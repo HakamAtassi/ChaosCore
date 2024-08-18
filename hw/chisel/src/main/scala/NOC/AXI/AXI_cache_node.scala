@@ -22,14 +22,10 @@ trait AXICacheNode {
   // FIXME: use the AXI master bundle
 
   // actual verilog IO
-  val m_axi = IO(new VerilogAXIFullIO(nocParameters))
-
-  dontTouch(m_axi)
-
-
-  val AXI_port = m_axi.viewAs[AXIFullIO]
-
   // chisel dataview mapping
+  val m_axi = IO(new VerilogAXIFullIO(nocParameters))
+  val AXI_port = m_axi.viewAs[AXIFullIO]
+  dontTouch(m_axi)
 
   object AXI_REQUEST_STATES extends ChiselEnum {
     val ADDRESS_PHASE, WRITE_DATA_PHASE, READ_RESPONSE_PHASE, WRITE_RESPONSE_PHASE = Value

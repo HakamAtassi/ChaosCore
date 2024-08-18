@@ -705,6 +705,7 @@ module L1_data_cache(
   reg              valid_memory_63_1;
   reg              valid_memory_63_2;
   reg              valid_memory_63_3;
+  reg  [5:0]       REG;
   wire             _GEN_7 = allocate_set == 6'h0;
   wire             _GEN_8 = _tag_memories_3_io_wr_en_T & _GEN_7 & _GEN_2;
   wire             _GEN_9 = _tag_memories_3_io_wr_en_T & _GEN_7 & _GEN_4;
@@ -1025,7 +1026,6 @@ module L1_data_cache(
   wire             _GEN_324 = _tag_memories_3_io_wr_en_T & (&allocate_set) & _GEN_5;
   wire             _GEN_325 =
     _tag_memories_3_io_wr_en_T & (&allocate_set) & (&allocate_way);
-  reg  [5:0]       REG;
   reg  [3:0]       PLRU_memory_0;
   reg  [3:0]       PLRU_memory_1;
   reg  [3:0]       PLRU_memory_2;
@@ -3803,518 +3803,516 @@ module L1_data_cache(
       end
       else
         DATA_CACHE_STATE <= 2'h2;
-      valid_memory_0_0 <=
-        ~(valid_miss & _GEN_581 & _GEN_582) & (_GEN_8 | valid_memory_0_0);
-      valid_memory_0_1 <=
-        ~(valid_miss & _GEN_581 & _GEN_583) & (_GEN_9 | valid_memory_0_1);
+      valid_memory_0_0 <= _GEN_8 | ~(valid_miss & _GEN_581 & _GEN_582) & valid_memory_0_0;
+      valid_memory_0_1 <= _GEN_9 | ~(valid_miss & _GEN_581 & _GEN_583) & valid_memory_0_1;
       valid_memory_0_2 <=
-        ~(valid_miss & _GEN_581 & _GEN_584) & (_GEN_10 | valid_memory_0_2);
+        _GEN_10 | ~(valid_miss & _GEN_581 & _GEN_584) & valid_memory_0_2;
       valid_memory_0_3 <=
-        ~(valid_miss & _GEN_581 & (&evict_way)) & (_GEN_11 | valid_memory_0_3);
+        _GEN_11 | ~(valid_miss & _GEN_581 & (&evict_way)) & valid_memory_0_3;
       valid_memory_1_0 <=
-        ~(valid_miss & _GEN_585 & _GEN_582) & (_GEN_13 | valid_memory_1_0);
+        _GEN_13 | ~(valid_miss & _GEN_585 & _GEN_582) & valid_memory_1_0;
       valid_memory_1_1 <=
-        ~(valid_miss & _GEN_585 & _GEN_583) & (_GEN_14 | valid_memory_1_1);
+        _GEN_14 | ~(valid_miss & _GEN_585 & _GEN_583) & valid_memory_1_1;
       valid_memory_1_2 <=
-        ~(valid_miss & _GEN_585 & _GEN_584) & (_GEN_15 | valid_memory_1_2);
+        _GEN_15 | ~(valid_miss & _GEN_585 & _GEN_584) & valid_memory_1_2;
       valid_memory_1_3 <=
-        ~(valid_miss & _GEN_585 & (&evict_way)) & (_GEN_16 | valid_memory_1_3);
+        _GEN_16 | ~(valid_miss & _GEN_585 & (&evict_way)) & valid_memory_1_3;
       valid_memory_2_0 <=
-        ~(valid_miss & _GEN_586 & _GEN_582) & (_GEN_18 | valid_memory_2_0);
+        _GEN_18 | ~(valid_miss & _GEN_586 & _GEN_582) & valid_memory_2_0;
       valid_memory_2_1 <=
-        ~(valid_miss & _GEN_586 & _GEN_583) & (_GEN_19 | valid_memory_2_1);
+        _GEN_19 | ~(valid_miss & _GEN_586 & _GEN_583) & valid_memory_2_1;
       valid_memory_2_2 <=
-        ~(valid_miss & _GEN_586 & _GEN_584) & (_GEN_20 | valid_memory_2_2);
+        _GEN_20 | ~(valid_miss & _GEN_586 & _GEN_584) & valid_memory_2_2;
       valid_memory_2_3 <=
-        ~(valid_miss & _GEN_586 & (&evict_way)) & (_GEN_21 | valid_memory_2_3);
+        _GEN_21 | ~(valid_miss & _GEN_586 & (&evict_way)) & valid_memory_2_3;
       valid_memory_3_0 <=
-        ~(valid_miss & _GEN_587 & _GEN_582) & (_GEN_23 | valid_memory_3_0);
+        _GEN_23 | ~(valid_miss & _GEN_587 & _GEN_582) & valid_memory_3_0;
       valid_memory_3_1 <=
-        ~(valid_miss & _GEN_587 & _GEN_583) & (_GEN_24 | valid_memory_3_1);
+        _GEN_24 | ~(valid_miss & _GEN_587 & _GEN_583) & valid_memory_3_1;
       valid_memory_3_2 <=
-        ~(valid_miss & _GEN_587 & _GEN_584) & (_GEN_25 | valid_memory_3_2);
+        _GEN_25 | ~(valid_miss & _GEN_587 & _GEN_584) & valid_memory_3_2;
       valid_memory_3_3 <=
-        ~(valid_miss & _GEN_587 & (&evict_way)) & (_GEN_26 | valid_memory_3_3);
+        _GEN_26 | ~(valid_miss & _GEN_587 & (&evict_way)) & valid_memory_3_3;
       valid_memory_4_0 <=
-        ~(valid_miss & _GEN_588 & _GEN_582) & (_GEN_28 | valid_memory_4_0);
+        _GEN_28 | ~(valid_miss & _GEN_588 & _GEN_582) & valid_memory_4_0;
       valid_memory_4_1 <=
-        ~(valid_miss & _GEN_588 & _GEN_583) & (_GEN_29 | valid_memory_4_1);
+        _GEN_29 | ~(valid_miss & _GEN_588 & _GEN_583) & valid_memory_4_1;
       valid_memory_4_2 <=
-        ~(valid_miss & _GEN_588 & _GEN_584) & (_GEN_30 | valid_memory_4_2);
+        _GEN_30 | ~(valid_miss & _GEN_588 & _GEN_584) & valid_memory_4_2;
       valid_memory_4_3 <=
-        ~(valid_miss & _GEN_588 & (&evict_way)) & (_GEN_31 | valid_memory_4_3);
+        _GEN_31 | ~(valid_miss & _GEN_588 & (&evict_way)) & valid_memory_4_3;
       valid_memory_5_0 <=
-        ~(valid_miss & _GEN_589 & _GEN_582) & (_GEN_33 | valid_memory_5_0);
+        _GEN_33 | ~(valid_miss & _GEN_589 & _GEN_582) & valid_memory_5_0;
       valid_memory_5_1 <=
-        ~(valid_miss & _GEN_589 & _GEN_583) & (_GEN_34 | valid_memory_5_1);
+        _GEN_34 | ~(valid_miss & _GEN_589 & _GEN_583) & valid_memory_5_1;
       valid_memory_5_2 <=
-        ~(valid_miss & _GEN_589 & _GEN_584) & (_GEN_35 | valid_memory_5_2);
+        _GEN_35 | ~(valid_miss & _GEN_589 & _GEN_584) & valid_memory_5_2;
       valid_memory_5_3 <=
-        ~(valid_miss & _GEN_589 & (&evict_way)) & (_GEN_36 | valid_memory_5_3);
+        _GEN_36 | ~(valid_miss & _GEN_589 & (&evict_way)) & valid_memory_5_3;
       valid_memory_6_0 <=
-        ~(valid_miss & _GEN_590 & _GEN_582) & (_GEN_38 | valid_memory_6_0);
+        _GEN_38 | ~(valid_miss & _GEN_590 & _GEN_582) & valid_memory_6_0;
       valid_memory_6_1 <=
-        ~(valid_miss & _GEN_590 & _GEN_583) & (_GEN_39 | valid_memory_6_1);
+        _GEN_39 | ~(valid_miss & _GEN_590 & _GEN_583) & valid_memory_6_1;
       valid_memory_6_2 <=
-        ~(valid_miss & _GEN_590 & _GEN_584) & (_GEN_40 | valid_memory_6_2);
+        _GEN_40 | ~(valid_miss & _GEN_590 & _GEN_584) & valid_memory_6_2;
       valid_memory_6_3 <=
-        ~(valid_miss & _GEN_590 & (&evict_way)) & (_GEN_41 | valid_memory_6_3);
+        _GEN_41 | ~(valid_miss & _GEN_590 & (&evict_way)) & valid_memory_6_3;
       valid_memory_7_0 <=
-        ~(valid_miss & _GEN_591 & _GEN_582) & (_GEN_43 | valid_memory_7_0);
+        _GEN_43 | ~(valid_miss & _GEN_591 & _GEN_582) & valid_memory_7_0;
       valid_memory_7_1 <=
-        ~(valid_miss & _GEN_591 & _GEN_583) & (_GEN_44 | valid_memory_7_1);
+        _GEN_44 | ~(valid_miss & _GEN_591 & _GEN_583) & valid_memory_7_1;
       valid_memory_7_2 <=
-        ~(valid_miss & _GEN_591 & _GEN_584) & (_GEN_45 | valid_memory_7_2);
+        _GEN_45 | ~(valid_miss & _GEN_591 & _GEN_584) & valid_memory_7_2;
       valid_memory_7_3 <=
-        ~(valid_miss & _GEN_591 & (&evict_way)) & (_GEN_46 | valid_memory_7_3);
+        _GEN_46 | ~(valid_miss & _GEN_591 & (&evict_way)) & valid_memory_7_3;
       valid_memory_8_0 <=
-        ~(valid_miss & _GEN_592 & _GEN_582) & (_GEN_48 | valid_memory_8_0);
+        _GEN_48 | ~(valid_miss & _GEN_592 & _GEN_582) & valid_memory_8_0;
       valid_memory_8_1 <=
-        ~(valid_miss & _GEN_592 & _GEN_583) & (_GEN_49 | valid_memory_8_1);
+        _GEN_49 | ~(valid_miss & _GEN_592 & _GEN_583) & valid_memory_8_1;
       valid_memory_8_2 <=
-        ~(valid_miss & _GEN_592 & _GEN_584) & (_GEN_50 | valid_memory_8_2);
+        _GEN_50 | ~(valid_miss & _GEN_592 & _GEN_584) & valid_memory_8_2;
       valid_memory_8_3 <=
-        ~(valid_miss & _GEN_592 & (&evict_way)) & (_GEN_51 | valid_memory_8_3);
+        _GEN_51 | ~(valid_miss & _GEN_592 & (&evict_way)) & valid_memory_8_3;
       valid_memory_9_0 <=
-        ~(valid_miss & _GEN_593 & _GEN_582) & (_GEN_53 | valid_memory_9_0);
+        _GEN_53 | ~(valid_miss & _GEN_593 & _GEN_582) & valid_memory_9_0;
       valid_memory_9_1 <=
-        ~(valid_miss & _GEN_593 & _GEN_583) & (_GEN_54 | valid_memory_9_1);
+        _GEN_54 | ~(valid_miss & _GEN_593 & _GEN_583) & valid_memory_9_1;
       valid_memory_9_2 <=
-        ~(valid_miss & _GEN_593 & _GEN_584) & (_GEN_55 | valid_memory_9_2);
+        _GEN_55 | ~(valid_miss & _GEN_593 & _GEN_584) & valid_memory_9_2;
       valid_memory_9_3 <=
-        ~(valid_miss & _GEN_593 & (&evict_way)) & (_GEN_56 | valid_memory_9_3);
+        _GEN_56 | ~(valid_miss & _GEN_593 & (&evict_way)) & valid_memory_9_3;
       valid_memory_10_0 <=
-        ~(valid_miss & _GEN_594 & _GEN_582) & (_GEN_58 | valid_memory_10_0);
+        _GEN_58 | ~(valid_miss & _GEN_594 & _GEN_582) & valid_memory_10_0;
       valid_memory_10_1 <=
-        ~(valid_miss & _GEN_594 & _GEN_583) & (_GEN_59 | valid_memory_10_1);
+        _GEN_59 | ~(valid_miss & _GEN_594 & _GEN_583) & valid_memory_10_1;
       valid_memory_10_2 <=
-        ~(valid_miss & _GEN_594 & _GEN_584) & (_GEN_60 | valid_memory_10_2);
+        _GEN_60 | ~(valid_miss & _GEN_594 & _GEN_584) & valid_memory_10_2;
       valid_memory_10_3 <=
-        ~(valid_miss & _GEN_594 & (&evict_way)) & (_GEN_61 | valid_memory_10_3);
+        _GEN_61 | ~(valid_miss & _GEN_594 & (&evict_way)) & valid_memory_10_3;
       valid_memory_11_0 <=
-        ~(valid_miss & _GEN_595 & _GEN_582) & (_GEN_63 | valid_memory_11_0);
+        _GEN_63 | ~(valid_miss & _GEN_595 & _GEN_582) & valid_memory_11_0;
       valid_memory_11_1 <=
-        ~(valid_miss & _GEN_595 & _GEN_583) & (_GEN_64 | valid_memory_11_1);
+        _GEN_64 | ~(valid_miss & _GEN_595 & _GEN_583) & valid_memory_11_1;
       valid_memory_11_2 <=
-        ~(valid_miss & _GEN_595 & _GEN_584) & (_GEN_65 | valid_memory_11_2);
+        _GEN_65 | ~(valid_miss & _GEN_595 & _GEN_584) & valid_memory_11_2;
       valid_memory_11_3 <=
-        ~(valid_miss & _GEN_595 & (&evict_way)) & (_GEN_66 | valid_memory_11_3);
+        _GEN_66 | ~(valid_miss & _GEN_595 & (&evict_way)) & valid_memory_11_3;
       valid_memory_12_0 <=
-        ~(valid_miss & _GEN_596 & _GEN_582) & (_GEN_68 | valid_memory_12_0);
+        _GEN_68 | ~(valid_miss & _GEN_596 & _GEN_582) & valid_memory_12_0;
       valid_memory_12_1 <=
-        ~(valid_miss & _GEN_596 & _GEN_583) & (_GEN_69 | valid_memory_12_1);
+        _GEN_69 | ~(valid_miss & _GEN_596 & _GEN_583) & valid_memory_12_1;
       valid_memory_12_2 <=
-        ~(valid_miss & _GEN_596 & _GEN_584) & (_GEN_70 | valid_memory_12_2);
+        _GEN_70 | ~(valid_miss & _GEN_596 & _GEN_584) & valid_memory_12_2;
       valid_memory_12_3 <=
-        ~(valid_miss & _GEN_596 & (&evict_way)) & (_GEN_71 | valid_memory_12_3);
+        _GEN_71 | ~(valid_miss & _GEN_596 & (&evict_way)) & valid_memory_12_3;
       valid_memory_13_0 <=
-        ~(valid_miss & _GEN_597 & _GEN_582) & (_GEN_73 | valid_memory_13_0);
+        _GEN_73 | ~(valid_miss & _GEN_597 & _GEN_582) & valid_memory_13_0;
       valid_memory_13_1 <=
-        ~(valid_miss & _GEN_597 & _GEN_583) & (_GEN_74 | valid_memory_13_1);
+        _GEN_74 | ~(valid_miss & _GEN_597 & _GEN_583) & valid_memory_13_1;
       valid_memory_13_2 <=
-        ~(valid_miss & _GEN_597 & _GEN_584) & (_GEN_75 | valid_memory_13_2);
+        _GEN_75 | ~(valid_miss & _GEN_597 & _GEN_584) & valid_memory_13_2;
       valid_memory_13_3 <=
-        ~(valid_miss & _GEN_597 & (&evict_way)) & (_GEN_76 | valid_memory_13_3);
+        _GEN_76 | ~(valid_miss & _GEN_597 & (&evict_way)) & valid_memory_13_3;
       valid_memory_14_0 <=
-        ~(valid_miss & _GEN_598 & _GEN_582) & (_GEN_78 | valid_memory_14_0);
+        _GEN_78 | ~(valid_miss & _GEN_598 & _GEN_582) & valid_memory_14_0;
       valid_memory_14_1 <=
-        ~(valid_miss & _GEN_598 & _GEN_583) & (_GEN_79 | valid_memory_14_1);
+        _GEN_79 | ~(valid_miss & _GEN_598 & _GEN_583) & valid_memory_14_1;
       valid_memory_14_2 <=
-        ~(valid_miss & _GEN_598 & _GEN_584) & (_GEN_80 | valid_memory_14_2);
+        _GEN_80 | ~(valid_miss & _GEN_598 & _GEN_584) & valid_memory_14_2;
       valid_memory_14_3 <=
-        ~(valid_miss & _GEN_598 & (&evict_way)) & (_GEN_81 | valid_memory_14_3);
+        _GEN_81 | ~(valid_miss & _GEN_598 & (&evict_way)) & valid_memory_14_3;
       valid_memory_15_0 <=
-        ~(valid_miss & _GEN_599 & _GEN_582) & (_GEN_83 | valid_memory_15_0);
+        _GEN_83 | ~(valid_miss & _GEN_599 & _GEN_582) & valid_memory_15_0;
       valid_memory_15_1 <=
-        ~(valid_miss & _GEN_599 & _GEN_583) & (_GEN_84 | valid_memory_15_1);
+        _GEN_84 | ~(valid_miss & _GEN_599 & _GEN_583) & valid_memory_15_1;
       valid_memory_15_2 <=
-        ~(valid_miss & _GEN_599 & _GEN_584) & (_GEN_85 | valid_memory_15_2);
+        _GEN_85 | ~(valid_miss & _GEN_599 & _GEN_584) & valid_memory_15_2;
       valid_memory_15_3 <=
-        ~(valid_miss & _GEN_599 & (&evict_way)) & (_GEN_86 | valid_memory_15_3);
+        _GEN_86 | ~(valid_miss & _GEN_599 & (&evict_way)) & valid_memory_15_3;
       valid_memory_16_0 <=
-        ~(valid_miss & _GEN_600 & _GEN_582) & (_GEN_88 | valid_memory_16_0);
+        _GEN_88 | ~(valid_miss & _GEN_600 & _GEN_582) & valid_memory_16_0;
       valid_memory_16_1 <=
-        ~(valid_miss & _GEN_600 & _GEN_583) & (_GEN_89 | valid_memory_16_1);
+        _GEN_89 | ~(valid_miss & _GEN_600 & _GEN_583) & valid_memory_16_1;
       valid_memory_16_2 <=
-        ~(valid_miss & _GEN_600 & _GEN_584) & (_GEN_90 | valid_memory_16_2);
+        _GEN_90 | ~(valid_miss & _GEN_600 & _GEN_584) & valid_memory_16_2;
       valid_memory_16_3 <=
-        ~(valid_miss & _GEN_600 & (&evict_way)) & (_GEN_91 | valid_memory_16_3);
+        _GEN_91 | ~(valid_miss & _GEN_600 & (&evict_way)) & valid_memory_16_3;
       valid_memory_17_0 <=
-        ~(valid_miss & _GEN_601 & _GEN_582) & (_GEN_93 | valid_memory_17_0);
+        _GEN_93 | ~(valid_miss & _GEN_601 & _GEN_582) & valid_memory_17_0;
       valid_memory_17_1 <=
-        ~(valid_miss & _GEN_601 & _GEN_583) & (_GEN_94 | valid_memory_17_1);
+        _GEN_94 | ~(valid_miss & _GEN_601 & _GEN_583) & valid_memory_17_1;
       valid_memory_17_2 <=
-        ~(valid_miss & _GEN_601 & _GEN_584) & (_GEN_95 | valid_memory_17_2);
+        _GEN_95 | ~(valid_miss & _GEN_601 & _GEN_584) & valid_memory_17_2;
       valid_memory_17_3 <=
-        ~(valid_miss & _GEN_601 & (&evict_way)) & (_GEN_96 | valid_memory_17_3);
+        _GEN_96 | ~(valid_miss & _GEN_601 & (&evict_way)) & valid_memory_17_3;
       valid_memory_18_0 <=
-        ~(valid_miss & _GEN_602 & _GEN_582) & (_GEN_98 | valid_memory_18_0);
+        _GEN_98 | ~(valid_miss & _GEN_602 & _GEN_582) & valid_memory_18_0;
       valid_memory_18_1 <=
-        ~(valid_miss & _GEN_602 & _GEN_583) & (_GEN_99 | valid_memory_18_1);
+        _GEN_99 | ~(valid_miss & _GEN_602 & _GEN_583) & valid_memory_18_1;
       valid_memory_18_2 <=
-        ~(valid_miss & _GEN_602 & _GEN_584) & (_GEN_100 | valid_memory_18_2);
+        _GEN_100 | ~(valid_miss & _GEN_602 & _GEN_584) & valid_memory_18_2;
       valid_memory_18_3 <=
-        ~(valid_miss & _GEN_602 & (&evict_way)) & (_GEN_101 | valid_memory_18_3);
+        _GEN_101 | ~(valid_miss & _GEN_602 & (&evict_way)) & valid_memory_18_3;
       valid_memory_19_0 <=
-        ~(valid_miss & _GEN_603 & _GEN_582) & (_GEN_103 | valid_memory_19_0);
+        _GEN_103 | ~(valid_miss & _GEN_603 & _GEN_582) & valid_memory_19_0;
       valid_memory_19_1 <=
-        ~(valid_miss & _GEN_603 & _GEN_583) & (_GEN_104 | valid_memory_19_1);
+        _GEN_104 | ~(valid_miss & _GEN_603 & _GEN_583) & valid_memory_19_1;
       valid_memory_19_2 <=
-        ~(valid_miss & _GEN_603 & _GEN_584) & (_GEN_105 | valid_memory_19_2);
+        _GEN_105 | ~(valid_miss & _GEN_603 & _GEN_584) & valid_memory_19_2;
       valid_memory_19_3 <=
-        ~(valid_miss & _GEN_603 & (&evict_way)) & (_GEN_106 | valid_memory_19_3);
+        _GEN_106 | ~(valid_miss & _GEN_603 & (&evict_way)) & valid_memory_19_3;
       valid_memory_20_0 <=
-        ~(valid_miss & _GEN_604 & _GEN_582) & (_GEN_108 | valid_memory_20_0);
+        _GEN_108 | ~(valid_miss & _GEN_604 & _GEN_582) & valid_memory_20_0;
       valid_memory_20_1 <=
-        ~(valid_miss & _GEN_604 & _GEN_583) & (_GEN_109 | valid_memory_20_1);
+        _GEN_109 | ~(valid_miss & _GEN_604 & _GEN_583) & valid_memory_20_1;
       valid_memory_20_2 <=
-        ~(valid_miss & _GEN_604 & _GEN_584) & (_GEN_110 | valid_memory_20_2);
+        _GEN_110 | ~(valid_miss & _GEN_604 & _GEN_584) & valid_memory_20_2;
       valid_memory_20_3 <=
-        ~(valid_miss & _GEN_604 & (&evict_way)) & (_GEN_111 | valid_memory_20_3);
+        _GEN_111 | ~(valid_miss & _GEN_604 & (&evict_way)) & valid_memory_20_3;
       valid_memory_21_0 <=
-        ~(valid_miss & _GEN_605 & _GEN_582) & (_GEN_113 | valid_memory_21_0);
+        _GEN_113 | ~(valid_miss & _GEN_605 & _GEN_582) & valid_memory_21_0;
       valid_memory_21_1 <=
-        ~(valid_miss & _GEN_605 & _GEN_583) & (_GEN_114 | valid_memory_21_1);
+        _GEN_114 | ~(valid_miss & _GEN_605 & _GEN_583) & valid_memory_21_1;
       valid_memory_21_2 <=
-        ~(valid_miss & _GEN_605 & _GEN_584) & (_GEN_115 | valid_memory_21_2);
+        _GEN_115 | ~(valid_miss & _GEN_605 & _GEN_584) & valid_memory_21_2;
       valid_memory_21_3 <=
-        ~(valid_miss & _GEN_605 & (&evict_way)) & (_GEN_116 | valid_memory_21_3);
+        _GEN_116 | ~(valid_miss & _GEN_605 & (&evict_way)) & valid_memory_21_3;
       valid_memory_22_0 <=
-        ~(valid_miss & _GEN_606 & _GEN_582) & (_GEN_118 | valid_memory_22_0);
+        _GEN_118 | ~(valid_miss & _GEN_606 & _GEN_582) & valid_memory_22_0;
       valid_memory_22_1 <=
-        ~(valid_miss & _GEN_606 & _GEN_583) & (_GEN_119 | valid_memory_22_1);
+        _GEN_119 | ~(valid_miss & _GEN_606 & _GEN_583) & valid_memory_22_1;
       valid_memory_22_2 <=
-        ~(valid_miss & _GEN_606 & _GEN_584) & (_GEN_120 | valid_memory_22_2);
+        _GEN_120 | ~(valid_miss & _GEN_606 & _GEN_584) & valid_memory_22_2;
       valid_memory_22_3 <=
-        ~(valid_miss & _GEN_606 & (&evict_way)) & (_GEN_121 | valid_memory_22_3);
+        _GEN_121 | ~(valid_miss & _GEN_606 & (&evict_way)) & valid_memory_22_3;
       valid_memory_23_0 <=
-        ~(valid_miss & _GEN_607 & _GEN_582) & (_GEN_123 | valid_memory_23_0);
+        _GEN_123 | ~(valid_miss & _GEN_607 & _GEN_582) & valid_memory_23_0;
       valid_memory_23_1 <=
-        ~(valid_miss & _GEN_607 & _GEN_583) & (_GEN_124 | valid_memory_23_1);
+        _GEN_124 | ~(valid_miss & _GEN_607 & _GEN_583) & valid_memory_23_1;
       valid_memory_23_2 <=
-        ~(valid_miss & _GEN_607 & _GEN_584) & (_GEN_125 | valid_memory_23_2);
+        _GEN_125 | ~(valid_miss & _GEN_607 & _GEN_584) & valid_memory_23_2;
       valid_memory_23_3 <=
-        ~(valid_miss & _GEN_607 & (&evict_way)) & (_GEN_126 | valid_memory_23_3);
+        _GEN_126 | ~(valid_miss & _GEN_607 & (&evict_way)) & valid_memory_23_3;
       valid_memory_24_0 <=
-        ~(valid_miss & _GEN_608 & _GEN_582) & (_GEN_128 | valid_memory_24_0);
+        _GEN_128 | ~(valid_miss & _GEN_608 & _GEN_582) & valid_memory_24_0;
       valid_memory_24_1 <=
-        ~(valid_miss & _GEN_608 & _GEN_583) & (_GEN_129 | valid_memory_24_1);
+        _GEN_129 | ~(valid_miss & _GEN_608 & _GEN_583) & valid_memory_24_1;
       valid_memory_24_2 <=
-        ~(valid_miss & _GEN_608 & _GEN_584) & (_GEN_130 | valid_memory_24_2);
+        _GEN_130 | ~(valid_miss & _GEN_608 & _GEN_584) & valid_memory_24_2;
       valid_memory_24_3 <=
-        ~(valid_miss & _GEN_608 & (&evict_way)) & (_GEN_131 | valid_memory_24_3);
+        _GEN_131 | ~(valid_miss & _GEN_608 & (&evict_way)) & valid_memory_24_3;
       valid_memory_25_0 <=
-        ~(valid_miss & _GEN_609 & _GEN_582) & (_GEN_133 | valid_memory_25_0);
+        _GEN_133 | ~(valid_miss & _GEN_609 & _GEN_582) & valid_memory_25_0;
       valid_memory_25_1 <=
-        ~(valid_miss & _GEN_609 & _GEN_583) & (_GEN_134 | valid_memory_25_1);
+        _GEN_134 | ~(valid_miss & _GEN_609 & _GEN_583) & valid_memory_25_1;
       valid_memory_25_2 <=
-        ~(valid_miss & _GEN_609 & _GEN_584) & (_GEN_135 | valid_memory_25_2);
+        _GEN_135 | ~(valid_miss & _GEN_609 & _GEN_584) & valid_memory_25_2;
       valid_memory_25_3 <=
-        ~(valid_miss & _GEN_609 & (&evict_way)) & (_GEN_136 | valid_memory_25_3);
+        _GEN_136 | ~(valid_miss & _GEN_609 & (&evict_way)) & valid_memory_25_3;
       valid_memory_26_0 <=
-        ~(valid_miss & _GEN_610 & _GEN_582) & (_GEN_138 | valid_memory_26_0);
+        _GEN_138 | ~(valid_miss & _GEN_610 & _GEN_582) & valid_memory_26_0;
       valid_memory_26_1 <=
-        ~(valid_miss & _GEN_610 & _GEN_583) & (_GEN_139 | valid_memory_26_1);
+        _GEN_139 | ~(valid_miss & _GEN_610 & _GEN_583) & valid_memory_26_1;
       valid_memory_26_2 <=
-        ~(valid_miss & _GEN_610 & _GEN_584) & (_GEN_140 | valid_memory_26_2);
+        _GEN_140 | ~(valid_miss & _GEN_610 & _GEN_584) & valid_memory_26_2;
       valid_memory_26_3 <=
-        ~(valid_miss & _GEN_610 & (&evict_way)) & (_GEN_141 | valid_memory_26_3);
+        _GEN_141 | ~(valid_miss & _GEN_610 & (&evict_way)) & valid_memory_26_3;
       valid_memory_27_0 <=
-        ~(valid_miss & _GEN_611 & _GEN_582) & (_GEN_143 | valid_memory_27_0);
+        _GEN_143 | ~(valid_miss & _GEN_611 & _GEN_582) & valid_memory_27_0;
       valid_memory_27_1 <=
-        ~(valid_miss & _GEN_611 & _GEN_583) & (_GEN_144 | valid_memory_27_1);
+        _GEN_144 | ~(valid_miss & _GEN_611 & _GEN_583) & valid_memory_27_1;
       valid_memory_27_2 <=
-        ~(valid_miss & _GEN_611 & _GEN_584) & (_GEN_145 | valid_memory_27_2);
+        _GEN_145 | ~(valid_miss & _GEN_611 & _GEN_584) & valid_memory_27_2;
       valid_memory_27_3 <=
-        ~(valid_miss & _GEN_611 & (&evict_way)) & (_GEN_146 | valid_memory_27_3);
+        _GEN_146 | ~(valid_miss & _GEN_611 & (&evict_way)) & valid_memory_27_3;
       valid_memory_28_0 <=
-        ~(valid_miss & _GEN_612 & _GEN_582) & (_GEN_148 | valid_memory_28_0);
+        _GEN_148 | ~(valid_miss & _GEN_612 & _GEN_582) & valid_memory_28_0;
       valid_memory_28_1 <=
-        ~(valid_miss & _GEN_612 & _GEN_583) & (_GEN_149 | valid_memory_28_1);
+        _GEN_149 | ~(valid_miss & _GEN_612 & _GEN_583) & valid_memory_28_1;
       valid_memory_28_2 <=
-        ~(valid_miss & _GEN_612 & _GEN_584) & (_GEN_150 | valid_memory_28_2);
+        _GEN_150 | ~(valid_miss & _GEN_612 & _GEN_584) & valid_memory_28_2;
       valid_memory_28_3 <=
-        ~(valid_miss & _GEN_612 & (&evict_way)) & (_GEN_151 | valid_memory_28_3);
+        _GEN_151 | ~(valid_miss & _GEN_612 & (&evict_way)) & valid_memory_28_3;
       valid_memory_29_0 <=
-        ~(valid_miss & _GEN_613 & _GEN_582) & (_GEN_153 | valid_memory_29_0);
+        _GEN_153 | ~(valid_miss & _GEN_613 & _GEN_582) & valid_memory_29_0;
       valid_memory_29_1 <=
-        ~(valid_miss & _GEN_613 & _GEN_583) & (_GEN_154 | valid_memory_29_1);
+        _GEN_154 | ~(valid_miss & _GEN_613 & _GEN_583) & valid_memory_29_1;
       valid_memory_29_2 <=
-        ~(valid_miss & _GEN_613 & _GEN_584) & (_GEN_155 | valid_memory_29_2);
+        _GEN_155 | ~(valid_miss & _GEN_613 & _GEN_584) & valid_memory_29_2;
       valid_memory_29_3 <=
-        ~(valid_miss & _GEN_613 & (&evict_way)) & (_GEN_156 | valid_memory_29_3);
+        _GEN_156 | ~(valid_miss & _GEN_613 & (&evict_way)) & valid_memory_29_3;
       valid_memory_30_0 <=
-        ~(valid_miss & _GEN_614 & _GEN_582) & (_GEN_158 | valid_memory_30_0);
+        _GEN_158 | ~(valid_miss & _GEN_614 & _GEN_582) & valid_memory_30_0;
       valid_memory_30_1 <=
-        ~(valid_miss & _GEN_614 & _GEN_583) & (_GEN_159 | valid_memory_30_1);
+        _GEN_159 | ~(valid_miss & _GEN_614 & _GEN_583) & valid_memory_30_1;
       valid_memory_30_2 <=
-        ~(valid_miss & _GEN_614 & _GEN_584) & (_GEN_160 | valid_memory_30_2);
+        _GEN_160 | ~(valid_miss & _GEN_614 & _GEN_584) & valid_memory_30_2;
       valid_memory_30_3 <=
-        ~(valid_miss & _GEN_614 & (&evict_way)) & (_GEN_161 | valid_memory_30_3);
+        _GEN_161 | ~(valid_miss & _GEN_614 & (&evict_way)) & valid_memory_30_3;
       valid_memory_31_0 <=
-        ~(valid_miss & _GEN_615 & _GEN_582) & (_GEN_163 | valid_memory_31_0);
+        _GEN_163 | ~(valid_miss & _GEN_615 & _GEN_582) & valid_memory_31_0;
       valid_memory_31_1 <=
-        ~(valid_miss & _GEN_615 & _GEN_583) & (_GEN_164 | valid_memory_31_1);
+        _GEN_164 | ~(valid_miss & _GEN_615 & _GEN_583) & valid_memory_31_1;
       valid_memory_31_2 <=
-        ~(valid_miss & _GEN_615 & _GEN_584) & (_GEN_165 | valid_memory_31_2);
+        _GEN_165 | ~(valid_miss & _GEN_615 & _GEN_584) & valid_memory_31_2;
       valid_memory_31_3 <=
-        ~(valid_miss & _GEN_615 & (&evict_way)) & (_GEN_166 | valid_memory_31_3);
+        _GEN_166 | ~(valid_miss & _GEN_615 & (&evict_way)) & valid_memory_31_3;
       valid_memory_32_0 <=
-        ~(valid_miss & _GEN_616 & _GEN_582) & (_GEN_168 | valid_memory_32_0);
+        _GEN_168 | ~(valid_miss & _GEN_616 & _GEN_582) & valid_memory_32_0;
       valid_memory_32_1 <=
-        ~(valid_miss & _GEN_616 & _GEN_583) & (_GEN_169 | valid_memory_32_1);
+        _GEN_169 | ~(valid_miss & _GEN_616 & _GEN_583) & valid_memory_32_1;
       valid_memory_32_2 <=
-        ~(valid_miss & _GEN_616 & _GEN_584) & (_GEN_170 | valid_memory_32_2);
+        _GEN_170 | ~(valid_miss & _GEN_616 & _GEN_584) & valid_memory_32_2;
       valid_memory_32_3 <=
-        ~(valid_miss & _GEN_616 & (&evict_way)) & (_GEN_171 | valid_memory_32_3);
+        _GEN_171 | ~(valid_miss & _GEN_616 & (&evict_way)) & valid_memory_32_3;
       valid_memory_33_0 <=
-        ~(valid_miss & _GEN_617 & _GEN_582) & (_GEN_173 | valid_memory_33_0);
+        _GEN_173 | ~(valid_miss & _GEN_617 & _GEN_582) & valid_memory_33_0;
       valid_memory_33_1 <=
-        ~(valid_miss & _GEN_617 & _GEN_583) & (_GEN_174 | valid_memory_33_1);
+        _GEN_174 | ~(valid_miss & _GEN_617 & _GEN_583) & valid_memory_33_1;
       valid_memory_33_2 <=
-        ~(valid_miss & _GEN_617 & _GEN_584) & (_GEN_175 | valid_memory_33_2);
+        _GEN_175 | ~(valid_miss & _GEN_617 & _GEN_584) & valid_memory_33_2;
       valid_memory_33_3 <=
-        ~(valid_miss & _GEN_617 & (&evict_way)) & (_GEN_176 | valid_memory_33_3);
+        _GEN_176 | ~(valid_miss & _GEN_617 & (&evict_way)) & valid_memory_33_3;
       valid_memory_34_0 <=
-        ~(valid_miss & _GEN_618 & _GEN_582) & (_GEN_178 | valid_memory_34_0);
+        _GEN_178 | ~(valid_miss & _GEN_618 & _GEN_582) & valid_memory_34_0;
       valid_memory_34_1 <=
-        ~(valid_miss & _GEN_618 & _GEN_583) & (_GEN_179 | valid_memory_34_1);
+        _GEN_179 | ~(valid_miss & _GEN_618 & _GEN_583) & valid_memory_34_1;
       valid_memory_34_2 <=
-        ~(valid_miss & _GEN_618 & _GEN_584) & (_GEN_180 | valid_memory_34_2);
+        _GEN_180 | ~(valid_miss & _GEN_618 & _GEN_584) & valid_memory_34_2;
       valid_memory_34_3 <=
-        ~(valid_miss & _GEN_618 & (&evict_way)) & (_GEN_181 | valid_memory_34_3);
+        _GEN_181 | ~(valid_miss & _GEN_618 & (&evict_way)) & valid_memory_34_3;
       valid_memory_35_0 <=
-        ~(valid_miss & _GEN_619 & _GEN_582) & (_GEN_183 | valid_memory_35_0);
+        _GEN_183 | ~(valid_miss & _GEN_619 & _GEN_582) & valid_memory_35_0;
       valid_memory_35_1 <=
-        ~(valid_miss & _GEN_619 & _GEN_583) & (_GEN_184 | valid_memory_35_1);
+        _GEN_184 | ~(valid_miss & _GEN_619 & _GEN_583) & valid_memory_35_1;
       valid_memory_35_2 <=
-        ~(valid_miss & _GEN_619 & _GEN_584) & (_GEN_185 | valid_memory_35_2);
+        _GEN_185 | ~(valid_miss & _GEN_619 & _GEN_584) & valid_memory_35_2;
       valid_memory_35_3 <=
-        ~(valid_miss & _GEN_619 & (&evict_way)) & (_GEN_186 | valid_memory_35_3);
+        _GEN_186 | ~(valid_miss & _GEN_619 & (&evict_way)) & valid_memory_35_3;
       valid_memory_36_0 <=
-        ~(valid_miss & _GEN_620 & _GEN_582) & (_GEN_188 | valid_memory_36_0);
+        _GEN_188 | ~(valid_miss & _GEN_620 & _GEN_582) & valid_memory_36_0;
       valid_memory_36_1 <=
-        ~(valid_miss & _GEN_620 & _GEN_583) & (_GEN_189 | valid_memory_36_1);
+        _GEN_189 | ~(valid_miss & _GEN_620 & _GEN_583) & valid_memory_36_1;
       valid_memory_36_2 <=
-        ~(valid_miss & _GEN_620 & _GEN_584) & (_GEN_190 | valid_memory_36_2);
+        _GEN_190 | ~(valid_miss & _GEN_620 & _GEN_584) & valid_memory_36_2;
       valid_memory_36_3 <=
-        ~(valid_miss & _GEN_620 & (&evict_way)) & (_GEN_191 | valid_memory_36_3);
+        _GEN_191 | ~(valid_miss & _GEN_620 & (&evict_way)) & valid_memory_36_3;
       valid_memory_37_0 <=
-        ~(valid_miss & _GEN_621 & _GEN_582) & (_GEN_193 | valid_memory_37_0);
+        _GEN_193 | ~(valid_miss & _GEN_621 & _GEN_582) & valid_memory_37_0;
       valid_memory_37_1 <=
-        ~(valid_miss & _GEN_621 & _GEN_583) & (_GEN_194 | valid_memory_37_1);
+        _GEN_194 | ~(valid_miss & _GEN_621 & _GEN_583) & valid_memory_37_1;
       valid_memory_37_2 <=
-        ~(valid_miss & _GEN_621 & _GEN_584) & (_GEN_195 | valid_memory_37_2);
+        _GEN_195 | ~(valid_miss & _GEN_621 & _GEN_584) & valid_memory_37_2;
       valid_memory_37_3 <=
-        ~(valid_miss & _GEN_621 & (&evict_way)) & (_GEN_196 | valid_memory_37_3);
+        _GEN_196 | ~(valid_miss & _GEN_621 & (&evict_way)) & valid_memory_37_3;
       valid_memory_38_0 <=
-        ~(valid_miss & _GEN_622 & _GEN_582) & (_GEN_198 | valid_memory_38_0);
+        _GEN_198 | ~(valid_miss & _GEN_622 & _GEN_582) & valid_memory_38_0;
       valid_memory_38_1 <=
-        ~(valid_miss & _GEN_622 & _GEN_583) & (_GEN_199 | valid_memory_38_1);
+        _GEN_199 | ~(valid_miss & _GEN_622 & _GEN_583) & valid_memory_38_1;
       valid_memory_38_2 <=
-        ~(valid_miss & _GEN_622 & _GEN_584) & (_GEN_200 | valid_memory_38_2);
+        _GEN_200 | ~(valid_miss & _GEN_622 & _GEN_584) & valid_memory_38_2;
       valid_memory_38_3 <=
-        ~(valid_miss & _GEN_622 & (&evict_way)) & (_GEN_201 | valid_memory_38_3);
+        _GEN_201 | ~(valid_miss & _GEN_622 & (&evict_way)) & valid_memory_38_3;
       valid_memory_39_0 <=
-        ~(valid_miss & _GEN_623 & _GEN_582) & (_GEN_203 | valid_memory_39_0);
+        _GEN_203 | ~(valid_miss & _GEN_623 & _GEN_582) & valid_memory_39_0;
       valid_memory_39_1 <=
-        ~(valid_miss & _GEN_623 & _GEN_583) & (_GEN_204 | valid_memory_39_1);
+        _GEN_204 | ~(valid_miss & _GEN_623 & _GEN_583) & valid_memory_39_1;
       valid_memory_39_2 <=
-        ~(valid_miss & _GEN_623 & _GEN_584) & (_GEN_205 | valid_memory_39_2);
+        _GEN_205 | ~(valid_miss & _GEN_623 & _GEN_584) & valid_memory_39_2;
       valid_memory_39_3 <=
-        ~(valid_miss & _GEN_623 & (&evict_way)) & (_GEN_206 | valid_memory_39_3);
+        _GEN_206 | ~(valid_miss & _GEN_623 & (&evict_way)) & valid_memory_39_3;
       valid_memory_40_0 <=
-        ~(valid_miss & _GEN_624 & _GEN_582) & (_GEN_208 | valid_memory_40_0);
+        _GEN_208 | ~(valid_miss & _GEN_624 & _GEN_582) & valid_memory_40_0;
       valid_memory_40_1 <=
-        ~(valid_miss & _GEN_624 & _GEN_583) & (_GEN_209 | valid_memory_40_1);
+        _GEN_209 | ~(valid_miss & _GEN_624 & _GEN_583) & valid_memory_40_1;
       valid_memory_40_2 <=
-        ~(valid_miss & _GEN_624 & _GEN_584) & (_GEN_210 | valid_memory_40_2);
+        _GEN_210 | ~(valid_miss & _GEN_624 & _GEN_584) & valid_memory_40_2;
       valid_memory_40_3 <=
-        ~(valid_miss & _GEN_624 & (&evict_way)) & (_GEN_211 | valid_memory_40_3);
+        _GEN_211 | ~(valid_miss & _GEN_624 & (&evict_way)) & valid_memory_40_3;
       valid_memory_41_0 <=
-        ~(valid_miss & _GEN_625 & _GEN_582) & (_GEN_213 | valid_memory_41_0);
+        _GEN_213 | ~(valid_miss & _GEN_625 & _GEN_582) & valid_memory_41_0;
       valid_memory_41_1 <=
-        ~(valid_miss & _GEN_625 & _GEN_583) & (_GEN_214 | valid_memory_41_1);
+        _GEN_214 | ~(valid_miss & _GEN_625 & _GEN_583) & valid_memory_41_1;
       valid_memory_41_2 <=
-        ~(valid_miss & _GEN_625 & _GEN_584) & (_GEN_215 | valid_memory_41_2);
+        _GEN_215 | ~(valid_miss & _GEN_625 & _GEN_584) & valid_memory_41_2;
       valid_memory_41_3 <=
-        ~(valid_miss & _GEN_625 & (&evict_way)) & (_GEN_216 | valid_memory_41_3);
+        _GEN_216 | ~(valid_miss & _GEN_625 & (&evict_way)) & valid_memory_41_3;
       valid_memory_42_0 <=
-        ~(valid_miss & _GEN_626 & _GEN_582) & (_GEN_218 | valid_memory_42_0);
+        _GEN_218 | ~(valid_miss & _GEN_626 & _GEN_582) & valid_memory_42_0;
       valid_memory_42_1 <=
-        ~(valid_miss & _GEN_626 & _GEN_583) & (_GEN_219 | valid_memory_42_1);
+        _GEN_219 | ~(valid_miss & _GEN_626 & _GEN_583) & valid_memory_42_1;
       valid_memory_42_2 <=
-        ~(valid_miss & _GEN_626 & _GEN_584) & (_GEN_220 | valid_memory_42_2);
+        _GEN_220 | ~(valid_miss & _GEN_626 & _GEN_584) & valid_memory_42_2;
       valid_memory_42_3 <=
-        ~(valid_miss & _GEN_626 & (&evict_way)) & (_GEN_221 | valid_memory_42_3);
+        _GEN_221 | ~(valid_miss & _GEN_626 & (&evict_way)) & valid_memory_42_3;
       valid_memory_43_0 <=
-        ~(valid_miss & _GEN_627 & _GEN_582) & (_GEN_223 | valid_memory_43_0);
+        _GEN_223 | ~(valid_miss & _GEN_627 & _GEN_582) & valid_memory_43_0;
       valid_memory_43_1 <=
-        ~(valid_miss & _GEN_627 & _GEN_583) & (_GEN_224 | valid_memory_43_1);
+        _GEN_224 | ~(valid_miss & _GEN_627 & _GEN_583) & valid_memory_43_1;
       valid_memory_43_2 <=
-        ~(valid_miss & _GEN_627 & _GEN_584) & (_GEN_225 | valid_memory_43_2);
+        _GEN_225 | ~(valid_miss & _GEN_627 & _GEN_584) & valid_memory_43_2;
       valid_memory_43_3 <=
-        ~(valid_miss & _GEN_627 & (&evict_way)) & (_GEN_226 | valid_memory_43_3);
+        _GEN_226 | ~(valid_miss & _GEN_627 & (&evict_way)) & valid_memory_43_3;
       valid_memory_44_0 <=
-        ~(valid_miss & _GEN_628 & _GEN_582) & (_GEN_228 | valid_memory_44_0);
+        _GEN_228 | ~(valid_miss & _GEN_628 & _GEN_582) & valid_memory_44_0;
       valid_memory_44_1 <=
-        ~(valid_miss & _GEN_628 & _GEN_583) & (_GEN_229 | valid_memory_44_1);
+        _GEN_229 | ~(valid_miss & _GEN_628 & _GEN_583) & valid_memory_44_1;
       valid_memory_44_2 <=
-        ~(valid_miss & _GEN_628 & _GEN_584) & (_GEN_230 | valid_memory_44_2);
+        _GEN_230 | ~(valid_miss & _GEN_628 & _GEN_584) & valid_memory_44_2;
       valid_memory_44_3 <=
-        ~(valid_miss & _GEN_628 & (&evict_way)) & (_GEN_231 | valid_memory_44_3);
+        _GEN_231 | ~(valid_miss & _GEN_628 & (&evict_way)) & valid_memory_44_3;
       valid_memory_45_0 <=
-        ~(valid_miss & _GEN_629 & _GEN_582) & (_GEN_233 | valid_memory_45_0);
+        _GEN_233 | ~(valid_miss & _GEN_629 & _GEN_582) & valid_memory_45_0;
       valid_memory_45_1 <=
-        ~(valid_miss & _GEN_629 & _GEN_583) & (_GEN_234 | valid_memory_45_1);
+        _GEN_234 | ~(valid_miss & _GEN_629 & _GEN_583) & valid_memory_45_1;
       valid_memory_45_2 <=
-        ~(valid_miss & _GEN_629 & _GEN_584) & (_GEN_235 | valid_memory_45_2);
+        _GEN_235 | ~(valid_miss & _GEN_629 & _GEN_584) & valid_memory_45_2;
       valid_memory_45_3 <=
-        ~(valid_miss & _GEN_629 & (&evict_way)) & (_GEN_236 | valid_memory_45_3);
+        _GEN_236 | ~(valid_miss & _GEN_629 & (&evict_way)) & valid_memory_45_3;
       valid_memory_46_0 <=
-        ~(valid_miss & _GEN_630 & _GEN_582) & (_GEN_238 | valid_memory_46_0);
+        _GEN_238 | ~(valid_miss & _GEN_630 & _GEN_582) & valid_memory_46_0;
       valid_memory_46_1 <=
-        ~(valid_miss & _GEN_630 & _GEN_583) & (_GEN_239 | valid_memory_46_1);
+        _GEN_239 | ~(valid_miss & _GEN_630 & _GEN_583) & valid_memory_46_1;
       valid_memory_46_2 <=
-        ~(valid_miss & _GEN_630 & _GEN_584) & (_GEN_240 | valid_memory_46_2);
+        _GEN_240 | ~(valid_miss & _GEN_630 & _GEN_584) & valid_memory_46_2;
       valid_memory_46_3 <=
-        ~(valid_miss & _GEN_630 & (&evict_way)) & (_GEN_241 | valid_memory_46_3);
+        _GEN_241 | ~(valid_miss & _GEN_630 & (&evict_way)) & valid_memory_46_3;
       valid_memory_47_0 <=
-        ~(valid_miss & _GEN_631 & _GEN_582) & (_GEN_243 | valid_memory_47_0);
+        _GEN_243 | ~(valid_miss & _GEN_631 & _GEN_582) & valid_memory_47_0;
       valid_memory_47_1 <=
-        ~(valid_miss & _GEN_631 & _GEN_583) & (_GEN_244 | valid_memory_47_1);
+        _GEN_244 | ~(valid_miss & _GEN_631 & _GEN_583) & valid_memory_47_1;
       valid_memory_47_2 <=
-        ~(valid_miss & _GEN_631 & _GEN_584) & (_GEN_245 | valid_memory_47_2);
+        _GEN_245 | ~(valid_miss & _GEN_631 & _GEN_584) & valid_memory_47_2;
       valid_memory_47_3 <=
-        ~(valid_miss & _GEN_631 & (&evict_way)) & (_GEN_246 | valid_memory_47_3);
+        _GEN_246 | ~(valid_miss & _GEN_631 & (&evict_way)) & valid_memory_47_3;
       valid_memory_48_0 <=
-        ~(valid_miss & _GEN_632 & _GEN_582) & (_GEN_248 | valid_memory_48_0);
+        _GEN_248 | ~(valid_miss & _GEN_632 & _GEN_582) & valid_memory_48_0;
       valid_memory_48_1 <=
-        ~(valid_miss & _GEN_632 & _GEN_583) & (_GEN_249 | valid_memory_48_1);
+        _GEN_249 | ~(valid_miss & _GEN_632 & _GEN_583) & valid_memory_48_1;
       valid_memory_48_2 <=
-        ~(valid_miss & _GEN_632 & _GEN_584) & (_GEN_250 | valid_memory_48_2);
+        _GEN_250 | ~(valid_miss & _GEN_632 & _GEN_584) & valid_memory_48_2;
       valid_memory_48_3 <=
-        ~(valid_miss & _GEN_632 & (&evict_way)) & (_GEN_251 | valid_memory_48_3);
+        _GEN_251 | ~(valid_miss & _GEN_632 & (&evict_way)) & valid_memory_48_3;
       valid_memory_49_0 <=
-        ~(valid_miss & _GEN_633 & _GEN_582) & (_GEN_253 | valid_memory_49_0);
+        _GEN_253 | ~(valid_miss & _GEN_633 & _GEN_582) & valid_memory_49_0;
       valid_memory_49_1 <=
-        ~(valid_miss & _GEN_633 & _GEN_583) & (_GEN_254 | valid_memory_49_1);
+        _GEN_254 | ~(valid_miss & _GEN_633 & _GEN_583) & valid_memory_49_1;
       valid_memory_49_2 <=
-        ~(valid_miss & _GEN_633 & _GEN_584) & (_GEN_255 | valid_memory_49_2);
+        _GEN_255 | ~(valid_miss & _GEN_633 & _GEN_584) & valid_memory_49_2;
       valid_memory_49_3 <=
-        ~(valid_miss & _GEN_633 & (&evict_way)) & (_GEN_256 | valid_memory_49_3);
+        _GEN_256 | ~(valid_miss & _GEN_633 & (&evict_way)) & valid_memory_49_3;
       valid_memory_50_0 <=
-        ~(valid_miss & _GEN_634 & _GEN_582) & (_GEN_258 | valid_memory_50_0);
+        _GEN_258 | ~(valid_miss & _GEN_634 & _GEN_582) & valid_memory_50_0;
       valid_memory_50_1 <=
-        ~(valid_miss & _GEN_634 & _GEN_583) & (_GEN_259 | valid_memory_50_1);
+        _GEN_259 | ~(valid_miss & _GEN_634 & _GEN_583) & valid_memory_50_1;
       valid_memory_50_2 <=
-        ~(valid_miss & _GEN_634 & _GEN_584) & (_GEN_260 | valid_memory_50_2);
+        _GEN_260 | ~(valid_miss & _GEN_634 & _GEN_584) & valid_memory_50_2;
       valid_memory_50_3 <=
-        ~(valid_miss & _GEN_634 & (&evict_way)) & (_GEN_261 | valid_memory_50_3);
+        _GEN_261 | ~(valid_miss & _GEN_634 & (&evict_way)) & valid_memory_50_3;
       valid_memory_51_0 <=
-        ~(valid_miss & _GEN_635 & _GEN_582) & (_GEN_263 | valid_memory_51_0);
+        _GEN_263 | ~(valid_miss & _GEN_635 & _GEN_582) & valid_memory_51_0;
       valid_memory_51_1 <=
-        ~(valid_miss & _GEN_635 & _GEN_583) & (_GEN_264 | valid_memory_51_1);
+        _GEN_264 | ~(valid_miss & _GEN_635 & _GEN_583) & valid_memory_51_1;
       valid_memory_51_2 <=
-        ~(valid_miss & _GEN_635 & _GEN_584) & (_GEN_265 | valid_memory_51_2);
+        _GEN_265 | ~(valid_miss & _GEN_635 & _GEN_584) & valid_memory_51_2;
       valid_memory_51_3 <=
-        ~(valid_miss & _GEN_635 & (&evict_way)) & (_GEN_266 | valid_memory_51_3);
+        _GEN_266 | ~(valid_miss & _GEN_635 & (&evict_way)) & valid_memory_51_3;
       valid_memory_52_0 <=
-        ~(valid_miss & _GEN_636 & _GEN_582) & (_GEN_268 | valid_memory_52_0);
+        _GEN_268 | ~(valid_miss & _GEN_636 & _GEN_582) & valid_memory_52_0;
       valid_memory_52_1 <=
-        ~(valid_miss & _GEN_636 & _GEN_583) & (_GEN_269 | valid_memory_52_1);
+        _GEN_269 | ~(valid_miss & _GEN_636 & _GEN_583) & valid_memory_52_1;
       valid_memory_52_2 <=
-        ~(valid_miss & _GEN_636 & _GEN_584) & (_GEN_270 | valid_memory_52_2);
+        _GEN_270 | ~(valid_miss & _GEN_636 & _GEN_584) & valid_memory_52_2;
       valid_memory_52_3 <=
-        ~(valid_miss & _GEN_636 & (&evict_way)) & (_GEN_271 | valid_memory_52_3);
+        _GEN_271 | ~(valid_miss & _GEN_636 & (&evict_way)) & valid_memory_52_3;
       valid_memory_53_0 <=
-        ~(valid_miss & _GEN_637 & _GEN_582) & (_GEN_273 | valid_memory_53_0);
+        _GEN_273 | ~(valid_miss & _GEN_637 & _GEN_582) & valid_memory_53_0;
       valid_memory_53_1 <=
-        ~(valid_miss & _GEN_637 & _GEN_583) & (_GEN_274 | valid_memory_53_1);
+        _GEN_274 | ~(valid_miss & _GEN_637 & _GEN_583) & valid_memory_53_1;
       valid_memory_53_2 <=
-        ~(valid_miss & _GEN_637 & _GEN_584) & (_GEN_275 | valid_memory_53_2);
+        _GEN_275 | ~(valid_miss & _GEN_637 & _GEN_584) & valid_memory_53_2;
       valid_memory_53_3 <=
-        ~(valid_miss & _GEN_637 & (&evict_way)) & (_GEN_276 | valid_memory_53_3);
+        _GEN_276 | ~(valid_miss & _GEN_637 & (&evict_way)) & valid_memory_53_3;
       valid_memory_54_0 <=
-        ~(valid_miss & _GEN_638 & _GEN_582) & (_GEN_278 | valid_memory_54_0);
+        _GEN_278 | ~(valid_miss & _GEN_638 & _GEN_582) & valid_memory_54_0;
       valid_memory_54_1 <=
-        ~(valid_miss & _GEN_638 & _GEN_583) & (_GEN_279 | valid_memory_54_1);
+        _GEN_279 | ~(valid_miss & _GEN_638 & _GEN_583) & valid_memory_54_1;
       valid_memory_54_2 <=
-        ~(valid_miss & _GEN_638 & _GEN_584) & (_GEN_280 | valid_memory_54_2);
+        _GEN_280 | ~(valid_miss & _GEN_638 & _GEN_584) & valid_memory_54_2;
       valid_memory_54_3 <=
-        ~(valid_miss & _GEN_638 & (&evict_way)) & (_GEN_281 | valid_memory_54_3);
+        _GEN_281 | ~(valid_miss & _GEN_638 & (&evict_way)) & valid_memory_54_3;
       valid_memory_55_0 <=
-        ~(valid_miss & _GEN_639 & _GEN_582) & (_GEN_283 | valid_memory_55_0);
+        _GEN_283 | ~(valid_miss & _GEN_639 & _GEN_582) & valid_memory_55_0;
       valid_memory_55_1 <=
-        ~(valid_miss & _GEN_639 & _GEN_583) & (_GEN_284 | valid_memory_55_1);
+        _GEN_284 | ~(valid_miss & _GEN_639 & _GEN_583) & valid_memory_55_1;
       valid_memory_55_2 <=
-        ~(valid_miss & _GEN_639 & _GEN_584) & (_GEN_285 | valid_memory_55_2);
+        _GEN_285 | ~(valid_miss & _GEN_639 & _GEN_584) & valid_memory_55_2;
       valid_memory_55_3 <=
-        ~(valid_miss & _GEN_639 & (&evict_way)) & (_GEN_286 | valid_memory_55_3);
+        _GEN_286 | ~(valid_miss & _GEN_639 & (&evict_way)) & valid_memory_55_3;
       valid_memory_56_0 <=
-        ~(valid_miss & _GEN_640 & _GEN_582) & (_GEN_288 | valid_memory_56_0);
+        _GEN_288 | ~(valid_miss & _GEN_640 & _GEN_582) & valid_memory_56_0;
       valid_memory_56_1 <=
-        ~(valid_miss & _GEN_640 & _GEN_583) & (_GEN_289 | valid_memory_56_1);
+        _GEN_289 | ~(valid_miss & _GEN_640 & _GEN_583) & valid_memory_56_1;
       valid_memory_56_2 <=
-        ~(valid_miss & _GEN_640 & _GEN_584) & (_GEN_290 | valid_memory_56_2);
+        _GEN_290 | ~(valid_miss & _GEN_640 & _GEN_584) & valid_memory_56_2;
       valid_memory_56_3 <=
-        ~(valid_miss & _GEN_640 & (&evict_way)) & (_GEN_291 | valid_memory_56_3);
+        _GEN_291 | ~(valid_miss & _GEN_640 & (&evict_way)) & valid_memory_56_3;
       valid_memory_57_0 <=
-        ~(valid_miss & _GEN_641 & _GEN_582) & (_GEN_293 | valid_memory_57_0);
+        _GEN_293 | ~(valid_miss & _GEN_641 & _GEN_582) & valid_memory_57_0;
       valid_memory_57_1 <=
-        ~(valid_miss & _GEN_641 & _GEN_583) & (_GEN_294 | valid_memory_57_1);
+        _GEN_294 | ~(valid_miss & _GEN_641 & _GEN_583) & valid_memory_57_1;
       valid_memory_57_2 <=
-        ~(valid_miss & _GEN_641 & _GEN_584) & (_GEN_295 | valid_memory_57_2);
+        _GEN_295 | ~(valid_miss & _GEN_641 & _GEN_584) & valid_memory_57_2;
       valid_memory_57_3 <=
-        ~(valid_miss & _GEN_641 & (&evict_way)) & (_GEN_296 | valid_memory_57_3);
+        _GEN_296 | ~(valid_miss & _GEN_641 & (&evict_way)) & valid_memory_57_3;
       valid_memory_58_0 <=
-        ~(valid_miss & _GEN_642 & _GEN_582) & (_GEN_298 | valid_memory_58_0);
+        _GEN_298 | ~(valid_miss & _GEN_642 & _GEN_582) & valid_memory_58_0;
       valid_memory_58_1 <=
-        ~(valid_miss & _GEN_642 & _GEN_583) & (_GEN_299 | valid_memory_58_1);
+        _GEN_299 | ~(valid_miss & _GEN_642 & _GEN_583) & valid_memory_58_1;
       valid_memory_58_2 <=
-        ~(valid_miss & _GEN_642 & _GEN_584) & (_GEN_300 | valid_memory_58_2);
+        _GEN_300 | ~(valid_miss & _GEN_642 & _GEN_584) & valid_memory_58_2;
       valid_memory_58_3 <=
-        ~(valid_miss & _GEN_642 & (&evict_way)) & (_GEN_301 | valid_memory_58_3);
+        _GEN_301 | ~(valid_miss & _GEN_642 & (&evict_way)) & valid_memory_58_3;
       valid_memory_59_0 <=
-        ~(valid_miss & _GEN_643 & _GEN_582) & (_GEN_303 | valid_memory_59_0);
+        _GEN_303 | ~(valid_miss & _GEN_643 & _GEN_582) & valid_memory_59_0;
       valid_memory_59_1 <=
-        ~(valid_miss & _GEN_643 & _GEN_583) & (_GEN_304 | valid_memory_59_1);
+        _GEN_304 | ~(valid_miss & _GEN_643 & _GEN_583) & valid_memory_59_1;
       valid_memory_59_2 <=
-        ~(valid_miss & _GEN_643 & _GEN_584) & (_GEN_305 | valid_memory_59_2);
+        _GEN_305 | ~(valid_miss & _GEN_643 & _GEN_584) & valid_memory_59_2;
       valid_memory_59_3 <=
-        ~(valid_miss & _GEN_643 & (&evict_way)) & (_GEN_306 | valid_memory_59_3);
+        _GEN_306 | ~(valid_miss & _GEN_643 & (&evict_way)) & valid_memory_59_3;
       valid_memory_60_0 <=
-        ~(valid_miss & _GEN_644 & _GEN_582) & (_GEN_308 | valid_memory_60_0);
+        _GEN_308 | ~(valid_miss & _GEN_644 & _GEN_582) & valid_memory_60_0;
       valid_memory_60_1 <=
-        ~(valid_miss & _GEN_644 & _GEN_583) & (_GEN_309 | valid_memory_60_1);
+        _GEN_309 | ~(valid_miss & _GEN_644 & _GEN_583) & valid_memory_60_1;
       valid_memory_60_2 <=
-        ~(valid_miss & _GEN_644 & _GEN_584) & (_GEN_310 | valid_memory_60_2);
+        _GEN_310 | ~(valid_miss & _GEN_644 & _GEN_584) & valid_memory_60_2;
       valid_memory_60_3 <=
-        ~(valid_miss & _GEN_644 & (&evict_way)) & (_GEN_311 | valid_memory_60_3);
+        _GEN_311 | ~(valid_miss & _GEN_644 & (&evict_way)) & valid_memory_60_3;
       valid_memory_61_0 <=
-        ~(valid_miss & _GEN_645 & _GEN_582) & (_GEN_313 | valid_memory_61_0);
+        _GEN_313 | ~(valid_miss & _GEN_645 & _GEN_582) & valid_memory_61_0;
       valid_memory_61_1 <=
-        ~(valid_miss & _GEN_645 & _GEN_583) & (_GEN_314 | valid_memory_61_1);
+        _GEN_314 | ~(valid_miss & _GEN_645 & _GEN_583) & valid_memory_61_1;
       valid_memory_61_2 <=
-        ~(valid_miss & _GEN_645 & _GEN_584) & (_GEN_315 | valid_memory_61_2);
+        _GEN_315 | ~(valid_miss & _GEN_645 & _GEN_584) & valid_memory_61_2;
       valid_memory_61_3 <=
-        ~(valid_miss & _GEN_645 & (&evict_way)) & (_GEN_316 | valid_memory_61_3);
+        _GEN_316 | ~(valid_miss & _GEN_645 & (&evict_way)) & valid_memory_61_3;
       valid_memory_62_0 <=
-        ~(valid_miss & _GEN_646 & _GEN_582) & (_GEN_318 | valid_memory_62_0);
+        _GEN_318 | ~(valid_miss & _GEN_646 & _GEN_582) & valid_memory_62_0;
       valid_memory_62_1 <=
-        ~(valid_miss & _GEN_646 & _GEN_583) & (_GEN_319 | valid_memory_62_1);
+        _GEN_319 | ~(valid_miss & _GEN_646 & _GEN_583) & valid_memory_62_1;
       valid_memory_62_2 <=
-        ~(valid_miss & _GEN_646 & _GEN_584) & (_GEN_320 | valid_memory_62_2);
+        _GEN_320 | ~(valid_miss & _GEN_646 & _GEN_584) & valid_memory_62_2;
       valid_memory_62_3 <=
-        ~(valid_miss & _GEN_646 & (&evict_way)) & (_GEN_321 | valid_memory_62_3);
+        _GEN_321 | ~(valid_miss & _GEN_646 & (&evict_way)) & valid_memory_62_3;
       valid_memory_63_0 <=
-        ~(valid_miss & (&REG) & _GEN_582) & (_GEN_322 | valid_memory_63_0);
+        _GEN_322 | ~(valid_miss & (&REG) & _GEN_582) & valid_memory_63_0;
       valid_memory_63_1 <=
-        ~(valid_miss & (&REG) & _GEN_583) & (_GEN_323 | valid_memory_63_1);
+        _GEN_323 | ~(valid_miss & (&REG) & _GEN_583) & valid_memory_63_1;
       valid_memory_63_2 <=
-        ~(valid_miss & (&REG) & _GEN_584) & (_GEN_324 | valid_memory_63_2);
+        _GEN_324 | ~(valid_miss & (&REG) & _GEN_584) & valid_memory_63_2;
       valid_memory_63_3 <=
-        ~(valid_miss & (&REG) & (&evict_way)) & (_GEN_325 | valid_memory_63_3);
+        _GEN_325 | ~(valid_miss & (&REG) & (&evict_way)) & valid_memory_63_3;
       if (valid_hit & _GEN_326) begin
         if (&_PLRU_memory_T_1)
           PLRU_memory_0 <= _PLRU_memory_updated_PLRU_T;
