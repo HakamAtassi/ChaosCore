@@ -90,3 +90,6 @@ extern_modules.sv
 axi_interconnect_2x2.sv
 SOC.sv
 ./axi_interconnect_wrap_2x2.v
+axi_interconnect.v
+priority_encoder.v
+arbiter.v
