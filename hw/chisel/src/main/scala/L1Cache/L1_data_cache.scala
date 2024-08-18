@@ -328,19 +328,13 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	dontTouch(half_word_offset)
 	dontTouch(byte_offset)
 
-	val test = Wire(Vec(L1_DataCacheBlockSizeBytes, Bool()))
-	dontTouch(test)
-
 	// Assign data_memory_wr_en
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-
-		printf("word offset: %d =?= %d\n",word_offset,  (i / 4).U)
 
 		word_offset_match 		:= (word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
 		half_word_offset_match 	:= (half_word_offset 	=== (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)
 		byte_offset_match 		:= (byte_offset 		=== (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)
 
-		test(i) 				:= (word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
 
 		//data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(word_offset_match || half_word_offset_match || byte_offset_match) && valid_hit)
 
