@@ -31,7 +31,8 @@
 module Queue8_AXI_request_Q_entry(
   input          clock,
                  reset,
-                 io_enq_valid,
+  output         io_enq_ready,
+  input          io_enq_valid,
                  io_enq_bits_write_valid,
   input  [31:0]  io_enq_bits_write_address,
   input  [255:0] io_enq_bits_write_data,
@@ -54,16 +55,15 @@ module Queue8_AXI_request_Q_entry(
   output [6:0]   io_deq_bits_read_bytes
 );
 
-  wire         io_enq_ready;
   wire [351:0] _ram_ext_R0_data;
   reg  [2:0]   enq_ptr_value;
   reg  [2:0]   deq_ptr_value;
   reg          maybe_full;
   wire         ptr_match = enq_ptr_value == deq_ptr_value;
   wire         empty = ptr_match & ~maybe_full;
-  wire         do_enq = io_enq_ready & io_enq_valid;
+  wire         full = ptr_match & maybe_full;
+  wire         do_enq = ~full & io_enq_valid;
   wire         do_deq = io_deq_ready & ~empty;
-  assign io_enq_ready = ~(ptr_match & maybe_full);
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 3'h0;
@@ -98,6 +98,7 @@ module Queue8_AXI_request_Q_entry(
         io_enq_bits_write_address,
         io_enq_bits_write_valid})
   );
+  assign io_enq_ready = ~full;
   assign io_deq_valid = ~empty;
   assign io_deq_bits_write_valid = _ram_ext_R0_data[0];
   assign io_deq_bits_write_address = _ram_ext_R0_data[32:1];

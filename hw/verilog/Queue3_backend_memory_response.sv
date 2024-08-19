@@ -33,16 +33,18 @@ module Queue3_backend_memory_response(
                 reset,
   output        io_enq_ready,
   input         io_enq_valid,
-  input  [31:0] io_enq_bits_data,
+  input  [31:0] io_enq_bits_addr,
+                io_enq_bits_data,
   input  [3:0]  io_enq_bits_MOB_index,
   input         io_deq_ready,
   output        io_deq_valid,
-  output [31:0] io_deq_bits_data,
+  output [31:0] io_deq_bits_addr,
+                io_deq_bits_data,
   output [3:0]  io_deq_bits_MOB_index
 );
 
   wire        do_deq;
-  wire [35:0] _ram_ext_R0_data;
+  wire [67:0] _ram_ext_R0_data;
   reg  [1:0]  enq_ptr_value;
   reg  [1:0]  deq_ptr_value;
   reg         maybe_full;
@@ -75,7 +77,7 @@ module Queue3_backend_memory_response(
         maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_3x36 ram_ext (
+  ram_3x68 ram_ext (
     .R0_addr
       (do_deq ? (deq_ptr_value == 2'h2 ? 2'h0 : deq_ptr_value + 2'h1) : deq_ptr_value),
     .R0_en   (1'h1),
@@ -84,11 +86,12 @@ module Queue3_backend_memory_response(
     .W0_addr (enq_ptr_value),
     .W0_en   (do_enq),
     .W0_clk  (clock),
-    .W0_data ({io_enq_bits_MOB_index, io_enq_bits_data})
+    .W0_data ({io_enq_bits_MOB_index, io_enq_bits_data, io_enq_bits_addr})
   );
   assign io_enq_ready = ~full;
   assign io_deq_valid = io_deq_valid_0;
-  assign io_deq_bits_data = empty ? io_enq_bits_data : _ram_ext_R0_data[31:0];
-  assign io_deq_bits_MOB_index = empty ? io_enq_bits_MOB_index : _ram_ext_R0_data[35:32];
+  assign io_deq_bits_addr = empty ? io_enq_bits_addr : _ram_ext_R0_data[31:0];
+  assign io_deq_bits_data = empty ? io_enq_bits_data : _ram_ext_R0_data[63:32];
+  assign io_deq_bits_MOB_index = empty ? io_enq_bits_MOB_index : _ram_ext_R0_data[67:64];
 endmodule
 

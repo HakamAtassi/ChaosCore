@@ -32,16 +32,18 @@ module Queue8_backend_memory_response(
   input         clock,
                 reset,
                 io_enq_valid,
-  input  [31:0] io_enq_bits_data,
+  input  [31:0] io_enq_bits_addr,
+                io_enq_bits_data,
   input  [3:0]  io_enq_bits_MOB_index,
   input         io_deq_ready,
   output        io_deq_valid,
-  output [31:0] io_deq_bits_data,
+  output [31:0] io_deq_bits_addr,
+                io_deq_bits_data,
   output [3:0]  io_deq_bits_MOB_index
 );
 
   wire        io_enq_ready;
-  wire [35:0] _ram_ext_R0_data;
+  wire [67:0] _ram_ext_R0_data;
   reg  [2:0]  enq_ptr_value;
   reg  [2:0]  deq_ptr_value;
   reg         maybe_full;
@@ -65,7 +67,7 @@ module Queue8_backend_memory_response(
         maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_8x36 ram_ext (
+  ram_8x68 ram_ext (
     .R0_addr (do_deq ? ((&deq_ptr_value) ? 3'h0 : deq_ptr_value + 3'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -73,10 +75,11 @@ module Queue8_backend_memory_response(
     .W0_addr (enq_ptr_value),
     .W0_en   (do_enq),
     .W0_clk  (clock),
-    .W0_data ({io_enq_bits_MOB_index, io_enq_bits_data})
+    .W0_data ({io_enq_bits_MOB_index, io_enq_bits_data, io_enq_bits_addr})
   );
   assign io_deq_valid = ~empty;
-  assign io_deq_bits_data = _ram_ext_R0_data[31:0];
-  assign io_deq_bits_MOB_index = _ram_ext_R0_data[35:32];
+  assign io_deq_bits_addr = _ram_ext_R0_data[31:0];
+  assign io_deq_bits_data = _ram_ext_R0_data[63:32];
+  assign io_deq_bits_MOB_index = _ram_ext_R0_data[67:64];
 endmodule
 

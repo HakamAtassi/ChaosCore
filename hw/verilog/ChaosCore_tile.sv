@@ -123,6 +123,7 @@ module ChaosCore_tile(
 
   wire        _data_cache_io_CPU_request_ready;
   wire        _data_cache_io_CPU_response_valid;
+  wire [31:0] _data_cache_io_CPU_response_bits_addr;
   wire [31:0] _data_cache_io_CPU_response_bits_data;
   wire [3:0]  _data_cache_io_CPU_response_bits_MOB_index;
   wire        _instruction_cache_io_CPU_request_ready;
@@ -263,6 +264,8 @@ module ChaosCore_tile(
       (_ChaosCore_io_backend_memory_response_ready),
     .io_backend_memory_response_valid
       (_data_cache_io_CPU_response_valid),
+    .io_backend_memory_response_bits_addr
+      (_data_cache_io_CPU_response_bits_addr),
     .io_backend_memory_response_bits_data
       (_data_cache_io_CPU_response_bits_data),
     .io_backend_memory_response_bits_MOB_index
@@ -474,6 +477,7 @@ module ChaosCore_tile(
       (_ChaosCore_io_backend_memory_request_bits_MOB_index),
     .io_CPU_response_ready            (_ChaosCore_io_backend_memory_response_ready),
     .io_CPU_response_valid            (_data_cache_io_CPU_response_valid),
+    .io_CPU_response_bits_addr        (_data_cache_io_CPU_response_bits_addr),
     .io_CPU_response_bits_data        (_data_cache_io_CPU_response_bits_data),
     .io_CPU_response_bits_MOB_index   (_data_cache_io_CPU_response_bits_MOB_index)
   );

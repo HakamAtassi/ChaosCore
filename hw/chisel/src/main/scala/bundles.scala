@@ -519,7 +519,7 @@ class backend_memory_request(coreParameters:CoreParameters) extends Bundle{
 
 class backend_memory_response(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
-    //val addr            = UInt(32.W)
+    val addr            = UInt(32.W)
     val data            = UInt(32.W)
     //val memory_type     = memory_type_t() // LOAD/STORE
     //val access_width    = access_width_t()              // B/HW/W

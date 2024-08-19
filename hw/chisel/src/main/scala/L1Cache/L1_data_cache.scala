@@ -32,36 +32,33 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
+
 object format_dcache_word {
-  /**
-   * @param data_way: The hit cache line
-   * @param address: Address of the cache request
-   * @param operation: LW/LHW/LB
-   * @return: The formatted data extracted from the cache line
-   */
-  def apply(data_way: UInt, address: UInt, operation: access_width_t.Type):UInt = {
-    val word_offset = (address & 0x1F.U) / 4.U  // The "word address". ie, word 1, word 2, word 3.
-    val byte_offset = address % 4.U  // The byte offset within that word, if any. Ex, word 2, byte 0. 
-    val word_shamt = word_offset * 32.U
-    
-    val access_word = (data_way >> word_shamt)(31, 0)
+def apply(data_way: UInt, address: UInt, operation: access_width_t.Type): UInt = {
+  val word_offset = (address & 31.U) / 4.U  // Word address within the cache line
+  val word_shamt = word_offset * 32.U
+  val access_word = (data_way >> word_shamt)(31, 0)
 
-	val result = Wire(UInt(32.W))
+  val result = Wire(UInt(32.W))
 
-	result := access_word
+  result := access_word
 
-	when(operation === access_width_t.W){
-		result := access_word
-	}.elsewhen(operation === access_width_t.HW){
-		result := (access_word >> (byte_offset * 16.U))(15, 0)
-	}.elsewhen(operation === access_width_t.B){
-		result := (access_word >> (byte_offset * 8.U))(7, 0)
-	}
-
-	result
-
+  when(operation === access_width_t.W){
+    result := access_word
+  }.elsewhen(operation === access_width_t.HW){
+    val halfword_offset = (address & 2.U) * 8.U  // Aligns to 16 bits within the word
+    result := (access_word >> halfword_offset)(15, 0)
+  }.elsewhen(operation === access_width_t.B){
+    val byte_offset = address & 3.U  // Corrects byte offset within the word
+    result := (access_word >> (byte_offset * 8.U))(7, 0)
   }
+
+  result
 }
+
+}
+
+
 
 object update_PLRU {
 	/**
@@ -91,6 +88,7 @@ object get_decomposed_dcache_address{
 
 	val masked_addr = address(log2Ceil(L1_DataCacheBlockSizeBytes)-1, 0)
 
+
 	val decomposed_dcache_address = new data_cache_address_packet(
 		tag = address(31, 31-tag_bits+1),
 		set = address(31-tag_bits, 31-tag_bits-set_bits+1),
@@ -98,6 +96,7 @@ object get_decomposed_dcache_address{
 		half_word_offset = (masked_addr / 2.U),
 		byte_offset = (masked_addr / 1.U)
 	)
+
 	decomposed_dcache_address
   }
 }
@@ -120,6 +119,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	}); dontTouch(io)
 
+	io.CPU_response.bits.addr := 0.U
 
 	val DATA_CACHE_STATE 			= RegInit(DATA_CACHE_STATES(), DATA_CACHE_STATES.ACTIVE)
 	val DATA_CACHE_NEXT_STATE		= Wire(DATA_CACHE_STATES())
@@ -206,7 +206,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val data_way 					= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
 
 	val evict_way 					= Wire(UInt(log2Ceil(L1_DataCacheWays).W))
-	val is_evict_dirty 				= Wire(Bool())
 
 	val valid_vec					= Wire(Vec(L1_DataCacheWays, Bool()))
 
@@ -221,9 +220,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// Helper signal assignment //
 	//////////////////////////////
 
-	io.CPU_request.ready		:= DATA_CACHE_STATE === DATA_CACHE_STATES.ACTIVE	//1.B		// FIXME: !
-
-	active_valid				:=	DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY || (io.CPU_request.valid)
+	active_valid				:=	DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY || (io.CPU_request.fire)
 	active_address				:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_address,		backend_address)
 	active_cacheable			:=	((active_address & "h80000000".U) === 0.U) && active_valid
 	active_set					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_set, 			backend_set)
@@ -233,8 +230,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	active_MOB_index			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_MOB_index, 	backend_MOB_index)
 
 
-	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.valid) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
-	valid_miss			:= !tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.valid) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
+	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.fire) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
+	valid_miss			:= !tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.fire) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
 
 	valid_write_hit		:=	valid_hit && RegNext(active_memory_type === memory_type_t.STORE)
 	valid_write_miss	:=	valid_miss && RegNext(active_memory_type=== memory_type_t.STORE)
@@ -315,9 +312,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val data_memories_data_in 		= Wire(Vec(L1_DataCacheBlockSizeBytes, UInt(8.W)))
 
 
-	val word_offset_match 		= Wire(Bool())
-	val half_word_offset_match 	= Wire(Bool())
-	val byte_offset_match 		= Wire(Bool())
+	//val word_offset_match 		= Wire(Bool())
+	//val half_word_offset_match 	= Wire(Bool())
+	//val byte_offset_match 		= Wire(Bool())
 
 
 	val word_offset 			= get_decomposed_dcache_address(coreParameters, active_address).word_offset
@@ -331,9 +328,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// Assign data_memory_wr_en
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
 
-		word_offset_match 		:= (word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
-		half_word_offset_match 	:= (half_word_offset 	=== (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)
-		byte_offset_match 		:= (byte_offset 		=== (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)
+		//word_offset_match 		:= (word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
+		//half_word_offset_match 	:= (half_word_offset 	=== (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)
+		//byte_offset_match 		:= (byte_offset 		=== (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)
 
 
 		//data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(word_offset_match || half_word_offset_match || byte_offset_match) && valid_hit)
@@ -347,25 +344,49 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 			(byte_offset 		=== (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)	) && valid_hit)
 	}
 
-	dontTouch(word_offset_match)
-	dontTouch(half_word_offset_match)
-	dontTouch(byte_offset_match)
 	dontTouch(data_memories_wr_en)
 
 
 	active_data := Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_data, io.CPU_request.bits.data)
 
-	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-		data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%4)*8)(7,0))) //(((i+1)%4)*8-1, (i%4)*8))
+
+	when(RegNext(active_access_width === access_width_t.W)){
+		for(i <- 0 until L1_DataCacheBlockSizeBytes){
+			data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%4)*8)(7,0))) 
+		}
+	}.elsewhen(RegNext(active_access_width === access_width_t.HW)){
+		for(i <- 0 until L1_DataCacheBlockSizeBytes){
+			data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%2)*8)(7,0))) 
+		}
+	}.elsewhen(RegNext(active_access_width === access_width_t.B)){
+		for(i <- 0 until L1_DataCacheBlockSizeBytes){
+			data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%1)*8)(7,0))) 
+		}
+	}.otherwise{
+		for(i <- 0 until L1_DataCacheBlockSizeBytes){
+			data_memories_data_in(i) 	:= 0.U
+		}
 	}
 
 	val data_memory_allocate_address 	= Cat(allocate_way, allocate_set)
 	val data_memory_active_address 		= Cat(hit_way, RegNext(active_set))
+	val data_memory_evict_address		= Cat(evict_way, RegNext(active_set))
 
 
 	for((data_memory, i) <- data_memories.zipWithIndex){
 		data_memory.io.enable		:= 1.B
-		data_memory.io.addr			:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, data_memory_allocate_address, data_memory_active_address)
+
+		// Data memories have 3 possible address inputs:
+		// 1: On a hit, the address input is the set/way stuff based on the input from the CPU
+		// 2: On a miss, the address input is the set/way based on the data that is to be evicted
+		// 3: On response, the address input is based on the MSHR entry
+		when(valid_miss){
+			data_memory.io.addr			:= data_memory_evict_address
+		}.elsewhen(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE){ // Allocate taking place
+			data_memory.io.addr			:= data_memory_allocate_address 
+		}.otherwise{	// normal access
+			data_memory.io.addr			:= data_memory_active_address
+		}
 		data_memory.io.wr_en		:= data_memories_wr_en(i)
 		data_memory.io.data_in		:= data_memories_data_in(i)
 	}
@@ -408,8 +429,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	}
 
 	// writeback tag is the tag at the way that will be allocated to on DRAM response
-	writeback_tag 		:= VecInit(tag_memories.map(_.io.data_out))(miss_way)
-	writeback_address 	:= writeback_tag << log2Ceil(L1_DataCacheBlockSizeBytes)
 
 
 	//////////////////
@@ -451,9 +470,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// clearing PLRU on allocate is not needed (you allocate to the 0 PLRU bit, ie, no change)
 
 
-	val PLRU 	= Reg(UInt(L1_DataCacheWays.W))
-	PLRU 		:= PLRU_memory(active_set)
-	evict_way 	:= PriorityEncoder(~PLRU)
+	val PLRU 	= Wire(UInt(L1_DataCacheWays.W))
+	PLRU 		:= RegNext(PLRU_memory(active_set))
+	evict_way 	:= PriorityEncoder(~PLRU_memory(active_set))
 
 	dontTouch(evict_way)
 	dontTouch(PLRU)
@@ -463,7 +482,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	//////////////////
 	// Memory of "way" width, sets length (Regs)
 
-	val dirty_memory = VecInit.fill(L1_DataCacheSets, L1_DataCacheWays)(0.B)
+  	val dirty_memory = RegInit(VecInit.tabulate(L1_DataCacheSets, L1_DataCacheWays){ (x, y) => 0.B })
+
+	dontTouch(dirty_memory)
 
 	// update on hit (writes only)
 	when(valid_write_hit){
@@ -475,9 +496,13 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		dirty_memory(allocate_set)(allocate_way) := 0.B
 	}
 
-	writeback_dirty 	:= dirty_memory(miss_set)(miss_way)
-	is_evict_dirty 		:= dirty_memory(RegNext(active_set))(evict_way)
+	writeback_dirty 	:= dirty_memory(RegNext(active_set))(evict_way) && valid_miss
+	writeback_tag 		:= VecInit(tag_memories.map(_.io.data_out))(evict_way)
+	writeback_address 	:= Cat(writeback_tag, 0.U(11.W)) 	//FIXME: hardcoded...
 
+	dontTouch(writeback_tag)
+	dontTouch(writeback_data)
+	dontTouch(writeback_dirty)
 
 
 	/////////////////////////////////
@@ -624,23 +649,26 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 
 	// Outgoing request queues
+	// FIXME: change these to shift regs
+	// These are shifted by 2 after a miss because you need 1 cycle to get the miss data (tag lookup)
+	// And another to read out potential eviction data
 
 	// Buffer cacheable requests //
 	// format request //
-
+	dontTouch(active_cacheable_write_read)
 	// Memory requests occur when a cache miss takes place or when there is a non-cacheable request
-	cacheable_request_Q.io.enq.valid 	 			:=  RegNext(active_cacheable_write_read) && valid_miss && valid_MSHR_miss // buffer cache misses
-	cacheable_request_Q.io.enq.bits.write_valid		:=	RegNext(active_cacheable_write_read) && is_evict_dirty
-	cacheable_request_Q.io.enq.bits.write_address	:=	writeback_address	//FIXME: ???
-	cacheable_request_Q.io.enq.bits.write_data		:=	data_way	// FIXME: this should be evict way...
-	cacheable_request_Q.io.enq.bits.write_ID		:=	0.U
-	cacheable_request_Q.io.enq.bits.write_bytes		:=	L1_DataCacheBlockSizeBytes.U
+	cacheable_request_Q.io.enq.valid 	 			:=  RegNext(RegNext(active_cacheable_write_read) && valid_miss && valid_MSHR_miss)
+	cacheable_request_Q.io.enq.bits.write_valid		:=	RegNext(RegNext(active_cacheable_write_read) && writeback_dirty)
+	cacheable_request_Q.io.enq.bits.write_address	:=	RegNext(writeback_address)
+	cacheable_request_Q.io.enq.bits.write_data		:=	writeback_data
+	cacheable_request_Q.io.enq.bits.write_ID		:=	RegNext(0.U)
+	cacheable_request_Q.io.enq.bits.write_bytes		:=	RegNext(L1_DataCacheBlockSizeBytes.U)
 
 	// Read missing line
-	cacheable_request_Q.io.enq.bits.read_valid		:=	RegNext(active_cacheable_write_read)
-	cacheable_request_Q.io.enq.bits.read_address	:=	RegNext(active_address) & dram_addr_mask
-	cacheable_request_Q.io.enq.bits.read_ID			:=	0.U
-	cacheable_request_Q.io.enq.bits.read_bytes		:=	L1_DataCacheBlockSizeBytes.U
+	cacheable_request_Q.io.enq.bits.read_valid		:=	RegNext(RegNext(active_cacheable_write_read))
+	cacheable_request_Q.io.enq.bits.read_address	:=	RegNext(RegNext(active_address) & dram_addr_mask)
+	cacheable_request_Q.io.enq.bits.read_ID			:=	RegNext(0.U)
+	cacheable_request_Q.io.enq.bits.read_bytes		:=	RegNext(L1_DataCacheBlockSizeBytes.U)
 
 
 	// Buffer non-cacheable requests //
@@ -762,6 +790,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	output_operation	 := ShiftRegister(active_access_width, 2)
 
 
+	dontTouch(output_address)
 	output_data := format_dcache_word(data_way, output_address, output_operation)
 	
 
@@ -786,8 +815,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// CACHEABLE
 	// On AXI response, queue entries into line fill buffer
 
-	dontTouch(output_valid)
-	cacheable_response_Q.io.enq.valid 			:= RegNext(valid_read_hit)
+	cacheable_response_Q.io.enq.valid 			:= output_valid
+	cacheable_response_Q.io.enq.bits.addr  		:= output_address
 	cacheable_response_Q.io.enq.bits.data  		:= output_data
 	cacheable_response_Q.io.enq.bits.MOB_index  := output_MOB_index
 	cacheable_response_Q.io.deq.ready 			:= 1.B		// FIXME: not always ready
@@ -797,9 +826,11 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	dontTouch(io)
 	dontTouch(axi_response_valid)
 	dontTouch(axi_response.data)
+	dontTouch(output_valid)
 
 	non_cacheable_response_Q.io.enq.valid 			:= axi_response_valid && (axi_response_ID === AXI_NON_CACHEABLE_RESPONSE_ID.U).asBool
 	// FIXME: why top 32 bits??
+	non_cacheable_response_Q.io.enq.bits.addr  		:= non_cacheable_buffer_front.addr
 	non_cacheable_response_Q.io.enq.bits.data  		:= axi_response.data(255,256-32)	// non cacheable responses are always 32 bits 
 	non_cacheable_response_Q.io.enq.bits.MOB_index  := non_cacheable_buffer_front.MOB_index
 	non_cacheable_response_Q.io.deq.ready 			:= 1.B	// FIXME: not always ready
@@ -817,4 +848,38 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// IO //
 	////////
 	CPU_response_skid_buffer.io.deq <> io.CPU_response
+
+
+	// cache is ready when:
+	// Cache is active and...
+	// MSHR conds:
+	// MSHR has entry available
+	// MSHR has no entry available but input address matches an adderess in the MSHR
+	// Queues:
+	// input is non-cacheable and non-cacheable request queue has an entry available
+	// input is cacheable and cacheable request queue has an entry available
+
+	val input_cacheable = ((io.CPU_request.bits.addr & "h80000000".U) === 0.U)
+	val input_non_cacheable = ((io.CPU_request.bits.addr & "h80000000".U) =/= 0.U)
+
+
+	// MSHR resource conds
+	val MSHR_full = Wire(Bool())
+	val MSHR_full_and_input_match = Wire(Bool())
+
+	// input queue checks
+	val input_cacheable_and_Q_available = Wire(Bool())
+	val input_non_cacheable_and_Q_available = Wire(Bool())
+
+	MSHR_full := (MSHR_front_pointer =/= MSHR_back_pointer) && (MSHR_back_index === MSHR_back_index)
+	MSHR_full_and_input_match := MSHR_full && (MSHRs.map(MSHR_entry => MSHR_entry.address === io.CPU_request.bits.addr).reduce(_ || _))
+
+	input_cacheable_and_Q_available := input_cacheable && cacheable_request_Q.io.enq.ready
+	input_non_cacheable_and_Q_available := input_non_cacheable && non_cacheable_request_Q.io.enq.ready
+
+	dontTouch(input_cacheable)
+	dontTouch(input_cacheable_and_Q_available)
+	dontTouch(input_non_cacheable_and_Q_available)
+
+	io.CPU_request.ready		:= (!MSHR_full || MSHR_full_and_input_match) && (input_cacheable_and_Q_available || input_non_cacheable_and_Q_available) && (DATA_CACHE_STATE === DATA_CACHE_STATES.ACTIVE)
 }

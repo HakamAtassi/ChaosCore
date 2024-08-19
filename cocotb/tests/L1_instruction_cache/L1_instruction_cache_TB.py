@@ -26,12 +26,13 @@ class L1_instruction_cache_TB:
 
     def init_sequence(self):
         # INIT MEMORY
-        for i in range(256*2**10):
+        for i in range(self.memory_capacity):
             random_byte = random.getrandbits(8)
             self.axi_ram.write(i, random_byte.to_bytes(1))
-            self.golden_memory[i] = random_byte.to_bytes(1)
+            self.golden_memory[i] = random_byte #random_byte.to_bytes(1)
         self.golden_memory = bytes(self.golden_memory)  # make memory read only (I$ is read only)
-        # self.axi_ram.hexdump(0x0000, 256*4, prefix="RAM")
+
+        # Assert golden memory and AXI memory are equal
 
     #################
     # RESET & CLOCK #
@@ -77,30 +78,32 @@ class L1_instruction_cache_TB:
         expected_response = None
 
         # Place request on DUT
-        self.write_CPU_read_request(address=address, valid=valid)
+        await self.write_CPU_read_request(address=address, valid=valid)
 
         # Monitor request
         cache_request_valid = self.L1_instruction_cache.read_CPU_read_request()["valid"]
         cache_request_ready = self.L1_instruction_cache.read_CPU_read_request()["ready"]
 
         # Monitor response
-        cache_response_valid = self.read_CPU_read_response()["valid"]
-        cache_response_ready = self.read_CPU_read_response()["ready"]
+        cache_response_valid = self.L1_instruction_cache.read_CPU_read_response()["valid"]
+        cache_response_ready = self.L1_instruction_cache.read_CPU_read_response()["ready"]
 
         if (cache_request_valid and cache_request_ready):
             # cache DUT request accepted
             # Construct expected response and queue it
+            monitored_address = self.L1_instruction_cache.read_CPU_read_request()["bits"]["addr"]
+            monitored_address_masked = self.L1_instruction_cache.read_CPU_read_request()["bits"]["addr"] & 0xFFFF_FFF0
             expected_response = {
                 "valid": 1,
                 "bits": {
-                    "fetch_PC": address & 0xFFFF_FFF0,  # No idea if this is correct
+                    "fetch_PC": address ,  # No idea if this is correct
                     "instruction": [
-                        self.golden_memory[address:address+4],
-                        self.golden_memory[address+4:address+8],
-                        self.golden_memory[address+8:address+12],
-                        self.golden_memory[address+12:address+16],
+                        int.from_bytes(self.golden_memory[monitored_address_masked:monitored_address_masked+4], 'little'),
+                        int.from_bytes(self.golden_memory[monitored_address_masked+4:monitored_address_masked+8], 'little'),
+                        int.from_bytes(self.golden_memory[monitored_address_masked+8:monitored_address_masked+12], 'little'),
+                        int.from_bytes(self.golden_memory[monitored_address_masked+12:monitored_address_masked+16], 'little')
                     ],
-                    "valid_bits": self.get_valid_bits(address),
+                    "valid_bits": self.get_valid_bits(monitored_address),
                     "packet_index":
                     [
                         0,
@@ -114,9 +117,9 @@ class L1_instruction_cache_TB:
             self.expected_read_responses.append(expected_response)
 
         # if cache response is accepted, compare with golden response queue
-        if (cache_response_valid and cache_request_ready):
+        if (cache_response_valid and cache_response_ready):
             # compare output with expected
-            got_response = self.read_CPU_read_response()
+            got_response = self.L1_instruction_cache.read_CPU_read_response()
             try:
                 expected_response = self.expected_read_responses.pop(0)
             except (IndexError):
@@ -125,14 +128,21 @@ class L1_instruction_cache_TB:
                 exit(1)
 
             try: 
-                assert expected_response["bits"]["fetch_PC"] == got_response["bits"]["fetch_PC"], f"Error! fetch PCs do not match. Expected {expected_response['bits']['fetch_PC']} got {got_response['bits']['fetch_PC']}"
+                assert expected_response["bits"]["fetch_PC"] == got_response["bits"]["fetch_PC"], f"Error! fetch PCs do not match. Expected {hex(expected_response['bits']['fetch_PC'])} got {hex(got_response['bits']['fetch_PC'])}"
                 assert expected_response["bits"]["instruction"] == got_response["bits"]["instruction"], f"Error! instructions do not match. Expected {expected_response['bits']['instruction']} got {got_response['bits']['instruction']}"
-                assert expected_response["bits"]["valid_bits"] == got_response["bits"]["valid_bits"], f"Error! instruction validation incorrect. Expected {expected_response['bits']['valid_bits']} got {got_response['bits']['valid_bits']}"
+
+
+                #expected_hex = [hex(instr) for instr in expected_response["bits"]["instruction"]]
+                #got_hex = [hex(instr) for instr in got_response["bits"]["instruction"]]
+                #assert expected_response["bits"]["instruction"] == got_response["bits"]["instruction"], \
+                #f"Error! Instructions do not match. Expected {expected_hex} got {got_hex}"
+                #assert expected_response["bits"]["valid_bits"] == got_response["bits"]["valid_bits"], f"Error! instruction validation incorrect. Expected {expected_response['bits']['valid_bits']} got {got_response['bits']['valid_bits']}"
             except(AssertionError):
                 # wait a few extra cycles before terminating
                 print(f"Assertion failed. Terminating test.")
                 await self.clock()
                 await self.clock()
                 await self.clock()
+                assert False
                 exit(1)
 

@@ -38,10 +38,10 @@ class instruction_cache_dut:
     def read_CPU_read_request(self):
         """perform a CPU read request"""
         cache_request = {
-            "valid": self.L1_instruction_cache.io_CPU_request_valid,
-            "ready": self.L1_instruction_cache.io_CPU_request_ready,
+            "valid": self.L1_instruction_cache.io_CPU_request_valid.value,
+            "ready": self.L1_instruction_cache.io_CPU_request_ready.value,
             "bits": {
-                "addr": self.L1_instruction_cache.io_CPU_request_ready,
+                "addr": int(self.L1_instruction_cache.io_CPU_request_bits_addr.value),
             }
         }
         return cache_request
