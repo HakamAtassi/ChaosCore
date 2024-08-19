@@ -39,15 +39,7 @@ def test_sweep_sets():
         configs["testcase"] = "test_sweep_sets"
         run(**configs)
 
-def test_AXI_not_ready():
-        configs["testcase"] = "test_AXI_not_ready"
-        run(**configs)
-
-def test_CPU_not_ready():
-        configs["testcase"] = "test_CPU_not_ready"
-        run(**configs)
-
-def test_kill():
-        configs["testcase"] = "test_kill"
+def test_fuzz_no_kill():
+        configs["testcase"] = "test_fuzz_no_kill"
         run(**configs)
 

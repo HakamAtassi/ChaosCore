@@ -28,30 +28,29 @@
   `endif // STOP_COND
 `endif // not def STOP_COND_
 
-module Arbiter2_backend_memory_response(
-  output        io_in_0_ready,
-  input         io_in_0_valid,
-  input  [31:0] io_in_0_bits_addr,
-                io_in_0_bits_data,
-  input  [3:0]  io_in_0_bits_MOB_index,
-  output        io_in_1_ready,
-  input         io_in_1_valid,
-  input  [31:0] io_in_1_bits_addr,
-                io_in_1_bits_data,
-  input  [3:0]  io_in_1_bits_MOB_index,
-  input         io_out_ready,
-  output        io_out_valid,
-  output [31:0] io_out_bits_addr,
-                io_out_bits_data,
-  output [3:0]  io_out_bits_MOB_index
+// VCS coverage exclude_file
+module ram_8x68(
+  input  [2:0]  R0_addr,
+  input         R0_en,
+                R0_clk,
+  output [67:0] R0_data,
+  input  [2:0]  W0_addr,
+  input         W0_en,
+                W0_clk,
+  input  [67:0] W0_data
 );
 
-  assign io_in_0_ready = io_out_ready;
-  assign io_in_1_ready = ~io_in_0_valid & io_out_ready;
-  assign io_out_valid = io_in_0_valid | io_in_1_valid;
-  assign io_out_bits_addr = io_in_0_valid ? io_in_0_bits_addr : io_in_1_bits_addr;
-  assign io_out_bits_data = io_in_0_valid ? io_in_0_bits_data : io_in_1_bits_data;
-  assign io_out_bits_MOB_index =
-    io_in_0_valid ? io_in_0_bits_MOB_index : io_in_1_bits_MOB_index;
+  reg [67:0] Memory[0:7];
+  reg        _R0_en_d0;
+  reg [2:0]  _R0_addr_d0;
+  always @(posedge R0_clk) begin
+    _R0_en_d0 <= R0_en;
+    _R0_addr_d0 <= R0_addr;
+  end // always @(posedge)
+  always @(posedge W0_clk) begin
+    if (W0_en & 1'h1)
+      Memory[W0_addr] <= W0_data;
+  end // always @(posedge)
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 68'bx;
 endmodule
 

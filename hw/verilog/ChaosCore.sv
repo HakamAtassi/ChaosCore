@@ -95,7 +95,8 @@ module ChaosCore(
   output [3:0]  io_backend_memory_request_bits_MOB_index,
   output        io_backend_memory_response_ready,
   input         io_backend_memory_response_valid,
-  input  [31:0] io_backend_memory_response_bits_data,
+  input  [31:0] io_backend_memory_response_bits_addr,
+                io_backend_memory_response_bits_data,
   input  [3:0]  io_backend_memory_response_bits_MOB_index
 );
 
@@ -1008,6 +1009,8 @@ module ChaosCore(
       (io_backend_memory_response_ready),
     .io_backend_memory_response_valid
       (io_backend_memory_response_valid),
+    .io_backend_memory_response_bits_addr
+      (io_backend_memory_response_bits_addr),
     .io_backend_memory_response_bits_data
       (io_backend_memory_response_bits_data),
     .io_backend_memory_response_bits_MOB_index

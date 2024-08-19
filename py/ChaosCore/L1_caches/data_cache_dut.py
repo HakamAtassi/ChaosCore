@@ -43,6 +43,22 @@ class data_cache_dut:
         self.L1_data_cache.io_CPU_request_bits_MOB_index.value       = MOB_index
 
 
+    def read_CPU_request(self):
+        """perform a CPU read request"""
+        cache_request = {
+            "valid": self.L1_data_cache.io_CPU_request_valid.value,
+            "ready": self.L1_data_cache.io_CPU_request_ready.value,
+            "bits": {
+                "addr": int(self.L1_data_cache.io_CPU_request_bits_addr.value),
+                "data": int(self.L1_data_cache.io_CPU_request_bits_data.value),
+                "memory_type": int(self.L1_data_cache.io_CPU_request_bits_memory_type.value),
+                "access_width": int(self.L1_data_cache.io_CPU_request_bits_access_width.value),
+                "MOB_index": int(self.L1_data_cache.io_CPU_request_bits_MOB_index.value),
+            }
+        }
+        return cache_request
+
+
     def write_CPU_response_ready(self, ready):
         self.L1_data_cache.io_CPU_response_ready.value = ready
 
@@ -51,7 +67,9 @@ class data_cache_dut:
         cache_response          = {}
         cache_response["bits"]  = {}
         cache_response["valid"]             = int(self.L1_data_cache.io_CPU_response_valid.value)
+        cache_response["ready"]             = int(self.L1_data_cache.io_CPU_response_ready.value)
         cache_response["bits"]["data"]      = int(self.L1_data_cache.io_CPU_response_bits_data.value)
+        cache_response["bits"]["addr"]      = int(self.L1_data_cache.io_CPU_response_bits_addr.value)
         cache_response["bits"]["MOB_index"] = self.L1_data_cache.io_CPU_response_bits_MOB_index.value
         return cache_response
 

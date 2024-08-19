@@ -1,0 +1,11 @@
+# D$ Verification
+
+Unlike the I$, the D$ is a fairly sophisticated hardware component. Also unlike the I$, the D$ is completely out-of-order, meaning that if request A and B occur in the order A -> B, responses may or or may not be returned in the same order. As such, this means that simply generating expected responses based on the order in which the requests are made (which is what was done to verify the I$) is not valid. In order to effectively verify the D$, while treating the D$ as a black box, the following strategy is applied:
+
+
+On requests, if a request is accepted (request valid/ready), the verification environment will generate an expected response immediately. However, instead of queuing the response in a single global queue, the TB generates a queue for each in-flight memory address access. When the cache generates a response, the address of the response is used to index this table of response queues. The testbench then pops a response off of the queue for that particular address and uses it for the corresponding assertions. 
+
+In a much more abstract and general sense, non-blocking caches cannot enforce an ordering between requests globally, but must enforce ordering for each particular addresses. Meaning that for address 0xFACE_CAFE, all read and writes must be processed in the order they are requested. This MUST be true for RAW and WAW hazards (otherwise memory is curropted and all bets are off), and is assumed true for RAR "hazards" (it is assumed the implementation respects RAR ordering, though it doesnt need to, neccisarily. With that said, why would you process reads to the same address in any other order?)
+
+### PS
+It is also assumed that the D$ returns the address along with the responses. This is also not needed as the requests are stored in the MSHR, so providing the MSHR index is sufficient, but providing the response address is really useful for verification because it provides a way for verification to make sense of what the D$ is returning without looking into the rest of the design.

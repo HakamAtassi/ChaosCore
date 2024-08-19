@@ -73,9 +73,9 @@ ram_8x352.sv
 Queue8_AXI_request_Q_entry.sv
 ram_2x352.sv
 Queue2_AXI_request_Q_entry.sv
-ram_8x36.sv
+ram_8x68.sv
 Queue8_backend_memory_response.sv
-ram_3x36.sv
+ram_3x68.sv
 Queue3_backend_memory_response.sv
 ram_256x8.sv
 ReadWriteSmem.sv
@@ -90,6 +90,3 @@ extern_modules.sv
 axi_interconnect_2x2.sv
 SOC.sv
 ./axi_interconnect_wrap_2x2.v
-axi_interconnect.v
-priority_encoder.v
-arbiter.v
