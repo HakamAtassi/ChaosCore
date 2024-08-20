@@ -31,13 +31,15 @@
 module Queue1_final_AXI_response(
   input          clock,
                  reset,
-                 io_enq_valid,
+  output         io_enq_ready,
+  input          io_enq_valid,
   input  [255:0] io_enq_bits_data,
   input  [7:0]   io_enq_bits_ID,
   input          io_deq_ready,
   output         io_deq_valid,
   output [255:0] io_deq_bits_data,
-  output [7:0]   io_deq_bits_ID
+  output [7:0]   io_deq_bits_ID,
+  output         io_count
 );
 
   reg  [263:0] ram;
@@ -52,8 +54,10 @@ module Queue1_final_AXI_response(
     else if (~(do_enq == (full & io_deq_ready & io_deq_valid_0)))
       full <= do_enq;
   end // always @(posedge)
+  assign io_enq_ready = ~full;
   assign io_deq_valid = io_deq_valid_0;
   assign io_deq_bits_data = full ? ram[255:0] : io_enq_bits_data;
   assign io_deq_bits_ID = full ? ram[263:256] : io_enq_bits_ID;
+  assign io_count = full;
 endmodule
 

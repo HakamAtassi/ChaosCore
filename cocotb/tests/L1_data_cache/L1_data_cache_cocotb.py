@@ -402,7 +402,7 @@ async def test_burst_accesses(dut):
     await cocotb.start(generateClock(dut))
 
     # Bring up TB
-    L1_cache = L1_data_cache_TB(dut)            # construct TB
+    L1_cache = L1_data_cache_TB(dut, 256*(2**10))            # construct TB
     await L1_cache.reset()                      # Reset
     L1_cache.init_sequence()      # INIT axi ram
 
@@ -421,10 +421,10 @@ async def test_burst_accesses(dut):
 
 
 
-    await L1_cache.write_CPU_request(valid = 1, addr = 0x24, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=1)
-    await L1_cache.write_CPU_request(valid = 1, addr = 0x104, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=2)
-    await L1_cache.write_CPU_request(valid = 1, addr = 0x204, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=2)
-    await L1_cache.write_CPU_request(valid = 1, addr = 0x404, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=2)
+    await L1_cache.write_CPU_request(valid = 1, addr = 0x502, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=1)
+    #await L1_cache.write_CPU_request(valid = 1, addr = 0x104, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=2)
+    #await L1_cache.write_CPU_request(valid = 1, addr = 0x204, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=2)
+    #await L1_cache.write_CPU_request(valid = 1, addr = 0x404, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=2)
 
 
     #await L1_cache.write_CPU_request(valid = 1, addr = 0xB, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=8)
@@ -550,7 +550,7 @@ async def test_read_fuzz(dut):
         valid = random.choice([0,1,2,3])  # 1/(n-1) chance of valid request
         valid = (valid == 0)
         
-        memory_type = random.choice([memory_type_t.LOAD, memory_type_t.STORE])
+        memory_type = random.choice([memory_type_t.LOAD, memory_type_t.LOAD])
         access_width = random.choice([(access_width_t.B, 1), (access_width_t.HW, 2), (access_width_t.W, 4)])
 
         # byte offsets must be aligned

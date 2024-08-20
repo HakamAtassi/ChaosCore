@@ -126,8 +126,8 @@ module L1_instruction_cache(
   wire             m_axi_rready_0 = AXI_REQUEST_STATE == 2'h2;
   wire             _GEN_0 = m_axi_rready_0 & m_axi_rvalid;
   reg  [31:0]      write_counter;
-  wire             m_axi_wlast_0 = m_axi_wvalid_0 & write_counter == 32'h0;
   reg  [255:0]     AXI_read_buffer;
+  wire             m_axi_wlast_0 = m_axi_wvalid_0 & write_counter == 32'h0;
   wire             _GEN_1 = _GEN_0 & m_axi_rlast;
   wire [255:0]     _GEN_2 = {m_axi_rdata, AXI_read_buffer[255:32]};
   reg  [2:0]       cache_state;
@@ -225,10 +225,12 @@ module L1_instruction_cache(
     _GEN_12 = m_axi_wvalid_0 & _GEN_11;
     if (_GEN_12)
       AXI_AW_DATA_BUFFER <= {32'h0, AXI_AW_DATA_BUFFER[255:32]};
-    if (~m_axi_rready_0 | _GEN_1 | ~_GEN_0) begin
+    if (m_axi_rready_0) begin
+      if (_GEN_1)
+        AXI_read_buffer <= 256'h0;
+      else if (_GEN_0)
+        AXI_read_buffer <= _GEN_2;
     end
-    else
-      AXI_read_buffer <= _GEN_2;
     LRU_memory_io_wr_addr_REG <= current_packet_set;
     hit_oh_vec_0_REG <= current_packet_tag;
     hit_oh_vec_1_REG <= current_packet_tag;
@@ -313,13 +315,15 @@ module L1_instruction_cache(
   Queue1_final_AXI_response final_response_buffer (
     .clock            (clock),
     .reset            (reset),
+    .io_enq_ready     (/* unused */),
     .io_enq_valid     (m_axi_rready_0 & _GEN_1),
     .io_enq_bits_data (_GEN_2),
     .io_enq_bits_ID   (m_axi_rid),
     .io_deq_ready     (_GEN),
     .io_deq_valid     (_final_response_buffer_io_deq_valid),
     .io_deq_bits_data (_final_response_buffer_io_deq_bits_data),
-    .io_deq_bits_ID   (/* unused */)
+    .io_deq_bits_ID   (/* unused */),
+    .io_count         (/* unused */)
   );
   SDPReadWriteSmem_1 LRU_memory (
     .clock       (clock),

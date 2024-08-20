@@ -162,14 +162,18 @@ trait AXICacheNode {
   val write_counter = RegInit(UInt(32.W), 0.U)
   val read_counter  = RegInit(UInt(32.W), 0.U)
 
+  val AXI_read_buffer = Reg(UInt(256.W))
+  // SHARED ADDRESS PHASE
   // SHARED ADDRESS PHASE
   when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE){ // drive output request
+    //AXI_read_buffer := 0.U
     when(AXI_port.AXI_AW.fire){
       write_counter := AXI_port.AXI_AW.bits.awlen
     }.elsewhen(AXI_port.AXI_AR.fire){
       read_counter := AXI_port.AXI_AR.bits.arlen
     }
   }
+
 
   dontTouch(AXI_REQUEST_STATE)
 
@@ -192,11 +196,14 @@ trait AXICacheNode {
     AXI_port.AXI_B.ready := 1.B
   }
 
+  dontTouch(final_response_buffer.io)
+
+  final_response_buffer.io.enq.valid := 0.B
   // READ RESPONSE PHASE
-  val AXI_read_buffer = Reg(UInt(256.W))
   when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.READ_RESPONSE_PHASE){
     AXI_port.AXI_R.ready := 1.B
     when(AXI_port.AXI_R.fire && AXI_port.AXI_R.bits.rlast.asBool){
+      AXI_read_buffer := 0.U
       final_response_buffer.io.enq.bits.data := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
       final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid
       final_response_buffer.io.enq.valid := 1.B
