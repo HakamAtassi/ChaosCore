@@ -1624,6 +1624,8 @@ module L1_data_cache(
   reg  [2:0]       MSHR_back_pointer;
   wire [1:0]       MSHR_front_index = MSHR_front_pointer[1:0];
   wire [1:0]       MSHR_back_index = MSHR_back_pointer[1:0];
+  wire [1:0]       MSHR_front_index_next = MSHR_front_pointer_next[1:0];
+  wire [1:0]       MSHR_back_index_next = MSHR_back_pointer_next[1:0];
   reg  [31:0]      non_cacheable_buffer_0_addr;
   reg  [31:0]      non_cacheable_buffer_0_data;
   reg  [1:0]       non_cacheable_buffer_0_memory_type;
@@ -2017,7 +2019,7 @@ module L1_data_cache(
   wire             input_cacheable = ~(io_CPU_request_bits_addr[31]);
   wire             MSHR_full_next =
     MSHR_front_pointer_next != MSHR_back_pointer_next
-    & MSHR_front_pointer_next[1:0] == MSHR_back_pointer_next[1:0];
+    & MSHR_front_index_next == MSHR_back_index_next;
   wire             input_cacheable_and_Q_available =
     input_cacheable & _cacheable_request_Q_io_enq_ready;
   wire             input_non_cacheable_and_Q_available =

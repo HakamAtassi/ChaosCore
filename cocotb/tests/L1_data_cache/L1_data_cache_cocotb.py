@@ -550,7 +550,7 @@ async def test_read_fuzz(dut):
         valid = random.choice([0,1,2,3])  # 1/(n-1) chance of valid request
         valid = (valid == 0)
         
-        memory_type = random.choice([memory_type_t.LOAD, memory_type_t.LOAD])
+        memory_type = random.choice([memory_type_t.LOAD, memory_type_t.STORE])
         access_width = random.choice([(access_width_t.B, 1), (access_width_t.HW, 2), (access_width_t.W, 4)])
 
         # byte offsets must be aligned
