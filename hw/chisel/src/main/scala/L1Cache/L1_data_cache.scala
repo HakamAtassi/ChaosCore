@@ -648,6 +648,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// free and output from non-cacheable buffer on non-cacheable response
 	
 	
+	// FIXME: for easy area savings, change this so that the non-cachable request queu only has 32 bits of write data
 	class AXI_request_Q_entry extends Bundle{
 		val write_valid		=	Bool()
 		val write_address	=	UInt(32.W)
@@ -695,8 +696,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// Memory requests occur when a cache miss takes place or when there is a non-cacheable request
 	non_cacheable_request_Q.io.enq.valid 				:=	(active_non_cacheable_read  || active_non_cacheable_write) && active_valid
 	non_cacheable_request_Q.io.enq.bits.write_valid		:=	active_non_cacheable_write
-	non_cacheable_request_Q.io.enq.bits.write_address	:=	RegNext(writeback_address)//active_address
-	non_cacheable_request_Q.io.enq.bits.write_data		:=	writeback_data//active_data 
+	non_cacheable_request_Q.io.enq.bits.write_address	:=	(active_address)
+	non_cacheable_request_Q.io.enq.bits.write_data		:=	(active_data)
 	non_cacheable_request_Q.io.enq.bits.write_ID		:=	1.U
 	non_cacheable_request_Q.io.enq.bits.write_bytes		:=	non_cacheable_request_bytes
 
