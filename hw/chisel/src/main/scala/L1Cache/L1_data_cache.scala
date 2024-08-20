@@ -328,16 +328,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// Assign data_memory_wr_en
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
 
-		//word_offset_match 		:= (word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
-		//half_word_offset_match 	:= (half_word_offset 	=== (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)
-		//byte_offset_match 		:= (byte_offset 		=== (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)
-
-
-		//data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(word_offset_match || half_word_offset_match || byte_offset_match) && valid_hit)
-
-		//data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || RegNext(test(i)) && valid_hit
-
-
 		data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(
 			(word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)	||
 			(half_word_offset 	=== (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)	||
@@ -349,6 +339,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	active_data := Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_data, io.CPU_request.bits.data)
 
+
+	dontTouch(allocate_cache_line)
 
 	when(RegNext(active_access_width === access_width_t.W)){
 		for(i <- 0 until L1_DataCacheBlockSizeBytes){
@@ -371,6 +363,10 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val data_memory_allocate_address 	= Cat(allocate_way, allocate_set)
 	val data_memory_active_address 		= Cat(hit_way, RegNext(active_set))
 	val data_memory_evict_address		= Cat(evict_way, RegNext(active_set))
+
+	dontTouch(data_memory_allocate_address)
+	dontTouch(data_memory_active_address)
+	dontTouch(data_memory_evict_address)
 
 
 	for((data_memory, i) <- data_memories.zipWithIndex){
@@ -518,6 +514,12 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val MSHR_front_index 	= MSHR_front_pointer(MSHR_ptr_width-2, 0)
 	val MSHR_back_index 	= MSHR_back_pointer(MSHR_ptr_width-2, 0)
 
+	val MSHR_front_pointer_next = Wire(UInt(MSHR_ptr_width.W))
+	val MSHR_back_pointer_next	= Wire(UInt(MSHR_ptr_width.W))
+
+	val MSHR_front_index_next 	= MSHR_front_pointer_next(MSHR_ptr_width-2, 0)
+	val MSHR_back_index_next 	= MSHR_back_pointer_next(MSHR_ptr_width-2, 0)
+
 	// update non-cacheable buffer on non-cacheable request
 	val non_cacheable_buffer 				= Reg(Vec(L1_NonCacheableBufferEntries, new backend_memory_request(coreParameters)))
 	val non_cacheable_buffer_pointer_width	= log2Ceil(L1_NonCacheableBufferEntries) + 1
@@ -561,6 +563,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// AXI RESPONSE HANDLING //
 	///////////////////////////
 
+	MSHR_front_pointer_next := MSHR_front_pointer 
+	MSHR_back_pointer_next	:= MSHR_back_pointer
+
 	// Response is cacheable
 	when(valid_miss && valid_MSHR_hit){
 		// append MSHR entry
@@ -573,8 +578,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		MSHRs(MSHR_back_index).address := miss_backend_memory_request.addr & dram_addr_mask
         MSHRs(MSHR_back_index).miss_requests(MSHRs(MSHR_back_index).back_pointer) := miss_backend_memory_request
 		MSHRs(MSHR_back_index).back_pointer := MSHRs(MSHR_back_index).back_pointer + 1.U
-		MSHR_back_pointer := MSHR_back_pointer + 1.U
+		MSHR_back_pointer_next := MSHR_back_pointer + 1.U
 	}
+	MSHR_back_pointer := MSHR_back_pointer_next
 
 	// Response is non-cacheable
 	// TODO: construct input from buffer
@@ -595,12 +601,14 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		MSHRs(MSHR_front_index).dequeue
 		when(MSHRs(MSHR_front_index).last){
 			MSHR_replay_done := 1.B
-			MSHR_front_pointer := MSHR_front_pointer + 1.U
+			MSHR_front_pointer_next := MSHR_front_pointer + 1.U
 
 			// clear the MSHR entry
 			MSHRs(MSHR_front_index).clear
 		}
 	}
+
+	MSHR_front_pointer := MSHR_front_pointer_next
 
 	//FIXME: Allocate way and miss way are inconsistent
 	allocate_way				:= MSHRs(MSHR_front_index).allocate_way
@@ -739,7 +747,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		is(DATA_CACHE_STATES.ACTIVE){
 			when(non_cacheable_response_Q.io.deq.valid){
 				// output non cacheable response
-			}.elsewhen(cacheable_AXI_response_valid){
+			}.elsewhen(cacheable_AXI_response_valid){ // FIXME: shouldnt this just be the output of the response arb?
 				DATA_CACHE_NEXT_STATE := DATA_CACHE_STATES.ALLOCATE
 			}
 		}
@@ -792,6 +800,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	dontTouch(output_address)
 	output_data := format_dcache_word(data_way, output_address, output_operation)
+
+	dontTouch(data_way)
 	
 
 	dontTouch(output_data)
@@ -808,7 +818,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val (axi_response, axi_response_valid) = AXI_read
 	val axi_response_ID = axi_response.ID
 
-	allocate_cache_line		:=	axi_response.data
+	allocate_cache_line		:=	RegNext(axi_response.data)
 
 	cacheable_AXI_response_valid := axi_response_valid && (axi_response_ID === 0.U)
 
@@ -864,15 +874,19 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 
 	// MSHR resource conds
-	val MSHR_full = Wire(Bool())
+	val MSHR_full_next = Wire(Bool())	// The cache only cares about if the MSHR will be full next cycle
 	val MSHR_full_and_input_match = Wire(Bool())
 
 	// input queue checks
 	val input_cacheable_and_Q_available = Wire(Bool())
 	val input_non_cacheable_and_Q_available = Wire(Bool())
 
-	MSHR_full := (MSHR_front_pointer =/= MSHR_back_pointer) && (MSHR_back_index === MSHR_back_index)
-	MSHR_full_and_input_match := MSHR_full && (MSHRs.map(MSHR_entry => MSHR_entry.address === io.CPU_request.bits.addr).reduce(_ || _))
+	dontTouch(MSHR_front_index)
+	dontTouch(MSHR_back_index)
+
+	MSHR_full_next := (MSHR_front_pointer_next =/= MSHR_back_pointer_next) && (MSHR_front_index_next === MSHR_back_index_next)
+
+	MSHR_full_and_input_match := MSHR_full_next && (MSHRs.map(MSHR_entry => (MSHR_entry.address === io.CPU_request.bits.addr) && !MSHR_entry.full).reduce(_ || _))
 
 	input_cacheable_and_Q_available := input_cacheable && cacheable_request_Q.io.enq.ready
 	input_non_cacheable_and_Q_available := input_non_cacheable && non_cacheable_request_Q.io.enq.ready
@@ -881,5 +895,12 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	dontTouch(input_cacheable_and_Q_available)
 	dontTouch(input_non_cacheable_and_Q_available)
 
-	io.CPU_request.ready		:= (!MSHR_full || MSHR_full_and_input_match) && (input_cacheable_and_Q_available || input_non_cacheable_and_Q_available) && (DATA_CACHE_STATE === DATA_CACHE_STATES.ACTIVE)
+	io.CPU_request.ready		:= (!MSHR_full_next || MSHR_full_and_input_match) && 
+									(input_cacheable_and_Q_available || input_non_cacheable_and_Q_available) && 
+									(DATA_CACHE_STATE === DATA_CACHE_STATES.ACTIVE) &&
+									!(DATA_CACHE_NEXT_STATE === DATA_CACHE_STATES.ALLOCATE) // you dont want to accept a new input (that may miss) when you have a response from the DRAM
 }
+
+
+// FIXES: 
+// If MSHR is full or will be full next cycle (currently being updated), only accept an input if its address exists in the MSHR, and the corresponding MSHR entry is not full
