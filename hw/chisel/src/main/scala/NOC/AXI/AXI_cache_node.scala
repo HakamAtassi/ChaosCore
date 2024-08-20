@@ -25,7 +25,7 @@ trait AXICacheNode {
   dontTouch(m_axi)
 
   object AXI_REQUEST_STATES extends ChiselEnum {
-    val ACTIVE, AW_R_PHASE, R_W_PHASE, R_PHASE, AR_W_PHASE, B_PHASE = Value
+    val ACTIVE, AW_R_PHASE, R_W_PHASE, R_PHASE, W_PHASE, AR_W_PHASE, B_PHASE = Value
   }
 
   ///////////////////////
@@ -159,6 +159,8 @@ trait AXICacheNode {
       }.elsewhen(AXI_port.AXI_AR.fire){
         // Only AR accepted
         AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.AW_R_PHASE
+      }.elsewhen(AXI_port.AXI_AW.fire && !AXI_port.AXI_AR.valid){
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.W_PHASE
       }.elsewhen(AXI_port.AXI_AW.fire){
         // Only AW accepted
         AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.AR_W_PHASE
@@ -179,6 +181,14 @@ trait AXICacheNode {
         AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ACTIVE
       }
     }
+    is(AXI_REQUEST_STATES.W_PHASE){
+      AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.W_PHASE
+      when(W_done){
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.B_PHASE
+      }
+    }
+
+
 
     is(AXI_REQUEST_STATES.AR_W_PHASE){
       AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.AR_W_PHASE
@@ -328,6 +338,22 @@ trait AXICacheNode {
       final_response_buffer.io.enq.valid := 1.B
     }
   }
+
+  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.W_PHASE){ 
+    // AXI W
+    when(!W_done){
+      W_done := AXI_port.AXI_W.bits.wlast
+      AXI_port.AXI_W.bits.wlast := (write_counter === 0.U)
+      AXI_port.AXI_W.valid      := 1.B
+      AXI_port.AXI_W.bits.wdata := AXI_AW_DATA_BUFFER(DATA_WIDTH-1, 0)
+      AXI_port.AXI_W.bits.wstrb := 0xF.U
+    }
+    when(!W_done && AXI_port.AXI_W.fire){
+      write_counter := write_counter - 1.U
+      AXI_AW_DATA_BUFFER := AXI_AW_DATA_BUFFER >> 32.U
+    }
+  }
+
 
 
 

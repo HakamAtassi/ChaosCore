@@ -183,7 +183,7 @@ async def test_fuzz_no_kill(dut):
     await cocotb.start(generateClock(dut))
 
     # Bring up TB
-    L1_cache = L1_instruction_cache_TB(dut)     # construct TB
+    L1_cache = L1_instruction_cache_TB(dut, 256*(2**10))     # construct TB
     await L1_cache.reset()                      # Reset
     L1_cache.init_sequence()                    # INIT axi ram
 
@@ -210,7 +210,7 @@ async def test_fuzz_no_kill(dut):
     for set in range(64):
         tag_groups[set] = [0]*TAGS_PER_SET
         for _ in range(TAGS_PER_SET):
-            tag_groups[set].append(random.getrandbits(10)) # limit tag size because large memories are slow to simulate
+            tag_groups[set].append(random.getrandbits(7)) # limit tag size because large memories are slow to simulate
 
     for iteration in range(25000):
         # Generate random request 
