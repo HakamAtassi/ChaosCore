@@ -396,6 +396,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	//////////////////
 	// Array of Way memories, each tag size bits wide (Bmem).
 
+	dontTouch(allocate_address)
+
 	val tag_memories = Seq.fill(L1_DataCacheWays)(Module(new ReadWriteSmem(depth=L1_DataCacheSets, width=L1_DataCacheTagBits)))
 
 
@@ -468,7 +470,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	val PLRU 	= Wire(UInt(L1_DataCacheWays.W))
 	PLRU 		:= RegNext(PLRU_memory(active_set))
-	evict_way 	:= PriorityEncoder(~PLRU_memory(active_set))
+	evict_way 	:= PriorityEncoder(~PLRU)
 
 	dontTouch(evict_way)
 	dontTouch(PLRU)
@@ -492,9 +494,13 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		dirty_memory(allocate_set)(allocate_way) := 0.B
 	}
 
+	val writeback_set = Wire(UInt(log2Ceil(L1_DataCacheSets).W)) //RegNext(active_set)
+
+	writeback_set := RegNext(active_set)
+
 	writeback_dirty 	:= dirty_memory(RegNext(active_set))(evict_way) && valid_miss
 	writeback_tag 		:= VecInit(tag_memories.map(_.io.data_out))(evict_way)
-	writeback_address 	:= Cat(writeback_tag, 0.U(11.W)) 	//FIXME: hardcoded...
+	writeback_address 	:= Cat(writeback_tag, writeback_set, 0.U((log2Ceil(L1_DataCacheBlockSizeBytes)).W))
 
 	dontTouch(writeback_tag)
 	dontTouch(writeback_data)
@@ -573,7 +579,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		MSHRs(hit_MSHR_index).back_pointer := MSHRs(hit_MSHR_index).back_pointer + 1.U
 	}.elsewhen(valid_miss && valid_MSHR_miss){
 		// allocate new MSHR entry
-		MSHRs(MSHR_front_index).allocate_way := evict_way
+		MSHRs(MSHR_back_index).allocate_way := evict_way
 		MSHRs(MSHR_back_index).valid	:= 1.B
 		MSHRs(MSHR_back_index).address := miss_backend_memory_request.addr & dram_addr_mask
         MSHRs(MSHR_back_index).miss_requests(MSHRs(MSHR_back_index).back_pointer) := miss_backend_memory_request
@@ -685,11 +691,12 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	.elsewhen(io.CPU_request.bits.access_width === access_width_t.HW)		{non_cacheable_request_bytes := 2.U}
 	.otherwise																{non_cacheable_request_bytes := 1.U}
 
+	dontTouch(writeback_address)
 	// Memory requests occur when a cache miss takes place or when there is a non-cacheable request
 	non_cacheable_request_Q.io.enq.valid 				:=	(active_non_cacheable_read  || active_non_cacheable_write) && active_valid
 	non_cacheable_request_Q.io.enq.bits.write_valid		:=	active_non_cacheable_write
-	non_cacheable_request_Q.io.enq.bits.write_address	:=	active_address
-	non_cacheable_request_Q.io.enq.bits.write_data		:=	active_data 
+	non_cacheable_request_Q.io.enq.bits.write_address	:=	RegNext(writeback_address)//active_address
+	non_cacheable_request_Q.io.enq.bits.write_data		:=	writeback_data//active_data 
 	non_cacheable_request_Q.io.enq.bits.write_ID		:=	1.U
 	non_cacheable_request_Q.io.enq.bits.write_bytes		:=	non_cacheable_request_bytes
 

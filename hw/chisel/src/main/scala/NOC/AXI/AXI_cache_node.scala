@@ -14,12 +14,9 @@ The AXI node will then transport 1 beat at a time in an INCR only burst type.
 */
 
 trait AXICacheNode {
-
   val nocParameters:NOCParameters
 
   import nocParameters._
-
-  // FIXME: use the AXI master bundle
 
   // actual verilog IO
   // chisel dataview mapping
@@ -28,7 +25,7 @@ trait AXICacheNode {
   dontTouch(m_axi)
 
   object AXI_REQUEST_STATES extends ChiselEnum {
-    val ADDRESS_PHASE, WRITE_DATA_PHASE, READ_RESPONSE_PHASE, WRITE_RESPONSE_PHASE = Value
+    val ACTIVE, AW_R_PHASE, R_W_PHASE, R_PHASE, AR_W_PHASE, B_PHASE = Value
   }
 
   ///////////////////////
@@ -64,10 +61,28 @@ trait AXICacheNode {
   // APIs //
   //////////
 
-  def AXI_read_request(address:UInt, ID:UInt, bytes:UInt):Bool = {
+  val AXI_AR_buf = Reg(new AXI_AR(nocParameters))
+  val AXI_AW_buf = Reg(new AXI_AW(nocParameters))
+
+  AXI_AR_buf := 0.U.asTypeOf(new AXI_AR(nocParameters))
+  AXI_AW_buf := 0.U.asTypeOf(new AXI_AW(nocParameters))
+
+
+
+  def AXI_read_request(address:UInt, ID:UInt, bytes:UInt): Bool = {
     import nocParameters._
     // drive channels
-    AXI_port.AXI_AR.valid        := AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE
+    //AXI_port.AXI_AR.valid        := AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE
+    AXI_AR_buf.arid    := ID
+    AXI_AR_buf.araddr  := address
+    AXI_AR_buf.arlen   := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
+    AXI_AR_buf.arsize  := log2Ceil(DATA_WIDTH/8).U // FIXME: hardcoded..
+    AXI_AR_buf.arburst := 0x1.U
+    AXI_AR_buf.arlock  := 0x0.U
+    AXI_AR_buf.arcache := 0x0.U
+    AXI_AR_buf.arprot  := 0x0.U
+
+    AXI_port.AXI_AR.valid        := AXI_REQUEST_STATE === AXI_REQUEST_STATES.ACTIVE
     AXI_port.AXI_AR.bits.arid    := ID
     AXI_port.AXI_AR.bits.araddr  := address
     AXI_port.AXI_AR.bits.arlen   := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
@@ -78,16 +93,25 @@ trait AXICacheNode {
     AXI_port.AXI_AR.bits.arprot  := 0x0.U
 
     AXI_port.AXI_AR.fire
+
   }
   
   val AXI_AW_DATA_BUFFER = Reg(UInt(256.W))   // FIXME: make this a param based on cache line width
-  def AXI_write_request(address:UInt, ID:UInt, data:UInt, bytes:UInt):Bool = {
+  def AXI_write_request(address:UInt, ID:UInt, data:UInt, bytes:UInt): Bool = {
     import nocParameters._
     // awlen = transfer size / bus width 
     // awsize = always 0x2.U (32 bits) for simplicity
 
+    AXI_AW_buf.awid      := ID
+    AXI_AW_buf.awaddr    := address
+    AXI_AW_buf.awlen     := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
+    AXI_AW_buf.awsize    := log2Ceil(DATA_WIDTH/8).U  // FIXME: hardcoded..
+    AXI_AW_buf.awburst   := 0x1.U
+    AXI_AW_buf.awlock    := 0.U
+    AXI_AW_buf.awcache   := 0.U
+    AXI_AW_buf.awprot    := 0.U
 
-    AXI_port.AXI_AW.valid          := (AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE)
+    AXI_port.AXI_AW.valid          := (AXI_REQUEST_STATE === AXI_REQUEST_STATES.ACTIVE)
     AXI_port.AXI_AW.bits.awid      := ID
     AXI_port.AXI_AW.bits.awaddr    := address
     AXI_port.AXI_AW.bits.awlen     := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
@@ -103,6 +127,7 @@ trait AXICacheNode {
     AXI_port.AXI_AW.fire
   }
 
+
   /**
   @return: The data found in the one entry response Q + if the "fire" of that queue
   */
@@ -115,42 +140,67 @@ trait AXICacheNode {
   // AXI FSM //
   /////////////
 
-
-  val AXI_REQUEST_STATE       = RegInit(AXI_REQUEST_STATES(), AXI_REQUEST_STATES.ADDRESS_PHASE)
+  val AXI_REQUEST_STATE       = RegInit(AXI_REQUEST_STATES(), AXI_REQUEST_STATES.ACTIVE)
   val AXI_REQUEST_NEXT_STATE  = Wire(AXI_REQUEST_STATES())
+
+  val R_done = RegInit(Bool(), 0.B)
+  val W_done = RegInit(Bool(), 0.B)
+
 
   AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATE
 
   switch(AXI_REQUEST_STATE){
-    is(AXI_REQUEST_STATES.ADDRESS_PHASE){
-      // ASSIGN AXI OUTPUT
-
-      // FSM
-      AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ADDRESS_PHASE
-      when(AXI_port.AXI_AW.fire){                   // AW accepted
-        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.WRITE_DATA_PHASE
-      }.elsewhen(AXI_port.AXI_AR.fire){             // AR accepted
-        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.READ_RESPONSE_PHASE
+    is(AXI_REQUEST_STATES.ACTIVE){
+      when((AXI_port.AXI_AR.fire && AXI_port.AXI_AW.fire) ){
+        // Both AR and AW valid
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.R_W_PHASE
+      }.elsewhen(AXI_port.AXI_AR.fire && !AXI_port.AXI_AW.valid){
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.R_PHASE
+      }.elsewhen(AXI_port.AXI_AR.fire){
+        // Only AR accepted
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.AW_R_PHASE
+      }.elsewhen(AXI_port.AXI_AW.fire){
+        // Only AW accepted
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.AR_W_PHASE
+      }.otherwise{
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ACTIVE
       }
     }
 
-    is(AXI_REQUEST_STATES.WRITE_DATA_PHASE){
-      when(AXI_port.AXI_W.bits.wlast.asBool && AXI_port.AXI_W.fire){
-        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.WRITE_RESPONSE_PHASE
+    is(AXI_REQUEST_STATES.R_W_PHASE){
+      AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.R_W_PHASE
+      when(R_done && W_done){
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.B_PHASE
+      }
+    }
+    is(AXI_REQUEST_STATES.R_PHASE){
+      AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.R_PHASE
+      when(R_done){
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ACTIVE
       }
     }
 
-    is(AXI_REQUEST_STATES.WRITE_RESPONSE_PHASE){
-      when(AXI_port.AXI_B.fire){
-        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ADDRESS_PHASE
+    is(AXI_REQUEST_STATES.AR_W_PHASE){
+      AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.AR_W_PHASE
+      when(AXI_port.AXI_AR.fire){ // AR accepted
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.R_W_PHASE
       }
     }
 
-    is(AXI_REQUEST_STATES.READ_RESPONSE_PHASE){
-      when(AXI_port.AXI_R.bits.rlast.asBool && AXI_port.AXI_R.fire){ // FIXME:  last and okay and ... 
-        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ADDRESS_PHASE
+    is(AXI_REQUEST_STATES.AW_R_PHASE){
+      AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.AW_R_PHASE
+      when(AXI_port.AXI_AW.fire){ // AW accepted
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.R_W_PHASE
       }
     }
+
+    is(AXI_REQUEST_STATES.B_PHASE){
+      AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.B_PHASE
+      when(AXI_port.AXI_B.fire){ // Ack write complete
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ACTIVE
+      }
+    }
+
   }
 
   AXI_REQUEST_STATE := AXI_REQUEST_NEXT_STATE
@@ -159,48 +209,52 @@ trait AXICacheNode {
   // DATA PATH //
   ///////////////
 
+
   val write_counter = RegInit(UInt(32.W), 0.U)
   val read_counter  = RegInit(UInt(32.W), 0.U)
 
   val AXI_read_buffer = Reg(UInt(256.W))
-  // SHARED ADDRESS PHASE
-  // SHARED ADDRESS PHASE
-  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE){ // drive output request
-    //AXI_read_buffer := 0.U
+  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.ACTIVE){ // Write address channels. Reset control regs
+    R_done := (!AXI_port.AXI_AR.valid)  // These might need to be more robust. how to init done?
+    W_done := (!AXI_port.AXI_AW.valid)
     when(AXI_port.AXI_AW.fire){
       write_counter := AXI_port.AXI_AW.bits.awlen
-    }.elsewhen(AXI_port.AXI_AR.fire){
+    }
+    when(AXI_port.AXI_AR.fire){
       read_counter := AXI_port.AXI_AR.bits.arlen
     }
   }
 
+  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.AR_W_PHASE){  // Drive AR and W data
+    // AXI AR
+    AXI_port.AXI_AR.valid        := 1.B
+    AXI_port.AXI_AR.bits.arid    := AXI_AR_buf.arid
+    AXI_port.AXI_AR.bits.araddr  := AXI_AR_buf.araddr
+    AXI_port.AXI_AR.bits.arlen   := AXI_AR_buf.arlen  //Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
+    AXI_port.AXI_AR.bits.arsize  := AXI_AR_buf.arsize //log2Ceil(DATA_WIDTH/8).U // FIXME: hardcoded..
+    AXI_port.AXI_AR.bits.arburst := 0x1.U
+    AXI_port.AXI_AR.bits.arlock  := 0x0.U
+    AXI_port.AXI_AR.bits.arcache := 0x0.U
+    AXI_port.AXI_AR.bits.arprot  := 0x0.U
 
-  dontTouch(AXI_REQUEST_STATE)
-
-  // WRITE DATA PHASE
-  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.WRITE_DATA_PHASE){ 
-
-    AXI_port.AXI_W.valid            := 1.B
-    AXI_port.AXI_W.bits.wdata := AXI_AW_DATA_BUFFER(DATA_WIDTH-1, 0)
-    AXI_port.AXI_W.bits.wstrb := 0xF.U
-    AXI_port.AXI_W.bits.wlast := (write_counter === 0.U)
-
-    when(AXI_port.AXI_W.fire){
+    // AXI W
+    when(!W_done){
+      W_done                    := AXI_port.AXI_W.bits.wlast
+      AXI_port.AXI_W.bits.wlast := (write_counter === 0.U)
+      AXI_port.AXI_W.valid      := 1.B
+      AXI_port.AXI_W.bits.wdata := AXI_AW_DATA_BUFFER(DATA_WIDTH-1, 0)
+      AXI_port.AXI_W.bits.wstrb := 0xF.U
+    }
+    when(!W_done && AXI_port.AXI_W.fire){
       write_counter := write_counter - 1.U
       AXI_AW_DATA_BUFFER := AXI_AW_DATA_BUFFER >> 32.U
     }
-  }
 
-  // WRITE RESPONSE PHASE
-  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.WRITE_RESPONSE_PHASE){
-    AXI_port.AXI_B.ready := 1.B
   }
-
-  dontTouch(final_response_buffer.io)
 
   final_response_buffer.io.enq.valid := 0.B
-  // READ RESPONSE PHASE
-  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.READ_RESPONSE_PHASE){
+  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.AW_R_PHASE){
+    // AXI R
     AXI_port.AXI_R.ready := 1.B
     when(AXI_port.AXI_R.fire && AXI_port.AXI_R.bits.rlast.asBool){
       AXI_read_buffer := 0.U
@@ -210,11 +264,81 @@ trait AXICacheNode {
     }.elsewhen(AXI_port.AXI_R.fire){
       AXI_read_buffer := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
     }
+
+    // AXI AW
+    AXI_port.AXI_AW.valid          := 1.B
+    AXI_port.AXI_AW.bits.awid      := AXI_AW_buf.awid
+    AXI_port.AXI_AW.bits.awaddr    := AXI_AW_buf.awaddr
+    AXI_port.AXI_AW.bits.awlen     := AXI_AW_buf.awlen
+    AXI_port.AXI_AW.bits.awsize    := AXI_AW_buf.awsize
+    AXI_port.AXI_AW.bits.awburst   := 0x1.U
+    AXI_port.AXI_AW.bits.awlock    := 0.U
+    AXI_port.AXI_AW.bits.awcache   := 0.U
+    AXI_port.AXI_AW.bits.awprot    := 0.U
+
   }
 
 
+
+
+  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.R_W_PHASE){ 
+
+    // AXI R
+    AXI_port.AXI_R.ready := 1.B
+    when(!R_done && AXI_port.AXI_R.fire){
+      AXI_read_buffer := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
+      R_done := AXI_port.AXI_R.bits.rlast
+    }
+
+    // AXI W
+    when(!W_done){
+      W_done := AXI_port.AXI_W.bits.wlast
+      AXI_port.AXI_W.bits.wlast := (write_counter === 0.U)
+      AXI_port.AXI_W.valid      := 1.B
+      AXI_port.AXI_W.bits.wdata := AXI_AW_DATA_BUFFER(DATA_WIDTH-1, 0)
+      AXI_port.AXI_W.bits.wstrb := 0xF.U
+    }
+    when(!W_done && AXI_port.AXI_W.fire){
+      write_counter := write_counter - 1.U
+      AXI_AW_DATA_BUFFER := AXI_AW_DATA_BUFFER >> 32.U
+    }
+
+    when(W_done && R_done){
+      final_response_buffer.io.enq.bits.data := AXI_read_buffer
+      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid // FIXME: this is wrong (load from buffer i think)
+      final_response_buffer.io.enq.valid := 1.B
+    }
+
+  }
+
+  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.R_PHASE){ 
+
+    // AXI R
+    when(!R_done && AXI_port.AXI_R.fire){
+      AXI_read_buffer := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
+      R_done := AXI_port.AXI_R.bits.rlast
+    }
+
+    // AXI R
+    AXI_port.AXI_R.ready := 1.B
+    when(AXI_port.AXI_R.fire && AXI_port.AXI_R.bits.rlast.asBool){
+      AXI_read_buffer := 0.U
+      final_response_buffer.io.enq.bits.data := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
+      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid // FIXME: this is wrong (load from buffer i think)
+      final_response_buffer.io.enq.valid := 1.B
+    }
+  }
+
+
+
+  when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.B_PHASE){
+    AXI_port.AXI_B.ready := 1.B
+  }
+
+  dontTouch(AXI_REQUEST_STATE)
+  dontTouch(final_response_buffer.io)
+
   AXI_port.AXI_AW.valid := 0.B
   AXI_port.AXI_AR.valid := 0.B
-  //printf("%d %d\n", AXI_AW.valid, AXI_AW.bits.m_axi_awaddr)
 
 }
