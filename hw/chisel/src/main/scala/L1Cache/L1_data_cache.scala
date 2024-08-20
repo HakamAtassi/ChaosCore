@@ -886,6 +886,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	MSHR_full_next := (MSHR_front_pointer_next =/= MSHR_back_pointer_next) && (MSHR_front_index_next === MSHR_back_index_next)
 
+	dontTouch(MSHR_front_index_next)
+	dontTouch(MSHR_back_index_next)
+
 	MSHR_full_and_input_match := MSHR_full_next && (MSHRs.map(MSHR_entry => (MSHR_entry.address === io.CPU_request.bits.addr) && !MSHR_entry.full).reduce(_ || _))
 
 	input_cacheable_and_Q_available := input_cacheable && cacheable_request_Q.io.enq.ready
