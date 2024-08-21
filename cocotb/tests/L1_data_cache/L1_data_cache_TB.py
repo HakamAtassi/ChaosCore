@@ -125,7 +125,7 @@ class L1_data_cache_TB:
             if(monitored_memory_type == memory_type_t.STORE):
                 # perform store to model memory
                 #print(f"request addr {hex(monitored_address)}")
-                print(f"write to {hex(monitored_address)} @ {cocotb.utils.get_sim_time('ns')}")
+                print(f"write to {hex(monitored_address)} @ {cocotb.utils.get_sim_time('ns')} <= {hex(data)}")
                 self.golden_memory[monitored_address:monitored_address + monitored_access_width_bytes] = data.to_bytes(monitored_access_width_bytes, 'little')
                 pass
 

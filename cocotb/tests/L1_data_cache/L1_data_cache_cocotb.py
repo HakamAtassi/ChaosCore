@@ -247,6 +247,8 @@ async def test_LRU(dut):
     # Set response port ready
     L1_cache.write_CPU_response_ready(1)
 
+    # Fill a way with data
+
     # Request read
 
     tag     = 4
@@ -256,7 +258,7 @@ async def test_LRU(dut):
 
     await L1_cache.write_CPU_request(valid = 1, addr = address, data=0xdeadbeef ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
 
-    for _ in range(25):
+    for _ in range(2):
         await L1_cache.clock()
 
     # Request read from new tag
@@ -265,45 +267,51 @@ async def test_LRU(dut):
     offset  = 0
     address = (tag<<11) + (set<<5) + (offset<<0)
 
-    await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
+    await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.W, MOB_index=8)
 
 
-    for _ in range(25):
-        await L1_cache.clock()
+    #for _ in range(15):
+        #await L1_cache.clock()
+
+    ### Request read from new tag
+    #tag     = 6
+    #set     = 0
+    #offset  = 0
+    #address = (tag<<11) + (set<<5) + (offset<<0)
+
+    #await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.W, MOB_index=8)
+
+
+    #for _ in range(15):
+        #await L1_cache.clock()
+
+    
+
+    ## Performing a Store then a load
+    ## when all other ways are valid causes a situation where the load will not trigger a write back because the store is still in flight
+    ## while the read miss is taking place. 
 
     ## Request read from new tag
-    tag     = 6
-    set     = 0
-    offset  = 0
-    address = (tag<<11) + (set<<5) + (offset<<0)
+    #tag     = 7
+    #set     = 0
+    #offset  = 0
+    #address = (tag<<11) + (set<<5) + (offset<<0)
 
-    await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
-
-
-    for _ in range(25):
-        await L1_cache.clock()
-
-    # Request read from new tag
-    tag     = 7
-    set     = 0
-    offset  = 0
-    address = (tag<<11) + (set<<5) + (offset<<0)
-
-    await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
-
-    for _ in range(25):
-        await L1_cache.clock()
-
-    # Request read from new tag
-    tag     = 20
-    set     = 0
-    offset  = 0
-    address = (tag<<11) + (set<<5) + (offset<<0)
-
-    await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.W, MOB_index=8)
+    #await L1_cache.write_CPU_request(valid = 1, addr = address, data=0xDEADBEEF ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
 
     for _ in range(30):
         await L1_cache.clock()
+
+    ## Request read from new tag
+    #tag     = 20
+    #set     = 0
+    #offset  = 0
+    #address = (tag<<11) + (set<<5) + (offset<<0)
+
+    #await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.W, MOB_index=8)
+
+    #for _ in range(30):
+        #await L1_cache.clock()
 
 
 
@@ -538,7 +546,7 @@ async def test_fuzz(dut):
             tag_groups[set].append(random.getrandbits(5)) # limit tag size because large memories are slow to simulate
 
     MOB_index = 0
-    for iteration in range(25_000):
+    for iteration in range(250_000):
         # Generate address
         set = random.randrange(0, 63)
         tag = random.sample(sorted(tag_groups[set]), 1)[0]

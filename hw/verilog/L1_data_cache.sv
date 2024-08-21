@@ -238,9 +238,10 @@ module L1_data_cache(
   wire [255:0]     _GEN_9 = {m_axi_rdata, AXI_read_buffer[255:32]};
   wire             _GEN_10 = _GEN_3 & _GEN_8;
   wire             _GEN_11 = _GEN & ~W_done;
-  wire             _GEN_12 = _GEN & W_done & R_done;
+  wire             _GEN_12 = W_done & R_done;
+  wire             _GEN_13 = _GEN & _GEN_12;
   assign m_axi_rready_0 = _GEN_0 | _GEN | _GEN_3;
-  wire             _GEN_13 = _GEN_1 & ~W_done;
+  wire             _GEN_14 = _GEN_1 & ~W_done;
   wire             m_axi_wvalid_0 =
     _GEN_1 ? ~W_done | _GEN_11 | _GEN_6 : _GEN_11 | _GEN_6;
   reg  [1:0]       DATA_CACHE_STATE;
@@ -495,7 +496,7 @@ module L1_data_cache(
   reg  [5:0]       data_memory_evict_address_REG;
   wire [1:0]       evict_way;
   wire [7:0]       data_memory_evict_address = {evict_way, data_memory_evict_address_REG};
-  wire [7:0]       _GEN_14 =
+  wire [7:0]       _GEN_15 =
     valid_miss
       ? data_memory_evict_address
       : _tag_memories_3_io_wr_en_T
@@ -542,10 +543,10 @@ module L1_data_cache(
   assign tag_hit_OH_2 = _tag_memories_2_io_data_out == tag_hit_OH_2_REG & valid_vec_2_REG;
   reg  [20:0]      tag_hit_OH_3_REG;
   assign tag_hit_OH_3 = _tag_memories_3_io_data_out == tag_hit_OH_3_REG & valid_vec_3_REG;
-  wire             _GEN_15 = allocate_way == 2'h0;
-  wire [20:0]      _GEN_16 = {16'h0, allocate_tag};
-  wire             _GEN_17 = allocate_way == 2'h1;
-  wire             _GEN_18 = allocate_way == 2'h2;
+  wire             _GEN_16 = allocate_way == 2'h0;
+  wire [20:0]      _GEN_17 = {16'h0, allocate_tag};
+  wire             _GEN_18 = allocate_way == 2'h1;
+  wire             _GEN_19 = allocate_way == 2'h2;
   reg              valid_memory_0_0;
   reg              valid_memory_0_1;
   reg              valid_memory_0_2;
@@ -803,6 +804,9 @@ module L1_data_cache(
   reg              valid_memory_63_2;
   reg              valid_memory_63_3;
   reg  [5:0]       REG_3;
+  wire             _GEN_20 = evict_way == 2'h0;
+  wire             _GEN_21 = evict_way == 2'h1;
+  wire             _GEN_22 = evict_way == 2'h2;
   reg  [3:0]       PLRU_memory_0;
   reg  [3:0]       PLRU_memory_1;
   reg  [3:0]       PLRU_memory_2;
@@ -867,7 +871,7 @@ module L1_data_cache(
   reg  [3:0]       PLRU_memory_61;
   reg  [3:0]       PLRU_memory_62;
   reg  [3:0]       PLRU_memory_63;
-  wire [63:0][3:0] _GEN_19 =
+  wire [63:0][3:0] _GEN_23 =
     {{PLRU_memory_63},
      {PLRU_memory_62},
      {PLRU_memory_61},
@@ -932,7 +936,8 @@ module L1_data_cache(
      {PLRU_memory_2},
      {PLRU_memory_1},
      {PLRU_memory_0}};
-  wire [3:0]       PLRU = _GEN_19[active_set];
+  reg  [5:0]       PLRU_REG;
+  wire [3:0]       PLRU = _GEN_23[PLRU_REG];
   wire [2:0]       _evict_way_T = ~(PLRU[2:0]);
   assign evict_way =
     _evict_way_T[0] ? 2'h0 : _evict_way_T[1] ? 2'h1 : {1'h1, ~(_evict_way_T[2])};
@@ -1193,9 +1198,1166 @@ module L1_data_cache(
   reg              dirty_memory_63_2;
   reg              dirty_memory_63_3;
   reg  [5:0]       REG_4;
+  reg              inflight_write_miss_0_0;
+  reg              inflight_write_miss_0_1;
+  reg              inflight_write_miss_0_2;
+  reg              inflight_write_miss_0_3;
+  reg              inflight_write_miss_1_0;
+  reg              inflight_write_miss_1_1;
+  reg              inflight_write_miss_1_2;
+  reg              inflight_write_miss_1_3;
+  reg              inflight_write_miss_2_0;
+  reg              inflight_write_miss_2_1;
+  reg              inflight_write_miss_2_2;
+  reg              inflight_write_miss_2_3;
+  reg              inflight_write_miss_3_0;
+  reg              inflight_write_miss_3_1;
+  reg              inflight_write_miss_3_2;
+  reg              inflight_write_miss_3_3;
+  reg              inflight_write_miss_4_0;
+  reg              inflight_write_miss_4_1;
+  reg              inflight_write_miss_4_2;
+  reg              inflight_write_miss_4_3;
+  reg              inflight_write_miss_5_0;
+  reg              inflight_write_miss_5_1;
+  reg              inflight_write_miss_5_2;
+  reg              inflight_write_miss_5_3;
+  reg              inflight_write_miss_6_0;
+  reg              inflight_write_miss_6_1;
+  reg              inflight_write_miss_6_2;
+  reg              inflight_write_miss_6_3;
+  reg              inflight_write_miss_7_0;
+  reg              inflight_write_miss_7_1;
+  reg              inflight_write_miss_7_2;
+  reg              inflight_write_miss_7_3;
+  reg              inflight_write_miss_8_0;
+  reg              inflight_write_miss_8_1;
+  reg              inflight_write_miss_8_2;
+  reg              inflight_write_miss_8_3;
+  reg              inflight_write_miss_9_0;
+  reg              inflight_write_miss_9_1;
+  reg              inflight_write_miss_9_2;
+  reg              inflight_write_miss_9_3;
+  reg              inflight_write_miss_10_0;
+  reg              inflight_write_miss_10_1;
+  reg              inflight_write_miss_10_2;
+  reg              inflight_write_miss_10_3;
+  reg              inflight_write_miss_11_0;
+  reg              inflight_write_miss_11_1;
+  reg              inflight_write_miss_11_2;
+  reg              inflight_write_miss_11_3;
+  reg              inflight_write_miss_12_0;
+  reg              inflight_write_miss_12_1;
+  reg              inflight_write_miss_12_2;
+  reg              inflight_write_miss_12_3;
+  reg              inflight_write_miss_13_0;
+  reg              inflight_write_miss_13_1;
+  reg              inflight_write_miss_13_2;
+  reg              inflight_write_miss_13_3;
+  reg              inflight_write_miss_14_0;
+  reg              inflight_write_miss_14_1;
+  reg              inflight_write_miss_14_2;
+  reg              inflight_write_miss_14_3;
+  reg              inflight_write_miss_15_0;
+  reg              inflight_write_miss_15_1;
+  reg              inflight_write_miss_15_2;
+  reg              inflight_write_miss_15_3;
+  reg              inflight_write_miss_16_0;
+  reg              inflight_write_miss_16_1;
+  reg              inflight_write_miss_16_2;
+  reg              inflight_write_miss_16_3;
+  reg              inflight_write_miss_17_0;
+  reg              inflight_write_miss_17_1;
+  reg              inflight_write_miss_17_2;
+  reg              inflight_write_miss_17_3;
+  reg              inflight_write_miss_18_0;
+  reg              inflight_write_miss_18_1;
+  reg              inflight_write_miss_18_2;
+  reg              inflight_write_miss_18_3;
+  reg              inflight_write_miss_19_0;
+  reg              inflight_write_miss_19_1;
+  reg              inflight_write_miss_19_2;
+  reg              inflight_write_miss_19_3;
+  reg              inflight_write_miss_20_0;
+  reg              inflight_write_miss_20_1;
+  reg              inflight_write_miss_20_2;
+  reg              inflight_write_miss_20_3;
+  reg              inflight_write_miss_21_0;
+  reg              inflight_write_miss_21_1;
+  reg              inflight_write_miss_21_2;
+  reg              inflight_write_miss_21_3;
+  reg              inflight_write_miss_22_0;
+  reg              inflight_write_miss_22_1;
+  reg              inflight_write_miss_22_2;
+  reg              inflight_write_miss_22_3;
+  reg              inflight_write_miss_23_0;
+  reg              inflight_write_miss_23_1;
+  reg              inflight_write_miss_23_2;
+  reg              inflight_write_miss_23_3;
+  reg              inflight_write_miss_24_0;
+  reg              inflight_write_miss_24_1;
+  reg              inflight_write_miss_24_2;
+  reg              inflight_write_miss_24_3;
+  reg              inflight_write_miss_25_0;
+  reg              inflight_write_miss_25_1;
+  reg              inflight_write_miss_25_2;
+  reg              inflight_write_miss_25_3;
+  reg              inflight_write_miss_26_0;
+  reg              inflight_write_miss_26_1;
+  reg              inflight_write_miss_26_2;
+  reg              inflight_write_miss_26_3;
+  reg              inflight_write_miss_27_0;
+  reg              inflight_write_miss_27_1;
+  reg              inflight_write_miss_27_2;
+  reg              inflight_write_miss_27_3;
+  reg              inflight_write_miss_28_0;
+  reg              inflight_write_miss_28_1;
+  reg              inflight_write_miss_28_2;
+  reg              inflight_write_miss_28_3;
+  reg              inflight_write_miss_29_0;
+  reg              inflight_write_miss_29_1;
+  reg              inflight_write_miss_29_2;
+  reg              inflight_write_miss_29_3;
+  reg              inflight_write_miss_30_0;
+  reg              inflight_write_miss_30_1;
+  reg              inflight_write_miss_30_2;
+  reg              inflight_write_miss_30_3;
+  reg              inflight_write_miss_31_0;
+  reg              inflight_write_miss_31_1;
+  reg              inflight_write_miss_31_2;
+  reg              inflight_write_miss_31_3;
+  reg              inflight_write_miss_32_0;
+  reg              inflight_write_miss_32_1;
+  reg              inflight_write_miss_32_2;
+  reg              inflight_write_miss_32_3;
+  reg              inflight_write_miss_33_0;
+  reg              inflight_write_miss_33_1;
+  reg              inflight_write_miss_33_2;
+  reg              inflight_write_miss_33_3;
+  reg              inflight_write_miss_34_0;
+  reg              inflight_write_miss_34_1;
+  reg              inflight_write_miss_34_2;
+  reg              inflight_write_miss_34_3;
+  reg              inflight_write_miss_35_0;
+  reg              inflight_write_miss_35_1;
+  reg              inflight_write_miss_35_2;
+  reg              inflight_write_miss_35_3;
+  reg              inflight_write_miss_36_0;
+  reg              inflight_write_miss_36_1;
+  reg              inflight_write_miss_36_2;
+  reg              inflight_write_miss_36_3;
+  reg              inflight_write_miss_37_0;
+  reg              inflight_write_miss_37_1;
+  reg              inflight_write_miss_37_2;
+  reg              inflight_write_miss_37_3;
+  reg              inflight_write_miss_38_0;
+  reg              inflight_write_miss_38_1;
+  reg              inflight_write_miss_38_2;
+  reg              inflight_write_miss_38_3;
+  reg              inflight_write_miss_39_0;
+  reg              inflight_write_miss_39_1;
+  reg              inflight_write_miss_39_2;
+  reg              inflight_write_miss_39_3;
+  reg              inflight_write_miss_40_0;
+  reg              inflight_write_miss_40_1;
+  reg              inflight_write_miss_40_2;
+  reg              inflight_write_miss_40_3;
+  reg              inflight_write_miss_41_0;
+  reg              inflight_write_miss_41_1;
+  reg              inflight_write_miss_41_2;
+  reg              inflight_write_miss_41_3;
+  reg              inflight_write_miss_42_0;
+  reg              inflight_write_miss_42_1;
+  reg              inflight_write_miss_42_2;
+  reg              inflight_write_miss_42_3;
+  reg              inflight_write_miss_43_0;
+  reg              inflight_write_miss_43_1;
+  reg              inflight_write_miss_43_2;
+  reg              inflight_write_miss_43_3;
+  reg              inflight_write_miss_44_0;
+  reg              inflight_write_miss_44_1;
+  reg              inflight_write_miss_44_2;
+  reg              inflight_write_miss_44_3;
+  reg              inflight_write_miss_45_0;
+  reg              inflight_write_miss_45_1;
+  reg              inflight_write_miss_45_2;
+  reg              inflight_write_miss_45_3;
+  reg              inflight_write_miss_46_0;
+  reg              inflight_write_miss_46_1;
+  reg              inflight_write_miss_46_2;
+  reg              inflight_write_miss_46_3;
+  reg              inflight_write_miss_47_0;
+  reg              inflight_write_miss_47_1;
+  reg              inflight_write_miss_47_2;
+  reg              inflight_write_miss_47_3;
+  reg              inflight_write_miss_48_0;
+  reg              inflight_write_miss_48_1;
+  reg              inflight_write_miss_48_2;
+  reg              inflight_write_miss_48_3;
+  reg              inflight_write_miss_49_0;
+  reg              inflight_write_miss_49_1;
+  reg              inflight_write_miss_49_2;
+  reg              inflight_write_miss_49_3;
+  reg              inflight_write_miss_50_0;
+  reg              inflight_write_miss_50_1;
+  reg              inflight_write_miss_50_2;
+  reg              inflight_write_miss_50_3;
+  reg              inflight_write_miss_51_0;
+  reg              inflight_write_miss_51_1;
+  reg              inflight_write_miss_51_2;
+  reg              inflight_write_miss_51_3;
+  reg              inflight_write_miss_52_0;
+  reg              inflight_write_miss_52_1;
+  reg              inflight_write_miss_52_2;
+  reg              inflight_write_miss_52_3;
+  reg              inflight_write_miss_53_0;
+  reg              inflight_write_miss_53_1;
+  reg              inflight_write_miss_53_2;
+  reg              inflight_write_miss_53_3;
+  reg              inflight_write_miss_54_0;
+  reg              inflight_write_miss_54_1;
+  reg              inflight_write_miss_54_2;
+  reg              inflight_write_miss_54_3;
+  reg              inflight_write_miss_55_0;
+  reg              inflight_write_miss_55_1;
+  reg              inflight_write_miss_55_2;
+  reg              inflight_write_miss_55_3;
+  reg              inflight_write_miss_56_0;
+  reg              inflight_write_miss_56_1;
+  reg              inflight_write_miss_56_2;
+  reg              inflight_write_miss_56_3;
+  reg              inflight_write_miss_57_0;
+  reg              inflight_write_miss_57_1;
+  reg              inflight_write_miss_57_2;
+  reg              inflight_write_miss_57_3;
+  reg              inflight_write_miss_58_0;
+  reg              inflight_write_miss_58_1;
+  reg              inflight_write_miss_58_2;
+  reg              inflight_write_miss_58_3;
+  reg              inflight_write_miss_59_0;
+  reg              inflight_write_miss_59_1;
+  reg              inflight_write_miss_59_2;
+  reg              inflight_write_miss_59_3;
+  reg              inflight_write_miss_60_0;
+  reg              inflight_write_miss_60_1;
+  reg              inflight_write_miss_60_2;
+  reg              inflight_write_miss_60_3;
+  reg              inflight_write_miss_61_0;
+  reg              inflight_write_miss_61_1;
+  reg              inflight_write_miss_61_2;
+  reg              inflight_write_miss_61_3;
+  reg              inflight_write_miss_62_0;
+  reg              inflight_write_miss_62_1;
+  reg              inflight_write_miss_62_2;
+  reg              inflight_write_miss_62_3;
+  reg              inflight_write_miss_63_0;
+  reg              inflight_write_miss_63_1;
+  reg              inflight_write_miss_63_2;
+  reg              inflight_write_miss_63_3;
+  reg              REG_5;
+  wire             _GEN_24 = REG_5 & valid_miss;
+  reg  [5:0]       REG_6;
+  wire             _GEN_25 = REG_6 == 6'h0;
+  wire             _GEN_26 = REG_6 == 6'h1;
+  wire             _GEN_27 = REG_6 == 6'h2;
+  wire             _GEN_28 = REG_6 == 6'h3;
+  wire             _GEN_29 = REG_6 == 6'h4;
+  wire             _GEN_30 = REG_6 == 6'h5;
+  wire             _GEN_31 = REG_6 == 6'h6;
+  wire             _GEN_32 = REG_6 == 6'h7;
+  wire             _GEN_33 = REG_6 == 6'h8;
+  wire             _GEN_34 = REG_6 == 6'h9;
+  wire             _GEN_35 = REG_6 == 6'hA;
+  wire             _GEN_36 = REG_6 == 6'hB;
+  wire             _GEN_37 = REG_6 == 6'hC;
+  wire             _GEN_38 = REG_6 == 6'hD;
+  wire             _GEN_39 = REG_6 == 6'hE;
+  wire             _GEN_40 = REG_6 == 6'hF;
+  wire             _GEN_41 = REG_6 == 6'h10;
+  wire             _GEN_42 = REG_6 == 6'h11;
+  wire             _GEN_43 = REG_6 == 6'h12;
+  wire             _GEN_44 = REG_6 == 6'h13;
+  wire             _GEN_45 = REG_6 == 6'h14;
+  wire             _GEN_46 = REG_6 == 6'h15;
+  wire             _GEN_47 = REG_6 == 6'h16;
+  wire             _GEN_48 = REG_6 == 6'h17;
+  wire             _GEN_49 = REG_6 == 6'h18;
+  wire             _GEN_50 = REG_6 == 6'h19;
+  wire             _GEN_51 = REG_6 == 6'h1A;
+  wire             _GEN_52 = REG_6 == 6'h1B;
+  wire             _GEN_53 = REG_6 == 6'h1C;
+  wire             _GEN_54 = REG_6 == 6'h1D;
+  wire             _GEN_55 = REG_6 == 6'h1E;
+  wire             _GEN_56 = REG_6 == 6'h1F;
+  wire             _GEN_57 = REG_6 == 6'h20;
+  wire             _GEN_58 = REG_6 == 6'h21;
+  wire             _GEN_59 = REG_6 == 6'h22;
+  wire             _GEN_60 = REG_6 == 6'h23;
+  wire             _GEN_61 = REG_6 == 6'h24;
+  wire             _GEN_62 = REG_6 == 6'h25;
+  wire             _GEN_63 = REG_6 == 6'h26;
+  wire             _GEN_64 = REG_6 == 6'h27;
+  wire             _GEN_65 = REG_6 == 6'h28;
+  wire             _GEN_66 = REG_6 == 6'h29;
+  wire             _GEN_67 = REG_6 == 6'h2A;
+  wire             _GEN_68 = REG_6 == 6'h2B;
+  wire             _GEN_69 = REG_6 == 6'h2C;
+  wire             _GEN_70 = REG_6 == 6'h2D;
+  wire             _GEN_71 = REG_6 == 6'h2E;
+  wire             _GEN_72 = REG_6 == 6'h2F;
+  wire             _GEN_73 = REG_6 == 6'h30;
+  wire             _GEN_74 = REG_6 == 6'h31;
+  wire             _GEN_75 = REG_6 == 6'h32;
+  wire             _GEN_76 = REG_6 == 6'h33;
+  wire             _GEN_77 = REG_6 == 6'h34;
+  wire             _GEN_78 = REG_6 == 6'h35;
+  wire             _GEN_79 = REG_6 == 6'h36;
+  wire             _GEN_80 = REG_6 == 6'h37;
+  wire             _GEN_81 = REG_6 == 6'h38;
+  wire             _GEN_82 = REG_6 == 6'h39;
+  wire             _GEN_83 = REG_6 == 6'h3A;
+  wire             _GEN_84 = REG_6 == 6'h3B;
+  wire             _GEN_85 = REG_6 == 6'h3C;
+  wire             _GEN_86 = REG_6 == 6'h3D;
+  wire             _GEN_87 = REG_6 == 6'h3E;
+  reg  [5:0]       REG_7;
+  wire             _GEN_88 = REG_7 == 6'h0;
+  wire             _GEN_89 = hit_way == 2'h0;
+  wire             inflight_write_miss_next_0_0 =
+    ~(valid_hit & _GEN_88 & _GEN_89)
+    & (_GEN_24 & _GEN_25 & _GEN_20 | inflight_write_miss_0_0);
+  wire             _GEN_90 = hit_way == 2'h1;
+  wire             inflight_write_miss_next_0_1 =
+    ~(valid_hit & _GEN_88 & _GEN_90)
+    & (_GEN_24 & _GEN_25 & _GEN_21 | inflight_write_miss_0_1);
+  wire             _GEN_91 = hit_way == 2'h2;
+  wire             inflight_write_miss_next_0_2 =
+    ~(valid_hit & _GEN_88 & _GEN_91)
+    & (_GEN_24 & _GEN_25 & _GEN_22 | inflight_write_miss_0_2);
+  wire             inflight_write_miss_next_0_3 =
+    ~(valid_hit & _GEN_88 & (&hit_way))
+    & (_GEN_24 & _GEN_25 & (&evict_way) | inflight_write_miss_0_3);
+  wire             _GEN_92 = REG_7 == 6'h1;
+  wire             inflight_write_miss_next_1_0 =
+    ~(valid_hit & _GEN_92 & _GEN_89)
+    & (_GEN_24 & _GEN_26 & _GEN_20 | inflight_write_miss_1_0);
+  wire             inflight_write_miss_next_1_1 =
+    ~(valid_hit & _GEN_92 & _GEN_90)
+    & (_GEN_24 & _GEN_26 & _GEN_21 | inflight_write_miss_1_1);
+  wire             inflight_write_miss_next_1_2 =
+    ~(valid_hit & _GEN_92 & _GEN_91)
+    & (_GEN_24 & _GEN_26 & _GEN_22 | inflight_write_miss_1_2);
+  wire             inflight_write_miss_next_1_3 =
+    ~(valid_hit & _GEN_92 & (&hit_way))
+    & (_GEN_24 & _GEN_26 & (&evict_way) | inflight_write_miss_1_3);
+  wire             _GEN_93 = REG_7 == 6'h2;
+  wire             inflight_write_miss_next_2_0 =
+    ~(valid_hit & _GEN_93 & _GEN_89)
+    & (_GEN_24 & _GEN_27 & _GEN_20 | inflight_write_miss_2_0);
+  wire             inflight_write_miss_next_2_1 =
+    ~(valid_hit & _GEN_93 & _GEN_90)
+    & (_GEN_24 & _GEN_27 & _GEN_21 | inflight_write_miss_2_1);
+  wire             inflight_write_miss_next_2_2 =
+    ~(valid_hit & _GEN_93 & _GEN_91)
+    & (_GEN_24 & _GEN_27 & _GEN_22 | inflight_write_miss_2_2);
+  wire             inflight_write_miss_next_2_3 =
+    ~(valid_hit & _GEN_93 & (&hit_way))
+    & (_GEN_24 & _GEN_27 & (&evict_way) | inflight_write_miss_2_3);
+  wire             _GEN_94 = REG_7 == 6'h3;
+  wire             inflight_write_miss_next_3_0 =
+    ~(valid_hit & _GEN_94 & _GEN_89)
+    & (_GEN_24 & _GEN_28 & _GEN_20 | inflight_write_miss_3_0);
+  wire             inflight_write_miss_next_3_1 =
+    ~(valid_hit & _GEN_94 & _GEN_90)
+    & (_GEN_24 & _GEN_28 & _GEN_21 | inflight_write_miss_3_1);
+  wire             inflight_write_miss_next_3_2 =
+    ~(valid_hit & _GEN_94 & _GEN_91)
+    & (_GEN_24 & _GEN_28 & _GEN_22 | inflight_write_miss_3_2);
+  wire             inflight_write_miss_next_3_3 =
+    ~(valid_hit & _GEN_94 & (&hit_way))
+    & (_GEN_24 & _GEN_28 & (&evict_way) | inflight_write_miss_3_3);
+  wire             _GEN_95 = REG_7 == 6'h4;
+  wire             inflight_write_miss_next_4_0 =
+    ~(valid_hit & _GEN_95 & _GEN_89)
+    & (_GEN_24 & _GEN_29 & _GEN_20 | inflight_write_miss_4_0);
+  wire             inflight_write_miss_next_4_1 =
+    ~(valid_hit & _GEN_95 & _GEN_90)
+    & (_GEN_24 & _GEN_29 & _GEN_21 | inflight_write_miss_4_1);
+  wire             inflight_write_miss_next_4_2 =
+    ~(valid_hit & _GEN_95 & _GEN_91)
+    & (_GEN_24 & _GEN_29 & _GEN_22 | inflight_write_miss_4_2);
+  wire             inflight_write_miss_next_4_3 =
+    ~(valid_hit & _GEN_95 & (&hit_way))
+    & (_GEN_24 & _GEN_29 & (&evict_way) | inflight_write_miss_4_3);
+  wire             _GEN_96 = REG_7 == 6'h5;
+  wire             inflight_write_miss_next_5_0 =
+    ~(valid_hit & _GEN_96 & _GEN_89)
+    & (_GEN_24 & _GEN_30 & _GEN_20 | inflight_write_miss_5_0);
+  wire             inflight_write_miss_next_5_1 =
+    ~(valid_hit & _GEN_96 & _GEN_90)
+    & (_GEN_24 & _GEN_30 & _GEN_21 | inflight_write_miss_5_1);
+  wire             inflight_write_miss_next_5_2 =
+    ~(valid_hit & _GEN_96 & _GEN_91)
+    & (_GEN_24 & _GEN_30 & _GEN_22 | inflight_write_miss_5_2);
+  wire             inflight_write_miss_next_5_3 =
+    ~(valid_hit & _GEN_96 & (&hit_way))
+    & (_GEN_24 & _GEN_30 & (&evict_way) | inflight_write_miss_5_3);
+  wire             _GEN_97 = REG_7 == 6'h6;
+  wire             inflight_write_miss_next_6_0 =
+    ~(valid_hit & _GEN_97 & _GEN_89)
+    & (_GEN_24 & _GEN_31 & _GEN_20 | inflight_write_miss_6_0);
+  wire             inflight_write_miss_next_6_1 =
+    ~(valid_hit & _GEN_97 & _GEN_90)
+    & (_GEN_24 & _GEN_31 & _GEN_21 | inflight_write_miss_6_1);
+  wire             inflight_write_miss_next_6_2 =
+    ~(valid_hit & _GEN_97 & _GEN_91)
+    & (_GEN_24 & _GEN_31 & _GEN_22 | inflight_write_miss_6_2);
+  wire             inflight_write_miss_next_6_3 =
+    ~(valid_hit & _GEN_97 & (&hit_way))
+    & (_GEN_24 & _GEN_31 & (&evict_way) | inflight_write_miss_6_3);
+  wire             _GEN_98 = REG_7 == 6'h7;
+  wire             inflight_write_miss_next_7_0 =
+    ~(valid_hit & _GEN_98 & _GEN_89)
+    & (_GEN_24 & _GEN_32 & _GEN_20 | inflight_write_miss_7_0);
+  wire             inflight_write_miss_next_7_1 =
+    ~(valid_hit & _GEN_98 & _GEN_90)
+    & (_GEN_24 & _GEN_32 & _GEN_21 | inflight_write_miss_7_1);
+  wire             inflight_write_miss_next_7_2 =
+    ~(valid_hit & _GEN_98 & _GEN_91)
+    & (_GEN_24 & _GEN_32 & _GEN_22 | inflight_write_miss_7_2);
+  wire             inflight_write_miss_next_7_3 =
+    ~(valid_hit & _GEN_98 & (&hit_way))
+    & (_GEN_24 & _GEN_32 & (&evict_way) | inflight_write_miss_7_3);
+  wire             _GEN_99 = REG_7 == 6'h8;
+  wire             inflight_write_miss_next_8_0 =
+    ~(valid_hit & _GEN_99 & _GEN_89)
+    & (_GEN_24 & _GEN_33 & _GEN_20 | inflight_write_miss_8_0);
+  wire             inflight_write_miss_next_8_1 =
+    ~(valid_hit & _GEN_99 & _GEN_90)
+    & (_GEN_24 & _GEN_33 & _GEN_21 | inflight_write_miss_8_1);
+  wire             inflight_write_miss_next_8_2 =
+    ~(valid_hit & _GEN_99 & _GEN_91)
+    & (_GEN_24 & _GEN_33 & _GEN_22 | inflight_write_miss_8_2);
+  wire             inflight_write_miss_next_8_3 =
+    ~(valid_hit & _GEN_99 & (&hit_way))
+    & (_GEN_24 & _GEN_33 & (&evict_way) | inflight_write_miss_8_3);
+  wire             _GEN_100 = REG_7 == 6'h9;
+  wire             inflight_write_miss_next_9_0 =
+    ~(valid_hit & _GEN_100 & _GEN_89)
+    & (_GEN_24 & _GEN_34 & _GEN_20 | inflight_write_miss_9_0);
+  wire             inflight_write_miss_next_9_1 =
+    ~(valid_hit & _GEN_100 & _GEN_90)
+    & (_GEN_24 & _GEN_34 & _GEN_21 | inflight_write_miss_9_1);
+  wire             inflight_write_miss_next_9_2 =
+    ~(valid_hit & _GEN_100 & _GEN_91)
+    & (_GEN_24 & _GEN_34 & _GEN_22 | inflight_write_miss_9_2);
+  wire             inflight_write_miss_next_9_3 =
+    ~(valid_hit & _GEN_100 & (&hit_way))
+    & (_GEN_24 & _GEN_34 & (&evict_way) | inflight_write_miss_9_3);
+  wire             _GEN_101 = REG_7 == 6'hA;
+  wire             inflight_write_miss_next_10_0 =
+    ~(valid_hit & _GEN_101 & _GEN_89)
+    & (_GEN_24 & _GEN_35 & _GEN_20 | inflight_write_miss_10_0);
+  wire             inflight_write_miss_next_10_1 =
+    ~(valid_hit & _GEN_101 & _GEN_90)
+    & (_GEN_24 & _GEN_35 & _GEN_21 | inflight_write_miss_10_1);
+  wire             inflight_write_miss_next_10_2 =
+    ~(valid_hit & _GEN_101 & _GEN_91)
+    & (_GEN_24 & _GEN_35 & _GEN_22 | inflight_write_miss_10_2);
+  wire             inflight_write_miss_next_10_3 =
+    ~(valid_hit & _GEN_101 & (&hit_way))
+    & (_GEN_24 & _GEN_35 & (&evict_way) | inflight_write_miss_10_3);
+  wire             _GEN_102 = REG_7 == 6'hB;
+  wire             inflight_write_miss_next_11_0 =
+    ~(valid_hit & _GEN_102 & _GEN_89)
+    & (_GEN_24 & _GEN_36 & _GEN_20 | inflight_write_miss_11_0);
+  wire             inflight_write_miss_next_11_1 =
+    ~(valid_hit & _GEN_102 & _GEN_90)
+    & (_GEN_24 & _GEN_36 & _GEN_21 | inflight_write_miss_11_1);
+  wire             inflight_write_miss_next_11_2 =
+    ~(valid_hit & _GEN_102 & _GEN_91)
+    & (_GEN_24 & _GEN_36 & _GEN_22 | inflight_write_miss_11_2);
+  wire             inflight_write_miss_next_11_3 =
+    ~(valid_hit & _GEN_102 & (&hit_way))
+    & (_GEN_24 & _GEN_36 & (&evict_way) | inflight_write_miss_11_3);
+  wire             _GEN_103 = REG_7 == 6'hC;
+  wire             inflight_write_miss_next_12_0 =
+    ~(valid_hit & _GEN_103 & _GEN_89)
+    & (_GEN_24 & _GEN_37 & _GEN_20 | inflight_write_miss_12_0);
+  wire             inflight_write_miss_next_12_1 =
+    ~(valid_hit & _GEN_103 & _GEN_90)
+    & (_GEN_24 & _GEN_37 & _GEN_21 | inflight_write_miss_12_1);
+  wire             inflight_write_miss_next_12_2 =
+    ~(valid_hit & _GEN_103 & _GEN_91)
+    & (_GEN_24 & _GEN_37 & _GEN_22 | inflight_write_miss_12_2);
+  wire             inflight_write_miss_next_12_3 =
+    ~(valid_hit & _GEN_103 & (&hit_way))
+    & (_GEN_24 & _GEN_37 & (&evict_way) | inflight_write_miss_12_3);
+  wire             _GEN_104 = REG_7 == 6'hD;
+  wire             inflight_write_miss_next_13_0 =
+    ~(valid_hit & _GEN_104 & _GEN_89)
+    & (_GEN_24 & _GEN_38 & _GEN_20 | inflight_write_miss_13_0);
+  wire             inflight_write_miss_next_13_1 =
+    ~(valid_hit & _GEN_104 & _GEN_90)
+    & (_GEN_24 & _GEN_38 & _GEN_21 | inflight_write_miss_13_1);
+  wire             inflight_write_miss_next_13_2 =
+    ~(valid_hit & _GEN_104 & _GEN_91)
+    & (_GEN_24 & _GEN_38 & _GEN_22 | inflight_write_miss_13_2);
+  wire             inflight_write_miss_next_13_3 =
+    ~(valid_hit & _GEN_104 & (&hit_way))
+    & (_GEN_24 & _GEN_38 & (&evict_way) | inflight_write_miss_13_3);
+  wire             _GEN_105 = REG_7 == 6'hE;
+  wire             inflight_write_miss_next_14_0 =
+    ~(valid_hit & _GEN_105 & _GEN_89)
+    & (_GEN_24 & _GEN_39 & _GEN_20 | inflight_write_miss_14_0);
+  wire             inflight_write_miss_next_14_1 =
+    ~(valid_hit & _GEN_105 & _GEN_90)
+    & (_GEN_24 & _GEN_39 & _GEN_21 | inflight_write_miss_14_1);
+  wire             inflight_write_miss_next_14_2 =
+    ~(valid_hit & _GEN_105 & _GEN_91)
+    & (_GEN_24 & _GEN_39 & _GEN_22 | inflight_write_miss_14_2);
+  wire             inflight_write_miss_next_14_3 =
+    ~(valid_hit & _GEN_105 & (&hit_way))
+    & (_GEN_24 & _GEN_39 & (&evict_way) | inflight_write_miss_14_3);
+  wire             _GEN_106 = REG_7 == 6'hF;
+  wire             inflight_write_miss_next_15_0 =
+    ~(valid_hit & _GEN_106 & _GEN_89)
+    & (_GEN_24 & _GEN_40 & _GEN_20 | inflight_write_miss_15_0);
+  wire             inflight_write_miss_next_15_1 =
+    ~(valid_hit & _GEN_106 & _GEN_90)
+    & (_GEN_24 & _GEN_40 & _GEN_21 | inflight_write_miss_15_1);
+  wire             inflight_write_miss_next_15_2 =
+    ~(valid_hit & _GEN_106 & _GEN_91)
+    & (_GEN_24 & _GEN_40 & _GEN_22 | inflight_write_miss_15_2);
+  wire             inflight_write_miss_next_15_3 =
+    ~(valid_hit & _GEN_106 & (&hit_way))
+    & (_GEN_24 & _GEN_40 & (&evict_way) | inflight_write_miss_15_3);
+  wire             _GEN_107 = REG_7 == 6'h10;
+  wire             inflight_write_miss_next_16_0 =
+    ~(valid_hit & _GEN_107 & _GEN_89)
+    & (_GEN_24 & _GEN_41 & _GEN_20 | inflight_write_miss_16_0);
+  wire             inflight_write_miss_next_16_1 =
+    ~(valid_hit & _GEN_107 & _GEN_90)
+    & (_GEN_24 & _GEN_41 & _GEN_21 | inflight_write_miss_16_1);
+  wire             inflight_write_miss_next_16_2 =
+    ~(valid_hit & _GEN_107 & _GEN_91)
+    & (_GEN_24 & _GEN_41 & _GEN_22 | inflight_write_miss_16_2);
+  wire             inflight_write_miss_next_16_3 =
+    ~(valid_hit & _GEN_107 & (&hit_way))
+    & (_GEN_24 & _GEN_41 & (&evict_way) | inflight_write_miss_16_3);
+  wire             _GEN_108 = REG_7 == 6'h11;
+  wire             inflight_write_miss_next_17_0 =
+    ~(valid_hit & _GEN_108 & _GEN_89)
+    & (_GEN_24 & _GEN_42 & _GEN_20 | inflight_write_miss_17_0);
+  wire             inflight_write_miss_next_17_1 =
+    ~(valid_hit & _GEN_108 & _GEN_90)
+    & (_GEN_24 & _GEN_42 & _GEN_21 | inflight_write_miss_17_1);
+  wire             inflight_write_miss_next_17_2 =
+    ~(valid_hit & _GEN_108 & _GEN_91)
+    & (_GEN_24 & _GEN_42 & _GEN_22 | inflight_write_miss_17_2);
+  wire             inflight_write_miss_next_17_3 =
+    ~(valid_hit & _GEN_108 & (&hit_way))
+    & (_GEN_24 & _GEN_42 & (&evict_way) | inflight_write_miss_17_3);
+  wire             _GEN_109 = REG_7 == 6'h12;
+  wire             inflight_write_miss_next_18_0 =
+    ~(valid_hit & _GEN_109 & _GEN_89)
+    & (_GEN_24 & _GEN_43 & _GEN_20 | inflight_write_miss_18_0);
+  wire             inflight_write_miss_next_18_1 =
+    ~(valid_hit & _GEN_109 & _GEN_90)
+    & (_GEN_24 & _GEN_43 & _GEN_21 | inflight_write_miss_18_1);
+  wire             inflight_write_miss_next_18_2 =
+    ~(valid_hit & _GEN_109 & _GEN_91)
+    & (_GEN_24 & _GEN_43 & _GEN_22 | inflight_write_miss_18_2);
+  wire             inflight_write_miss_next_18_3 =
+    ~(valid_hit & _GEN_109 & (&hit_way))
+    & (_GEN_24 & _GEN_43 & (&evict_way) | inflight_write_miss_18_3);
+  wire             _GEN_110 = REG_7 == 6'h13;
+  wire             inflight_write_miss_next_19_0 =
+    ~(valid_hit & _GEN_110 & _GEN_89)
+    & (_GEN_24 & _GEN_44 & _GEN_20 | inflight_write_miss_19_0);
+  wire             inflight_write_miss_next_19_1 =
+    ~(valid_hit & _GEN_110 & _GEN_90)
+    & (_GEN_24 & _GEN_44 & _GEN_21 | inflight_write_miss_19_1);
+  wire             inflight_write_miss_next_19_2 =
+    ~(valid_hit & _GEN_110 & _GEN_91)
+    & (_GEN_24 & _GEN_44 & _GEN_22 | inflight_write_miss_19_2);
+  wire             inflight_write_miss_next_19_3 =
+    ~(valid_hit & _GEN_110 & (&hit_way))
+    & (_GEN_24 & _GEN_44 & (&evict_way) | inflight_write_miss_19_3);
+  wire             _GEN_111 = REG_7 == 6'h14;
+  wire             inflight_write_miss_next_20_0 =
+    ~(valid_hit & _GEN_111 & _GEN_89)
+    & (_GEN_24 & _GEN_45 & _GEN_20 | inflight_write_miss_20_0);
+  wire             inflight_write_miss_next_20_1 =
+    ~(valid_hit & _GEN_111 & _GEN_90)
+    & (_GEN_24 & _GEN_45 & _GEN_21 | inflight_write_miss_20_1);
+  wire             inflight_write_miss_next_20_2 =
+    ~(valid_hit & _GEN_111 & _GEN_91)
+    & (_GEN_24 & _GEN_45 & _GEN_22 | inflight_write_miss_20_2);
+  wire             inflight_write_miss_next_20_3 =
+    ~(valid_hit & _GEN_111 & (&hit_way))
+    & (_GEN_24 & _GEN_45 & (&evict_way) | inflight_write_miss_20_3);
+  wire             _GEN_112 = REG_7 == 6'h15;
+  wire             inflight_write_miss_next_21_0 =
+    ~(valid_hit & _GEN_112 & _GEN_89)
+    & (_GEN_24 & _GEN_46 & _GEN_20 | inflight_write_miss_21_0);
+  wire             inflight_write_miss_next_21_1 =
+    ~(valid_hit & _GEN_112 & _GEN_90)
+    & (_GEN_24 & _GEN_46 & _GEN_21 | inflight_write_miss_21_1);
+  wire             inflight_write_miss_next_21_2 =
+    ~(valid_hit & _GEN_112 & _GEN_91)
+    & (_GEN_24 & _GEN_46 & _GEN_22 | inflight_write_miss_21_2);
+  wire             inflight_write_miss_next_21_3 =
+    ~(valid_hit & _GEN_112 & (&hit_way))
+    & (_GEN_24 & _GEN_46 & (&evict_way) | inflight_write_miss_21_3);
+  wire             _GEN_113 = REG_7 == 6'h16;
+  wire             inflight_write_miss_next_22_0 =
+    ~(valid_hit & _GEN_113 & _GEN_89)
+    & (_GEN_24 & _GEN_47 & _GEN_20 | inflight_write_miss_22_0);
+  wire             inflight_write_miss_next_22_1 =
+    ~(valid_hit & _GEN_113 & _GEN_90)
+    & (_GEN_24 & _GEN_47 & _GEN_21 | inflight_write_miss_22_1);
+  wire             inflight_write_miss_next_22_2 =
+    ~(valid_hit & _GEN_113 & _GEN_91)
+    & (_GEN_24 & _GEN_47 & _GEN_22 | inflight_write_miss_22_2);
+  wire             inflight_write_miss_next_22_3 =
+    ~(valid_hit & _GEN_113 & (&hit_way))
+    & (_GEN_24 & _GEN_47 & (&evict_way) | inflight_write_miss_22_3);
+  wire             _GEN_114 = REG_7 == 6'h17;
+  wire             inflight_write_miss_next_23_0 =
+    ~(valid_hit & _GEN_114 & _GEN_89)
+    & (_GEN_24 & _GEN_48 & _GEN_20 | inflight_write_miss_23_0);
+  wire             inflight_write_miss_next_23_1 =
+    ~(valid_hit & _GEN_114 & _GEN_90)
+    & (_GEN_24 & _GEN_48 & _GEN_21 | inflight_write_miss_23_1);
+  wire             inflight_write_miss_next_23_2 =
+    ~(valid_hit & _GEN_114 & _GEN_91)
+    & (_GEN_24 & _GEN_48 & _GEN_22 | inflight_write_miss_23_2);
+  wire             inflight_write_miss_next_23_3 =
+    ~(valid_hit & _GEN_114 & (&hit_way))
+    & (_GEN_24 & _GEN_48 & (&evict_way) | inflight_write_miss_23_3);
+  wire             _GEN_115 = REG_7 == 6'h18;
+  wire             inflight_write_miss_next_24_0 =
+    ~(valid_hit & _GEN_115 & _GEN_89)
+    & (_GEN_24 & _GEN_49 & _GEN_20 | inflight_write_miss_24_0);
+  wire             inflight_write_miss_next_24_1 =
+    ~(valid_hit & _GEN_115 & _GEN_90)
+    & (_GEN_24 & _GEN_49 & _GEN_21 | inflight_write_miss_24_1);
+  wire             inflight_write_miss_next_24_2 =
+    ~(valid_hit & _GEN_115 & _GEN_91)
+    & (_GEN_24 & _GEN_49 & _GEN_22 | inflight_write_miss_24_2);
+  wire             inflight_write_miss_next_24_3 =
+    ~(valid_hit & _GEN_115 & (&hit_way))
+    & (_GEN_24 & _GEN_49 & (&evict_way) | inflight_write_miss_24_3);
+  wire             _GEN_116 = REG_7 == 6'h19;
+  wire             inflight_write_miss_next_25_0 =
+    ~(valid_hit & _GEN_116 & _GEN_89)
+    & (_GEN_24 & _GEN_50 & _GEN_20 | inflight_write_miss_25_0);
+  wire             inflight_write_miss_next_25_1 =
+    ~(valid_hit & _GEN_116 & _GEN_90)
+    & (_GEN_24 & _GEN_50 & _GEN_21 | inflight_write_miss_25_1);
+  wire             inflight_write_miss_next_25_2 =
+    ~(valid_hit & _GEN_116 & _GEN_91)
+    & (_GEN_24 & _GEN_50 & _GEN_22 | inflight_write_miss_25_2);
+  wire             inflight_write_miss_next_25_3 =
+    ~(valid_hit & _GEN_116 & (&hit_way))
+    & (_GEN_24 & _GEN_50 & (&evict_way) | inflight_write_miss_25_3);
+  wire             _GEN_117 = REG_7 == 6'h1A;
+  wire             inflight_write_miss_next_26_0 =
+    ~(valid_hit & _GEN_117 & _GEN_89)
+    & (_GEN_24 & _GEN_51 & _GEN_20 | inflight_write_miss_26_0);
+  wire             inflight_write_miss_next_26_1 =
+    ~(valid_hit & _GEN_117 & _GEN_90)
+    & (_GEN_24 & _GEN_51 & _GEN_21 | inflight_write_miss_26_1);
+  wire             inflight_write_miss_next_26_2 =
+    ~(valid_hit & _GEN_117 & _GEN_91)
+    & (_GEN_24 & _GEN_51 & _GEN_22 | inflight_write_miss_26_2);
+  wire             inflight_write_miss_next_26_3 =
+    ~(valid_hit & _GEN_117 & (&hit_way))
+    & (_GEN_24 & _GEN_51 & (&evict_way) | inflight_write_miss_26_3);
+  wire             _GEN_118 = REG_7 == 6'h1B;
+  wire             inflight_write_miss_next_27_0 =
+    ~(valid_hit & _GEN_118 & _GEN_89)
+    & (_GEN_24 & _GEN_52 & _GEN_20 | inflight_write_miss_27_0);
+  wire             inflight_write_miss_next_27_1 =
+    ~(valid_hit & _GEN_118 & _GEN_90)
+    & (_GEN_24 & _GEN_52 & _GEN_21 | inflight_write_miss_27_1);
+  wire             inflight_write_miss_next_27_2 =
+    ~(valid_hit & _GEN_118 & _GEN_91)
+    & (_GEN_24 & _GEN_52 & _GEN_22 | inflight_write_miss_27_2);
+  wire             inflight_write_miss_next_27_3 =
+    ~(valid_hit & _GEN_118 & (&hit_way))
+    & (_GEN_24 & _GEN_52 & (&evict_way) | inflight_write_miss_27_3);
+  wire             _GEN_119 = REG_7 == 6'h1C;
+  wire             inflight_write_miss_next_28_0 =
+    ~(valid_hit & _GEN_119 & _GEN_89)
+    & (_GEN_24 & _GEN_53 & _GEN_20 | inflight_write_miss_28_0);
+  wire             inflight_write_miss_next_28_1 =
+    ~(valid_hit & _GEN_119 & _GEN_90)
+    & (_GEN_24 & _GEN_53 & _GEN_21 | inflight_write_miss_28_1);
+  wire             inflight_write_miss_next_28_2 =
+    ~(valid_hit & _GEN_119 & _GEN_91)
+    & (_GEN_24 & _GEN_53 & _GEN_22 | inflight_write_miss_28_2);
+  wire             inflight_write_miss_next_28_3 =
+    ~(valid_hit & _GEN_119 & (&hit_way))
+    & (_GEN_24 & _GEN_53 & (&evict_way) | inflight_write_miss_28_3);
+  wire             _GEN_120 = REG_7 == 6'h1D;
+  wire             inflight_write_miss_next_29_0 =
+    ~(valid_hit & _GEN_120 & _GEN_89)
+    & (_GEN_24 & _GEN_54 & _GEN_20 | inflight_write_miss_29_0);
+  wire             inflight_write_miss_next_29_1 =
+    ~(valid_hit & _GEN_120 & _GEN_90)
+    & (_GEN_24 & _GEN_54 & _GEN_21 | inflight_write_miss_29_1);
+  wire             inflight_write_miss_next_29_2 =
+    ~(valid_hit & _GEN_120 & _GEN_91)
+    & (_GEN_24 & _GEN_54 & _GEN_22 | inflight_write_miss_29_2);
+  wire             inflight_write_miss_next_29_3 =
+    ~(valid_hit & _GEN_120 & (&hit_way))
+    & (_GEN_24 & _GEN_54 & (&evict_way) | inflight_write_miss_29_3);
+  wire             _GEN_121 = REG_7 == 6'h1E;
+  wire             inflight_write_miss_next_30_0 =
+    ~(valid_hit & _GEN_121 & _GEN_89)
+    & (_GEN_24 & _GEN_55 & _GEN_20 | inflight_write_miss_30_0);
+  wire             inflight_write_miss_next_30_1 =
+    ~(valid_hit & _GEN_121 & _GEN_90)
+    & (_GEN_24 & _GEN_55 & _GEN_21 | inflight_write_miss_30_1);
+  wire             inflight_write_miss_next_30_2 =
+    ~(valid_hit & _GEN_121 & _GEN_91)
+    & (_GEN_24 & _GEN_55 & _GEN_22 | inflight_write_miss_30_2);
+  wire             inflight_write_miss_next_30_3 =
+    ~(valid_hit & _GEN_121 & (&hit_way))
+    & (_GEN_24 & _GEN_55 & (&evict_way) | inflight_write_miss_30_3);
+  wire             _GEN_122 = REG_7 == 6'h1F;
+  wire             inflight_write_miss_next_31_0 =
+    ~(valid_hit & _GEN_122 & _GEN_89)
+    & (_GEN_24 & _GEN_56 & _GEN_20 | inflight_write_miss_31_0);
+  wire             inflight_write_miss_next_31_1 =
+    ~(valid_hit & _GEN_122 & _GEN_90)
+    & (_GEN_24 & _GEN_56 & _GEN_21 | inflight_write_miss_31_1);
+  wire             inflight_write_miss_next_31_2 =
+    ~(valid_hit & _GEN_122 & _GEN_91)
+    & (_GEN_24 & _GEN_56 & _GEN_22 | inflight_write_miss_31_2);
+  wire             inflight_write_miss_next_31_3 =
+    ~(valid_hit & _GEN_122 & (&hit_way))
+    & (_GEN_24 & _GEN_56 & (&evict_way) | inflight_write_miss_31_3);
+  wire             _GEN_123 = REG_7 == 6'h20;
+  wire             inflight_write_miss_next_32_0 =
+    ~(valid_hit & _GEN_123 & _GEN_89)
+    & (_GEN_24 & _GEN_57 & _GEN_20 | inflight_write_miss_32_0);
+  wire             inflight_write_miss_next_32_1 =
+    ~(valid_hit & _GEN_123 & _GEN_90)
+    & (_GEN_24 & _GEN_57 & _GEN_21 | inflight_write_miss_32_1);
+  wire             inflight_write_miss_next_32_2 =
+    ~(valid_hit & _GEN_123 & _GEN_91)
+    & (_GEN_24 & _GEN_57 & _GEN_22 | inflight_write_miss_32_2);
+  wire             inflight_write_miss_next_32_3 =
+    ~(valid_hit & _GEN_123 & (&hit_way))
+    & (_GEN_24 & _GEN_57 & (&evict_way) | inflight_write_miss_32_3);
+  wire             _GEN_124 = REG_7 == 6'h21;
+  wire             inflight_write_miss_next_33_0 =
+    ~(valid_hit & _GEN_124 & _GEN_89)
+    & (_GEN_24 & _GEN_58 & _GEN_20 | inflight_write_miss_33_0);
+  wire             inflight_write_miss_next_33_1 =
+    ~(valid_hit & _GEN_124 & _GEN_90)
+    & (_GEN_24 & _GEN_58 & _GEN_21 | inflight_write_miss_33_1);
+  wire             inflight_write_miss_next_33_2 =
+    ~(valid_hit & _GEN_124 & _GEN_91)
+    & (_GEN_24 & _GEN_58 & _GEN_22 | inflight_write_miss_33_2);
+  wire             inflight_write_miss_next_33_3 =
+    ~(valid_hit & _GEN_124 & (&hit_way))
+    & (_GEN_24 & _GEN_58 & (&evict_way) | inflight_write_miss_33_3);
+  wire             _GEN_125 = REG_7 == 6'h22;
+  wire             inflight_write_miss_next_34_0 =
+    ~(valid_hit & _GEN_125 & _GEN_89)
+    & (_GEN_24 & _GEN_59 & _GEN_20 | inflight_write_miss_34_0);
+  wire             inflight_write_miss_next_34_1 =
+    ~(valid_hit & _GEN_125 & _GEN_90)
+    & (_GEN_24 & _GEN_59 & _GEN_21 | inflight_write_miss_34_1);
+  wire             inflight_write_miss_next_34_2 =
+    ~(valid_hit & _GEN_125 & _GEN_91)
+    & (_GEN_24 & _GEN_59 & _GEN_22 | inflight_write_miss_34_2);
+  wire             inflight_write_miss_next_34_3 =
+    ~(valid_hit & _GEN_125 & (&hit_way))
+    & (_GEN_24 & _GEN_59 & (&evict_way) | inflight_write_miss_34_3);
+  wire             _GEN_126 = REG_7 == 6'h23;
+  wire             inflight_write_miss_next_35_0 =
+    ~(valid_hit & _GEN_126 & _GEN_89)
+    & (_GEN_24 & _GEN_60 & _GEN_20 | inflight_write_miss_35_0);
+  wire             inflight_write_miss_next_35_1 =
+    ~(valid_hit & _GEN_126 & _GEN_90)
+    & (_GEN_24 & _GEN_60 & _GEN_21 | inflight_write_miss_35_1);
+  wire             inflight_write_miss_next_35_2 =
+    ~(valid_hit & _GEN_126 & _GEN_91)
+    & (_GEN_24 & _GEN_60 & _GEN_22 | inflight_write_miss_35_2);
+  wire             inflight_write_miss_next_35_3 =
+    ~(valid_hit & _GEN_126 & (&hit_way))
+    & (_GEN_24 & _GEN_60 & (&evict_way) | inflight_write_miss_35_3);
+  wire             _GEN_127 = REG_7 == 6'h24;
+  wire             inflight_write_miss_next_36_0 =
+    ~(valid_hit & _GEN_127 & _GEN_89)
+    & (_GEN_24 & _GEN_61 & _GEN_20 | inflight_write_miss_36_0);
+  wire             inflight_write_miss_next_36_1 =
+    ~(valid_hit & _GEN_127 & _GEN_90)
+    & (_GEN_24 & _GEN_61 & _GEN_21 | inflight_write_miss_36_1);
+  wire             inflight_write_miss_next_36_2 =
+    ~(valid_hit & _GEN_127 & _GEN_91)
+    & (_GEN_24 & _GEN_61 & _GEN_22 | inflight_write_miss_36_2);
+  wire             inflight_write_miss_next_36_3 =
+    ~(valid_hit & _GEN_127 & (&hit_way))
+    & (_GEN_24 & _GEN_61 & (&evict_way) | inflight_write_miss_36_3);
+  wire             _GEN_128 = REG_7 == 6'h25;
+  wire             inflight_write_miss_next_37_0 =
+    ~(valid_hit & _GEN_128 & _GEN_89)
+    & (_GEN_24 & _GEN_62 & _GEN_20 | inflight_write_miss_37_0);
+  wire             inflight_write_miss_next_37_1 =
+    ~(valid_hit & _GEN_128 & _GEN_90)
+    & (_GEN_24 & _GEN_62 & _GEN_21 | inflight_write_miss_37_1);
+  wire             inflight_write_miss_next_37_2 =
+    ~(valid_hit & _GEN_128 & _GEN_91)
+    & (_GEN_24 & _GEN_62 & _GEN_22 | inflight_write_miss_37_2);
+  wire             inflight_write_miss_next_37_3 =
+    ~(valid_hit & _GEN_128 & (&hit_way))
+    & (_GEN_24 & _GEN_62 & (&evict_way) | inflight_write_miss_37_3);
+  wire             _GEN_129 = REG_7 == 6'h26;
+  wire             inflight_write_miss_next_38_0 =
+    ~(valid_hit & _GEN_129 & _GEN_89)
+    & (_GEN_24 & _GEN_63 & _GEN_20 | inflight_write_miss_38_0);
+  wire             inflight_write_miss_next_38_1 =
+    ~(valid_hit & _GEN_129 & _GEN_90)
+    & (_GEN_24 & _GEN_63 & _GEN_21 | inflight_write_miss_38_1);
+  wire             inflight_write_miss_next_38_2 =
+    ~(valid_hit & _GEN_129 & _GEN_91)
+    & (_GEN_24 & _GEN_63 & _GEN_22 | inflight_write_miss_38_2);
+  wire             inflight_write_miss_next_38_3 =
+    ~(valid_hit & _GEN_129 & (&hit_way))
+    & (_GEN_24 & _GEN_63 & (&evict_way) | inflight_write_miss_38_3);
+  wire             _GEN_130 = REG_7 == 6'h27;
+  wire             inflight_write_miss_next_39_0 =
+    ~(valid_hit & _GEN_130 & _GEN_89)
+    & (_GEN_24 & _GEN_64 & _GEN_20 | inflight_write_miss_39_0);
+  wire             inflight_write_miss_next_39_1 =
+    ~(valid_hit & _GEN_130 & _GEN_90)
+    & (_GEN_24 & _GEN_64 & _GEN_21 | inflight_write_miss_39_1);
+  wire             inflight_write_miss_next_39_2 =
+    ~(valid_hit & _GEN_130 & _GEN_91)
+    & (_GEN_24 & _GEN_64 & _GEN_22 | inflight_write_miss_39_2);
+  wire             inflight_write_miss_next_39_3 =
+    ~(valid_hit & _GEN_130 & (&hit_way))
+    & (_GEN_24 & _GEN_64 & (&evict_way) | inflight_write_miss_39_3);
+  wire             _GEN_131 = REG_7 == 6'h28;
+  wire             inflight_write_miss_next_40_0 =
+    ~(valid_hit & _GEN_131 & _GEN_89)
+    & (_GEN_24 & _GEN_65 & _GEN_20 | inflight_write_miss_40_0);
+  wire             inflight_write_miss_next_40_1 =
+    ~(valid_hit & _GEN_131 & _GEN_90)
+    & (_GEN_24 & _GEN_65 & _GEN_21 | inflight_write_miss_40_1);
+  wire             inflight_write_miss_next_40_2 =
+    ~(valid_hit & _GEN_131 & _GEN_91)
+    & (_GEN_24 & _GEN_65 & _GEN_22 | inflight_write_miss_40_2);
+  wire             inflight_write_miss_next_40_3 =
+    ~(valid_hit & _GEN_131 & (&hit_way))
+    & (_GEN_24 & _GEN_65 & (&evict_way) | inflight_write_miss_40_3);
+  wire             _GEN_132 = REG_7 == 6'h29;
+  wire             inflight_write_miss_next_41_0 =
+    ~(valid_hit & _GEN_132 & _GEN_89)
+    & (_GEN_24 & _GEN_66 & _GEN_20 | inflight_write_miss_41_0);
+  wire             inflight_write_miss_next_41_1 =
+    ~(valid_hit & _GEN_132 & _GEN_90)
+    & (_GEN_24 & _GEN_66 & _GEN_21 | inflight_write_miss_41_1);
+  wire             inflight_write_miss_next_41_2 =
+    ~(valid_hit & _GEN_132 & _GEN_91)
+    & (_GEN_24 & _GEN_66 & _GEN_22 | inflight_write_miss_41_2);
+  wire             inflight_write_miss_next_41_3 =
+    ~(valid_hit & _GEN_132 & (&hit_way))
+    & (_GEN_24 & _GEN_66 & (&evict_way) | inflight_write_miss_41_3);
+  wire             _GEN_133 = REG_7 == 6'h2A;
+  wire             inflight_write_miss_next_42_0 =
+    ~(valid_hit & _GEN_133 & _GEN_89)
+    & (_GEN_24 & _GEN_67 & _GEN_20 | inflight_write_miss_42_0);
+  wire             inflight_write_miss_next_42_1 =
+    ~(valid_hit & _GEN_133 & _GEN_90)
+    & (_GEN_24 & _GEN_67 & _GEN_21 | inflight_write_miss_42_1);
+  wire             inflight_write_miss_next_42_2 =
+    ~(valid_hit & _GEN_133 & _GEN_91)
+    & (_GEN_24 & _GEN_67 & _GEN_22 | inflight_write_miss_42_2);
+  wire             inflight_write_miss_next_42_3 =
+    ~(valid_hit & _GEN_133 & (&hit_way))
+    & (_GEN_24 & _GEN_67 & (&evict_way) | inflight_write_miss_42_3);
+  wire             _GEN_134 = REG_7 == 6'h2B;
+  wire             inflight_write_miss_next_43_0 =
+    ~(valid_hit & _GEN_134 & _GEN_89)
+    & (_GEN_24 & _GEN_68 & _GEN_20 | inflight_write_miss_43_0);
+  wire             inflight_write_miss_next_43_1 =
+    ~(valid_hit & _GEN_134 & _GEN_90)
+    & (_GEN_24 & _GEN_68 & _GEN_21 | inflight_write_miss_43_1);
+  wire             inflight_write_miss_next_43_2 =
+    ~(valid_hit & _GEN_134 & _GEN_91)
+    & (_GEN_24 & _GEN_68 & _GEN_22 | inflight_write_miss_43_2);
+  wire             inflight_write_miss_next_43_3 =
+    ~(valid_hit & _GEN_134 & (&hit_way))
+    & (_GEN_24 & _GEN_68 & (&evict_way) | inflight_write_miss_43_3);
+  wire             _GEN_135 = REG_7 == 6'h2C;
+  wire             inflight_write_miss_next_44_0 =
+    ~(valid_hit & _GEN_135 & _GEN_89)
+    & (_GEN_24 & _GEN_69 & _GEN_20 | inflight_write_miss_44_0);
+  wire             inflight_write_miss_next_44_1 =
+    ~(valid_hit & _GEN_135 & _GEN_90)
+    & (_GEN_24 & _GEN_69 & _GEN_21 | inflight_write_miss_44_1);
+  wire             inflight_write_miss_next_44_2 =
+    ~(valid_hit & _GEN_135 & _GEN_91)
+    & (_GEN_24 & _GEN_69 & _GEN_22 | inflight_write_miss_44_2);
+  wire             inflight_write_miss_next_44_3 =
+    ~(valid_hit & _GEN_135 & (&hit_way))
+    & (_GEN_24 & _GEN_69 & (&evict_way) | inflight_write_miss_44_3);
+  wire             _GEN_136 = REG_7 == 6'h2D;
+  wire             inflight_write_miss_next_45_0 =
+    ~(valid_hit & _GEN_136 & _GEN_89)
+    & (_GEN_24 & _GEN_70 & _GEN_20 | inflight_write_miss_45_0);
+  wire             inflight_write_miss_next_45_1 =
+    ~(valid_hit & _GEN_136 & _GEN_90)
+    & (_GEN_24 & _GEN_70 & _GEN_21 | inflight_write_miss_45_1);
+  wire             inflight_write_miss_next_45_2 =
+    ~(valid_hit & _GEN_136 & _GEN_91)
+    & (_GEN_24 & _GEN_70 & _GEN_22 | inflight_write_miss_45_2);
+  wire             inflight_write_miss_next_45_3 =
+    ~(valid_hit & _GEN_136 & (&hit_way))
+    & (_GEN_24 & _GEN_70 & (&evict_way) | inflight_write_miss_45_3);
+  wire             _GEN_137 = REG_7 == 6'h2E;
+  wire             inflight_write_miss_next_46_0 =
+    ~(valid_hit & _GEN_137 & _GEN_89)
+    & (_GEN_24 & _GEN_71 & _GEN_20 | inflight_write_miss_46_0);
+  wire             inflight_write_miss_next_46_1 =
+    ~(valid_hit & _GEN_137 & _GEN_90)
+    & (_GEN_24 & _GEN_71 & _GEN_21 | inflight_write_miss_46_1);
+  wire             inflight_write_miss_next_46_2 =
+    ~(valid_hit & _GEN_137 & _GEN_91)
+    & (_GEN_24 & _GEN_71 & _GEN_22 | inflight_write_miss_46_2);
+  wire             inflight_write_miss_next_46_3 =
+    ~(valid_hit & _GEN_137 & (&hit_way))
+    & (_GEN_24 & _GEN_71 & (&evict_way) | inflight_write_miss_46_3);
+  wire             _GEN_138 = REG_7 == 6'h2F;
+  wire             inflight_write_miss_next_47_0 =
+    ~(valid_hit & _GEN_138 & _GEN_89)
+    & (_GEN_24 & _GEN_72 & _GEN_20 | inflight_write_miss_47_0);
+  wire             inflight_write_miss_next_47_1 =
+    ~(valid_hit & _GEN_138 & _GEN_90)
+    & (_GEN_24 & _GEN_72 & _GEN_21 | inflight_write_miss_47_1);
+  wire             inflight_write_miss_next_47_2 =
+    ~(valid_hit & _GEN_138 & _GEN_91)
+    & (_GEN_24 & _GEN_72 & _GEN_22 | inflight_write_miss_47_2);
+  wire             inflight_write_miss_next_47_3 =
+    ~(valid_hit & _GEN_138 & (&hit_way))
+    & (_GEN_24 & _GEN_72 & (&evict_way) | inflight_write_miss_47_3);
+  wire             _GEN_139 = REG_7 == 6'h30;
+  wire             inflight_write_miss_next_48_0 =
+    ~(valid_hit & _GEN_139 & _GEN_89)
+    & (_GEN_24 & _GEN_73 & _GEN_20 | inflight_write_miss_48_0);
+  wire             inflight_write_miss_next_48_1 =
+    ~(valid_hit & _GEN_139 & _GEN_90)
+    & (_GEN_24 & _GEN_73 & _GEN_21 | inflight_write_miss_48_1);
+  wire             inflight_write_miss_next_48_2 =
+    ~(valid_hit & _GEN_139 & _GEN_91)
+    & (_GEN_24 & _GEN_73 & _GEN_22 | inflight_write_miss_48_2);
+  wire             inflight_write_miss_next_48_3 =
+    ~(valid_hit & _GEN_139 & (&hit_way))
+    & (_GEN_24 & _GEN_73 & (&evict_way) | inflight_write_miss_48_3);
+  wire             _GEN_140 = REG_7 == 6'h31;
+  wire             inflight_write_miss_next_49_0 =
+    ~(valid_hit & _GEN_140 & _GEN_89)
+    & (_GEN_24 & _GEN_74 & _GEN_20 | inflight_write_miss_49_0);
+  wire             inflight_write_miss_next_49_1 =
+    ~(valid_hit & _GEN_140 & _GEN_90)
+    & (_GEN_24 & _GEN_74 & _GEN_21 | inflight_write_miss_49_1);
+  wire             inflight_write_miss_next_49_2 =
+    ~(valid_hit & _GEN_140 & _GEN_91)
+    & (_GEN_24 & _GEN_74 & _GEN_22 | inflight_write_miss_49_2);
+  wire             inflight_write_miss_next_49_3 =
+    ~(valid_hit & _GEN_140 & (&hit_way))
+    & (_GEN_24 & _GEN_74 & (&evict_way) | inflight_write_miss_49_3);
+  wire             _GEN_141 = REG_7 == 6'h32;
+  wire             inflight_write_miss_next_50_0 =
+    ~(valid_hit & _GEN_141 & _GEN_89)
+    & (_GEN_24 & _GEN_75 & _GEN_20 | inflight_write_miss_50_0);
+  wire             inflight_write_miss_next_50_1 =
+    ~(valid_hit & _GEN_141 & _GEN_90)
+    & (_GEN_24 & _GEN_75 & _GEN_21 | inflight_write_miss_50_1);
+  wire             inflight_write_miss_next_50_2 =
+    ~(valid_hit & _GEN_141 & _GEN_91)
+    & (_GEN_24 & _GEN_75 & _GEN_22 | inflight_write_miss_50_2);
+  wire             inflight_write_miss_next_50_3 =
+    ~(valid_hit & _GEN_141 & (&hit_way))
+    & (_GEN_24 & _GEN_75 & (&evict_way) | inflight_write_miss_50_3);
+  wire             _GEN_142 = REG_7 == 6'h33;
+  wire             inflight_write_miss_next_51_0 =
+    ~(valid_hit & _GEN_142 & _GEN_89)
+    & (_GEN_24 & _GEN_76 & _GEN_20 | inflight_write_miss_51_0);
+  wire             inflight_write_miss_next_51_1 =
+    ~(valid_hit & _GEN_142 & _GEN_90)
+    & (_GEN_24 & _GEN_76 & _GEN_21 | inflight_write_miss_51_1);
+  wire             inflight_write_miss_next_51_2 =
+    ~(valid_hit & _GEN_142 & _GEN_91)
+    & (_GEN_24 & _GEN_76 & _GEN_22 | inflight_write_miss_51_2);
+  wire             inflight_write_miss_next_51_3 =
+    ~(valid_hit & _GEN_142 & (&hit_way))
+    & (_GEN_24 & _GEN_76 & (&evict_way) | inflight_write_miss_51_3);
+  wire             _GEN_143 = REG_7 == 6'h34;
+  wire             inflight_write_miss_next_52_0 =
+    ~(valid_hit & _GEN_143 & _GEN_89)
+    & (_GEN_24 & _GEN_77 & _GEN_20 | inflight_write_miss_52_0);
+  wire             inflight_write_miss_next_52_1 =
+    ~(valid_hit & _GEN_143 & _GEN_90)
+    & (_GEN_24 & _GEN_77 & _GEN_21 | inflight_write_miss_52_1);
+  wire             inflight_write_miss_next_52_2 =
+    ~(valid_hit & _GEN_143 & _GEN_91)
+    & (_GEN_24 & _GEN_77 & _GEN_22 | inflight_write_miss_52_2);
+  wire             inflight_write_miss_next_52_3 =
+    ~(valid_hit & _GEN_143 & (&hit_way))
+    & (_GEN_24 & _GEN_77 & (&evict_way) | inflight_write_miss_52_3);
+  wire             _GEN_144 = REG_7 == 6'h35;
+  wire             inflight_write_miss_next_53_0 =
+    ~(valid_hit & _GEN_144 & _GEN_89)
+    & (_GEN_24 & _GEN_78 & _GEN_20 | inflight_write_miss_53_0);
+  wire             inflight_write_miss_next_53_1 =
+    ~(valid_hit & _GEN_144 & _GEN_90)
+    & (_GEN_24 & _GEN_78 & _GEN_21 | inflight_write_miss_53_1);
+  wire             inflight_write_miss_next_53_2 =
+    ~(valid_hit & _GEN_144 & _GEN_91)
+    & (_GEN_24 & _GEN_78 & _GEN_22 | inflight_write_miss_53_2);
+  wire             inflight_write_miss_next_53_3 =
+    ~(valid_hit & _GEN_144 & (&hit_way))
+    & (_GEN_24 & _GEN_78 & (&evict_way) | inflight_write_miss_53_3);
+  wire             _GEN_145 = REG_7 == 6'h36;
+  wire             inflight_write_miss_next_54_0 =
+    ~(valid_hit & _GEN_145 & _GEN_89)
+    & (_GEN_24 & _GEN_79 & _GEN_20 | inflight_write_miss_54_0);
+  wire             inflight_write_miss_next_54_1 =
+    ~(valid_hit & _GEN_145 & _GEN_90)
+    & (_GEN_24 & _GEN_79 & _GEN_21 | inflight_write_miss_54_1);
+  wire             inflight_write_miss_next_54_2 =
+    ~(valid_hit & _GEN_145 & _GEN_91)
+    & (_GEN_24 & _GEN_79 & _GEN_22 | inflight_write_miss_54_2);
+  wire             inflight_write_miss_next_54_3 =
+    ~(valid_hit & _GEN_145 & (&hit_way))
+    & (_GEN_24 & _GEN_79 & (&evict_way) | inflight_write_miss_54_3);
+  wire             _GEN_146 = REG_7 == 6'h37;
+  wire             inflight_write_miss_next_55_0 =
+    ~(valid_hit & _GEN_146 & _GEN_89)
+    & (_GEN_24 & _GEN_80 & _GEN_20 | inflight_write_miss_55_0);
+  wire             inflight_write_miss_next_55_1 =
+    ~(valid_hit & _GEN_146 & _GEN_90)
+    & (_GEN_24 & _GEN_80 & _GEN_21 | inflight_write_miss_55_1);
+  wire             inflight_write_miss_next_55_2 =
+    ~(valid_hit & _GEN_146 & _GEN_91)
+    & (_GEN_24 & _GEN_80 & _GEN_22 | inflight_write_miss_55_2);
+  wire             inflight_write_miss_next_55_3 =
+    ~(valid_hit & _GEN_146 & (&hit_way))
+    & (_GEN_24 & _GEN_80 & (&evict_way) | inflight_write_miss_55_3);
+  wire             _GEN_147 = REG_7 == 6'h38;
+  wire             inflight_write_miss_next_56_0 =
+    ~(valid_hit & _GEN_147 & _GEN_89)
+    & (_GEN_24 & _GEN_81 & _GEN_20 | inflight_write_miss_56_0);
+  wire             inflight_write_miss_next_56_1 =
+    ~(valid_hit & _GEN_147 & _GEN_90)
+    & (_GEN_24 & _GEN_81 & _GEN_21 | inflight_write_miss_56_1);
+  wire             inflight_write_miss_next_56_2 =
+    ~(valid_hit & _GEN_147 & _GEN_91)
+    & (_GEN_24 & _GEN_81 & _GEN_22 | inflight_write_miss_56_2);
+  wire             inflight_write_miss_next_56_3 =
+    ~(valid_hit & _GEN_147 & (&hit_way))
+    & (_GEN_24 & _GEN_81 & (&evict_way) | inflight_write_miss_56_3);
+  wire             _GEN_148 = REG_7 == 6'h39;
+  wire             inflight_write_miss_next_57_0 =
+    ~(valid_hit & _GEN_148 & _GEN_89)
+    & (_GEN_24 & _GEN_82 & _GEN_20 | inflight_write_miss_57_0);
+  wire             inflight_write_miss_next_57_1 =
+    ~(valid_hit & _GEN_148 & _GEN_90)
+    & (_GEN_24 & _GEN_82 & _GEN_21 | inflight_write_miss_57_1);
+  wire             inflight_write_miss_next_57_2 =
+    ~(valid_hit & _GEN_148 & _GEN_91)
+    & (_GEN_24 & _GEN_82 & _GEN_22 | inflight_write_miss_57_2);
+  wire             inflight_write_miss_next_57_3 =
+    ~(valid_hit & _GEN_148 & (&hit_way))
+    & (_GEN_24 & _GEN_82 & (&evict_way) | inflight_write_miss_57_3);
+  wire             _GEN_149 = REG_7 == 6'h3A;
+  wire             inflight_write_miss_next_58_0 =
+    ~(valid_hit & _GEN_149 & _GEN_89)
+    & (_GEN_24 & _GEN_83 & _GEN_20 | inflight_write_miss_58_0);
+  wire             inflight_write_miss_next_58_1 =
+    ~(valid_hit & _GEN_149 & _GEN_90)
+    & (_GEN_24 & _GEN_83 & _GEN_21 | inflight_write_miss_58_1);
+  wire             inflight_write_miss_next_58_2 =
+    ~(valid_hit & _GEN_149 & _GEN_91)
+    & (_GEN_24 & _GEN_83 & _GEN_22 | inflight_write_miss_58_2);
+  wire             inflight_write_miss_next_58_3 =
+    ~(valid_hit & _GEN_149 & (&hit_way))
+    & (_GEN_24 & _GEN_83 & (&evict_way) | inflight_write_miss_58_3);
+  wire             _GEN_150 = REG_7 == 6'h3B;
+  wire             inflight_write_miss_next_59_0 =
+    ~(valid_hit & _GEN_150 & _GEN_89)
+    & (_GEN_24 & _GEN_84 & _GEN_20 | inflight_write_miss_59_0);
+  wire             inflight_write_miss_next_59_1 =
+    ~(valid_hit & _GEN_150 & _GEN_90)
+    & (_GEN_24 & _GEN_84 & _GEN_21 | inflight_write_miss_59_1);
+  wire             inflight_write_miss_next_59_2 =
+    ~(valid_hit & _GEN_150 & _GEN_91)
+    & (_GEN_24 & _GEN_84 & _GEN_22 | inflight_write_miss_59_2);
+  wire             inflight_write_miss_next_59_3 =
+    ~(valid_hit & _GEN_150 & (&hit_way))
+    & (_GEN_24 & _GEN_84 & (&evict_way) | inflight_write_miss_59_3);
+  wire             _GEN_151 = REG_7 == 6'h3C;
+  wire             inflight_write_miss_next_60_0 =
+    ~(valid_hit & _GEN_151 & _GEN_89)
+    & (_GEN_24 & _GEN_85 & _GEN_20 | inflight_write_miss_60_0);
+  wire             inflight_write_miss_next_60_1 =
+    ~(valid_hit & _GEN_151 & _GEN_90)
+    & (_GEN_24 & _GEN_85 & _GEN_21 | inflight_write_miss_60_1);
+  wire             inflight_write_miss_next_60_2 =
+    ~(valid_hit & _GEN_151 & _GEN_91)
+    & (_GEN_24 & _GEN_85 & _GEN_22 | inflight_write_miss_60_2);
+  wire             inflight_write_miss_next_60_3 =
+    ~(valid_hit & _GEN_151 & (&hit_way))
+    & (_GEN_24 & _GEN_85 & (&evict_way) | inflight_write_miss_60_3);
+  wire             _GEN_152 = REG_7 == 6'h3D;
+  wire             inflight_write_miss_next_61_0 =
+    ~(valid_hit & _GEN_152 & _GEN_89)
+    & (_GEN_24 & _GEN_86 & _GEN_20 | inflight_write_miss_61_0);
+  wire             inflight_write_miss_next_61_1 =
+    ~(valid_hit & _GEN_152 & _GEN_90)
+    & (_GEN_24 & _GEN_86 & _GEN_21 | inflight_write_miss_61_1);
+  wire             inflight_write_miss_next_61_2 =
+    ~(valid_hit & _GEN_152 & _GEN_91)
+    & (_GEN_24 & _GEN_86 & _GEN_22 | inflight_write_miss_61_2);
+  wire             inflight_write_miss_next_61_3 =
+    ~(valid_hit & _GEN_152 & (&hit_way))
+    & (_GEN_24 & _GEN_86 & (&evict_way) | inflight_write_miss_61_3);
+  wire             _GEN_153 = REG_7 == 6'h3E;
+  wire             inflight_write_miss_next_62_0 =
+    ~(valid_hit & _GEN_153 & _GEN_89)
+    & (_GEN_24 & _GEN_87 & _GEN_20 | inflight_write_miss_62_0);
+  wire             inflight_write_miss_next_62_1 =
+    ~(valid_hit & _GEN_153 & _GEN_90)
+    & (_GEN_24 & _GEN_87 & _GEN_21 | inflight_write_miss_62_1);
+  wire             inflight_write_miss_next_62_2 =
+    ~(valid_hit & _GEN_153 & _GEN_91)
+    & (_GEN_24 & _GEN_87 & _GEN_22 | inflight_write_miss_62_2);
+  wire             inflight_write_miss_next_62_3 =
+    ~(valid_hit & _GEN_153 & (&hit_way))
+    & (_GEN_24 & _GEN_87 & (&evict_way) | inflight_write_miss_62_3);
+  wire             inflight_write_miss_next_63_0 =
+    ~(valid_hit & (&REG_7) & _GEN_89)
+    & (_GEN_24 & (&REG_6) & _GEN_20 | inflight_write_miss_63_0);
+  wire             inflight_write_miss_next_63_1 =
+    ~(valid_hit & (&REG_7) & _GEN_90)
+    & (_GEN_24 & (&REG_6) & _GEN_21 | inflight_write_miss_63_1);
+  wire             inflight_write_miss_next_63_2 =
+    ~(valid_hit & (&REG_7) & _GEN_91)
+    & (_GEN_24 & (&REG_6) & _GEN_22 | inflight_write_miss_63_2);
+  wire             inflight_write_miss_next_63_3 =
+    ~(valid_hit & (&REG_7) & (&hit_way))
+    & (_GEN_24 & (&REG_6) & (&evict_way) | inflight_write_miss_63_3);
   reg  [5:0]       writeback_set_REG;
   reg  [5:0]       writeback_dirty_REG;
-  wire [63:0]      _GEN_20 =
+  wire [63:0]      _GEN_154 =
     {{dirty_memory_63_0},
      {dirty_memory_62_0},
      {dirty_memory_61_0},
@@ -1260,7 +2422,7 @@ module L1_data_cache(
      {dirty_memory_2_0},
      {dirty_memory_1_0},
      {dirty_memory_0_0}};
-  wire [63:0]      _GEN_21 =
+  wire [63:0]      _GEN_155 =
     {{dirty_memory_63_1},
      {dirty_memory_62_1},
      {dirty_memory_61_1},
@@ -1325,7 +2487,7 @@ module L1_data_cache(
      {dirty_memory_2_1},
      {dirty_memory_1_1},
      {dirty_memory_0_1}};
-  wire [63:0]      _GEN_22 =
+  wire [63:0]      _GEN_156 =
     {{dirty_memory_63_2},
      {dirty_memory_62_2},
      {dirty_memory_61_2},
@@ -1390,7 +2552,7 @@ module L1_data_cache(
      {dirty_memory_2_2},
      {dirty_memory_1_2},
      {dirty_memory_0_2}};
-  wire [63:0]      _GEN_23 =
+  wire [63:0]      _GEN_157 =
     {{dirty_memory_63_3},
      {dirty_memory_62_3},
      {dirty_memory_61_3},
@@ -1455,18 +2617,18 @@ module L1_data_cache(
      {dirty_memory_2_3},
      {dirty_memory_1_3},
      {dirty_memory_0_3}};
-  wire [3:0]       _GEN_24 =
-    {{_GEN_23[writeback_dirty_REG]},
-     {_GEN_22[writeback_dirty_REG]},
-     {_GEN_21[writeback_dirty_REG]},
-     {_GEN_20[writeback_dirty_REG]}};
-  wire             writeback_dirty = _GEN_24[evict_way] & valid_miss;
-  wire [3:0][20:0] _GEN_25 =
+  wire [3:0]       _GEN_158 =
+    {{_GEN_157[writeback_dirty_REG]},
+     {_GEN_156[writeback_dirty_REG]},
+     {_GEN_155[writeback_dirty_REG]},
+     {_GEN_154[writeback_dirty_REG]}};
+  wire             writeback_dirty = _GEN_158[evict_way] & valid_miss;
+  wire [3:0][20:0] _GEN_159 =
     {{_tag_memories_3_io_data_out},
      {_tag_memories_2_io_data_out},
      {_tag_memories_1_io_data_out},
      {_tag_memories_0_io_data_out}};
-  wire [20:0]      writeback_tag = _GEN_25[evict_way];
+  wire [20:0]      writeback_tag = _GEN_159[evict_way];
   wire [31:0]      writeback_address = {writeback_tag, writeback_set_REG, 5'h0};
   reg  [31:0]      MSHRs_0_address;
   reg  [31:0]      MSHRs_0_miss_requests_0_addr;
@@ -1674,248 +2836,249 @@ module L1_data_cache(
   reg  [1:0]       non_cacheable_buffer_3_memory_type;
   reg  [1:0]       non_cacheable_buffer_3_access_width;
   reg  [3:0]       non_cacheable_buffer_3_MOB_index;
-  wire [31:0]      _GEN_26 = miss_address_REG & 32'hFFFFFFE0;
-  wire             _GEN_27 = MSHRs_0_address == _GEN_26 & MSHRs_0_valid;
-  wire             _GEN_28 = MSHRs_1_address == _GEN_26 & MSHRs_1_valid;
-  wire             _GEN_29 = MSHRs_2_address == _GEN_26 & MSHRs_2_valid;
-  wire             _GEN_30 = MSHRs_3_address == _GEN_26 & MSHRs_3_valid;
-  wire             _GEN_31 = _GEN_30 | _GEN_29 | _GEN_28;
-  wire             valid_MSHR_miss = valid_miss & ~_GEN_31 & ~_GEN_27;
+  wire [31:0]      _GEN_160 = miss_address_REG & 32'hFFFFFFE0;
+  wire             _GEN_161 = MSHRs_0_address == _GEN_160 & MSHRs_0_valid;
+  wire             _GEN_162 = MSHRs_1_address == _GEN_160 & MSHRs_1_valid;
+  wire             _GEN_163 = MSHRs_2_address == _GEN_160 & MSHRs_2_valid;
+  wire             _GEN_164 = MSHRs_3_address == _GEN_160 & MSHRs_3_valid;
+  wire             _GEN_165 = _GEN_164 | _GEN_163 | _GEN_162;
+  wire             valid_MSHR_miss = valid_miss & ~_GEN_165 & ~_GEN_161;
   reg  [31:0]      miss_backend_memory_request_REG_addr;
   reg  [31:0]      miss_backend_memory_request_REG_data;
   reg  [1:0]       miss_backend_memory_request_REG_memory_type;
   reg  [1:0]       miss_backend_memory_request_REG_access_width;
   reg  [3:0]       miss_backend_memory_request_REG_MOB_index;
-  wire             _GEN_32 = valid_miss & (_GEN_31 | _GEN_27);
-  wire [3:0][2:0]  _GEN_33 =
+  wire             _GEN_166 = valid_miss & (_GEN_165 | _GEN_161);
+  wire [3:0][2:0]  _GEN_167 =
     {{MSHRs_3_back_pointer},
      {MSHRs_2_back_pointer},
      {MSHRs_1_back_pointer},
      {MSHRs_0_back_pointer}};
-  wire             _GEN_34 = valid_miss & valid_MSHR_miss;
+  wire             _GEN_168 = valid_miss & valid_MSHR_miss;
   wire [2:0]       _MSHR_back_pointer_next_T = MSHR_back_pointer + 3'h1;
-  wire             _GEN_35 = _GEN_32 | ~_GEN_34;
-  assign MSHR_back_pointer_next = _GEN_35 ? MSHR_back_pointer : _MSHR_back_pointer_next_T;
-  wire [3:0][2:0]  _GEN_36 =
+  wire             _GEN_169 = _GEN_166 | ~_GEN_168;
+  assign MSHR_back_pointer_next =
+    _GEN_169 ? MSHR_back_pointer : _MSHR_back_pointer_next_T;
+  wire [3:0][2:0]  _GEN_170 =
     {{MSHRs_3_front_pointer},
      {MSHRs_2_front_pointer},
      {MSHRs_1_front_pointer},
      {MSHRs_0_front_pointer}};
-  wire [2:0]       _MSHRs_front_pointer_T = _GEN_36[MSHR_front_index] + 3'h1;
-  wire             _GEN_37 = _MSHRs_front_pointer_T == _GEN_33[MSHR_front_index];
+  wire [2:0]       _MSHRs_front_pointer_T = _GEN_170[MSHR_front_index] + 3'h1;
+  wire             _GEN_171 = _MSHRs_front_pointer_T == _GEN_167[MSHR_front_index];
   wire [2:0]       _MSHR_front_pointer_next_T = MSHR_front_pointer + 3'h1;
-  wire             _GEN_38 = (&DATA_CACHE_STATE) & _GEN_37;
+  wire             _GEN_172 = (&DATA_CACHE_STATE) & _GEN_171;
   assign MSHR_front_pointer_next =
-    _GEN_38 ? _MSHR_front_pointer_next_T : MSHR_front_pointer;
-  wire [3:0][31:0] _GEN_39 =
+    _GEN_172 ? _MSHR_front_pointer_next_T : MSHR_front_pointer;
+  wire [3:0][31:0] _GEN_173 =
     {{MSHRs_3_address}, {MSHRs_2_address}, {MSHRs_1_address}, {MSHRs_0_address}};
-  wire [31:0]      allocate_address = _GEN_39[MSHR_front_index];
-  wire [3:0][31:0] _GEN_40 =
+  wire [31:0]      allocate_address = _GEN_173[MSHR_front_index];
+  wire [3:0][31:0] _GEN_174 =
     {{MSHRs_3_miss_requests_0_addr},
      {MSHRs_2_miss_requests_0_addr},
      {MSHRs_1_miss_requests_0_addr},
      {MSHRs_0_miss_requests_0_addr}};
-  wire [3:0][31:0] _GEN_41 =
+  wire [3:0][31:0] _GEN_175 =
     {{MSHRs_3_miss_requests_0_data},
      {MSHRs_2_miss_requests_0_data},
      {MSHRs_1_miss_requests_0_data},
      {MSHRs_0_miss_requests_0_data}};
-  wire [3:0][1:0]  _GEN_42 =
+  wire [3:0][1:0]  _GEN_176 =
     {{MSHRs_3_miss_requests_0_memory_type},
      {MSHRs_2_miss_requests_0_memory_type},
      {MSHRs_1_miss_requests_0_memory_type},
      {MSHRs_0_miss_requests_0_memory_type}};
-  wire [3:0][1:0]  _GEN_43 =
+  wire [3:0][1:0]  _GEN_177 =
     {{MSHRs_3_miss_requests_0_access_width},
      {MSHRs_2_miss_requests_0_access_width},
      {MSHRs_1_miss_requests_0_access_width},
      {MSHRs_0_miss_requests_0_access_width}};
-  wire [3:0][3:0]  _GEN_44 =
+  wire [3:0][3:0]  _GEN_178 =
     {{MSHRs_3_miss_requests_0_MOB_index},
      {MSHRs_2_miss_requests_0_MOB_index},
      {MSHRs_1_miss_requests_0_MOB_index},
      {MSHRs_0_miss_requests_0_MOB_index}};
-  wire [3:0][31:0] _GEN_45 =
+  wire [3:0][31:0] _GEN_179 =
     {{MSHRs_3_miss_requests_1_addr},
      {MSHRs_2_miss_requests_1_addr},
      {MSHRs_1_miss_requests_1_addr},
      {MSHRs_0_miss_requests_1_addr}};
-  wire [3:0][31:0] _GEN_46 =
+  wire [3:0][31:0] _GEN_180 =
     {{MSHRs_3_miss_requests_1_data},
      {MSHRs_2_miss_requests_1_data},
      {MSHRs_1_miss_requests_1_data},
      {MSHRs_0_miss_requests_1_data}};
-  wire [3:0][1:0]  _GEN_47 =
+  wire [3:0][1:0]  _GEN_181 =
     {{MSHRs_3_miss_requests_1_memory_type},
      {MSHRs_2_miss_requests_1_memory_type},
      {MSHRs_1_miss_requests_1_memory_type},
      {MSHRs_0_miss_requests_1_memory_type}};
-  wire [3:0][1:0]  _GEN_48 =
+  wire [3:0][1:0]  _GEN_182 =
     {{MSHRs_3_miss_requests_1_access_width},
      {MSHRs_2_miss_requests_1_access_width},
      {MSHRs_1_miss_requests_1_access_width},
      {MSHRs_0_miss_requests_1_access_width}};
-  wire [3:0][3:0]  _GEN_49 =
+  wire [3:0][3:0]  _GEN_183 =
     {{MSHRs_3_miss_requests_1_MOB_index},
      {MSHRs_2_miss_requests_1_MOB_index},
      {MSHRs_1_miss_requests_1_MOB_index},
      {MSHRs_0_miss_requests_1_MOB_index}};
-  wire [3:0][31:0] _GEN_50 =
+  wire [3:0][31:0] _GEN_184 =
     {{MSHRs_3_miss_requests_2_addr},
      {MSHRs_2_miss_requests_2_addr},
      {MSHRs_1_miss_requests_2_addr},
      {MSHRs_0_miss_requests_2_addr}};
-  wire [3:0][31:0] _GEN_51 =
+  wire [3:0][31:0] _GEN_185 =
     {{MSHRs_3_miss_requests_2_data},
      {MSHRs_2_miss_requests_2_data},
      {MSHRs_1_miss_requests_2_data},
      {MSHRs_0_miss_requests_2_data}};
-  wire [3:0][1:0]  _GEN_52 =
+  wire [3:0][1:0]  _GEN_186 =
     {{MSHRs_3_miss_requests_2_memory_type},
      {MSHRs_2_miss_requests_2_memory_type},
      {MSHRs_1_miss_requests_2_memory_type},
      {MSHRs_0_miss_requests_2_memory_type}};
-  wire [3:0][1:0]  _GEN_53 =
+  wire [3:0][1:0]  _GEN_187 =
     {{MSHRs_3_miss_requests_2_access_width},
      {MSHRs_2_miss_requests_2_access_width},
      {MSHRs_1_miss_requests_2_access_width},
      {MSHRs_0_miss_requests_2_access_width}};
-  wire [3:0][3:0]  _GEN_54 =
+  wire [3:0][3:0]  _GEN_188 =
     {{MSHRs_3_miss_requests_2_MOB_index},
      {MSHRs_2_miss_requests_2_MOB_index},
      {MSHRs_1_miss_requests_2_MOB_index},
      {MSHRs_0_miss_requests_2_MOB_index}};
-  wire [3:0][31:0] _GEN_55 =
+  wire [3:0][31:0] _GEN_189 =
     {{MSHRs_3_miss_requests_3_addr},
      {MSHRs_2_miss_requests_3_addr},
      {MSHRs_1_miss_requests_3_addr},
      {MSHRs_0_miss_requests_3_addr}};
-  wire [3:0][31:0] _GEN_56 =
+  wire [3:0][31:0] _GEN_190 =
     {{MSHRs_3_miss_requests_3_data},
      {MSHRs_2_miss_requests_3_data},
      {MSHRs_1_miss_requests_3_data},
      {MSHRs_0_miss_requests_3_data}};
-  wire [3:0][1:0]  _GEN_57 =
+  wire [3:0][1:0]  _GEN_191 =
     {{MSHRs_3_miss_requests_3_memory_type},
      {MSHRs_2_miss_requests_3_memory_type},
      {MSHRs_1_miss_requests_3_memory_type},
      {MSHRs_0_miss_requests_3_memory_type}};
-  wire [3:0][1:0]  _GEN_58 =
+  wire [3:0][1:0]  _GEN_192 =
     {{MSHRs_3_miss_requests_3_access_width},
      {MSHRs_2_miss_requests_3_access_width},
      {MSHRs_1_miss_requests_3_access_width},
      {MSHRs_0_miss_requests_3_access_width}};
-  wire [3:0][3:0]  _GEN_59 =
+  wire [3:0][3:0]  _GEN_193 =
     {{MSHRs_3_miss_requests_3_MOB_index},
      {MSHRs_2_miss_requests_3_MOB_index},
      {MSHRs_1_miss_requests_3_MOB_index},
      {MSHRs_0_miss_requests_3_MOB_index}};
-  wire [3:0][31:0] _GEN_60 =
+  wire [3:0][31:0] _GEN_194 =
     {{MSHRs_3_miss_requests_4_addr},
      {MSHRs_2_miss_requests_4_addr},
      {MSHRs_1_miss_requests_4_addr},
      {MSHRs_0_miss_requests_4_addr}};
-  wire [3:0][31:0] _GEN_61 =
+  wire [3:0][31:0] _GEN_195 =
     {{MSHRs_3_miss_requests_4_data},
      {MSHRs_2_miss_requests_4_data},
      {MSHRs_1_miss_requests_4_data},
      {MSHRs_0_miss_requests_4_data}};
-  wire [3:0][1:0]  _GEN_62 =
+  wire [3:0][1:0]  _GEN_196 =
     {{MSHRs_3_miss_requests_4_memory_type},
      {MSHRs_2_miss_requests_4_memory_type},
      {MSHRs_1_miss_requests_4_memory_type},
      {MSHRs_0_miss_requests_4_memory_type}};
-  wire [3:0][1:0]  _GEN_63 =
+  wire [3:0][1:0]  _GEN_197 =
     {{MSHRs_3_miss_requests_4_access_width},
      {MSHRs_2_miss_requests_4_access_width},
      {MSHRs_1_miss_requests_4_access_width},
      {MSHRs_0_miss_requests_4_access_width}};
-  wire [3:0][3:0]  _GEN_64 =
+  wire [3:0][3:0]  _GEN_198 =
     {{MSHRs_3_miss_requests_4_MOB_index},
      {MSHRs_2_miss_requests_4_MOB_index},
      {MSHRs_1_miss_requests_4_MOB_index},
      {MSHRs_0_miss_requests_4_MOB_index}};
-  wire [3:0][31:0] _GEN_65 =
+  wire [3:0][31:0] _GEN_199 =
     {{MSHRs_3_miss_requests_5_addr},
      {MSHRs_2_miss_requests_5_addr},
      {MSHRs_1_miss_requests_5_addr},
      {MSHRs_0_miss_requests_5_addr}};
-  wire [3:0][31:0] _GEN_66 =
+  wire [3:0][31:0] _GEN_200 =
     {{MSHRs_3_miss_requests_5_data},
      {MSHRs_2_miss_requests_5_data},
      {MSHRs_1_miss_requests_5_data},
      {MSHRs_0_miss_requests_5_data}};
-  wire [3:0][1:0]  _GEN_67 =
+  wire [3:0][1:0]  _GEN_201 =
     {{MSHRs_3_miss_requests_5_memory_type},
      {MSHRs_2_miss_requests_5_memory_type},
      {MSHRs_1_miss_requests_5_memory_type},
      {MSHRs_0_miss_requests_5_memory_type}};
-  wire [3:0][1:0]  _GEN_68 =
+  wire [3:0][1:0]  _GEN_202 =
     {{MSHRs_3_miss_requests_5_access_width},
      {MSHRs_2_miss_requests_5_access_width},
      {MSHRs_1_miss_requests_5_access_width},
      {MSHRs_0_miss_requests_5_access_width}};
-  wire [3:0][3:0]  _GEN_69 =
+  wire [3:0][3:0]  _GEN_203 =
     {{MSHRs_3_miss_requests_5_MOB_index},
      {MSHRs_2_miss_requests_5_MOB_index},
      {MSHRs_1_miss_requests_5_MOB_index},
      {MSHRs_0_miss_requests_5_MOB_index}};
-  wire [3:0][31:0] _GEN_70 =
+  wire [3:0][31:0] _GEN_204 =
     {{MSHRs_3_miss_requests_6_addr},
      {MSHRs_2_miss_requests_6_addr},
      {MSHRs_1_miss_requests_6_addr},
      {MSHRs_0_miss_requests_6_addr}};
-  wire [3:0][31:0] _GEN_71 =
+  wire [3:0][31:0] _GEN_205 =
     {{MSHRs_3_miss_requests_6_data},
      {MSHRs_2_miss_requests_6_data},
      {MSHRs_1_miss_requests_6_data},
      {MSHRs_0_miss_requests_6_data}};
-  wire [3:0][1:0]  _GEN_72 =
+  wire [3:0][1:0]  _GEN_206 =
     {{MSHRs_3_miss_requests_6_memory_type},
      {MSHRs_2_miss_requests_6_memory_type},
      {MSHRs_1_miss_requests_6_memory_type},
      {MSHRs_0_miss_requests_6_memory_type}};
-  wire [3:0][1:0]  _GEN_73 =
+  wire [3:0][1:0]  _GEN_207 =
     {{MSHRs_3_miss_requests_6_access_width},
      {MSHRs_2_miss_requests_6_access_width},
      {MSHRs_1_miss_requests_6_access_width},
      {MSHRs_0_miss_requests_6_access_width}};
-  wire [3:0][3:0]  _GEN_74 =
+  wire [3:0][3:0]  _GEN_208 =
     {{MSHRs_3_miss_requests_6_MOB_index},
      {MSHRs_2_miss_requests_6_MOB_index},
      {MSHRs_1_miss_requests_6_MOB_index},
      {MSHRs_0_miss_requests_6_MOB_index}};
-  wire [3:0][31:0] _GEN_75 =
+  wire [3:0][31:0] _GEN_209 =
     {{MSHRs_3_miss_requests_7_addr},
      {MSHRs_2_miss_requests_7_addr},
      {MSHRs_1_miss_requests_7_addr},
      {MSHRs_0_miss_requests_7_addr}};
-  wire [3:0][31:0] _GEN_76 =
+  wire [3:0][31:0] _GEN_210 =
     {{MSHRs_3_miss_requests_7_data},
      {MSHRs_2_miss_requests_7_data},
      {MSHRs_1_miss_requests_7_data},
      {MSHRs_0_miss_requests_7_data}};
-  wire [3:0][1:0]  _GEN_77 =
+  wire [3:0][1:0]  _GEN_211 =
     {{MSHRs_3_miss_requests_7_memory_type},
      {MSHRs_2_miss_requests_7_memory_type},
      {MSHRs_1_miss_requests_7_memory_type},
      {MSHRs_0_miss_requests_7_memory_type}};
-  wire [3:0][1:0]  _GEN_78 =
+  wire [3:0][1:0]  _GEN_212 =
     {{MSHRs_3_miss_requests_7_access_width},
      {MSHRs_2_miss_requests_7_access_width},
      {MSHRs_1_miss_requests_7_access_width},
      {MSHRs_0_miss_requests_7_access_width}};
-  wire [3:0][3:0]  _GEN_79 =
+  wire [3:0][3:0]  _GEN_213 =
     {{MSHRs_3_miss_requests_7_MOB_index},
      {MSHRs_2_miss_requests_7_MOB_index},
      {MSHRs_1_miss_requests_7_MOB_index},
      {MSHRs_0_miss_requests_7_MOB_index}};
-  wire [3:0][1:0]  _GEN_80 =
+  wire [3:0][1:0]  _GEN_214 =
     {{MSHRs_3_allocate_way},
      {MSHRs_2_allocate_way},
      {MSHRs_1_allocate_way},
      {MSHRs_0_allocate_way}};
-  assign allocate_way = _GEN_80[MSHR_front_index];
+  assign allocate_way = _GEN_214[MSHR_front_index];
   assign allocate_set = allocate_address[10:5];
   assign allocate_tag = allocate_address[15:11];
   reg              cacheable_request_Q_io_enq_valid_REG;
@@ -1927,7 +3090,7 @@ module L1_data_cache(
   reg              cacheable_request_Q_io_enq_bits_read_valid_REG_1;
   reg  [31:0]      cacheable_request_Q_io_enq_bits_read_address_REG;
   reg  [63:0]      cacheable_request_Q_io_enq_bits_read_address_REG_1;
-  wire [6:0]       _GEN_81 =
+  wire [6:0]       _GEN_215 =
     {5'h0,
      (&io_CPU_request_bits_access_width)
        ? 2'h0
@@ -1936,92 +3099,92 @@ module L1_data_cache(
     _AXI_request_Q_io_deq_valid & _AXI_request_Q_io_deq_bits_write_valid;
   wire             read_request_valid =
     _AXI_request_Q_io_deq_valid & _AXI_request_Q_io_deq_bits_read_valid;
-  wire             _GEN_82 = write_request_valid & read_request_valid;
+  wire             _GEN_216 = write_request_valid & read_request_valid;
   wire             _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T =
     _AXI_request_Q_io_deq_bits_read_bytes < 7'h4;
   wire [6:0]       _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T_1 =
     _AXI_request_Q_io_deq_bits_read_bytes / 7'h4;
   wire             _AXI_request_Q_io_deq_ready_T_1 = m_axi_awready & m_axi_awvalid_0;
-  wire             _GEN_83 = _GEN_82 | read_request_valid;
+  wire             _GEN_217 = _GEN_216 | read_request_valid;
   wire             _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T_5 =
     _AXI_request_Q_io_deq_bits_read_bytes < 7'h4;
   wire [6:0]       _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T_6 =
     _AXI_request_Q_io_deq_bits_read_bytes / 7'h4;
-  assign m_axi_arvalid_0 = _GEN_83 & ~(|AXI_REQUEST_STATE);
-  wire             _GEN_84 = read_request_valid | ~write_request_valid;
-  wire             _GEN_85 = _GEN_82 | ~_GEN_84;
+  assign m_axi_arvalid_0 = _GEN_217 & ~(|AXI_REQUEST_STATE);
+  wire             _GEN_218 = read_request_valid | ~write_request_valid;
+  wire             _GEN_219 = _GEN_216 | ~_GEN_218;
   wire             _AXI_request_Q_io_deq_ready_view__AXI_AW_bits_awlen_T_5 =
     _AXI_request_Q_io_deq_bits_read_bytes < 7'h4;
   wire [6:0]       _AXI_request_Q_io_deq_ready_view__AXI_AW_bits_awlen_T_6 =
     _AXI_request_Q_io_deq_bits_read_bytes / 7'h4;
-  wire             _GEN_86 = ~read_request_valid & write_request_valid;
-  assign m_axi_awvalid_0 = (_GEN_82 | _GEN_86) & ~(|AXI_REQUEST_STATE);
+  wire             _GEN_220 = ~read_request_valid & write_request_valid;
+  assign m_axi_awvalid_0 = (_GEN_216 | _GEN_220) & ~(|AXI_REQUEST_STATE);
   wire [7:0]       m_axi_awlen_0 =
-    _GEN_82
+    _GEN_216
       ? {1'h0,
          _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T
            ? 7'h0
            : _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T_1 - 7'h1}
-      : _GEN_84
+      : _GEN_218
           ? (_GEN_3 ? AXI_AW_buf_awlen : 8'h0)
           : {1'h0,
              _AXI_request_Q_io_deq_ready_view__AXI_AW_bits_awlen_T_5
                ? 7'h0
                : _AXI_request_Q_io_deq_ready_view__AXI_AW_bits_awlen_T_6 - 7'h1};
   wire             _AXI_request_Q_io_deq_ready_T_6 = m_axi_awready & m_axi_awvalid_0;
-  wire             _GEN_87 =
+  wire             _GEN_221 =
     _non_cacheable_response_Q_io_deq_valid | ~cacheable_AXI_response_valid;
-  wire             _GEN_88 = DATA_CACHE_STATE == 2'h1;
-  wire             _GEN_89 = DATA_CACHE_STATE == 2'h2;
-  wire             _GEN_90 = (&DATA_CACHE_STATE) & (&DATA_CACHE_STATE) & _GEN_37;
-  wire [7:0][31:0] _GEN_91 =
-    {{_GEN_75[MSHR_front_index]},
-     {_GEN_70[MSHR_front_index]},
-     {_GEN_65[MSHR_front_index]},
-     {_GEN_60[MSHR_front_index]},
-     {_GEN_55[MSHR_front_index]},
-     {_GEN_50[MSHR_front_index]},
-     {_GEN_45[MSHR_front_index]},
-     {_GEN_40[MSHR_front_index]}};
-  assign replay_address = _GEN_91[_GEN_36[MSHR_front_index]];
-  wire [7:0][31:0] _GEN_92 =
-    {{_GEN_76[MSHR_front_index]},
-     {_GEN_71[MSHR_front_index]},
-     {_GEN_66[MSHR_front_index]},
-     {_GEN_61[MSHR_front_index]},
-     {_GEN_56[MSHR_front_index]},
-     {_GEN_51[MSHR_front_index]},
-     {_GEN_46[MSHR_front_index]},
-     {_GEN_41[MSHR_front_index]}};
-  assign replay_data = _GEN_92[_GEN_36[MSHR_front_index]];
-  wire [7:0][1:0]  _GEN_93 =
-    {{_GEN_77[MSHR_front_index]},
-     {_GEN_72[MSHR_front_index]},
-     {_GEN_67[MSHR_front_index]},
-     {_GEN_62[MSHR_front_index]},
-     {_GEN_57[MSHR_front_index]},
-     {_GEN_52[MSHR_front_index]},
-     {_GEN_47[MSHR_front_index]},
-     {_GEN_42[MSHR_front_index]}};
-  assign replay_memory_type = _GEN_93[_GEN_36[MSHR_front_index]];
-  wire [7:0][1:0]  _GEN_94 =
-    {{_GEN_78[MSHR_front_index]},
-     {_GEN_73[MSHR_front_index]},
-     {_GEN_68[MSHR_front_index]},
-     {_GEN_63[MSHR_front_index]},
-     {_GEN_58[MSHR_front_index]},
-     {_GEN_53[MSHR_front_index]},
-     {_GEN_48[MSHR_front_index]},
-     {_GEN_43[MSHR_front_index]}};
-  wire [7:0][3:0]  _GEN_95 =
-    {{_GEN_79[MSHR_front_index]},
-     {_GEN_74[MSHR_front_index]},
-     {_GEN_69[MSHR_front_index]},
-     {_GEN_64[MSHR_front_index]},
-     {_GEN_59[MSHR_front_index]},
-     {_GEN_54[MSHR_front_index]},
-     {_GEN_49[MSHR_front_index]},
-     {_GEN_44[MSHR_front_index]}};
+  wire             _GEN_222 = DATA_CACHE_STATE == 2'h1;
+  wire             _GEN_223 = DATA_CACHE_STATE == 2'h2;
+  wire             _GEN_224 = (&DATA_CACHE_STATE) & (&DATA_CACHE_STATE) & _GEN_171;
+  wire [7:0][31:0] _GEN_225 =
+    {{_GEN_209[MSHR_front_index]},
+     {_GEN_204[MSHR_front_index]},
+     {_GEN_199[MSHR_front_index]},
+     {_GEN_194[MSHR_front_index]},
+     {_GEN_189[MSHR_front_index]},
+     {_GEN_184[MSHR_front_index]},
+     {_GEN_179[MSHR_front_index]},
+     {_GEN_174[MSHR_front_index]}};
+  assign replay_address = _GEN_225[_GEN_170[MSHR_front_index]];
+  wire [7:0][31:0] _GEN_226 =
+    {{_GEN_210[MSHR_front_index]},
+     {_GEN_205[MSHR_front_index]},
+     {_GEN_200[MSHR_front_index]},
+     {_GEN_195[MSHR_front_index]},
+     {_GEN_190[MSHR_front_index]},
+     {_GEN_185[MSHR_front_index]},
+     {_GEN_180[MSHR_front_index]},
+     {_GEN_175[MSHR_front_index]}};
+  assign replay_data = _GEN_226[_GEN_170[MSHR_front_index]];
+  wire [7:0][1:0]  _GEN_227 =
+    {{_GEN_211[MSHR_front_index]},
+     {_GEN_206[MSHR_front_index]},
+     {_GEN_201[MSHR_front_index]},
+     {_GEN_196[MSHR_front_index]},
+     {_GEN_191[MSHR_front_index]},
+     {_GEN_186[MSHR_front_index]},
+     {_GEN_181[MSHR_front_index]},
+     {_GEN_176[MSHR_front_index]}};
+  assign replay_memory_type = _GEN_227[_GEN_170[MSHR_front_index]];
+  wire [7:0][1:0]  _GEN_228 =
+    {{_GEN_212[MSHR_front_index]},
+     {_GEN_207[MSHR_front_index]},
+     {_GEN_202[MSHR_front_index]},
+     {_GEN_197[MSHR_front_index]},
+     {_GEN_192[MSHR_front_index]},
+     {_GEN_187[MSHR_front_index]},
+     {_GEN_182[MSHR_front_index]},
+     {_GEN_177[MSHR_front_index]}};
+  wire [7:0][3:0]  _GEN_229 =
+    {{_GEN_213[MSHR_front_index]},
+     {_GEN_208[MSHR_front_index]},
+     {_GEN_203[MSHR_front_index]},
+     {_GEN_198[MSHR_front_index]},
+     {_GEN_193[MSHR_front_index]},
+     {_GEN_188[MSHR_front_index]},
+     {_GEN_183[MSHR_front_index]},
+     {_GEN_178[MSHR_front_index]}};
   assign replay_set = replay_address[10:5];
   assign replay_tag = replay_address[15:11];
   reg              output_cacheable_r;
@@ -2034,16 +3197,16 @@ module L1_data_cache(
   wire [1:0]       output_operation = output_operation_r_1;
   wire [255:0]     _output_data_access_word_T =
     data_way >> {219'h0, {27'h0, output_address[4:0]} / 32'h4, 5'h0};
-  wire [35:0]      _GEN_96 = {4'h0, _output_data_access_word_T[31:0]};
-  wire [35:0]      _output_data_result_T = _GEN_96 >> {31'h0, output_address[1], 4'h0};
+  wire [35:0]      _GEN_230 = {4'h0, _output_data_access_word_T[31:0]};
+  wire [35:0]      _output_data_result_T = _GEN_230 >> {31'h0, output_address[1], 4'h0};
   wire [35:0]      _output_data_result_T_3 =
-    _GEN_96 >> {31'h0, output_address[1:0], 3'h0};
-  wire [3:0][31:0] _GEN_97 =
+    _GEN_230 >> {31'h0, output_address[1:0], 3'h0};
+  wire [3:0][31:0] _GEN_231 =
     {{_output_data_access_word_T[31:0]},
      {{16'h0, _output_data_result_T[15:0]}},
      {{24'h0, _output_data_result_T_3[7:0]}},
      {_output_data_access_word_T[31:0]}};
-  wire [31:0]      output_data = _GEN_97[output_operation];
+  wire [31:0]      output_data = _GEN_231[output_operation];
   reg              output_valid_r;
   wire             output_valid = output_valid_r;
   reg  [3:0]       output_MOB_index_r;
@@ -2061,6 +3224,266 @@ module L1_data_cache(
     input_cacheable & _cacheable_request_Q_io_enq_ready;
   wire             input_non_cacheable_and_Q_available =
     io_CPU_request_bits_addr[31] & _non_cacheable_request_Q_io_enq_ready;
+  wire [63:0]      _GEN_232 =
+    {{inflight_write_miss_next_63_0},
+     {inflight_write_miss_next_62_0},
+     {inflight_write_miss_next_61_0},
+     {inflight_write_miss_next_60_0},
+     {inflight_write_miss_next_59_0},
+     {inflight_write_miss_next_58_0},
+     {inflight_write_miss_next_57_0},
+     {inflight_write_miss_next_56_0},
+     {inflight_write_miss_next_55_0},
+     {inflight_write_miss_next_54_0},
+     {inflight_write_miss_next_53_0},
+     {inflight_write_miss_next_52_0},
+     {inflight_write_miss_next_51_0},
+     {inflight_write_miss_next_50_0},
+     {inflight_write_miss_next_49_0},
+     {inflight_write_miss_next_48_0},
+     {inflight_write_miss_next_47_0},
+     {inflight_write_miss_next_46_0},
+     {inflight_write_miss_next_45_0},
+     {inflight_write_miss_next_44_0},
+     {inflight_write_miss_next_43_0},
+     {inflight_write_miss_next_42_0},
+     {inflight_write_miss_next_41_0},
+     {inflight_write_miss_next_40_0},
+     {inflight_write_miss_next_39_0},
+     {inflight_write_miss_next_38_0},
+     {inflight_write_miss_next_37_0},
+     {inflight_write_miss_next_36_0},
+     {inflight_write_miss_next_35_0},
+     {inflight_write_miss_next_34_0},
+     {inflight_write_miss_next_33_0},
+     {inflight_write_miss_next_32_0},
+     {inflight_write_miss_next_31_0},
+     {inflight_write_miss_next_30_0},
+     {inflight_write_miss_next_29_0},
+     {inflight_write_miss_next_28_0},
+     {inflight_write_miss_next_27_0},
+     {inflight_write_miss_next_26_0},
+     {inflight_write_miss_next_25_0},
+     {inflight_write_miss_next_24_0},
+     {inflight_write_miss_next_23_0},
+     {inflight_write_miss_next_22_0},
+     {inflight_write_miss_next_21_0},
+     {inflight_write_miss_next_20_0},
+     {inflight_write_miss_next_19_0},
+     {inflight_write_miss_next_18_0},
+     {inflight_write_miss_next_17_0},
+     {inflight_write_miss_next_16_0},
+     {inflight_write_miss_next_15_0},
+     {inflight_write_miss_next_14_0},
+     {inflight_write_miss_next_13_0},
+     {inflight_write_miss_next_12_0},
+     {inflight_write_miss_next_11_0},
+     {inflight_write_miss_next_10_0},
+     {inflight_write_miss_next_9_0},
+     {inflight_write_miss_next_8_0},
+     {inflight_write_miss_next_7_0},
+     {inflight_write_miss_next_6_0},
+     {inflight_write_miss_next_5_0},
+     {inflight_write_miss_next_4_0},
+     {inflight_write_miss_next_3_0},
+     {inflight_write_miss_next_2_0},
+     {inflight_write_miss_next_1_0},
+     {inflight_write_miss_next_0_0}};
+  wire [63:0]      _GEN_233 =
+    {{inflight_write_miss_next_63_1},
+     {inflight_write_miss_next_62_1},
+     {inflight_write_miss_next_61_1},
+     {inflight_write_miss_next_60_1},
+     {inflight_write_miss_next_59_1},
+     {inflight_write_miss_next_58_1},
+     {inflight_write_miss_next_57_1},
+     {inflight_write_miss_next_56_1},
+     {inflight_write_miss_next_55_1},
+     {inflight_write_miss_next_54_1},
+     {inflight_write_miss_next_53_1},
+     {inflight_write_miss_next_52_1},
+     {inflight_write_miss_next_51_1},
+     {inflight_write_miss_next_50_1},
+     {inflight_write_miss_next_49_1},
+     {inflight_write_miss_next_48_1},
+     {inflight_write_miss_next_47_1},
+     {inflight_write_miss_next_46_1},
+     {inflight_write_miss_next_45_1},
+     {inflight_write_miss_next_44_1},
+     {inflight_write_miss_next_43_1},
+     {inflight_write_miss_next_42_1},
+     {inflight_write_miss_next_41_1},
+     {inflight_write_miss_next_40_1},
+     {inflight_write_miss_next_39_1},
+     {inflight_write_miss_next_38_1},
+     {inflight_write_miss_next_37_1},
+     {inflight_write_miss_next_36_1},
+     {inflight_write_miss_next_35_1},
+     {inflight_write_miss_next_34_1},
+     {inflight_write_miss_next_33_1},
+     {inflight_write_miss_next_32_1},
+     {inflight_write_miss_next_31_1},
+     {inflight_write_miss_next_30_1},
+     {inflight_write_miss_next_29_1},
+     {inflight_write_miss_next_28_1},
+     {inflight_write_miss_next_27_1},
+     {inflight_write_miss_next_26_1},
+     {inflight_write_miss_next_25_1},
+     {inflight_write_miss_next_24_1},
+     {inflight_write_miss_next_23_1},
+     {inflight_write_miss_next_22_1},
+     {inflight_write_miss_next_21_1},
+     {inflight_write_miss_next_20_1},
+     {inflight_write_miss_next_19_1},
+     {inflight_write_miss_next_18_1},
+     {inflight_write_miss_next_17_1},
+     {inflight_write_miss_next_16_1},
+     {inflight_write_miss_next_15_1},
+     {inflight_write_miss_next_14_1},
+     {inflight_write_miss_next_13_1},
+     {inflight_write_miss_next_12_1},
+     {inflight_write_miss_next_11_1},
+     {inflight_write_miss_next_10_1},
+     {inflight_write_miss_next_9_1},
+     {inflight_write_miss_next_8_1},
+     {inflight_write_miss_next_7_1},
+     {inflight_write_miss_next_6_1},
+     {inflight_write_miss_next_5_1},
+     {inflight_write_miss_next_4_1},
+     {inflight_write_miss_next_3_1},
+     {inflight_write_miss_next_2_1},
+     {inflight_write_miss_next_1_1},
+     {inflight_write_miss_next_0_1}};
+  wire [63:0]      _GEN_234 =
+    {{inflight_write_miss_next_63_2},
+     {inflight_write_miss_next_62_2},
+     {inflight_write_miss_next_61_2},
+     {inflight_write_miss_next_60_2},
+     {inflight_write_miss_next_59_2},
+     {inflight_write_miss_next_58_2},
+     {inflight_write_miss_next_57_2},
+     {inflight_write_miss_next_56_2},
+     {inflight_write_miss_next_55_2},
+     {inflight_write_miss_next_54_2},
+     {inflight_write_miss_next_53_2},
+     {inflight_write_miss_next_52_2},
+     {inflight_write_miss_next_51_2},
+     {inflight_write_miss_next_50_2},
+     {inflight_write_miss_next_49_2},
+     {inflight_write_miss_next_48_2},
+     {inflight_write_miss_next_47_2},
+     {inflight_write_miss_next_46_2},
+     {inflight_write_miss_next_45_2},
+     {inflight_write_miss_next_44_2},
+     {inflight_write_miss_next_43_2},
+     {inflight_write_miss_next_42_2},
+     {inflight_write_miss_next_41_2},
+     {inflight_write_miss_next_40_2},
+     {inflight_write_miss_next_39_2},
+     {inflight_write_miss_next_38_2},
+     {inflight_write_miss_next_37_2},
+     {inflight_write_miss_next_36_2},
+     {inflight_write_miss_next_35_2},
+     {inflight_write_miss_next_34_2},
+     {inflight_write_miss_next_33_2},
+     {inflight_write_miss_next_32_2},
+     {inflight_write_miss_next_31_2},
+     {inflight_write_miss_next_30_2},
+     {inflight_write_miss_next_29_2},
+     {inflight_write_miss_next_28_2},
+     {inflight_write_miss_next_27_2},
+     {inflight_write_miss_next_26_2},
+     {inflight_write_miss_next_25_2},
+     {inflight_write_miss_next_24_2},
+     {inflight_write_miss_next_23_2},
+     {inflight_write_miss_next_22_2},
+     {inflight_write_miss_next_21_2},
+     {inflight_write_miss_next_20_2},
+     {inflight_write_miss_next_19_2},
+     {inflight_write_miss_next_18_2},
+     {inflight_write_miss_next_17_2},
+     {inflight_write_miss_next_16_2},
+     {inflight_write_miss_next_15_2},
+     {inflight_write_miss_next_14_2},
+     {inflight_write_miss_next_13_2},
+     {inflight_write_miss_next_12_2},
+     {inflight_write_miss_next_11_2},
+     {inflight_write_miss_next_10_2},
+     {inflight_write_miss_next_9_2},
+     {inflight_write_miss_next_8_2},
+     {inflight_write_miss_next_7_2},
+     {inflight_write_miss_next_6_2},
+     {inflight_write_miss_next_5_2},
+     {inflight_write_miss_next_4_2},
+     {inflight_write_miss_next_3_2},
+     {inflight_write_miss_next_2_2},
+     {inflight_write_miss_next_1_2},
+     {inflight_write_miss_next_0_2}};
+  wire [63:0]      _GEN_235 =
+    {{inflight_write_miss_next_63_3},
+     {inflight_write_miss_next_62_3},
+     {inflight_write_miss_next_61_3},
+     {inflight_write_miss_next_60_3},
+     {inflight_write_miss_next_59_3},
+     {inflight_write_miss_next_58_3},
+     {inflight_write_miss_next_57_3},
+     {inflight_write_miss_next_56_3},
+     {inflight_write_miss_next_55_3},
+     {inflight_write_miss_next_54_3},
+     {inflight_write_miss_next_53_3},
+     {inflight_write_miss_next_52_3},
+     {inflight_write_miss_next_51_3},
+     {inflight_write_miss_next_50_3},
+     {inflight_write_miss_next_49_3},
+     {inflight_write_miss_next_48_3},
+     {inflight_write_miss_next_47_3},
+     {inflight_write_miss_next_46_3},
+     {inflight_write_miss_next_45_3},
+     {inflight_write_miss_next_44_3},
+     {inflight_write_miss_next_43_3},
+     {inflight_write_miss_next_42_3},
+     {inflight_write_miss_next_41_3},
+     {inflight_write_miss_next_40_3},
+     {inflight_write_miss_next_39_3},
+     {inflight_write_miss_next_38_3},
+     {inflight_write_miss_next_37_3},
+     {inflight_write_miss_next_36_3},
+     {inflight_write_miss_next_35_3},
+     {inflight_write_miss_next_34_3},
+     {inflight_write_miss_next_33_3},
+     {inflight_write_miss_next_32_3},
+     {inflight_write_miss_next_31_3},
+     {inflight_write_miss_next_30_3},
+     {inflight_write_miss_next_29_3},
+     {inflight_write_miss_next_28_3},
+     {inflight_write_miss_next_27_3},
+     {inflight_write_miss_next_26_3},
+     {inflight_write_miss_next_25_3},
+     {inflight_write_miss_next_24_3},
+     {inflight_write_miss_next_23_3},
+     {inflight_write_miss_next_22_3},
+     {inflight_write_miss_next_21_3},
+     {inflight_write_miss_next_20_3},
+     {inflight_write_miss_next_19_3},
+     {inflight_write_miss_next_18_3},
+     {inflight_write_miss_next_17_3},
+     {inflight_write_miss_next_16_3},
+     {inflight_write_miss_next_15_3},
+     {inflight_write_miss_next_14_3},
+     {inflight_write_miss_next_13_3},
+     {inflight_write_miss_next_12_3},
+     {inflight_write_miss_next_11_3},
+     {inflight_write_miss_next_10_3},
+     {inflight_write_miss_next_9_3},
+     {inflight_write_miss_next_8_3},
+     {inflight_write_miss_next_7_3},
+     {inflight_write_miss_next_6_3},
+     {inflight_write_miss_next_5_3},
+     {inflight_write_miss_next_4_3},
+     {inflight_write_miss_next_3_3},
+     {inflight_write_miss_next_2_3},
+     {inflight_write_miss_next_1_3},
+     {inflight_write_miss_next_0_3}};
   assign io_CPU_request_ready_0 =
     (~MSHR_full_next | MSHR_full_next
      & (MSHRs_0_address == io_CPU_request_bits_addr
@@ -2070,23 +3493,24 @@ module L1_data_cache(
     & (input_cacheable_and_Q_available | input_non_cacheable_and_Q_available)
     & ~(|DATA_CACHE_STATE)
     & ((|DATA_CACHE_STATE)
-         ? (_GEN_88
+         ? (_GEN_222
               ? DATA_CACHE_STATE
-              : _GEN_89 ? 2'h3 : _GEN_90 ? 2'h0 : DATA_CACHE_STATE)
-         : _GEN_87 ? DATA_CACHE_STATE : 2'h2) != 2'h2;
+              : _GEN_223 ? 2'h3 : _GEN_224 ? 2'h0 : DATA_CACHE_STATE)
+         : _GEN_221 ? DATA_CACHE_STATE : 2'h2) != 2'h2
+    & ~(_GEN_232[active_set] | _GEN_233[active_set] | _GEN_234[active_set]
+        | _GEN_235[active_set]);
   always @(posedge clock) begin
-    automatic logic         _GEN_98 = ~W_done & m_axi_wready & m_axi_wvalid_0;
-    automatic logic         _GEN_99;
-    automatic logic [255:0] _GEN_100;
-    automatic logic         _GEN_101;
-    automatic logic         _GEN_102;
-    automatic logic         _GEN_103;
-    automatic logic         _GEN_104;
-    automatic logic         _GEN_105;
+    automatic logic         _GEN_236 = ~W_done & m_axi_wready & m_axi_wvalid_0;
+    automatic logic         _GEN_237;
+    automatic logic [255:0] _GEN_238;
+    automatic logic         _GEN_239;
+    automatic logic         _GEN_240;
+    automatic logic         _GEN_241;
+    automatic logic         _GEN_242;
     automatic logic         active_cacheable = ~(active_address[31]) & active_valid;
     automatic logic [1:0]   active_access_width =
       (&DATA_CACHE_STATE)
-        ? _GEN_94[_GEN_36[MSHR_front_index]]
+        ? _GEN_228[_GEN_170[MSHR_front_index]]
         : io_CPU_request_bits_access_width;
     automatic logic         _data_memories_wr_en_3_T_1 = word_offset == 5'h0;
     automatic logic         _data_memories_wr_en_1_T_6 = half_word_offset == 5'h0;
@@ -2115,53 +3539,53 @@ module L1_data_cache(
     automatic logic         _data_memories_wr_en_29_T_6 = half_word_offset == 5'hE;
     automatic logic         _data_memories_wr_en_31_T_6 = half_word_offset == 5'hF;
     automatic logic [1:0]   hit_MSHR_index;
-    automatic logic         _GEN_106;
-    automatic logic         _GEN_107;
-    automatic logic         _GEN_108;
-    automatic logic         _GEN_109;
-    automatic logic         _GEN_110;
-    automatic logic         _GEN_111;
-    automatic logic         _GEN_112;
-    automatic logic         _GEN_113;
-    automatic logic         _GEN_114;
-    automatic logic         _GEN_115;
+    automatic logic         _GEN_243;
+    automatic logic         _GEN_244;
+    automatic logic         _GEN_245;
+    automatic logic         _GEN_246;
+    automatic logic         _GEN_247;
+    automatic logic         _GEN_248;
+    automatic logic         _GEN_249;
+    automatic logic         _GEN_250;
+    automatic logic         _GEN_251;
+    automatic logic         _GEN_252;
     automatic logic [2:0]   _MSHRs_back_pointer_T;
-    automatic logic [2:0]   _GEN_116;
-    automatic logic         _GEN_117;
-    automatic logic         _GEN_118;
-    automatic logic         _GEN_119;
-    automatic logic         _GEN_120;
-    automatic logic         _GEN_121;
-    automatic logic         _GEN_122;
-    automatic logic         _GEN_123;
-    automatic logic [31:0]  _GEN_124;
-    automatic logic         _GEN_125;
-    automatic logic         _GEN_126;
-    automatic logic         _GEN_127;
-    automatic logic         _GEN_128;
-    automatic logic         _GEN_129;
-    automatic logic         _GEN_130;
-    automatic logic         _GEN_131;
+    automatic logic [2:0]   _GEN_253;
+    automatic logic         _GEN_254;
+    automatic logic         _GEN_255;
+    automatic logic         _GEN_256;
+    automatic logic         _GEN_257;
+    automatic logic         _GEN_258;
+    automatic logic         _GEN_259;
+    automatic logic         _GEN_260;
+    automatic logic [31:0]  _GEN_261;
+    automatic logic         _GEN_262;
+    automatic logic         _GEN_263;
+    automatic logic         _GEN_264;
+    automatic logic         _GEN_265;
+    automatic logic         _GEN_266;
+    automatic logic         _GEN_267;
+    automatic logic         _GEN_268;
     automatic logic [2:0]   _MSHRs_back_pointer_T_2;
-    automatic logic         _GEN_132;
-    automatic logic         _GEN_133 = _GEN_36[MSHR_front_index] == 3'h0;
-    automatic logic         _GEN_134 = _GEN_36[MSHR_front_index] == 3'h1;
-    automatic logic         _GEN_135 = _GEN_36[MSHR_front_index] == 3'h2;
-    automatic logic         _GEN_136 = _GEN_36[MSHR_front_index] == 3'h3;
-    automatic logic         _GEN_137 = _GEN_36[MSHR_front_index] == 3'h4;
-    automatic logic         _GEN_138 = _GEN_36[MSHR_front_index] == 3'h5;
-    automatic logic         _GEN_139 = _GEN_36[MSHR_front_index] == 3'h6;
-    automatic logic         _GEN_140;
-    automatic logic         _GEN_141;
-    automatic logic         _GEN_142;
-    automatic logic         _GEN_143;
-    automatic logic         _GEN_144;
-    automatic logic         _GEN_145;
-    automatic logic         _GEN_146;
-    automatic logic         _GEN_147;
-    automatic logic         _GEN_148;
-    automatic logic         _GEN_149;
-    automatic logic [63:0]  _GEN_150 =
+    automatic logic         _GEN_269;
+    automatic logic         _GEN_270 = _GEN_170[MSHR_front_index] == 3'h0;
+    automatic logic         _GEN_271 = _GEN_170[MSHR_front_index] == 3'h1;
+    automatic logic         _GEN_272 = _GEN_170[MSHR_front_index] == 3'h2;
+    automatic logic         _GEN_273 = _GEN_170[MSHR_front_index] == 3'h3;
+    automatic logic         _GEN_274 = _GEN_170[MSHR_front_index] == 3'h4;
+    automatic logic         _GEN_275 = _GEN_170[MSHR_front_index] == 3'h5;
+    automatic logic         _GEN_276 = _GEN_170[MSHR_front_index] == 3'h6;
+    automatic logic         _GEN_277;
+    automatic logic         _GEN_278;
+    automatic logic         _GEN_279;
+    automatic logic         _GEN_280;
+    automatic logic         _GEN_281;
+    automatic logic         _GEN_282;
+    automatic logic         _GEN_283;
+    automatic logic         _GEN_284;
+    automatic logic         _GEN_285;
+    automatic logic         _GEN_286;
+    automatic logic [63:0]  _GEN_287 =
       {{valid_memory_63_0},
        {valid_memory_62_0},
        {valid_memory_61_0},
@@ -2226,7 +3650,7 @@ module L1_data_cache(
        {valid_memory_2_0},
        {valid_memory_1_0},
        {valid_memory_0_0}};
-    automatic logic [63:0]  _GEN_151 =
+    automatic logic [63:0]  _GEN_288 =
       {{valid_memory_63_1},
        {valid_memory_62_1},
        {valid_memory_61_1},
@@ -2291,7 +3715,7 @@ module L1_data_cache(
        {valid_memory_2_1},
        {valid_memory_1_1},
        {valid_memory_0_1}};
-    automatic logic [63:0]  _GEN_152 =
+    automatic logic [63:0]  _GEN_289 =
       {{valid_memory_63_2},
        {valid_memory_62_2},
        {valid_memory_61_2},
@@ -2356,7 +3780,7 @@ module L1_data_cache(
        {valid_memory_2_2},
        {valid_memory_1_2},
        {valid_memory_0_2}};
-    automatic logic [63:0]  _GEN_153 =
+    automatic logic [63:0]  _GEN_290 =
       {{valid_memory_63_3},
        {valid_memory_62_3},
        {valid_memory_61_3},
@@ -2421,58 +3845,57 @@ module L1_data_cache(
        {valid_memory_2_3},
        {valid_memory_1_3},
        {valid_memory_0_3}};
-    _GEN_99 = _GEN_2 & _GEN_98;
-    _GEN_100 = {32'h0, AXI_AW_DATA_BUFFER[255:32]};
-    _GEN_101 = ~R_done & _GEN_7;
-    _GEN_102 = _GEN & _GEN_101;
-    _GEN_103 = _GEN & _GEN_98;
-    _GEN_104 = _GEN_1 & _GEN_98;
-    _GEN_105 = _GEN_104 | _GEN_103 | _GEN_99;
+    _GEN_237 = _GEN_2 & _GEN_236;
+    _GEN_238 = {32'h0, AXI_AW_DATA_BUFFER[255:32]};
+    _GEN_239 = ~R_done & _GEN_7;
+    _GEN_240 = _GEN & _GEN_236;
+    _GEN_241 = _GEN_1 & _GEN_236;
+    _GEN_242 = _GEN_241 | _GEN_240 | _GEN_237;
     hit_MSHR_index =
-      valid_miss ? (_GEN_30 ? 2'h3 : _GEN_29 ? 2'h2 : {1'h0, _GEN_28}) : 2'h0;
-    _GEN_106 = hit_MSHR_index == 2'h0;
-    _GEN_107 = _GEN_33[hit_MSHR_index] == 3'h0;
-    _GEN_108 = _GEN_33[hit_MSHR_index] == 3'h1;
-    _GEN_109 = _GEN_33[hit_MSHR_index] == 3'h2;
-    _GEN_110 = _GEN_33[hit_MSHR_index] == 3'h3;
-    _GEN_111 = _GEN_33[hit_MSHR_index] == 3'h4;
-    _GEN_112 = _GEN_33[hit_MSHR_index] == 3'h5;
-    _GEN_113 = _GEN_33[hit_MSHR_index] == 3'h6;
-    _GEN_114 = hit_MSHR_index == 2'h1;
-    _GEN_115 = hit_MSHR_index == 2'h2;
-    _MSHRs_back_pointer_T = _GEN_33[hit_MSHR_index] + 3'h1;
-    _GEN_116 = _GEN_33[MSHR_back_index];
-    _GEN_117 = MSHR_back_index == 2'h0;
-    _GEN_118 = _GEN_34 & _GEN_117;
-    _GEN_119 = MSHR_back_index == 2'h1;
-    _GEN_120 = _GEN_34 & _GEN_119;
-    _GEN_121 = MSHR_back_index == 2'h2;
-    _GEN_122 = _GEN_34 & _GEN_121;
-    _GEN_123 = _GEN_34 & (&MSHR_back_index);
-    _GEN_124 = miss_backend_memory_request_REG_addr & 32'hFFFFFFE0;
-    _GEN_125 = _GEN_116 == 3'h0;
-    _GEN_126 = _GEN_116 == 3'h1;
-    _GEN_127 = _GEN_116 == 3'h2;
-    _GEN_128 = _GEN_116 == 3'h3;
-    _GEN_129 = _GEN_116 == 3'h4;
-    _GEN_130 = _GEN_116 == 3'h5;
-    _GEN_131 = _GEN_116 == 3'h6;
-    _MSHRs_back_pointer_T_2 = _GEN_116 + 3'h1;
-    _GEN_132 = MSHR_front_index == 2'h0;
-    _GEN_140 = MSHR_front_index == 2'h1;
-    _GEN_141 = MSHR_front_index == 2'h2;
-    _GEN_142 = _GEN_37 & _GEN_132;
-    _GEN_143 = _GEN_37 & _GEN_140;
-    _GEN_144 = _GEN_37 & _GEN_141;
-    _GEN_145 = _GEN_37 & (&MSHR_front_index);
-    _GEN_146 = (&DATA_CACHE_STATE) & _GEN_142;
-    _GEN_147 = (&DATA_CACHE_STATE) & _GEN_143;
-    _GEN_148 = (&DATA_CACHE_STATE) & _GEN_144;
-    _GEN_149 = (&DATA_CACHE_STATE) & _GEN_145;
-    AXI_AR_buf_arid <= _GEN_83 ? _AXI_request_Q_io_deq_bits_read_ID : 8'h0;
-    AXI_AR_buf_araddr <= _GEN_83 ? _AXI_request_Q_io_deq_bits_read_address : 32'h0;
+      valid_miss ? (_GEN_164 ? 2'h3 : _GEN_163 ? 2'h2 : {1'h0, _GEN_162}) : 2'h0;
+    _GEN_243 = hit_MSHR_index == 2'h0;
+    _GEN_244 = _GEN_167[hit_MSHR_index] == 3'h0;
+    _GEN_245 = _GEN_167[hit_MSHR_index] == 3'h1;
+    _GEN_246 = _GEN_167[hit_MSHR_index] == 3'h2;
+    _GEN_247 = _GEN_167[hit_MSHR_index] == 3'h3;
+    _GEN_248 = _GEN_167[hit_MSHR_index] == 3'h4;
+    _GEN_249 = _GEN_167[hit_MSHR_index] == 3'h5;
+    _GEN_250 = _GEN_167[hit_MSHR_index] == 3'h6;
+    _GEN_251 = hit_MSHR_index == 2'h1;
+    _GEN_252 = hit_MSHR_index == 2'h2;
+    _MSHRs_back_pointer_T = _GEN_167[hit_MSHR_index] + 3'h1;
+    _GEN_253 = _GEN_167[MSHR_back_index];
+    _GEN_254 = MSHR_back_index == 2'h0;
+    _GEN_255 = _GEN_168 & _GEN_254;
+    _GEN_256 = MSHR_back_index == 2'h1;
+    _GEN_257 = _GEN_168 & _GEN_256;
+    _GEN_258 = MSHR_back_index == 2'h2;
+    _GEN_259 = _GEN_168 & _GEN_258;
+    _GEN_260 = _GEN_168 & (&MSHR_back_index);
+    _GEN_261 = miss_backend_memory_request_REG_addr & 32'hFFFFFFE0;
+    _GEN_262 = _GEN_253 == 3'h0;
+    _GEN_263 = _GEN_253 == 3'h1;
+    _GEN_264 = _GEN_253 == 3'h2;
+    _GEN_265 = _GEN_253 == 3'h3;
+    _GEN_266 = _GEN_253 == 3'h4;
+    _GEN_267 = _GEN_253 == 3'h5;
+    _GEN_268 = _GEN_253 == 3'h6;
+    _MSHRs_back_pointer_T_2 = _GEN_253 + 3'h1;
+    _GEN_269 = MSHR_front_index == 2'h0;
+    _GEN_277 = MSHR_front_index == 2'h1;
+    _GEN_278 = MSHR_front_index == 2'h2;
+    _GEN_279 = _GEN_171 & _GEN_269;
+    _GEN_280 = _GEN_171 & _GEN_277;
+    _GEN_281 = _GEN_171 & _GEN_278;
+    _GEN_282 = _GEN_171 & (&MSHR_front_index);
+    _GEN_283 = (&DATA_CACHE_STATE) & _GEN_279;
+    _GEN_284 = (&DATA_CACHE_STATE) & _GEN_280;
+    _GEN_285 = (&DATA_CACHE_STATE) & _GEN_281;
+    _GEN_286 = (&DATA_CACHE_STATE) & _GEN_282;
+    AXI_AR_buf_arid <= _GEN_217 ? _AXI_request_Q_io_deq_bits_read_ID : 8'h0;
+    AXI_AR_buf_araddr <= _GEN_217 ? _AXI_request_Q_io_deq_bits_read_address : 32'h0;
     AXI_AR_buf_arlen <=
-      _GEN_82
+      _GEN_216
         ? {1'h0,
            _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T
              ? 7'h0
@@ -2483,42 +3906,64 @@ module L1_data_cache(
                  ? 7'h0
                  : _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T_6 - 7'h1}
             : 8'h0;
-    AXI_AR_buf_arsize <= {1'h0, _GEN_83, 1'h0};
-    AXI_AW_buf_awid <= _GEN_85 ? _AXI_request_Q_io_deq_bits_write_ID : 8'h0;
-    AXI_AW_buf_awaddr <= _GEN_85 ? _AXI_request_Q_io_deq_bits_write_address : 32'h0;
+    AXI_AR_buf_arsize <= {1'h0, _GEN_217, 1'h0};
+    AXI_AW_buf_awid <= _GEN_219 ? _AXI_request_Q_io_deq_bits_write_ID : 8'h0;
+    AXI_AW_buf_awaddr <= _GEN_219 ? _AXI_request_Q_io_deq_bits_write_address : 32'h0;
     AXI_AW_buf_awlen <=
-      _GEN_82
+      _GEN_216
         ? {1'h0,
            _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T
              ? 7'h0
              : _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T_1 - 7'h1}
-        : _GEN_84
+        : _GEN_218
             ? 8'h0
             : {1'h0,
                _AXI_request_Q_io_deq_ready_view__AXI_AW_bits_awlen_T_5
                  ? 7'h0
                  : _AXI_request_Q_io_deq_ready_view__AXI_AW_bits_awlen_T_6 - 7'h1};
     AXI_AW_buf_awsize <=
-      _GEN_82 ? 3'h2 : read_request_valid ? 3'h0 : {1'h0, write_request_valid, 1'h0};
-    if (_GEN_82) begin
+      _GEN_216 ? 3'h2 : read_request_valid ? 3'h0 : {1'h0, write_request_valid, 1'h0};
+    if (_GEN_216) begin
       if (_AXI_request_Q_io_deq_ready_T_1)
         AXI_AW_DATA_BUFFER <= _AXI_request_Q_io_deq_bits_write_data;
-      else if (_GEN_105)
-        AXI_AW_DATA_BUFFER <= _GEN_100;
+      else if (_GEN_242)
+        AXI_AW_DATA_BUFFER <= _GEN_238;
     end
     else if (read_request_valid
              | ~(write_request_valid & _AXI_request_Q_io_deq_ready_T_6)) begin
-      if (_GEN_105)
-        AXI_AW_DATA_BUFFER <= _GEN_100;
+      if (_GEN_242)
+        AXI_AW_DATA_BUFFER <= _GEN_238;
     end
     else
       AXI_AW_DATA_BUFFER <= _AXI_request_Q_io_deq_bits_write_data;
     if (_GEN_0) begin
       if (_GEN_8)
         AXI_read_buffer <= 256'h0;
-      else if (_GEN_101)
+      else if (_GEN_239)
         AXI_read_buffer <= _GEN_9;
-      else if (_GEN_102)
+      else if (_GEN) begin
+        if (_GEN_12)
+          AXI_read_buffer <= 256'h0;
+        else if (_GEN_239)
+          AXI_read_buffer <= _GEN_9;
+        else if (_GEN_3) begin
+          if (_GEN_8)
+            AXI_read_buffer <= 256'h0;
+          else if (_GEN_7)
+            AXI_read_buffer <= _GEN_9;
+        end
+      end
+      else if (_GEN_3) begin
+        if (_GEN_8)
+          AXI_read_buffer <= 256'h0;
+        else if (_GEN_7)
+          AXI_read_buffer <= _GEN_9;
+      end
+    end
+    else if (_GEN) begin
+      if (_GEN_12)
+        AXI_read_buffer <= 256'h0;
+      else if (_GEN_239)
         AXI_read_buffer <= _GEN_9;
       else if (_GEN_3) begin
         if (_GEN_8)
@@ -2527,8 +3972,6 @@ module L1_data_cache(
           AXI_read_buffer <= _GEN_9;
       end
     end
-    else if (_GEN_102)
-      AXI_read_buffer <= _GEN_9;
     else if (_GEN_3) begin
       if (_GEN_8)
         AXI_read_buffer <= 256'h0;
@@ -2811,40 +4254,44 @@ module L1_data_cache(
     tag_hit_OH_2_REG <= active_tag;
     tag_hit_OH_3_REG <= active_tag;
     REG_3 <= active_set;
-    valid_vec_0_REG <= _GEN_150[active_set];
-    valid_vec_1_REG <= _GEN_151[active_set];
-    valid_vec_2_REG <= _GEN_152[active_set];
-    valid_vec_3_REG <= _GEN_153[active_set];
+    valid_vec_0_REG <= _GEN_287[active_set];
+    valid_vec_1_REG <= _GEN_288[active_set];
+    valid_vec_2_REG <= _GEN_289[active_set];
+    valid_vec_3_REG <= _GEN_290[active_set];
+    PLRU_REG <= active_set;
     REG_4 <= active_set;
+    REG_5 <= io_CPU_request_bits_memory_type == 2'h2;
+    REG_6 <= active_set;
+    REG_7 <= active_set;
     writeback_set_REG <= active_set;
     writeback_dirty_REG <= active_set;
-    if (_GEN_146) begin
+    if (_GEN_283) begin
       MSHRs_0_address <= 32'h0;
       MSHRs_0_allocate_way <= 2'h0;
       MSHRs_0_back_pointer <= 3'h0;
     end
     else begin
-      if (_GEN_32 | ~_GEN_118) begin
+      if (_GEN_166 | ~_GEN_255) begin
       end
       else begin
-        MSHRs_0_address <= _GEN_124;
+        MSHRs_0_address <= _GEN_261;
         MSHRs_0_allocate_way <= evict_way;
       end
-      if (_GEN_32) begin
-        if (_GEN_106)
+      if (_GEN_166) begin
+        if (_GEN_243)
           MSHRs_0_back_pointer <= _MSHRs_back_pointer_T;
       end
-      else if (_GEN_118)
+      else if (_GEN_255)
         MSHRs_0_back_pointer <= _MSHRs_back_pointer_T_2;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_132 & _GEN_133) begin
+    if ((&DATA_CACHE_STATE) & _GEN_269 & _GEN_270) begin
       MSHRs_0_miss_requests_0_addr <= 32'h0;
       MSHRs_0_miss_requests_0_data <= 32'h0;
       MSHRs_0_miss_requests_0_memory_type <= 2'h0;
       MSHRs_0_miss_requests_0_access_width <= 2'h0;
       MSHRs_0_miss_requests_0_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_106 & _GEN_107 : _GEN_34 & _GEN_117 & _GEN_125) begin
+    else if (_GEN_166 ? _GEN_243 & _GEN_244 : _GEN_168 & _GEN_254 & _GEN_262) begin
       MSHRs_0_miss_requests_0_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_0_miss_requests_0_data <= miss_backend_memory_request_REG_data;
       MSHRs_0_miss_requests_0_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -2852,14 +4299,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_0_miss_requests_0_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_132 & _GEN_134) begin
+    if ((&DATA_CACHE_STATE) & _GEN_269 & _GEN_271) begin
       MSHRs_0_miss_requests_1_addr <= 32'h0;
       MSHRs_0_miss_requests_1_data <= 32'h0;
       MSHRs_0_miss_requests_1_memory_type <= 2'h0;
       MSHRs_0_miss_requests_1_access_width <= 2'h0;
       MSHRs_0_miss_requests_1_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_106 & _GEN_108 : _GEN_34 & _GEN_117 & _GEN_126) begin
+    else if (_GEN_166 ? _GEN_243 & _GEN_245 : _GEN_168 & _GEN_254 & _GEN_263) begin
       MSHRs_0_miss_requests_1_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_0_miss_requests_1_data <= miss_backend_memory_request_REG_data;
       MSHRs_0_miss_requests_1_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -2867,14 +4314,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_0_miss_requests_1_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_132 & _GEN_135) begin
+    if ((&DATA_CACHE_STATE) & _GEN_269 & _GEN_272) begin
       MSHRs_0_miss_requests_2_addr <= 32'h0;
       MSHRs_0_miss_requests_2_data <= 32'h0;
       MSHRs_0_miss_requests_2_memory_type <= 2'h0;
       MSHRs_0_miss_requests_2_access_width <= 2'h0;
       MSHRs_0_miss_requests_2_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_106 & _GEN_109 : _GEN_34 & _GEN_117 & _GEN_127) begin
+    else if (_GEN_166 ? _GEN_243 & _GEN_246 : _GEN_168 & _GEN_254 & _GEN_264) begin
       MSHRs_0_miss_requests_2_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_0_miss_requests_2_data <= miss_backend_memory_request_REG_data;
       MSHRs_0_miss_requests_2_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -2882,14 +4329,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_0_miss_requests_2_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_132 & _GEN_136) begin
+    if ((&DATA_CACHE_STATE) & _GEN_269 & _GEN_273) begin
       MSHRs_0_miss_requests_3_addr <= 32'h0;
       MSHRs_0_miss_requests_3_data <= 32'h0;
       MSHRs_0_miss_requests_3_memory_type <= 2'h0;
       MSHRs_0_miss_requests_3_access_width <= 2'h0;
       MSHRs_0_miss_requests_3_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_106 & _GEN_110 : _GEN_34 & _GEN_117 & _GEN_128) begin
+    else if (_GEN_166 ? _GEN_243 & _GEN_247 : _GEN_168 & _GEN_254 & _GEN_265) begin
       MSHRs_0_miss_requests_3_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_0_miss_requests_3_data <= miss_backend_memory_request_REG_data;
       MSHRs_0_miss_requests_3_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -2897,14 +4344,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_0_miss_requests_3_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_132 & _GEN_137) begin
+    if ((&DATA_CACHE_STATE) & _GEN_269 & _GEN_274) begin
       MSHRs_0_miss_requests_4_addr <= 32'h0;
       MSHRs_0_miss_requests_4_data <= 32'h0;
       MSHRs_0_miss_requests_4_memory_type <= 2'h0;
       MSHRs_0_miss_requests_4_access_width <= 2'h0;
       MSHRs_0_miss_requests_4_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_106 & _GEN_111 : _GEN_34 & _GEN_117 & _GEN_129) begin
+    else if (_GEN_166 ? _GEN_243 & _GEN_248 : _GEN_168 & _GEN_254 & _GEN_266) begin
       MSHRs_0_miss_requests_4_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_0_miss_requests_4_data <= miss_backend_memory_request_REG_data;
       MSHRs_0_miss_requests_4_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -2912,14 +4359,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_0_miss_requests_4_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_132 & _GEN_138) begin
+    if ((&DATA_CACHE_STATE) & _GEN_269 & _GEN_275) begin
       MSHRs_0_miss_requests_5_addr <= 32'h0;
       MSHRs_0_miss_requests_5_data <= 32'h0;
       MSHRs_0_miss_requests_5_memory_type <= 2'h0;
       MSHRs_0_miss_requests_5_access_width <= 2'h0;
       MSHRs_0_miss_requests_5_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_106 & _GEN_112 : _GEN_34 & _GEN_117 & _GEN_130) begin
+    else if (_GEN_166 ? _GEN_243 & _GEN_249 : _GEN_168 & _GEN_254 & _GEN_267) begin
       MSHRs_0_miss_requests_5_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_0_miss_requests_5_data <= miss_backend_memory_request_REG_data;
       MSHRs_0_miss_requests_5_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -2927,14 +4374,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_0_miss_requests_5_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_132 & _GEN_139) begin
+    if ((&DATA_CACHE_STATE) & _GEN_269 & _GEN_276) begin
       MSHRs_0_miss_requests_6_addr <= 32'h0;
       MSHRs_0_miss_requests_6_data <= 32'h0;
       MSHRs_0_miss_requests_6_memory_type <= 2'h0;
       MSHRs_0_miss_requests_6_access_width <= 2'h0;
       MSHRs_0_miss_requests_6_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_106 & _GEN_113 : _GEN_34 & _GEN_117 & _GEN_131) begin
+    else if (_GEN_166 ? _GEN_243 & _GEN_250 : _GEN_168 & _GEN_254 & _GEN_268) begin
       MSHRs_0_miss_requests_6_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_0_miss_requests_6_data <= miss_backend_memory_request_REG_data;
       MSHRs_0_miss_requests_6_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -2942,16 +4389,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_0_miss_requests_6_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_132 & (&_GEN_36[MSHR_front_index])) begin
+    if ((&DATA_CACHE_STATE) & _GEN_269 & (&_GEN_170[MSHR_front_index])) begin
       MSHRs_0_miss_requests_7_addr <= 32'h0;
       MSHRs_0_miss_requests_7_data <= 32'h0;
       MSHRs_0_miss_requests_7_memory_type <= 2'h0;
       MSHRs_0_miss_requests_7_access_width <= 2'h0;
       MSHRs_0_miss_requests_7_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? _GEN_106 & (&_GEN_33[hit_MSHR_index])
-               : _GEN_34 & _GEN_117 & (&_GEN_116)) begin
+    else if (_GEN_166
+               ? _GEN_243 & (&_GEN_167[hit_MSHR_index])
+               : _GEN_168 & _GEN_254 & (&_GEN_253)) begin
       MSHRs_0_miss_requests_7_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_0_miss_requests_7_data <= miss_backend_memory_request_REG_data;
       MSHRs_0_miss_requests_7_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -2960,51 +4407,51 @@ module L1_data_cache(
       MSHRs_0_miss_requests_7_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
     if (&DATA_CACHE_STATE) begin
-      if (_GEN_142)
+      if (_GEN_279)
         MSHRs_0_front_pointer <= 3'h0;
-      else if (_GEN_132)
+      else if (_GEN_269)
         MSHRs_0_front_pointer <= _MSHRs_front_pointer_T;
-      if (_GEN_143)
+      if (_GEN_280)
         MSHRs_1_front_pointer <= 3'h0;
-      else if (_GEN_140)
+      else if (_GEN_277)
         MSHRs_1_front_pointer <= _MSHRs_front_pointer_T;
-      if (_GEN_144)
+      if (_GEN_281)
         MSHRs_2_front_pointer <= 3'h0;
-      else if (_GEN_141)
+      else if (_GEN_278)
         MSHRs_2_front_pointer <= _MSHRs_front_pointer_T;
-      if (_GEN_145)
+      if (_GEN_282)
         MSHRs_3_front_pointer <= 3'h0;
       else if (&MSHR_front_index)
         MSHRs_3_front_pointer <= _MSHRs_front_pointer_T;
     end
-    MSHRs_0_valid <= ~_GEN_146 & (~_GEN_32 & _GEN_118 | MSHRs_0_valid);
-    if (_GEN_147) begin
+    MSHRs_0_valid <= ~_GEN_283 & (~_GEN_166 & _GEN_255 | MSHRs_0_valid);
+    if (_GEN_284) begin
       MSHRs_1_address <= 32'h0;
       MSHRs_1_allocate_way <= 2'h0;
       MSHRs_1_back_pointer <= 3'h0;
     end
     else begin
-      if (_GEN_32 | ~_GEN_120) begin
+      if (_GEN_166 | ~_GEN_257) begin
       end
       else begin
-        MSHRs_1_address <= _GEN_124;
+        MSHRs_1_address <= _GEN_261;
         MSHRs_1_allocate_way <= evict_way;
       end
-      if (_GEN_32) begin
-        if (_GEN_114)
+      if (_GEN_166) begin
+        if (_GEN_251)
           MSHRs_1_back_pointer <= _MSHRs_back_pointer_T;
       end
-      else if (_GEN_120)
+      else if (_GEN_257)
         MSHRs_1_back_pointer <= _MSHRs_back_pointer_T_2;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_140 & _GEN_133) begin
+    if ((&DATA_CACHE_STATE) & _GEN_277 & _GEN_270) begin
       MSHRs_1_miss_requests_0_addr <= 32'h0;
       MSHRs_1_miss_requests_0_data <= 32'h0;
       MSHRs_1_miss_requests_0_memory_type <= 2'h0;
       MSHRs_1_miss_requests_0_access_width <= 2'h0;
       MSHRs_1_miss_requests_0_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_114 & _GEN_107 : _GEN_34 & _GEN_119 & _GEN_125) begin
+    else if (_GEN_166 ? _GEN_251 & _GEN_244 : _GEN_168 & _GEN_256 & _GEN_262) begin
       MSHRs_1_miss_requests_0_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_1_miss_requests_0_data <= miss_backend_memory_request_REG_data;
       MSHRs_1_miss_requests_0_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3012,14 +4459,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_1_miss_requests_0_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_140 & _GEN_134) begin
+    if ((&DATA_CACHE_STATE) & _GEN_277 & _GEN_271) begin
       MSHRs_1_miss_requests_1_addr <= 32'h0;
       MSHRs_1_miss_requests_1_data <= 32'h0;
       MSHRs_1_miss_requests_1_memory_type <= 2'h0;
       MSHRs_1_miss_requests_1_access_width <= 2'h0;
       MSHRs_1_miss_requests_1_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_114 & _GEN_108 : _GEN_34 & _GEN_119 & _GEN_126) begin
+    else if (_GEN_166 ? _GEN_251 & _GEN_245 : _GEN_168 & _GEN_256 & _GEN_263) begin
       MSHRs_1_miss_requests_1_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_1_miss_requests_1_data <= miss_backend_memory_request_REG_data;
       MSHRs_1_miss_requests_1_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3027,14 +4474,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_1_miss_requests_1_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_140 & _GEN_135) begin
+    if ((&DATA_CACHE_STATE) & _GEN_277 & _GEN_272) begin
       MSHRs_1_miss_requests_2_addr <= 32'h0;
       MSHRs_1_miss_requests_2_data <= 32'h0;
       MSHRs_1_miss_requests_2_memory_type <= 2'h0;
       MSHRs_1_miss_requests_2_access_width <= 2'h0;
       MSHRs_1_miss_requests_2_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_114 & _GEN_109 : _GEN_34 & _GEN_119 & _GEN_127) begin
+    else if (_GEN_166 ? _GEN_251 & _GEN_246 : _GEN_168 & _GEN_256 & _GEN_264) begin
       MSHRs_1_miss_requests_2_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_1_miss_requests_2_data <= miss_backend_memory_request_REG_data;
       MSHRs_1_miss_requests_2_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3042,14 +4489,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_1_miss_requests_2_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_140 & _GEN_136) begin
+    if ((&DATA_CACHE_STATE) & _GEN_277 & _GEN_273) begin
       MSHRs_1_miss_requests_3_addr <= 32'h0;
       MSHRs_1_miss_requests_3_data <= 32'h0;
       MSHRs_1_miss_requests_3_memory_type <= 2'h0;
       MSHRs_1_miss_requests_3_access_width <= 2'h0;
       MSHRs_1_miss_requests_3_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_114 & _GEN_110 : _GEN_34 & _GEN_119 & _GEN_128) begin
+    else if (_GEN_166 ? _GEN_251 & _GEN_247 : _GEN_168 & _GEN_256 & _GEN_265) begin
       MSHRs_1_miss_requests_3_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_1_miss_requests_3_data <= miss_backend_memory_request_REG_data;
       MSHRs_1_miss_requests_3_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3057,14 +4504,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_1_miss_requests_3_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_140 & _GEN_137) begin
+    if ((&DATA_CACHE_STATE) & _GEN_277 & _GEN_274) begin
       MSHRs_1_miss_requests_4_addr <= 32'h0;
       MSHRs_1_miss_requests_4_data <= 32'h0;
       MSHRs_1_miss_requests_4_memory_type <= 2'h0;
       MSHRs_1_miss_requests_4_access_width <= 2'h0;
       MSHRs_1_miss_requests_4_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_114 & _GEN_111 : _GEN_34 & _GEN_119 & _GEN_129) begin
+    else if (_GEN_166 ? _GEN_251 & _GEN_248 : _GEN_168 & _GEN_256 & _GEN_266) begin
       MSHRs_1_miss_requests_4_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_1_miss_requests_4_data <= miss_backend_memory_request_REG_data;
       MSHRs_1_miss_requests_4_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3072,14 +4519,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_1_miss_requests_4_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_140 & _GEN_138) begin
+    if ((&DATA_CACHE_STATE) & _GEN_277 & _GEN_275) begin
       MSHRs_1_miss_requests_5_addr <= 32'h0;
       MSHRs_1_miss_requests_5_data <= 32'h0;
       MSHRs_1_miss_requests_5_memory_type <= 2'h0;
       MSHRs_1_miss_requests_5_access_width <= 2'h0;
       MSHRs_1_miss_requests_5_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_114 & _GEN_112 : _GEN_34 & _GEN_119 & _GEN_130) begin
+    else if (_GEN_166 ? _GEN_251 & _GEN_249 : _GEN_168 & _GEN_256 & _GEN_267) begin
       MSHRs_1_miss_requests_5_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_1_miss_requests_5_data <= miss_backend_memory_request_REG_data;
       MSHRs_1_miss_requests_5_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3087,14 +4534,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_1_miss_requests_5_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_140 & _GEN_139) begin
+    if ((&DATA_CACHE_STATE) & _GEN_277 & _GEN_276) begin
       MSHRs_1_miss_requests_6_addr <= 32'h0;
       MSHRs_1_miss_requests_6_data <= 32'h0;
       MSHRs_1_miss_requests_6_memory_type <= 2'h0;
       MSHRs_1_miss_requests_6_access_width <= 2'h0;
       MSHRs_1_miss_requests_6_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_114 & _GEN_113 : _GEN_34 & _GEN_119 & _GEN_131) begin
+    else if (_GEN_166 ? _GEN_251 & _GEN_250 : _GEN_168 & _GEN_256 & _GEN_268) begin
       MSHRs_1_miss_requests_6_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_1_miss_requests_6_data <= miss_backend_memory_request_REG_data;
       MSHRs_1_miss_requests_6_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3102,16 +4549,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_1_miss_requests_6_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_140 & (&_GEN_36[MSHR_front_index])) begin
+    if ((&DATA_CACHE_STATE) & _GEN_277 & (&_GEN_170[MSHR_front_index])) begin
       MSHRs_1_miss_requests_7_addr <= 32'h0;
       MSHRs_1_miss_requests_7_data <= 32'h0;
       MSHRs_1_miss_requests_7_memory_type <= 2'h0;
       MSHRs_1_miss_requests_7_access_width <= 2'h0;
       MSHRs_1_miss_requests_7_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? _GEN_114 & (&_GEN_33[hit_MSHR_index])
-               : _GEN_34 & _GEN_119 & (&_GEN_116)) begin
+    else if (_GEN_166
+               ? _GEN_251 & (&_GEN_167[hit_MSHR_index])
+               : _GEN_168 & _GEN_256 & (&_GEN_253)) begin
       MSHRs_1_miss_requests_7_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_1_miss_requests_7_data <= miss_backend_memory_request_REG_data;
       MSHRs_1_miss_requests_7_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3119,34 +4566,34 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_1_miss_requests_7_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    MSHRs_1_valid <= ~_GEN_147 & (~_GEN_32 & _GEN_120 | MSHRs_1_valid);
-    if (_GEN_148) begin
+    MSHRs_1_valid <= ~_GEN_284 & (~_GEN_166 & _GEN_257 | MSHRs_1_valid);
+    if (_GEN_285) begin
       MSHRs_2_address <= 32'h0;
       MSHRs_2_allocate_way <= 2'h0;
       MSHRs_2_back_pointer <= 3'h0;
     end
     else begin
-      if (_GEN_32 | ~_GEN_122) begin
+      if (_GEN_166 | ~_GEN_259) begin
       end
       else begin
-        MSHRs_2_address <= _GEN_124;
+        MSHRs_2_address <= _GEN_261;
         MSHRs_2_allocate_way <= evict_way;
       end
-      if (_GEN_32) begin
-        if (_GEN_115)
+      if (_GEN_166) begin
+        if (_GEN_252)
           MSHRs_2_back_pointer <= _MSHRs_back_pointer_T;
       end
-      else if (_GEN_122)
+      else if (_GEN_259)
         MSHRs_2_back_pointer <= _MSHRs_back_pointer_T_2;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_141 & _GEN_133) begin
+    if ((&DATA_CACHE_STATE) & _GEN_278 & _GEN_270) begin
       MSHRs_2_miss_requests_0_addr <= 32'h0;
       MSHRs_2_miss_requests_0_data <= 32'h0;
       MSHRs_2_miss_requests_0_memory_type <= 2'h0;
       MSHRs_2_miss_requests_0_access_width <= 2'h0;
       MSHRs_2_miss_requests_0_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_115 & _GEN_107 : _GEN_34 & _GEN_121 & _GEN_125) begin
+    else if (_GEN_166 ? _GEN_252 & _GEN_244 : _GEN_168 & _GEN_258 & _GEN_262) begin
       MSHRs_2_miss_requests_0_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_2_miss_requests_0_data <= miss_backend_memory_request_REG_data;
       MSHRs_2_miss_requests_0_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3154,14 +4601,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_2_miss_requests_0_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_141 & _GEN_134) begin
+    if ((&DATA_CACHE_STATE) & _GEN_278 & _GEN_271) begin
       MSHRs_2_miss_requests_1_addr <= 32'h0;
       MSHRs_2_miss_requests_1_data <= 32'h0;
       MSHRs_2_miss_requests_1_memory_type <= 2'h0;
       MSHRs_2_miss_requests_1_access_width <= 2'h0;
       MSHRs_2_miss_requests_1_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_115 & _GEN_108 : _GEN_34 & _GEN_121 & _GEN_126) begin
+    else if (_GEN_166 ? _GEN_252 & _GEN_245 : _GEN_168 & _GEN_258 & _GEN_263) begin
       MSHRs_2_miss_requests_1_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_2_miss_requests_1_data <= miss_backend_memory_request_REG_data;
       MSHRs_2_miss_requests_1_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3169,14 +4616,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_2_miss_requests_1_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_141 & _GEN_135) begin
+    if ((&DATA_CACHE_STATE) & _GEN_278 & _GEN_272) begin
       MSHRs_2_miss_requests_2_addr <= 32'h0;
       MSHRs_2_miss_requests_2_data <= 32'h0;
       MSHRs_2_miss_requests_2_memory_type <= 2'h0;
       MSHRs_2_miss_requests_2_access_width <= 2'h0;
       MSHRs_2_miss_requests_2_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_115 & _GEN_109 : _GEN_34 & _GEN_121 & _GEN_127) begin
+    else if (_GEN_166 ? _GEN_252 & _GEN_246 : _GEN_168 & _GEN_258 & _GEN_264) begin
       MSHRs_2_miss_requests_2_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_2_miss_requests_2_data <= miss_backend_memory_request_REG_data;
       MSHRs_2_miss_requests_2_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3184,14 +4631,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_2_miss_requests_2_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_141 & _GEN_136) begin
+    if ((&DATA_CACHE_STATE) & _GEN_278 & _GEN_273) begin
       MSHRs_2_miss_requests_3_addr <= 32'h0;
       MSHRs_2_miss_requests_3_data <= 32'h0;
       MSHRs_2_miss_requests_3_memory_type <= 2'h0;
       MSHRs_2_miss_requests_3_access_width <= 2'h0;
       MSHRs_2_miss_requests_3_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_115 & _GEN_110 : _GEN_34 & _GEN_121 & _GEN_128) begin
+    else if (_GEN_166 ? _GEN_252 & _GEN_247 : _GEN_168 & _GEN_258 & _GEN_265) begin
       MSHRs_2_miss_requests_3_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_2_miss_requests_3_data <= miss_backend_memory_request_REG_data;
       MSHRs_2_miss_requests_3_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3199,14 +4646,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_2_miss_requests_3_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_141 & _GEN_137) begin
+    if ((&DATA_CACHE_STATE) & _GEN_278 & _GEN_274) begin
       MSHRs_2_miss_requests_4_addr <= 32'h0;
       MSHRs_2_miss_requests_4_data <= 32'h0;
       MSHRs_2_miss_requests_4_memory_type <= 2'h0;
       MSHRs_2_miss_requests_4_access_width <= 2'h0;
       MSHRs_2_miss_requests_4_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_115 & _GEN_111 : _GEN_34 & _GEN_121 & _GEN_129) begin
+    else if (_GEN_166 ? _GEN_252 & _GEN_248 : _GEN_168 & _GEN_258 & _GEN_266) begin
       MSHRs_2_miss_requests_4_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_2_miss_requests_4_data <= miss_backend_memory_request_REG_data;
       MSHRs_2_miss_requests_4_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3214,14 +4661,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_2_miss_requests_4_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_141 & _GEN_138) begin
+    if ((&DATA_CACHE_STATE) & _GEN_278 & _GEN_275) begin
       MSHRs_2_miss_requests_5_addr <= 32'h0;
       MSHRs_2_miss_requests_5_data <= 32'h0;
       MSHRs_2_miss_requests_5_memory_type <= 2'h0;
       MSHRs_2_miss_requests_5_access_width <= 2'h0;
       MSHRs_2_miss_requests_5_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_115 & _GEN_112 : _GEN_34 & _GEN_121 & _GEN_130) begin
+    else if (_GEN_166 ? _GEN_252 & _GEN_249 : _GEN_168 & _GEN_258 & _GEN_267) begin
       MSHRs_2_miss_requests_5_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_2_miss_requests_5_data <= miss_backend_memory_request_REG_data;
       MSHRs_2_miss_requests_5_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3229,14 +4676,14 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_2_miss_requests_5_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_141 & _GEN_139) begin
+    if ((&DATA_CACHE_STATE) & _GEN_278 & _GEN_276) begin
       MSHRs_2_miss_requests_6_addr <= 32'h0;
       MSHRs_2_miss_requests_6_data <= 32'h0;
       MSHRs_2_miss_requests_6_memory_type <= 2'h0;
       MSHRs_2_miss_requests_6_access_width <= 2'h0;
       MSHRs_2_miss_requests_6_MOB_index <= 4'h0;
     end
-    else if (_GEN_32 ? _GEN_115 & _GEN_113 : _GEN_34 & _GEN_121 & _GEN_131) begin
+    else if (_GEN_166 ? _GEN_252 & _GEN_250 : _GEN_168 & _GEN_258 & _GEN_268) begin
       MSHRs_2_miss_requests_6_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_2_miss_requests_6_data <= miss_backend_memory_request_REG_data;
       MSHRs_2_miss_requests_6_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3244,16 +4691,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_2_miss_requests_6_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & _GEN_141 & (&_GEN_36[MSHR_front_index])) begin
+    if ((&DATA_CACHE_STATE) & _GEN_278 & (&_GEN_170[MSHR_front_index])) begin
       MSHRs_2_miss_requests_7_addr <= 32'h0;
       MSHRs_2_miss_requests_7_data <= 32'h0;
       MSHRs_2_miss_requests_7_memory_type <= 2'h0;
       MSHRs_2_miss_requests_7_access_width <= 2'h0;
       MSHRs_2_miss_requests_7_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? _GEN_115 & (&_GEN_33[hit_MSHR_index])
-               : _GEN_34 & _GEN_121 & (&_GEN_116)) begin
+    else if (_GEN_166
+               ? _GEN_252 & (&_GEN_167[hit_MSHR_index])
+               : _GEN_168 & _GEN_258 & (&_GEN_253)) begin
       MSHRs_2_miss_requests_7_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_2_miss_requests_7_data <= miss_backend_memory_request_REG_data;
       MSHRs_2_miss_requests_7_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3261,36 +4708,36 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_2_miss_requests_7_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    MSHRs_2_valid <= ~_GEN_148 & (~_GEN_32 & _GEN_122 | MSHRs_2_valid);
-    if (_GEN_149) begin
+    MSHRs_2_valid <= ~_GEN_285 & (~_GEN_166 & _GEN_259 | MSHRs_2_valid);
+    if (_GEN_286) begin
       MSHRs_3_address <= 32'h0;
       MSHRs_3_allocate_way <= 2'h0;
       MSHRs_3_back_pointer <= 3'h0;
     end
     else begin
-      if (_GEN_32 | ~_GEN_123) begin
+      if (_GEN_166 | ~_GEN_260) begin
       end
       else begin
-        MSHRs_3_address <= _GEN_124;
+        MSHRs_3_address <= _GEN_261;
         MSHRs_3_allocate_way <= evict_way;
       end
-      if (_GEN_32) begin
+      if (_GEN_166) begin
         if (&hit_MSHR_index)
           MSHRs_3_back_pointer <= _MSHRs_back_pointer_T;
       end
-      else if (_GEN_123)
+      else if (_GEN_260)
         MSHRs_3_back_pointer <= _MSHRs_back_pointer_T_2;
     end
-    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_133) begin
+    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_270) begin
       MSHRs_3_miss_requests_0_addr <= 32'h0;
       MSHRs_3_miss_requests_0_data <= 32'h0;
       MSHRs_3_miss_requests_0_memory_type <= 2'h0;
       MSHRs_3_miss_requests_0_access_width <= 2'h0;
       MSHRs_3_miss_requests_0_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? (&hit_MSHR_index) & _GEN_107
-               : _GEN_34 & (&MSHR_back_index) & _GEN_125) begin
+    else if (_GEN_166
+               ? (&hit_MSHR_index) & _GEN_244
+               : _GEN_168 & (&MSHR_back_index) & _GEN_262) begin
       MSHRs_3_miss_requests_0_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_3_miss_requests_0_data <= miss_backend_memory_request_REG_data;
       MSHRs_3_miss_requests_0_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3298,16 +4745,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_3_miss_requests_0_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_134) begin
+    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_271) begin
       MSHRs_3_miss_requests_1_addr <= 32'h0;
       MSHRs_3_miss_requests_1_data <= 32'h0;
       MSHRs_3_miss_requests_1_memory_type <= 2'h0;
       MSHRs_3_miss_requests_1_access_width <= 2'h0;
       MSHRs_3_miss_requests_1_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? (&hit_MSHR_index) & _GEN_108
-               : _GEN_34 & (&MSHR_back_index) & _GEN_126) begin
+    else if (_GEN_166
+               ? (&hit_MSHR_index) & _GEN_245
+               : _GEN_168 & (&MSHR_back_index) & _GEN_263) begin
       MSHRs_3_miss_requests_1_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_3_miss_requests_1_data <= miss_backend_memory_request_REG_data;
       MSHRs_3_miss_requests_1_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3315,16 +4762,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_3_miss_requests_1_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_135) begin
+    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_272) begin
       MSHRs_3_miss_requests_2_addr <= 32'h0;
       MSHRs_3_miss_requests_2_data <= 32'h0;
       MSHRs_3_miss_requests_2_memory_type <= 2'h0;
       MSHRs_3_miss_requests_2_access_width <= 2'h0;
       MSHRs_3_miss_requests_2_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? (&hit_MSHR_index) & _GEN_109
-               : _GEN_34 & (&MSHR_back_index) & _GEN_127) begin
+    else if (_GEN_166
+               ? (&hit_MSHR_index) & _GEN_246
+               : _GEN_168 & (&MSHR_back_index) & _GEN_264) begin
       MSHRs_3_miss_requests_2_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_3_miss_requests_2_data <= miss_backend_memory_request_REG_data;
       MSHRs_3_miss_requests_2_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3332,16 +4779,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_3_miss_requests_2_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_136) begin
+    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_273) begin
       MSHRs_3_miss_requests_3_addr <= 32'h0;
       MSHRs_3_miss_requests_3_data <= 32'h0;
       MSHRs_3_miss_requests_3_memory_type <= 2'h0;
       MSHRs_3_miss_requests_3_access_width <= 2'h0;
       MSHRs_3_miss_requests_3_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? (&hit_MSHR_index) & _GEN_110
-               : _GEN_34 & (&MSHR_back_index) & _GEN_128) begin
+    else if (_GEN_166
+               ? (&hit_MSHR_index) & _GEN_247
+               : _GEN_168 & (&MSHR_back_index) & _GEN_265) begin
       MSHRs_3_miss_requests_3_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_3_miss_requests_3_data <= miss_backend_memory_request_REG_data;
       MSHRs_3_miss_requests_3_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3349,16 +4796,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_3_miss_requests_3_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_137) begin
+    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_274) begin
       MSHRs_3_miss_requests_4_addr <= 32'h0;
       MSHRs_3_miss_requests_4_data <= 32'h0;
       MSHRs_3_miss_requests_4_memory_type <= 2'h0;
       MSHRs_3_miss_requests_4_access_width <= 2'h0;
       MSHRs_3_miss_requests_4_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? (&hit_MSHR_index) & _GEN_111
-               : _GEN_34 & (&MSHR_back_index) & _GEN_129) begin
+    else if (_GEN_166
+               ? (&hit_MSHR_index) & _GEN_248
+               : _GEN_168 & (&MSHR_back_index) & _GEN_266) begin
       MSHRs_3_miss_requests_4_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_3_miss_requests_4_data <= miss_backend_memory_request_REG_data;
       MSHRs_3_miss_requests_4_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3366,16 +4813,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_3_miss_requests_4_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_138) begin
+    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_275) begin
       MSHRs_3_miss_requests_5_addr <= 32'h0;
       MSHRs_3_miss_requests_5_data <= 32'h0;
       MSHRs_3_miss_requests_5_memory_type <= 2'h0;
       MSHRs_3_miss_requests_5_access_width <= 2'h0;
       MSHRs_3_miss_requests_5_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? (&hit_MSHR_index) & _GEN_112
-               : _GEN_34 & (&MSHR_back_index) & _GEN_130) begin
+    else if (_GEN_166
+               ? (&hit_MSHR_index) & _GEN_249
+               : _GEN_168 & (&MSHR_back_index) & _GEN_267) begin
       MSHRs_3_miss_requests_5_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_3_miss_requests_5_data <= miss_backend_memory_request_REG_data;
       MSHRs_3_miss_requests_5_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3383,16 +4830,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_3_miss_requests_5_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_139) begin
+    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & _GEN_276) begin
       MSHRs_3_miss_requests_6_addr <= 32'h0;
       MSHRs_3_miss_requests_6_data <= 32'h0;
       MSHRs_3_miss_requests_6_memory_type <= 2'h0;
       MSHRs_3_miss_requests_6_access_width <= 2'h0;
       MSHRs_3_miss_requests_6_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? (&hit_MSHR_index) & _GEN_113
-               : _GEN_34 & (&MSHR_back_index) & _GEN_131) begin
+    else if (_GEN_166
+               ? (&hit_MSHR_index) & _GEN_250
+               : _GEN_168 & (&MSHR_back_index) & _GEN_268) begin
       MSHRs_3_miss_requests_6_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_3_miss_requests_6_data <= miss_backend_memory_request_REG_data;
       MSHRs_3_miss_requests_6_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3400,16 +4847,16 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_3_miss_requests_6_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & (&_GEN_36[MSHR_front_index])) begin
+    if ((&DATA_CACHE_STATE) & (&MSHR_front_index) & (&_GEN_170[MSHR_front_index])) begin
       MSHRs_3_miss_requests_7_addr <= 32'h0;
       MSHRs_3_miss_requests_7_data <= 32'h0;
       MSHRs_3_miss_requests_7_memory_type <= 2'h0;
       MSHRs_3_miss_requests_7_access_width <= 2'h0;
       MSHRs_3_miss_requests_7_MOB_index <= 4'h0;
     end
-    else if (_GEN_32
-               ? (&hit_MSHR_index) & (&_GEN_33[hit_MSHR_index])
-               : _GEN_34 & (&MSHR_back_index) & (&_GEN_116)) begin
+    else if (_GEN_166
+               ? (&hit_MSHR_index) & (&_GEN_167[hit_MSHR_index])
+               : _GEN_168 & (&MSHR_back_index) & (&_GEN_253)) begin
       MSHRs_3_miss_requests_7_addr <= miss_backend_memory_request_REG_addr;
       MSHRs_3_miss_requests_7_data <= miss_backend_memory_request_REG_data;
       MSHRs_3_miss_requests_7_memory_type <= miss_backend_memory_request_REG_memory_type;
@@ -3417,7 +4864,7 @@ module L1_data_cache(
         miss_backend_memory_request_REG_access_width;
       MSHRs_3_miss_requests_7_MOB_index <= miss_backend_memory_request_REG_MOB_index;
     end
-    MSHRs_3_valid <= ~_GEN_149 & (~_GEN_32 & _GEN_123 | MSHRs_3_valid);
+    MSHRs_3_valid <= ~_GEN_286 & (~_GEN_166 & _GEN_260 | MSHRs_3_valid);
     if (active_non_cacheable_read) begin
       non_cacheable_buffer_0_addr <= io_CPU_request_bits_addr;
       non_cacheable_buffer_0_data <= io_CPU_request_bits_data;
@@ -3452,7 +4899,7 @@ module L1_data_cache(
     output_valid_r <= valid_hit & valid_read_hit_REG;
     output_MOB_index_r <=
       (&DATA_CACHE_STATE)
-        ? _GEN_95[_GEN_36[MSHR_front_index]]
+        ? _GEN_229[_GEN_170[MSHR_front_index]]
         : io_CPU_request_bits_MOB_index;
     output_MOB_index_r_1 <= output_MOB_index_r;
     allocate_cache_line_REG <= _final_response_buffer_io_deq_bits_data;
@@ -4038,570 +5485,823 @@ module L1_data_cache(
       dirty_memory_63_1 <= 1'h0;
       dirty_memory_63_2 <= 1'h0;
       dirty_memory_63_3 <= 1'h0;
+      inflight_write_miss_0_0 <= 1'h0;
+      inflight_write_miss_0_1 <= 1'h0;
+      inflight_write_miss_0_2 <= 1'h0;
+      inflight_write_miss_0_3 <= 1'h0;
+      inflight_write_miss_1_0 <= 1'h0;
+      inflight_write_miss_1_1 <= 1'h0;
+      inflight_write_miss_1_2 <= 1'h0;
+      inflight_write_miss_1_3 <= 1'h0;
+      inflight_write_miss_2_0 <= 1'h0;
+      inflight_write_miss_2_1 <= 1'h0;
+      inflight_write_miss_2_2 <= 1'h0;
+      inflight_write_miss_2_3 <= 1'h0;
+      inflight_write_miss_3_0 <= 1'h0;
+      inflight_write_miss_3_1 <= 1'h0;
+      inflight_write_miss_3_2 <= 1'h0;
+      inflight_write_miss_3_3 <= 1'h0;
+      inflight_write_miss_4_0 <= 1'h0;
+      inflight_write_miss_4_1 <= 1'h0;
+      inflight_write_miss_4_2 <= 1'h0;
+      inflight_write_miss_4_3 <= 1'h0;
+      inflight_write_miss_5_0 <= 1'h0;
+      inflight_write_miss_5_1 <= 1'h0;
+      inflight_write_miss_5_2 <= 1'h0;
+      inflight_write_miss_5_3 <= 1'h0;
+      inflight_write_miss_6_0 <= 1'h0;
+      inflight_write_miss_6_1 <= 1'h0;
+      inflight_write_miss_6_2 <= 1'h0;
+      inflight_write_miss_6_3 <= 1'h0;
+      inflight_write_miss_7_0 <= 1'h0;
+      inflight_write_miss_7_1 <= 1'h0;
+      inflight_write_miss_7_2 <= 1'h0;
+      inflight_write_miss_7_3 <= 1'h0;
+      inflight_write_miss_8_0 <= 1'h0;
+      inflight_write_miss_8_1 <= 1'h0;
+      inflight_write_miss_8_2 <= 1'h0;
+      inflight_write_miss_8_3 <= 1'h0;
+      inflight_write_miss_9_0 <= 1'h0;
+      inflight_write_miss_9_1 <= 1'h0;
+      inflight_write_miss_9_2 <= 1'h0;
+      inflight_write_miss_9_3 <= 1'h0;
+      inflight_write_miss_10_0 <= 1'h0;
+      inflight_write_miss_10_1 <= 1'h0;
+      inflight_write_miss_10_2 <= 1'h0;
+      inflight_write_miss_10_3 <= 1'h0;
+      inflight_write_miss_11_0 <= 1'h0;
+      inflight_write_miss_11_1 <= 1'h0;
+      inflight_write_miss_11_2 <= 1'h0;
+      inflight_write_miss_11_3 <= 1'h0;
+      inflight_write_miss_12_0 <= 1'h0;
+      inflight_write_miss_12_1 <= 1'h0;
+      inflight_write_miss_12_2 <= 1'h0;
+      inflight_write_miss_12_3 <= 1'h0;
+      inflight_write_miss_13_0 <= 1'h0;
+      inflight_write_miss_13_1 <= 1'h0;
+      inflight_write_miss_13_2 <= 1'h0;
+      inflight_write_miss_13_3 <= 1'h0;
+      inflight_write_miss_14_0 <= 1'h0;
+      inflight_write_miss_14_1 <= 1'h0;
+      inflight_write_miss_14_2 <= 1'h0;
+      inflight_write_miss_14_3 <= 1'h0;
+      inflight_write_miss_15_0 <= 1'h0;
+      inflight_write_miss_15_1 <= 1'h0;
+      inflight_write_miss_15_2 <= 1'h0;
+      inflight_write_miss_15_3 <= 1'h0;
+      inflight_write_miss_16_0 <= 1'h0;
+      inflight_write_miss_16_1 <= 1'h0;
+      inflight_write_miss_16_2 <= 1'h0;
+      inflight_write_miss_16_3 <= 1'h0;
+      inflight_write_miss_17_0 <= 1'h0;
+      inflight_write_miss_17_1 <= 1'h0;
+      inflight_write_miss_17_2 <= 1'h0;
+      inflight_write_miss_17_3 <= 1'h0;
+      inflight_write_miss_18_0 <= 1'h0;
+      inflight_write_miss_18_1 <= 1'h0;
+      inflight_write_miss_18_2 <= 1'h0;
+      inflight_write_miss_18_3 <= 1'h0;
+      inflight_write_miss_19_0 <= 1'h0;
+      inflight_write_miss_19_1 <= 1'h0;
+      inflight_write_miss_19_2 <= 1'h0;
+      inflight_write_miss_19_3 <= 1'h0;
+      inflight_write_miss_20_0 <= 1'h0;
+      inflight_write_miss_20_1 <= 1'h0;
+      inflight_write_miss_20_2 <= 1'h0;
+      inflight_write_miss_20_3 <= 1'h0;
+      inflight_write_miss_21_0 <= 1'h0;
+      inflight_write_miss_21_1 <= 1'h0;
+      inflight_write_miss_21_2 <= 1'h0;
+      inflight_write_miss_21_3 <= 1'h0;
+      inflight_write_miss_22_0 <= 1'h0;
+      inflight_write_miss_22_1 <= 1'h0;
+      inflight_write_miss_22_2 <= 1'h0;
+      inflight_write_miss_22_3 <= 1'h0;
+      inflight_write_miss_23_0 <= 1'h0;
+      inflight_write_miss_23_1 <= 1'h0;
+      inflight_write_miss_23_2 <= 1'h0;
+      inflight_write_miss_23_3 <= 1'h0;
+      inflight_write_miss_24_0 <= 1'h0;
+      inflight_write_miss_24_1 <= 1'h0;
+      inflight_write_miss_24_2 <= 1'h0;
+      inflight_write_miss_24_3 <= 1'h0;
+      inflight_write_miss_25_0 <= 1'h0;
+      inflight_write_miss_25_1 <= 1'h0;
+      inflight_write_miss_25_2 <= 1'h0;
+      inflight_write_miss_25_3 <= 1'h0;
+      inflight_write_miss_26_0 <= 1'h0;
+      inflight_write_miss_26_1 <= 1'h0;
+      inflight_write_miss_26_2 <= 1'h0;
+      inflight_write_miss_26_3 <= 1'h0;
+      inflight_write_miss_27_0 <= 1'h0;
+      inflight_write_miss_27_1 <= 1'h0;
+      inflight_write_miss_27_2 <= 1'h0;
+      inflight_write_miss_27_3 <= 1'h0;
+      inflight_write_miss_28_0 <= 1'h0;
+      inflight_write_miss_28_1 <= 1'h0;
+      inflight_write_miss_28_2 <= 1'h0;
+      inflight_write_miss_28_3 <= 1'h0;
+      inflight_write_miss_29_0 <= 1'h0;
+      inflight_write_miss_29_1 <= 1'h0;
+      inflight_write_miss_29_2 <= 1'h0;
+      inflight_write_miss_29_3 <= 1'h0;
+      inflight_write_miss_30_0 <= 1'h0;
+      inflight_write_miss_30_1 <= 1'h0;
+      inflight_write_miss_30_2 <= 1'h0;
+      inflight_write_miss_30_3 <= 1'h0;
+      inflight_write_miss_31_0 <= 1'h0;
+      inflight_write_miss_31_1 <= 1'h0;
+      inflight_write_miss_31_2 <= 1'h0;
+      inflight_write_miss_31_3 <= 1'h0;
+      inflight_write_miss_32_0 <= 1'h0;
+      inflight_write_miss_32_1 <= 1'h0;
+      inflight_write_miss_32_2 <= 1'h0;
+      inflight_write_miss_32_3 <= 1'h0;
+      inflight_write_miss_33_0 <= 1'h0;
+      inflight_write_miss_33_1 <= 1'h0;
+      inflight_write_miss_33_2 <= 1'h0;
+      inflight_write_miss_33_3 <= 1'h0;
+      inflight_write_miss_34_0 <= 1'h0;
+      inflight_write_miss_34_1 <= 1'h0;
+      inflight_write_miss_34_2 <= 1'h0;
+      inflight_write_miss_34_3 <= 1'h0;
+      inflight_write_miss_35_0 <= 1'h0;
+      inflight_write_miss_35_1 <= 1'h0;
+      inflight_write_miss_35_2 <= 1'h0;
+      inflight_write_miss_35_3 <= 1'h0;
+      inflight_write_miss_36_0 <= 1'h0;
+      inflight_write_miss_36_1 <= 1'h0;
+      inflight_write_miss_36_2 <= 1'h0;
+      inflight_write_miss_36_3 <= 1'h0;
+      inflight_write_miss_37_0 <= 1'h0;
+      inflight_write_miss_37_1 <= 1'h0;
+      inflight_write_miss_37_2 <= 1'h0;
+      inflight_write_miss_37_3 <= 1'h0;
+      inflight_write_miss_38_0 <= 1'h0;
+      inflight_write_miss_38_1 <= 1'h0;
+      inflight_write_miss_38_2 <= 1'h0;
+      inflight_write_miss_38_3 <= 1'h0;
+      inflight_write_miss_39_0 <= 1'h0;
+      inflight_write_miss_39_1 <= 1'h0;
+      inflight_write_miss_39_2 <= 1'h0;
+      inflight_write_miss_39_3 <= 1'h0;
+      inflight_write_miss_40_0 <= 1'h0;
+      inflight_write_miss_40_1 <= 1'h0;
+      inflight_write_miss_40_2 <= 1'h0;
+      inflight_write_miss_40_3 <= 1'h0;
+      inflight_write_miss_41_0 <= 1'h0;
+      inflight_write_miss_41_1 <= 1'h0;
+      inflight_write_miss_41_2 <= 1'h0;
+      inflight_write_miss_41_3 <= 1'h0;
+      inflight_write_miss_42_0 <= 1'h0;
+      inflight_write_miss_42_1 <= 1'h0;
+      inflight_write_miss_42_2 <= 1'h0;
+      inflight_write_miss_42_3 <= 1'h0;
+      inflight_write_miss_43_0 <= 1'h0;
+      inflight_write_miss_43_1 <= 1'h0;
+      inflight_write_miss_43_2 <= 1'h0;
+      inflight_write_miss_43_3 <= 1'h0;
+      inflight_write_miss_44_0 <= 1'h0;
+      inflight_write_miss_44_1 <= 1'h0;
+      inflight_write_miss_44_2 <= 1'h0;
+      inflight_write_miss_44_3 <= 1'h0;
+      inflight_write_miss_45_0 <= 1'h0;
+      inflight_write_miss_45_1 <= 1'h0;
+      inflight_write_miss_45_2 <= 1'h0;
+      inflight_write_miss_45_3 <= 1'h0;
+      inflight_write_miss_46_0 <= 1'h0;
+      inflight_write_miss_46_1 <= 1'h0;
+      inflight_write_miss_46_2 <= 1'h0;
+      inflight_write_miss_46_3 <= 1'h0;
+      inflight_write_miss_47_0 <= 1'h0;
+      inflight_write_miss_47_1 <= 1'h0;
+      inflight_write_miss_47_2 <= 1'h0;
+      inflight_write_miss_47_3 <= 1'h0;
+      inflight_write_miss_48_0 <= 1'h0;
+      inflight_write_miss_48_1 <= 1'h0;
+      inflight_write_miss_48_2 <= 1'h0;
+      inflight_write_miss_48_3 <= 1'h0;
+      inflight_write_miss_49_0 <= 1'h0;
+      inflight_write_miss_49_1 <= 1'h0;
+      inflight_write_miss_49_2 <= 1'h0;
+      inflight_write_miss_49_3 <= 1'h0;
+      inflight_write_miss_50_0 <= 1'h0;
+      inflight_write_miss_50_1 <= 1'h0;
+      inflight_write_miss_50_2 <= 1'h0;
+      inflight_write_miss_50_3 <= 1'h0;
+      inflight_write_miss_51_0 <= 1'h0;
+      inflight_write_miss_51_1 <= 1'h0;
+      inflight_write_miss_51_2 <= 1'h0;
+      inflight_write_miss_51_3 <= 1'h0;
+      inflight_write_miss_52_0 <= 1'h0;
+      inflight_write_miss_52_1 <= 1'h0;
+      inflight_write_miss_52_2 <= 1'h0;
+      inflight_write_miss_52_3 <= 1'h0;
+      inflight_write_miss_53_0 <= 1'h0;
+      inflight_write_miss_53_1 <= 1'h0;
+      inflight_write_miss_53_2 <= 1'h0;
+      inflight_write_miss_53_3 <= 1'h0;
+      inflight_write_miss_54_0 <= 1'h0;
+      inflight_write_miss_54_1 <= 1'h0;
+      inflight_write_miss_54_2 <= 1'h0;
+      inflight_write_miss_54_3 <= 1'h0;
+      inflight_write_miss_55_0 <= 1'h0;
+      inflight_write_miss_55_1 <= 1'h0;
+      inflight_write_miss_55_2 <= 1'h0;
+      inflight_write_miss_55_3 <= 1'h0;
+      inflight_write_miss_56_0 <= 1'h0;
+      inflight_write_miss_56_1 <= 1'h0;
+      inflight_write_miss_56_2 <= 1'h0;
+      inflight_write_miss_56_3 <= 1'h0;
+      inflight_write_miss_57_0 <= 1'h0;
+      inflight_write_miss_57_1 <= 1'h0;
+      inflight_write_miss_57_2 <= 1'h0;
+      inflight_write_miss_57_3 <= 1'h0;
+      inflight_write_miss_58_0 <= 1'h0;
+      inflight_write_miss_58_1 <= 1'h0;
+      inflight_write_miss_58_2 <= 1'h0;
+      inflight_write_miss_58_3 <= 1'h0;
+      inflight_write_miss_59_0 <= 1'h0;
+      inflight_write_miss_59_1 <= 1'h0;
+      inflight_write_miss_59_2 <= 1'h0;
+      inflight_write_miss_59_3 <= 1'h0;
+      inflight_write_miss_60_0 <= 1'h0;
+      inflight_write_miss_60_1 <= 1'h0;
+      inflight_write_miss_60_2 <= 1'h0;
+      inflight_write_miss_60_3 <= 1'h0;
+      inflight_write_miss_61_0 <= 1'h0;
+      inflight_write_miss_61_1 <= 1'h0;
+      inflight_write_miss_61_2 <= 1'h0;
+      inflight_write_miss_61_3 <= 1'h0;
+      inflight_write_miss_62_0 <= 1'h0;
+      inflight_write_miss_62_1 <= 1'h0;
+      inflight_write_miss_62_2 <= 1'h0;
+      inflight_write_miss_62_3 <= 1'h0;
+      inflight_write_miss_63_0 <= 1'h0;
+      inflight_write_miss_63_1 <= 1'h0;
+      inflight_write_miss_63_2 <= 1'h0;
+      inflight_write_miss_63_3 <= 1'h0;
       MSHR_front_pointer <= 3'h0;
       MSHR_back_pointer <= 3'h0;
     end
     else begin
-      automatic logic       _GEN_154;
-      automatic logic       _GEN_155;
-      automatic logic       _GEN_156 = REG_3 == 6'h0;
-      automatic logic       _GEN_157 = evict_way == 2'h0;
-      automatic logic       _GEN_158 = evict_way == 2'h1;
-      automatic logic       _GEN_159 = evict_way == 2'h2;
-      automatic logic       _GEN_160 = REG_3 == 6'h1;
-      automatic logic       _GEN_161 = REG_3 == 6'h2;
-      automatic logic       _GEN_162 = REG_3 == 6'h3;
-      automatic logic       _GEN_163 = REG_3 == 6'h4;
-      automatic logic       _GEN_164 = REG_3 == 6'h5;
-      automatic logic       _GEN_165 = REG_3 == 6'h6;
-      automatic logic       _GEN_166 = REG_3 == 6'h7;
-      automatic logic       _GEN_167 = REG_3 == 6'h8;
-      automatic logic       _GEN_168 = REG_3 == 6'h9;
-      automatic logic       _GEN_169 = REG_3 == 6'hA;
-      automatic logic       _GEN_170 = REG_3 == 6'hB;
-      automatic logic       _GEN_171 = REG_3 == 6'hC;
-      automatic logic       _GEN_172 = REG_3 == 6'hD;
-      automatic logic       _GEN_173 = REG_3 == 6'hE;
-      automatic logic       _GEN_174 = REG_3 == 6'hF;
-      automatic logic       _GEN_175 = REG_3 == 6'h10;
-      automatic logic       _GEN_176 = REG_3 == 6'h11;
-      automatic logic       _GEN_177 = REG_3 == 6'h12;
-      automatic logic       _GEN_178 = REG_3 == 6'h13;
-      automatic logic       _GEN_179 = REG_3 == 6'h14;
-      automatic logic       _GEN_180 = REG_3 == 6'h15;
-      automatic logic       _GEN_181 = REG_3 == 6'h16;
-      automatic logic       _GEN_182 = REG_3 == 6'h17;
-      automatic logic       _GEN_183 = REG_3 == 6'h18;
-      automatic logic       _GEN_184 = REG_3 == 6'h19;
-      automatic logic       _GEN_185 = REG_3 == 6'h1A;
-      automatic logic       _GEN_186 = REG_3 == 6'h1B;
-      automatic logic       _GEN_187 = REG_3 == 6'h1C;
-      automatic logic       _GEN_188 = REG_3 == 6'h1D;
-      automatic logic       _GEN_189 = REG_3 == 6'h1E;
-      automatic logic       _GEN_190 = REG_3 == 6'h1F;
-      automatic logic       _GEN_191 = REG_3 == 6'h20;
-      automatic logic       _GEN_192 = REG_3 == 6'h21;
-      automatic logic       _GEN_193 = REG_3 == 6'h22;
-      automatic logic       _GEN_194 = REG_3 == 6'h23;
-      automatic logic       _GEN_195 = REG_3 == 6'h24;
-      automatic logic       _GEN_196 = REG_3 == 6'h25;
-      automatic logic       _GEN_197 = REG_3 == 6'h26;
-      automatic logic       _GEN_198 = REG_3 == 6'h27;
-      automatic logic       _GEN_199 = REG_3 == 6'h28;
-      automatic logic       _GEN_200 = REG_3 == 6'h29;
-      automatic logic       _GEN_201 = REG_3 == 6'h2A;
-      automatic logic       _GEN_202 = REG_3 == 6'h2B;
-      automatic logic       _GEN_203 = REG_3 == 6'h2C;
-      automatic logic       _GEN_204 = REG_3 == 6'h2D;
-      automatic logic       _GEN_205 = REG_3 == 6'h2E;
-      automatic logic       _GEN_206 = REG_3 == 6'h2F;
-      automatic logic       _GEN_207 = REG_3 == 6'h30;
-      automatic logic       _GEN_208 = REG_3 == 6'h31;
-      automatic logic       _GEN_209 = REG_3 == 6'h32;
-      automatic logic       _GEN_210 = REG_3 == 6'h33;
-      automatic logic       _GEN_211 = REG_3 == 6'h34;
-      automatic logic       _GEN_212 = REG_3 == 6'h35;
-      automatic logic       _GEN_213 = REG_3 == 6'h36;
-      automatic logic       _GEN_214 = REG_3 == 6'h37;
-      automatic logic       _GEN_215 = REG_3 == 6'h38;
-      automatic logic       _GEN_216 = REG_3 == 6'h39;
-      automatic logic       _GEN_217 = REG_3 == 6'h3A;
-      automatic logic       _GEN_218 = REG_3 == 6'h3B;
-      automatic logic       _GEN_219 = REG_3 == 6'h3C;
-      automatic logic       _GEN_220 = REG_3 == 6'h3D;
-      automatic logic       _GEN_221 = REG_3 == 6'h3E;
-      automatic logic       _GEN_222 = allocate_set == 6'h0;
-      automatic logic       _GEN_223 = _tag_memories_3_io_wr_en_T & _GEN_222 & _GEN_15;
-      automatic logic       _GEN_224 = _tag_memories_3_io_wr_en_T & _GEN_222 & _GEN_17;
-      automatic logic       _GEN_225 = _tag_memories_3_io_wr_en_T & _GEN_222 & _GEN_18;
-      automatic logic       _GEN_226 =
-        _tag_memories_3_io_wr_en_T & _GEN_222 & (&allocate_way);
-      automatic logic       _GEN_227 = allocate_set == 6'h1;
-      automatic logic       _GEN_228 = _tag_memories_3_io_wr_en_T & _GEN_227 & _GEN_15;
-      automatic logic       _GEN_229 = _tag_memories_3_io_wr_en_T & _GEN_227 & _GEN_17;
-      automatic logic       _GEN_230 = _tag_memories_3_io_wr_en_T & _GEN_227 & _GEN_18;
-      automatic logic       _GEN_231 =
-        _tag_memories_3_io_wr_en_T & _GEN_227 & (&allocate_way);
-      automatic logic       _GEN_232 = allocate_set == 6'h2;
-      automatic logic       _GEN_233 = _tag_memories_3_io_wr_en_T & _GEN_232 & _GEN_15;
-      automatic logic       _GEN_234 = _tag_memories_3_io_wr_en_T & _GEN_232 & _GEN_17;
-      automatic logic       _GEN_235 = _tag_memories_3_io_wr_en_T & _GEN_232 & _GEN_18;
-      automatic logic       _GEN_236 =
-        _tag_memories_3_io_wr_en_T & _GEN_232 & (&allocate_way);
-      automatic logic       _GEN_237 = allocate_set == 6'h3;
-      automatic logic       _GEN_238 = _tag_memories_3_io_wr_en_T & _GEN_237 & _GEN_15;
-      automatic logic       _GEN_239 = _tag_memories_3_io_wr_en_T & _GEN_237 & _GEN_17;
-      automatic logic       _GEN_240 = _tag_memories_3_io_wr_en_T & _GEN_237 & _GEN_18;
-      automatic logic       _GEN_241 =
-        _tag_memories_3_io_wr_en_T & _GEN_237 & (&allocate_way);
-      automatic logic       _GEN_242 = allocate_set == 6'h4;
-      automatic logic       _GEN_243 = _tag_memories_3_io_wr_en_T & _GEN_242 & _GEN_15;
-      automatic logic       _GEN_244 = _tag_memories_3_io_wr_en_T & _GEN_242 & _GEN_17;
-      automatic logic       _GEN_245 = _tag_memories_3_io_wr_en_T & _GEN_242 & _GEN_18;
-      automatic logic       _GEN_246 =
-        _tag_memories_3_io_wr_en_T & _GEN_242 & (&allocate_way);
-      automatic logic       _GEN_247 = allocate_set == 6'h5;
-      automatic logic       _GEN_248 = _tag_memories_3_io_wr_en_T & _GEN_247 & _GEN_15;
-      automatic logic       _GEN_249 = _tag_memories_3_io_wr_en_T & _GEN_247 & _GEN_17;
-      automatic logic       _GEN_250 = _tag_memories_3_io_wr_en_T & _GEN_247 & _GEN_18;
-      automatic logic       _GEN_251 =
-        _tag_memories_3_io_wr_en_T & _GEN_247 & (&allocate_way);
-      automatic logic       _GEN_252 = allocate_set == 6'h6;
-      automatic logic       _GEN_253 = _tag_memories_3_io_wr_en_T & _GEN_252 & _GEN_15;
-      automatic logic       _GEN_254 = _tag_memories_3_io_wr_en_T & _GEN_252 & _GEN_17;
-      automatic logic       _GEN_255 = _tag_memories_3_io_wr_en_T & _GEN_252 & _GEN_18;
-      automatic logic       _GEN_256 =
-        _tag_memories_3_io_wr_en_T & _GEN_252 & (&allocate_way);
-      automatic logic       _GEN_257 = allocate_set == 6'h7;
-      automatic logic       _GEN_258 = _tag_memories_3_io_wr_en_T & _GEN_257 & _GEN_15;
-      automatic logic       _GEN_259 = _tag_memories_3_io_wr_en_T & _GEN_257 & _GEN_17;
-      automatic logic       _GEN_260 = _tag_memories_3_io_wr_en_T & _GEN_257 & _GEN_18;
-      automatic logic       _GEN_261 =
-        _tag_memories_3_io_wr_en_T & _GEN_257 & (&allocate_way);
-      automatic logic       _GEN_262 = allocate_set == 6'h8;
-      automatic logic       _GEN_263 = _tag_memories_3_io_wr_en_T & _GEN_262 & _GEN_15;
-      automatic logic       _GEN_264 = _tag_memories_3_io_wr_en_T & _GEN_262 & _GEN_17;
-      automatic logic       _GEN_265 = _tag_memories_3_io_wr_en_T & _GEN_262 & _GEN_18;
-      automatic logic       _GEN_266 =
-        _tag_memories_3_io_wr_en_T & _GEN_262 & (&allocate_way);
-      automatic logic       _GEN_267 = allocate_set == 6'h9;
-      automatic logic       _GEN_268 = _tag_memories_3_io_wr_en_T & _GEN_267 & _GEN_15;
-      automatic logic       _GEN_269 = _tag_memories_3_io_wr_en_T & _GEN_267 & _GEN_17;
-      automatic logic       _GEN_270 = _tag_memories_3_io_wr_en_T & _GEN_267 & _GEN_18;
-      automatic logic       _GEN_271 =
-        _tag_memories_3_io_wr_en_T & _GEN_267 & (&allocate_way);
-      automatic logic       _GEN_272 = allocate_set == 6'hA;
-      automatic logic       _GEN_273 = _tag_memories_3_io_wr_en_T & _GEN_272 & _GEN_15;
-      automatic logic       _GEN_274 = _tag_memories_3_io_wr_en_T & _GEN_272 & _GEN_17;
-      automatic logic       _GEN_275 = _tag_memories_3_io_wr_en_T & _GEN_272 & _GEN_18;
-      automatic logic       _GEN_276 =
-        _tag_memories_3_io_wr_en_T & _GEN_272 & (&allocate_way);
-      automatic logic       _GEN_277 = allocate_set == 6'hB;
-      automatic logic       _GEN_278 = _tag_memories_3_io_wr_en_T & _GEN_277 & _GEN_15;
-      automatic logic       _GEN_279 = _tag_memories_3_io_wr_en_T & _GEN_277 & _GEN_17;
-      automatic logic       _GEN_280 = _tag_memories_3_io_wr_en_T & _GEN_277 & _GEN_18;
-      automatic logic       _GEN_281 =
-        _tag_memories_3_io_wr_en_T & _GEN_277 & (&allocate_way);
-      automatic logic       _GEN_282 = allocate_set == 6'hC;
-      automatic logic       _GEN_283 = _tag_memories_3_io_wr_en_T & _GEN_282 & _GEN_15;
-      automatic logic       _GEN_284 = _tag_memories_3_io_wr_en_T & _GEN_282 & _GEN_17;
-      automatic logic       _GEN_285 = _tag_memories_3_io_wr_en_T & _GEN_282 & _GEN_18;
-      automatic logic       _GEN_286 =
-        _tag_memories_3_io_wr_en_T & _GEN_282 & (&allocate_way);
-      automatic logic       _GEN_287 = allocate_set == 6'hD;
-      automatic logic       _GEN_288 = _tag_memories_3_io_wr_en_T & _GEN_287 & _GEN_15;
-      automatic logic       _GEN_289 = _tag_memories_3_io_wr_en_T & _GEN_287 & _GEN_17;
-      automatic logic       _GEN_290 = _tag_memories_3_io_wr_en_T & _GEN_287 & _GEN_18;
-      automatic logic       _GEN_291 =
-        _tag_memories_3_io_wr_en_T & _GEN_287 & (&allocate_way);
-      automatic logic       _GEN_292 = allocate_set == 6'hE;
-      automatic logic       _GEN_293 = _tag_memories_3_io_wr_en_T & _GEN_292 & _GEN_15;
-      automatic logic       _GEN_294 = _tag_memories_3_io_wr_en_T & _GEN_292 & _GEN_17;
-      automatic logic       _GEN_295 = _tag_memories_3_io_wr_en_T & _GEN_292 & _GEN_18;
-      automatic logic       _GEN_296 =
-        _tag_memories_3_io_wr_en_T & _GEN_292 & (&allocate_way);
-      automatic logic       _GEN_297 = allocate_set == 6'hF;
-      automatic logic       _GEN_298 = _tag_memories_3_io_wr_en_T & _GEN_297 & _GEN_15;
-      automatic logic       _GEN_299 = _tag_memories_3_io_wr_en_T & _GEN_297 & _GEN_17;
-      automatic logic       _GEN_300 = _tag_memories_3_io_wr_en_T & _GEN_297 & _GEN_18;
-      automatic logic       _GEN_301 =
-        _tag_memories_3_io_wr_en_T & _GEN_297 & (&allocate_way);
-      automatic logic       _GEN_302 = allocate_set == 6'h10;
-      automatic logic       _GEN_303 = _tag_memories_3_io_wr_en_T & _GEN_302 & _GEN_15;
-      automatic logic       _GEN_304 = _tag_memories_3_io_wr_en_T & _GEN_302 & _GEN_17;
-      automatic logic       _GEN_305 = _tag_memories_3_io_wr_en_T & _GEN_302 & _GEN_18;
-      automatic logic       _GEN_306 =
-        _tag_memories_3_io_wr_en_T & _GEN_302 & (&allocate_way);
-      automatic logic       _GEN_307 = allocate_set == 6'h11;
-      automatic logic       _GEN_308 = _tag_memories_3_io_wr_en_T & _GEN_307 & _GEN_15;
-      automatic logic       _GEN_309 = _tag_memories_3_io_wr_en_T & _GEN_307 & _GEN_17;
-      automatic logic       _GEN_310 = _tag_memories_3_io_wr_en_T & _GEN_307 & _GEN_18;
-      automatic logic       _GEN_311 =
-        _tag_memories_3_io_wr_en_T & _GEN_307 & (&allocate_way);
-      automatic logic       _GEN_312 = allocate_set == 6'h12;
-      automatic logic       _GEN_313 = _tag_memories_3_io_wr_en_T & _GEN_312 & _GEN_15;
-      automatic logic       _GEN_314 = _tag_memories_3_io_wr_en_T & _GEN_312 & _GEN_17;
-      automatic logic       _GEN_315 = _tag_memories_3_io_wr_en_T & _GEN_312 & _GEN_18;
-      automatic logic       _GEN_316 =
-        _tag_memories_3_io_wr_en_T & _GEN_312 & (&allocate_way);
-      automatic logic       _GEN_317 = allocate_set == 6'h13;
-      automatic logic       _GEN_318 = _tag_memories_3_io_wr_en_T & _GEN_317 & _GEN_15;
-      automatic logic       _GEN_319 = _tag_memories_3_io_wr_en_T & _GEN_317 & _GEN_17;
-      automatic logic       _GEN_320 = _tag_memories_3_io_wr_en_T & _GEN_317 & _GEN_18;
-      automatic logic       _GEN_321 =
-        _tag_memories_3_io_wr_en_T & _GEN_317 & (&allocate_way);
-      automatic logic       _GEN_322 = allocate_set == 6'h14;
-      automatic logic       _GEN_323 = _tag_memories_3_io_wr_en_T & _GEN_322 & _GEN_15;
-      automatic logic       _GEN_324 = _tag_memories_3_io_wr_en_T & _GEN_322 & _GEN_17;
-      automatic logic       _GEN_325 = _tag_memories_3_io_wr_en_T & _GEN_322 & _GEN_18;
-      automatic logic       _GEN_326 =
-        _tag_memories_3_io_wr_en_T & _GEN_322 & (&allocate_way);
-      automatic logic       _GEN_327 = allocate_set == 6'h15;
-      automatic logic       _GEN_328 = _tag_memories_3_io_wr_en_T & _GEN_327 & _GEN_15;
-      automatic logic       _GEN_329 = _tag_memories_3_io_wr_en_T & _GEN_327 & _GEN_17;
-      automatic logic       _GEN_330 = _tag_memories_3_io_wr_en_T & _GEN_327 & _GEN_18;
-      automatic logic       _GEN_331 =
-        _tag_memories_3_io_wr_en_T & _GEN_327 & (&allocate_way);
-      automatic logic       _GEN_332 = allocate_set == 6'h16;
-      automatic logic       _GEN_333 = _tag_memories_3_io_wr_en_T & _GEN_332 & _GEN_15;
-      automatic logic       _GEN_334 = _tag_memories_3_io_wr_en_T & _GEN_332 & _GEN_17;
-      automatic logic       _GEN_335 = _tag_memories_3_io_wr_en_T & _GEN_332 & _GEN_18;
-      automatic logic       _GEN_336 =
-        _tag_memories_3_io_wr_en_T & _GEN_332 & (&allocate_way);
-      automatic logic       _GEN_337 = allocate_set == 6'h17;
-      automatic logic       _GEN_338 = _tag_memories_3_io_wr_en_T & _GEN_337 & _GEN_15;
-      automatic logic       _GEN_339 = _tag_memories_3_io_wr_en_T & _GEN_337 & _GEN_17;
-      automatic logic       _GEN_340 = _tag_memories_3_io_wr_en_T & _GEN_337 & _GEN_18;
-      automatic logic       _GEN_341 =
-        _tag_memories_3_io_wr_en_T & _GEN_337 & (&allocate_way);
-      automatic logic       _GEN_342 = allocate_set == 6'h18;
-      automatic logic       _GEN_343 = _tag_memories_3_io_wr_en_T & _GEN_342 & _GEN_15;
-      automatic logic       _GEN_344 = _tag_memories_3_io_wr_en_T & _GEN_342 & _GEN_17;
-      automatic logic       _GEN_345 = _tag_memories_3_io_wr_en_T & _GEN_342 & _GEN_18;
-      automatic logic       _GEN_346 =
-        _tag_memories_3_io_wr_en_T & _GEN_342 & (&allocate_way);
-      automatic logic       _GEN_347 = allocate_set == 6'h19;
-      automatic logic       _GEN_348 = _tag_memories_3_io_wr_en_T & _GEN_347 & _GEN_15;
-      automatic logic       _GEN_349 = _tag_memories_3_io_wr_en_T & _GEN_347 & _GEN_17;
-      automatic logic       _GEN_350 = _tag_memories_3_io_wr_en_T & _GEN_347 & _GEN_18;
-      automatic logic       _GEN_351 =
-        _tag_memories_3_io_wr_en_T & _GEN_347 & (&allocate_way);
-      automatic logic       _GEN_352 = allocate_set == 6'h1A;
-      automatic logic       _GEN_353 = _tag_memories_3_io_wr_en_T & _GEN_352 & _GEN_15;
-      automatic logic       _GEN_354 = _tag_memories_3_io_wr_en_T & _GEN_352 & _GEN_17;
-      automatic logic       _GEN_355 = _tag_memories_3_io_wr_en_T & _GEN_352 & _GEN_18;
-      automatic logic       _GEN_356 =
-        _tag_memories_3_io_wr_en_T & _GEN_352 & (&allocate_way);
-      automatic logic       _GEN_357 = allocate_set == 6'h1B;
-      automatic logic       _GEN_358 = _tag_memories_3_io_wr_en_T & _GEN_357 & _GEN_15;
-      automatic logic       _GEN_359 = _tag_memories_3_io_wr_en_T & _GEN_357 & _GEN_17;
-      automatic logic       _GEN_360 = _tag_memories_3_io_wr_en_T & _GEN_357 & _GEN_18;
-      automatic logic       _GEN_361 =
-        _tag_memories_3_io_wr_en_T & _GEN_357 & (&allocate_way);
-      automatic logic       _GEN_362 = allocate_set == 6'h1C;
-      automatic logic       _GEN_363 = _tag_memories_3_io_wr_en_T & _GEN_362 & _GEN_15;
-      automatic logic       _GEN_364 = _tag_memories_3_io_wr_en_T & _GEN_362 & _GEN_17;
-      automatic logic       _GEN_365 = _tag_memories_3_io_wr_en_T & _GEN_362 & _GEN_18;
-      automatic logic       _GEN_366 =
-        _tag_memories_3_io_wr_en_T & _GEN_362 & (&allocate_way);
-      automatic logic       _GEN_367 = allocate_set == 6'h1D;
-      automatic logic       _GEN_368 = _tag_memories_3_io_wr_en_T & _GEN_367 & _GEN_15;
-      automatic logic       _GEN_369 = _tag_memories_3_io_wr_en_T & _GEN_367 & _GEN_17;
-      automatic logic       _GEN_370 = _tag_memories_3_io_wr_en_T & _GEN_367 & _GEN_18;
-      automatic logic       _GEN_371 =
-        _tag_memories_3_io_wr_en_T & _GEN_367 & (&allocate_way);
-      automatic logic       _GEN_372 = allocate_set == 6'h1E;
-      automatic logic       _GEN_373 = _tag_memories_3_io_wr_en_T & _GEN_372 & _GEN_15;
-      automatic logic       _GEN_374 = _tag_memories_3_io_wr_en_T & _GEN_372 & _GEN_17;
-      automatic logic       _GEN_375 = _tag_memories_3_io_wr_en_T & _GEN_372 & _GEN_18;
-      automatic logic       _GEN_376 =
-        _tag_memories_3_io_wr_en_T & _GEN_372 & (&allocate_way);
-      automatic logic       _GEN_377 = allocate_set == 6'h1F;
-      automatic logic       _GEN_378 = _tag_memories_3_io_wr_en_T & _GEN_377 & _GEN_15;
-      automatic logic       _GEN_379 = _tag_memories_3_io_wr_en_T & _GEN_377 & _GEN_17;
-      automatic logic       _GEN_380 = _tag_memories_3_io_wr_en_T & _GEN_377 & _GEN_18;
-      automatic logic       _GEN_381 =
-        _tag_memories_3_io_wr_en_T & _GEN_377 & (&allocate_way);
-      automatic logic       _GEN_382 = allocate_set == 6'h20;
-      automatic logic       _GEN_383 = _tag_memories_3_io_wr_en_T & _GEN_382 & _GEN_15;
-      automatic logic       _GEN_384 = _tag_memories_3_io_wr_en_T & _GEN_382 & _GEN_17;
-      automatic logic       _GEN_385 = _tag_memories_3_io_wr_en_T & _GEN_382 & _GEN_18;
-      automatic logic       _GEN_386 =
-        _tag_memories_3_io_wr_en_T & _GEN_382 & (&allocate_way);
-      automatic logic       _GEN_387 = allocate_set == 6'h21;
-      automatic logic       _GEN_388 = _tag_memories_3_io_wr_en_T & _GEN_387 & _GEN_15;
-      automatic logic       _GEN_389 = _tag_memories_3_io_wr_en_T & _GEN_387 & _GEN_17;
-      automatic logic       _GEN_390 = _tag_memories_3_io_wr_en_T & _GEN_387 & _GEN_18;
-      automatic logic       _GEN_391 =
-        _tag_memories_3_io_wr_en_T & _GEN_387 & (&allocate_way);
-      automatic logic       _GEN_392 = allocate_set == 6'h22;
-      automatic logic       _GEN_393 = _tag_memories_3_io_wr_en_T & _GEN_392 & _GEN_15;
-      automatic logic       _GEN_394 = _tag_memories_3_io_wr_en_T & _GEN_392 & _GEN_17;
-      automatic logic       _GEN_395 = _tag_memories_3_io_wr_en_T & _GEN_392 & _GEN_18;
-      automatic logic       _GEN_396 =
-        _tag_memories_3_io_wr_en_T & _GEN_392 & (&allocate_way);
-      automatic logic       _GEN_397 = allocate_set == 6'h23;
-      automatic logic       _GEN_398 = _tag_memories_3_io_wr_en_T & _GEN_397 & _GEN_15;
-      automatic logic       _GEN_399 = _tag_memories_3_io_wr_en_T & _GEN_397 & _GEN_17;
-      automatic logic       _GEN_400 = _tag_memories_3_io_wr_en_T & _GEN_397 & _GEN_18;
-      automatic logic       _GEN_401 =
-        _tag_memories_3_io_wr_en_T & _GEN_397 & (&allocate_way);
-      automatic logic       _GEN_402 = allocate_set == 6'h24;
-      automatic logic       _GEN_403 = _tag_memories_3_io_wr_en_T & _GEN_402 & _GEN_15;
-      automatic logic       _GEN_404 = _tag_memories_3_io_wr_en_T & _GEN_402 & _GEN_17;
-      automatic logic       _GEN_405 = _tag_memories_3_io_wr_en_T & _GEN_402 & _GEN_18;
-      automatic logic       _GEN_406 =
-        _tag_memories_3_io_wr_en_T & _GEN_402 & (&allocate_way);
-      automatic logic       _GEN_407 = allocate_set == 6'h25;
-      automatic logic       _GEN_408 = _tag_memories_3_io_wr_en_T & _GEN_407 & _GEN_15;
-      automatic logic       _GEN_409 = _tag_memories_3_io_wr_en_T & _GEN_407 & _GEN_17;
-      automatic logic       _GEN_410 = _tag_memories_3_io_wr_en_T & _GEN_407 & _GEN_18;
-      automatic logic       _GEN_411 =
-        _tag_memories_3_io_wr_en_T & _GEN_407 & (&allocate_way);
-      automatic logic       _GEN_412 = allocate_set == 6'h26;
-      automatic logic       _GEN_413 = _tag_memories_3_io_wr_en_T & _GEN_412 & _GEN_15;
-      automatic logic       _GEN_414 = _tag_memories_3_io_wr_en_T & _GEN_412 & _GEN_17;
-      automatic logic       _GEN_415 = _tag_memories_3_io_wr_en_T & _GEN_412 & _GEN_18;
-      automatic logic       _GEN_416 =
-        _tag_memories_3_io_wr_en_T & _GEN_412 & (&allocate_way);
-      automatic logic       _GEN_417 = allocate_set == 6'h27;
-      automatic logic       _GEN_418 = _tag_memories_3_io_wr_en_T & _GEN_417 & _GEN_15;
-      automatic logic       _GEN_419 = _tag_memories_3_io_wr_en_T & _GEN_417 & _GEN_17;
-      automatic logic       _GEN_420 = _tag_memories_3_io_wr_en_T & _GEN_417 & _GEN_18;
-      automatic logic       _GEN_421 =
-        _tag_memories_3_io_wr_en_T & _GEN_417 & (&allocate_way);
-      automatic logic       _GEN_422 = allocate_set == 6'h28;
-      automatic logic       _GEN_423 = _tag_memories_3_io_wr_en_T & _GEN_422 & _GEN_15;
-      automatic logic       _GEN_424 = _tag_memories_3_io_wr_en_T & _GEN_422 & _GEN_17;
-      automatic logic       _GEN_425 = _tag_memories_3_io_wr_en_T & _GEN_422 & _GEN_18;
-      automatic logic       _GEN_426 =
-        _tag_memories_3_io_wr_en_T & _GEN_422 & (&allocate_way);
-      automatic logic       _GEN_427 = allocate_set == 6'h29;
-      automatic logic       _GEN_428 = _tag_memories_3_io_wr_en_T & _GEN_427 & _GEN_15;
-      automatic logic       _GEN_429 = _tag_memories_3_io_wr_en_T & _GEN_427 & _GEN_17;
-      automatic logic       _GEN_430 = _tag_memories_3_io_wr_en_T & _GEN_427 & _GEN_18;
-      automatic logic       _GEN_431 =
-        _tag_memories_3_io_wr_en_T & _GEN_427 & (&allocate_way);
-      automatic logic       _GEN_432 = allocate_set == 6'h2A;
-      automatic logic       _GEN_433 = _tag_memories_3_io_wr_en_T & _GEN_432 & _GEN_15;
-      automatic logic       _GEN_434 = _tag_memories_3_io_wr_en_T & _GEN_432 & _GEN_17;
-      automatic logic       _GEN_435 = _tag_memories_3_io_wr_en_T & _GEN_432 & _GEN_18;
-      automatic logic       _GEN_436 =
-        _tag_memories_3_io_wr_en_T & _GEN_432 & (&allocate_way);
-      automatic logic       _GEN_437 = allocate_set == 6'h2B;
-      automatic logic       _GEN_438 = _tag_memories_3_io_wr_en_T & _GEN_437 & _GEN_15;
-      automatic logic       _GEN_439 = _tag_memories_3_io_wr_en_T & _GEN_437 & _GEN_17;
-      automatic logic       _GEN_440 = _tag_memories_3_io_wr_en_T & _GEN_437 & _GEN_18;
-      automatic logic       _GEN_441 =
-        _tag_memories_3_io_wr_en_T & _GEN_437 & (&allocate_way);
-      automatic logic       _GEN_442 = allocate_set == 6'h2C;
-      automatic logic       _GEN_443 = _tag_memories_3_io_wr_en_T & _GEN_442 & _GEN_15;
-      automatic logic       _GEN_444 = _tag_memories_3_io_wr_en_T & _GEN_442 & _GEN_17;
-      automatic logic       _GEN_445 = _tag_memories_3_io_wr_en_T & _GEN_442 & _GEN_18;
-      automatic logic       _GEN_446 =
-        _tag_memories_3_io_wr_en_T & _GEN_442 & (&allocate_way);
-      automatic logic       _GEN_447 = allocate_set == 6'h2D;
-      automatic logic       _GEN_448 = _tag_memories_3_io_wr_en_T & _GEN_447 & _GEN_15;
-      automatic logic       _GEN_449 = _tag_memories_3_io_wr_en_T & _GEN_447 & _GEN_17;
-      automatic logic       _GEN_450 = _tag_memories_3_io_wr_en_T & _GEN_447 & _GEN_18;
-      automatic logic       _GEN_451 =
-        _tag_memories_3_io_wr_en_T & _GEN_447 & (&allocate_way);
-      automatic logic       _GEN_452 = allocate_set == 6'h2E;
-      automatic logic       _GEN_453 = _tag_memories_3_io_wr_en_T & _GEN_452 & _GEN_15;
-      automatic logic       _GEN_454 = _tag_memories_3_io_wr_en_T & _GEN_452 & _GEN_17;
-      automatic logic       _GEN_455 = _tag_memories_3_io_wr_en_T & _GEN_452 & _GEN_18;
-      automatic logic       _GEN_456 =
-        _tag_memories_3_io_wr_en_T & _GEN_452 & (&allocate_way);
-      automatic logic       _GEN_457 = allocate_set == 6'h2F;
-      automatic logic       _GEN_458 = _tag_memories_3_io_wr_en_T & _GEN_457 & _GEN_15;
-      automatic logic       _GEN_459 = _tag_memories_3_io_wr_en_T & _GEN_457 & _GEN_17;
-      automatic logic       _GEN_460 = _tag_memories_3_io_wr_en_T & _GEN_457 & _GEN_18;
-      automatic logic       _GEN_461 =
-        _tag_memories_3_io_wr_en_T & _GEN_457 & (&allocate_way);
-      automatic logic       _GEN_462 = allocate_set == 6'h30;
-      automatic logic       _GEN_463 = _tag_memories_3_io_wr_en_T & _GEN_462 & _GEN_15;
-      automatic logic       _GEN_464 = _tag_memories_3_io_wr_en_T & _GEN_462 & _GEN_17;
-      automatic logic       _GEN_465 = _tag_memories_3_io_wr_en_T & _GEN_462 & _GEN_18;
-      automatic logic       _GEN_466 =
-        _tag_memories_3_io_wr_en_T & _GEN_462 & (&allocate_way);
-      automatic logic       _GEN_467 = allocate_set == 6'h31;
-      automatic logic       _GEN_468 = _tag_memories_3_io_wr_en_T & _GEN_467 & _GEN_15;
-      automatic logic       _GEN_469 = _tag_memories_3_io_wr_en_T & _GEN_467 & _GEN_17;
-      automatic logic       _GEN_470 = _tag_memories_3_io_wr_en_T & _GEN_467 & _GEN_18;
-      automatic logic       _GEN_471 =
-        _tag_memories_3_io_wr_en_T & _GEN_467 & (&allocate_way);
-      automatic logic       _GEN_472 = allocate_set == 6'h32;
-      automatic logic       _GEN_473 = _tag_memories_3_io_wr_en_T & _GEN_472 & _GEN_15;
-      automatic logic       _GEN_474 = _tag_memories_3_io_wr_en_T & _GEN_472 & _GEN_17;
-      automatic logic       _GEN_475 = _tag_memories_3_io_wr_en_T & _GEN_472 & _GEN_18;
-      automatic logic       _GEN_476 =
-        _tag_memories_3_io_wr_en_T & _GEN_472 & (&allocate_way);
-      automatic logic       _GEN_477 = allocate_set == 6'h33;
-      automatic logic       _GEN_478 = _tag_memories_3_io_wr_en_T & _GEN_477 & _GEN_15;
-      automatic logic       _GEN_479 = _tag_memories_3_io_wr_en_T & _GEN_477 & _GEN_17;
-      automatic logic       _GEN_480 = _tag_memories_3_io_wr_en_T & _GEN_477 & _GEN_18;
-      automatic logic       _GEN_481 =
-        _tag_memories_3_io_wr_en_T & _GEN_477 & (&allocate_way);
-      automatic logic       _GEN_482 = allocate_set == 6'h34;
-      automatic logic       _GEN_483 = _tag_memories_3_io_wr_en_T & _GEN_482 & _GEN_15;
-      automatic logic       _GEN_484 = _tag_memories_3_io_wr_en_T & _GEN_482 & _GEN_17;
-      automatic logic       _GEN_485 = _tag_memories_3_io_wr_en_T & _GEN_482 & _GEN_18;
-      automatic logic       _GEN_486 =
-        _tag_memories_3_io_wr_en_T & _GEN_482 & (&allocate_way);
-      automatic logic       _GEN_487 = allocate_set == 6'h35;
-      automatic logic       _GEN_488 = _tag_memories_3_io_wr_en_T & _GEN_487 & _GEN_15;
-      automatic logic       _GEN_489 = _tag_memories_3_io_wr_en_T & _GEN_487 & _GEN_17;
-      automatic logic       _GEN_490 = _tag_memories_3_io_wr_en_T & _GEN_487 & _GEN_18;
-      automatic logic       _GEN_491 =
-        _tag_memories_3_io_wr_en_T & _GEN_487 & (&allocate_way);
-      automatic logic       _GEN_492 = allocate_set == 6'h36;
-      automatic logic       _GEN_493 = _tag_memories_3_io_wr_en_T & _GEN_492 & _GEN_15;
-      automatic logic       _GEN_494 = _tag_memories_3_io_wr_en_T & _GEN_492 & _GEN_17;
-      automatic logic       _GEN_495 = _tag_memories_3_io_wr_en_T & _GEN_492 & _GEN_18;
-      automatic logic       _GEN_496 =
-        _tag_memories_3_io_wr_en_T & _GEN_492 & (&allocate_way);
-      automatic logic       _GEN_497 = allocate_set == 6'h37;
-      automatic logic       _GEN_498 = _tag_memories_3_io_wr_en_T & _GEN_497 & _GEN_15;
-      automatic logic       _GEN_499 = _tag_memories_3_io_wr_en_T & _GEN_497 & _GEN_17;
-      automatic logic       _GEN_500 = _tag_memories_3_io_wr_en_T & _GEN_497 & _GEN_18;
-      automatic logic       _GEN_501 =
-        _tag_memories_3_io_wr_en_T & _GEN_497 & (&allocate_way);
-      automatic logic       _GEN_502 = allocate_set == 6'h38;
-      automatic logic       _GEN_503 = _tag_memories_3_io_wr_en_T & _GEN_502 & _GEN_15;
-      automatic logic       _GEN_504 = _tag_memories_3_io_wr_en_T & _GEN_502 & _GEN_17;
-      automatic logic       _GEN_505 = _tag_memories_3_io_wr_en_T & _GEN_502 & _GEN_18;
-      automatic logic       _GEN_506 =
-        _tag_memories_3_io_wr_en_T & _GEN_502 & (&allocate_way);
-      automatic logic       _GEN_507 = allocate_set == 6'h39;
-      automatic logic       _GEN_508 = _tag_memories_3_io_wr_en_T & _GEN_507 & _GEN_15;
-      automatic logic       _GEN_509 = _tag_memories_3_io_wr_en_T & _GEN_507 & _GEN_17;
-      automatic logic       _GEN_510 = _tag_memories_3_io_wr_en_T & _GEN_507 & _GEN_18;
-      automatic logic       _GEN_511 =
-        _tag_memories_3_io_wr_en_T & _GEN_507 & (&allocate_way);
-      automatic logic       _GEN_512 = allocate_set == 6'h3A;
-      automatic logic       _GEN_513 = _tag_memories_3_io_wr_en_T & _GEN_512 & _GEN_15;
-      automatic logic       _GEN_514 = _tag_memories_3_io_wr_en_T & _GEN_512 & _GEN_17;
-      automatic logic       _GEN_515 = _tag_memories_3_io_wr_en_T & _GEN_512 & _GEN_18;
-      automatic logic       _GEN_516 =
-        _tag_memories_3_io_wr_en_T & _GEN_512 & (&allocate_way);
-      automatic logic       _GEN_517 = allocate_set == 6'h3B;
-      automatic logic       _GEN_518 = _tag_memories_3_io_wr_en_T & _GEN_517 & _GEN_15;
-      automatic logic       _GEN_519 = _tag_memories_3_io_wr_en_T & _GEN_517 & _GEN_17;
-      automatic logic       _GEN_520 = _tag_memories_3_io_wr_en_T & _GEN_517 & _GEN_18;
-      automatic logic       _GEN_521 =
-        _tag_memories_3_io_wr_en_T & _GEN_517 & (&allocate_way);
-      automatic logic       _GEN_522 = allocate_set == 6'h3C;
-      automatic logic       _GEN_523 = _tag_memories_3_io_wr_en_T & _GEN_522 & _GEN_15;
-      automatic logic       _GEN_524 = _tag_memories_3_io_wr_en_T & _GEN_522 & _GEN_17;
-      automatic logic       _GEN_525 = _tag_memories_3_io_wr_en_T & _GEN_522 & _GEN_18;
-      automatic logic       _GEN_526 =
-        _tag_memories_3_io_wr_en_T & _GEN_522 & (&allocate_way);
-      automatic logic       _GEN_527 = allocate_set == 6'h3D;
-      automatic logic       _GEN_528 = _tag_memories_3_io_wr_en_T & _GEN_527 & _GEN_15;
-      automatic logic       _GEN_529 = _tag_memories_3_io_wr_en_T & _GEN_527 & _GEN_17;
-      automatic logic       _GEN_530 = _tag_memories_3_io_wr_en_T & _GEN_527 & _GEN_18;
-      automatic logic       _GEN_531 =
-        _tag_memories_3_io_wr_en_T & _GEN_527 & (&allocate_way);
-      automatic logic       _GEN_532 = allocate_set == 6'h3E;
-      automatic logic       _GEN_533 = _tag_memories_3_io_wr_en_T & _GEN_532 & _GEN_15;
-      automatic logic       _GEN_534 = _tag_memories_3_io_wr_en_T & _GEN_532 & _GEN_17;
-      automatic logic       _GEN_535 = _tag_memories_3_io_wr_en_T & _GEN_532 & _GEN_18;
-      automatic logic       _GEN_536 =
-        _tag_memories_3_io_wr_en_T & _GEN_532 & (&allocate_way);
-      automatic logic       _GEN_537 =
-        _tag_memories_3_io_wr_en_T & (&allocate_set) & _GEN_15;
-      automatic logic       _GEN_538 =
-        _tag_memories_3_io_wr_en_T & (&allocate_set) & _GEN_17;
-      automatic logic       _GEN_539 =
-        _tag_memories_3_io_wr_en_T & (&allocate_set) & _GEN_18;
+      automatic logic       _GEN_291;
+      automatic logic       _GEN_292;
+      automatic logic       _GEN_293 = REG_3 == 6'h0;
+      automatic logic       _GEN_294 = REG_3 == 6'h1;
+      automatic logic       _GEN_295 = REG_3 == 6'h2;
+      automatic logic       _GEN_296 = REG_3 == 6'h3;
+      automatic logic       _GEN_297 = REG_3 == 6'h4;
+      automatic logic       _GEN_298 = REG_3 == 6'h5;
+      automatic logic       _GEN_299 = REG_3 == 6'h6;
+      automatic logic       _GEN_300 = REG_3 == 6'h7;
+      automatic logic       _GEN_301 = REG_3 == 6'h8;
+      automatic logic       _GEN_302 = REG_3 == 6'h9;
+      automatic logic       _GEN_303 = REG_3 == 6'hA;
+      automatic logic       _GEN_304 = REG_3 == 6'hB;
+      automatic logic       _GEN_305 = REG_3 == 6'hC;
+      automatic logic       _GEN_306 = REG_3 == 6'hD;
+      automatic logic       _GEN_307 = REG_3 == 6'hE;
+      automatic logic       _GEN_308 = REG_3 == 6'hF;
+      automatic logic       _GEN_309 = REG_3 == 6'h10;
+      automatic logic       _GEN_310 = REG_3 == 6'h11;
+      automatic logic       _GEN_311 = REG_3 == 6'h12;
+      automatic logic       _GEN_312 = REG_3 == 6'h13;
+      automatic logic       _GEN_313 = REG_3 == 6'h14;
+      automatic logic       _GEN_314 = REG_3 == 6'h15;
+      automatic logic       _GEN_315 = REG_3 == 6'h16;
+      automatic logic       _GEN_316 = REG_3 == 6'h17;
+      automatic logic       _GEN_317 = REG_3 == 6'h18;
+      automatic logic       _GEN_318 = REG_3 == 6'h19;
+      automatic logic       _GEN_319 = REG_3 == 6'h1A;
+      automatic logic       _GEN_320 = REG_3 == 6'h1B;
+      automatic logic       _GEN_321 = REG_3 == 6'h1C;
+      automatic logic       _GEN_322 = REG_3 == 6'h1D;
+      automatic logic       _GEN_323 = REG_3 == 6'h1E;
+      automatic logic       _GEN_324 = REG_3 == 6'h1F;
+      automatic logic       _GEN_325 = REG_3 == 6'h20;
+      automatic logic       _GEN_326 = REG_3 == 6'h21;
+      automatic logic       _GEN_327 = REG_3 == 6'h22;
+      automatic logic       _GEN_328 = REG_3 == 6'h23;
+      automatic logic       _GEN_329 = REG_3 == 6'h24;
+      automatic logic       _GEN_330 = REG_3 == 6'h25;
+      automatic logic       _GEN_331 = REG_3 == 6'h26;
+      automatic logic       _GEN_332 = REG_3 == 6'h27;
+      automatic logic       _GEN_333 = REG_3 == 6'h28;
+      automatic logic       _GEN_334 = REG_3 == 6'h29;
+      automatic logic       _GEN_335 = REG_3 == 6'h2A;
+      automatic logic       _GEN_336 = REG_3 == 6'h2B;
+      automatic logic       _GEN_337 = REG_3 == 6'h2C;
+      automatic logic       _GEN_338 = REG_3 == 6'h2D;
+      automatic logic       _GEN_339 = REG_3 == 6'h2E;
+      automatic logic       _GEN_340 = REG_3 == 6'h2F;
+      automatic logic       _GEN_341 = REG_3 == 6'h30;
+      automatic logic       _GEN_342 = REG_3 == 6'h31;
+      automatic logic       _GEN_343 = REG_3 == 6'h32;
+      automatic logic       _GEN_344 = REG_3 == 6'h33;
+      automatic logic       _GEN_345 = REG_3 == 6'h34;
+      automatic logic       _GEN_346 = REG_3 == 6'h35;
+      automatic logic       _GEN_347 = REG_3 == 6'h36;
+      automatic logic       _GEN_348 = REG_3 == 6'h37;
+      automatic logic       _GEN_349 = REG_3 == 6'h38;
+      automatic logic       _GEN_350 = REG_3 == 6'h39;
+      automatic logic       _GEN_351 = REG_3 == 6'h3A;
+      automatic logic       _GEN_352 = REG_3 == 6'h3B;
+      automatic logic       _GEN_353 = REG_3 == 6'h3C;
+      automatic logic       _GEN_354 = REG_3 == 6'h3D;
+      automatic logic       _GEN_355 = REG_3 == 6'h3E;
+      automatic logic       _GEN_356 = allocate_set == 6'h0;
+      automatic logic       _GEN_357 = _tag_memories_3_io_wr_en_T & _GEN_356 & _GEN_16;
+      automatic logic       _GEN_358 = _tag_memories_3_io_wr_en_T & _GEN_356 & _GEN_18;
+      automatic logic       _GEN_359 = _tag_memories_3_io_wr_en_T & _GEN_356 & _GEN_19;
+      automatic logic       _GEN_360 =
+        _tag_memories_3_io_wr_en_T & _GEN_356 & (&allocate_way);
+      automatic logic       _GEN_361 = allocate_set == 6'h1;
+      automatic logic       _GEN_362 = _tag_memories_3_io_wr_en_T & _GEN_361 & _GEN_16;
+      automatic logic       _GEN_363 = _tag_memories_3_io_wr_en_T & _GEN_361 & _GEN_18;
+      automatic logic       _GEN_364 = _tag_memories_3_io_wr_en_T & _GEN_361 & _GEN_19;
+      automatic logic       _GEN_365 =
+        _tag_memories_3_io_wr_en_T & _GEN_361 & (&allocate_way);
+      automatic logic       _GEN_366 = allocate_set == 6'h2;
+      automatic logic       _GEN_367 = _tag_memories_3_io_wr_en_T & _GEN_366 & _GEN_16;
+      automatic logic       _GEN_368 = _tag_memories_3_io_wr_en_T & _GEN_366 & _GEN_18;
+      automatic logic       _GEN_369 = _tag_memories_3_io_wr_en_T & _GEN_366 & _GEN_19;
+      automatic logic       _GEN_370 =
+        _tag_memories_3_io_wr_en_T & _GEN_366 & (&allocate_way);
+      automatic logic       _GEN_371 = allocate_set == 6'h3;
+      automatic logic       _GEN_372 = _tag_memories_3_io_wr_en_T & _GEN_371 & _GEN_16;
+      automatic logic       _GEN_373 = _tag_memories_3_io_wr_en_T & _GEN_371 & _GEN_18;
+      automatic logic       _GEN_374 = _tag_memories_3_io_wr_en_T & _GEN_371 & _GEN_19;
+      automatic logic       _GEN_375 =
+        _tag_memories_3_io_wr_en_T & _GEN_371 & (&allocate_way);
+      automatic logic       _GEN_376 = allocate_set == 6'h4;
+      automatic logic       _GEN_377 = _tag_memories_3_io_wr_en_T & _GEN_376 & _GEN_16;
+      automatic logic       _GEN_378 = _tag_memories_3_io_wr_en_T & _GEN_376 & _GEN_18;
+      automatic logic       _GEN_379 = _tag_memories_3_io_wr_en_T & _GEN_376 & _GEN_19;
+      automatic logic       _GEN_380 =
+        _tag_memories_3_io_wr_en_T & _GEN_376 & (&allocate_way);
+      automatic logic       _GEN_381 = allocate_set == 6'h5;
+      automatic logic       _GEN_382 = _tag_memories_3_io_wr_en_T & _GEN_381 & _GEN_16;
+      automatic logic       _GEN_383 = _tag_memories_3_io_wr_en_T & _GEN_381 & _GEN_18;
+      automatic logic       _GEN_384 = _tag_memories_3_io_wr_en_T & _GEN_381 & _GEN_19;
+      automatic logic       _GEN_385 =
+        _tag_memories_3_io_wr_en_T & _GEN_381 & (&allocate_way);
+      automatic logic       _GEN_386 = allocate_set == 6'h6;
+      automatic logic       _GEN_387 = _tag_memories_3_io_wr_en_T & _GEN_386 & _GEN_16;
+      automatic logic       _GEN_388 = _tag_memories_3_io_wr_en_T & _GEN_386 & _GEN_18;
+      automatic logic       _GEN_389 = _tag_memories_3_io_wr_en_T & _GEN_386 & _GEN_19;
+      automatic logic       _GEN_390 =
+        _tag_memories_3_io_wr_en_T & _GEN_386 & (&allocate_way);
+      automatic logic       _GEN_391 = allocate_set == 6'h7;
+      automatic logic       _GEN_392 = _tag_memories_3_io_wr_en_T & _GEN_391 & _GEN_16;
+      automatic logic       _GEN_393 = _tag_memories_3_io_wr_en_T & _GEN_391 & _GEN_18;
+      automatic logic       _GEN_394 = _tag_memories_3_io_wr_en_T & _GEN_391 & _GEN_19;
+      automatic logic       _GEN_395 =
+        _tag_memories_3_io_wr_en_T & _GEN_391 & (&allocate_way);
+      automatic logic       _GEN_396 = allocate_set == 6'h8;
+      automatic logic       _GEN_397 = _tag_memories_3_io_wr_en_T & _GEN_396 & _GEN_16;
+      automatic logic       _GEN_398 = _tag_memories_3_io_wr_en_T & _GEN_396 & _GEN_18;
+      automatic logic       _GEN_399 = _tag_memories_3_io_wr_en_T & _GEN_396 & _GEN_19;
+      automatic logic       _GEN_400 =
+        _tag_memories_3_io_wr_en_T & _GEN_396 & (&allocate_way);
+      automatic logic       _GEN_401 = allocate_set == 6'h9;
+      automatic logic       _GEN_402 = _tag_memories_3_io_wr_en_T & _GEN_401 & _GEN_16;
+      automatic logic       _GEN_403 = _tag_memories_3_io_wr_en_T & _GEN_401 & _GEN_18;
+      automatic logic       _GEN_404 = _tag_memories_3_io_wr_en_T & _GEN_401 & _GEN_19;
+      automatic logic       _GEN_405 =
+        _tag_memories_3_io_wr_en_T & _GEN_401 & (&allocate_way);
+      automatic logic       _GEN_406 = allocate_set == 6'hA;
+      automatic logic       _GEN_407 = _tag_memories_3_io_wr_en_T & _GEN_406 & _GEN_16;
+      automatic logic       _GEN_408 = _tag_memories_3_io_wr_en_T & _GEN_406 & _GEN_18;
+      automatic logic       _GEN_409 = _tag_memories_3_io_wr_en_T & _GEN_406 & _GEN_19;
+      automatic logic       _GEN_410 =
+        _tag_memories_3_io_wr_en_T & _GEN_406 & (&allocate_way);
+      automatic logic       _GEN_411 = allocate_set == 6'hB;
+      automatic logic       _GEN_412 = _tag_memories_3_io_wr_en_T & _GEN_411 & _GEN_16;
+      automatic logic       _GEN_413 = _tag_memories_3_io_wr_en_T & _GEN_411 & _GEN_18;
+      automatic logic       _GEN_414 = _tag_memories_3_io_wr_en_T & _GEN_411 & _GEN_19;
+      automatic logic       _GEN_415 =
+        _tag_memories_3_io_wr_en_T & _GEN_411 & (&allocate_way);
+      automatic logic       _GEN_416 = allocate_set == 6'hC;
+      automatic logic       _GEN_417 = _tag_memories_3_io_wr_en_T & _GEN_416 & _GEN_16;
+      automatic logic       _GEN_418 = _tag_memories_3_io_wr_en_T & _GEN_416 & _GEN_18;
+      automatic logic       _GEN_419 = _tag_memories_3_io_wr_en_T & _GEN_416 & _GEN_19;
+      automatic logic       _GEN_420 =
+        _tag_memories_3_io_wr_en_T & _GEN_416 & (&allocate_way);
+      automatic logic       _GEN_421 = allocate_set == 6'hD;
+      automatic logic       _GEN_422 = _tag_memories_3_io_wr_en_T & _GEN_421 & _GEN_16;
+      automatic logic       _GEN_423 = _tag_memories_3_io_wr_en_T & _GEN_421 & _GEN_18;
+      automatic logic       _GEN_424 = _tag_memories_3_io_wr_en_T & _GEN_421 & _GEN_19;
+      automatic logic       _GEN_425 =
+        _tag_memories_3_io_wr_en_T & _GEN_421 & (&allocate_way);
+      automatic logic       _GEN_426 = allocate_set == 6'hE;
+      automatic logic       _GEN_427 = _tag_memories_3_io_wr_en_T & _GEN_426 & _GEN_16;
+      automatic logic       _GEN_428 = _tag_memories_3_io_wr_en_T & _GEN_426 & _GEN_18;
+      automatic logic       _GEN_429 = _tag_memories_3_io_wr_en_T & _GEN_426 & _GEN_19;
+      automatic logic       _GEN_430 =
+        _tag_memories_3_io_wr_en_T & _GEN_426 & (&allocate_way);
+      automatic logic       _GEN_431 = allocate_set == 6'hF;
+      automatic logic       _GEN_432 = _tag_memories_3_io_wr_en_T & _GEN_431 & _GEN_16;
+      automatic logic       _GEN_433 = _tag_memories_3_io_wr_en_T & _GEN_431 & _GEN_18;
+      automatic logic       _GEN_434 = _tag_memories_3_io_wr_en_T & _GEN_431 & _GEN_19;
+      automatic logic       _GEN_435 =
+        _tag_memories_3_io_wr_en_T & _GEN_431 & (&allocate_way);
+      automatic logic       _GEN_436 = allocate_set == 6'h10;
+      automatic logic       _GEN_437 = _tag_memories_3_io_wr_en_T & _GEN_436 & _GEN_16;
+      automatic logic       _GEN_438 = _tag_memories_3_io_wr_en_T & _GEN_436 & _GEN_18;
+      automatic logic       _GEN_439 = _tag_memories_3_io_wr_en_T & _GEN_436 & _GEN_19;
+      automatic logic       _GEN_440 =
+        _tag_memories_3_io_wr_en_T & _GEN_436 & (&allocate_way);
+      automatic logic       _GEN_441 = allocate_set == 6'h11;
+      automatic logic       _GEN_442 = _tag_memories_3_io_wr_en_T & _GEN_441 & _GEN_16;
+      automatic logic       _GEN_443 = _tag_memories_3_io_wr_en_T & _GEN_441 & _GEN_18;
+      automatic logic       _GEN_444 = _tag_memories_3_io_wr_en_T & _GEN_441 & _GEN_19;
+      automatic logic       _GEN_445 =
+        _tag_memories_3_io_wr_en_T & _GEN_441 & (&allocate_way);
+      automatic logic       _GEN_446 = allocate_set == 6'h12;
+      automatic logic       _GEN_447 = _tag_memories_3_io_wr_en_T & _GEN_446 & _GEN_16;
+      automatic logic       _GEN_448 = _tag_memories_3_io_wr_en_T & _GEN_446 & _GEN_18;
+      automatic logic       _GEN_449 = _tag_memories_3_io_wr_en_T & _GEN_446 & _GEN_19;
+      automatic logic       _GEN_450 =
+        _tag_memories_3_io_wr_en_T & _GEN_446 & (&allocate_way);
+      automatic logic       _GEN_451 = allocate_set == 6'h13;
+      automatic logic       _GEN_452 = _tag_memories_3_io_wr_en_T & _GEN_451 & _GEN_16;
+      automatic logic       _GEN_453 = _tag_memories_3_io_wr_en_T & _GEN_451 & _GEN_18;
+      automatic logic       _GEN_454 = _tag_memories_3_io_wr_en_T & _GEN_451 & _GEN_19;
+      automatic logic       _GEN_455 =
+        _tag_memories_3_io_wr_en_T & _GEN_451 & (&allocate_way);
+      automatic logic       _GEN_456 = allocate_set == 6'h14;
+      automatic logic       _GEN_457 = _tag_memories_3_io_wr_en_T & _GEN_456 & _GEN_16;
+      automatic logic       _GEN_458 = _tag_memories_3_io_wr_en_T & _GEN_456 & _GEN_18;
+      automatic logic       _GEN_459 = _tag_memories_3_io_wr_en_T & _GEN_456 & _GEN_19;
+      automatic logic       _GEN_460 =
+        _tag_memories_3_io_wr_en_T & _GEN_456 & (&allocate_way);
+      automatic logic       _GEN_461 = allocate_set == 6'h15;
+      automatic logic       _GEN_462 = _tag_memories_3_io_wr_en_T & _GEN_461 & _GEN_16;
+      automatic logic       _GEN_463 = _tag_memories_3_io_wr_en_T & _GEN_461 & _GEN_18;
+      automatic logic       _GEN_464 = _tag_memories_3_io_wr_en_T & _GEN_461 & _GEN_19;
+      automatic logic       _GEN_465 =
+        _tag_memories_3_io_wr_en_T & _GEN_461 & (&allocate_way);
+      automatic logic       _GEN_466 = allocate_set == 6'h16;
+      automatic logic       _GEN_467 = _tag_memories_3_io_wr_en_T & _GEN_466 & _GEN_16;
+      automatic logic       _GEN_468 = _tag_memories_3_io_wr_en_T & _GEN_466 & _GEN_18;
+      automatic logic       _GEN_469 = _tag_memories_3_io_wr_en_T & _GEN_466 & _GEN_19;
+      automatic logic       _GEN_470 =
+        _tag_memories_3_io_wr_en_T & _GEN_466 & (&allocate_way);
+      automatic logic       _GEN_471 = allocate_set == 6'h17;
+      automatic logic       _GEN_472 = _tag_memories_3_io_wr_en_T & _GEN_471 & _GEN_16;
+      automatic logic       _GEN_473 = _tag_memories_3_io_wr_en_T & _GEN_471 & _GEN_18;
+      automatic logic       _GEN_474 = _tag_memories_3_io_wr_en_T & _GEN_471 & _GEN_19;
+      automatic logic       _GEN_475 =
+        _tag_memories_3_io_wr_en_T & _GEN_471 & (&allocate_way);
+      automatic logic       _GEN_476 = allocate_set == 6'h18;
+      automatic logic       _GEN_477 = _tag_memories_3_io_wr_en_T & _GEN_476 & _GEN_16;
+      automatic logic       _GEN_478 = _tag_memories_3_io_wr_en_T & _GEN_476 & _GEN_18;
+      automatic logic       _GEN_479 = _tag_memories_3_io_wr_en_T & _GEN_476 & _GEN_19;
+      automatic logic       _GEN_480 =
+        _tag_memories_3_io_wr_en_T & _GEN_476 & (&allocate_way);
+      automatic logic       _GEN_481 = allocate_set == 6'h19;
+      automatic logic       _GEN_482 = _tag_memories_3_io_wr_en_T & _GEN_481 & _GEN_16;
+      automatic logic       _GEN_483 = _tag_memories_3_io_wr_en_T & _GEN_481 & _GEN_18;
+      automatic logic       _GEN_484 = _tag_memories_3_io_wr_en_T & _GEN_481 & _GEN_19;
+      automatic logic       _GEN_485 =
+        _tag_memories_3_io_wr_en_T & _GEN_481 & (&allocate_way);
+      automatic logic       _GEN_486 = allocate_set == 6'h1A;
+      automatic logic       _GEN_487 = _tag_memories_3_io_wr_en_T & _GEN_486 & _GEN_16;
+      automatic logic       _GEN_488 = _tag_memories_3_io_wr_en_T & _GEN_486 & _GEN_18;
+      automatic logic       _GEN_489 = _tag_memories_3_io_wr_en_T & _GEN_486 & _GEN_19;
+      automatic logic       _GEN_490 =
+        _tag_memories_3_io_wr_en_T & _GEN_486 & (&allocate_way);
+      automatic logic       _GEN_491 = allocate_set == 6'h1B;
+      automatic logic       _GEN_492 = _tag_memories_3_io_wr_en_T & _GEN_491 & _GEN_16;
+      automatic logic       _GEN_493 = _tag_memories_3_io_wr_en_T & _GEN_491 & _GEN_18;
+      automatic logic       _GEN_494 = _tag_memories_3_io_wr_en_T & _GEN_491 & _GEN_19;
+      automatic logic       _GEN_495 =
+        _tag_memories_3_io_wr_en_T & _GEN_491 & (&allocate_way);
+      automatic logic       _GEN_496 = allocate_set == 6'h1C;
+      automatic logic       _GEN_497 = _tag_memories_3_io_wr_en_T & _GEN_496 & _GEN_16;
+      automatic logic       _GEN_498 = _tag_memories_3_io_wr_en_T & _GEN_496 & _GEN_18;
+      automatic logic       _GEN_499 = _tag_memories_3_io_wr_en_T & _GEN_496 & _GEN_19;
+      automatic logic       _GEN_500 =
+        _tag_memories_3_io_wr_en_T & _GEN_496 & (&allocate_way);
+      automatic logic       _GEN_501 = allocate_set == 6'h1D;
+      automatic logic       _GEN_502 = _tag_memories_3_io_wr_en_T & _GEN_501 & _GEN_16;
+      automatic logic       _GEN_503 = _tag_memories_3_io_wr_en_T & _GEN_501 & _GEN_18;
+      automatic logic       _GEN_504 = _tag_memories_3_io_wr_en_T & _GEN_501 & _GEN_19;
+      automatic logic       _GEN_505 =
+        _tag_memories_3_io_wr_en_T & _GEN_501 & (&allocate_way);
+      automatic logic       _GEN_506 = allocate_set == 6'h1E;
+      automatic logic       _GEN_507 = _tag_memories_3_io_wr_en_T & _GEN_506 & _GEN_16;
+      automatic logic       _GEN_508 = _tag_memories_3_io_wr_en_T & _GEN_506 & _GEN_18;
+      automatic logic       _GEN_509 = _tag_memories_3_io_wr_en_T & _GEN_506 & _GEN_19;
+      automatic logic       _GEN_510 =
+        _tag_memories_3_io_wr_en_T & _GEN_506 & (&allocate_way);
+      automatic logic       _GEN_511 = allocate_set == 6'h1F;
+      automatic logic       _GEN_512 = _tag_memories_3_io_wr_en_T & _GEN_511 & _GEN_16;
+      automatic logic       _GEN_513 = _tag_memories_3_io_wr_en_T & _GEN_511 & _GEN_18;
+      automatic logic       _GEN_514 = _tag_memories_3_io_wr_en_T & _GEN_511 & _GEN_19;
+      automatic logic       _GEN_515 =
+        _tag_memories_3_io_wr_en_T & _GEN_511 & (&allocate_way);
+      automatic logic       _GEN_516 = allocate_set == 6'h20;
+      automatic logic       _GEN_517 = _tag_memories_3_io_wr_en_T & _GEN_516 & _GEN_16;
+      automatic logic       _GEN_518 = _tag_memories_3_io_wr_en_T & _GEN_516 & _GEN_18;
+      automatic logic       _GEN_519 = _tag_memories_3_io_wr_en_T & _GEN_516 & _GEN_19;
+      automatic logic       _GEN_520 =
+        _tag_memories_3_io_wr_en_T & _GEN_516 & (&allocate_way);
+      automatic logic       _GEN_521 = allocate_set == 6'h21;
+      automatic logic       _GEN_522 = _tag_memories_3_io_wr_en_T & _GEN_521 & _GEN_16;
+      automatic logic       _GEN_523 = _tag_memories_3_io_wr_en_T & _GEN_521 & _GEN_18;
+      automatic logic       _GEN_524 = _tag_memories_3_io_wr_en_T & _GEN_521 & _GEN_19;
+      automatic logic       _GEN_525 =
+        _tag_memories_3_io_wr_en_T & _GEN_521 & (&allocate_way);
+      automatic logic       _GEN_526 = allocate_set == 6'h22;
+      automatic logic       _GEN_527 = _tag_memories_3_io_wr_en_T & _GEN_526 & _GEN_16;
+      automatic logic       _GEN_528 = _tag_memories_3_io_wr_en_T & _GEN_526 & _GEN_18;
+      automatic logic       _GEN_529 = _tag_memories_3_io_wr_en_T & _GEN_526 & _GEN_19;
+      automatic logic       _GEN_530 =
+        _tag_memories_3_io_wr_en_T & _GEN_526 & (&allocate_way);
+      automatic logic       _GEN_531 = allocate_set == 6'h23;
+      automatic logic       _GEN_532 = _tag_memories_3_io_wr_en_T & _GEN_531 & _GEN_16;
+      automatic logic       _GEN_533 = _tag_memories_3_io_wr_en_T & _GEN_531 & _GEN_18;
+      automatic logic       _GEN_534 = _tag_memories_3_io_wr_en_T & _GEN_531 & _GEN_19;
+      automatic logic       _GEN_535 =
+        _tag_memories_3_io_wr_en_T & _GEN_531 & (&allocate_way);
+      automatic logic       _GEN_536 = allocate_set == 6'h24;
+      automatic logic       _GEN_537 = _tag_memories_3_io_wr_en_T & _GEN_536 & _GEN_16;
+      automatic logic       _GEN_538 = _tag_memories_3_io_wr_en_T & _GEN_536 & _GEN_18;
+      automatic logic       _GEN_539 = _tag_memories_3_io_wr_en_T & _GEN_536 & _GEN_19;
       automatic logic       _GEN_540 =
+        _tag_memories_3_io_wr_en_T & _GEN_536 & (&allocate_way);
+      automatic logic       _GEN_541 = allocate_set == 6'h25;
+      automatic logic       _GEN_542 = _tag_memories_3_io_wr_en_T & _GEN_541 & _GEN_16;
+      automatic logic       _GEN_543 = _tag_memories_3_io_wr_en_T & _GEN_541 & _GEN_18;
+      automatic logic       _GEN_544 = _tag_memories_3_io_wr_en_T & _GEN_541 & _GEN_19;
+      automatic logic       _GEN_545 =
+        _tag_memories_3_io_wr_en_T & _GEN_541 & (&allocate_way);
+      automatic logic       _GEN_546 = allocate_set == 6'h26;
+      automatic logic       _GEN_547 = _tag_memories_3_io_wr_en_T & _GEN_546 & _GEN_16;
+      automatic logic       _GEN_548 = _tag_memories_3_io_wr_en_T & _GEN_546 & _GEN_18;
+      automatic logic       _GEN_549 = _tag_memories_3_io_wr_en_T & _GEN_546 & _GEN_19;
+      automatic logic       _GEN_550 =
+        _tag_memories_3_io_wr_en_T & _GEN_546 & (&allocate_way);
+      automatic logic       _GEN_551 = allocate_set == 6'h27;
+      automatic logic       _GEN_552 = _tag_memories_3_io_wr_en_T & _GEN_551 & _GEN_16;
+      automatic logic       _GEN_553 = _tag_memories_3_io_wr_en_T & _GEN_551 & _GEN_18;
+      automatic logic       _GEN_554 = _tag_memories_3_io_wr_en_T & _GEN_551 & _GEN_19;
+      automatic logic       _GEN_555 =
+        _tag_memories_3_io_wr_en_T & _GEN_551 & (&allocate_way);
+      automatic logic       _GEN_556 = allocate_set == 6'h28;
+      automatic logic       _GEN_557 = _tag_memories_3_io_wr_en_T & _GEN_556 & _GEN_16;
+      automatic logic       _GEN_558 = _tag_memories_3_io_wr_en_T & _GEN_556 & _GEN_18;
+      automatic logic       _GEN_559 = _tag_memories_3_io_wr_en_T & _GEN_556 & _GEN_19;
+      automatic logic       _GEN_560 =
+        _tag_memories_3_io_wr_en_T & _GEN_556 & (&allocate_way);
+      automatic logic       _GEN_561 = allocate_set == 6'h29;
+      automatic logic       _GEN_562 = _tag_memories_3_io_wr_en_T & _GEN_561 & _GEN_16;
+      automatic logic       _GEN_563 = _tag_memories_3_io_wr_en_T & _GEN_561 & _GEN_18;
+      automatic logic       _GEN_564 = _tag_memories_3_io_wr_en_T & _GEN_561 & _GEN_19;
+      automatic logic       _GEN_565 =
+        _tag_memories_3_io_wr_en_T & _GEN_561 & (&allocate_way);
+      automatic logic       _GEN_566 = allocate_set == 6'h2A;
+      automatic logic       _GEN_567 = _tag_memories_3_io_wr_en_T & _GEN_566 & _GEN_16;
+      automatic logic       _GEN_568 = _tag_memories_3_io_wr_en_T & _GEN_566 & _GEN_18;
+      automatic logic       _GEN_569 = _tag_memories_3_io_wr_en_T & _GEN_566 & _GEN_19;
+      automatic logic       _GEN_570 =
+        _tag_memories_3_io_wr_en_T & _GEN_566 & (&allocate_way);
+      automatic logic       _GEN_571 = allocate_set == 6'h2B;
+      automatic logic       _GEN_572 = _tag_memories_3_io_wr_en_T & _GEN_571 & _GEN_16;
+      automatic logic       _GEN_573 = _tag_memories_3_io_wr_en_T & _GEN_571 & _GEN_18;
+      automatic logic       _GEN_574 = _tag_memories_3_io_wr_en_T & _GEN_571 & _GEN_19;
+      automatic logic       _GEN_575 =
+        _tag_memories_3_io_wr_en_T & _GEN_571 & (&allocate_way);
+      automatic logic       _GEN_576 = allocate_set == 6'h2C;
+      automatic logic       _GEN_577 = _tag_memories_3_io_wr_en_T & _GEN_576 & _GEN_16;
+      automatic logic       _GEN_578 = _tag_memories_3_io_wr_en_T & _GEN_576 & _GEN_18;
+      automatic logic       _GEN_579 = _tag_memories_3_io_wr_en_T & _GEN_576 & _GEN_19;
+      automatic logic       _GEN_580 =
+        _tag_memories_3_io_wr_en_T & _GEN_576 & (&allocate_way);
+      automatic logic       _GEN_581 = allocate_set == 6'h2D;
+      automatic logic       _GEN_582 = _tag_memories_3_io_wr_en_T & _GEN_581 & _GEN_16;
+      automatic logic       _GEN_583 = _tag_memories_3_io_wr_en_T & _GEN_581 & _GEN_18;
+      automatic logic       _GEN_584 = _tag_memories_3_io_wr_en_T & _GEN_581 & _GEN_19;
+      automatic logic       _GEN_585 =
+        _tag_memories_3_io_wr_en_T & _GEN_581 & (&allocate_way);
+      automatic logic       _GEN_586 = allocate_set == 6'h2E;
+      automatic logic       _GEN_587 = _tag_memories_3_io_wr_en_T & _GEN_586 & _GEN_16;
+      automatic logic       _GEN_588 = _tag_memories_3_io_wr_en_T & _GEN_586 & _GEN_18;
+      automatic logic       _GEN_589 = _tag_memories_3_io_wr_en_T & _GEN_586 & _GEN_19;
+      automatic logic       _GEN_590 =
+        _tag_memories_3_io_wr_en_T & _GEN_586 & (&allocate_way);
+      automatic logic       _GEN_591 = allocate_set == 6'h2F;
+      automatic logic       _GEN_592 = _tag_memories_3_io_wr_en_T & _GEN_591 & _GEN_16;
+      automatic logic       _GEN_593 = _tag_memories_3_io_wr_en_T & _GEN_591 & _GEN_18;
+      automatic logic       _GEN_594 = _tag_memories_3_io_wr_en_T & _GEN_591 & _GEN_19;
+      automatic logic       _GEN_595 =
+        _tag_memories_3_io_wr_en_T & _GEN_591 & (&allocate_way);
+      automatic logic       _GEN_596 = allocate_set == 6'h30;
+      automatic logic       _GEN_597 = _tag_memories_3_io_wr_en_T & _GEN_596 & _GEN_16;
+      automatic logic       _GEN_598 = _tag_memories_3_io_wr_en_T & _GEN_596 & _GEN_18;
+      automatic logic       _GEN_599 = _tag_memories_3_io_wr_en_T & _GEN_596 & _GEN_19;
+      automatic logic       _GEN_600 =
+        _tag_memories_3_io_wr_en_T & _GEN_596 & (&allocate_way);
+      automatic logic       _GEN_601 = allocate_set == 6'h31;
+      automatic logic       _GEN_602 = _tag_memories_3_io_wr_en_T & _GEN_601 & _GEN_16;
+      automatic logic       _GEN_603 = _tag_memories_3_io_wr_en_T & _GEN_601 & _GEN_18;
+      automatic logic       _GEN_604 = _tag_memories_3_io_wr_en_T & _GEN_601 & _GEN_19;
+      automatic logic       _GEN_605 =
+        _tag_memories_3_io_wr_en_T & _GEN_601 & (&allocate_way);
+      automatic logic       _GEN_606 = allocate_set == 6'h32;
+      automatic logic       _GEN_607 = _tag_memories_3_io_wr_en_T & _GEN_606 & _GEN_16;
+      automatic logic       _GEN_608 = _tag_memories_3_io_wr_en_T & _GEN_606 & _GEN_18;
+      automatic logic       _GEN_609 = _tag_memories_3_io_wr_en_T & _GEN_606 & _GEN_19;
+      automatic logic       _GEN_610 =
+        _tag_memories_3_io_wr_en_T & _GEN_606 & (&allocate_way);
+      automatic logic       _GEN_611 = allocate_set == 6'h33;
+      automatic logic       _GEN_612 = _tag_memories_3_io_wr_en_T & _GEN_611 & _GEN_16;
+      automatic logic       _GEN_613 = _tag_memories_3_io_wr_en_T & _GEN_611 & _GEN_18;
+      automatic logic       _GEN_614 = _tag_memories_3_io_wr_en_T & _GEN_611 & _GEN_19;
+      automatic logic       _GEN_615 =
+        _tag_memories_3_io_wr_en_T & _GEN_611 & (&allocate_way);
+      automatic logic       _GEN_616 = allocate_set == 6'h34;
+      automatic logic       _GEN_617 = _tag_memories_3_io_wr_en_T & _GEN_616 & _GEN_16;
+      automatic logic       _GEN_618 = _tag_memories_3_io_wr_en_T & _GEN_616 & _GEN_18;
+      automatic logic       _GEN_619 = _tag_memories_3_io_wr_en_T & _GEN_616 & _GEN_19;
+      automatic logic       _GEN_620 =
+        _tag_memories_3_io_wr_en_T & _GEN_616 & (&allocate_way);
+      automatic logic       _GEN_621 = allocate_set == 6'h35;
+      automatic logic       _GEN_622 = _tag_memories_3_io_wr_en_T & _GEN_621 & _GEN_16;
+      automatic logic       _GEN_623 = _tag_memories_3_io_wr_en_T & _GEN_621 & _GEN_18;
+      automatic logic       _GEN_624 = _tag_memories_3_io_wr_en_T & _GEN_621 & _GEN_19;
+      automatic logic       _GEN_625 =
+        _tag_memories_3_io_wr_en_T & _GEN_621 & (&allocate_way);
+      automatic logic       _GEN_626 = allocate_set == 6'h36;
+      automatic logic       _GEN_627 = _tag_memories_3_io_wr_en_T & _GEN_626 & _GEN_16;
+      automatic logic       _GEN_628 = _tag_memories_3_io_wr_en_T & _GEN_626 & _GEN_18;
+      automatic logic       _GEN_629 = _tag_memories_3_io_wr_en_T & _GEN_626 & _GEN_19;
+      automatic logic       _GEN_630 =
+        _tag_memories_3_io_wr_en_T & _GEN_626 & (&allocate_way);
+      automatic logic       _GEN_631 = allocate_set == 6'h37;
+      automatic logic       _GEN_632 = _tag_memories_3_io_wr_en_T & _GEN_631 & _GEN_16;
+      automatic logic       _GEN_633 = _tag_memories_3_io_wr_en_T & _GEN_631 & _GEN_18;
+      automatic logic       _GEN_634 = _tag_memories_3_io_wr_en_T & _GEN_631 & _GEN_19;
+      automatic logic       _GEN_635 =
+        _tag_memories_3_io_wr_en_T & _GEN_631 & (&allocate_way);
+      automatic logic       _GEN_636 = allocate_set == 6'h38;
+      automatic logic       _GEN_637 = _tag_memories_3_io_wr_en_T & _GEN_636 & _GEN_16;
+      automatic logic       _GEN_638 = _tag_memories_3_io_wr_en_T & _GEN_636 & _GEN_18;
+      automatic logic       _GEN_639 = _tag_memories_3_io_wr_en_T & _GEN_636 & _GEN_19;
+      automatic logic       _GEN_640 =
+        _tag_memories_3_io_wr_en_T & _GEN_636 & (&allocate_way);
+      automatic logic       _GEN_641 = allocate_set == 6'h39;
+      automatic logic       _GEN_642 = _tag_memories_3_io_wr_en_T & _GEN_641 & _GEN_16;
+      automatic logic       _GEN_643 = _tag_memories_3_io_wr_en_T & _GEN_641 & _GEN_18;
+      automatic logic       _GEN_644 = _tag_memories_3_io_wr_en_T & _GEN_641 & _GEN_19;
+      automatic logic       _GEN_645 =
+        _tag_memories_3_io_wr_en_T & _GEN_641 & (&allocate_way);
+      automatic logic       _GEN_646 = allocate_set == 6'h3A;
+      automatic logic       _GEN_647 = _tag_memories_3_io_wr_en_T & _GEN_646 & _GEN_16;
+      automatic logic       _GEN_648 = _tag_memories_3_io_wr_en_T & _GEN_646 & _GEN_18;
+      automatic logic       _GEN_649 = _tag_memories_3_io_wr_en_T & _GEN_646 & _GEN_19;
+      automatic logic       _GEN_650 =
+        _tag_memories_3_io_wr_en_T & _GEN_646 & (&allocate_way);
+      automatic logic       _GEN_651 = allocate_set == 6'h3B;
+      automatic logic       _GEN_652 = _tag_memories_3_io_wr_en_T & _GEN_651 & _GEN_16;
+      automatic logic       _GEN_653 = _tag_memories_3_io_wr_en_T & _GEN_651 & _GEN_18;
+      automatic logic       _GEN_654 = _tag_memories_3_io_wr_en_T & _GEN_651 & _GEN_19;
+      automatic logic       _GEN_655 =
+        _tag_memories_3_io_wr_en_T & _GEN_651 & (&allocate_way);
+      automatic logic       _GEN_656 = allocate_set == 6'h3C;
+      automatic logic       _GEN_657 = _tag_memories_3_io_wr_en_T & _GEN_656 & _GEN_16;
+      automatic logic       _GEN_658 = _tag_memories_3_io_wr_en_T & _GEN_656 & _GEN_18;
+      automatic logic       _GEN_659 = _tag_memories_3_io_wr_en_T & _GEN_656 & _GEN_19;
+      automatic logic       _GEN_660 =
+        _tag_memories_3_io_wr_en_T & _GEN_656 & (&allocate_way);
+      automatic logic       _GEN_661 = allocate_set == 6'h3D;
+      automatic logic       _GEN_662 = _tag_memories_3_io_wr_en_T & _GEN_661 & _GEN_16;
+      automatic logic       _GEN_663 = _tag_memories_3_io_wr_en_T & _GEN_661 & _GEN_18;
+      automatic logic       _GEN_664 = _tag_memories_3_io_wr_en_T & _GEN_661 & _GEN_19;
+      automatic logic       _GEN_665 =
+        _tag_memories_3_io_wr_en_T & _GEN_661 & (&allocate_way);
+      automatic logic       _GEN_666 = allocate_set == 6'h3E;
+      automatic logic       _GEN_667 = _tag_memories_3_io_wr_en_T & _GEN_666 & _GEN_16;
+      automatic logic       _GEN_668 = _tag_memories_3_io_wr_en_T & _GEN_666 & _GEN_18;
+      automatic logic       _GEN_669 = _tag_memories_3_io_wr_en_T & _GEN_666 & _GEN_19;
+      automatic logic       _GEN_670 =
+        _tag_memories_3_io_wr_en_T & _GEN_666 & (&allocate_way);
+      automatic logic       _GEN_671 =
+        _tag_memories_3_io_wr_en_T & (&allocate_set) & _GEN_16;
+      automatic logic       _GEN_672 =
+        _tag_memories_3_io_wr_en_T & (&allocate_set) & _GEN_18;
+      automatic logic       _GEN_673 =
+        _tag_memories_3_io_wr_en_T & (&allocate_set) & _GEN_19;
+      automatic logic       _GEN_674 =
         _tag_memories_3_io_wr_en_T & (&allocate_set) & (&allocate_way);
       automatic logic [3:0] PLRU_memory_updated_PLRU;
-      automatic logic [1:0] _GEN_541 =
+      automatic logic [1:0] _GEN_675 =
         tag_hit_OH_0 ? 2'h0 : tag_hit_OH_1 ? 2'h1 : {1'h1, ~tag_hit_OH_2};
-      automatic logic       _GEN_542 = REG_4 == 6'h0;
-      automatic logic       _GEN_543 = _GEN_541 == 2'h0;
-      automatic logic       _GEN_544 = _GEN_541 == 2'h1;
-      automatic logic       _GEN_545 = _GEN_541 == 2'h2;
-      automatic logic       _GEN_546 = REG_4 == 6'h1;
-      automatic logic       _GEN_547 = REG_4 == 6'h2;
-      automatic logic       _GEN_548 = REG_4 == 6'h3;
-      automatic logic       _GEN_549 = REG_4 == 6'h4;
-      automatic logic       _GEN_550 = REG_4 == 6'h5;
-      automatic logic       _GEN_551 = REG_4 == 6'h6;
-      automatic logic       _GEN_552 = REG_4 == 6'h7;
-      automatic logic       _GEN_553 = REG_4 == 6'h8;
-      automatic logic       _GEN_554 = REG_4 == 6'h9;
-      automatic logic       _GEN_555 = REG_4 == 6'hA;
-      automatic logic       _GEN_556 = REG_4 == 6'hB;
-      automatic logic       _GEN_557 = REG_4 == 6'hC;
-      automatic logic       _GEN_558 = REG_4 == 6'hD;
-      automatic logic       _GEN_559 = REG_4 == 6'hE;
-      automatic logic       _GEN_560 = REG_4 == 6'hF;
-      automatic logic       _GEN_561 = REG_4 == 6'h10;
-      automatic logic       _GEN_562 = REG_4 == 6'h11;
-      automatic logic       _GEN_563 = REG_4 == 6'h12;
-      automatic logic       _GEN_564 = REG_4 == 6'h13;
-      automatic logic       _GEN_565 = REG_4 == 6'h14;
-      automatic logic       _GEN_566 = REG_4 == 6'h15;
-      automatic logic       _GEN_567 = REG_4 == 6'h16;
-      automatic logic       _GEN_568 = REG_4 == 6'h17;
-      automatic logic       _GEN_569 = REG_4 == 6'h18;
-      automatic logic       _GEN_570 = REG_4 == 6'h19;
-      automatic logic       _GEN_571 = REG_4 == 6'h1A;
-      automatic logic       _GEN_572 = REG_4 == 6'h1B;
-      automatic logic       _GEN_573 = REG_4 == 6'h1C;
-      automatic logic       _GEN_574 = REG_4 == 6'h1D;
-      automatic logic       _GEN_575 = REG_4 == 6'h1E;
-      automatic logic       _GEN_576 = REG_4 == 6'h1F;
-      automatic logic       _GEN_577 = REG_4 == 6'h20;
-      automatic logic       _GEN_578 = REG_4 == 6'h21;
-      automatic logic       _GEN_579 = REG_4 == 6'h22;
-      automatic logic       _GEN_580 = REG_4 == 6'h23;
-      automatic logic       _GEN_581 = REG_4 == 6'h24;
-      automatic logic       _GEN_582 = REG_4 == 6'h25;
-      automatic logic       _GEN_583 = REG_4 == 6'h26;
-      automatic logic       _GEN_584 = REG_4 == 6'h27;
-      automatic logic       _GEN_585 = REG_4 == 6'h28;
-      automatic logic       _GEN_586 = REG_4 == 6'h29;
-      automatic logic       _GEN_587 = REG_4 == 6'h2A;
-      automatic logic       _GEN_588 = REG_4 == 6'h2B;
-      automatic logic       _GEN_589 = REG_4 == 6'h2C;
-      automatic logic       _GEN_590 = REG_4 == 6'h2D;
-      automatic logic       _GEN_591 = REG_4 == 6'h2E;
-      automatic logic       _GEN_592 = REG_4 == 6'h2F;
-      automatic logic       _GEN_593 = REG_4 == 6'h30;
-      automatic logic       _GEN_594 = REG_4 == 6'h31;
-      automatic logic       _GEN_595 = REG_4 == 6'h32;
-      automatic logic       _GEN_596 = REG_4 == 6'h33;
-      automatic logic       _GEN_597 = REG_4 == 6'h34;
-      automatic logic       _GEN_598 = REG_4 == 6'h35;
-      automatic logic       _GEN_599 = REG_4 == 6'h36;
-      automatic logic       _GEN_600 = REG_4 == 6'h37;
-      automatic logic       _GEN_601 = REG_4 == 6'h38;
-      automatic logic       _GEN_602 = REG_4 == 6'h39;
-      automatic logic       _GEN_603 = REG_4 == 6'h3A;
-      automatic logic       _GEN_604 = REG_4 == 6'h3B;
-      automatic logic       _GEN_605 = REG_4 == 6'h3C;
-      automatic logic       _GEN_606 = REG_4 == 6'h3D;
-      automatic logic       _GEN_607 = REG_4 == 6'h3E;
-      _GEN_154 = m_axi_arready & m_axi_arvalid_0;
-      _GEN_155 = m_axi_awready & m_axi_awvalid_0;
+      automatic logic       _GEN_676 = REG_4 == 6'h0;
+      automatic logic       _GEN_677 = _GEN_675 == 2'h0;
+      automatic logic       _GEN_678 = _GEN_675 == 2'h1;
+      automatic logic       _GEN_679 = _GEN_675 == 2'h2;
+      automatic logic       _GEN_680 = REG_4 == 6'h1;
+      automatic logic       _GEN_681 = REG_4 == 6'h2;
+      automatic logic       _GEN_682 = REG_4 == 6'h3;
+      automatic logic       _GEN_683 = REG_4 == 6'h4;
+      automatic logic       _GEN_684 = REG_4 == 6'h5;
+      automatic logic       _GEN_685 = REG_4 == 6'h6;
+      automatic logic       _GEN_686 = REG_4 == 6'h7;
+      automatic logic       _GEN_687 = REG_4 == 6'h8;
+      automatic logic       _GEN_688 = REG_4 == 6'h9;
+      automatic logic       _GEN_689 = REG_4 == 6'hA;
+      automatic logic       _GEN_690 = REG_4 == 6'hB;
+      automatic logic       _GEN_691 = REG_4 == 6'hC;
+      automatic logic       _GEN_692 = REG_4 == 6'hD;
+      automatic logic       _GEN_693 = REG_4 == 6'hE;
+      automatic logic       _GEN_694 = REG_4 == 6'hF;
+      automatic logic       _GEN_695 = REG_4 == 6'h10;
+      automatic logic       _GEN_696 = REG_4 == 6'h11;
+      automatic logic       _GEN_697 = REG_4 == 6'h12;
+      automatic logic       _GEN_698 = REG_4 == 6'h13;
+      automatic logic       _GEN_699 = REG_4 == 6'h14;
+      automatic logic       _GEN_700 = REG_4 == 6'h15;
+      automatic logic       _GEN_701 = REG_4 == 6'h16;
+      automatic logic       _GEN_702 = REG_4 == 6'h17;
+      automatic logic       _GEN_703 = REG_4 == 6'h18;
+      automatic logic       _GEN_704 = REG_4 == 6'h19;
+      automatic logic       _GEN_705 = REG_4 == 6'h1A;
+      automatic logic       _GEN_706 = REG_4 == 6'h1B;
+      automatic logic       _GEN_707 = REG_4 == 6'h1C;
+      automatic logic       _GEN_708 = REG_4 == 6'h1D;
+      automatic logic       _GEN_709 = REG_4 == 6'h1E;
+      automatic logic       _GEN_710 = REG_4 == 6'h1F;
+      automatic logic       _GEN_711 = REG_4 == 6'h20;
+      automatic logic       _GEN_712 = REG_4 == 6'h21;
+      automatic logic       _GEN_713 = REG_4 == 6'h22;
+      automatic logic       _GEN_714 = REG_4 == 6'h23;
+      automatic logic       _GEN_715 = REG_4 == 6'h24;
+      automatic logic       _GEN_716 = REG_4 == 6'h25;
+      automatic logic       _GEN_717 = REG_4 == 6'h26;
+      automatic logic       _GEN_718 = REG_4 == 6'h27;
+      automatic logic       _GEN_719 = REG_4 == 6'h28;
+      automatic logic       _GEN_720 = REG_4 == 6'h29;
+      automatic logic       _GEN_721 = REG_4 == 6'h2A;
+      automatic logic       _GEN_722 = REG_4 == 6'h2B;
+      automatic logic       _GEN_723 = REG_4 == 6'h2C;
+      automatic logic       _GEN_724 = REG_4 == 6'h2D;
+      automatic logic       _GEN_725 = REG_4 == 6'h2E;
+      automatic logic       _GEN_726 = REG_4 == 6'h2F;
+      automatic logic       _GEN_727 = REG_4 == 6'h30;
+      automatic logic       _GEN_728 = REG_4 == 6'h31;
+      automatic logic       _GEN_729 = REG_4 == 6'h32;
+      automatic logic       _GEN_730 = REG_4 == 6'h33;
+      automatic logic       _GEN_731 = REG_4 == 6'h34;
+      automatic logic       _GEN_732 = REG_4 == 6'h35;
+      automatic logic       _GEN_733 = REG_4 == 6'h36;
+      automatic logic       _GEN_734 = REG_4 == 6'h37;
+      automatic logic       _GEN_735 = REG_4 == 6'h38;
+      automatic logic       _GEN_736 = REG_4 == 6'h39;
+      automatic logic       _GEN_737 = REG_4 == 6'h3A;
+      automatic logic       _GEN_738 = REG_4 == 6'h3B;
+      automatic logic       _GEN_739 = REG_4 == 6'h3C;
+      automatic logic       _GEN_740 = REG_4 == 6'h3D;
+      automatic logic       _GEN_741 = REG_4 == 6'h3E;
+      _GEN_291 = m_axi_arready & m_axi_arvalid_0;
+      _GEN_292 = m_axi_awready & m_axi_awvalid_0;
       PLRU_memory_updated_PLRU =
-        _GEN_19[hit_set] | {tag_hit_OH_3, tag_hit_OH_2, tag_hit_OH_1, tag_hit_OH_0};
+        _GEN_23[hit_set] | {tag_hit_OH_3, tag_hit_OH_2, tag_hit_OH_1, tag_hit_OH_0};
       if (|AXI_REQUEST_STATE) begin
-        automatic logic [7:0][2:0] _GEN_608;
-        _GEN_608 =
+        automatic logic [7:0][2:0] _GEN_742;
+        _GEN_742 =
           {{AXI_REQUEST_STATE},
            {m_axi_bready_0 & m_axi_bvalid ? 3'h0 : 3'h6},
-           {_GEN_154 ? 3'h2 : 3'h5},
+           {_GEN_291 ? 3'h2 : 3'h5},
            {{1'h1, W_done, 1'h0}},
            {R_done ? 3'h0 : 3'h3},
            {{R_done & W_done, 2'h2}},
-           {_GEN_155 ? 3'h2 : 3'h1},
+           {_GEN_292 ? 3'h2 : 3'h1},
            {AXI_REQUEST_STATE}};
-        AXI_REQUEST_STATE <= _GEN_608[AXI_REQUEST_STATE];
+        AXI_REQUEST_STATE <= _GEN_742[AXI_REQUEST_STATE];
       end
-      else if (_GEN_154 & _GEN_155)
+      else if (_GEN_291 & _GEN_292)
         AXI_REQUEST_STATE <= 3'h2;
-      else if (_GEN_154 & ~m_axi_awvalid_0)
+      else if (_GEN_291 & ~m_axi_awvalid_0)
         AXI_REQUEST_STATE <= 3'h3;
-      else if (_GEN_154)
+      else if (_GEN_291)
         AXI_REQUEST_STATE <= 3'h1;
-      else if (_GEN_155 & ~m_axi_arvalid_0)
+      else if (_GEN_292 & ~m_axi_arvalid_0)
         AXI_REQUEST_STATE <= 3'h4;
-      else if (_GEN_155)
+      else if (_GEN_292)
         AXI_REQUEST_STATE <= 3'h5;
       else
         AXI_REQUEST_STATE <= 3'h0;
-      if (_GEN_0 & _GEN_101 | _GEN_102)
+      if (_GEN_0 & _GEN_239 | _GEN & _GEN_239)
         R_done <= m_axi_rlast;
       else if (~(|AXI_REQUEST_STATE))
         R_done <= ~m_axi_arvalid_0;
-      if (_GEN_13)
+      if (_GEN_14)
         W_done <= ~(|write_counter);
       else if (_GEN & ~W_done | _GEN_4) begin
-        if (_GEN_13)
+        if (_GEN_14)
           W_done <= ~(|write_counter);
         else if (_GEN_11)
           W_done <= ~(|write_counter);
@@ -4610,538 +6310,538 @@ module L1_data_cache(
       end
       else if (~(|AXI_REQUEST_STATE))
         W_done <= ~m_axi_awvalid_0;
-      if (_GEN_104)
+      if (_GEN_241)
         write_counter <= write_counter - 32'h1;
-      else if (_GEN_103)
+      else if (_GEN_240)
         write_counter <= write_counter - 32'h1;
-      else if (_GEN_99)
+      else if (_GEN_237)
         write_counter <= write_counter - 32'h1;
-      else if (~(|AXI_REQUEST_STATE) & _GEN_155)
+      else if (~(|AXI_REQUEST_STATE) & _GEN_292)
         write_counter <= {24'h0, m_axi_awlen_0};
       if (|DATA_CACHE_STATE) begin
-        if (~_GEN_88) begin
-          if (_GEN_89)
+        if (~_GEN_222) begin
+          if (_GEN_223)
             DATA_CACHE_STATE <= 2'h3;
-          else if (_GEN_90)
+          else if (_GEN_224)
             DATA_CACHE_STATE <= 2'h0;
         end
       end
-      else if (_GEN_87) begin
+      else if (_GEN_221) begin
       end
       else
         DATA_CACHE_STATE <= 2'h2;
       valid_memory_0_0 <=
-        _GEN_223 | ~(valid_miss & _GEN_156 & _GEN_157) & valid_memory_0_0;
+        _GEN_357 | ~(valid_miss & _GEN_293 & _GEN_20) & valid_memory_0_0;
       valid_memory_0_1 <=
-        _GEN_224 | ~(valid_miss & _GEN_156 & _GEN_158) & valid_memory_0_1;
+        _GEN_358 | ~(valid_miss & _GEN_293 & _GEN_21) & valid_memory_0_1;
       valid_memory_0_2 <=
-        _GEN_225 | ~(valid_miss & _GEN_156 & _GEN_159) & valid_memory_0_2;
+        _GEN_359 | ~(valid_miss & _GEN_293 & _GEN_22) & valid_memory_0_2;
       valid_memory_0_3 <=
-        _GEN_226 | ~(valid_miss & _GEN_156 & (&evict_way)) & valid_memory_0_3;
+        _GEN_360 | ~(valid_miss & _GEN_293 & (&evict_way)) & valid_memory_0_3;
       valid_memory_1_0 <=
-        _GEN_228 | ~(valid_miss & _GEN_160 & _GEN_157) & valid_memory_1_0;
+        _GEN_362 | ~(valid_miss & _GEN_294 & _GEN_20) & valid_memory_1_0;
       valid_memory_1_1 <=
-        _GEN_229 | ~(valid_miss & _GEN_160 & _GEN_158) & valid_memory_1_1;
+        _GEN_363 | ~(valid_miss & _GEN_294 & _GEN_21) & valid_memory_1_1;
       valid_memory_1_2 <=
-        _GEN_230 | ~(valid_miss & _GEN_160 & _GEN_159) & valid_memory_1_2;
+        _GEN_364 | ~(valid_miss & _GEN_294 & _GEN_22) & valid_memory_1_2;
       valid_memory_1_3 <=
-        _GEN_231 | ~(valid_miss & _GEN_160 & (&evict_way)) & valid_memory_1_3;
+        _GEN_365 | ~(valid_miss & _GEN_294 & (&evict_way)) & valid_memory_1_3;
       valid_memory_2_0 <=
-        _GEN_233 | ~(valid_miss & _GEN_161 & _GEN_157) & valid_memory_2_0;
+        _GEN_367 | ~(valid_miss & _GEN_295 & _GEN_20) & valid_memory_2_0;
       valid_memory_2_1 <=
-        _GEN_234 | ~(valid_miss & _GEN_161 & _GEN_158) & valid_memory_2_1;
+        _GEN_368 | ~(valid_miss & _GEN_295 & _GEN_21) & valid_memory_2_1;
       valid_memory_2_2 <=
-        _GEN_235 | ~(valid_miss & _GEN_161 & _GEN_159) & valid_memory_2_2;
+        _GEN_369 | ~(valid_miss & _GEN_295 & _GEN_22) & valid_memory_2_2;
       valid_memory_2_3 <=
-        _GEN_236 | ~(valid_miss & _GEN_161 & (&evict_way)) & valid_memory_2_3;
+        _GEN_370 | ~(valid_miss & _GEN_295 & (&evict_way)) & valid_memory_2_3;
       valid_memory_3_0 <=
-        _GEN_238 | ~(valid_miss & _GEN_162 & _GEN_157) & valid_memory_3_0;
+        _GEN_372 | ~(valid_miss & _GEN_296 & _GEN_20) & valid_memory_3_0;
       valid_memory_3_1 <=
-        _GEN_239 | ~(valid_miss & _GEN_162 & _GEN_158) & valid_memory_3_1;
+        _GEN_373 | ~(valid_miss & _GEN_296 & _GEN_21) & valid_memory_3_1;
       valid_memory_3_2 <=
-        _GEN_240 | ~(valid_miss & _GEN_162 & _GEN_159) & valid_memory_3_2;
+        _GEN_374 | ~(valid_miss & _GEN_296 & _GEN_22) & valid_memory_3_2;
       valid_memory_3_3 <=
-        _GEN_241 | ~(valid_miss & _GEN_162 & (&evict_way)) & valid_memory_3_3;
+        _GEN_375 | ~(valid_miss & _GEN_296 & (&evict_way)) & valid_memory_3_3;
       valid_memory_4_0 <=
-        _GEN_243 | ~(valid_miss & _GEN_163 & _GEN_157) & valid_memory_4_0;
+        _GEN_377 | ~(valid_miss & _GEN_297 & _GEN_20) & valid_memory_4_0;
       valid_memory_4_1 <=
-        _GEN_244 | ~(valid_miss & _GEN_163 & _GEN_158) & valid_memory_4_1;
+        _GEN_378 | ~(valid_miss & _GEN_297 & _GEN_21) & valid_memory_4_1;
       valid_memory_4_2 <=
-        _GEN_245 | ~(valid_miss & _GEN_163 & _GEN_159) & valid_memory_4_2;
+        _GEN_379 | ~(valid_miss & _GEN_297 & _GEN_22) & valid_memory_4_2;
       valid_memory_4_3 <=
-        _GEN_246 | ~(valid_miss & _GEN_163 & (&evict_way)) & valid_memory_4_3;
+        _GEN_380 | ~(valid_miss & _GEN_297 & (&evict_way)) & valid_memory_4_3;
       valid_memory_5_0 <=
-        _GEN_248 | ~(valid_miss & _GEN_164 & _GEN_157) & valid_memory_5_0;
+        _GEN_382 | ~(valid_miss & _GEN_298 & _GEN_20) & valid_memory_5_0;
       valid_memory_5_1 <=
-        _GEN_249 | ~(valid_miss & _GEN_164 & _GEN_158) & valid_memory_5_1;
+        _GEN_383 | ~(valid_miss & _GEN_298 & _GEN_21) & valid_memory_5_1;
       valid_memory_5_2 <=
-        _GEN_250 | ~(valid_miss & _GEN_164 & _GEN_159) & valid_memory_5_2;
+        _GEN_384 | ~(valid_miss & _GEN_298 & _GEN_22) & valid_memory_5_2;
       valid_memory_5_3 <=
-        _GEN_251 | ~(valid_miss & _GEN_164 & (&evict_way)) & valid_memory_5_3;
+        _GEN_385 | ~(valid_miss & _GEN_298 & (&evict_way)) & valid_memory_5_3;
       valid_memory_6_0 <=
-        _GEN_253 | ~(valid_miss & _GEN_165 & _GEN_157) & valid_memory_6_0;
+        _GEN_387 | ~(valid_miss & _GEN_299 & _GEN_20) & valid_memory_6_0;
       valid_memory_6_1 <=
-        _GEN_254 | ~(valid_miss & _GEN_165 & _GEN_158) & valid_memory_6_1;
+        _GEN_388 | ~(valid_miss & _GEN_299 & _GEN_21) & valid_memory_6_1;
       valid_memory_6_2 <=
-        _GEN_255 | ~(valid_miss & _GEN_165 & _GEN_159) & valid_memory_6_2;
+        _GEN_389 | ~(valid_miss & _GEN_299 & _GEN_22) & valid_memory_6_2;
       valid_memory_6_3 <=
-        _GEN_256 | ~(valid_miss & _GEN_165 & (&evict_way)) & valid_memory_6_3;
+        _GEN_390 | ~(valid_miss & _GEN_299 & (&evict_way)) & valid_memory_6_3;
       valid_memory_7_0 <=
-        _GEN_258 | ~(valid_miss & _GEN_166 & _GEN_157) & valid_memory_7_0;
+        _GEN_392 | ~(valid_miss & _GEN_300 & _GEN_20) & valid_memory_7_0;
       valid_memory_7_1 <=
-        _GEN_259 | ~(valid_miss & _GEN_166 & _GEN_158) & valid_memory_7_1;
+        _GEN_393 | ~(valid_miss & _GEN_300 & _GEN_21) & valid_memory_7_1;
       valid_memory_7_2 <=
-        _GEN_260 | ~(valid_miss & _GEN_166 & _GEN_159) & valid_memory_7_2;
+        _GEN_394 | ~(valid_miss & _GEN_300 & _GEN_22) & valid_memory_7_2;
       valid_memory_7_3 <=
-        _GEN_261 | ~(valid_miss & _GEN_166 & (&evict_way)) & valid_memory_7_3;
+        _GEN_395 | ~(valid_miss & _GEN_300 & (&evict_way)) & valid_memory_7_3;
       valid_memory_8_0 <=
-        _GEN_263 | ~(valid_miss & _GEN_167 & _GEN_157) & valid_memory_8_0;
+        _GEN_397 | ~(valid_miss & _GEN_301 & _GEN_20) & valid_memory_8_0;
       valid_memory_8_1 <=
-        _GEN_264 | ~(valid_miss & _GEN_167 & _GEN_158) & valid_memory_8_1;
+        _GEN_398 | ~(valid_miss & _GEN_301 & _GEN_21) & valid_memory_8_1;
       valid_memory_8_2 <=
-        _GEN_265 | ~(valid_miss & _GEN_167 & _GEN_159) & valid_memory_8_2;
+        _GEN_399 | ~(valid_miss & _GEN_301 & _GEN_22) & valid_memory_8_2;
       valid_memory_8_3 <=
-        _GEN_266 | ~(valid_miss & _GEN_167 & (&evict_way)) & valid_memory_8_3;
+        _GEN_400 | ~(valid_miss & _GEN_301 & (&evict_way)) & valid_memory_8_3;
       valid_memory_9_0 <=
-        _GEN_268 | ~(valid_miss & _GEN_168 & _GEN_157) & valid_memory_9_0;
+        _GEN_402 | ~(valid_miss & _GEN_302 & _GEN_20) & valid_memory_9_0;
       valid_memory_9_1 <=
-        _GEN_269 | ~(valid_miss & _GEN_168 & _GEN_158) & valid_memory_9_1;
+        _GEN_403 | ~(valid_miss & _GEN_302 & _GEN_21) & valid_memory_9_1;
       valid_memory_9_2 <=
-        _GEN_270 | ~(valid_miss & _GEN_168 & _GEN_159) & valid_memory_9_2;
+        _GEN_404 | ~(valid_miss & _GEN_302 & _GEN_22) & valid_memory_9_2;
       valid_memory_9_3 <=
-        _GEN_271 | ~(valid_miss & _GEN_168 & (&evict_way)) & valid_memory_9_3;
+        _GEN_405 | ~(valid_miss & _GEN_302 & (&evict_way)) & valid_memory_9_3;
       valid_memory_10_0 <=
-        _GEN_273 | ~(valid_miss & _GEN_169 & _GEN_157) & valid_memory_10_0;
+        _GEN_407 | ~(valid_miss & _GEN_303 & _GEN_20) & valid_memory_10_0;
       valid_memory_10_1 <=
-        _GEN_274 | ~(valid_miss & _GEN_169 & _GEN_158) & valid_memory_10_1;
+        _GEN_408 | ~(valid_miss & _GEN_303 & _GEN_21) & valid_memory_10_1;
       valid_memory_10_2 <=
-        _GEN_275 | ~(valid_miss & _GEN_169 & _GEN_159) & valid_memory_10_2;
+        _GEN_409 | ~(valid_miss & _GEN_303 & _GEN_22) & valid_memory_10_2;
       valid_memory_10_3 <=
-        _GEN_276 | ~(valid_miss & _GEN_169 & (&evict_way)) & valid_memory_10_3;
+        _GEN_410 | ~(valid_miss & _GEN_303 & (&evict_way)) & valid_memory_10_3;
       valid_memory_11_0 <=
-        _GEN_278 | ~(valid_miss & _GEN_170 & _GEN_157) & valid_memory_11_0;
+        _GEN_412 | ~(valid_miss & _GEN_304 & _GEN_20) & valid_memory_11_0;
       valid_memory_11_1 <=
-        _GEN_279 | ~(valid_miss & _GEN_170 & _GEN_158) & valid_memory_11_1;
+        _GEN_413 | ~(valid_miss & _GEN_304 & _GEN_21) & valid_memory_11_1;
       valid_memory_11_2 <=
-        _GEN_280 | ~(valid_miss & _GEN_170 & _GEN_159) & valid_memory_11_2;
+        _GEN_414 | ~(valid_miss & _GEN_304 & _GEN_22) & valid_memory_11_2;
       valid_memory_11_3 <=
-        _GEN_281 | ~(valid_miss & _GEN_170 & (&evict_way)) & valid_memory_11_3;
+        _GEN_415 | ~(valid_miss & _GEN_304 & (&evict_way)) & valid_memory_11_3;
       valid_memory_12_0 <=
-        _GEN_283 | ~(valid_miss & _GEN_171 & _GEN_157) & valid_memory_12_0;
+        _GEN_417 | ~(valid_miss & _GEN_305 & _GEN_20) & valid_memory_12_0;
       valid_memory_12_1 <=
-        _GEN_284 | ~(valid_miss & _GEN_171 & _GEN_158) & valid_memory_12_1;
+        _GEN_418 | ~(valid_miss & _GEN_305 & _GEN_21) & valid_memory_12_1;
       valid_memory_12_2 <=
-        _GEN_285 | ~(valid_miss & _GEN_171 & _GEN_159) & valid_memory_12_2;
+        _GEN_419 | ~(valid_miss & _GEN_305 & _GEN_22) & valid_memory_12_2;
       valid_memory_12_3 <=
-        _GEN_286 | ~(valid_miss & _GEN_171 & (&evict_way)) & valid_memory_12_3;
+        _GEN_420 | ~(valid_miss & _GEN_305 & (&evict_way)) & valid_memory_12_3;
       valid_memory_13_0 <=
-        _GEN_288 | ~(valid_miss & _GEN_172 & _GEN_157) & valid_memory_13_0;
+        _GEN_422 | ~(valid_miss & _GEN_306 & _GEN_20) & valid_memory_13_0;
       valid_memory_13_1 <=
-        _GEN_289 | ~(valid_miss & _GEN_172 & _GEN_158) & valid_memory_13_1;
+        _GEN_423 | ~(valid_miss & _GEN_306 & _GEN_21) & valid_memory_13_1;
       valid_memory_13_2 <=
-        _GEN_290 | ~(valid_miss & _GEN_172 & _GEN_159) & valid_memory_13_2;
+        _GEN_424 | ~(valid_miss & _GEN_306 & _GEN_22) & valid_memory_13_2;
       valid_memory_13_3 <=
-        _GEN_291 | ~(valid_miss & _GEN_172 & (&evict_way)) & valid_memory_13_3;
+        _GEN_425 | ~(valid_miss & _GEN_306 & (&evict_way)) & valid_memory_13_3;
       valid_memory_14_0 <=
-        _GEN_293 | ~(valid_miss & _GEN_173 & _GEN_157) & valid_memory_14_0;
+        _GEN_427 | ~(valid_miss & _GEN_307 & _GEN_20) & valid_memory_14_0;
       valid_memory_14_1 <=
-        _GEN_294 | ~(valid_miss & _GEN_173 & _GEN_158) & valid_memory_14_1;
+        _GEN_428 | ~(valid_miss & _GEN_307 & _GEN_21) & valid_memory_14_1;
       valid_memory_14_2 <=
-        _GEN_295 | ~(valid_miss & _GEN_173 & _GEN_159) & valid_memory_14_2;
+        _GEN_429 | ~(valid_miss & _GEN_307 & _GEN_22) & valid_memory_14_2;
       valid_memory_14_3 <=
-        _GEN_296 | ~(valid_miss & _GEN_173 & (&evict_way)) & valid_memory_14_3;
+        _GEN_430 | ~(valid_miss & _GEN_307 & (&evict_way)) & valid_memory_14_3;
       valid_memory_15_0 <=
-        _GEN_298 | ~(valid_miss & _GEN_174 & _GEN_157) & valid_memory_15_0;
+        _GEN_432 | ~(valid_miss & _GEN_308 & _GEN_20) & valid_memory_15_0;
       valid_memory_15_1 <=
-        _GEN_299 | ~(valid_miss & _GEN_174 & _GEN_158) & valid_memory_15_1;
+        _GEN_433 | ~(valid_miss & _GEN_308 & _GEN_21) & valid_memory_15_1;
       valid_memory_15_2 <=
-        _GEN_300 | ~(valid_miss & _GEN_174 & _GEN_159) & valid_memory_15_2;
+        _GEN_434 | ~(valid_miss & _GEN_308 & _GEN_22) & valid_memory_15_2;
       valid_memory_15_3 <=
-        _GEN_301 | ~(valid_miss & _GEN_174 & (&evict_way)) & valid_memory_15_3;
+        _GEN_435 | ~(valid_miss & _GEN_308 & (&evict_way)) & valid_memory_15_3;
       valid_memory_16_0 <=
-        _GEN_303 | ~(valid_miss & _GEN_175 & _GEN_157) & valid_memory_16_0;
+        _GEN_437 | ~(valid_miss & _GEN_309 & _GEN_20) & valid_memory_16_0;
       valid_memory_16_1 <=
-        _GEN_304 | ~(valid_miss & _GEN_175 & _GEN_158) & valid_memory_16_1;
+        _GEN_438 | ~(valid_miss & _GEN_309 & _GEN_21) & valid_memory_16_1;
       valid_memory_16_2 <=
-        _GEN_305 | ~(valid_miss & _GEN_175 & _GEN_159) & valid_memory_16_2;
+        _GEN_439 | ~(valid_miss & _GEN_309 & _GEN_22) & valid_memory_16_2;
       valid_memory_16_3 <=
-        _GEN_306 | ~(valid_miss & _GEN_175 & (&evict_way)) & valid_memory_16_3;
+        _GEN_440 | ~(valid_miss & _GEN_309 & (&evict_way)) & valid_memory_16_3;
       valid_memory_17_0 <=
-        _GEN_308 | ~(valid_miss & _GEN_176 & _GEN_157) & valid_memory_17_0;
+        _GEN_442 | ~(valid_miss & _GEN_310 & _GEN_20) & valid_memory_17_0;
       valid_memory_17_1 <=
-        _GEN_309 | ~(valid_miss & _GEN_176 & _GEN_158) & valid_memory_17_1;
+        _GEN_443 | ~(valid_miss & _GEN_310 & _GEN_21) & valid_memory_17_1;
       valid_memory_17_2 <=
-        _GEN_310 | ~(valid_miss & _GEN_176 & _GEN_159) & valid_memory_17_2;
+        _GEN_444 | ~(valid_miss & _GEN_310 & _GEN_22) & valid_memory_17_2;
       valid_memory_17_3 <=
-        _GEN_311 | ~(valid_miss & _GEN_176 & (&evict_way)) & valid_memory_17_3;
+        _GEN_445 | ~(valid_miss & _GEN_310 & (&evict_way)) & valid_memory_17_3;
       valid_memory_18_0 <=
-        _GEN_313 | ~(valid_miss & _GEN_177 & _GEN_157) & valid_memory_18_0;
+        _GEN_447 | ~(valid_miss & _GEN_311 & _GEN_20) & valid_memory_18_0;
       valid_memory_18_1 <=
-        _GEN_314 | ~(valid_miss & _GEN_177 & _GEN_158) & valid_memory_18_1;
+        _GEN_448 | ~(valid_miss & _GEN_311 & _GEN_21) & valid_memory_18_1;
       valid_memory_18_2 <=
-        _GEN_315 | ~(valid_miss & _GEN_177 & _GEN_159) & valid_memory_18_2;
+        _GEN_449 | ~(valid_miss & _GEN_311 & _GEN_22) & valid_memory_18_2;
       valid_memory_18_3 <=
-        _GEN_316 | ~(valid_miss & _GEN_177 & (&evict_way)) & valid_memory_18_3;
+        _GEN_450 | ~(valid_miss & _GEN_311 & (&evict_way)) & valid_memory_18_3;
       valid_memory_19_0 <=
-        _GEN_318 | ~(valid_miss & _GEN_178 & _GEN_157) & valid_memory_19_0;
+        _GEN_452 | ~(valid_miss & _GEN_312 & _GEN_20) & valid_memory_19_0;
       valid_memory_19_1 <=
-        _GEN_319 | ~(valid_miss & _GEN_178 & _GEN_158) & valid_memory_19_1;
+        _GEN_453 | ~(valid_miss & _GEN_312 & _GEN_21) & valid_memory_19_1;
       valid_memory_19_2 <=
-        _GEN_320 | ~(valid_miss & _GEN_178 & _GEN_159) & valid_memory_19_2;
+        _GEN_454 | ~(valid_miss & _GEN_312 & _GEN_22) & valid_memory_19_2;
       valid_memory_19_3 <=
-        _GEN_321 | ~(valid_miss & _GEN_178 & (&evict_way)) & valid_memory_19_3;
+        _GEN_455 | ~(valid_miss & _GEN_312 & (&evict_way)) & valid_memory_19_3;
       valid_memory_20_0 <=
-        _GEN_323 | ~(valid_miss & _GEN_179 & _GEN_157) & valid_memory_20_0;
+        _GEN_457 | ~(valid_miss & _GEN_313 & _GEN_20) & valid_memory_20_0;
       valid_memory_20_1 <=
-        _GEN_324 | ~(valid_miss & _GEN_179 & _GEN_158) & valid_memory_20_1;
+        _GEN_458 | ~(valid_miss & _GEN_313 & _GEN_21) & valid_memory_20_1;
       valid_memory_20_2 <=
-        _GEN_325 | ~(valid_miss & _GEN_179 & _GEN_159) & valid_memory_20_2;
+        _GEN_459 | ~(valid_miss & _GEN_313 & _GEN_22) & valid_memory_20_2;
       valid_memory_20_3 <=
-        _GEN_326 | ~(valid_miss & _GEN_179 & (&evict_way)) & valid_memory_20_3;
+        _GEN_460 | ~(valid_miss & _GEN_313 & (&evict_way)) & valid_memory_20_3;
       valid_memory_21_0 <=
-        _GEN_328 | ~(valid_miss & _GEN_180 & _GEN_157) & valid_memory_21_0;
+        _GEN_462 | ~(valid_miss & _GEN_314 & _GEN_20) & valid_memory_21_0;
       valid_memory_21_1 <=
-        _GEN_329 | ~(valid_miss & _GEN_180 & _GEN_158) & valid_memory_21_1;
+        _GEN_463 | ~(valid_miss & _GEN_314 & _GEN_21) & valid_memory_21_1;
       valid_memory_21_2 <=
-        _GEN_330 | ~(valid_miss & _GEN_180 & _GEN_159) & valid_memory_21_2;
+        _GEN_464 | ~(valid_miss & _GEN_314 & _GEN_22) & valid_memory_21_2;
       valid_memory_21_3 <=
-        _GEN_331 | ~(valid_miss & _GEN_180 & (&evict_way)) & valid_memory_21_3;
+        _GEN_465 | ~(valid_miss & _GEN_314 & (&evict_way)) & valid_memory_21_3;
       valid_memory_22_0 <=
-        _GEN_333 | ~(valid_miss & _GEN_181 & _GEN_157) & valid_memory_22_0;
+        _GEN_467 | ~(valid_miss & _GEN_315 & _GEN_20) & valid_memory_22_0;
       valid_memory_22_1 <=
-        _GEN_334 | ~(valid_miss & _GEN_181 & _GEN_158) & valid_memory_22_1;
+        _GEN_468 | ~(valid_miss & _GEN_315 & _GEN_21) & valid_memory_22_1;
       valid_memory_22_2 <=
-        _GEN_335 | ~(valid_miss & _GEN_181 & _GEN_159) & valid_memory_22_2;
+        _GEN_469 | ~(valid_miss & _GEN_315 & _GEN_22) & valid_memory_22_2;
       valid_memory_22_3 <=
-        _GEN_336 | ~(valid_miss & _GEN_181 & (&evict_way)) & valid_memory_22_3;
+        _GEN_470 | ~(valid_miss & _GEN_315 & (&evict_way)) & valid_memory_22_3;
       valid_memory_23_0 <=
-        _GEN_338 | ~(valid_miss & _GEN_182 & _GEN_157) & valid_memory_23_0;
+        _GEN_472 | ~(valid_miss & _GEN_316 & _GEN_20) & valid_memory_23_0;
       valid_memory_23_1 <=
-        _GEN_339 | ~(valid_miss & _GEN_182 & _GEN_158) & valid_memory_23_1;
+        _GEN_473 | ~(valid_miss & _GEN_316 & _GEN_21) & valid_memory_23_1;
       valid_memory_23_2 <=
-        _GEN_340 | ~(valid_miss & _GEN_182 & _GEN_159) & valid_memory_23_2;
+        _GEN_474 | ~(valid_miss & _GEN_316 & _GEN_22) & valid_memory_23_2;
       valid_memory_23_3 <=
-        _GEN_341 | ~(valid_miss & _GEN_182 & (&evict_way)) & valid_memory_23_3;
+        _GEN_475 | ~(valid_miss & _GEN_316 & (&evict_way)) & valid_memory_23_3;
       valid_memory_24_0 <=
-        _GEN_343 | ~(valid_miss & _GEN_183 & _GEN_157) & valid_memory_24_0;
+        _GEN_477 | ~(valid_miss & _GEN_317 & _GEN_20) & valid_memory_24_0;
       valid_memory_24_1 <=
-        _GEN_344 | ~(valid_miss & _GEN_183 & _GEN_158) & valid_memory_24_1;
+        _GEN_478 | ~(valid_miss & _GEN_317 & _GEN_21) & valid_memory_24_1;
       valid_memory_24_2 <=
-        _GEN_345 | ~(valid_miss & _GEN_183 & _GEN_159) & valid_memory_24_2;
+        _GEN_479 | ~(valid_miss & _GEN_317 & _GEN_22) & valid_memory_24_2;
       valid_memory_24_3 <=
-        _GEN_346 | ~(valid_miss & _GEN_183 & (&evict_way)) & valid_memory_24_3;
+        _GEN_480 | ~(valid_miss & _GEN_317 & (&evict_way)) & valid_memory_24_3;
       valid_memory_25_0 <=
-        _GEN_348 | ~(valid_miss & _GEN_184 & _GEN_157) & valid_memory_25_0;
+        _GEN_482 | ~(valid_miss & _GEN_318 & _GEN_20) & valid_memory_25_0;
       valid_memory_25_1 <=
-        _GEN_349 | ~(valid_miss & _GEN_184 & _GEN_158) & valid_memory_25_1;
+        _GEN_483 | ~(valid_miss & _GEN_318 & _GEN_21) & valid_memory_25_1;
       valid_memory_25_2 <=
-        _GEN_350 | ~(valid_miss & _GEN_184 & _GEN_159) & valid_memory_25_2;
+        _GEN_484 | ~(valid_miss & _GEN_318 & _GEN_22) & valid_memory_25_2;
       valid_memory_25_3 <=
-        _GEN_351 | ~(valid_miss & _GEN_184 & (&evict_way)) & valid_memory_25_3;
+        _GEN_485 | ~(valid_miss & _GEN_318 & (&evict_way)) & valid_memory_25_3;
       valid_memory_26_0 <=
-        _GEN_353 | ~(valid_miss & _GEN_185 & _GEN_157) & valid_memory_26_0;
+        _GEN_487 | ~(valid_miss & _GEN_319 & _GEN_20) & valid_memory_26_0;
       valid_memory_26_1 <=
-        _GEN_354 | ~(valid_miss & _GEN_185 & _GEN_158) & valid_memory_26_1;
+        _GEN_488 | ~(valid_miss & _GEN_319 & _GEN_21) & valid_memory_26_1;
       valid_memory_26_2 <=
-        _GEN_355 | ~(valid_miss & _GEN_185 & _GEN_159) & valid_memory_26_2;
+        _GEN_489 | ~(valid_miss & _GEN_319 & _GEN_22) & valid_memory_26_2;
       valid_memory_26_3 <=
-        _GEN_356 | ~(valid_miss & _GEN_185 & (&evict_way)) & valid_memory_26_3;
+        _GEN_490 | ~(valid_miss & _GEN_319 & (&evict_way)) & valid_memory_26_3;
       valid_memory_27_0 <=
-        _GEN_358 | ~(valid_miss & _GEN_186 & _GEN_157) & valid_memory_27_0;
+        _GEN_492 | ~(valid_miss & _GEN_320 & _GEN_20) & valid_memory_27_0;
       valid_memory_27_1 <=
-        _GEN_359 | ~(valid_miss & _GEN_186 & _GEN_158) & valid_memory_27_1;
+        _GEN_493 | ~(valid_miss & _GEN_320 & _GEN_21) & valid_memory_27_1;
       valid_memory_27_2 <=
-        _GEN_360 | ~(valid_miss & _GEN_186 & _GEN_159) & valid_memory_27_2;
+        _GEN_494 | ~(valid_miss & _GEN_320 & _GEN_22) & valid_memory_27_2;
       valid_memory_27_3 <=
-        _GEN_361 | ~(valid_miss & _GEN_186 & (&evict_way)) & valid_memory_27_3;
+        _GEN_495 | ~(valid_miss & _GEN_320 & (&evict_way)) & valid_memory_27_3;
       valid_memory_28_0 <=
-        _GEN_363 | ~(valid_miss & _GEN_187 & _GEN_157) & valid_memory_28_0;
+        _GEN_497 | ~(valid_miss & _GEN_321 & _GEN_20) & valid_memory_28_0;
       valid_memory_28_1 <=
-        _GEN_364 | ~(valid_miss & _GEN_187 & _GEN_158) & valid_memory_28_1;
+        _GEN_498 | ~(valid_miss & _GEN_321 & _GEN_21) & valid_memory_28_1;
       valid_memory_28_2 <=
-        _GEN_365 | ~(valid_miss & _GEN_187 & _GEN_159) & valid_memory_28_2;
+        _GEN_499 | ~(valid_miss & _GEN_321 & _GEN_22) & valid_memory_28_2;
       valid_memory_28_3 <=
-        _GEN_366 | ~(valid_miss & _GEN_187 & (&evict_way)) & valid_memory_28_3;
+        _GEN_500 | ~(valid_miss & _GEN_321 & (&evict_way)) & valid_memory_28_3;
       valid_memory_29_0 <=
-        _GEN_368 | ~(valid_miss & _GEN_188 & _GEN_157) & valid_memory_29_0;
+        _GEN_502 | ~(valid_miss & _GEN_322 & _GEN_20) & valid_memory_29_0;
       valid_memory_29_1 <=
-        _GEN_369 | ~(valid_miss & _GEN_188 & _GEN_158) & valid_memory_29_1;
+        _GEN_503 | ~(valid_miss & _GEN_322 & _GEN_21) & valid_memory_29_1;
       valid_memory_29_2 <=
-        _GEN_370 | ~(valid_miss & _GEN_188 & _GEN_159) & valid_memory_29_2;
+        _GEN_504 | ~(valid_miss & _GEN_322 & _GEN_22) & valid_memory_29_2;
       valid_memory_29_3 <=
-        _GEN_371 | ~(valid_miss & _GEN_188 & (&evict_way)) & valid_memory_29_3;
+        _GEN_505 | ~(valid_miss & _GEN_322 & (&evict_way)) & valid_memory_29_3;
       valid_memory_30_0 <=
-        _GEN_373 | ~(valid_miss & _GEN_189 & _GEN_157) & valid_memory_30_0;
+        _GEN_507 | ~(valid_miss & _GEN_323 & _GEN_20) & valid_memory_30_0;
       valid_memory_30_1 <=
-        _GEN_374 | ~(valid_miss & _GEN_189 & _GEN_158) & valid_memory_30_1;
+        _GEN_508 | ~(valid_miss & _GEN_323 & _GEN_21) & valid_memory_30_1;
       valid_memory_30_2 <=
-        _GEN_375 | ~(valid_miss & _GEN_189 & _GEN_159) & valid_memory_30_2;
+        _GEN_509 | ~(valid_miss & _GEN_323 & _GEN_22) & valid_memory_30_2;
       valid_memory_30_3 <=
-        _GEN_376 | ~(valid_miss & _GEN_189 & (&evict_way)) & valid_memory_30_3;
+        _GEN_510 | ~(valid_miss & _GEN_323 & (&evict_way)) & valid_memory_30_3;
       valid_memory_31_0 <=
-        _GEN_378 | ~(valid_miss & _GEN_190 & _GEN_157) & valid_memory_31_0;
+        _GEN_512 | ~(valid_miss & _GEN_324 & _GEN_20) & valid_memory_31_0;
       valid_memory_31_1 <=
-        _GEN_379 | ~(valid_miss & _GEN_190 & _GEN_158) & valid_memory_31_1;
+        _GEN_513 | ~(valid_miss & _GEN_324 & _GEN_21) & valid_memory_31_1;
       valid_memory_31_2 <=
-        _GEN_380 | ~(valid_miss & _GEN_190 & _GEN_159) & valid_memory_31_2;
+        _GEN_514 | ~(valid_miss & _GEN_324 & _GEN_22) & valid_memory_31_2;
       valid_memory_31_3 <=
-        _GEN_381 | ~(valid_miss & _GEN_190 & (&evict_way)) & valid_memory_31_3;
+        _GEN_515 | ~(valid_miss & _GEN_324 & (&evict_way)) & valid_memory_31_3;
       valid_memory_32_0 <=
-        _GEN_383 | ~(valid_miss & _GEN_191 & _GEN_157) & valid_memory_32_0;
+        _GEN_517 | ~(valid_miss & _GEN_325 & _GEN_20) & valid_memory_32_0;
       valid_memory_32_1 <=
-        _GEN_384 | ~(valid_miss & _GEN_191 & _GEN_158) & valid_memory_32_1;
+        _GEN_518 | ~(valid_miss & _GEN_325 & _GEN_21) & valid_memory_32_1;
       valid_memory_32_2 <=
-        _GEN_385 | ~(valid_miss & _GEN_191 & _GEN_159) & valid_memory_32_2;
+        _GEN_519 | ~(valid_miss & _GEN_325 & _GEN_22) & valid_memory_32_2;
       valid_memory_32_3 <=
-        _GEN_386 | ~(valid_miss & _GEN_191 & (&evict_way)) & valid_memory_32_3;
+        _GEN_520 | ~(valid_miss & _GEN_325 & (&evict_way)) & valid_memory_32_3;
       valid_memory_33_0 <=
-        _GEN_388 | ~(valid_miss & _GEN_192 & _GEN_157) & valid_memory_33_0;
+        _GEN_522 | ~(valid_miss & _GEN_326 & _GEN_20) & valid_memory_33_0;
       valid_memory_33_1 <=
-        _GEN_389 | ~(valid_miss & _GEN_192 & _GEN_158) & valid_memory_33_1;
+        _GEN_523 | ~(valid_miss & _GEN_326 & _GEN_21) & valid_memory_33_1;
       valid_memory_33_2 <=
-        _GEN_390 | ~(valid_miss & _GEN_192 & _GEN_159) & valid_memory_33_2;
+        _GEN_524 | ~(valid_miss & _GEN_326 & _GEN_22) & valid_memory_33_2;
       valid_memory_33_3 <=
-        _GEN_391 | ~(valid_miss & _GEN_192 & (&evict_way)) & valid_memory_33_3;
+        _GEN_525 | ~(valid_miss & _GEN_326 & (&evict_way)) & valid_memory_33_3;
       valid_memory_34_0 <=
-        _GEN_393 | ~(valid_miss & _GEN_193 & _GEN_157) & valid_memory_34_0;
+        _GEN_527 | ~(valid_miss & _GEN_327 & _GEN_20) & valid_memory_34_0;
       valid_memory_34_1 <=
-        _GEN_394 | ~(valid_miss & _GEN_193 & _GEN_158) & valid_memory_34_1;
+        _GEN_528 | ~(valid_miss & _GEN_327 & _GEN_21) & valid_memory_34_1;
       valid_memory_34_2 <=
-        _GEN_395 | ~(valid_miss & _GEN_193 & _GEN_159) & valid_memory_34_2;
+        _GEN_529 | ~(valid_miss & _GEN_327 & _GEN_22) & valid_memory_34_2;
       valid_memory_34_3 <=
-        _GEN_396 | ~(valid_miss & _GEN_193 & (&evict_way)) & valid_memory_34_3;
+        _GEN_530 | ~(valid_miss & _GEN_327 & (&evict_way)) & valid_memory_34_3;
       valid_memory_35_0 <=
-        _GEN_398 | ~(valid_miss & _GEN_194 & _GEN_157) & valid_memory_35_0;
+        _GEN_532 | ~(valid_miss & _GEN_328 & _GEN_20) & valid_memory_35_0;
       valid_memory_35_1 <=
-        _GEN_399 | ~(valid_miss & _GEN_194 & _GEN_158) & valid_memory_35_1;
+        _GEN_533 | ~(valid_miss & _GEN_328 & _GEN_21) & valid_memory_35_1;
       valid_memory_35_2 <=
-        _GEN_400 | ~(valid_miss & _GEN_194 & _GEN_159) & valid_memory_35_2;
+        _GEN_534 | ~(valid_miss & _GEN_328 & _GEN_22) & valid_memory_35_2;
       valid_memory_35_3 <=
-        _GEN_401 | ~(valid_miss & _GEN_194 & (&evict_way)) & valid_memory_35_3;
+        _GEN_535 | ~(valid_miss & _GEN_328 & (&evict_way)) & valid_memory_35_3;
       valid_memory_36_0 <=
-        _GEN_403 | ~(valid_miss & _GEN_195 & _GEN_157) & valid_memory_36_0;
+        _GEN_537 | ~(valid_miss & _GEN_329 & _GEN_20) & valid_memory_36_0;
       valid_memory_36_1 <=
-        _GEN_404 | ~(valid_miss & _GEN_195 & _GEN_158) & valid_memory_36_1;
+        _GEN_538 | ~(valid_miss & _GEN_329 & _GEN_21) & valid_memory_36_1;
       valid_memory_36_2 <=
-        _GEN_405 | ~(valid_miss & _GEN_195 & _GEN_159) & valid_memory_36_2;
+        _GEN_539 | ~(valid_miss & _GEN_329 & _GEN_22) & valid_memory_36_2;
       valid_memory_36_3 <=
-        _GEN_406 | ~(valid_miss & _GEN_195 & (&evict_way)) & valid_memory_36_3;
+        _GEN_540 | ~(valid_miss & _GEN_329 & (&evict_way)) & valid_memory_36_3;
       valid_memory_37_0 <=
-        _GEN_408 | ~(valid_miss & _GEN_196 & _GEN_157) & valid_memory_37_0;
+        _GEN_542 | ~(valid_miss & _GEN_330 & _GEN_20) & valid_memory_37_0;
       valid_memory_37_1 <=
-        _GEN_409 | ~(valid_miss & _GEN_196 & _GEN_158) & valid_memory_37_1;
+        _GEN_543 | ~(valid_miss & _GEN_330 & _GEN_21) & valid_memory_37_1;
       valid_memory_37_2 <=
-        _GEN_410 | ~(valid_miss & _GEN_196 & _GEN_159) & valid_memory_37_2;
+        _GEN_544 | ~(valid_miss & _GEN_330 & _GEN_22) & valid_memory_37_2;
       valid_memory_37_3 <=
-        _GEN_411 | ~(valid_miss & _GEN_196 & (&evict_way)) & valid_memory_37_3;
+        _GEN_545 | ~(valid_miss & _GEN_330 & (&evict_way)) & valid_memory_37_3;
       valid_memory_38_0 <=
-        _GEN_413 | ~(valid_miss & _GEN_197 & _GEN_157) & valid_memory_38_0;
+        _GEN_547 | ~(valid_miss & _GEN_331 & _GEN_20) & valid_memory_38_0;
       valid_memory_38_1 <=
-        _GEN_414 | ~(valid_miss & _GEN_197 & _GEN_158) & valid_memory_38_1;
+        _GEN_548 | ~(valid_miss & _GEN_331 & _GEN_21) & valid_memory_38_1;
       valid_memory_38_2 <=
-        _GEN_415 | ~(valid_miss & _GEN_197 & _GEN_159) & valid_memory_38_2;
+        _GEN_549 | ~(valid_miss & _GEN_331 & _GEN_22) & valid_memory_38_2;
       valid_memory_38_3 <=
-        _GEN_416 | ~(valid_miss & _GEN_197 & (&evict_way)) & valid_memory_38_3;
+        _GEN_550 | ~(valid_miss & _GEN_331 & (&evict_way)) & valid_memory_38_3;
       valid_memory_39_0 <=
-        _GEN_418 | ~(valid_miss & _GEN_198 & _GEN_157) & valid_memory_39_0;
+        _GEN_552 | ~(valid_miss & _GEN_332 & _GEN_20) & valid_memory_39_0;
       valid_memory_39_1 <=
-        _GEN_419 | ~(valid_miss & _GEN_198 & _GEN_158) & valid_memory_39_1;
+        _GEN_553 | ~(valid_miss & _GEN_332 & _GEN_21) & valid_memory_39_1;
       valid_memory_39_2 <=
-        _GEN_420 | ~(valid_miss & _GEN_198 & _GEN_159) & valid_memory_39_2;
+        _GEN_554 | ~(valid_miss & _GEN_332 & _GEN_22) & valid_memory_39_2;
       valid_memory_39_3 <=
-        _GEN_421 | ~(valid_miss & _GEN_198 & (&evict_way)) & valid_memory_39_3;
+        _GEN_555 | ~(valid_miss & _GEN_332 & (&evict_way)) & valid_memory_39_3;
       valid_memory_40_0 <=
-        _GEN_423 | ~(valid_miss & _GEN_199 & _GEN_157) & valid_memory_40_0;
+        _GEN_557 | ~(valid_miss & _GEN_333 & _GEN_20) & valid_memory_40_0;
       valid_memory_40_1 <=
-        _GEN_424 | ~(valid_miss & _GEN_199 & _GEN_158) & valid_memory_40_1;
+        _GEN_558 | ~(valid_miss & _GEN_333 & _GEN_21) & valid_memory_40_1;
       valid_memory_40_2 <=
-        _GEN_425 | ~(valid_miss & _GEN_199 & _GEN_159) & valid_memory_40_2;
+        _GEN_559 | ~(valid_miss & _GEN_333 & _GEN_22) & valid_memory_40_2;
       valid_memory_40_3 <=
-        _GEN_426 | ~(valid_miss & _GEN_199 & (&evict_way)) & valid_memory_40_3;
+        _GEN_560 | ~(valid_miss & _GEN_333 & (&evict_way)) & valid_memory_40_3;
       valid_memory_41_0 <=
-        _GEN_428 | ~(valid_miss & _GEN_200 & _GEN_157) & valid_memory_41_0;
+        _GEN_562 | ~(valid_miss & _GEN_334 & _GEN_20) & valid_memory_41_0;
       valid_memory_41_1 <=
-        _GEN_429 | ~(valid_miss & _GEN_200 & _GEN_158) & valid_memory_41_1;
+        _GEN_563 | ~(valid_miss & _GEN_334 & _GEN_21) & valid_memory_41_1;
       valid_memory_41_2 <=
-        _GEN_430 | ~(valid_miss & _GEN_200 & _GEN_159) & valid_memory_41_2;
+        _GEN_564 | ~(valid_miss & _GEN_334 & _GEN_22) & valid_memory_41_2;
       valid_memory_41_3 <=
-        _GEN_431 | ~(valid_miss & _GEN_200 & (&evict_way)) & valid_memory_41_3;
+        _GEN_565 | ~(valid_miss & _GEN_334 & (&evict_way)) & valid_memory_41_3;
       valid_memory_42_0 <=
-        _GEN_433 | ~(valid_miss & _GEN_201 & _GEN_157) & valid_memory_42_0;
+        _GEN_567 | ~(valid_miss & _GEN_335 & _GEN_20) & valid_memory_42_0;
       valid_memory_42_1 <=
-        _GEN_434 | ~(valid_miss & _GEN_201 & _GEN_158) & valid_memory_42_1;
+        _GEN_568 | ~(valid_miss & _GEN_335 & _GEN_21) & valid_memory_42_1;
       valid_memory_42_2 <=
-        _GEN_435 | ~(valid_miss & _GEN_201 & _GEN_159) & valid_memory_42_2;
+        _GEN_569 | ~(valid_miss & _GEN_335 & _GEN_22) & valid_memory_42_2;
       valid_memory_42_3 <=
-        _GEN_436 | ~(valid_miss & _GEN_201 & (&evict_way)) & valid_memory_42_3;
+        _GEN_570 | ~(valid_miss & _GEN_335 & (&evict_way)) & valid_memory_42_3;
       valid_memory_43_0 <=
-        _GEN_438 | ~(valid_miss & _GEN_202 & _GEN_157) & valid_memory_43_0;
+        _GEN_572 | ~(valid_miss & _GEN_336 & _GEN_20) & valid_memory_43_0;
       valid_memory_43_1 <=
-        _GEN_439 | ~(valid_miss & _GEN_202 & _GEN_158) & valid_memory_43_1;
+        _GEN_573 | ~(valid_miss & _GEN_336 & _GEN_21) & valid_memory_43_1;
       valid_memory_43_2 <=
-        _GEN_440 | ~(valid_miss & _GEN_202 & _GEN_159) & valid_memory_43_2;
+        _GEN_574 | ~(valid_miss & _GEN_336 & _GEN_22) & valid_memory_43_2;
       valid_memory_43_3 <=
-        _GEN_441 | ~(valid_miss & _GEN_202 & (&evict_way)) & valid_memory_43_3;
+        _GEN_575 | ~(valid_miss & _GEN_336 & (&evict_way)) & valid_memory_43_3;
       valid_memory_44_0 <=
-        _GEN_443 | ~(valid_miss & _GEN_203 & _GEN_157) & valid_memory_44_0;
+        _GEN_577 | ~(valid_miss & _GEN_337 & _GEN_20) & valid_memory_44_0;
       valid_memory_44_1 <=
-        _GEN_444 | ~(valid_miss & _GEN_203 & _GEN_158) & valid_memory_44_1;
+        _GEN_578 | ~(valid_miss & _GEN_337 & _GEN_21) & valid_memory_44_1;
       valid_memory_44_2 <=
-        _GEN_445 | ~(valid_miss & _GEN_203 & _GEN_159) & valid_memory_44_2;
+        _GEN_579 | ~(valid_miss & _GEN_337 & _GEN_22) & valid_memory_44_2;
       valid_memory_44_3 <=
-        _GEN_446 | ~(valid_miss & _GEN_203 & (&evict_way)) & valid_memory_44_3;
+        _GEN_580 | ~(valid_miss & _GEN_337 & (&evict_way)) & valid_memory_44_3;
       valid_memory_45_0 <=
-        _GEN_448 | ~(valid_miss & _GEN_204 & _GEN_157) & valid_memory_45_0;
+        _GEN_582 | ~(valid_miss & _GEN_338 & _GEN_20) & valid_memory_45_0;
       valid_memory_45_1 <=
-        _GEN_449 | ~(valid_miss & _GEN_204 & _GEN_158) & valid_memory_45_1;
+        _GEN_583 | ~(valid_miss & _GEN_338 & _GEN_21) & valid_memory_45_1;
       valid_memory_45_2 <=
-        _GEN_450 | ~(valid_miss & _GEN_204 & _GEN_159) & valid_memory_45_2;
+        _GEN_584 | ~(valid_miss & _GEN_338 & _GEN_22) & valid_memory_45_2;
       valid_memory_45_3 <=
-        _GEN_451 | ~(valid_miss & _GEN_204 & (&evict_way)) & valid_memory_45_3;
+        _GEN_585 | ~(valid_miss & _GEN_338 & (&evict_way)) & valid_memory_45_3;
       valid_memory_46_0 <=
-        _GEN_453 | ~(valid_miss & _GEN_205 & _GEN_157) & valid_memory_46_0;
+        _GEN_587 | ~(valid_miss & _GEN_339 & _GEN_20) & valid_memory_46_0;
       valid_memory_46_1 <=
-        _GEN_454 | ~(valid_miss & _GEN_205 & _GEN_158) & valid_memory_46_1;
+        _GEN_588 | ~(valid_miss & _GEN_339 & _GEN_21) & valid_memory_46_1;
       valid_memory_46_2 <=
-        _GEN_455 | ~(valid_miss & _GEN_205 & _GEN_159) & valid_memory_46_2;
+        _GEN_589 | ~(valid_miss & _GEN_339 & _GEN_22) & valid_memory_46_2;
       valid_memory_46_3 <=
-        _GEN_456 | ~(valid_miss & _GEN_205 & (&evict_way)) & valid_memory_46_3;
+        _GEN_590 | ~(valid_miss & _GEN_339 & (&evict_way)) & valid_memory_46_3;
       valid_memory_47_0 <=
-        _GEN_458 | ~(valid_miss & _GEN_206 & _GEN_157) & valid_memory_47_0;
+        _GEN_592 | ~(valid_miss & _GEN_340 & _GEN_20) & valid_memory_47_0;
       valid_memory_47_1 <=
-        _GEN_459 | ~(valid_miss & _GEN_206 & _GEN_158) & valid_memory_47_1;
+        _GEN_593 | ~(valid_miss & _GEN_340 & _GEN_21) & valid_memory_47_1;
       valid_memory_47_2 <=
-        _GEN_460 | ~(valid_miss & _GEN_206 & _GEN_159) & valid_memory_47_2;
+        _GEN_594 | ~(valid_miss & _GEN_340 & _GEN_22) & valid_memory_47_2;
       valid_memory_47_3 <=
-        _GEN_461 | ~(valid_miss & _GEN_206 & (&evict_way)) & valid_memory_47_3;
+        _GEN_595 | ~(valid_miss & _GEN_340 & (&evict_way)) & valid_memory_47_3;
       valid_memory_48_0 <=
-        _GEN_463 | ~(valid_miss & _GEN_207 & _GEN_157) & valid_memory_48_0;
+        _GEN_597 | ~(valid_miss & _GEN_341 & _GEN_20) & valid_memory_48_0;
       valid_memory_48_1 <=
-        _GEN_464 | ~(valid_miss & _GEN_207 & _GEN_158) & valid_memory_48_1;
+        _GEN_598 | ~(valid_miss & _GEN_341 & _GEN_21) & valid_memory_48_1;
       valid_memory_48_2 <=
-        _GEN_465 | ~(valid_miss & _GEN_207 & _GEN_159) & valid_memory_48_2;
+        _GEN_599 | ~(valid_miss & _GEN_341 & _GEN_22) & valid_memory_48_2;
       valid_memory_48_3 <=
-        _GEN_466 | ~(valid_miss & _GEN_207 & (&evict_way)) & valid_memory_48_3;
+        _GEN_600 | ~(valid_miss & _GEN_341 & (&evict_way)) & valid_memory_48_3;
       valid_memory_49_0 <=
-        _GEN_468 | ~(valid_miss & _GEN_208 & _GEN_157) & valid_memory_49_0;
+        _GEN_602 | ~(valid_miss & _GEN_342 & _GEN_20) & valid_memory_49_0;
       valid_memory_49_1 <=
-        _GEN_469 | ~(valid_miss & _GEN_208 & _GEN_158) & valid_memory_49_1;
+        _GEN_603 | ~(valid_miss & _GEN_342 & _GEN_21) & valid_memory_49_1;
       valid_memory_49_2 <=
-        _GEN_470 | ~(valid_miss & _GEN_208 & _GEN_159) & valid_memory_49_2;
+        _GEN_604 | ~(valid_miss & _GEN_342 & _GEN_22) & valid_memory_49_2;
       valid_memory_49_3 <=
-        _GEN_471 | ~(valid_miss & _GEN_208 & (&evict_way)) & valid_memory_49_3;
+        _GEN_605 | ~(valid_miss & _GEN_342 & (&evict_way)) & valid_memory_49_3;
       valid_memory_50_0 <=
-        _GEN_473 | ~(valid_miss & _GEN_209 & _GEN_157) & valid_memory_50_0;
+        _GEN_607 | ~(valid_miss & _GEN_343 & _GEN_20) & valid_memory_50_0;
       valid_memory_50_1 <=
-        _GEN_474 | ~(valid_miss & _GEN_209 & _GEN_158) & valid_memory_50_1;
+        _GEN_608 | ~(valid_miss & _GEN_343 & _GEN_21) & valid_memory_50_1;
       valid_memory_50_2 <=
-        _GEN_475 | ~(valid_miss & _GEN_209 & _GEN_159) & valid_memory_50_2;
+        _GEN_609 | ~(valid_miss & _GEN_343 & _GEN_22) & valid_memory_50_2;
       valid_memory_50_3 <=
-        _GEN_476 | ~(valid_miss & _GEN_209 & (&evict_way)) & valid_memory_50_3;
+        _GEN_610 | ~(valid_miss & _GEN_343 & (&evict_way)) & valid_memory_50_3;
       valid_memory_51_0 <=
-        _GEN_478 | ~(valid_miss & _GEN_210 & _GEN_157) & valid_memory_51_0;
+        _GEN_612 | ~(valid_miss & _GEN_344 & _GEN_20) & valid_memory_51_0;
       valid_memory_51_1 <=
-        _GEN_479 | ~(valid_miss & _GEN_210 & _GEN_158) & valid_memory_51_1;
+        _GEN_613 | ~(valid_miss & _GEN_344 & _GEN_21) & valid_memory_51_1;
       valid_memory_51_2 <=
-        _GEN_480 | ~(valid_miss & _GEN_210 & _GEN_159) & valid_memory_51_2;
+        _GEN_614 | ~(valid_miss & _GEN_344 & _GEN_22) & valid_memory_51_2;
       valid_memory_51_3 <=
-        _GEN_481 | ~(valid_miss & _GEN_210 & (&evict_way)) & valid_memory_51_3;
+        _GEN_615 | ~(valid_miss & _GEN_344 & (&evict_way)) & valid_memory_51_3;
       valid_memory_52_0 <=
-        _GEN_483 | ~(valid_miss & _GEN_211 & _GEN_157) & valid_memory_52_0;
+        _GEN_617 | ~(valid_miss & _GEN_345 & _GEN_20) & valid_memory_52_0;
       valid_memory_52_1 <=
-        _GEN_484 | ~(valid_miss & _GEN_211 & _GEN_158) & valid_memory_52_1;
+        _GEN_618 | ~(valid_miss & _GEN_345 & _GEN_21) & valid_memory_52_1;
       valid_memory_52_2 <=
-        _GEN_485 | ~(valid_miss & _GEN_211 & _GEN_159) & valid_memory_52_2;
+        _GEN_619 | ~(valid_miss & _GEN_345 & _GEN_22) & valid_memory_52_2;
       valid_memory_52_3 <=
-        _GEN_486 | ~(valid_miss & _GEN_211 & (&evict_way)) & valid_memory_52_3;
+        _GEN_620 | ~(valid_miss & _GEN_345 & (&evict_way)) & valid_memory_52_3;
       valid_memory_53_0 <=
-        _GEN_488 | ~(valid_miss & _GEN_212 & _GEN_157) & valid_memory_53_0;
+        _GEN_622 | ~(valid_miss & _GEN_346 & _GEN_20) & valid_memory_53_0;
       valid_memory_53_1 <=
-        _GEN_489 | ~(valid_miss & _GEN_212 & _GEN_158) & valid_memory_53_1;
+        _GEN_623 | ~(valid_miss & _GEN_346 & _GEN_21) & valid_memory_53_1;
       valid_memory_53_2 <=
-        _GEN_490 | ~(valid_miss & _GEN_212 & _GEN_159) & valid_memory_53_2;
+        _GEN_624 | ~(valid_miss & _GEN_346 & _GEN_22) & valid_memory_53_2;
       valid_memory_53_3 <=
-        _GEN_491 | ~(valid_miss & _GEN_212 & (&evict_way)) & valid_memory_53_3;
+        _GEN_625 | ~(valid_miss & _GEN_346 & (&evict_way)) & valid_memory_53_3;
       valid_memory_54_0 <=
-        _GEN_493 | ~(valid_miss & _GEN_213 & _GEN_157) & valid_memory_54_0;
+        _GEN_627 | ~(valid_miss & _GEN_347 & _GEN_20) & valid_memory_54_0;
       valid_memory_54_1 <=
-        _GEN_494 | ~(valid_miss & _GEN_213 & _GEN_158) & valid_memory_54_1;
+        _GEN_628 | ~(valid_miss & _GEN_347 & _GEN_21) & valid_memory_54_1;
       valid_memory_54_2 <=
-        _GEN_495 | ~(valid_miss & _GEN_213 & _GEN_159) & valid_memory_54_2;
+        _GEN_629 | ~(valid_miss & _GEN_347 & _GEN_22) & valid_memory_54_2;
       valid_memory_54_3 <=
-        _GEN_496 | ~(valid_miss & _GEN_213 & (&evict_way)) & valid_memory_54_3;
+        _GEN_630 | ~(valid_miss & _GEN_347 & (&evict_way)) & valid_memory_54_3;
       valid_memory_55_0 <=
-        _GEN_498 | ~(valid_miss & _GEN_214 & _GEN_157) & valid_memory_55_0;
+        _GEN_632 | ~(valid_miss & _GEN_348 & _GEN_20) & valid_memory_55_0;
       valid_memory_55_1 <=
-        _GEN_499 | ~(valid_miss & _GEN_214 & _GEN_158) & valid_memory_55_1;
+        _GEN_633 | ~(valid_miss & _GEN_348 & _GEN_21) & valid_memory_55_1;
       valid_memory_55_2 <=
-        _GEN_500 | ~(valid_miss & _GEN_214 & _GEN_159) & valid_memory_55_2;
+        _GEN_634 | ~(valid_miss & _GEN_348 & _GEN_22) & valid_memory_55_2;
       valid_memory_55_3 <=
-        _GEN_501 | ~(valid_miss & _GEN_214 & (&evict_way)) & valid_memory_55_3;
+        _GEN_635 | ~(valid_miss & _GEN_348 & (&evict_way)) & valid_memory_55_3;
       valid_memory_56_0 <=
-        _GEN_503 | ~(valid_miss & _GEN_215 & _GEN_157) & valid_memory_56_0;
+        _GEN_637 | ~(valid_miss & _GEN_349 & _GEN_20) & valid_memory_56_0;
       valid_memory_56_1 <=
-        _GEN_504 | ~(valid_miss & _GEN_215 & _GEN_158) & valid_memory_56_1;
+        _GEN_638 | ~(valid_miss & _GEN_349 & _GEN_21) & valid_memory_56_1;
       valid_memory_56_2 <=
-        _GEN_505 | ~(valid_miss & _GEN_215 & _GEN_159) & valid_memory_56_2;
+        _GEN_639 | ~(valid_miss & _GEN_349 & _GEN_22) & valid_memory_56_2;
       valid_memory_56_3 <=
-        _GEN_506 | ~(valid_miss & _GEN_215 & (&evict_way)) & valid_memory_56_3;
+        _GEN_640 | ~(valid_miss & _GEN_349 & (&evict_way)) & valid_memory_56_3;
       valid_memory_57_0 <=
-        _GEN_508 | ~(valid_miss & _GEN_216 & _GEN_157) & valid_memory_57_0;
+        _GEN_642 | ~(valid_miss & _GEN_350 & _GEN_20) & valid_memory_57_0;
       valid_memory_57_1 <=
-        _GEN_509 | ~(valid_miss & _GEN_216 & _GEN_158) & valid_memory_57_1;
+        _GEN_643 | ~(valid_miss & _GEN_350 & _GEN_21) & valid_memory_57_1;
       valid_memory_57_2 <=
-        _GEN_510 | ~(valid_miss & _GEN_216 & _GEN_159) & valid_memory_57_2;
+        _GEN_644 | ~(valid_miss & _GEN_350 & _GEN_22) & valid_memory_57_2;
       valid_memory_57_3 <=
-        _GEN_511 | ~(valid_miss & _GEN_216 & (&evict_way)) & valid_memory_57_3;
+        _GEN_645 | ~(valid_miss & _GEN_350 & (&evict_way)) & valid_memory_57_3;
       valid_memory_58_0 <=
-        _GEN_513 | ~(valid_miss & _GEN_217 & _GEN_157) & valid_memory_58_0;
+        _GEN_647 | ~(valid_miss & _GEN_351 & _GEN_20) & valid_memory_58_0;
       valid_memory_58_1 <=
-        _GEN_514 | ~(valid_miss & _GEN_217 & _GEN_158) & valid_memory_58_1;
+        _GEN_648 | ~(valid_miss & _GEN_351 & _GEN_21) & valid_memory_58_1;
       valid_memory_58_2 <=
-        _GEN_515 | ~(valid_miss & _GEN_217 & _GEN_159) & valid_memory_58_2;
+        _GEN_649 | ~(valid_miss & _GEN_351 & _GEN_22) & valid_memory_58_2;
       valid_memory_58_3 <=
-        _GEN_516 | ~(valid_miss & _GEN_217 & (&evict_way)) & valid_memory_58_3;
+        _GEN_650 | ~(valid_miss & _GEN_351 & (&evict_way)) & valid_memory_58_3;
       valid_memory_59_0 <=
-        _GEN_518 | ~(valid_miss & _GEN_218 & _GEN_157) & valid_memory_59_0;
+        _GEN_652 | ~(valid_miss & _GEN_352 & _GEN_20) & valid_memory_59_0;
       valid_memory_59_1 <=
-        _GEN_519 | ~(valid_miss & _GEN_218 & _GEN_158) & valid_memory_59_1;
+        _GEN_653 | ~(valid_miss & _GEN_352 & _GEN_21) & valid_memory_59_1;
       valid_memory_59_2 <=
-        _GEN_520 | ~(valid_miss & _GEN_218 & _GEN_159) & valid_memory_59_2;
+        _GEN_654 | ~(valid_miss & _GEN_352 & _GEN_22) & valid_memory_59_2;
       valid_memory_59_3 <=
-        _GEN_521 | ~(valid_miss & _GEN_218 & (&evict_way)) & valid_memory_59_3;
+        _GEN_655 | ~(valid_miss & _GEN_352 & (&evict_way)) & valid_memory_59_3;
       valid_memory_60_0 <=
-        _GEN_523 | ~(valid_miss & _GEN_219 & _GEN_157) & valid_memory_60_0;
+        _GEN_657 | ~(valid_miss & _GEN_353 & _GEN_20) & valid_memory_60_0;
       valid_memory_60_1 <=
-        _GEN_524 | ~(valid_miss & _GEN_219 & _GEN_158) & valid_memory_60_1;
+        _GEN_658 | ~(valid_miss & _GEN_353 & _GEN_21) & valid_memory_60_1;
       valid_memory_60_2 <=
-        _GEN_525 | ~(valid_miss & _GEN_219 & _GEN_159) & valid_memory_60_2;
+        _GEN_659 | ~(valid_miss & _GEN_353 & _GEN_22) & valid_memory_60_2;
       valid_memory_60_3 <=
-        _GEN_526 | ~(valid_miss & _GEN_219 & (&evict_way)) & valid_memory_60_3;
+        _GEN_660 | ~(valid_miss & _GEN_353 & (&evict_way)) & valid_memory_60_3;
       valid_memory_61_0 <=
-        _GEN_528 | ~(valid_miss & _GEN_220 & _GEN_157) & valid_memory_61_0;
+        _GEN_662 | ~(valid_miss & _GEN_354 & _GEN_20) & valid_memory_61_0;
       valid_memory_61_1 <=
-        _GEN_529 | ~(valid_miss & _GEN_220 & _GEN_158) & valid_memory_61_1;
+        _GEN_663 | ~(valid_miss & _GEN_354 & _GEN_21) & valid_memory_61_1;
       valid_memory_61_2 <=
-        _GEN_530 | ~(valid_miss & _GEN_220 & _GEN_159) & valid_memory_61_2;
+        _GEN_664 | ~(valid_miss & _GEN_354 & _GEN_22) & valid_memory_61_2;
       valid_memory_61_3 <=
-        _GEN_531 | ~(valid_miss & _GEN_220 & (&evict_way)) & valid_memory_61_3;
+        _GEN_665 | ~(valid_miss & _GEN_354 & (&evict_way)) & valid_memory_61_3;
       valid_memory_62_0 <=
-        _GEN_533 | ~(valid_miss & _GEN_221 & _GEN_157) & valid_memory_62_0;
+        _GEN_667 | ~(valid_miss & _GEN_355 & _GEN_20) & valid_memory_62_0;
       valid_memory_62_1 <=
-        _GEN_534 | ~(valid_miss & _GEN_221 & _GEN_158) & valid_memory_62_1;
+        _GEN_668 | ~(valid_miss & _GEN_355 & _GEN_21) & valid_memory_62_1;
       valid_memory_62_2 <=
-        _GEN_535 | ~(valid_miss & _GEN_221 & _GEN_159) & valid_memory_62_2;
+        _GEN_669 | ~(valid_miss & _GEN_355 & _GEN_22) & valid_memory_62_2;
       valid_memory_62_3 <=
-        _GEN_536 | ~(valid_miss & _GEN_221 & (&evict_way)) & valid_memory_62_3;
+        _GEN_670 | ~(valid_miss & _GEN_355 & (&evict_way)) & valid_memory_62_3;
       valid_memory_63_0 <=
-        _GEN_537 | ~(valid_miss & (&REG_3) & _GEN_157) & valid_memory_63_0;
+        _GEN_671 | ~(valid_miss & (&REG_3) & _GEN_20) & valid_memory_63_0;
       valid_memory_63_1 <=
-        _GEN_538 | ~(valid_miss & (&REG_3) & _GEN_158) & valid_memory_63_1;
+        _GEN_672 | ~(valid_miss & (&REG_3) & _GEN_21) & valid_memory_63_1;
       valid_memory_63_2 <=
-        _GEN_539 | ~(valid_miss & (&REG_3) & _GEN_159) & valid_memory_63_2;
+        _GEN_673 | ~(valid_miss & (&REG_3) & _GEN_22) & valid_memory_63_2;
       valid_memory_63_3 <=
-        _GEN_540 | ~(valid_miss & (&REG_3) & (&evict_way)) & valid_memory_63_3;
+        _GEN_674 | ~(valid_miss & (&REG_3) & (&evict_way)) & valid_memory_63_3;
       if (valid_hit & hit_set == 6'h0) begin
         if (&PLRU_memory_updated_PLRU)
           PLRU_memory_0 <= 4'h0;
@@ -5527,520 +7227,776 @@ module L1_data_cache(
           PLRU_memory_63 <= PLRU_memory_updated_PLRU;
       end
       dirty_memory_0_0 <=
-        ~_GEN_223 & (valid_write_hit & _GEN_542 & _GEN_543 | dirty_memory_0_0);
+        ~_GEN_357 & (valid_write_hit & _GEN_676 & _GEN_677 | dirty_memory_0_0);
       dirty_memory_0_1 <=
-        ~_GEN_224 & (valid_write_hit & _GEN_542 & _GEN_544 | dirty_memory_0_1);
+        ~_GEN_358 & (valid_write_hit & _GEN_676 & _GEN_678 | dirty_memory_0_1);
       dirty_memory_0_2 <=
-        ~_GEN_225 & (valid_write_hit & _GEN_542 & _GEN_545 | dirty_memory_0_2);
+        ~_GEN_359 & (valid_write_hit & _GEN_676 & _GEN_679 | dirty_memory_0_2);
       dirty_memory_0_3 <=
-        ~_GEN_226 & (valid_write_hit & _GEN_542 & (&_GEN_541) | dirty_memory_0_3);
+        ~_GEN_360 & (valid_write_hit & _GEN_676 & (&_GEN_675) | dirty_memory_0_3);
       dirty_memory_1_0 <=
-        ~_GEN_228 & (valid_write_hit & _GEN_546 & _GEN_543 | dirty_memory_1_0);
+        ~_GEN_362 & (valid_write_hit & _GEN_680 & _GEN_677 | dirty_memory_1_0);
       dirty_memory_1_1 <=
-        ~_GEN_229 & (valid_write_hit & _GEN_546 & _GEN_544 | dirty_memory_1_1);
+        ~_GEN_363 & (valid_write_hit & _GEN_680 & _GEN_678 | dirty_memory_1_1);
       dirty_memory_1_2 <=
-        ~_GEN_230 & (valid_write_hit & _GEN_546 & _GEN_545 | dirty_memory_1_2);
+        ~_GEN_364 & (valid_write_hit & _GEN_680 & _GEN_679 | dirty_memory_1_2);
       dirty_memory_1_3 <=
-        ~_GEN_231 & (valid_write_hit & _GEN_546 & (&_GEN_541) | dirty_memory_1_3);
+        ~_GEN_365 & (valid_write_hit & _GEN_680 & (&_GEN_675) | dirty_memory_1_3);
       dirty_memory_2_0 <=
-        ~_GEN_233 & (valid_write_hit & _GEN_547 & _GEN_543 | dirty_memory_2_0);
+        ~_GEN_367 & (valid_write_hit & _GEN_681 & _GEN_677 | dirty_memory_2_0);
       dirty_memory_2_1 <=
-        ~_GEN_234 & (valid_write_hit & _GEN_547 & _GEN_544 | dirty_memory_2_1);
+        ~_GEN_368 & (valid_write_hit & _GEN_681 & _GEN_678 | dirty_memory_2_1);
       dirty_memory_2_2 <=
-        ~_GEN_235 & (valid_write_hit & _GEN_547 & _GEN_545 | dirty_memory_2_2);
+        ~_GEN_369 & (valid_write_hit & _GEN_681 & _GEN_679 | dirty_memory_2_2);
       dirty_memory_2_3 <=
-        ~_GEN_236 & (valid_write_hit & _GEN_547 & (&_GEN_541) | dirty_memory_2_3);
+        ~_GEN_370 & (valid_write_hit & _GEN_681 & (&_GEN_675) | dirty_memory_2_3);
       dirty_memory_3_0 <=
-        ~_GEN_238 & (valid_write_hit & _GEN_548 & _GEN_543 | dirty_memory_3_0);
+        ~_GEN_372 & (valid_write_hit & _GEN_682 & _GEN_677 | dirty_memory_3_0);
       dirty_memory_3_1 <=
-        ~_GEN_239 & (valid_write_hit & _GEN_548 & _GEN_544 | dirty_memory_3_1);
+        ~_GEN_373 & (valid_write_hit & _GEN_682 & _GEN_678 | dirty_memory_3_1);
       dirty_memory_3_2 <=
-        ~_GEN_240 & (valid_write_hit & _GEN_548 & _GEN_545 | dirty_memory_3_2);
+        ~_GEN_374 & (valid_write_hit & _GEN_682 & _GEN_679 | dirty_memory_3_2);
       dirty_memory_3_3 <=
-        ~_GEN_241 & (valid_write_hit & _GEN_548 & (&_GEN_541) | dirty_memory_3_3);
+        ~_GEN_375 & (valid_write_hit & _GEN_682 & (&_GEN_675) | dirty_memory_3_3);
       dirty_memory_4_0 <=
-        ~_GEN_243 & (valid_write_hit & _GEN_549 & _GEN_543 | dirty_memory_4_0);
+        ~_GEN_377 & (valid_write_hit & _GEN_683 & _GEN_677 | dirty_memory_4_0);
       dirty_memory_4_1 <=
-        ~_GEN_244 & (valid_write_hit & _GEN_549 & _GEN_544 | dirty_memory_4_1);
+        ~_GEN_378 & (valid_write_hit & _GEN_683 & _GEN_678 | dirty_memory_4_1);
       dirty_memory_4_2 <=
-        ~_GEN_245 & (valid_write_hit & _GEN_549 & _GEN_545 | dirty_memory_4_2);
+        ~_GEN_379 & (valid_write_hit & _GEN_683 & _GEN_679 | dirty_memory_4_2);
       dirty_memory_4_3 <=
-        ~_GEN_246 & (valid_write_hit & _GEN_549 & (&_GEN_541) | dirty_memory_4_3);
+        ~_GEN_380 & (valid_write_hit & _GEN_683 & (&_GEN_675) | dirty_memory_4_3);
       dirty_memory_5_0 <=
-        ~_GEN_248 & (valid_write_hit & _GEN_550 & _GEN_543 | dirty_memory_5_0);
+        ~_GEN_382 & (valid_write_hit & _GEN_684 & _GEN_677 | dirty_memory_5_0);
       dirty_memory_5_1 <=
-        ~_GEN_249 & (valid_write_hit & _GEN_550 & _GEN_544 | dirty_memory_5_1);
+        ~_GEN_383 & (valid_write_hit & _GEN_684 & _GEN_678 | dirty_memory_5_1);
       dirty_memory_5_2 <=
-        ~_GEN_250 & (valid_write_hit & _GEN_550 & _GEN_545 | dirty_memory_5_2);
+        ~_GEN_384 & (valid_write_hit & _GEN_684 & _GEN_679 | dirty_memory_5_2);
       dirty_memory_5_3 <=
-        ~_GEN_251 & (valid_write_hit & _GEN_550 & (&_GEN_541) | dirty_memory_5_3);
+        ~_GEN_385 & (valid_write_hit & _GEN_684 & (&_GEN_675) | dirty_memory_5_3);
       dirty_memory_6_0 <=
-        ~_GEN_253 & (valid_write_hit & _GEN_551 & _GEN_543 | dirty_memory_6_0);
+        ~_GEN_387 & (valid_write_hit & _GEN_685 & _GEN_677 | dirty_memory_6_0);
       dirty_memory_6_1 <=
-        ~_GEN_254 & (valid_write_hit & _GEN_551 & _GEN_544 | dirty_memory_6_1);
+        ~_GEN_388 & (valid_write_hit & _GEN_685 & _GEN_678 | dirty_memory_6_1);
       dirty_memory_6_2 <=
-        ~_GEN_255 & (valid_write_hit & _GEN_551 & _GEN_545 | dirty_memory_6_2);
+        ~_GEN_389 & (valid_write_hit & _GEN_685 & _GEN_679 | dirty_memory_6_2);
       dirty_memory_6_3 <=
-        ~_GEN_256 & (valid_write_hit & _GEN_551 & (&_GEN_541) | dirty_memory_6_3);
+        ~_GEN_390 & (valid_write_hit & _GEN_685 & (&_GEN_675) | dirty_memory_6_3);
       dirty_memory_7_0 <=
-        ~_GEN_258 & (valid_write_hit & _GEN_552 & _GEN_543 | dirty_memory_7_0);
+        ~_GEN_392 & (valid_write_hit & _GEN_686 & _GEN_677 | dirty_memory_7_0);
       dirty_memory_7_1 <=
-        ~_GEN_259 & (valid_write_hit & _GEN_552 & _GEN_544 | dirty_memory_7_1);
+        ~_GEN_393 & (valid_write_hit & _GEN_686 & _GEN_678 | dirty_memory_7_1);
       dirty_memory_7_2 <=
-        ~_GEN_260 & (valid_write_hit & _GEN_552 & _GEN_545 | dirty_memory_7_2);
+        ~_GEN_394 & (valid_write_hit & _GEN_686 & _GEN_679 | dirty_memory_7_2);
       dirty_memory_7_3 <=
-        ~_GEN_261 & (valid_write_hit & _GEN_552 & (&_GEN_541) | dirty_memory_7_3);
+        ~_GEN_395 & (valid_write_hit & _GEN_686 & (&_GEN_675) | dirty_memory_7_3);
       dirty_memory_8_0 <=
-        ~_GEN_263 & (valid_write_hit & _GEN_553 & _GEN_543 | dirty_memory_8_0);
+        ~_GEN_397 & (valid_write_hit & _GEN_687 & _GEN_677 | dirty_memory_8_0);
       dirty_memory_8_1 <=
-        ~_GEN_264 & (valid_write_hit & _GEN_553 & _GEN_544 | dirty_memory_8_1);
+        ~_GEN_398 & (valid_write_hit & _GEN_687 & _GEN_678 | dirty_memory_8_1);
       dirty_memory_8_2 <=
-        ~_GEN_265 & (valid_write_hit & _GEN_553 & _GEN_545 | dirty_memory_8_2);
+        ~_GEN_399 & (valid_write_hit & _GEN_687 & _GEN_679 | dirty_memory_8_2);
       dirty_memory_8_3 <=
-        ~_GEN_266 & (valid_write_hit & _GEN_553 & (&_GEN_541) | dirty_memory_8_3);
+        ~_GEN_400 & (valid_write_hit & _GEN_687 & (&_GEN_675) | dirty_memory_8_3);
       dirty_memory_9_0 <=
-        ~_GEN_268 & (valid_write_hit & _GEN_554 & _GEN_543 | dirty_memory_9_0);
+        ~_GEN_402 & (valid_write_hit & _GEN_688 & _GEN_677 | dirty_memory_9_0);
       dirty_memory_9_1 <=
-        ~_GEN_269 & (valid_write_hit & _GEN_554 & _GEN_544 | dirty_memory_9_1);
+        ~_GEN_403 & (valid_write_hit & _GEN_688 & _GEN_678 | dirty_memory_9_1);
       dirty_memory_9_2 <=
-        ~_GEN_270 & (valid_write_hit & _GEN_554 & _GEN_545 | dirty_memory_9_2);
+        ~_GEN_404 & (valid_write_hit & _GEN_688 & _GEN_679 | dirty_memory_9_2);
       dirty_memory_9_3 <=
-        ~_GEN_271 & (valid_write_hit & _GEN_554 & (&_GEN_541) | dirty_memory_9_3);
+        ~_GEN_405 & (valid_write_hit & _GEN_688 & (&_GEN_675) | dirty_memory_9_3);
       dirty_memory_10_0 <=
-        ~_GEN_273 & (valid_write_hit & _GEN_555 & _GEN_543 | dirty_memory_10_0);
+        ~_GEN_407 & (valid_write_hit & _GEN_689 & _GEN_677 | dirty_memory_10_0);
       dirty_memory_10_1 <=
-        ~_GEN_274 & (valid_write_hit & _GEN_555 & _GEN_544 | dirty_memory_10_1);
+        ~_GEN_408 & (valid_write_hit & _GEN_689 & _GEN_678 | dirty_memory_10_1);
       dirty_memory_10_2 <=
-        ~_GEN_275 & (valid_write_hit & _GEN_555 & _GEN_545 | dirty_memory_10_2);
+        ~_GEN_409 & (valid_write_hit & _GEN_689 & _GEN_679 | dirty_memory_10_2);
       dirty_memory_10_3 <=
-        ~_GEN_276 & (valid_write_hit & _GEN_555 & (&_GEN_541) | dirty_memory_10_3);
+        ~_GEN_410 & (valid_write_hit & _GEN_689 & (&_GEN_675) | dirty_memory_10_3);
       dirty_memory_11_0 <=
-        ~_GEN_278 & (valid_write_hit & _GEN_556 & _GEN_543 | dirty_memory_11_0);
+        ~_GEN_412 & (valid_write_hit & _GEN_690 & _GEN_677 | dirty_memory_11_0);
       dirty_memory_11_1 <=
-        ~_GEN_279 & (valid_write_hit & _GEN_556 & _GEN_544 | dirty_memory_11_1);
+        ~_GEN_413 & (valid_write_hit & _GEN_690 & _GEN_678 | dirty_memory_11_1);
       dirty_memory_11_2 <=
-        ~_GEN_280 & (valid_write_hit & _GEN_556 & _GEN_545 | dirty_memory_11_2);
+        ~_GEN_414 & (valid_write_hit & _GEN_690 & _GEN_679 | dirty_memory_11_2);
       dirty_memory_11_3 <=
-        ~_GEN_281 & (valid_write_hit & _GEN_556 & (&_GEN_541) | dirty_memory_11_3);
+        ~_GEN_415 & (valid_write_hit & _GEN_690 & (&_GEN_675) | dirty_memory_11_3);
       dirty_memory_12_0 <=
-        ~_GEN_283 & (valid_write_hit & _GEN_557 & _GEN_543 | dirty_memory_12_0);
+        ~_GEN_417 & (valid_write_hit & _GEN_691 & _GEN_677 | dirty_memory_12_0);
       dirty_memory_12_1 <=
-        ~_GEN_284 & (valid_write_hit & _GEN_557 & _GEN_544 | dirty_memory_12_1);
+        ~_GEN_418 & (valid_write_hit & _GEN_691 & _GEN_678 | dirty_memory_12_1);
       dirty_memory_12_2 <=
-        ~_GEN_285 & (valid_write_hit & _GEN_557 & _GEN_545 | dirty_memory_12_2);
+        ~_GEN_419 & (valid_write_hit & _GEN_691 & _GEN_679 | dirty_memory_12_2);
       dirty_memory_12_3 <=
-        ~_GEN_286 & (valid_write_hit & _GEN_557 & (&_GEN_541) | dirty_memory_12_3);
+        ~_GEN_420 & (valid_write_hit & _GEN_691 & (&_GEN_675) | dirty_memory_12_3);
       dirty_memory_13_0 <=
-        ~_GEN_288 & (valid_write_hit & _GEN_558 & _GEN_543 | dirty_memory_13_0);
+        ~_GEN_422 & (valid_write_hit & _GEN_692 & _GEN_677 | dirty_memory_13_0);
       dirty_memory_13_1 <=
-        ~_GEN_289 & (valid_write_hit & _GEN_558 & _GEN_544 | dirty_memory_13_1);
+        ~_GEN_423 & (valid_write_hit & _GEN_692 & _GEN_678 | dirty_memory_13_1);
       dirty_memory_13_2 <=
-        ~_GEN_290 & (valid_write_hit & _GEN_558 & _GEN_545 | dirty_memory_13_2);
+        ~_GEN_424 & (valid_write_hit & _GEN_692 & _GEN_679 | dirty_memory_13_2);
       dirty_memory_13_3 <=
-        ~_GEN_291 & (valid_write_hit & _GEN_558 & (&_GEN_541) | dirty_memory_13_3);
+        ~_GEN_425 & (valid_write_hit & _GEN_692 & (&_GEN_675) | dirty_memory_13_3);
       dirty_memory_14_0 <=
-        ~_GEN_293 & (valid_write_hit & _GEN_559 & _GEN_543 | dirty_memory_14_0);
+        ~_GEN_427 & (valid_write_hit & _GEN_693 & _GEN_677 | dirty_memory_14_0);
       dirty_memory_14_1 <=
-        ~_GEN_294 & (valid_write_hit & _GEN_559 & _GEN_544 | dirty_memory_14_1);
+        ~_GEN_428 & (valid_write_hit & _GEN_693 & _GEN_678 | dirty_memory_14_1);
       dirty_memory_14_2 <=
-        ~_GEN_295 & (valid_write_hit & _GEN_559 & _GEN_545 | dirty_memory_14_2);
+        ~_GEN_429 & (valid_write_hit & _GEN_693 & _GEN_679 | dirty_memory_14_2);
       dirty_memory_14_3 <=
-        ~_GEN_296 & (valid_write_hit & _GEN_559 & (&_GEN_541) | dirty_memory_14_3);
+        ~_GEN_430 & (valid_write_hit & _GEN_693 & (&_GEN_675) | dirty_memory_14_3);
       dirty_memory_15_0 <=
-        ~_GEN_298 & (valid_write_hit & _GEN_560 & _GEN_543 | dirty_memory_15_0);
+        ~_GEN_432 & (valid_write_hit & _GEN_694 & _GEN_677 | dirty_memory_15_0);
       dirty_memory_15_1 <=
-        ~_GEN_299 & (valid_write_hit & _GEN_560 & _GEN_544 | dirty_memory_15_1);
+        ~_GEN_433 & (valid_write_hit & _GEN_694 & _GEN_678 | dirty_memory_15_1);
       dirty_memory_15_2 <=
-        ~_GEN_300 & (valid_write_hit & _GEN_560 & _GEN_545 | dirty_memory_15_2);
+        ~_GEN_434 & (valid_write_hit & _GEN_694 & _GEN_679 | dirty_memory_15_2);
       dirty_memory_15_3 <=
-        ~_GEN_301 & (valid_write_hit & _GEN_560 & (&_GEN_541) | dirty_memory_15_3);
+        ~_GEN_435 & (valid_write_hit & _GEN_694 & (&_GEN_675) | dirty_memory_15_3);
       dirty_memory_16_0 <=
-        ~_GEN_303 & (valid_write_hit & _GEN_561 & _GEN_543 | dirty_memory_16_0);
+        ~_GEN_437 & (valid_write_hit & _GEN_695 & _GEN_677 | dirty_memory_16_0);
       dirty_memory_16_1 <=
-        ~_GEN_304 & (valid_write_hit & _GEN_561 & _GEN_544 | dirty_memory_16_1);
+        ~_GEN_438 & (valid_write_hit & _GEN_695 & _GEN_678 | dirty_memory_16_1);
       dirty_memory_16_2 <=
-        ~_GEN_305 & (valid_write_hit & _GEN_561 & _GEN_545 | dirty_memory_16_2);
+        ~_GEN_439 & (valid_write_hit & _GEN_695 & _GEN_679 | dirty_memory_16_2);
       dirty_memory_16_3 <=
-        ~_GEN_306 & (valid_write_hit & _GEN_561 & (&_GEN_541) | dirty_memory_16_3);
+        ~_GEN_440 & (valid_write_hit & _GEN_695 & (&_GEN_675) | dirty_memory_16_3);
       dirty_memory_17_0 <=
-        ~_GEN_308 & (valid_write_hit & _GEN_562 & _GEN_543 | dirty_memory_17_0);
+        ~_GEN_442 & (valid_write_hit & _GEN_696 & _GEN_677 | dirty_memory_17_0);
       dirty_memory_17_1 <=
-        ~_GEN_309 & (valid_write_hit & _GEN_562 & _GEN_544 | dirty_memory_17_1);
+        ~_GEN_443 & (valid_write_hit & _GEN_696 & _GEN_678 | dirty_memory_17_1);
       dirty_memory_17_2 <=
-        ~_GEN_310 & (valid_write_hit & _GEN_562 & _GEN_545 | dirty_memory_17_2);
+        ~_GEN_444 & (valid_write_hit & _GEN_696 & _GEN_679 | dirty_memory_17_2);
       dirty_memory_17_3 <=
-        ~_GEN_311 & (valid_write_hit & _GEN_562 & (&_GEN_541) | dirty_memory_17_3);
+        ~_GEN_445 & (valid_write_hit & _GEN_696 & (&_GEN_675) | dirty_memory_17_3);
       dirty_memory_18_0 <=
-        ~_GEN_313 & (valid_write_hit & _GEN_563 & _GEN_543 | dirty_memory_18_0);
+        ~_GEN_447 & (valid_write_hit & _GEN_697 & _GEN_677 | dirty_memory_18_0);
       dirty_memory_18_1 <=
-        ~_GEN_314 & (valid_write_hit & _GEN_563 & _GEN_544 | dirty_memory_18_1);
+        ~_GEN_448 & (valid_write_hit & _GEN_697 & _GEN_678 | dirty_memory_18_1);
       dirty_memory_18_2 <=
-        ~_GEN_315 & (valid_write_hit & _GEN_563 & _GEN_545 | dirty_memory_18_2);
+        ~_GEN_449 & (valid_write_hit & _GEN_697 & _GEN_679 | dirty_memory_18_2);
       dirty_memory_18_3 <=
-        ~_GEN_316 & (valid_write_hit & _GEN_563 & (&_GEN_541) | dirty_memory_18_3);
+        ~_GEN_450 & (valid_write_hit & _GEN_697 & (&_GEN_675) | dirty_memory_18_3);
       dirty_memory_19_0 <=
-        ~_GEN_318 & (valid_write_hit & _GEN_564 & _GEN_543 | dirty_memory_19_0);
+        ~_GEN_452 & (valid_write_hit & _GEN_698 & _GEN_677 | dirty_memory_19_0);
       dirty_memory_19_1 <=
-        ~_GEN_319 & (valid_write_hit & _GEN_564 & _GEN_544 | dirty_memory_19_1);
+        ~_GEN_453 & (valid_write_hit & _GEN_698 & _GEN_678 | dirty_memory_19_1);
       dirty_memory_19_2 <=
-        ~_GEN_320 & (valid_write_hit & _GEN_564 & _GEN_545 | dirty_memory_19_2);
+        ~_GEN_454 & (valid_write_hit & _GEN_698 & _GEN_679 | dirty_memory_19_2);
       dirty_memory_19_3 <=
-        ~_GEN_321 & (valid_write_hit & _GEN_564 & (&_GEN_541) | dirty_memory_19_3);
+        ~_GEN_455 & (valid_write_hit & _GEN_698 & (&_GEN_675) | dirty_memory_19_3);
       dirty_memory_20_0 <=
-        ~_GEN_323 & (valid_write_hit & _GEN_565 & _GEN_543 | dirty_memory_20_0);
+        ~_GEN_457 & (valid_write_hit & _GEN_699 & _GEN_677 | dirty_memory_20_0);
       dirty_memory_20_1 <=
-        ~_GEN_324 & (valid_write_hit & _GEN_565 & _GEN_544 | dirty_memory_20_1);
+        ~_GEN_458 & (valid_write_hit & _GEN_699 & _GEN_678 | dirty_memory_20_1);
       dirty_memory_20_2 <=
-        ~_GEN_325 & (valid_write_hit & _GEN_565 & _GEN_545 | dirty_memory_20_2);
+        ~_GEN_459 & (valid_write_hit & _GEN_699 & _GEN_679 | dirty_memory_20_2);
       dirty_memory_20_3 <=
-        ~_GEN_326 & (valid_write_hit & _GEN_565 & (&_GEN_541) | dirty_memory_20_3);
+        ~_GEN_460 & (valid_write_hit & _GEN_699 & (&_GEN_675) | dirty_memory_20_3);
       dirty_memory_21_0 <=
-        ~_GEN_328 & (valid_write_hit & _GEN_566 & _GEN_543 | dirty_memory_21_0);
+        ~_GEN_462 & (valid_write_hit & _GEN_700 & _GEN_677 | dirty_memory_21_0);
       dirty_memory_21_1 <=
-        ~_GEN_329 & (valid_write_hit & _GEN_566 & _GEN_544 | dirty_memory_21_1);
+        ~_GEN_463 & (valid_write_hit & _GEN_700 & _GEN_678 | dirty_memory_21_1);
       dirty_memory_21_2 <=
-        ~_GEN_330 & (valid_write_hit & _GEN_566 & _GEN_545 | dirty_memory_21_2);
+        ~_GEN_464 & (valid_write_hit & _GEN_700 & _GEN_679 | dirty_memory_21_2);
       dirty_memory_21_3 <=
-        ~_GEN_331 & (valid_write_hit & _GEN_566 & (&_GEN_541) | dirty_memory_21_3);
+        ~_GEN_465 & (valid_write_hit & _GEN_700 & (&_GEN_675) | dirty_memory_21_3);
       dirty_memory_22_0 <=
-        ~_GEN_333 & (valid_write_hit & _GEN_567 & _GEN_543 | dirty_memory_22_0);
+        ~_GEN_467 & (valid_write_hit & _GEN_701 & _GEN_677 | dirty_memory_22_0);
       dirty_memory_22_1 <=
-        ~_GEN_334 & (valid_write_hit & _GEN_567 & _GEN_544 | dirty_memory_22_1);
+        ~_GEN_468 & (valid_write_hit & _GEN_701 & _GEN_678 | dirty_memory_22_1);
       dirty_memory_22_2 <=
-        ~_GEN_335 & (valid_write_hit & _GEN_567 & _GEN_545 | dirty_memory_22_2);
+        ~_GEN_469 & (valid_write_hit & _GEN_701 & _GEN_679 | dirty_memory_22_2);
       dirty_memory_22_3 <=
-        ~_GEN_336 & (valid_write_hit & _GEN_567 & (&_GEN_541) | dirty_memory_22_3);
+        ~_GEN_470 & (valid_write_hit & _GEN_701 & (&_GEN_675) | dirty_memory_22_3);
       dirty_memory_23_0 <=
-        ~_GEN_338 & (valid_write_hit & _GEN_568 & _GEN_543 | dirty_memory_23_0);
+        ~_GEN_472 & (valid_write_hit & _GEN_702 & _GEN_677 | dirty_memory_23_0);
       dirty_memory_23_1 <=
-        ~_GEN_339 & (valid_write_hit & _GEN_568 & _GEN_544 | dirty_memory_23_1);
+        ~_GEN_473 & (valid_write_hit & _GEN_702 & _GEN_678 | dirty_memory_23_1);
       dirty_memory_23_2 <=
-        ~_GEN_340 & (valid_write_hit & _GEN_568 & _GEN_545 | dirty_memory_23_2);
+        ~_GEN_474 & (valid_write_hit & _GEN_702 & _GEN_679 | dirty_memory_23_2);
       dirty_memory_23_3 <=
-        ~_GEN_341 & (valid_write_hit & _GEN_568 & (&_GEN_541) | dirty_memory_23_3);
+        ~_GEN_475 & (valid_write_hit & _GEN_702 & (&_GEN_675) | dirty_memory_23_3);
       dirty_memory_24_0 <=
-        ~_GEN_343 & (valid_write_hit & _GEN_569 & _GEN_543 | dirty_memory_24_0);
+        ~_GEN_477 & (valid_write_hit & _GEN_703 & _GEN_677 | dirty_memory_24_0);
       dirty_memory_24_1 <=
-        ~_GEN_344 & (valid_write_hit & _GEN_569 & _GEN_544 | dirty_memory_24_1);
+        ~_GEN_478 & (valid_write_hit & _GEN_703 & _GEN_678 | dirty_memory_24_1);
       dirty_memory_24_2 <=
-        ~_GEN_345 & (valid_write_hit & _GEN_569 & _GEN_545 | dirty_memory_24_2);
+        ~_GEN_479 & (valid_write_hit & _GEN_703 & _GEN_679 | dirty_memory_24_2);
       dirty_memory_24_3 <=
-        ~_GEN_346 & (valid_write_hit & _GEN_569 & (&_GEN_541) | dirty_memory_24_3);
+        ~_GEN_480 & (valid_write_hit & _GEN_703 & (&_GEN_675) | dirty_memory_24_3);
       dirty_memory_25_0 <=
-        ~_GEN_348 & (valid_write_hit & _GEN_570 & _GEN_543 | dirty_memory_25_0);
+        ~_GEN_482 & (valid_write_hit & _GEN_704 & _GEN_677 | dirty_memory_25_0);
       dirty_memory_25_1 <=
-        ~_GEN_349 & (valid_write_hit & _GEN_570 & _GEN_544 | dirty_memory_25_1);
+        ~_GEN_483 & (valid_write_hit & _GEN_704 & _GEN_678 | dirty_memory_25_1);
       dirty_memory_25_2 <=
-        ~_GEN_350 & (valid_write_hit & _GEN_570 & _GEN_545 | dirty_memory_25_2);
+        ~_GEN_484 & (valid_write_hit & _GEN_704 & _GEN_679 | dirty_memory_25_2);
       dirty_memory_25_3 <=
-        ~_GEN_351 & (valid_write_hit & _GEN_570 & (&_GEN_541) | dirty_memory_25_3);
+        ~_GEN_485 & (valid_write_hit & _GEN_704 & (&_GEN_675) | dirty_memory_25_3);
       dirty_memory_26_0 <=
-        ~_GEN_353 & (valid_write_hit & _GEN_571 & _GEN_543 | dirty_memory_26_0);
+        ~_GEN_487 & (valid_write_hit & _GEN_705 & _GEN_677 | dirty_memory_26_0);
       dirty_memory_26_1 <=
-        ~_GEN_354 & (valid_write_hit & _GEN_571 & _GEN_544 | dirty_memory_26_1);
+        ~_GEN_488 & (valid_write_hit & _GEN_705 & _GEN_678 | dirty_memory_26_1);
       dirty_memory_26_2 <=
-        ~_GEN_355 & (valid_write_hit & _GEN_571 & _GEN_545 | dirty_memory_26_2);
+        ~_GEN_489 & (valid_write_hit & _GEN_705 & _GEN_679 | dirty_memory_26_2);
       dirty_memory_26_3 <=
-        ~_GEN_356 & (valid_write_hit & _GEN_571 & (&_GEN_541) | dirty_memory_26_3);
+        ~_GEN_490 & (valid_write_hit & _GEN_705 & (&_GEN_675) | dirty_memory_26_3);
       dirty_memory_27_0 <=
-        ~_GEN_358 & (valid_write_hit & _GEN_572 & _GEN_543 | dirty_memory_27_0);
+        ~_GEN_492 & (valid_write_hit & _GEN_706 & _GEN_677 | dirty_memory_27_0);
       dirty_memory_27_1 <=
-        ~_GEN_359 & (valid_write_hit & _GEN_572 & _GEN_544 | dirty_memory_27_1);
+        ~_GEN_493 & (valid_write_hit & _GEN_706 & _GEN_678 | dirty_memory_27_1);
       dirty_memory_27_2 <=
-        ~_GEN_360 & (valid_write_hit & _GEN_572 & _GEN_545 | dirty_memory_27_2);
+        ~_GEN_494 & (valid_write_hit & _GEN_706 & _GEN_679 | dirty_memory_27_2);
       dirty_memory_27_3 <=
-        ~_GEN_361 & (valid_write_hit & _GEN_572 & (&_GEN_541) | dirty_memory_27_3);
+        ~_GEN_495 & (valid_write_hit & _GEN_706 & (&_GEN_675) | dirty_memory_27_3);
       dirty_memory_28_0 <=
-        ~_GEN_363 & (valid_write_hit & _GEN_573 & _GEN_543 | dirty_memory_28_0);
+        ~_GEN_497 & (valid_write_hit & _GEN_707 & _GEN_677 | dirty_memory_28_0);
       dirty_memory_28_1 <=
-        ~_GEN_364 & (valid_write_hit & _GEN_573 & _GEN_544 | dirty_memory_28_1);
+        ~_GEN_498 & (valid_write_hit & _GEN_707 & _GEN_678 | dirty_memory_28_1);
       dirty_memory_28_2 <=
-        ~_GEN_365 & (valid_write_hit & _GEN_573 & _GEN_545 | dirty_memory_28_2);
+        ~_GEN_499 & (valid_write_hit & _GEN_707 & _GEN_679 | dirty_memory_28_2);
       dirty_memory_28_3 <=
-        ~_GEN_366 & (valid_write_hit & _GEN_573 & (&_GEN_541) | dirty_memory_28_3);
+        ~_GEN_500 & (valid_write_hit & _GEN_707 & (&_GEN_675) | dirty_memory_28_3);
       dirty_memory_29_0 <=
-        ~_GEN_368 & (valid_write_hit & _GEN_574 & _GEN_543 | dirty_memory_29_0);
+        ~_GEN_502 & (valid_write_hit & _GEN_708 & _GEN_677 | dirty_memory_29_0);
       dirty_memory_29_1 <=
-        ~_GEN_369 & (valid_write_hit & _GEN_574 & _GEN_544 | dirty_memory_29_1);
+        ~_GEN_503 & (valid_write_hit & _GEN_708 & _GEN_678 | dirty_memory_29_1);
       dirty_memory_29_2 <=
-        ~_GEN_370 & (valid_write_hit & _GEN_574 & _GEN_545 | dirty_memory_29_2);
+        ~_GEN_504 & (valid_write_hit & _GEN_708 & _GEN_679 | dirty_memory_29_2);
       dirty_memory_29_3 <=
-        ~_GEN_371 & (valid_write_hit & _GEN_574 & (&_GEN_541) | dirty_memory_29_3);
+        ~_GEN_505 & (valid_write_hit & _GEN_708 & (&_GEN_675) | dirty_memory_29_3);
       dirty_memory_30_0 <=
-        ~_GEN_373 & (valid_write_hit & _GEN_575 & _GEN_543 | dirty_memory_30_0);
+        ~_GEN_507 & (valid_write_hit & _GEN_709 & _GEN_677 | dirty_memory_30_0);
       dirty_memory_30_1 <=
-        ~_GEN_374 & (valid_write_hit & _GEN_575 & _GEN_544 | dirty_memory_30_1);
+        ~_GEN_508 & (valid_write_hit & _GEN_709 & _GEN_678 | dirty_memory_30_1);
       dirty_memory_30_2 <=
-        ~_GEN_375 & (valid_write_hit & _GEN_575 & _GEN_545 | dirty_memory_30_2);
+        ~_GEN_509 & (valid_write_hit & _GEN_709 & _GEN_679 | dirty_memory_30_2);
       dirty_memory_30_3 <=
-        ~_GEN_376 & (valid_write_hit & _GEN_575 & (&_GEN_541) | dirty_memory_30_3);
+        ~_GEN_510 & (valid_write_hit & _GEN_709 & (&_GEN_675) | dirty_memory_30_3);
       dirty_memory_31_0 <=
-        ~_GEN_378 & (valid_write_hit & _GEN_576 & _GEN_543 | dirty_memory_31_0);
+        ~_GEN_512 & (valid_write_hit & _GEN_710 & _GEN_677 | dirty_memory_31_0);
       dirty_memory_31_1 <=
-        ~_GEN_379 & (valid_write_hit & _GEN_576 & _GEN_544 | dirty_memory_31_1);
+        ~_GEN_513 & (valid_write_hit & _GEN_710 & _GEN_678 | dirty_memory_31_1);
       dirty_memory_31_2 <=
-        ~_GEN_380 & (valid_write_hit & _GEN_576 & _GEN_545 | dirty_memory_31_2);
+        ~_GEN_514 & (valid_write_hit & _GEN_710 & _GEN_679 | dirty_memory_31_2);
       dirty_memory_31_3 <=
-        ~_GEN_381 & (valid_write_hit & _GEN_576 & (&_GEN_541) | dirty_memory_31_3);
+        ~_GEN_515 & (valid_write_hit & _GEN_710 & (&_GEN_675) | dirty_memory_31_3);
       dirty_memory_32_0 <=
-        ~_GEN_383 & (valid_write_hit & _GEN_577 & _GEN_543 | dirty_memory_32_0);
+        ~_GEN_517 & (valid_write_hit & _GEN_711 & _GEN_677 | dirty_memory_32_0);
       dirty_memory_32_1 <=
-        ~_GEN_384 & (valid_write_hit & _GEN_577 & _GEN_544 | dirty_memory_32_1);
+        ~_GEN_518 & (valid_write_hit & _GEN_711 & _GEN_678 | dirty_memory_32_1);
       dirty_memory_32_2 <=
-        ~_GEN_385 & (valid_write_hit & _GEN_577 & _GEN_545 | dirty_memory_32_2);
+        ~_GEN_519 & (valid_write_hit & _GEN_711 & _GEN_679 | dirty_memory_32_2);
       dirty_memory_32_3 <=
-        ~_GEN_386 & (valid_write_hit & _GEN_577 & (&_GEN_541) | dirty_memory_32_3);
+        ~_GEN_520 & (valid_write_hit & _GEN_711 & (&_GEN_675) | dirty_memory_32_3);
       dirty_memory_33_0 <=
-        ~_GEN_388 & (valid_write_hit & _GEN_578 & _GEN_543 | dirty_memory_33_0);
+        ~_GEN_522 & (valid_write_hit & _GEN_712 & _GEN_677 | dirty_memory_33_0);
       dirty_memory_33_1 <=
-        ~_GEN_389 & (valid_write_hit & _GEN_578 & _GEN_544 | dirty_memory_33_1);
+        ~_GEN_523 & (valid_write_hit & _GEN_712 & _GEN_678 | dirty_memory_33_1);
       dirty_memory_33_2 <=
-        ~_GEN_390 & (valid_write_hit & _GEN_578 & _GEN_545 | dirty_memory_33_2);
+        ~_GEN_524 & (valid_write_hit & _GEN_712 & _GEN_679 | dirty_memory_33_2);
       dirty_memory_33_3 <=
-        ~_GEN_391 & (valid_write_hit & _GEN_578 & (&_GEN_541) | dirty_memory_33_3);
+        ~_GEN_525 & (valid_write_hit & _GEN_712 & (&_GEN_675) | dirty_memory_33_3);
       dirty_memory_34_0 <=
-        ~_GEN_393 & (valid_write_hit & _GEN_579 & _GEN_543 | dirty_memory_34_0);
+        ~_GEN_527 & (valid_write_hit & _GEN_713 & _GEN_677 | dirty_memory_34_0);
       dirty_memory_34_1 <=
-        ~_GEN_394 & (valid_write_hit & _GEN_579 & _GEN_544 | dirty_memory_34_1);
+        ~_GEN_528 & (valid_write_hit & _GEN_713 & _GEN_678 | dirty_memory_34_1);
       dirty_memory_34_2 <=
-        ~_GEN_395 & (valid_write_hit & _GEN_579 & _GEN_545 | dirty_memory_34_2);
+        ~_GEN_529 & (valid_write_hit & _GEN_713 & _GEN_679 | dirty_memory_34_2);
       dirty_memory_34_3 <=
-        ~_GEN_396 & (valid_write_hit & _GEN_579 & (&_GEN_541) | dirty_memory_34_3);
+        ~_GEN_530 & (valid_write_hit & _GEN_713 & (&_GEN_675) | dirty_memory_34_3);
       dirty_memory_35_0 <=
-        ~_GEN_398 & (valid_write_hit & _GEN_580 & _GEN_543 | dirty_memory_35_0);
+        ~_GEN_532 & (valid_write_hit & _GEN_714 & _GEN_677 | dirty_memory_35_0);
       dirty_memory_35_1 <=
-        ~_GEN_399 & (valid_write_hit & _GEN_580 & _GEN_544 | dirty_memory_35_1);
+        ~_GEN_533 & (valid_write_hit & _GEN_714 & _GEN_678 | dirty_memory_35_1);
       dirty_memory_35_2 <=
-        ~_GEN_400 & (valid_write_hit & _GEN_580 & _GEN_545 | dirty_memory_35_2);
+        ~_GEN_534 & (valid_write_hit & _GEN_714 & _GEN_679 | dirty_memory_35_2);
       dirty_memory_35_3 <=
-        ~_GEN_401 & (valid_write_hit & _GEN_580 & (&_GEN_541) | dirty_memory_35_3);
+        ~_GEN_535 & (valid_write_hit & _GEN_714 & (&_GEN_675) | dirty_memory_35_3);
       dirty_memory_36_0 <=
-        ~_GEN_403 & (valid_write_hit & _GEN_581 & _GEN_543 | dirty_memory_36_0);
+        ~_GEN_537 & (valid_write_hit & _GEN_715 & _GEN_677 | dirty_memory_36_0);
       dirty_memory_36_1 <=
-        ~_GEN_404 & (valid_write_hit & _GEN_581 & _GEN_544 | dirty_memory_36_1);
+        ~_GEN_538 & (valid_write_hit & _GEN_715 & _GEN_678 | dirty_memory_36_1);
       dirty_memory_36_2 <=
-        ~_GEN_405 & (valid_write_hit & _GEN_581 & _GEN_545 | dirty_memory_36_2);
+        ~_GEN_539 & (valid_write_hit & _GEN_715 & _GEN_679 | dirty_memory_36_2);
       dirty_memory_36_3 <=
-        ~_GEN_406 & (valid_write_hit & _GEN_581 & (&_GEN_541) | dirty_memory_36_3);
+        ~_GEN_540 & (valid_write_hit & _GEN_715 & (&_GEN_675) | dirty_memory_36_3);
       dirty_memory_37_0 <=
-        ~_GEN_408 & (valid_write_hit & _GEN_582 & _GEN_543 | dirty_memory_37_0);
+        ~_GEN_542 & (valid_write_hit & _GEN_716 & _GEN_677 | dirty_memory_37_0);
       dirty_memory_37_1 <=
-        ~_GEN_409 & (valid_write_hit & _GEN_582 & _GEN_544 | dirty_memory_37_1);
+        ~_GEN_543 & (valid_write_hit & _GEN_716 & _GEN_678 | dirty_memory_37_1);
       dirty_memory_37_2 <=
-        ~_GEN_410 & (valid_write_hit & _GEN_582 & _GEN_545 | dirty_memory_37_2);
+        ~_GEN_544 & (valid_write_hit & _GEN_716 & _GEN_679 | dirty_memory_37_2);
       dirty_memory_37_3 <=
-        ~_GEN_411 & (valid_write_hit & _GEN_582 & (&_GEN_541) | dirty_memory_37_3);
+        ~_GEN_545 & (valid_write_hit & _GEN_716 & (&_GEN_675) | dirty_memory_37_3);
       dirty_memory_38_0 <=
-        ~_GEN_413 & (valid_write_hit & _GEN_583 & _GEN_543 | dirty_memory_38_0);
+        ~_GEN_547 & (valid_write_hit & _GEN_717 & _GEN_677 | dirty_memory_38_0);
       dirty_memory_38_1 <=
-        ~_GEN_414 & (valid_write_hit & _GEN_583 & _GEN_544 | dirty_memory_38_1);
+        ~_GEN_548 & (valid_write_hit & _GEN_717 & _GEN_678 | dirty_memory_38_1);
       dirty_memory_38_2 <=
-        ~_GEN_415 & (valid_write_hit & _GEN_583 & _GEN_545 | dirty_memory_38_2);
+        ~_GEN_549 & (valid_write_hit & _GEN_717 & _GEN_679 | dirty_memory_38_2);
       dirty_memory_38_3 <=
-        ~_GEN_416 & (valid_write_hit & _GEN_583 & (&_GEN_541) | dirty_memory_38_3);
+        ~_GEN_550 & (valid_write_hit & _GEN_717 & (&_GEN_675) | dirty_memory_38_3);
       dirty_memory_39_0 <=
-        ~_GEN_418 & (valid_write_hit & _GEN_584 & _GEN_543 | dirty_memory_39_0);
+        ~_GEN_552 & (valid_write_hit & _GEN_718 & _GEN_677 | dirty_memory_39_0);
       dirty_memory_39_1 <=
-        ~_GEN_419 & (valid_write_hit & _GEN_584 & _GEN_544 | dirty_memory_39_1);
+        ~_GEN_553 & (valid_write_hit & _GEN_718 & _GEN_678 | dirty_memory_39_1);
       dirty_memory_39_2 <=
-        ~_GEN_420 & (valid_write_hit & _GEN_584 & _GEN_545 | dirty_memory_39_2);
+        ~_GEN_554 & (valid_write_hit & _GEN_718 & _GEN_679 | dirty_memory_39_2);
       dirty_memory_39_3 <=
-        ~_GEN_421 & (valid_write_hit & _GEN_584 & (&_GEN_541) | dirty_memory_39_3);
+        ~_GEN_555 & (valid_write_hit & _GEN_718 & (&_GEN_675) | dirty_memory_39_3);
       dirty_memory_40_0 <=
-        ~_GEN_423 & (valid_write_hit & _GEN_585 & _GEN_543 | dirty_memory_40_0);
+        ~_GEN_557 & (valid_write_hit & _GEN_719 & _GEN_677 | dirty_memory_40_0);
       dirty_memory_40_1 <=
-        ~_GEN_424 & (valid_write_hit & _GEN_585 & _GEN_544 | dirty_memory_40_1);
+        ~_GEN_558 & (valid_write_hit & _GEN_719 & _GEN_678 | dirty_memory_40_1);
       dirty_memory_40_2 <=
-        ~_GEN_425 & (valid_write_hit & _GEN_585 & _GEN_545 | dirty_memory_40_2);
+        ~_GEN_559 & (valid_write_hit & _GEN_719 & _GEN_679 | dirty_memory_40_2);
       dirty_memory_40_3 <=
-        ~_GEN_426 & (valid_write_hit & _GEN_585 & (&_GEN_541) | dirty_memory_40_3);
+        ~_GEN_560 & (valid_write_hit & _GEN_719 & (&_GEN_675) | dirty_memory_40_3);
       dirty_memory_41_0 <=
-        ~_GEN_428 & (valid_write_hit & _GEN_586 & _GEN_543 | dirty_memory_41_0);
+        ~_GEN_562 & (valid_write_hit & _GEN_720 & _GEN_677 | dirty_memory_41_0);
       dirty_memory_41_1 <=
-        ~_GEN_429 & (valid_write_hit & _GEN_586 & _GEN_544 | dirty_memory_41_1);
+        ~_GEN_563 & (valid_write_hit & _GEN_720 & _GEN_678 | dirty_memory_41_1);
       dirty_memory_41_2 <=
-        ~_GEN_430 & (valid_write_hit & _GEN_586 & _GEN_545 | dirty_memory_41_2);
+        ~_GEN_564 & (valid_write_hit & _GEN_720 & _GEN_679 | dirty_memory_41_2);
       dirty_memory_41_3 <=
-        ~_GEN_431 & (valid_write_hit & _GEN_586 & (&_GEN_541) | dirty_memory_41_3);
+        ~_GEN_565 & (valid_write_hit & _GEN_720 & (&_GEN_675) | dirty_memory_41_3);
       dirty_memory_42_0 <=
-        ~_GEN_433 & (valid_write_hit & _GEN_587 & _GEN_543 | dirty_memory_42_0);
+        ~_GEN_567 & (valid_write_hit & _GEN_721 & _GEN_677 | dirty_memory_42_0);
       dirty_memory_42_1 <=
-        ~_GEN_434 & (valid_write_hit & _GEN_587 & _GEN_544 | dirty_memory_42_1);
+        ~_GEN_568 & (valid_write_hit & _GEN_721 & _GEN_678 | dirty_memory_42_1);
       dirty_memory_42_2 <=
-        ~_GEN_435 & (valid_write_hit & _GEN_587 & _GEN_545 | dirty_memory_42_2);
+        ~_GEN_569 & (valid_write_hit & _GEN_721 & _GEN_679 | dirty_memory_42_2);
       dirty_memory_42_3 <=
-        ~_GEN_436 & (valid_write_hit & _GEN_587 & (&_GEN_541) | dirty_memory_42_3);
+        ~_GEN_570 & (valid_write_hit & _GEN_721 & (&_GEN_675) | dirty_memory_42_3);
       dirty_memory_43_0 <=
-        ~_GEN_438 & (valid_write_hit & _GEN_588 & _GEN_543 | dirty_memory_43_0);
+        ~_GEN_572 & (valid_write_hit & _GEN_722 & _GEN_677 | dirty_memory_43_0);
       dirty_memory_43_1 <=
-        ~_GEN_439 & (valid_write_hit & _GEN_588 & _GEN_544 | dirty_memory_43_1);
+        ~_GEN_573 & (valid_write_hit & _GEN_722 & _GEN_678 | dirty_memory_43_1);
       dirty_memory_43_2 <=
-        ~_GEN_440 & (valid_write_hit & _GEN_588 & _GEN_545 | dirty_memory_43_2);
+        ~_GEN_574 & (valid_write_hit & _GEN_722 & _GEN_679 | dirty_memory_43_2);
       dirty_memory_43_3 <=
-        ~_GEN_441 & (valid_write_hit & _GEN_588 & (&_GEN_541) | dirty_memory_43_3);
+        ~_GEN_575 & (valid_write_hit & _GEN_722 & (&_GEN_675) | dirty_memory_43_3);
       dirty_memory_44_0 <=
-        ~_GEN_443 & (valid_write_hit & _GEN_589 & _GEN_543 | dirty_memory_44_0);
+        ~_GEN_577 & (valid_write_hit & _GEN_723 & _GEN_677 | dirty_memory_44_0);
       dirty_memory_44_1 <=
-        ~_GEN_444 & (valid_write_hit & _GEN_589 & _GEN_544 | dirty_memory_44_1);
+        ~_GEN_578 & (valid_write_hit & _GEN_723 & _GEN_678 | dirty_memory_44_1);
       dirty_memory_44_2 <=
-        ~_GEN_445 & (valid_write_hit & _GEN_589 & _GEN_545 | dirty_memory_44_2);
+        ~_GEN_579 & (valid_write_hit & _GEN_723 & _GEN_679 | dirty_memory_44_2);
       dirty_memory_44_3 <=
-        ~_GEN_446 & (valid_write_hit & _GEN_589 & (&_GEN_541) | dirty_memory_44_3);
+        ~_GEN_580 & (valid_write_hit & _GEN_723 & (&_GEN_675) | dirty_memory_44_3);
       dirty_memory_45_0 <=
-        ~_GEN_448 & (valid_write_hit & _GEN_590 & _GEN_543 | dirty_memory_45_0);
+        ~_GEN_582 & (valid_write_hit & _GEN_724 & _GEN_677 | dirty_memory_45_0);
       dirty_memory_45_1 <=
-        ~_GEN_449 & (valid_write_hit & _GEN_590 & _GEN_544 | dirty_memory_45_1);
+        ~_GEN_583 & (valid_write_hit & _GEN_724 & _GEN_678 | dirty_memory_45_1);
       dirty_memory_45_2 <=
-        ~_GEN_450 & (valid_write_hit & _GEN_590 & _GEN_545 | dirty_memory_45_2);
+        ~_GEN_584 & (valid_write_hit & _GEN_724 & _GEN_679 | dirty_memory_45_2);
       dirty_memory_45_3 <=
-        ~_GEN_451 & (valid_write_hit & _GEN_590 & (&_GEN_541) | dirty_memory_45_3);
+        ~_GEN_585 & (valid_write_hit & _GEN_724 & (&_GEN_675) | dirty_memory_45_3);
       dirty_memory_46_0 <=
-        ~_GEN_453 & (valid_write_hit & _GEN_591 & _GEN_543 | dirty_memory_46_0);
+        ~_GEN_587 & (valid_write_hit & _GEN_725 & _GEN_677 | dirty_memory_46_0);
       dirty_memory_46_1 <=
-        ~_GEN_454 & (valid_write_hit & _GEN_591 & _GEN_544 | dirty_memory_46_1);
+        ~_GEN_588 & (valid_write_hit & _GEN_725 & _GEN_678 | dirty_memory_46_1);
       dirty_memory_46_2 <=
-        ~_GEN_455 & (valid_write_hit & _GEN_591 & _GEN_545 | dirty_memory_46_2);
+        ~_GEN_589 & (valid_write_hit & _GEN_725 & _GEN_679 | dirty_memory_46_2);
       dirty_memory_46_3 <=
-        ~_GEN_456 & (valid_write_hit & _GEN_591 & (&_GEN_541) | dirty_memory_46_3);
+        ~_GEN_590 & (valid_write_hit & _GEN_725 & (&_GEN_675) | dirty_memory_46_3);
       dirty_memory_47_0 <=
-        ~_GEN_458 & (valid_write_hit & _GEN_592 & _GEN_543 | dirty_memory_47_0);
+        ~_GEN_592 & (valid_write_hit & _GEN_726 & _GEN_677 | dirty_memory_47_0);
       dirty_memory_47_1 <=
-        ~_GEN_459 & (valid_write_hit & _GEN_592 & _GEN_544 | dirty_memory_47_1);
+        ~_GEN_593 & (valid_write_hit & _GEN_726 & _GEN_678 | dirty_memory_47_1);
       dirty_memory_47_2 <=
-        ~_GEN_460 & (valid_write_hit & _GEN_592 & _GEN_545 | dirty_memory_47_2);
+        ~_GEN_594 & (valid_write_hit & _GEN_726 & _GEN_679 | dirty_memory_47_2);
       dirty_memory_47_3 <=
-        ~_GEN_461 & (valid_write_hit & _GEN_592 & (&_GEN_541) | dirty_memory_47_3);
+        ~_GEN_595 & (valid_write_hit & _GEN_726 & (&_GEN_675) | dirty_memory_47_3);
       dirty_memory_48_0 <=
-        ~_GEN_463 & (valid_write_hit & _GEN_593 & _GEN_543 | dirty_memory_48_0);
+        ~_GEN_597 & (valid_write_hit & _GEN_727 & _GEN_677 | dirty_memory_48_0);
       dirty_memory_48_1 <=
-        ~_GEN_464 & (valid_write_hit & _GEN_593 & _GEN_544 | dirty_memory_48_1);
+        ~_GEN_598 & (valid_write_hit & _GEN_727 & _GEN_678 | dirty_memory_48_1);
       dirty_memory_48_2 <=
-        ~_GEN_465 & (valid_write_hit & _GEN_593 & _GEN_545 | dirty_memory_48_2);
+        ~_GEN_599 & (valid_write_hit & _GEN_727 & _GEN_679 | dirty_memory_48_2);
       dirty_memory_48_3 <=
-        ~_GEN_466 & (valid_write_hit & _GEN_593 & (&_GEN_541) | dirty_memory_48_3);
+        ~_GEN_600 & (valid_write_hit & _GEN_727 & (&_GEN_675) | dirty_memory_48_3);
       dirty_memory_49_0 <=
-        ~_GEN_468 & (valid_write_hit & _GEN_594 & _GEN_543 | dirty_memory_49_0);
+        ~_GEN_602 & (valid_write_hit & _GEN_728 & _GEN_677 | dirty_memory_49_0);
       dirty_memory_49_1 <=
-        ~_GEN_469 & (valid_write_hit & _GEN_594 & _GEN_544 | dirty_memory_49_1);
+        ~_GEN_603 & (valid_write_hit & _GEN_728 & _GEN_678 | dirty_memory_49_1);
       dirty_memory_49_2 <=
-        ~_GEN_470 & (valid_write_hit & _GEN_594 & _GEN_545 | dirty_memory_49_2);
+        ~_GEN_604 & (valid_write_hit & _GEN_728 & _GEN_679 | dirty_memory_49_2);
       dirty_memory_49_3 <=
-        ~_GEN_471 & (valid_write_hit & _GEN_594 & (&_GEN_541) | dirty_memory_49_3);
+        ~_GEN_605 & (valid_write_hit & _GEN_728 & (&_GEN_675) | dirty_memory_49_3);
       dirty_memory_50_0 <=
-        ~_GEN_473 & (valid_write_hit & _GEN_595 & _GEN_543 | dirty_memory_50_0);
+        ~_GEN_607 & (valid_write_hit & _GEN_729 & _GEN_677 | dirty_memory_50_0);
       dirty_memory_50_1 <=
-        ~_GEN_474 & (valid_write_hit & _GEN_595 & _GEN_544 | dirty_memory_50_1);
+        ~_GEN_608 & (valid_write_hit & _GEN_729 & _GEN_678 | dirty_memory_50_1);
       dirty_memory_50_2 <=
-        ~_GEN_475 & (valid_write_hit & _GEN_595 & _GEN_545 | dirty_memory_50_2);
+        ~_GEN_609 & (valid_write_hit & _GEN_729 & _GEN_679 | dirty_memory_50_2);
       dirty_memory_50_3 <=
-        ~_GEN_476 & (valid_write_hit & _GEN_595 & (&_GEN_541) | dirty_memory_50_3);
+        ~_GEN_610 & (valid_write_hit & _GEN_729 & (&_GEN_675) | dirty_memory_50_3);
       dirty_memory_51_0 <=
-        ~_GEN_478 & (valid_write_hit & _GEN_596 & _GEN_543 | dirty_memory_51_0);
+        ~_GEN_612 & (valid_write_hit & _GEN_730 & _GEN_677 | dirty_memory_51_0);
       dirty_memory_51_1 <=
-        ~_GEN_479 & (valid_write_hit & _GEN_596 & _GEN_544 | dirty_memory_51_1);
+        ~_GEN_613 & (valid_write_hit & _GEN_730 & _GEN_678 | dirty_memory_51_1);
       dirty_memory_51_2 <=
-        ~_GEN_480 & (valid_write_hit & _GEN_596 & _GEN_545 | dirty_memory_51_2);
+        ~_GEN_614 & (valid_write_hit & _GEN_730 & _GEN_679 | dirty_memory_51_2);
       dirty_memory_51_3 <=
-        ~_GEN_481 & (valid_write_hit & _GEN_596 & (&_GEN_541) | dirty_memory_51_3);
+        ~_GEN_615 & (valid_write_hit & _GEN_730 & (&_GEN_675) | dirty_memory_51_3);
       dirty_memory_52_0 <=
-        ~_GEN_483 & (valid_write_hit & _GEN_597 & _GEN_543 | dirty_memory_52_0);
+        ~_GEN_617 & (valid_write_hit & _GEN_731 & _GEN_677 | dirty_memory_52_0);
       dirty_memory_52_1 <=
-        ~_GEN_484 & (valid_write_hit & _GEN_597 & _GEN_544 | dirty_memory_52_1);
+        ~_GEN_618 & (valid_write_hit & _GEN_731 & _GEN_678 | dirty_memory_52_1);
       dirty_memory_52_2 <=
-        ~_GEN_485 & (valid_write_hit & _GEN_597 & _GEN_545 | dirty_memory_52_2);
+        ~_GEN_619 & (valid_write_hit & _GEN_731 & _GEN_679 | dirty_memory_52_2);
       dirty_memory_52_3 <=
-        ~_GEN_486 & (valid_write_hit & _GEN_597 & (&_GEN_541) | dirty_memory_52_3);
+        ~_GEN_620 & (valid_write_hit & _GEN_731 & (&_GEN_675) | dirty_memory_52_3);
       dirty_memory_53_0 <=
-        ~_GEN_488 & (valid_write_hit & _GEN_598 & _GEN_543 | dirty_memory_53_0);
+        ~_GEN_622 & (valid_write_hit & _GEN_732 & _GEN_677 | dirty_memory_53_0);
       dirty_memory_53_1 <=
-        ~_GEN_489 & (valid_write_hit & _GEN_598 & _GEN_544 | dirty_memory_53_1);
+        ~_GEN_623 & (valid_write_hit & _GEN_732 & _GEN_678 | dirty_memory_53_1);
       dirty_memory_53_2 <=
-        ~_GEN_490 & (valid_write_hit & _GEN_598 & _GEN_545 | dirty_memory_53_2);
+        ~_GEN_624 & (valid_write_hit & _GEN_732 & _GEN_679 | dirty_memory_53_2);
       dirty_memory_53_3 <=
-        ~_GEN_491 & (valid_write_hit & _GEN_598 & (&_GEN_541) | dirty_memory_53_3);
+        ~_GEN_625 & (valid_write_hit & _GEN_732 & (&_GEN_675) | dirty_memory_53_3);
       dirty_memory_54_0 <=
-        ~_GEN_493 & (valid_write_hit & _GEN_599 & _GEN_543 | dirty_memory_54_0);
+        ~_GEN_627 & (valid_write_hit & _GEN_733 & _GEN_677 | dirty_memory_54_0);
       dirty_memory_54_1 <=
-        ~_GEN_494 & (valid_write_hit & _GEN_599 & _GEN_544 | dirty_memory_54_1);
+        ~_GEN_628 & (valid_write_hit & _GEN_733 & _GEN_678 | dirty_memory_54_1);
       dirty_memory_54_2 <=
-        ~_GEN_495 & (valid_write_hit & _GEN_599 & _GEN_545 | dirty_memory_54_2);
+        ~_GEN_629 & (valid_write_hit & _GEN_733 & _GEN_679 | dirty_memory_54_2);
       dirty_memory_54_3 <=
-        ~_GEN_496 & (valid_write_hit & _GEN_599 & (&_GEN_541) | dirty_memory_54_3);
+        ~_GEN_630 & (valid_write_hit & _GEN_733 & (&_GEN_675) | dirty_memory_54_3);
       dirty_memory_55_0 <=
-        ~_GEN_498 & (valid_write_hit & _GEN_600 & _GEN_543 | dirty_memory_55_0);
+        ~_GEN_632 & (valid_write_hit & _GEN_734 & _GEN_677 | dirty_memory_55_0);
       dirty_memory_55_1 <=
-        ~_GEN_499 & (valid_write_hit & _GEN_600 & _GEN_544 | dirty_memory_55_1);
+        ~_GEN_633 & (valid_write_hit & _GEN_734 & _GEN_678 | dirty_memory_55_1);
       dirty_memory_55_2 <=
-        ~_GEN_500 & (valid_write_hit & _GEN_600 & _GEN_545 | dirty_memory_55_2);
+        ~_GEN_634 & (valid_write_hit & _GEN_734 & _GEN_679 | dirty_memory_55_2);
       dirty_memory_55_3 <=
-        ~_GEN_501 & (valid_write_hit & _GEN_600 & (&_GEN_541) | dirty_memory_55_3);
+        ~_GEN_635 & (valid_write_hit & _GEN_734 & (&_GEN_675) | dirty_memory_55_3);
       dirty_memory_56_0 <=
-        ~_GEN_503 & (valid_write_hit & _GEN_601 & _GEN_543 | dirty_memory_56_0);
+        ~_GEN_637 & (valid_write_hit & _GEN_735 & _GEN_677 | dirty_memory_56_0);
       dirty_memory_56_1 <=
-        ~_GEN_504 & (valid_write_hit & _GEN_601 & _GEN_544 | dirty_memory_56_1);
+        ~_GEN_638 & (valid_write_hit & _GEN_735 & _GEN_678 | dirty_memory_56_1);
       dirty_memory_56_2 <=
-        ~_GEN_505 & (valid_write_hit & _GEN_601 & _GEN_545 | dirty_memory_56_2);
+        ~_GEN_639 & (valid_write_hit & _GEN_735 & _GEN_679 | dirty_memory_56_2);
       dirty_memory_56_3 <=
-        ~_GEN_506 & (valid_write_hit & _GEN_601 & (&_GEN_541) | dirty_memory_56_3);
+        ~_GEN_640 & (valid_write_hit & _GEN_735 & (&_GEN_675) | dirty_memory_56_3);
       dirty_memory_57_0 <=
-        ~_GEN_508 & (valid_write_hit & _GEN_602 & _GEN_543 | dirty_memory_57_0);
+        ~_GEN_642 & (valid_write_hit & _GEN_736 & _GEN_677 | dirty_memory_57_0);
       dirty_memory_57_1 <=
-        ~_GEN_509 & (valid_write_hit & _GEN_602 & _GEN_544 | dirty_memory_57_1);
+        ~_GEN_643 & (valid_write_hit & _GEN_736 & _GEN_678 | dirty_memory_57_1);
       dirty_memory_57_2 <=
-        ~_GEN_510 & (valid_write_hit & _GEN_602 & _GEN_545 | dirty_memory_57_2);
+        ~_GEN_644 & (valid_write_hit & _GEN_736 & _GEN_679 | dirty_memory_57_2);
       dirty_memory_57_3 <=
-        ~_GEN_511 & (valid_write_hit & _GEN_602 & (&_GEN_541) | dirty_memory_57_3);
+        ~_GEN_645 & (valid_write_hit & _GEN_736 & (&_GEN_675) | dirty_memory_57_3);
       dirty_memory_58_0 <=
-        ~_GEN_513 & (valid_write_hit & _GEN_603 & _GEN_543 | dirty_memory_58_0);
+        ~_GEN_647 & (valid_write_hit & _GEN_737 & _GEN_677 | dirty_memory_58_0);
       dirty_memory_58_1 <=
-        ~_GEN_514 & (valid_write_hit & _GEN_603 & _GEN_544 | dirty_memory_58_1);
+        ~_GEN_648 & (valid_write_hit & _GEN_737 & _GEN_678 | dirty_memory_58_1);
       dirty_memory_58_2 <=
-        ~_GEN_515 & (valid_write_hit & _GEN_603 & _GEN_545 | dirty_memory_58_2);
+        ~_GEN_649 & (valid_write_hit & _GEN_737 & _GEN_679 | dirty_memory_58_2);
       dirty_memory_58_3 <=
-        ~_GEN_516 & (valid_write_hit & _GEN_603 & (&_GEN_541) | dirty_memory_58_3);
+        ~_GEN_650 & (valid_write_hit & _GEN_737 & (&_GEN_675) | dirty_memory_58_3);
       dirty_memory_59_0 <=
-        ~_GEN_518 & (valid_write_hit & _GEN_604 & _GEN_543 | dirty_memory_59_0);
+        ~_GEN_652 & (valid_write_hit & _GEN_738 & _GEN_677 | dirty_memory_59_0);
       dirty_memory_59_1 <=
-        ~_GEN_519 & (valid_write_hit & _GEN_604 & _GEN_544 | dirty_memory_59_1);
+        ~_GEN_653 & (valid_write_hit & _GEN_738 & _GEN_678 | dirty_memory_59_1);
       dirty_memory_59_2 <=
-        ~_GEN_520 & (valid_write_hit & _GEN_604 & _GEN_545 | dirty_memory_59_2);
+        ~_GEN_654 & (valid_write_hit & _GEN_738 & _GEN_679 | dirty_memory_59_2);
       dirty_memory_59_3 <=
-        ~_GEN_521 & (valid_write_hit & _GEN_604 & (&_GEN_541) | dirty_memory_59_3);
+        ~_GEN_655 & (valid_write_hit & _GEN_738 & (&_GEN_675) | dirty_memory_59_3);
       dirty_memory_60_0 <=
-        ~_GEN_523 & (valid_write_hit & _GEN_605 & _GEN_543 | dirty_memory_60_0);
+        ~_GEN_657 & (valid_write_hit & _GEN_739 & _GEN_677 | dirty_memory_60_0);
       dirty_memory_60_1 <=
-        ~_GEN_524 & (valid_write_hit & _GEN_605 & _GEN_544 | dirty_memory_60_1);
+        ~_GEN_658 & (valid_write_hit & _GEN_739 & _GEN_678 | dirty_memory_60_1);
       dirty_memory_60_2 <=
-        ~_GEN_525 & (valid_write_hit & _GEN_605 & _GEN_545 | dirty_memory_60_2);
+        ~_GEN_659 & (valid_write_hit & _GEN_739 & _GEN_679 | dirty_memory_60_2);
       dirty_memory_60_3 <=
-        ~_GEN_526 & (valid_write_hit & _GEN_605 & (&_GEN_541) | dirty_memory_60_3);
+        ~_GEN_660 & (valid_write_hit & _GEN_739 & (&_GEN_675) | dirty_memory_60_3);
       dirty_memory_61_0 <=
-        ~_GEN_528 & (valid_write_hit & _GEN_606 & _GEN_543 | dirty_memory_61_0);
+        ~_GEN_662 & (valid_write_hit & _GEN_740 & _GEN_677 | dirty_memory_61_0);
       dirty_memory_61_1 <=
-        ~_GEN_529 & (valid_write_hit & _GEN_606 & _GEN_544 | dirty_memory_61_1);
+        ~_GEN_663 & (valid_write_hit & _GEN_740 & _GEN_678 | dirty_memory_61_1);
       dirty_memory_61_2 <=
-        ~_GEN_530 & (valid_write_hit & _GEN_606 & _GEN_545 | dirty_memory_61_2);
+        ~_GEN_664 & (valid_write_hit & _GEN_740 & _GEN_679 | dirty_memory_61_2);
       dirty_memory_61_3 <=
-        ~_GEN_531 & (valid_write_hit & _GEN_606 & (&_GEN_541) | dirty_memory_61_3);
+        ~_GEN_665 & (valid_write_hit & _GEN_740 & (&_GEN_675) | dirty_memory_61_3);
       dirty_memory_62_0 <=
-        ~_GEN_533 & (valid_write_hit & _GEN_607 & _GEN_543 | dirty_memory_62_0);
+        ~_GEN_667 & (valid_write_hit & _GEN_741 & _GEN_677 | dirty_memory_62_0);
       dirty_memory_62_1 <=
-        ~_GEN_534 & (valid_write_hit & _GEN_607 & _GEN_544 | dirty_memory_62_1);
+        ~_GEN_668 & (valid_write_hit & _GEN_741 & _GEN_678 | dirty_memory_62_1);
       dirty_memory_62_2 <=
-        ~_GEN_535 & (valid_write_hit & _GEN_607 & _GEN_545 | dirty_memory_62_2);
+        ~_GEN_669 & (valid_write_hit & _GEN_741 & _GEN_679 | dirty_memory_62_2);
       dirty_memory_62_3 <=
-        ~_GEN_536 & (valid_write_hit & _GEN_607 & (&_GEN_541) | dirty_memory_62_3);
+        ~_GEN_670 & (valid_write_hit & _GEN_741 & (&_GEN_675) | dirty_memory_62_3);
       dirty_memory_63_0 <=
-        ~_GEN_537 & (valid_write_hit & (&REG_4) & _GEN_543 | dirty_memory_63_0);
+        ~_GEN_671 & (valid_write_hit & (&REG_4) & _GEN_677 | dirty_memory_63_0);
       dirty_memory_63_1 <=
-        ~_GEN_538 & (valid_write_hit & (&REG_4) & _GEN_544 | dirty_memory_63_1);
+        ~_GEN_672 & (valid_write_hit & (&REG_4) & _GEN_678 | dirty_memory_63_1);
       dirty_memory_63_2 <=
-        ~_GEN_539 & (valid_write_hit & (&REG_4) & _GEN_545 | dirty_memory_63_2);
+        ~_GEN_673 & (valid_write_hit & (&REG_4) & _GEN_679 | dirty_memory_63_2);
       dirty_memory_63_3 <=
-        ~_GEN_540 & (valid_write_hit & (&REG_4) & (&_GEN_541) | dirty_memory_63_3);
-      if (_GEN_38)
+        ~_GEN_674 & (valid_write_hit & (&REG_4) & (&_GEN_675) | dirty_memory_63_3);
+      inflight_write_miss_0_0 <= inflight_write_miss_next_0_0;
+      inflight_write_miss_0_1 <= inflight_write_miss_next_0_1;
+      inflight_write_miss_0_2 <= inflight_write_miss_next_0_2;
+      inflight_write_miss_0_3 <= inflight_write_miss_next_0_3;
+      inflight_write_miss_1_0 <= inflight_write_miss_next_1_0;
+      inflight_write_miss_1_1 <= inflight_write_miss_next_1_1;
+      inflight_write_miss_1_2 <= inflight_write_miss_next_1_2;
+      inflight_write_miss_1_3 <= inflight_write_miss_next_1_3;
+      inflight_write_miss_2_0 <= inflight_write_miss_next_2_0;
+      inflight_write_miss_2_1 <= inflight_write_miss_next_2_1;
+      inflight_write_miss_2_2 <= inflight_write_miss_next_2_2;
+      inflight_write_miss_2_3 <= inflight_write_miss_next_2_3;
+      inflight_write_miss_3_0 <= inflight_write_miss_next_3_0;
+      inflight_write_miss_3_1 <= inflight_write_miss_next_3_1;
+      inflight_write_miss_3_2 <= inflight_write_miss_next_3_2;
+      inflight_write_miss_3_3 <= inflight_write_miss_next_3_3;
+      inflight_write_miss_4_0 <= inflight_write_miss_next_4_0;
+      inflight_write_miss_4_1 <= inflight_write_miss_next_4_1;
+      inflight_write_miss_4_2 <= inflight_write_miss_next_4_2;
+      inflight_write_miss_4_3 <= inflight_write_miss_next_4_3;
+      inflight_write_miss_5_0 <= inflight_write_miss_next_5_0;
+      inflight_write_miss_5_1 <= inflight_write_miss_next_5_1;
+      inflight_write_miss_5_2 <= inflight_write_miss_next_5_2;
+      inflight_write_miss_5_3 <= inflight_write_miss_next_5_3;
+      inflight_write_miss_6_0 <= inflight_write_miss_next_6_0;
+      inflight_write_miss_6_1 <= inflight_write_miss_next_6_1;
+      inflight_write_miss_6_2 <= inflight_write_miss_next_6_2;
+      inflight_write_miss_6_3 <= inflight_write_miss_next_6_3;
+      inflight_write_miss_7_0 <= inflight_write_miss_next_7_0;
+      inflight_write_miss_7_1 <= inflight_write_miss_next_7_1;
+      inflight_write_miss_7_2 <= inflight_write_miss_next_7_2;
+      inflight_write_miss_7_3 <= inflight_write_miss_next_7_3;
+      inflight_write_miss_8_0 <= inflight_write_miss_next_8_0;
+      inflight_write_miss_8_1 <= inflight_write_miss_next_8_1;
+      inflight_write_miss_8_2 <= inflight_write_miss_next_8_2;
+      inflight_write_miss_8_3 <= inflight_write_miss_next_8_3;
+      inflight_write_miss_9_0 <= inflight_write_miss_next_9_0;
+      inflight_write_miss_9_1 <= inflight_write_miss_next_9_1;
+      inflight_write_miss_9_2 <= inflight_write_miss_next_9_2;
+      inflight_write_miss_9_3 <= inflight_write_miss_next_9_3;
+      inflight_write_miss_10_0 <= inflight_write_miss_next_10_0;
+      inflight_write_miss_10_1 <= inflight_write_miss_next_10_1;
+      inflight_write_miss_10_2 <= inflight_write_miss_next_10_2;
+      inflight_write_miss_10_3 <= inflight_write_miss_next_10_3;
+      inflight_write_miss_11_0 <= inflight_write_miss_next_11_0;
+      inflight_write_miss_11_1 <= inflight_write_miss_next_11_1;
+      inflight_write_miss_11_2 <= inflight_write_miss_next_11_2;
+      inflight_write_miss_11_3 <= inflight_write_miss_next_11_3;
+      inflight_write_miss_12_0 <= inflight_write_miss_next_12_0;
+      inflight_write_miss_12_1 <= inflight_write_miss_next_12_1;
+      inflight_write_miss_12_2 <= inflight_write_miss_next_12_2;
+      inflight_write_miss_12_3 <= inflight_write_miss_next_12_3;
+      inflight_write_miss_13_0 <= inflight_write_miss_next_13_0;
+      inflight_write_miss_13_1 <= inflight_write_miss_next_13_1;
+      inflight_write_miss_13_2 <= inflight_write_miss_next_13_2;
+      inflight_write_miss_13_3 <= inflight_write_miss_next_13_3;
+      inflight_write_miss_14_0 <= inflight_write_miss_next_14_0;
+      inflight_write_miss_14_1 <= inflight_write_miss_next_14_1;
+      inflight_write_miss_14_2 <= inflight_write_miss_next_14_2;
+      inflight_write_miss_14_3 <= inflight_write_miss_next_14_3;
+      inflight_write_miss_15_0 <= inflight_write_miss_next_15_0;
+      inflight_write_miss_15_1 <= inflight_write_miss_next_15_1;
+      inflight_write_miss_15_2 <= inflight_write_miss_next_15_2;
+      inflight_write_miss_15_3 <= inflight_write_miss_next_15_3;
+      inflight_write_miss_16_0 <= inflight_write_miss_next_16_0;
+      inflight_write_miss_16_1 <= inflight_write_miss_next_16_1;
+      inflight_write_miss_16_2 <= inflight_write_miss_next_16_2;
+      inflight_write_miss_16_3 <= inflight_write_miss_next_16_3;
+      inflight_write_miss_17_0 <= inflight_write_miss_next_17_0;
+      inflight_write_miss_17_1 <= inflight_write_miss_next_17_1;
+      inflight_write_miss_17_2 <= inflight_write_miss_next_17_2;
+      inflight_write_miss_17_3 <= inflight_write_miss_next_17_3;
+      inflight_write_miss_18_0 <= inflight_write_miss_next_18_0;
+      inflight_write_miss_18_1 <= inflight_write_miss_next_18_1;
+      inflight_write_miss_18_2 <= inflight_write_miss_next_18_2;
+      inflight_write_miss_18_3 <= inflight_write_miss_next_18_3;
+      inflight_write_miss_19_0 <= inflight_write_miss_next_19_0;
+      inflight_write_miss_19_1 <= inflight_write_miss_next_19_1;
+      inflight_write_miss_19_2 <= inflight_write_miss_next_19_2;
+      inflight_write_miss_19_3 <= inflight_write_miss_next_19_3;
+      inflight_write_miss_20_0 <= inflight_write_miss_next_20_0;
+      inflight_write_miss_20_1 <= inflight_write_miss_next_20_1;
+      inflight_write_miss_20_2 <= inflight_write_miss_next_20_2;
+      inflight_write_miss_20_3 <= inflight_write_miss_next_20_3;
+      inflight_write_miss_21_0 <= inflight_write_miss_next_21_0;
+      inflight_write_miss_21_1 <= inflight_write_miss_next_21_1;
+      inflight_write_miss_21_2 <= inflight_write_miss_next_21_2;
+      inflight_write_miss_21_3 <= inflight_write_miss_next_21_3;
+      inflight_write_miss_22_0 <= inflight_write_miss_next_22_0;
+      inflight_write_miss_22_1 <= inflight_write_miss_next_22_1;
+      inflight_write_miss_22_2 <= inflight_write_miss_next_22_2;
+      inflight_write_miss_22_3 <= inflight_write_miss_next_22_3;
+      inflight_write_miss_23_0 <= inflight_write_miss_next_23_0;
+      inflight_write_miss_23_1 <= inflight_write_miss_next_23_1;
+      inflight_write_miss_23_2 <= inflight_write_miss_next_23_2;
+      inflight_write_miss_23_3 <= inflight_write_miss_next_23_3;
+      inflight_write_miss_24_0 <= inflight_write_miss_next_24_0;
+      inflight_write_miss_24_1 <= inflight_write_miss_next_24_1;
+      inflight_write_miss_24_2 <= inflight_write_miss_next_24_2;
+      inflight_write_miss_24_3 <= inflight_write_miss_next_24_3;
+      inflight_write_miss_25_0 <= inflight_write_miss_next_25_0;
+      inflight_write_miss_25_1 <= inflight_write_miss_next_25_1;
+      inflight_write_miss_25_2 <= inflight_write_miss_next_25_2;
+      inflight_write_miss_25_3 <= inflight_write_miss_next_25_3;
+      inflight_write_miss_26_0 <= inflight_write_miss_next_26_0;
+      inflight_write_miss_26_1 <= inflight_write_miss_next_26_1;
+      inflight_write_miss_26_2 <= inflight_write_miss_next_26_2;
+      inflight_write_miss_26_3 <= inflight_write_miss_next_26_3;
+      inflight_write_miss_27_0 <= inflight_write_miss_next_27_0;
+      inflight_write_miss_27_1 <= inflight_write_miss_next_27_1;
+      inflight_write_miss_27_2 <= inflight_write_miss_next_27_2;
+      inflight_write_miss_27_3 <= inflight_write_miss_next_27_3;
+      inflight_write_miss_28_0 <= inflight_write_miss_next_28_0;
+      inflight_write_miss_28_1 <= inflight_write_miss_next_28_1;
+      inflight_write_miss_28_2 <= inflight_write_miss_next_28_2;
+      inflight_write_miss_28_3 <= inflight_write_miss_next_28_3;
+      inflight_write_miss_29_0 <= inflight_write_miss_next_29_0;
+      inflight_write_miss_29_1 <= inflight_write_miss_next_29_1;
+      inflight_write_miss_29_2 <= inflight_write_miss_next_29_2;
+      inflight_write_miss_29_3 <= inflight_write_miss_next_29_3;
+      inflight_write_miss_30_0 <= inflight_write_miss_next_30_0;
+      inflight_write_miss_30_1 <= inflight_write_miss_next_30_1;
+      inflight_write_miss_30_2 <= inflight_write_miss_next_30_2;
+      inflight_write_miss_30_3 <= inflight_write_miss_next_30_3;
+      inflight_write_miss_31_0 <= inflight_write_miss_next_31_0;
+      inflight_write_miss_31_1 <= inflight_write_miss_next_31_1;
+      inflight_write_miss_31_2 <= inflight_write_miss_next_31_2;
+      inflight_write_miss_31_3 <= inflight_write_miss_next_31_3;
+      inflight_write_miss_32_0 <= inflight_write_miss_next_32_0;
+      inflight_write_miss_32_1 <= inflight_write_miss_next_32_1;
+      inflight_write_miss_32_2 <= inflight_write_miss_next_32_2;
+      inflight_write_miss_32_3 <= inflight_write_miss_next_32_3;
+      inflight_write_miss_33_0 <= inflight_write_miss_next_33_0;
+      inflight_write_miss_33_1 <= inflight_write_miss_next_33_1;
+      inflight_write_miss_33_2 <= inflight_write_miss_next_33_2;
+      inflight_write_miss_33_3 <= inflight_write_miss_next_33_3;
+      inflight_write_miss_34_0 <= inflight_write_miss_next_34_0;
+      inflight_write_miss_34_1 <= inflight_write_miss_next_34_1;
+      inflight_write_miss_34_2 <= inflight_write_miss_next_34_2;
+      inflight_write_miss_34_3 <= inflight_write_miss_next_34_3;
+      inflight_write_miss_35_0 <= inflight_write_miss_next_35_0;
+      inflight_write_miss_35_1 <= inflight_write_miss_next_35_1;
+      inflight_write_miss_35_2 <= inflight_write_miss_next_35_2;
+      inflight_write_miss_35_3 <= inflight_write_miss_next_35_3;
+      inflight_write_miss_36_0 <= inflight_write_miss_next_36_0;
+      inflight_write_miss_36_1 <= inflight_write_miss_next_36_1;
+      inflight_write_miss_36_2 <= inflight_write_miss_next_36_2;
+      inflight_write_miss_36_3 <= inflight_write_miss_next_36_3;
+      inflight_write_miss_37_0 <= inflight_write_miss_next_37_0;
+      inflight_write_miss_37_1 <= inflight_write_miss_next_37_1;
+      inflight_write_miss_37_2 <= inflight_write_miss_next_37_2;
+      inflight_write_miss_37_3 <= inflight_write_miss_next_37_3;
+      inflight_write_miss_38_0 <= inflight_write_miss_next_38_0;
+      inflight_write_miss_38_1 <= inflight_write_miss_next_38_1;
+      inflight_write_miss_38_2 <= inflight_write_miss_next_38_2;
+      inflight_write_miss_38_3 <= inflight_write_miss_next_38_3;
+      inflight_write_miss_39_0 <= inflight_write_miss_next_39_0;
+      inflight_write_miss_39_1 <= inflight_write_miss_next_39_1;
+      inflight_write_miss_39_2 <= inflight_write_miss_next_39_2;
+      inflight_write_miss_39_3 <= inflight_write_miss_next_39_3;
+      inflight_write_miss_40_0 <= inflight_write_miss_next_40_0;
+      inflight_write_miss_40_1 <= inflight_write_miss_next_40_1;
+      inflight_write_miss_40_2 <= inflight_write_miss_next_40_2;
+      inflight_write_miss_40_3 <= inflight_write_miss_next_40_3;
+      inflight_write_miss_41_0 <= inflight_write_miss_next_41_0;
+      inflight_write_miss_41_1 <= inflight_write_miss_next_41_1;
+      inflight_write_miss_41_2 <= inflight_write_miss_next_41_2;
+      inflight_write_miss_41_3 <= inflight_write_miss_next_41_3;
+      inflight_write_miss_42_0 <= inflight_write_miss_next_42_0;
+      inflight_write_miss_42_1 <= inflight_write_miss_next_42_1;
+      inflight_write_miss_42_2 <= inflight_write_miss_next_42_2;
+      inflight_write_miss_42_3 <= inflight_write_miss_next_42_3;
+      inflight_write_miss_43_0 <= inflight_write_miss_next_43_0;
+      inflight_write_miss_43_1 <= inflight_write_miss_next_43_1;
+      inflight_write_miss_43_2 <= inflight_write_miss_next_43_2;
+      inflight_write_miss_43_3 <= inflight_write_miss_next_43_3;
+      inflight_write_miss_44_0 <= inflight_write_miss_next_44_0;
+      inflight_write_miss_44_1 <= inflight_write_miss_next_44_1;
+      inflight_write_miss_44_2 <= inflight_write_miss_next_44_2;
+      inflight_write_miss_44_3 <= inflight_write_miss_next_44_3;
+      inflight_write_miss_45_0 <= inflight_write_miss_next_45_0;
+      inflight_write_miss_45_1 <= inflight_write_miss_next_45_1;
+      inflight_write_miss_45_2 <= inflight_write_miss_next_45_2;
+      inflight_write_miss_45_3 <= inflight_write_miss_next_45_3;
+      inflight_write_miss_46_0 <= inflight_write_miss_next_46_0;
+      inflight_write_miss_46_1 <= inflight_write_miss_next_46_1;
+      inflight_write_miss_46_2 <= inflight_write_miss_next_46_2;
+      inflight_write_miss_46_3 <= inflight_write_miss_next_46_3;
+      inflight_write_miss_47_0 <= inflight_write_miss_next_47_0;
+      inflight_write_miss_47_1 <= inflight_write_miss_next_47_1;
+      inflight_write_miss_47_2 <= inflight_write_miss_next_47_2;
+      inflight_write_miss_47_3 <= inflight_write_miss_next_47_3;
+      inflight_write_miss_48_0 <= inflight_write_miss_next_48_0;
+      inflight_write_miss_48_1 <= inflight_write_miss_next_48_1;
+      inflight_write_miss_48_2 <= inflight_write_miss_next_48_2;
+      inflight_write_miss_48_3 <= inflight_write_miss_next_48_3;
+      inflight_write_miss_49_0 <= inflight_write_miss_next_49_0;
+      inflight_write_miss_49_1 <= inflight_write_miss_next_49_1;
+      inflight_write_miss_49_2 <= inflight_write_miss_next_49_2;
+      inflight_write_miss_49_3 <= inflight_write_miss_next_49_3;
+      inflight_write_miss_50_0 <= inflight_write_miss_next_50_0;
+      inflight_write_miss_50_1 <= inflight_write_miss_next_50_1;
+      inflight_write_miss_50_2 <= inflight_write_miss_next_50_2;
+      inflight_write_miss_50_3 <= inflight_write_miss_next_50_3;
+      inflight_write_miss_51_0 <= inflight_write_miss_next_51_0;
+      inflight_write_miss_51_1 <= inflight_write_miss_next_51_1;
+      inflight_write_miss_51_2 <= inflight_write_miss_next_51_2;
+      inflight_write_miss_51_3 <= inflight_write_miss_next_51_3;
+      inflight_write_miss_52_0 <= inflight_write_miss_next_52_0;
+      inflight_write_miss_52_1 <= inflight_write_miss_next_52_1;
+      inflight_write_miss_52_2 <= inflight_write_miss_next_52_2;
+      inflight_write_miss_52_3 <= inflight_write_miss_next_52_3;
+      inflight_write_miss_53_0 <= inflight_write_miss_next_53_0;
+      inflight_write_miss_53_1 <= inflight_write_miss_next_53_1;
+      inflight_write_miss_53_2 <= inflight_write_miss_next_53_2;
+      inflight_write_miss_53_3 <= inflight_write_miss_next_53_3;
+      inflight_write_miss_54_0 <= inflight_write_miss_next_54_0;
+      inflight_write_miss_54_1 <= inflight_write_miss_next_54_1;
+      inflight_write_miss_54_2 <= inflight_write_miss_next_54_2;
+      inflight_write_miss_54_3 <= inflight_write_miss_next_54_3;
+      inflight_write_miss_55_0 <= inflight_write_miss_next_55_0;
+      inflight_write_miss_55_1 <= inflight_write_miss_next_55_1;
+      inflight_write_miss_55_2 <= inflight_write_miss_next_55_2;
+      inflight_write_miss_55_3 <= inflight_write_miss_next_55_3;
+      inflight_write_miss_56_0 <= inflight_write_miss_next_56_0;
+      inflight_write_miss_56_1 <= inflight_write_miss_next_56_1;
+      inflight_write_miss_56_2 <= inflight_write_miss_next_56_2;
+      inflight_write_miss_56_3 <= inflight_write_miss_next_56_3;
+      inflight_write_miss_57_0 <= inflight_write_miss_next_57_0;
+      inflight_write_miss_57_1 <= inflight_write_miss_next_57_1;
+      inflight_write_miss_57_2 <= inflight_write_miss_next_57_2;
+      inflight_write_miss_57_3 <= inflight_write_miss_next_57_3;
+      inflight_write_miss_58_0 <= inflight_write_miss_next_58_0;
+      inflight_write_miss_58_1 <= inflight_write_miss_next_58_1;
+      inflight_write_miss_58_2 <= inflight_write_miss_next_58_2;
+      inflight_write_miss_58_3 <= inflight_write_miss_next_58_3;
+      inflight_write_miss_59_0 <= inflight_write_miss_next_59_0;
+      inflight_write_miss_59_1 <= inflight_write_miss_next_59_1;
+      inflight_write_miss_59_2 <= inflight_write_miss_next_59_2;
+      inflight_write_miss_59_3 <= inflight_write_miss_next_59_3;
+      inflight_write_miss_60_0 <= inflight_write_miss_next_60_0;
+      inflight_write_miss_60_1 <= inflight_write_miss_next_60_1;
+      inflight_write_miss_60_2 <= inflight_write_miss_next_60_2;
+      inflight_write_miss_60_3 <= inflight_write_miss_next_60_3;
+      inflight_write_miss_61_0 <= inflight_write_miss_next_61_0;
+      inflight_write_miss_61_1 <= inflight_write_miss_next_61_1;
+      inflight_write_miss_61_2 <= inflight_write_miss_next_61_2;
+      inflight_write_miss_61_3 <= inflight_write_miss_next_61_3;
+      inflight_write_miss_62_0 <= inflight_write_miss_next_62_0;
+      inflight_write_miss_62_1 <= inflight_write_miss_next_62_1;
+      inflight_write_miss_62_2 <= inflight_write_miss_next_62_2;
+      inflight_write_miss_62_3 <= inflight_write_miss_next_62_3;
+      inflight_write_miss_63_0 <= inflight_write_miss_next_63_0;
+      inflight_write_miss_63_1 <= inflight_write_miss_next_63_1;
+      inflight_write_miss_63_2 <= inflight_write_miss_next_63_2;
+      inflight_write_miss_63_3 <= inflight_write_miss_next_63_3;
+      if (_GEN_172)
         MSHR_front_pointer <= _MSHR_front_pointer_next_T;
-      if (_GEN_35) begin
+      if (_GEN_169) begin
       end
       else
         MSHR_back_pointer <= _MSHR_back_pointer_next_T;
@@ -6050,8 +8006,8 @@ module L1_data_cache(
     .clock            (clock),
     .reset            (reset),
     .io_enq_ready     (/* unused */),
-    .io_enq_valid     (_GEN_0 ? _GEN_8 | _GEN_12 | _GEN_10 : _GEN_12 | _GEN_10),
-    .io_enq_bits_data (_GEN_0 & _GEN_8 | ~_GEN_12 ? _GEN_9 : AXI_read_buffer),
+    .io_enq_valid     (_GEN_0 ? _GEN_8 | _GEN_13 | _GEN_10 : _GEN_13 | _GEN_10),
+    .io_enq_bits_data (_GEN_0 & _GEN_8 | ~_GEN_13 ? _GEN_9 : AXI_read_buffer),
     .io_enq_bits_ID   (m_axi_rid),
     .io_deq_ready     (1'h1),
     .io_deq_valid     (axi_response_valid),
@@ -6095,11 +8051,11 @@ module L1_data_cache(
     .io_enq_bits_write_address (active_address),
     .io_enq_bits_write_data    ({224'h0, active_data}),
     .io_enq_bits_write_ID      (8'h1),
-    .io_enq_bits_write_bytes   (_GEN_81),
+    .io_enq_bits_write_bytes   (_GEN_215),
     .io_enq_bits_read_valid    (active_non_cacheable_read),
     .io_enq_bits_read_address  (active_address),
     .io_enq_bits_read_ID       (8'h1),
-    .io_enq_bits_read_bytes    (_GEN_81),
+    .io_enq_bits_read_bytes    (_GEN_215),
     .io_deq_ready              (_AXI_request_arb_io_in_0_ready),
     .io_deq_valid              (_non_cacheable_request_Q_io_deq_valid),
     .io_deq_bits_write_valid   (_non_cacheable_request_Q_io_deq_bits_write_valid),
@@ -6127,7 +8083,7 @@ module L1_data_cache(
     .io_enq_bits_read_ID       (_AXI_request_arb_io_out_bits_read_ID),
     .io_enq_bits_read_bytes    (_AXI_request_arb_io_out_bits_read_bytes),
     .io_deq_ready
-      (_GEN_82
+      (_GEN_216
          ? _AXI_request_Q_io_deq_ready_T_1 & m_axi_arready & m_axi_arvalid_0
          : read_request_valid
              ? m_axi_arready & m_axi_arvalid_0
@@ -6186,7 +8142,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_0 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_0),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6206,7 +8162,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_1 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_1),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6226,7 +8182,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_2 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_2),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6246,7 +8202,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_3 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_3),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6266,7 +8222,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_4 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_4),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6286,7 +8242,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_5 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_5),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6306,7 +8262,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_6 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_6),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6326,7 +8282,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_7 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_7),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6346,7 +8302,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_8 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_8),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6366,7 +8322,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_9 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_9),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6386,7 +8342,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_10 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_10),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6406,7 +8362,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_11 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_11),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6426,7 +8382,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_12 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_12),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6446,7 +8402,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_13 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_13),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6466,7 +8422,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_14 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_14),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6486,7 +8442,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_15 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_15),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6506,7 +8462,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_16 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_16),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6526,7 +8482,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_17 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_17),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6546,7 +8502,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_18 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_18),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6566,7 +8522,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_19 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_19),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6586,7 +8542,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_20 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_20),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6606,7 +8562,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_21 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_21),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6626,7 +8582,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_22 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_22),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6646,7 +8602,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_23 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_23),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6666,7 +8622,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_24 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_24),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6686,7 +8642,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_25 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_25),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6706,7 +8662,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_26 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_26),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6726,7 +8682,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_27 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_27),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6746,7 +8702,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_28 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_28),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6766,7 +8722,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_29 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_29),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6786,7 +8742,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_30 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_30),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6806,7 +8762,7 @@ module L1_data_cache(
   ReadWriteSmem data_memories_31 (
     .clock       (clock),
     .io_wr_en    (data_memories_wr_en_31),
-    .io_addr     (_GEN_14),
+    .io_addr     (_GEN_15),
     .io_data_in
       (REG
          ? (_tag_memories_3_io_wr_en_T
@@ -6825,30 +8781,30 @@ module L1_data_cache(
   );
   ReadWriteSmem_32 tag_memories_0 (
     .clock       (clock),
-    .io_wr_en    (_GEN_15 & _tag_memories_3_io_wr_en_T),
+    .io_wr_en    (_GEN_16 & _tag_memories_3_io_wr_en_T),
     .io_addr     (_tag_memories_3_io_wr_en_T ? allocate_set : active_set),
-    .io_data_in  (_GEN_15 ? _GEN_16 : 21'h0),
+    .io_data_in  (_GEN_16 ? _GEN_17 : 21'h0),
     .io_data_out (_tag_memories_0_io_data_out)
   );
   ReadWriteSmem_32 tag_memories_1 (
     .clock       (clock),
-    .io_wr_en    (_GEN_17 & _tag_memories_3_io_wr_en_T),
+    .io_wr_en    (_GEN_18 & _tag_memories_3_io_wr_en_T),
     .io_addr     (_tag_memories_3_io_wr_en_T ? allocate_set : active_set),
-    .io_data_in  (_GEN_17 ? _GEN_16 : 21'h0),
+    .io_data_in  (_GEN_18 ? _GEN_17 : 21'h0),
     .io_data_out (_tag_memories_1_io_data_out)
   );
   ReadWriteSmem_32 tag_memories_2 (
     .clock       (clock),
-    .io_wr_en    (_GEN_18 & _tag_memories_3_io_wr_en_T),
+    .io_wr_en    (_GEN_19 & _tag_memories_3_io_wr_en_T),
     .io_addr     (_tag_memories_3_io_wr_en_T ? allocate_set : active_set),
-    .io_data_in  (_GEN_18 ? _GEN_16 : 21'h0),
+    .io_data_in  (_GEN_19 ? _GEN_17 : 21'h0),
     .io_data_out (_tag_memories_2_io_data_out)
   );
   ReadWriteSmem_32 tag_memories_3 (
     .clock       (clock),
     .io_wr_en    ((&allocate_way) & _tag_memories_3_io_wr_en_T),
     .io_addr     (_tag_memories_3_io_wr_en_T ? allocate_set : active_set),
-    .io_data_in  ((&allocate_way) ? _GEN_16 : 21'h0),
+    .io_data_in  ((&allocate_way) ? _GEN_17 : 21'h0),
     .io_data_out (_tag_memories_3_io_data_out)
   );
   Arbiter2_AXI_request_Q_entry AXI_request_arb (
@@ -6905,14 +8861,14 @@ module L1_data_cache(
   );
   assign m_axi_awvalid = m_axi_awvalid_0;
   assign m_axi_awid =
-    _GEN_85 ? _AXI_request_Q_io_deq_bits_write_ID : _GEN_3 ? AXI_AW_buf_awid : 8'h0;
+    _GEN_219 ? _AXI_request_Q_io_deq_bits_write_ID : _GEN_3 ? AXI_AW_buf_awid : 8'h0;
   assign m_axi_awaddr =
-    _GEN_85
+    _GEN_219
       ? _AXI_request_Q_io_deq_bits_write_address
       : _GEN_3 ? AXI_AW_buf_awaddr : 32'h0;
   assign m_axi_awlen = m_axi_awlen_0;
-  assign m_axi_awsize = _GEN_85 ? 3'h2 : _GEN_3 ? AXI_AW_buf_awsize : 3'h0;
-  assign m_axi_awburst = _GEN_82 ? 2'h1 : {1'h0, _GEN_86 | _GEN_3};
+  assign m_axi_awsize = _GEN_219 ? 3'h2 : _GEN_3 ? AXI_AW_buf_awsize : 3'h0;
+  assign m_axi_awburst = _GEN_216 ? 2'h1 : {1'h0, _GEN_220 | _GEN_3};
   assign m_axi_awlock = 1'h0;
   assign m_axi_awcache = 4'h0;
   assign m_axi_awprot = 3'h0;
@@ -6921,22 +8877,22 @@ module L1_data_cache(
   assign m_axi_awuser = 1'h0;
   assign m_axi_wvalid = m_axi_wvalid_0;
   assign m_axi_wdata =
-    _GEN_13
+    _GEN_14
       ? AXI_AW_DATA_BUFFER[31:0]
       : _GEN_11 ? AXI_AW_DATA_BUFFER[31:0] : _GEN_4 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
-  assign m_axi_wstrb = _GEN_13 ? 4'hF : _GEN ? {4{~W_done | _GEN_4}} : {4{_GEN_4}};
-  assign m_axi_wlast = _GEN_13 ? ~(|write_counter) : _GEN_11 ? ~(|write_counter) : _GEN_5;
+  assign m_axi_wstrb = _GEN_14 ? 4'hF : _GEN ? {4{~W_done | _GEN_4}} : {4{_GEN_4}};
+  assign m_axi_wlast = _GEN_14 ? ~(|write_counter) : _GEN_11 ? ~(|write_counter) : _GEN_5;
   assign m_axi_wuser = 1'h0;
   assign m_axi_bready = m_axi_bready_0;
   assign m_axi_arvalid = m_axi_arvalid_0;
   assign m_axi_arid =
-    _GEN_83 ? _AXI_request_Q_io_deq_bits_read_ID : _GEN_2 ? AXI_AR_buf_arid : 8'h0;
+    _GEN_217 ? _AXI_request_Q_io_deq_bits_read_ID : _GEN_2 ? AXI_AR_buf_arid : 8'h0;
   assign m_axi_araddr =
-    _GEN_83
+    _GEN_217
       ? _AXI_request_Q_io_deq_bits_read_address
       : _GEN_2 ? AXI_AR_buf_araddr : 32'h0;
   assign m_axi_arlen =
-    _GEN_82
+    _GEN_216
       ? {1'h0,
          _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T
            ? 7'h0
@@ -6947,8 +8903,8 @@ module L1_data_cache(
                ? 7'h0
                : _AXI_request_Q_io_deq_ready_view__AXI_AR_bits_arlen_T_6 - 7'h1}
           : _GEN_2 ? AXI_AR_buf_arlen : 8'h0;
-  assign m_axi_arsize = _GEN_83 ? 3'h2 : _GEN_2 ? AXI_AR_buf_arsize : 3'h0;
-  assign m_axi_arburst = {1'h0, _GEN_82 | read_request_valid | _GEN_2};
+  assign m_axi_arsize = _GEN_217 ? 3'h2 : _GEN_2 ? AXI_AR_buf_arsize : 3'h0;
+  assign m_axi_arburst = {1'h0, _GEN_216 | read_request_valid | _GEN_2};
   assign m_axi_arlock = 1'h0;
   assign m_axi_arcache = 4'h0;
   assign m_axi_arprot = 3'h0;

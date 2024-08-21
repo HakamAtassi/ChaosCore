@@ -314,6 +314,7 @@ trait AXICacheNode {
     }
 
     when(W_done && R_done){
+      AXI_read_buffer := 0.U
       final_response_buffer.io.enq.bits.data := AXI_read_buffer
       final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid // FIXME: this is wrong (load from buffer i think)
       final_response_buffer.io.enq.valid := 1.B
