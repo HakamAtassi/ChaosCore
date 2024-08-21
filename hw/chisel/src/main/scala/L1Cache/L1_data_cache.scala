@@ -66,7 +66,7 @@ object update_PLRU {
 	* @param hit_way_OH: the OH equality result of the PLRU memories
 	* @return: the updated PLRU result
 	*/
-	def apply(coreParameters:CoreParameters)(PLRU:UInt, tag_hit_OH:Vec[Bool]):UInt = {
+	def apply(coreParameters:CoreParameters)(PLRU:UInt, tag_hit_OH:UInt):UInt = {
 		import coreParameters._
 		val updated_PLRU = Wire(UInt(4.W))	// FIXME: Make this a param for L1_data cache ways
 
@@ -475,13 +475,17 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	// update on hit (read or write)
 	when(valid_hit){
-		PLRU_memory(hit_set) := update_PLRU(coreParameters)(PLRU = PLRU_memory(hit_set), tag_hit_OH = tag_hit_OH)
+		PLRU_memory(hit_set) := update_PLRU(coreParameters)(PLRU = PLRU_memory(hit_set), tag_hit_OH = tag_hit_OH.asUInt)
 	}
+
+	//when(RegNext(io.CPU_request.fire)){
+		//PLRU_memory(RegNext(active_set)) := update_PLRU(coreParameters)(PLRU = PLRU_memory(RegNext(active_set)), tag_hit_OH = Mux(valid_hit, tag_hit_OH.asUInt, (1.U<<(evict_way))))
+	//}
 	// clearing PLRU on allocate is not needed (you allocate to the 0 PLRU bit, ie, no change)
 
 
 	val PLRU 	= Wire(UInt(L1_DataCacheWays.W))
-	PLRU 		:= (PLRU_memory(active_set))
+	PLRU 		:= (PLRU_memory(RegNext(active_set)))
 	evict_way 	:= PriorityEncoder(~PLRU)
 
 	dontTouch(evict_way)
@@ -506,6 +510,41 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	when(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE){
 		dirty_memory(allocate_set)(allocate_way) := 0.B
 	}
+
+	//////////////////////////
+	// IN FLIGHT WRITE MISS //
+	//////////////////////////
+	// Memory of "way" width, sets length (Regs)
+
+  	val inflight_write_miss = RegInit(VecInit.tabulate(L1_DataCacheSets, L1_DataCacheWays){ (x, y) => 0.B })
+  	val inflight_write_miss_next = VecInit.tabulate(L1_DataCacheSets, L1_DataCacheWays){ (x, y) => 0.B }
+
+	for(i <- 0 until L1_DataCacheSets){
+		for(j <- 0 until L1_DataCacheWays){
+			inflight_write_miss_next(i)(j) := inflight_write_miss(i)(j)
+		}
+	}
+
+
+	// update on write_miss
+	when(RegNext(io.CPU_request.bits.memory_type === memory_type_t.STORE) && valid_miss){
+		inflight_write_miss_next(RegNext(active_set))(evict_way) := 1.B
+	}
+
+	// reset on response
+	when(valid_hit){
+		inflight_write_miss_next(RegNext(active_set))(hit_way) := 0.B
+	}
+	
+	// update regs
+	for(i <- 0 until L1_DataCacheSets){
+		for(j <- 0 until L1_DataCacheWays){
+			inflight_write_miss(i)(j) := inflight_write_miss_next(i)(j)
+		}
+	}
+
+
+
 
 	val writeback_set = Wire(UInt(log2Ceil(L1_DataCacheSets).W)) //RegNext(active_set)
 
@@ -922,9 +961,53 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	io.CPU_request.ready		:= (!MSHR_full_next || MSHR_full_and_input_match) && 
 									(input_cacheable_and_Q_available || input_non_cacheable_and_Q_available) && 
 									(DATA_CACHE_STATE === DATA_CACHE_STATES.ACTIVE) &&
-									!(DATA_CACHE_NEXT_STATE === DATA_CACHE_STATES.ALLOCATE) // you dont want to accept a new input (that may miss) when you have a response from the DRAM
+									!(DATA_CACHE_NEXT_STATE === DATA_CACHE_STATES.ALLOCATE) && // you dont want to accept a new input (that may miss) when you have a response from the DRAM
+									!(inflight_write_miss_next(active_set).reduce(_ || _))
 }
 
+// MAJOR ISSUE:
+// If you have a write miss and a read miss back to back, the write miss will request to read data,
+// and will not update its PLRU/dirty, etc untill the dram responds with the data. 
+// Meanwhile, the read data will request 
 
-// FIXES: 
-// If MSHR is full or will be full next cycle (currently being updated), only accept an input if its address exists in the MSHR, and the corresponding MSHR entry is not full
+// Problem 1: PLRU is updated too late. this makes write miss read miss conflicts pretty likely (since they will alias to the same set & way)
+// Fix 1: make the PLRU update on cache access and not on hit. 
+
+// Problem 2: write miss => read/write miss to the same set back to back causes the write data to be discarded/dropped
+
+// On miss write => look up cache for where to place data, request data, update MSHR
+// On miss read (to same set) => look up cache for where to place data. Data will be found not dirty. Send request to DRAM and SMHR
+// On write data response, allocate line, and write new data. 
+// On read response, overwrite previously just allocated line to same set and way. 
+// Data from miss write has now been lost...
+
+// The underlying problem is that the second request, the read, has no knowledge about the fact that first request is a write. 
+// As such, it sees a clean line (despite the fact that it will soon be filled with a new line, and will have a write replay) that does not need to be evicted
+// If the second request did somehow know about its in-flight write status, the problem is still not solved becaues that line cant be evicted since its data is still being fetched
+
+
+
+// Fix 2: When a miss is detected, before requesting a read/write from DRAM, check if that line's data is in flight, or is busy. 
+// If a miss collides with a line (wants to allocate to a line) that is currently busy, wait for that operation to complete before beforing an AXI read and possible write.
+// When this collision is detected, buffer the request 
+
+
+// Simpler solution to this problem
+
+
+// Basically, there is a memory consistency issue when there is a write miss to some set/way followed by a read/write miss to the same set/way
+// That arrises because the second miss is unable to evict data that has not yet been recieved. 
+// In other words, when the first write miss occurs, there is a 50/100 cycle window that, if contains another allocate to the same way/set as the first miss
+// will simply overwrite the first wire request data in the cache, meaning the write data is lost. 
+
+// Luckily, the only way this can occur is if the set/way that was just allocated to goes from the most recently used to the least recently used, making it subject to eviction.
+// Since this type of access pattern is fairly uncommon, when a miss request to an outstanding write set, the cache is locked up until the line has been allocated, in which the request is replayed,
+// including checking for an eviction and requesting the data from DRAM
+
+
+// The simplest solution to the problem:
+// When the cache recieves a request to a set that currently has an in-flight write miss request, do not accept the request (mark cache unready).
+// Note that this is regardless of the way, and regardless of the request is actually a hit or a miss. 
+// This requires a buffer that stores an "in flight write miss" for each set. 
+// This bit is set when a write miss takes place, and is cleared on replay. 
+// If a CPU request address indicates an inflight write miss for any way in that set, the cache is just marked unready. 

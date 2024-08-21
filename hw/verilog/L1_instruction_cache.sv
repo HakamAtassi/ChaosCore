@@ -144,9 +144,10 @@ module L1_instruction_cache(
   wire [255:0]     _GEN_10 = {m_axi_rdata, AXI_read_buffer[255:32]};
   wire             _GEN_11 = _GEN_4 & _GEN_9;
   wire             _GEN_12 = _GEN_0 & ~W_done;
-  wire             _GEN_13 = _GEN_0 & W_done & R_done;
+  wire             _GEN_13 = W_done & R_done;
+  wire             _GEN_14 = _GEN_0 & _GEN_13;
   assign m_axi_rready_0 = _GEN_1 | _GEN_0 | _GEN_4;
-  wire             _GEN_14 = _GEN_2 & ~W_done;
+  wire             _GEN_15 = _GEN_2 & ~W_done;
   wire             m_axi_wvalid_0 =
     _GEN_2 ? ~W_done | _GEN_12 | _GEN_7 : _GEN_12 | _GEN_7;
   reg  [2:0]       cache_state;
@@ -156,26 +157,26 @@ module L1_instruction_cache(
   reg              replay_address_wr_en;
   reg  [31:0]      request_addr;
   reg              cache_valid;
-  wire             _GEN_15 = miss & ~io_kill;
-  wire             _GEN_16 = cache_state == 3'h1;
-  wire             _GEN_17 = (|cache_state) ? _GEN_16 : _GEN_15;
+  wire             _GEN_16 = miss & ~io_kill;
+  wire             _GEN_17 = cache_state == 3'h1;
+  wire             _GEN_18 = (|cache_state) ? _GEN_17 : _GEN_16;
   wire             m_axi_arvalid_0 =
-    (|cache_state) ? _GEN_16 & ~(|AXI_REQUEST_STATE) : _GEN_15 & ~(|AXI_REQUEST_STATE);
-  wire             _GEN_18 = cache_state == 3'h2;
-  wire             _GEN_19 = cache_state == 3'h3;
-  wire             _GEN_20 = ~(|cache_state) | _GEN_16;
-  assign _GEN = ~_GEN_20 & (_GEN_18 ? ~io_kill : _GEN_19);
+    (|cache_state) ? _GEN_17 & ~(|AXI_REQUEST_STATE) : _GEN_16 & ~(|AXI_REQUEST_STATE);
+  wire             _GEN_19 = cache_state == 3'h2;
+  wire             _GEN_20 = cache_state == 3'h3;
+  wire             _GEN_21 = ~(|cache_state) | _GEN_17;
+  assign _GEN = ~_GEN_21 & (_GEN_19 ? ~io_kill : _GEN_20);
   wire [255:0]     axi_response =
-    _GEN_20
+    _GEN_21
       ? 256'h0
-      : _GEN_18
+      : _GEN_19
           ? (io_kill ? 256'h0 : _final_response_buffer_io_deq_bits_data)
-          : _GEN_19 ? _final_response_buffer_io_deq_bits_data : 256'h0;
+          : _GEN_20 ? _final_response_buffer_io_deq_bits_data : 256'h0;
   wire             axi_response_valid =
-    ~_GEN_20
-    & (_GEN_18
+    ~_GEN_21
+    & (_GEN_19
          ? ~io_kill & _GEN & _final_response_buffer_io_deq_valid
-         : _GEN_19 & _GEN & _final_response_buffer_io_deq_valid);
+         : _GEN_20 & _GEN & _final_response_buffer_io_deq_valid);
   wire             _current_address_T_1 = (|cache_state) | miss;
   wire [31:0]      current_address_addr =
     _current_address_T_1 ? replay_address_addr : io_CPU_request_bits_addr;
@@ -220,7 +221,7 @@ module L1_instruction_cache(
   wire [31:0]      instruction_vec_6 = hit_instruction_data[223:192];
   wire [31:0]      instruction_vec_7 = hit_instruction_data[255:224];
   reg              CPU_response_bits_instructions_0_instruction_REG;
-  wire [7:0][31:0] _GEN_21 =
+  wire [7:0][31:0] _GEN_22 =
     {{instruction_vec_7},
      {instruction_vec_6},
      {instruction_vec_5},
@@ -236,28 +237,48 @@ module L1_instruction_cache(
   assign CPU_response_valid = (cache_valid | hit) & ~(io_kill | CPU_response_valid_REG);
   wire             io_CPU_request_ready_0 = ~(|cache_state) & ~miss;
   always @(posedge clock) begin
-    automatic logic _GEN_22 = ~W_done & m_axi_wready & m_axi_wvalid_0;
-    automatic logic _GEN_23;
+    automatic logic _GEN_23 = ~W_done & m_axi_wready & m_axi_wvalid_0;
     automatic logic _GEN_24;
     automatic logic _GEN_25;
     automatic logic _GEN_26;
     automatic logic _GEN_27;
     automatic logic _miss_T_2 = io_CPU_request_ready_0 & io_CPU_request_valid;
-    _GEN_23 = _GEN_3 & _GEN_22;
-    _GEN_24 = ~R_done & _GEN_8;
-    _GEN_25 = _GEN_0 & _GEN_24;
-    _GEN_26 = _GEN_0 & _GEN_22;
-    _GEN_27 = _GEN_2 & _GEN_22;
-    AXI_AR_buf_araddr <= _GEN_17 ? request_addr : 32'h0;
-    AXI_AR_buf_arlen <= _GEN_17 ? 8'h7 : 8'h0;
-    AXI_AR_buf_arsize <= {1'h0, (|cache_state) ? _GEN_16 : _GEN_15, 1'h0};
-    if (_GEN_27 | _GEN_26 | _GEN_23)
+    _GEN_24 = _GEN_3 & _GEN_23;
+    _GEN_25 = ~R_done & _GEN_8;
+    _GEN_26 = _GEN_0 & _GEN_23;
+    _GEN_27 = _GEN_2 & _GEN_23;
+    AXI_AR_buf_araddr <= _GEN_18 ? request_addr : 32'h0;
+    AXI_AR_buf_arlen <= _GEN_18 ? 8'h7 : 8'h0;
+    AXI_AR_buf_arsize <= {1'h0, (|cache_state) ? _GEN_17 : _GEN_16, 1'h0};
+    if (_GEN_27 | _GEN_26 | _GEN_24)
       AXI_AW_DATA_BUFFER <= {32'h0, AXI_AW_DATA_BUFFER[255:32]};
     if (_GEN_1) begin
       if (_GEN_9)
         AXI_read_buffer <= 256'h0;
-      else if (_GEN_24)
+      else if (_GEN_25)
         AXI_read_buffer <= _GEN_10;
+      else if (_GEN_0) begin
+        if (_GEN_13)
+          AXI_read_buffer <= 256'h0;
+        else if (_GEN_25)
+          AXI_read_buffer <= _GEN_10;
+        else if (_GEN_4) begin
+          if (_GEN_9)
+            AXI_read_buffer <= 256'h0;
+          else if (_GEN_8)
+            AXI_read_buffer <= _GEN_10;
+        end
+      end
+      else if (_GEN_4) begin
+        if (_GEN_9)
+          AXI_read_buffer <= 256'h0;
+        else if (_GEN_8)
+          AXI_read_buffer <= _GEN_10;
+      end
+    end
+    else if (_GEN_0) begin
+      if (_GEN_13)
+        AXI_read_buffer <= 256'h0;
       else if (_GEN_25)
         AXI_read_buffer <= _GEN_10;
       else if (_GEN_4) begin
@@ -267,8 +288,6 @@ module L1_instruction_cache(
           AXI_read_buffer <= _GEN_10;
       end
     end
-    else if (_GEN_25)
-      AXI_read_buffer <= _GEN_10;
     else if (_GEN_4) begin
       if (_GEN_9)
         AXI_read_buffer <= 256'h0;
@@ -326,14 +345,14 @@ module L1_instruction_cache(
         AXI_REQUEST_STATE <= 3'h3;
       else
         AXI_REQUEST_STATE <= 3'h0;
-      if (_GEN_1 & _GEN_24 | _GEN_25)
+      if (_GEN_1 & _GEN_25 | _GEN_0 & _GEN_25)
         R_done <= m_axi_rlast;
       else if (~(|AXI_REQUEST_STATE))
         R_done <= ~m_axi_arvalid_0;
-      if (_GEN_14)
+      if (_GEN_15)
         W_done <= ~(|write_counter);
       else if (_GEN_0 & ~W_done | _GEN_5) begin
-        if (_GEN_14)
+        if (_GEN_15)
           W_done <= ~(|write_counter);
         else if (_GEN_12)
           W_done <= ~(|write_counter);
@@ -346,29 +365,29 @@ module L1_instruction_cache(
         write_counter <= write_counter - 32'h1;
       else if (_GEN_26)
         write_counter <= write_counter - 32'h1;
-      else if (_GEN_23)
+      else if (_GEN_24)
         write_counter <= write_counter - 32'h1;
       if (|cache_state) begin
-        if (_GEN_16) begin
+        if (_GEN_17) begin
           if (m_axi_arready & m_axi_arvalid_0)
             cache_state <= 3'h2;
         end
-        else if (_GEN_18) begin
+        else if (_GEN_19) begin
           if (io_kill)
             cache_state <= 3'h3;
           else if (axi_response_valid)
             cache_state <= 3'h4;
         end
-        else if (_GEN_19 ? axi_response_valid : _GEN_29)
+        else if (_GEN_20 ? axi_response_valid : _GEN_29)
           cache_state <= 3'h0;
       end
-      else if (_GEN_15) begin
+      else if (_GEN_16) begin
         if (m_axi_arready & m_axi_arvalid_0)
           cache_state <= 3'h2;
         else
           cache_state <= 3'h1;
       end
-      if ((|cache_state) | _GEN_15) begin
+      if ((|cache_state) | _GEN_16) begin
       end
       else begin
         fetch_PC_buf_addr <= io_CPU_request_bits_addr;
@@ -377,11 +396,11 @@ module L1_instruction_cache(
         replay_address_wr_en <= io_CPU_request_bits_wr_en;
         request_addr <= io_CPU_request_bits_addr & 32'hFFFFFFE0;
       end
-      if (~_GEN_20) begin
-        if (_GEN_18)
+      if (~_GEN_21) begin
+        if (_GEN_19)
           cache_valid <= ~io_kill & cache_valid;
         else
-          cache_valid <= (_GEN_19 | ~_GEN_29) & cache_valid;
+          cache_valid <= (_GEN_20 | ~_GEN_29) & cache_valid;
       end
     end
   end // always @(posedge)
@@ -389,8 +408,8 @@ module L1_instruction_cache(
     .clock            (clock),
     .reset            (reset),
     .io_enq_ready     (/* unused */),
-    .io_enq_valid     (_GEN_1 ? _GEN_9 | _GEN_13 | _GEN_11 : _GEN_13 | _GEN_11),
-    .io_enq_bits_data (_GEN_1 & _GEN_9 | ~_GEN_13 ? _GEN_10 : AXI_read_buffer),
+    .io_enq_valid     (_GEN_1 ? _GEN_9 | _GEN_14 | _GEN_11 : _GEN_14 | _GEN_11),
+    .io_enq_bits_data (_GEN_1 & _GEN_9 | ~_GEN_14 ? _GEN_10 : AXI_read_buffer),
     .io_enq_bits_ID   (m_axi_rid),
     .io_deq_ready     (_GEN),
     .io_deq_valid     (_final_response_buffer_io_deq_valid),
@@ -449,13 +468,13 @@ module L1_instruction_cache(
     .io_enq_bits_valid_bits_3
       (_validator_io_instruction_output[0] & CPU_response_valid),
     .io_enq_bits_instructions_0_instruction
-      (_GEN_21[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
+      (_GEN_22[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
     .io_enq_bits_instructions_1_instruction
-      (_GEN_21[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
+      (_GEN_22[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
     .io_enq_bits_instructions_2_instruction
-      (_GEN_21[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
+      (_GEN_22[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
     .io_enq_bits_instructions_3_instruction
-      (_GEN_21[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
+      (_GEN_22[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
     .io_deq_ready                            (io_CPU_response_ready),
     .io_deq_valid                            (io_CPU_response_valid),
     .io_deq_bits_fetch_PC                    (io_CPU_response_bits_fetch_PC),
@@ -506,19 +525,19 @@ module L1_instruction_cache(
   assign m_axi_awuser = 1'h0;
   assign m_axi_wvalid = m_axi_wvalid_0;
   assign m_axi_wdata =
-    _GEN_14
+    _GEN_15
       ? AXI_AW_DATA_BUFFER[31:0]
       : _GEN_12 ? AXI_AW_DATA_BUFFER[31:0] : _GEN_5 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
-  assign m_axi_wstrb = _GEN_14 ? 4'hF : _GEN_0 ? {4{~W_done | _GEN_5}} : {4{_GEN_5}};
-  assign m_axi_wlast = _GEN_14 ? ~(|write_counter) : _GEN_12 ? ~(|write_counter) : _GEN_6;
+  assign m_axi_wstrb = _GEN_15 ? 4'hF : _GEN_0 ? {4{~W_done | _GEN_5}} : {4{_GEN_5}};
+  assign m_axi_wlast = _GEN_15 ? ~(|write_counter) : _GEN_12 ? ~(|write_counter) : _GEN_6;
   assign m_axi_wuser = 1'h0;
   assign m_axi_bready = m_axi_bready_0;
   assign m_axi_arvalid = m_axi_arvalid_0;
   assign m_axi_arid = 8'h0;
-  assign m_axi_araddr = _GEN_17 ? request_addr : _GEN_3 ? AXI_AR_buf_araddr : 32'h0;
-  assign m_axi_arlen = _GEN_17 ? 8'h7 : _GEN_3 ? AXI_AR_buf_arlen : 8'h0;
-  assign m_axi_arsize = _GEN_17 ? 3'h2 : _GEN_3 ? AXI_AR_buf_arsize : 3'h0;
-  assign m_axi_arburst = {1'h0, (|cache_state) ? _GEN_16 | _GEN_3 : _GEN_15 | _GEN_3};
+  assign m_axi_araddr = _GEN_18 ? request_addr : _GEN_3 ? AXI_AR_buf_araddr : 32'h0;
+  assign m_axi_arlen = _GEN_18 ? 8'h7 : _GEN_3 ? AXI_AR_buf_arlen : 8'h0;
+  assign m_axi_arsize = _GEN_18 ? 3'h2 : _GEN_3 ? AXI_AR_buf_arsize : 3'h0;
+  assign m_axi_arburst = {1'h0, (|cache_state) ? _GEN_17 | _GEN_3 : _GEN_16 | _GEN_3};
   assign m_axi_arlock = 1'h0;
   assign m_axi_arcache = 4'h0;
   assign m_axi_arprot = 3'h0;
