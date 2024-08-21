@@ -546,7 +546,7 @@ async def test_fuzz(dut):
             tag_groups[set].append(random.getrandbits(5)) # limit tag size because large memories are slow to simulate
 
     MOB_index = 0
-    for iteration in range(250_000):
+    for iteration in range(500_000):
         # Generate address
         set = random.randrange(0, 63)
         tag = random.sample(sorted(tag_groups[set]), 1)[0]
