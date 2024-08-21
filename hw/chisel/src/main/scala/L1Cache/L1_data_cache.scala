@@ -444,23 +444,42 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	//////////////////
 	// Memory of "way" width, sets length (Regs).
 
+	////
+
+
   	val valid_memory = RegInit(VecInit.tabulate(L1_DataCacheSets, L1_DataCacheWays){ (x, y) => 0.B })
+  	val valid_memory_next = VecInit.tabulate(L1_DataCacheSets, L1_DataCacheWays){ (x, y) => 0.B }
+
+
+	for(i <- 0 until L1_DataCacheSets){
+		for(j <- 0 until L1_DataCacheWays){
+			valid_memory_next(i)(j) := valid_memory(i)(j)
+		}
+	}
 
 
 	when(valid_miss){
 		// Invalidate the cache line as it is now scheduled for write back and is considered in-flight. Writes to this line, for instance, will be discarded
-		valid_memory(RegNext(active_set))(evict_way)	:= 0.B
+		valid_memory_next(RegNext(active_set))(evict_way)	:= 0.B
 	}
 
 	// update on allocate
 	when(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE){
 		// Data is valid after being allocated
-		valid_memory(allocate_set)(allocate_way) := 1.B
+		valid_memory_next(allocate_set)(allocate_way) := 1.B
 	}
 
 	for(i <- 0 until L1_DataCacheWays){
-		valid_vec(i) := RegNext(valid_memory(active_set)(i))
+		valid_vec(i) := RegNext(valid_memory_next(active_set)(i))
 	}
+
+	// update regs
+	for(i <- 0 until L1_DataCacheSets){
+		for(j <- 0 until L1_DataCacheWays){
+			valid_memory(i)(j) := valid_memory_next(i)(j)
+		}
+	}
+
 
 
 
