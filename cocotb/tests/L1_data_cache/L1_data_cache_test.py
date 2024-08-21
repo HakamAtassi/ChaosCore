@@ -71,7 +71,7 @@ def test_non_cacheable():
         configs["testcase"] = "test_non_cacheable"
         run(**configs)
 
-def test_read_fuzz():
-        configs["testcase"] = "test_read_fuzz"
+def test_fuzz():
+        configs["testcase"] = "test_fuzz"
         run(**configs)
 

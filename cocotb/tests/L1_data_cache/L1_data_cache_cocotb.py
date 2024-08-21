@@ -256,7 +256,7 @@ async def test_LRU(dut):
 
     await L1_cache.write_CPU_request(valid = 1, addr = address, data=0xdeadbeef ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
 
-    for _ in range(15):
+    for _ in range(25):
         await L1_cache.clock()
 
     # Request read from new tag
@@ -268,7 +268,7 @@ async def test_LRU(dut):
     await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
 
 
-    for _ in range(15):
+    for _ in range(25):
         await L1_cache.clock()
 
     ## Request read from new tag
@@ -280,7 +280,7 @@ async def test_LRU(dut):
     await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
 
 
-    for _ in range(15):
+    for _ in range(25):
         await L1_cache.clock()
 
     # Request read from new tag
@@ -291,7 +291,7 @@ async def test_LRU(dut):
 
     await L1_cache.write_CPU_request(valid = 1, addr = address, data=0x0 ,memory_type=memory_type_t.STORE, access_width=access_width_t.W, MOB_index=8)
 
-    for _ in range(15):
+    for _ in range(25):
         await L1_cache.clock()
 
     # Request read from new tag
@@ -391,7 +391,7 @@ async def test_LRU(dut):
 
     #for _ in range(10):
         #await L1_cache.clock()
-
+    assert False
 
 @cocotb.test()
 async def test_burst_accesses(dut):
@@ -509,7 +509,7 @@ async def test_non_cacheable(dut):
 
 
 @cocotb.test()
-async def test_read_fuzz(dut):
+async def test_fuzz(dut):
 
     # Set seed
     random.seed(0x42)
@@ -538,7 +538,7 @@ async def test_read_fuzz(dut):
             tag_groups[set].append(random.getrandbits(5)) # limit tag size because large memories are slow to simulate
 
     MOB_index = 0
-    for iteration in range(5000):
+    for iteration in range(25_000):
         # Generate address
         set = random.randrange(0, 63)
         tag = random.sample(sorted(tag_groups[set]), 1)[0]

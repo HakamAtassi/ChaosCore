@@ -66,16 +66,26 @@ object update_PLRU {
 	* @param hit_way_OH: the OH equality result of the PLRU memories
 	* @return: the updated PLRU result
 	*/
-	def apply(PLRU:UInt, tag_hit_OH:Vec[Bool]):UInt = {
+	def apply(coreParameters:CoreParameters)(PLRU:UInt, tag_hit_OH:Vec[Bool]):UInt = {
+		import coreParameters._
 		val updated_PLRU = Wire(UInt(4.W))	// FIXME: Make this a param for L1_data cache ways
-		when((PLRU | tag_hit_OH.asUInt).andR === 1.U){
-			updated_PLRU := tag_hit_OH.asUInt
+
+		val result = Wire(UInt(4.W))
+
+		updated_PLRU := PLRU | tag_hit_OH.asUInt
+
+		when(updated_PLRU.andR === 1.B){
+			result := 0.U
 		}.otherwise{
-			updated_PLRU := PLRU | tag_hit_OH.asUInt
+			result := updated_PLRU
 		}
-		updated_PLRU
+
+		//printf("%x | %x = %x\n",PLRU, tag_hit_OH.asUInt, (PLRU | Cat(tag_hit_OH.reverse)))
+		//printf("%x | %x = %x\n",PLRU, tag_hit_OH.asUInt, result)
+		result
 	}
 }
+
 
 case class data_cache_address_packet(tag:UInt, set:UInt, word_offset:UInt, half_word_offset:UInt, byte_offset:UInt)
 
@@ -321,9 +331,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val half_word_offset 		= get_decomposed_dcache_address(coreParameters, active_address).half_word_offset
 	val byte_offset 			= get_decomposed_dcache_address(coreParameters, active_address).byte_offset
 
-	dontTouch(word_offset)
-	dontTouch(half_word_offset)
-	dontTouch(byte_offset)
 
 	// Assign data_memory_wr_en
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
@@ -334,12 +341,15 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 			(byte_offset 		=== (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)	) && valid_hit)
 	}
 
-	dontTouch(data_memories_wr_en)
 
 
 	active_data := Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_data, io.CPU_request.bits.data)
 
 
+	dontTouch(word_offset)
+	dontTouch(half_word_offset)
+	dontTouch(byte_offset)
+	dontTouch(data_memories_wr_en)
 	dontTouch(allocate_cache_line)
 
 	when(RegNext(active_access_width === access_width_t.W)){
@@ -461,15 +471,17 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	val PLRU_memory = RegInit(VecInit(Seq.fill(L1_DataCacheSets)(0.U(L1_DataCacheWays.W))))
 
+	dontTouch(hit_set)
+
 	// update on hit (read or write)
 	when(valid_hit){
-		PLRU_memory(hit_set) := update_PLRU(PLRU = PLRU_memory(hit_set), tag_hit_OH = tag_hit_OH)
+		PLRU_memory(hit_set) := update_PLRU(coreParameters)(PLRU = PLRU_memory(hit_set), tag_hit_OH = tag_hit_OH)
 	}
 	// clearing PLRU on allocate is not needed (you allocate to the 0 PLRU bit, ie, no change)
 
 
 	val PLRU 	= Wire(UInt(L1_DataCacheWays.W))
-	PLRU 		:= RegNext(PLRU_memory(active_set))
+	PLRU 		:= (PLRU_memory(active_set))
 	evict_way 	:= PriorityEncoder(~PLRU)
 
 	dontTouch(evict_way)
@@ -483,10 +495,11 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
   	val dirty_memory = RegInit(VecInit.tabulate(L1_DataCacheSets, L1_DataCacheWays){ (x, y) => 0.B })
 
 	dontTouch(dirty_memory)
+	dontTouch(valid_write_hit)
 
 	// update on hit (writes only)
 	when(valid_write_hit){
-		dirty_memory(hit_set)(PriorityEncoder(tag_hit_OH)) := 1.B
+		dirty_memory(RegNext(active_set))(PriorityEncoder(tag_hit_OH)) := 1.B
 	}
 
 	// clear on allocate
