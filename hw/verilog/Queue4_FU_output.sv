@@ -58,10 +58,11 @@ module Queue4_FU_output(
   output [3:0]  io_deq_bits_FTQ_index,
   output [1:0]  io_deq_bits_fetch_packet_index,
   output        io_deq_bits_exception,
+                io_deq_bits_memory_violation,
   input         io_flush
 );
 
-  wire [191:0] _ram_ext_R0_data;
+  wire [192:0] _ram_ext_R0_data;
   reg  [1:0]   enq_ptr_value;
   reg  [1:0]   deq_ptr_value;
   reg          maybe_full;
@@ -91,7 +92,7 @@ module Queue4_FU_output(
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_4x192 ram_ext (
+  ram_4x193 ram_ext (
     .R0_addr (deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -100,7 +101,8 @@ module Queue4_FU_output(
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
-      ({io_enq_bits_exception,
+      ({1'h0,
+        io_enq_bits_exception,
         io_enq_bits_fetch_packet_index,
         4'h0,
         io_enq_bits_ROB_index,
@@ -128,5 +130,6 @@ module Queue4_FU_output(
   assign io_deq_bits_FTQ_index = _ram_ext_R0_data[188:185];
   assign io_deq_bits_fetch_packet_index = _ram_ext_R0_data[190:189];
   assign io_deq_bits_exception = _ram_ext_R0_data[191];
+  assign io_deq_bits_memory_violation = _ram_ext_R0_data[192];
 endmodule
 

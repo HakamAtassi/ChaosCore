@@ -39,7 +39,7 @@ rename.sv
 frontend.sv
 RS.sv
 MEMRS.sv
-ram_4x192.sv
+ram_4x193.sv
 Queue4_FU_output.sv
 Arbiter2_FU_output.sv
 MOB.sv
@@ -54,7 +54,7 @@ backend.sv
 FTQ.sv
 mem_64x70.sv
 ROB_shared_mem.sv
-mem_64x2.sv
+mem_64x3.sv
 ROB_WB_mem.sv
 mem_64x17.sv
 ROB_entry_mem.sv
@@ -62,7 +62,7 @@ ROB.sv
 BRU.sv
 ChaosCore.sv
 Queue1_final_AXI_response.sv
-mem_64x2_0.sv
+mem_64x2.sv
 SDPReadWriteSmem_1.sv
 mem_64x278.sv
 icache_ReadWriteSmem.sv

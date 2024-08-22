@@ -171,6 +171,7 @@ module MOB(
   input  [3:0]  io_AGU_output_bits_FTQ_index,
   input  [1:0]  io_AGU_output_bits_fetch_packet_index,
   input         io_AGU_output_bits_exception,
+                io_AGU_output_bits_memory_violation,
   output        io_MOB_output_valid,
   output [6:0]  io_MOB_output_bits_RD,
   output [31:0] io_MOB_output_bits_RD_data,
@@ -189,6 +190,7 @@ module MOB(
   output [3:0]  io_MOB_output_bits_FTQ_index,
   output [1:0]  io_MOB_output_bits_fetch_packet_index,
   output        io_MOB_output_bits_exception,
+                io_MOB_output_bits_memory_violation,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
@@ -250,6 +252,7 @@ module MOB(
   wire [3:0]        _FU_output_store_Q_io_deq_bits_FTQ_index;
   wire [1:0]        _FU_output_store_Q_io_deq_bits_fetch_packet_index;
   wire              _FU_output_store_Q_io_deq_bits_exception;
+  wire              _FU_output_store_Q_io_deq_bits_memory_violation;
   wire              _FU_output_load_Q_io_enq_ready;
   wire              _FU_output_load_Q_io_deq_valid;
   wire [6:0]        _FU_output_load_Q_io_deq_bits_RD;
@@ -269,6 +272,7 @@ module MOB(
   wire [3:0]        _FU_output_load_Q_io_deq_bits_FTQ_index;
   wire [1:0]        _FU_output_load_Q_io_deq_bits_fetch_packet_index;
   wire              _FU_output_load_Q_io_deq_bits_exception;
+  wire              _FU_output_load_Q_io_deq_bits_memory_violation;
   reg  [4:0]        front_pointer;
   reg  [4:0]        back_pointer;
   wire [3:0]        front_index = front_pointer[3:0];
@@ -3774,6 +3778,7 @@ module MOB(
     .io_deq_bits_FTQ_index          (_FU_output_load_Q_io_deq_bits_FTQ_index),
     .io_deq_bits_fetch_packet_index (_FU_output_load_Q_io_deq_bits_fetch_packet_index),
     .io_deq_bits_exception          (_FU_output_load_Q_io_deq_bits_exception),
+    .io_deq_bits_memory_violation   (_FU_output_load_Q_io_deq_bits_memory_violation),
     .io_flush                       (io_commit_valid & _FU_output_load_Q_io_flush_T)
   );
   Queue4_FU_output FU_output_store_Q (
@@ -3806,6 +3811,7 @@ module MOB(
     .io_deq_bits_FTQ_index          (_FU_output_store_Q_io_deq_bits_FTQ_index),
     .io_deq_bits_fetch_packet_index (_FU_output_store_Q_io_deq_bits_fetch_packet_index),
     .io_deq_bits_exception          (_FU_output_store_Q_io_deq_bits_exception),
+    .io_deq_bits_memory_violation   (_FU_output_store_Q_io_deq_bits_memory_violation),
     .io_flush                       (io_commit_valid & _FU_output_load_Q_io_flush_T)
   );
   Arbiter2_FU_output FU_output_arbiter (
@@ -3828,6 +3834,7 @@ module MOB(
     .io_in_0_bits_FTQ_index          (_FU_output_load_Q_io_deq_bits_FTQ_index),
     .io_in_0_bits_fetch_packet_index (_FU_output_load_Q_io_deq_bits_fetch_packet_index),
     .io_in_0_bits_exception          (_FU_output_load_Q_io_deq_bits_exception),
+    .io_in_0_bits_memory_violation   (_FU_output_load_Q_io_deq_bits_memory_violation),
     .io_in_1_ready                   (_FU_output_arbiter_io_in_1_ready),
     .io_in_1_valid                   (_FU_output_store_Q_io_deq_valid),
     .io_in_1_bits_RD                 (_FU_output_store_Q_io_deq_bits_RD),
@@ -3847,6 +3854,7 @@ module MOB(
     .io_in_1_bits_FTQ_index          (_FU_output_store_Q_io_deq_bits_FTQ_index),
     .io_in_1_bits_fetch_packet_index (_FU_output_store_Q_io_deq_bits_fetch_packet_index),
     .io_in_1_bits_exception          (_FU_output_store_Q_io_deq_bits_exception),
+    .io_in_1_bits_memory_violation   (_FU_output_store_Q_io_deq_bits_memory_violation),
     .io_out_ready                    (1'h1),
     .io_out_valid                    (io_MOB_output_valid),
     .io_out_bits_RD                  (io_MOB_output_bits_RD),
@@ -3865,7 +3873,8 @@ module MOB(
     .io_out_bits_ROB_index           (io_MOB_output_bits_ROB_index),
     .io_out_bits_FTQ_index           (io_MOB_output_bits_FTQ_index),
     .io_out_bits_fetch_packet_index  (io_MOB_output_bits_fetch_packet_index),
-    .io_out_bits_exception           (io_MOB_output_bits_exception)
+    .io_out_bits_exception           (io_MOB_output_bits_exception),
+    .io_out_bits_memory_violation    (io_MOB_output_bits_memory_violation)
   );
   assign io_reserve_0_ready = |_availalbe_MOB_entries_4to2;
   assign io_reserve_1_ready = |_availalbe_MOB_entries_4to2;

@@ -11,6 +11,8 @@ L1_caches/AXI_IO.py
 L1_caches/__init__.py
 L1_caches/data_cache_dut.py
 L1_caches/instruction_cache_dut.py
+MOB/MOB_dut.py
+MOB/__init__.py
 SimpleDRAM/SimpleDRAM.py
 SimpleDRAM/__init__.py
 agents/FU_agent.py

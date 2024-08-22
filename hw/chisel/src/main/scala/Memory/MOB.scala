@@ -74,6 +74,24 @@ import getPortCount._
 */
 
 
+/* Operation (improved/cleaner)
+
+// On decode, the core reserves a spot for memory operations.
+
+// On AGU output, the address/data fields of the memory entries are updated.
+
+// On AGU output:
+//      - if load, request read from cache
+//      - if store, check for load conflicts that have already written their result. If found, mark violation bit. If none found, do nothing.
+
+// On cache response, look up MOB for data to merge, do the merge, then output data. 
+
+// When entry at top of MOB, if complete & no issues (no violation, etc), set complete bit in ROB
+// If violation (load-store, etc...), set violation bit and complete bit in ROB. 
+
+*/
+
+
 
 class MOB(coreParameters:CoreParameters) extends Module{
     import coreParameters._
@@ -92,9 +110,11 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
         val fetch_PC                =      Input(UInt(32.W))                                                                // DEBUG
 
+        //val complete              =      ValidIO(new FU_output(coreParameters))                                               // update ROB (front of MOB)
+
         val AGU_output              =      Flipped(ValidIO(new FU_output(coreParameters)))                                      // update address (AGU)
 
-        val MOB_output              =      ValidIO(new FU_output(coreParameters))                                               // update address (AGU)
+        val MOB_output              =      ValidIO(new FU_output(coreParameters))                                               // broadcast load data
 
         // REDIRECTS // 
         val commit                  =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
@@ -415,7 +435,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
     // FU OUTPUT //
     ///////////////
 
-    io.MOB_output                   := DontCare
+    //io.MOB_output                   := DontCare
     io.MOB_output.valid             <> FU_output_arbiter.io.out.valid
     io.MOB_output.bits              <> FU_output_arbiter.io.out.bits
     io.MOB_output.bits.RD           := FU_output_arbiter.io.out.bits.RD

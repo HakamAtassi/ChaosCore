@@ -211,6 +211,7 @@ module backend(
   output [3:0]  io_FU_outputs_0_bits_FTQ_index,
   output [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
   output        io_FU_outputs_0_bits_exception,
+                io_FU_outputs_0_bits_memory_violation,
                 io_FU_outputs_1_valid,
   output [6:0]  io_FU_outputs_1_bits_RD,
   output [31:0] io_FU_outputs_1_bits_RD_data,
@@ -229,6 +230,7 @@ module backend(
   output [3:0]  io_FU_outputs_1_bits_FTQ_index,
   output [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
   output        io_FU_outputs_1_bits_exception,
+                io_FU_outputs_1_bits_memory_violation,
                 io_FU_outputs_2_valid,
   output [6:0]  io_FU_outputs_2_bits_RD,
   output [31:0] io_FU_outputs_2_bits_RD_data,
@@ -247,6 +249,7 @@ module backend(
   output [3:0]  io_FU_outputs_2_bits_FTQ_index,
   output [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
   output        io_FU_outputs_2_bits_exception,
+                io_FU_outputs_2_bits_memory_violation,
                 io_FU_outputs_3_valid,
   output [6:0]  io_FU_outputs_3_bits_RD,
   output [31:0] io_FU_outputs_3_bits_RD_data,
@@ -264,7 +267,8 @@ module backend(
   output [5:0]  io_FU_outputs_3_bits_ROB_index,
   output [3:0]  io_FU_outputs_3_bits_FTQ_index,
   output [1:0]  io_FU_outputs_3_bits_fetch_packet_index,
-  output        io_FU_outputs_3_bits_exception
+  output        io_FU_outputs_3_bits_exception,
+                io_FU_outputs_3_bits_memory_violation
 );
 
   wire        _AGU_io_FU_output_valid;
@@ -1567,6 +1571,7 @@ module backend(
     .io_AGU_output_bits_FTQ_index                (4'h0),
     .io_AGU_output_bits_fetch_packet_index       (2'h0),
     .io_AGU_output_bits_exception                (1'h0),
+    .io_AGU_output_bits_memory_violation         (1'h0),
     .io_MOB_output_valid                         (_MOB_io_MOB_output_valid),
     .io_MOB_output_bits_RD                       (_MOB_io_MOB_output_bits_RD),
     .io_MOB_output_bits_RD_data                  (_MOB_io_MOB_output_bits_RD_data),
@@ -1586,6 +1591,7 @@ module backend(
     .io_MOB_output_bits_fetch_packet_index
       (io_FU_outputs_3_bits_fetch_packet_index),
     .io_MOB_output_bits_exception                (io_FU_outputs_3_bits_exception),
+    .io_MOB_output_bits_memory_violation         (io_FU_outputs_3_bits_memory_violation),
     .io_commit_valid                             (io_commit_valid),
     .io_commit_bits_fetch_PC                     (io_commit_bits_fetch_PC),
     .io_commit_bits_T_NT                         (io_commit_bits_T_NT),
@@ -1755,7 +1761,9 @@ module backend(
     .io_FU_output_bits_fetch_packet_index
       (io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_output_bits_exception
-      (io_FU_outputs_0_bits_exception)
+      (io_FU_outputs_0_bits_exception),
+    .io_FU_output_bits_memory_violation
+      (io_FU_outputs_0_bits_memory_violation)
   );
   FU_1 FU1 (
     .clock                                                     (clock),
@@ -1853,7 +1861,9 @@ module backend(
     .io_FU_output_bits_fetch_packet_index
       (io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_output_bits_exception
-      (io_FU_outputs_1_bits_exception)
+      (io_FU_outputs_1_bits_exception),
+    .io_FU_output_bits_memory_violation
+      (io_FU_outputs_1_bits_memory_violation)
   );
   FU_1 FU2 (
     .clock                                                     (clock),
@@ -1951,7 +1961,9 @@ module backend(
     .io_FU_output_bits_fetch_packet_index
       (io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_output_bits_exception
-      (io_FU_outputs_2_bits_exception)
+      (io_FU_outputs_2_bits_exception),
+    .io_FU_output_bits_memory_violation
+      (io_FU_outputs_2_bits_memory_violation)
   );
   AGU AGU (
     .clock                                             (clock),

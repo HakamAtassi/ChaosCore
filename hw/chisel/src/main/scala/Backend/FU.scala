@@ -231,6 +231,8 @@ class ALU(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.is_unsigned         :=   DontCare
     io.FU_output.bits.wr_data             :=   DontCare
     io.FU_output.bits.exception           :=   0.B
+    io.FU_output.bits.memory_violation    :=   0.B
+    
 
 
 
@@ -374,6 +376,7 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.is_unsigned         :=   DontCare
     io.FU_output.bits.wr_data             :=   DontCare
     io.FU_output.bits.exception           :=   0.B
+    io.FU_output.bits.memory_violation    :=   0.B
 
 
     io.FU_output.valid                  :=      RegNext(io.FU_input.valid && !io.flush)

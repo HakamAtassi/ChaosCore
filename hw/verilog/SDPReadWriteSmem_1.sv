@@ -51,7 +51,7 @@ module SDPReadWriteSmem_1(
       din_buff <= io_data_in;
     end
   end // always @(posedge)
-  mem_64x2_0 mem_ext (
+  mem_64x2 mem_ext (
     .R0_addr (io_rd_addr),
     .R0_en   (1'h1),
     .R0_clk  (clock),
