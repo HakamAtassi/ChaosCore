@@ -199,6 +199,7 @@ module ChaosCore(
   wire [3:0]  _backend_io_FU_outputs_0_bits_FTQ_index;
   wire [1:0]  _backend_io_FU_outputs_0_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_0_bits_exception;
+  wire        _backend_io_FU_outputs_0_bits_memory_violation;
   wire        _backend_io_FU_outputs_1_valid;
   wire [6:0]  _backend_io_FU_outputs_1_bits_RD;
   wire [31:0] _backend_io_FU_outputs_1_bits_RD_data;
@@ -217,6 +218,7 @@ module ChaosCore(
   wire [3:0]  _backend_io_FU_outputs_1_bits_FTQ_index;
   wire [1:0]  _backend_io_FU_outputs_1_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_1_bits_exception;
+  wire        _backend_io_FU_outputs_1_bits_memory_violation;
   wire        _backend_io_FU_outputs_2_valid;
   wire [6:0]  _backend_io_FU_outputs_2_bits_RD;
   wire [31:0] _backend_io_FU_outputs_2_bits_RD_data;
@@ -235,6 +237,7 @@ module ChaosCore(
   wire [3:0]  _backend_io_FU_outputs_2_bits_FTQ_index;
   wire [1:0]  _backend_io_FU_outputs_2_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_2_bits_exception;
+  wire        _backend_io_FU_outputs_2_bits_memory_violation;
   wire        _backend_io_FU_outputs_3_valid;
   wire [6:0]  _backend_io_FU_outputs_3_bits_RD;
   wire [31:0] _backend_io_FU_outputs_3_bits_RD_data;
@@ -253,6 +256,7 @@ module ChaosCore(
   wire [3:0]  _backend_io_FU_outputs_3_bits_FTQ_index;
   wire [1:0]  _backend_io_FU_outputs_3_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_3_bits_exception;
+  wire        _backend_io_FU_outputs_3_bits_memory_violation;
   wire        _frontend_io_predictions_valid;
   wire        _frontend_io_predictions_bits_valid;
   wire [31:0] _frontend_io_predictions_bits_fetch_PC;
@@ -888,6 +892,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_0_bits_exception
       (_backend_io_FU_outputs_0_bits_exception),
+    .io_FU_outputs_0_bits_memory_violation
+      (_backend_io_FU_outputs_0_bits_memory_violation),
     .io_FU_outputs_1_valid
       (_backend_io_FU_outputs_1_valid),
     .io_FU_outputs_1_bits_RD
@@ -924,6 +930,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_1_bits_exception
       (_backend_io_FU_outputs_1_bits_exception),
+    .io_FU_outputs_1_bits_memory_violation
+      (_backend_io_FU_outputs_1_bits_memory_violation),
     .io_FU_outputs_2_valid
       (_backend_io_FU_outputs_2_valid),
     .io_FU_outputs_2_bits_RD
@@ -960,6 +968,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_2_bits_exception
       (_backend_io_FU_outputs_2_bits_exception),
+    .io_FU_outputs_2_bits_memory_violation
+      (_backend_io_FU_outputs_2_bits_memory_violation),
     .io_FU_outputs_3_valid
       (_backend_io_FU_outputs_3_valid),
     .io_FU_outputs_3_bits_RD
@@ -996,6 +1006,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_3_bits_fetch_packet_index),
     .io_FU_outputs_3_bits_exception
       (_backend_io_FU_outputs_3_bits_exception),
+    .io_FU_outputs_3_bits_memory_violation
+      (_backend_io_FU_outputs_3_bits_memory_violation),
     .io_revert_valid
       (io_revert_valid),
     .io_revert_bits_PC
@@ -1363,6 +1375,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_0_bits_exception
       (_backend_io_FU_outputs_0_bits_exception),
+    .io_FU_outputs_0_bits_memory_violation
+      (_backend_io_FU_outputs_0_bits_memory_violation),
     .io_FU_outputs_1_valid
       (_backend_io_FU_outputs_1_valid),
     .io_FU_outputs_1_bits_RD
@@ -1399,6 +1413,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_1_bits_exception
       (_backend_io_FU_outputs_1_bits_exception),
+    .io_FU_outputs_1_bits_memory_violation
+      (_backend_io_FU_outputs_1_bits_memory_violation),
     .io_FU_outputs_2_valid
       (_backend_io_FU_outputs_2_valid),
     .io_FU_outputs_2_bits_RD
@@ -1435,6 +1451,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_2_bits_exception
       (_backend_io_FU_outputs_2_bits_exception),
+    .io_FU_outputs_2_bits_memory_violation
+      (_backend_io_FU_outputs_2_bits_memory_violation),
     .io_FU_outputs_3_valid
       (_backend_io_FU_outputs_3_valid),
     .io_FU_outputs_3_bits_RD
@@ -1470,7 +1488,9 @@ module ChaosCore(
     .io_FU_outputs_3_bits_fetch_packet_index
       (_backend_io_FU_outputs_3_bits_fetch_packet_index),
     .io_FU_outputs_3_bits_exception
-      (_backend_io_FU_outputs_3_bits_exception)
+      (_backend_io_FU_outputs_3_bits_exception),
+    .io_FU_outputs_3_bits_memory_violation
+      (_backend_io_FU_outputs_3_bits_memory_violation)
   );
   FTQ FTQ (
     .clock                                   (clock),
@@ -1778,6 +1798,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_0_bits_exception
       (_backend_io_FU_outputs_0_bits_exception),
+    .io_FU_outputs_0_bits_memory_violation
+      (_backend_io_FU_outputs_0_bits_memory_violation),
     .io_FU_outputs_1_valid
       (_backend_io_FU_outputs_1_valid),
     .io_FU_outputs_1_bits_RD
@@ -1814,6 +1836,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_1_bits_exception
       (_backend_io_FU_outputs_1_bits_exception),
+    .io_FU_outputs_1_bits_memory_violation
+      (_backend_io_FU_outputs_1_bits_memory_violation),
     .io_FU_outputs_2_valid
       (_backend_io_FU_outputs_2_valid),
     .io_FU_outputs_2_bits_RD
@@ -1850,6 +1874,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_2_bits_exception
       (_backend_io_FU_outputs_2_bits_exception),
+    .io_FU_outputs_2_bits_memory_violation
+      (_backend_io_FU_outputs_2_bits_memory_violation),
     .io_FU_outputs_3_valid
       (_backend_io_FU_outputs_3_valid),
     .io_FU_outputs_3_bits_RD
@@ -1886,6 +1912,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_3_bits_fetch_packet_index),
     .io_FU_outputs_3_bits_exception
       (_backend_io_FU_outputs_3_bits_exception),
+    .io_FU_outputs_3_bits_memory_violation
+      (_backend_io_FU_outputs_3_bits_memory_violation),
     .io_ROB_output_row_valid
       (_ROB_io_ROB_output_row_valid),
     .io_ROB_output_fetch_PC

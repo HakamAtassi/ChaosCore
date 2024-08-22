@@ -80,7 +80,8 @@ module FU(
   output [5:0]  io_FU_output_bits_ROB_index,
   output [3:0]  io_FU_output_bits_FTQ_index,
   output [1:0]  io_FU_output_bits_fetch_packet_index,
-  output        io_FU_output_bits_exception
+  output        io_FU_output_bits_exception,
+                io_FU_output_bits_memory_violation
 );
 
   wire        _branch_unit_io_FU_output_valid;
@@ -243,5 +244,6 @@ module FU(
       ? _branch_unit_io_FU_output_bits_fetch_packet_index
       : _ALU_io_FU_output_bits_fetch_packet_index;
   assign io_FU_output_bits_exception = 1'h0;
+  assign io_FU_output_bits_memory_violation = 1'h0;
 endmodule
 

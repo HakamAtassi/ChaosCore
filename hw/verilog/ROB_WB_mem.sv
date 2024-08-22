@@ -49,8 +49,8 @@ module ROB_WB_mem(
                io_readDataG_exception
 );
 
-  wire [1:0] _mem_ext_R0_data;
-  mem_64x2 mem_ext (
+  wire [2:0] _mem_ext_R0_data;
+  mem_64x3 mem_ext (
     .R0_addr (io_addrG),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -58,23 +58,23 @@ module ROB_WB_mem(
     .W0_addr (io_addrE),
     .W0_en   (io_writeEnableE),
     .W0_clk  (clock),
-    .W0_data ({1'h0, io_writeDataE_busy}),
+    .W0_data ({2'h0, io_writeDataE_busy}),
     .W1_addr (io_addrD),
     .W1_en   (io_writeEnableD),
     .W1_clk  (clock),
-    .W1_data ({1'h0, io_writeDataD_busy}),
+    .W1_data ({2'h0, io_writeDataD_busy}),
     .W2_addr (io_addrC),
     .W2_en   (io_writeEnableC),
     .W2_clk  (clock),
-    .W2_data ({1'h0, io_writeDataC_busy}),
+    .W2_data ({2'h0, io_writeDataC_busy}),
     .W3_addr (io_addrB),
     .W3_en   (io_writeEnableB),
     .W3_clk  (clock),
-    .W3_data ({1'h0, io_writeDataB_busy}),
+    .W3_data ({2'h0, io_writeDataB_busy}),
     .W4_addr (io_addrA),
     .W4_en   (io_writeEnableA),
     .W4_clk  (clock),
-    .W4_data (2'h0)
+    .W4_data (3'h0)
   );
   assign io_readDataG_busy = _mem_ext_R0_data[0];
   assign io_readDataG_exception = _mem_ext_R0_data[1];

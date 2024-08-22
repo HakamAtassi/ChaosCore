@@ -400,8 +400,9 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
 }
 
 class ROB_WB(coreParameters:CoreParameters) extends Bundle{
-    val busy        = Bool()
-    val exception   = Bool()
+    val busy                = Bool()
+    val exception           = Bool()
+    val memory_violation    = Bool()
 }
 
 class sources_ready extends Bundle{
@@ -467,6 +468,7 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
 
 
     val exception           =   Bool()
+    val memory_violation    =   Bool()
 }
 
 

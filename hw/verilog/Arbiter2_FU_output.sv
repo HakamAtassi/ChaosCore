@@ -48,6 +48,7 @@ module Arbiter2_FU_output(
   input  [3:0]  io_in_0_bits_FTQ_index,
   input  [1:0]  io_in_0_bits_fetch_packet_index,
   input         io_in_0_bits_exception,
+                io_in_0_bits_memory_violation,
   output        io_in_1_ready,
   input         io_in_1_valid,
   input  [6:0]  io_in_1_bits_RD,
@@ -67,6 +68,7 @@ module Arbiter2_FU_output(
   input  [3:0]  io_in_1_bits_FTQ_index,
   input  [1:0]  io_in_1_bits_fetch_packet_index,
   input         io_in_1_bits_exception,
+                io_in_1_bits_memory_violation,
                 io_out_ready,
   output        io_out_valid,
   output [6:0]  io_out_bits_RD,
@@ -85,7 +87,8 @@ module Arbiter2_FU_output(
   output [5:0]  io_out_bits_ROB_index,
   output [3:0]  io_out_bits_FTQ_index,
   output [1:0]  io_out_bits_fetch_packet_index,
-  output        io_out_bits_exception
+  output        io_out_bits_exception,
+                io_out_bits_memory_violation
 );
 
   assign io_in_0_ready = io_out_ready;
@@ -124,5 +127,7 @@ module Arbiter2_FU_output(
     io_in_0_valid ? io_in_0_bits_fetch_packet_index : io_in_1_bits_fetch_packet_index;
   assign io_out_bits_exception =
     io_in_0_valid ? io_in_0_bits_exception : io_in_1_bits_exception;
+  assign io_out_bits_memory_violation =
+    io_in_0_valid ? io_in_0_bits_memory_violation : io_in_1_bits_memory_violation;
 endmodule
 

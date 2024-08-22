@@ -80,7 +80,8 @@ module FU_1(
   output [5:0]  io_FU_output_bits_ROB_index,
   output [3:0]  io_FU_output_bits_FTQ_index,
   output [1:0]  io_FU_output_bits_fetch_packet_index,
-  output        io_FU_output_bits_exception
+  output        io_FU_output_bits_exception,
+                io_FU_output_bits_memory_violation
 );
 
   reg  monitor_output_REG;
@@ -140,5 +141,6 @@ module FU_1(
   assign io_FU_output_bits_is_unsigned = 1'h0;
   assign io_FU_output_bits_wr_data = 32'h0;
   assign io_FU_output_bits_exception = 1'h0;
+  assign io_FU_output_bits_memory_violation = 1'h0;
 endmodule
 
