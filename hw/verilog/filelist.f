@@ -39,9 +39,6 @@ rename.sv
 frontend.sv
 RS.sv
 MEMRS.sv
-ram_4x193.sv
-Queue4_FU_output.sv
-Arbiter2_FU_output.sv
 MOB.sv
 mem_64x32.sv
 sim_nReadmWrite.sv

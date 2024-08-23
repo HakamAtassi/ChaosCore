@@ -3,19 +3,35 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, ReadOnly
 
 
+from enum import Enum
+
+class memory_type_t(Enum):
+    NONE = 0
+    LOAD = 1
+    STORE = 2
+
+class access_width_t(Enum):
+    NONE = 0
+    B = 1  # Byte
+    HW = 2 # Half-word
+    W = 3  # Word
+
+
 class MOB_dut:
     def __init__(self, dut):
         self.MOB = dut
 
         # Backend Modules #
 
-    def clock(self):  # Do not touch
-        return self.MOB.clock
+    async def clock(self):  # Do not touch
+        await RisingEdge(self.MOB.clock)
 
     async def reset(self):  # Do not touch
-        await RisingEdge(self.MOB.clock)
-        self.MOB = 1
-        await RisingEdge(self.MOB.clock)
+        await self.clock()
+        self.MOB.reset = 1
+        await self.clock()
+        await self.clock()
+        await self.clock()
         self.MOB.reset.value = 0
 
     def read_reset(self):
@@ -29,8 +45,8 @@ class MOB_dut:
     def write_reserve(self, reserve):
         for i in range(4):
             setattr(self.MOB, f"io_reserve_{i}_valid", reserve[i]["valid"])
-            setattr(self.MOB, f"io_reserve_{i}_bits_ready_bits_RS1_ready", reserve[i]["bits"]["RS1_ready"])
-            setattr(self.MOB, f"io_reserve_{i}_bits_ready_bits_RS2_ready", reserve[i]["bits"]["RS2_ready"])
+            setattr(self.MOB, f"io_reserve_{i}_bits_ready_bits_RS1_ready", reserve[i]["bits"]["ready_bits_RS1_ready"])
+            setattr(self.MOB, f"io_reserve_{i}_bits_ready_bits_RS2_ready", reserve[i]["bits"]["ready_bits_RS2_ready"])
             setattr(self.MOB, f"io_reserve_{i}_bits_RDold", reserve[i]["bits"]["RDold"])
             setattr(self.MOB, f"io_reserve_{i}_bits_RD", reserve[i]["bits"]["RD"])
             setattr(self.MOB, f"io_reserve_{i}_bits_RD_valid", reserve[i]["bits"]["RD_valid"])
@@ -123,24 +139,24 @@ class MOB_dut:
                 #io_flush,
 
     def write_AGU_output(self, AGU):
-        setattr(self.MOB, f"io_AGU_output_valid".value, AGU["valid"])
-        setattr(self.MOB, f"io_AGU_output_bits_RD".value, AGU["bits"]["RD"])
-        setattr(self.MOB, f"io_AGU_output_bits_RD_data".value, AGU["bits"]["RD_data"])
-        setattr(self.MOB, f"io_AGU_output_bits_RD_valid".value, AGU["bits"]["RD_valid"])
-        setattr(self.MOB, f"io_AGU_output_bits_fetch_PC".value, AGU["bits"]["fetch_PC"])
-        setattr(self.MOB, f"io_AGU_output_bits_branch_taken".value, AGU["bits"]["branch_taken"])
-        setattr(self.MOB, f"io_AGU_output_bits_target_address".value, AGU["bits"]["target_address"])
-        setattr(self.MOB, f"io_AGU_output_bits_branch_valid".value, AGU["bits"]["branch_valid"])
-        setattr(self.MOB, f"io_AGU_output_bits_address".value, AGU["bits"]["address"])
-        setattr(self.MOB, f"io_AGU_output_bits_memory_type".value, AGU["bits"]["memory_type"])
-        setattr(self.MOB, f"io_AGU_output_bits_access_width".value, AGU["bits"]["access_width"])
-        setattr(self.MOB, f"io_AGU_output_bits_is_unsigned".value, AGU["bits"]["is_unsigned"])
-        setattr(self.MOB, f"io_AGU_output_bits_wr_data".value, AGU["bits"]["wr_data"])
-        setattr(self.MOB, f"io_AGU_output_bits_MOB_index".value, AGU["bits"]["MOB_index"])
-        setattr(self.MOB, f"io_AGU_output_bits_ROB_index".value, AGU["bits"]["ROB_index"])
-        setattr(self.MOB, f"io_AGU_output_bits_FTQ_index".value, AGU["bits"]["FTQ_index"])
-        setattr(self.MOB, f"io_AGU_output_bits_fetch_packet_index".value, AGU["bits"]["fetch_packet_index"])
-        setattr(self.MOB, f"io_AGU_output_bits_exception".value, AGU["bits"]["exception"])
+        setattr(self.MOB, f"io_AGU_output_valid", AGU["valid"])
+        setattr(self.MOB, f"io_AGU_output_bits_RD", AGU["bits"]["RD"])
+        setattr(self.MOB, f"io_AGU_output_bits_RD_data", AGU["bits"]["RD_data"])
+        setattr(self.MOB, f"io_AGU_output_bits_RD_valid", AGU["bits"]["RD_valid"])
+        setattr(self.MOB, f"io_AGU_output_bits_fetch_PC", AGU["bits"]["fetch_PC"])
+        setattr(self.MOB, f"io_AGU_output_bits_branch_taken", AGU["bits"]["branch_taken"])
+        setattr(self.MOB, f"io_AGU_output_bits_target_address", AGU["bits"]["target_address"])
+        setattr(self.MOB, f"io_AGU_output_bits_branch_valid", AGU["bits"]["branch_valid"])
+        setattr(self.MOB, f"io_AGU_output_bits_address", AGU["bits"]["address"])
+        setattr(self.MOB, f"io_AGU_output_bits_memory_type", AGU["bits"]["memory_type"])
+        setattr(self.MOB, f"io_AGU_output_bits_access_width", AGU["bits"]["access_width"])
+        setattr(self.MOB, f"io_AGU_output_bits_is_unsigned", AGU["bits"]["is_unsigned"])
+        setattr(self.MOB, f"io_AGU_output_bits_wr_data", AGU["bits"]["wr_data"])
+        setattr(self.MOB, f"io_AGU_output_bits_MOB_index", AGU["bits"]["MOB_index"])
+        setattr(self.MOB, f"io_AGU_output_bits_ROB_index", AGU["bits"]["ROB_index"])
+        setattr(self.MOB, f"io_AGU_output_bits_FTQ_index", AGU["bits"]["FTQ_index"])
+        setattr(self.MOB, f"io_AGU_output_bits_fetch_packet_index", AGU["bits"]["fetch_packet_index"])
+        setattr(self.MOB, f"io_AGU_output_bits_violation", AGU["bits"]["violation"])
 
 
 

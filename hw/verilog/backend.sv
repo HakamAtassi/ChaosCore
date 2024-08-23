@@ -210,7 +210,7 @@ module backend(
   output [5:0]  io_FU_outputs_0_bits_ROB_index,
   output [3:0]  io_FU_outputs_0_bits_FTQ_index,
   output [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
-  output        io_FU_outputs_0_bits_exception,
+  output        io_FU_outputs_0_bits_violation,
                 io_FU_outputs_0_bits_memory_violation,
                 io_FU_outputs_1_valid,
   output [6:0]  io_FU_outputs_1_bits_RD,
@@ -229,7 +229,7 @@ module backend(
   output [5:0]  io_FU_outputs_1_bits_ROB_index,
   output [3:0]  io_FU_outputs_1_bits_FTQ_index,
   output [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
-  output        io_FU_outputs_1_bits_exception,
+  output        io_FU_outputs_1_bits_violation,
                 io_FU_outputs_1_bits_memory_violation,
                 io_FU_outputs_2_valid,
   output [6:0]  io_FU_outputs_2_bits_RD,
@@ -248,7 +248,7 @@ module backend(
   output [5:0]  io_FU_outputs_2_bits_ROB_index,
   output [3:0]  io_FU_outputs_2_bits_FTQ_index,
   output [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
-  output        io_FU_outputs_2_bits_exception,
+  output        io_FU_outputs_2_bits_violation,
                 io_FU_outputs_2_bits_memory_violation,
                 io_FU_outputs_3_valid,
   output [6:0]  io_FU_outputs_3_bits_RD,
@@ -267,7 +267,7 @@ module backend(
   output [5:0]  io_FU_outputs_3_bits_ROB_index,
   output [3:0]  io_FU_outputs_3_bits_FTQ_index,
   output [1:0]  io_FU_outputs_3_bits_fetch_packet_index,
-  output        io_FU_outputs_3_bits_exception,
+  output        io_FU_outputs_3_bits_violation,
                 io_FU_outputs_3_bits_memory_violation
 );
 
@@ -1552,7 +1552,26 @@ module backend(
     .io_reserved_pointers_2_bits                 (_MOB_io_reserved_pointers_2_bits),
     .io_reserved_pointers_3_valid                (_MOB_io_reserved_pointers_3_valid),
     .io_reserved_pointers_3_bits                 (_MOB_io_reserved_pointers_3_bits),
-    .io_fetch_PC                                 (io_fetch_PC),
+    .io_complete_valid                           (io_FU_outputs_3_valid),
+    .io_complete_bits_RD                         (io_FU_outputs_3_bits_RD),
+    .io_complete_bits_RD_data                    (io_FU_outputs_3_bits_RD_data),
+    .io_complete_bits_RD_valid                   (io_FU_outputs_3_bits_RD_valid),
+    .io_complete_bits_fetch_PC                   (io_FU_outputs_3_bits_fetch_PC),
+    .io_complete_bits_branch_taken               (io_FU_outputs_3_bits_branch_taken),
+    .io_complete_bits_target_address             (io_FU_outputs_3_bits_target_address),
+    .io_complete_bits_branch_valid               (io_FU_outputs_3_bits_branch_valid),
+    .io_complete_bits_address                    (io_FU_outputs_3_bits_address),
+    .io_complete_bits_memory_type                (io_FU_outputs_3_bits_memory_type),
+    .io_complete_bits_access_width               (io_FU_outputs_3_bits_access_width),
+    .io_complete_bits_is_unsigned                (io_FU_outputs_3_bits_is_unsigned),
+    .io_complete_bits_wr_data                    (io_FU_outputs_3_bits_wr_data),
+    .io_complete_bits_MOB_index                  (io_FU_outputs_3_bits_MOB_index),
+    .io_complete_bits_ROB_index                  (io_FU_outputs_3_bits_ROB_index),
+    .io_complete_bits_FTQ_index                  (io_FU_outputs_3_bits_FTQ_index),
+    .io_complete_bits_fetch_packet_index
+      (io_FU_outputs_3_bits_fetch_packet_index),
+    .io_complete_bits_violation                  (io_FU_outputs_3_bits_violation),
+    .io_complete_bits_memory_violation           (io_FU_outputs_3_bits_memory_violation),
     .io_AGU_output_valid                         (_AGU_io_FU_output_valid),
     .io_AGU_output_bits_RD                       (_AGU_io_FU_output_bits_RD),
     .io_AGU_output_bits_RD_data                  (32'h0),
@@ -1570,28 +1589,27 @@ module backend(
     .io_AGU_output_bits_ROB_index                (6'h0),
     .io_AGU_output_bits_FTQ_index                (4'h0),
     .io_AGU_output_bits_fetch_packet_index       (2'h0),
-    .io_AGU_output_bits_exception                (1'h0),
+    .io_AGU_output_bits_violation                (1'h0),
     .io_AGU_output_bits_memory_violation         (1'h0),
     .io_MOB_output_valid                         (_MOB_io_MOB_output_valid),
     .io_MOB_output_bits_RD                       (_MOB_io_MOB_output_bits_RD),
     .io_MOB_output_bits_RD_data                  (_MOB_io_MOB_output_bits_RD_data),
     .io_MOB_output_bits_RD_valid                 (_MOB_io_MOB_output_bits_RD_valid),
-    .io_MOB_output_bits_fetch_PC                 (io_FU_outputs_3_bits_fetch_PC),
-    .io_MOB_output_bits_branch_taken             (io_FU_outputs_3_bits_branch_taken),
-    .io_MOB_output_bits_target_address           (io_FU_outputs_3_bits_target_address),
-    .io_MOB_output_bits_branch_valid             (io_FU_outputs_3_bits_branch_valid),
-    .io_MOB_output_bits_address                  (io_FU_outputs_3_bits_address),
-    .io_MOB_output_bits_memory_type              (io_FU_outputs_3_bits_memory_type),
-    .io_MOB_output_bits_access_width             (io_FU_outputs_3_bits_access_width),
-    .io_MOB_output_bits_is_unsigned              (io_FU_outputs_3_bits_is_unsigned),
-    .io_MOB_output_bits_wr_data                  (io_FU_outputs_3_bits_wr_data),
-    .io_MOB_output_bits_MOB_index                (io_FU_outputs_3_bits_MOB_index),
-    .io_MOB_output_bits_ROB_index                (io_FU_outputs_3_bits_ROB_index),
-    .io_MOB_output_bits_FTQ_index                (io_FU_outputs_3_bits_FTQ_index),
-    .io_MOB_output_bits_fetch_packet_index
-      (io_FU_outputs_3_bits_fetch_packet_index),
-    .io_MOB_output_bits_exception                (io_FU_outputs_3_bits_exception),
-    .io_MOB_output_bits_memory_violation         (io_FU_outputs_3_bits_memory_violation),
+    .io_MOB_output_bits_fetch_PC                 (/* unused */),
+    .io_MOB_output_bits_branch_taken             (/* unused */),
+    .io_MOB_output_bits_target_address           (/* unused */),
+    .io_MOB_output_bits_branch_valid             (/* unused */),
+    .io_MOB_output_bits_address                  (/* unused */),
+    .io_MOB_output_bits_memory_type              (/* unused */),
+    .io_MOB_output_bits_access_width             (/* unused */),
+    .io_MOB_output_bits_is_unsigned              (/* unused */),
+    .io_MOB_output_bits_wr_data                  (/* unused */),
+    .io_MOB_output_bits_MOB_index                (/* unused */),
+    .io_MOB_output_bits_ROB_index                (/* unused */),
+    .io_MOB_output_bits_FTQ_index                (/* unused */),
+    .io_MOB_output_bits_fetch_packet_index       (/* unused */),
+    .io_MOB_output_bits_violation                (/* unused */),
+    .io_MOB_output_bits_memory_violation         (/* unused */),
     .io_commit_valid                             (io_commit_valid),
     .io_commit_bits_fetch_PC                     (io_commit_bits_fetch_PC),
     .io_commit_bits_T_NT                         (io_commit_bits_T_NT),
@@ -1760,8 +1778,8 @@ module backend(
       (io_FU_outputs_0_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
       (io_FU_outputs_0_bits_fetch_packet_index),
-    .io_FU_output_bits_exception
-      (io_FU_outputs_0_bits_exception),
+    .io_FU_output_bits_violation
+      (io_FU_outputs_0_bits_violation),
     .io_FU_output_bits_memory_violation
       (io_FU_outputs_0_bits_memory_violation)
   );
@@ -1860,8 +1878,8 @@ module backend(
       (io_FU_outputs_1_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
       (io_FU_outputs_1_bits_fetch_packet_index),
-    .io_FU_output_bits_exception
-      (io_FU_outputs_1_bits_exception),
+    .io_FU_output_bits_violation
+      (io_FU_outputs_1_bits_violation),
     .io_FU_output_bits_memory_violation
       (io_FU_outputs_1_bits_memory_violation)
   );
@@ -1960,8 +1978,8 @@ module backend(
       (io_FU_outputs_2_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
       (io_FU_outputs_2_bits_fetch_packet_index),
-    .io_FU_output_bits_exception
-      (io_FU_outputs_2_bits_exception),
+    .io_FU_output_bits_violation
+      (io_FU_outputs_2_bits_violation),
     .io_FU_output_bits_memory_violation
       (io_FU_outputs_2_bits_memory_violation)
   );
@@ -2017,9 +2035,5 @@ module backend(
   assign io_FU_outputs_2_bits_RD = _FU2_io_FU_output_bits_RD;
   assign io_FU_outputs_2_bits_RD_data = _FU2_io_FU_output_bits_RD_data;
   assign io_FU_outputs_2_bits_RD_valid = _FU2_io_FU_output_bits_RD_valid;
-  assign io_FU_outputs_3_valid = _MOB_io_MOB_output_valid;
-  assign io_FU_outputs_3_bits_RD = _MOB_io_MOB_output_bits_RD;
-  assign io_FU_outputs_3_bits_RD_data = _MOB_io_MOB_output_bits_RD_data;
-  assign io_FU_outputs_3_bits_RD_valid = _MOB_io_MOB_output_bits_RD_valid;
 endmodule
 

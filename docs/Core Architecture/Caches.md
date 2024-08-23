@@ -9,6 +9,8 @@ nav_order: 6
 
 # Caches
 
+Provide wavedrom diagrams
+
 
 # L1
 

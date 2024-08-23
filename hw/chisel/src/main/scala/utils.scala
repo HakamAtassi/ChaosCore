@@ -202,35 +202,35 @@ object get_decomposed_icache_address{
 }
 
 object get_MOB_row_byte_sel {
-  def apply(coreParameters:CoreParameters, MOB_entry: MOB_entry): UInt = {
+  def apply(coreParameters:CoreParameters, MOB_entry: MOB_entry): Vec[Bool] = {
     // Extract relevant fields from the MOB_entry
     val address     = MOB_entry.address 
     val is_store    = MOB_entry.memory_type === memory_type_t.STORE
     val access_width = MOB_entry.access_width 
 
     // Byte select vector (4 bits for 4 bytes in a word)
-    val byte_sels = Wire(UInt(4.W))
+    val byte_sels = Wire(Vec(4, Bool()))
 
-    byte_sels := 0.U
+    byte_sels := VecInit(Seq(0.B, 0.B, 0.B, 0.B))
 
     // Calculate byte mask based on the access size and address alignment
     when(is_store) {
       switch(access_width) {
         is(access_width_t.B) {
           // Byte access, only one byte is selected based on the lower 2 bits of the address
-          byte_sels := (1.U << address(1, 0))
+          byte_sels(address(1, 0)) := 1.B
         }
         is(access_width_t.HW) {
           // Half-Word access, two consecutive bytes are selected
           switch(address(1, 0)) {
-            is("b00".U) { byte_sels := "b0011".U }
-            is("b10".U) { byte_sels := "b1100".U }
+            is("b00".U) { byte_sels := VecInit(Seq(1.B, 1.B, 0.B, 0.B)) }
+            is("b10".U) { byte_sels := VecInit(Seq(0.B, 0.B, 1.B, 1.B)) }
             // TODO: Otherwise, exception 
           }
         }
         is(access_width_t.W) {
           // Word access, all four bytes are selected
-          byte_sels := "b1111".U
+          byte_sels := VecInit(Seq(1.B, 1.B, 1.B, 1.B))
         }
       }
     }
