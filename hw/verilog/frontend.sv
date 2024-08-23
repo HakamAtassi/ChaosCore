@@ -226,7 +226,7 @@ module frontend(
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,
   input  [3:0]  io_FU_outputs_0_bits_FTQ_index,
   input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
-  input         io_FU_outputs_0_bits_exception,
+  input         io_FU_outputs_0_bits_violation,
                 io_FU_outputs_0_bits_memory_violation,
                 io_FU_outputs_1_valid,
   input  [6:0]  io_FU_outputs_1_bits_RD,
@@ -245,7 +245,7 @@ module frontend(
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,
   input  [3:0]  io_FU_outputs_1_bits_FTQ_index,
   input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
-  input         io_FU_outputs_1_bits_exception,
+  input         io_FU_outputs_1_bits_violation,
                 io_FU_outputs_1_bits_memory_violation,
                 io_FU_outputs_2_valid,
   input  [6:0]  io_FU_outputs_2_bits_RD,
@@ -264,7 +264,7 @@ module frontend(
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,
   input  [3:0]  io_FU_outputs_2_bits_FTQ_index,
   input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
-  input         io_FU_outputs_2_bits_exception,
+  input         io_FU_outputs_2_bits_violation,
                 io_FU_outputs_2_bits_memory_violation,
                 io_FU_outputs_3_valid,
   input  [6:0]  io_FU_outputs_3_bits_RD,
@@ -283,7 +283,7 @@ module frontend(
   input  [5:0]  io_FU_outputs_3_bits_ROB_index,
   input  [3:0]  io_FU_outputs_3_bits_FTQ_index,
   input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index,
-  input         io_FU_outputs_3_bits_exception,
+  input         io_FU_outputs_3_bits_violation,
                 io_FU_outputs_3_bits_memory_violation,
   output        io_revert_valid,
   output [31:0] io_revert_bits_PC
@@ -1896,8 +1896,8 @@ module frontend(
       (io_FU_outputs_0_bits_FTQ_index),
     .io_FU_outputs_0_bits_fetch_packet_index
       (io_FU_outputs_0_bits_fetch_packet_index),
-    .io_FU_outputs_0_bits_exception
-      (io_FU_outputs_0_bits_exception),
+    .io_FU_outputs_0_bits_violation
+      (io_FU_outputs_0_bits_violation),
     .io_FU_outputs_0_bits_memory_violation
       (io_FU_outputs_0_bits_memory_violation),
     .io_FU_outputs_1_valid
@@ -1934,8 +1934,8 @@ module frontend(
       (io_FU_outputs_1_bits_FTQ_index),
     .io_FU_outputs_1_bits_fetch_packet_index
       (io_FU_outputs_1_bits_fetch_packet_index),
-    .io_FU_outputs_1_bits_exception
-      (io_FU_outputs_1_bits_exception),
+    .io_FU_outputs_1_bits_violation
+      (io_FU_outputs_1_bits_violation),
     .io_FU_outputs_1_bits_memory_violation
       (io_FU_outputs_1_bits_memory_violation),
     .io_FU_outputs_2_valid
@@ -1972,8 +1972,8 @@ module frontend(
       (io_FU_outputs_2_bits_FTQ_index),
     .io_FU_outputs_2_bits_fetch_packet_index
       (io_FU_outputs_2_bits_fetch_packet_index),
-    .io_FU_outputs_2_bits_exception
-      (io_FU_outputs_2_bits_exception),
+    .io_FU_outputs_2_bits_violation
+      (io_FU_outputs_2_bits_violation),
     .io_FU_outputs_2_bits_memory_violation
       (io_FU_outputs_2_bits_memory_violation),
     .io_FU_outputs_3_valid
@@ -2010,8 +2010,8 @@ module frontend(
       (io_FU_outputs_3_bits_FTQ_index),
     .io_FU_outputs_3_bits_fetch_packet_index
       (io_FU_outputs_3_bits_fetch_packet_index),
-    .io_FU_outputs_3_bits_exception
-      (io_FU_outputs_3_bits_exception),
+    .io_FU_outputs_3_bits_violation
+      (io_FU_outputs_3_bits_violation),
     .io_FU_outputs_3_bits_memory_violation
       (io_FU_outputs_3_bits_memory_violation),
     .io_renamed_decoded_fetch_packet_ready

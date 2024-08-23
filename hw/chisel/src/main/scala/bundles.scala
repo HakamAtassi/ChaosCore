@@ -466,8 +466,7 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
     
     val fetch_packet_index  =   UInt(log2Ceil(fetchWidth).W)
 
-
-    val exception           =   Bool()
+    val violation           =   Bool()
     val memory_violation    =   Bool()
 }
 
@@ -604,27 +603,46 @@ class TileLink_Channel_D extends Bundle {
 /*That is, loads can mark the RD ready to avoid stalling the pipeline*/
 /*But have the possibility of causing an exception that prevents them from committing*/
 /*Loads are not freed until they actually commit.*/
+
+
+object MOB_STATES extends ChiselEnum {
+    val INVALID,       
+    VALID,              // 1
+    READY,              // 2
+    REQUESTED,          // 3
+    CDB_WRITE,          // 4
+    ALMOST_COMPLETE,    // 5
+    COMPLETE,           // 6
+    WAIT,               // 7
+    COMMITTED,          // 8
+    DONE = Value        // 9
+}
+
 class MOB_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
-    val valid           = Bool()
-    val memory_type     = memory_type_t()
+    val valid                   = Bool()
+    val memory_type             = memory_type_t()
 
-    val ROB_index       = UInt(log2Ceil(ROBEntries).W)
+    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
-    val address         = UInt(32.W)        // LOAD/STORE address
-    val access_width    = access_width_t()  // B/HW/W
+    val address                 = UInt(32.W)        // LOAD/STORE address
+    val access_width            = access_width_t()  // B/HW/W
 
-    val RD              = UInt(physicalRegBits.W) // dest reg
-    val data            = UInt(32.W)              
-    val data_valid      = Bool()
+    val RD                      = UInt(physicalRegBits.W) // dest reg
+    val data                    = UInt(32.W)              
+    val data_valid              = Bool()
+
+
+    val fwd_valid              = Vec(4, Bool())
+    val fwd_data               = Vec(4, UInt(8.W))
+
+
 
     // Entry state
-    val pending         = Bool()    // AGU data valid but not requested from cache
-    val completed       = Bool()    // Load/Store sent to FU bus
-    val committed       = Bool()    // entry committed
-    val exception       = Bool()    // entry violated ordering (load/load or store/load)
+    val violation               = Bool()
+    val MOB_STATE               = MOB_STATES()
 
 }
 
@@ -681,13 +699,6 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
         //miss_request := 0.U // TODO: 
     }
 }
-
-
-////////////
-// DATA $ //
-////////////
-
-
 
 
 

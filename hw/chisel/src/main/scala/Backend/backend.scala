@@ -114,7 +114,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     for (i <- 0 until fetchWidth){
         MOB.io.reserve(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
         MOB.io.reserve(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid
-        MOB.io.fetch_PC := io.fetch_PC
+        //MOB.io.fetch_PC := io.fetch_PC
     }
 
     // Assign ready bits
@@ -267,7 +267,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     io.FU_outputs(0) <> FU0.io.FU_output
     io.FU_outputs(1) <> FU1.io.FU_output
     io.FU_outputs(2) <> FU2.io.FU_output
-    io.FU_outputs(3) <> MOB.io.MOB_output
+    io.FU_outputs(3) <> MOB.io.complete
 
     INT_RS.io.commit := io.commit
     MEM_RS.io.commit := io.commit

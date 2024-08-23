@@ -30,3 +30,8 @@ configs = {
 def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
+
+def test_general():
+        configs["testcase"] = "test_general"
+        run(**configs)
+

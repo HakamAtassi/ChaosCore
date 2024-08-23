@@ -7,7 +7,7 @@ from cocotbext.axi import AxiBus, AxiSlave, MemoryRegion
 from cocotbext.axi import AxiBus, AxiRam
 from cocotb.triggers import RisingEdge, ReadOnly
 from enum import Enum
-from L1_caches.data_cache_dut import *
+from MOB import MOB_dut
 import random
 
 
@@ -15,7 +15,7 @@ import random
 class MOB_TB:
     def __init__(self, dut, memory_capacity=512*(2**20)):
         # Top level Module #
-        self.MOB = data_cache_dut(dut)
+        self.MOB = MOB_dut(dut=dut)
 
         # For now, use 256MB of random data
         self.memory_capacity = memory_capacity
@@ -39,19 +39,89 @@ class MOB_TB:
     async def clock(self):
         await self.MOB.clock()
 
-    ######################
-    # CACHE READ REQUEST #
-    ######################
+    ###########
+    # RESERVE #
+    ###########
 
-    #async def write_CPU_request(self, valid, addr, data, memory_type, access_width, MOB_index):
-        #self.L1_data_cache.write_CPU_request(
-            #valid, addr, data, memory_type, access_width, MOB_index)
-        #await self.clock()
-        #self.L1_data_cache.write_CPU_request(
-            #0, 0, 0, memory_type_t.NONE, access_width_t.NONE, 0)
+    async def write_reserve(self, reserve):
+        self.MOB.write_reserve(reserve)
+        await self.clock()
+        reserve = [{} for _ in range(4)]
 
-    #def read_CPU_response(self):
-        #return self.L1_data_cache.read_CPU_response()
+        self.MOB.write_reserve([{
+                "valid": 0,
+                "bits": {
+                    "ready_bits_RS1_ready": 0,
+                    "ready_bits_RS2_ready": 0,
+                    "RDold": 0,
+                    "RD": 0,
+                    "RD_valid": 0,
+                    "RS1": 0,
+                    "RS1_valid": 0,
+                    "RS2": 0,
+                    "RS2_valid": 0,
+                    "IMM": 0,
+                    "FUNCT3": 0,
+                    "packet_index": 0,
+                    "ROB_index": 0,
+                    "MOB_index": 0,
+                    "FTQ_index": 0,
+                    "instructionType": 0,
+                    "portID": 0,
+                    "RS_type": 0,
+                    "needs_ALU": 0,
+                    "needs_branch_unit": 0,
+                    "needs_CSRs": 0,
+                    "SUBTRACT": 0,
+                    "MULTIPLY": 0,
+                    "IS_IMM": 0,
+                    "memory_type": 0,
+                    "access_width": 0,
+                }
+            } for _ in range(4)])
+
+    async def write_AGU_output(self, AGU_output):
+        self.MOB.write_AGU_output(AGU_output)
+        await self.clock()
+        self.MOB.write_AGU_output({
+        "valid": 0,
+        "bits": {
+            "RD": 0,
+            "RD_data": 0,
+            "RD_valid": 0,
+            "fetch_PC": 0,
+            "branch_taken": 0,
+            "target_address": 0,
+            "branch_valid": 0,
+            "address": 0,
+            "memory_type": 0,
+            "access_width":0,
+            "is_unsigned": 0,
+            "wr_data": 0,
+            "MOB_index": 0,
+            "ROB_index": 0,
+            "FTQ_index": 0,
+            "fetch_packet_index": 0,
+            "violation": 0
+        }
+        })
+
+    async def write_backend_memory_response(self, backend_response):
+        self.MOB.write_backend_memory_response(backend_response)
+        await self.clock()
+        self.MOB.write_backend_memory_response({
+            "valid" : 0,
+            "bits": {
+                "addr" : 0,
+                "data" : 0,
+                "MOB_index" : 0,
+            }
+        })
+
+
+    async def read_MOB_output(self):
+        return self.MOB.read_MOB_output(None)
+
 
     ###############
     # CACHE READY #
