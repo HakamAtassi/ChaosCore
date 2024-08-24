@@ -13,6 +13,10 @@ from MOB_TB import *
 from model_utils import *
 from MOB import *
 
+from drivers.mem_gen import *
+from drivers.drivers import *
+
+
 
 @cocotb.test()
 async def test_reset(dut):
@@ -32,7 +36,7 @@ async def test_reset(dut):
     await MOB.clock()
 
 @cocotb.test()
-async def test_general(dut):
+async def test_fuzz(dut):
     # Set seed
     random.seed(0x42)
 
@@ -201,18 +205,42 @@ async def test_general(dut):
     assert False
 
 
+# TODO: 
+# FU monitor
+# ROB model
+# Scoreboard:
+    # Memory load result reference (for checking on commit)
+    # Memory store in order checker
+    # final memory comparer (memory states must be 1:1)
 
-#@cocotb.test()
-#async def test_fuzz(dut):
-    ## Set seed
-    #random.seed(0x42)
 
-    ## Start lock
-    #await cocotb.start(generateClock(dut))
+@cocotb.test()
+async def test_fuzz(dut):
+    # Set seed
+    memory_capacity = 256* 2**10
+    random.seed(0x42)
 
-    ## Bring up TB
-    #MOB = MOB_TB(dut)     # construct TB
-    #await MOB.reset()     # Reset
+    # Start lock
+    await cocotb.start(generateClock(dut))
+
+    # Bring up TB
+    MOB = MOB_TB(dut)     # construct TB
+    MOB.init_sequence()
+
+
+
+
+
+
+    await MOB.reset()     # Reset
+
+    for _ in range(2000):
+
+        await MOB.update()
+
+    assert False
+
+
 
 
 
