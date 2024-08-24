@@ -31,7 +31,11 @@ def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
 
-def test_general():
-        configs["testcase"] = "test_general"
+def test_fuzz():
+        configs["testcase"] = "test_fuzz"
+        run(**configs)
+
+def test_fuzz():
+        configs["testcase"] = "test_fuzz"
         run(**configs)
 

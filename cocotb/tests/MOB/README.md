@@ -3,26 +3,25 @@
 
 # MOB Verification
 
-The job of the MOB is to aid in the execution of memory operations out-of-order. Namely, its job is twofold: to buffer stores till commit, wherein they are fired to memory, and to enable the execution of loads despite earlier pending stores to the same address that have not yet committed. As far as the verification is concerned, the MOB's operation can be viewed as a 4 stage process:
+The verification of the MOB is nuanced because it schedules loads and stores out of order, and can also return incorrect load data so long as it is later corrected by indicating a load violation to the ROB. Additionally, the MOB interfaces with many components that must be modeled accurately to achieve a simulation that effectively stresses the MOB. 
 
-1) reserve:
-    - When a memory instruction is decoded, it must also reserve a position in the MOB. During the reservation process, the MOB also outputs a pointer to the MOB entries for use when the address/memory of the instruction is determined. This stage simply buffers any informtion from the decode stage that is needed to peform the load/store.
-2) Update:
-    - When the AGU computes the memory address/data, this information is passed to the MOB to update the corresponding entry. This essentially informs the MOB with everything that is required to actually perform the memory operation. 
-3) Execute:
-    - During this stage, the memory operation is requested from memory. If this operation is a store, it returns nothing. If this operation is a load, the memory subsytem will, at some point in the future, return the data and the MOB index. 
-5) Output: 
-    - During this stage, the MOB will first check if earlier MOB entries have any colliding stores, and will then output the memory request, merged as necessary. 
-6) Commit:
-    - This occurs in paralell to the above operations. When the front of the MOB has compelted, it commits, and updates any ROB state as needed. Violations or normal commits are handled here. 
+At a high level, the verification of the MOB is split into two relatively independant properties. The first property is that the result of the most recent loads of a certain fetch packet must be correct after that fetch packet is comitted. Though a load may output incorrect data, that data must be corrected (via a replay) prior to that fetch packet's commit. As such, a fetch packet may execute an arbitrary number of times, so long as the most recent execution prior to it's commit is 100% accurate. 
 
-Notes:
-    - For memory operations, Loads/Stores are not marked as complete by FUs as would be the case traditionally. Instead, Loads/Stores are marked complete by the MOB (though they still must project their valid bits to the RS, just not to the ROB). Instructions are marked as complete when they are at the front of the MOB, are actually complete, and have not experienced a memory violation. Upon the detection of a memory violation, the violation bit in the ROB is marked, the pipeline is flushed, and the memory operations at that fetch packet are reattempted. 
+The second property is that all stores can only execute once, in program order, with correct data. 
+
+
+## Implementation
+
+Unfortunately, the verification of the MOB requires quite a bit of surrounding infrastructure. This includes a model of the ROB and Memory, sequencers/drivers for the reserve/AGU inputs, and a monitor on the FU output channel (to read load results) and Memory channel (to read store requests). The role of the ROB model in this context is to just be functionally accurate. The AGU & Reserve drivers, however, must stress the MOB effectively, testing burst allocations and resolutions, long latency resolutions, etc. This applies to the memory model as well, with the added complexity of possible out of order responses. Further, it is also important to generate random addresses that will actually incur conflicts with one-another, which is very unlikely with completely random fuzzing.
 
 
 
-# TODO: 
-something to drive requests
-something to drive responses (DRAM emulation with random latency)
-a way to keep track of violations/commits
-a way to keep track of the correctness of output based on what the MOB is aware of at that time
+## Memory Model
+
+The MOB testbench Memory component is used to mimic the behaviour of the ChaosCore DRAM. Since the D$ in ChaosCore is capable of returning responses out of order, the memory component in the testbench returns responses out of order as well. 
+
+Generally the testbench memory operates by monitoring the memory request lines. When a request is detected, it queues it in a structure that maps cache lines to memory requests. Every cycle, the response is determined by randomly selecting a cache line to service and performing the corresponding request. The memory also provides a flush feature that performs all outstanding memory requests such that the final memory state can be quickly determined
+
+The memory model is also capable of randomizing hits and misses, as well as their corresponding latencies.
+
+
