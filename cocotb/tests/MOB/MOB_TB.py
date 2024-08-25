@@ -38,7 +38,7 @@ class MOB_TB:
         # generate pool of memory operations
         
         memory_operations = []
-        for i in range(10000):
+        for i in range(50000):
             fetch_packet = []
             for i in range(4):
                 fetch_packet.append(generate_load_store(address_pool))
