@@ -13,7 +13,6 @@ from MOB_TB import *
 from model_utils import *
 from MOB import *
 
-from drivers.mem_gen import *
 from drivers.drivers import *
 
 
@@ -205,36 +204,27 @@ async def test_fuzz(dut):
     assert False
 
 
-# TODO: 
-# FU monitor
-# ROB model
-# Scoreboard:
-    # Memory load result reference (for checking on commit)
-    # Memory store in order checker
-    # final memory comparer (memory states must be 1:1)
-
 
 @cocotb.test()
 async def test_fuzz(dut):
     # Set seed
-    memory_capacity = 256* 2**10
+    memory_capacity = 256*2**10
     random.seed(0x42)
 
     # Start lock
     await cocotb.start(generateClock(dut))
 
     # Bring up TB
-    MOB = MOB_TB(dut)     # construct TB
-    MOB.init_sequence()
+    MOB = MOB_TB(dut, memory_capacity)     # construct TB
 
 
-
+    dut.io_backend_memory_request_ready.value = 1
 
 
 
     await MOB.reset()     # Reset
 
-    for _ in range(2000):
+    for _ in range(50000):
 
         await MOB.update()
 
