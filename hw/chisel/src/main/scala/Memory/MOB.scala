@@ -220,7 +220,6 @@ class MOB(coreParameters:CoreParameters) extends Module{
     }
 
     dontTouch(age_vector)
-
     dontTouch(wr_bytes)
     dontTouch(byte_sels)
 
@@ -282,9 +281,8 @@ class MOB(coreParameters:CoreParameters) extends Module{
         val is_valid        = MOB(i).valid
         val is_younger      = age_vector(i) < incoming_age
         val is_conflicting  = (incoming_address & "hFFFFFFFC".U) === ("hFFFFFFFC".U & MOB(i).address)
-        val is_complete     = (MOB(i).MOB_STATE === MOB_STATES.COMPLETE) ||  (MOB(i).MOB_STATE === MOB_STATES.ALMOST_COMPLETE)
+        val is_complete     = !(MOB(i).MOB_STATE === MOB_STATES.VALID) &&  !(MOB(i).MOB_STATE === MOB_STATES.INVALID)
         val is_load         = MOB(i).memory_type === memory_type_t.LOAD
-        val is_store        = MOB(i).memory_type === memory_type_t.STORE
 
         // FIXME: here, the conflicting depends on the TYPE of store and TYPE of load...
         when(io.AGU_output.valid && is_younger && is_conflicting && is_valid){
@@ -491,7 +489,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
     ///////////
     // FLUSH //
     ///////////
-    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)){   //FIXME: 
+    when(io.flush){   //FIXME: 
         for(i <- 0 until MOBEntries){
             MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
         }
@@ -509,7 +507,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
     val availalbe_MOB_entries = PopCount(~Cat(MOB.map(_.valid)))
     
     for (i <- 0 until fetchWidth){
-        io.reserve(i).ready := availalbe_MOB_entries >= fetchWidth.U
+        io.reserve(i).ready := (availalbe_MOB_entries >= fetchWidth.U) && !io.flush
     }
 
 

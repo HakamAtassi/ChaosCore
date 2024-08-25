@@ -248,7 +248,10 @@ module MOB(
   input  [3:0]  io_backend_memory_response_bits_MOB_index
 );
 
-  wire [2:0]        _availalbe_MOB_entries_4to2;
+  wire              io_reserve_3_ready_0;
+  wire              io_reserve_2_ready_0;
+  wire              io_reserve_1_ready_0;
+  wire              io_reserve_0_ready_0;
   reg               MOB_0_valid;
   reg  [1:0]        MOB_0_memory_type;
   reg  [5:0]        MOB_0_ROB_index;
@@ -587,10 +590,10 @@ module MOB(
   wire [3:0]        age_vector_12 = age_vector_15 + 4'h3;
   wire [3:0]        age_vector_13 = age_vector_15 + 4'h2;
   wire [3:0]        age_vector_14 = age_vector_15 + 4'h1;
-  wire              written_vec_0 = (|_availalbe_MOB_entries_4to2) & io_reserve_0_valid;
-  wire              written_vec_1 = (|_availalbe_MOB_entries_4to2) & io_reserve_1_valid;
-  wire              written_vec_2 = (|_availalbe_MOB_entries_4to2) & io_reserve_2_valid;
-  wire              written_vec_3 = (|_availalbe_MOB_entries_4to2) & io_reserve_3_valid;
+  wire              written_vec_0 = io_reserve_0_ready_0 & io_reserve_0_valid;
+  wire              written_vec_1 = io_reserve_1_ready_0 & io_reserve_1_valid;
+  wire              written_vec_2 = io_reserve_2_ready_0 & io_reserve_2_valid;
+  wire              written_vec_3 = io_reserve_3_ready_0 & io_reserve_3_valid;
   wire [1:0]        _GEN = {1'h0, written_vec_0};
   wire [3:0]        _io_reserved_pointers_0_bits_T =
     back_pointer[3:0] + {3'h0, written_vec_0 - 1'h1};
@@ -1908,7 +1911,10 @@ module MOB(
               + {1'h0,
                  {1'h0, _availalbe_MOB_entries_T_1[14]}
                    + {1'h0, _availalbe_MOB_entries_T_1[15]}}}};
-  assign _availalbe_MOB_entries_4to2 = availalbe_MOB_entries[4:2];
+  assign io_reserve_0_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush;
+  assign io_reserve_1_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush;
+  assign io_reserve_2_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush;
+  assign io_reserve_3_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush;
   always @(posedge clock) begin
     if (reset) begin
       MOB_0_valid <= 1'h0;
@@ -5134,22 +5140,6 @@ module MOB(
       automatic logic             _GEN_2525;
       automatic logic             _GEN_2526;
       automatic logic             _GEN_2527;
-      automatic logic             _is_complete_T_513;
-      automatic logic             _is_complete_T_515;
-      automatic logic             _is_complete_T_517;
-      automatic logic             _is_complete_T_519;
-      automatic logic             _is_complete_T_521;
-      automatic logic             _is_complete_T_523;
-      automatic logic             _is_complete_T_525;
-      automatic logic             _is_complete_T_527;
-      automatic logic             _is_complete_T_529;
-      automatic logic             _is_complete_T_531;
-      automatic logic             _is_complete_T_533;
-      automatic logic             _is_complete_T_535;
-      automatic logic             _is_complete_T_537;
-      automatic logic             _is_complete_T_539;
-      automatic logic             _is_complete_T_541;
-      automatic logic             _is_complete_T_543;
       automatic logic             _GEN_2528;
       automatic logic             _GEN_2529;
       automatic logic             _GEN_2530;
@@ -5190,8 +5180,7 @@ module MOB(
       automatic logic [15:0]      _bits_T = matrix_0 >> _GEN_2546;
       automatic logic [3:0]       _GEN_2547;
       automatic logic             _GEN_2548;
-      automatic logic             _GEN_2549 =
-        io_commit_valid & (io_commit_bits_is_misprediction | io_commit_bits_exception);
+      automatic logic             _GEN_2549;
       automatic logic             _GEN_2550;
       automatic logic             _GEN_2551;
       automatic logic             _GEN_2552;
@@ -5207,7 +5196,6 @@ module MOB(
       automatic logic             _GEN_2562;
       automatic logic             _GEN_2563;
       automatic logic             _GEN_2564;
-      automatic logic             _GEN_2565;
       _GEN_222 = 4'hF - back_pointer[3:0];
       _GEN_223 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h0;
       _GEN_224 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h1;
@@ -7262,22 +7250,6 @@ module MOB(
       _GEN_2525 = _GEN_2510 & _GEN_2511 & _GEN_330;
       _GEN_2526 = _GEN_2510 & _GEN_2511 & _GEN_331;
       _GEN_2527 = _GEN_2510 & _GEN_2511 & (&io_AGU_output_bits_MOB_index);
-      _is_complete_T_513 = MOB_0_MOB_STATE == 4'h5;
-      _is_complete_T_515 = MOB_1_MOB_STATE == 4'h5;
-      _is_complete_T_517 = MOB_2_MOB_STATE == 4'h5;
-      _is_complete_T_519 = MOB_3_MOB_STATE == 4'h5;
-      _is_complete_T_521 = MOB_4_MOB_STATE == 4'h5;
-      _is_complete_T_523 = MOB_5_MOB_STATE == 4'h5;
-      _is_complete_T_525 = MOB_6_MOB_STATE == 4'h5;
-      _is_complete_T_527 = MOB_7_MOB_STATE == 4'h5;
-      _is_complete_T_529 = MOB_8_MOB_STATE == 4'h5;
-      _is_complete_T_531 = MOB_9_MOB_STATE == 4'h5;
-      _is_complete_T_533 = MOB_10_MOB_STATE == 4'h5;
-      _is_complete_T_535 = MOB_11_MOB_STATE == 4'h5;
-      _is_complete_T_537 = MOB_12_MOB_STATE == 4'h5;
-      _is_complete_T_539 = MOB_13_MOB_STATE == 4'h5;
-      _is_complete_T_541 = MOB_14_MOB_STATE == 4'h5;
-      _is_complete_T_543 = MOB_15_MOB_STATE == 4'h5;
       _GEN_2528 = io_backend_memory_request_ready & io_backend_memory_request_valid_0;
       _GEN_2529 = age_vector_15 == 4'h0;
       _GEN_2530 = age_vector_15 == 4'h1;
@@ -7316,25 +7288,25 @@ module MOB(
           ? 4'h5
           : 4'h6;
       _GEN_2548 = _GEN_195[age_vector_15] & _GEN_201[age_vector_15] == 4'h9;
-      _GEN_2550 = _GEN_2549 | _GEN_2548 & _GEN_2529;
-      _GEN_2551 = _GEN_2549 | _GEN_2548 & _GEN_2530;
-      _GEN_2552 = _GEN_2549 | _GEN_2548 & _GEN_2531;
-      _GEN_2553 = _GEN_2549 | _GEN_2548 & _GEN_2532;
-      _GEN_2554 = _GEN_2549 | _GEN_2548 & _GEN_2533;
-      _GEN_2555 = _GEN_2549 | _GEN_2548 & _GEN_2534;
-      _GEN_2556 = _GEN_2549 | _GEN_2548 & _GEN_2535;
-      _GEN_2557 = _GEN_2549 | _GEN_2548 & _GEN_2536;
-      _GEN_2558 = _GEN_2549 | _GEN_2548 & _GEN_2537;
-      _GEN_2559 = _GEN_2549 | _GEN_2548 & _GEN_2538;
-      _GEN_2560 = _GEN_2549 | _GEN_2548 & _GEN_2539;
-      _GEN_2561 = _GEN_2549 | _GEN_2548 & _GEN_2540;
-      _GEN_2562 = _GEN_2549 | _GEN_2548 & _GEN_2541;
-      _GEN_2563 = _GEN_2549 | _GEN_2548 & _GEN_2542;
-      _GEN_2564 = _GEN_2549 | _GEN_2548 & _GEN_2543;
-      _GEN_2565 = _GEN_2549 | _GEN_2548 & (&age_vector_15);
+      _GEN_2549 = io_flush | _GEN_2548 & _GEN_2529;
+      _GEN_2550 = io_flush | _GEN_2548 & _GEN_2530;
+      _GEN_2551 = io_flush | _GEN_2548 & _GEN_2531;
+      _GEN_2552 = io_flush | _GEN_2548 & _GEN_2532;
+      _GEN_2553 = io_flush | _GEN_2548 & _GEN_2533;
+      _GEN_2554 = io_flush | _GEN_2548 & _GEN_2534;
+      _GEN_2555 = io_flush | _GEN_2548 & _GEN_2535;
+      _GEN_2556 = io_flush | _GEN_2548 & _GEN_2536;
+      _GEN_2557 = io_flush | _GEN_2548 & _GEN_2537;
+      _GEN_2558 = io_flush | _GEN_2548 & _GEN_2538;
+      _GEN_2559 = io_flush | _GEN_2548 & _GEN_2539;
+      _GEN_2560 = io_flush | _GEN_2548 & _GEN_2540;
+      _GEN_2561 = io_flush | _GEN_2548 & _GEN_2541;
+      _GEN_2562 = io_flush | _GEN_2548 & _GEN_2542;
+      _GEN_2563 = io_flush | _GEN_2548 & _GEN_2543;
+      _GEN_2564 = io_flush | _GEN_2548 & (&age_vector_15);
       MOB_0_valid <=
-        ~_GEN_2550 & (written_vec_3 ? _GEN_287 | _GEN_240 : _GEN_270 | _GEN_240);
-      if (_GEN_2550) begin
+        ~_GEN_2549 & (written_vec_3 ? _GEN_287 | _GEN_240 : _GEN_270 | _GEN_240);
+      if (_GEN_2549) begin
         MOB_0_memory_type <= 2'h0;
         MOB_0_ROB_index <= 6'h0;
         MOB_0_fetch_packet_index <= 2'h0;
@@ -7349,10 +7321,10 @@ module MOB(
         MOB_0_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2565;
         automatic logic _GEN_2566;
-        automatic logic _GEN_2567;
-        _GEN_2566 = io_AGU_output_valid & _GEN_317;
-        _GEN_2567 =
+        _GEN_2565 = io_AGU_output_valid & _GEN_317;
+        _GEN_2566 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h0;
         if (written_vec_3 & _GEN_286) begin
@@ -7383,11 +7355,11 @@ module MOB(
           MOB_0_access_width <= io_reserve_0_bits_access_width;
           MOB_0_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2566)
+        if (_GEN_2565)
           MOB_0_address <= io_AGU_output_bits_address;
-        if (_GEN_2567)
+        if (_GEN_2566)
           MOB_0_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2566)
+        else if (_GEN_2565)
           MOB_0_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1702)
           MOB_0_fwd_data_0 <= wr_bytes_14_0;
@@ -7633,20 +7605,20 @@ module MOB(
             & is_store)
           MOB_0_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2567;
           automatic logic _GEN_2568;
           automatic logic _GEN_2569;
           automatic logic _GEN_2570;
           automatic logic _GEN_2571;
           automatic logic _GEN_2572;
           automatic logic _GEN_2573;
-          automatic logic _GEN_2574;
-          _GEN_2568 = written_vec_1 & _GEN_239 | _GEN_223;
-          _GEN_2569 = written_vec_3 ? _GEN_287 | _GEN_2568 : _GEN_270 | _GEN_2568;
-          _GEN_2570 = _GEN_334 & _GEN_317;
-          _GEN_2571 = _GEN_2528 & load_index == 4'h0;
-          _GEN_2572 = fire_store & _GEN_2528 & _GEN_2529;
-          _GEN_2573 = _GEN_2545 & CDB_write_index == 4'h0;
-          _GEN_2574 =
+          _GEN_2567 = written_vec_1 & _GEN_239 | _GEN_223;
+          _GEN_2568 = written_vec_3 ? _GEN_287 | _GEN_2567 : _GEN_270 | _GEN_2567;
+          _GEN_2569 = _GEN_334 & _GEN_317;
+          _GEN_2570 = _GEN_2528 & load_index == 4'h0;
+          _GEN_2571 = fire_store & _GEN_2528 & _GEN_2529;
+          _GEN_2572 = _GEN_2545 & CDB_write_index == 4'h0;
+          _GEN_2573 =
             {matrix_15[0],
              matrix_14[0],
              matrix_13[0],
@@ -7662,142 +7634,142 @@ module MOB(
              matrix_3[0],
              matrix_2[0],
              matrix_1[0],
-             matrix_0[0]} == 16'h0 & _is_complete_T_513;
+             matrix_0[0]} == 16'h0 & MOB_0_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2575;
-            _GEN_2575 = _selected_MOB_entry_for_commit_T_14 == 4'h0;
+            automatic logic _GEN_2574;
+            _GEN_2574 = _selected_MOB_entry_for_commit_T_14 == 4'h0;
             if (_GEN_219) begin
-              if (_GEN_2575)
+              if (_GEN_2574)
                 MOB_0_MOB_STATE <= 4'h9;
-              else if (_GEN_2574)
-                MOB_0_MOB_STATE <= 4'h6;
               else if (_GEN_2573)
+                MOB_0_MOB_STATE <= 4'h6;
+              else if (_GEN_2572)
                 MOB_0_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2567)
+              else if (_GEN_2566)
                 MOB_0_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2571)
+                if (_GEN_2570)
                   MOB_0_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_317)
                       MOB_0_MOB_STATE <= 4'h2;
-                    else if (_GEN_2569)
+                    else if (_GEN_2568)
                       MOB_0_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2570)
-                    MOB_0_MOB_STATE <= 4'h6;
                   else if (_GEN_2569)
+                    MOB_0_MOB_STATE <= 4'h6;
+                  else if (_GEN_2568)
                     MOB_0_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2569)
+                else if (_GEN_2568)
                   MOB_0_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2572)
+              else if (_GEN_2571)
                 MOB_0_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_317)
                     MOB_0_MOB_STATE <= 4'h2;
-                  else if (_GEN_2569)
+                  else if (_GEN_2568)
                     MOB_0_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2570)
-                  MOB_0_MOB_STATE <= 4'h6;
                 else if (_GEN_2569)
+                  MOB_0_MOB_STATE <= 4'h6;
+                else if (_GEN_2568)
                   MOB_0_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2569)
+              else if (_GEN_2568)
                 MOB_0_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2575)
+            else if (_GEN_220 & _GEN_2574)
               MOB_0_MOB_STATE <= 4'h7;
-            else if (_GEN_2574)
-              MOB_0_MOB_STATE <= 4'h6;
             else if (_GEN_2573)
+              MOB_0_MOB_STATE <= 4'h6;
+            else if (_GEN_2572)
               MOB_0_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2567)
+            else if (_GEN_2566)
               MOB_0_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2571)
+              if (_GEN_2570)
                 MOB_0_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_317)
                     MOB_0_MOB_STATE <= 4'h2;
-                  else if (_GEN_2569)
+                  else if (_GEN_2568)
                     MOB_0_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2570)
-                  MOB_0_MOB_STATE <= 4'h6;
                 else if (_GEN_2569)
+                  MOB_0_MOB_STATE <= 4'h6;
+                else if (_GEN_2568)
                   MOB_0_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2569)
+              else if (_GEN_2568)
                 MOB_0_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2572)
+            else if (_GEN_2571)
               MOB_0_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_317)
                   MOB_0_MOB_STATE <= 4'h2;
-                else if (_GEN_2569)
+                else if (_GEN_2568)
                   MOB_0_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2570)
-                MOB_0_MOB_STATE <= 4'h6;
               else if (_GEN_2569)
+                MOB_0_MOB_STATE <= 4'h6;
+              else if (_GEN_2568)
                 MOB_0_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2569)
+            else if (_GEN_2568)
               MOB_0_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2574)
-            MOB_0_MOB_STATE <= 4'h6;
           else if (_GEN_2573)
+            MOB_0_MOB_STATE <= 4'h6;
+          else if (_GEN_2572)
             MOB_0_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2567)
+          else if (_GEN_2566)
             MOB_0_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2571)
+            if (_GEN_2570)
               MOB_0_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_317)
                   MOB_0_MOB_STATE <= 4'h2;
-                else if (_GEN_2569)
+                else if (_GEN_2568)
                   MOB_0_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2570)
-                MOB_0_MOB_STATE <= 4'h6;
               else if (_GEN_2569)
+                MOB_0_MOB_STATE <= 4'h6;
+              else if (_GEN_2568)
                 MOB_0_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2569)
+            else if (_GEN_2568)
               MOB_0_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2572)
+          else if (_GEN_2571)
             MOB_0_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_317)
                 MOB_0_MOB_STATE <= 4'h2;
-              else if (_GEN_2569)
+              else if (_GEN_2568)
                 MOB_0_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2570)
-              MOB_0_MOB_STATE <= 4'h6;
             else if (_GEN_2569)
+              MOB_0_MOB_STATE <= 4'h6;
+            else if (_GEN_2568)
               MOB_0_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2569)
+          else if (_GEN_2568)
             MOB_0_MOB_STATE <= 4'h1;
         end
       end
-      MOB_0_data_valid <= ~_GEN_2550 & MOB_0_data_valid;
+      MOB_0_data_valid <= ~_GEN_2549 & MOB_0_data_valid;
       MOB_0_fwd_valid_0 <=
-        ~_GEN_2550
+        ~_GEN_2549
         & (_GEN_1702
              ? byte_sels_14_0
              : _GEN_1684
@@ -7860,7 +7832,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_0_fwd_valid_0);
       MOB_0_fwd_valid_1 <=
-        ~_GEN_2550
+        ~_GEN_2549
         & (_GEN_1972
              ? byte_sels_14_1
              : _GEN_1954
@@ -7923,7 +7895,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_0_fwd_valid_1);
       MOB_0_fwd_valid_2 <=
-        ~_GEN_2550
+        ~_GEN_2549
         & (_GEN_2242
              ? byte_sels_14_2
              : _GEN_2224
@@ -7986,7 +7958,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_0_fwd_valid_2);
       MOB_0_fwd_valid_3 <=
-        ~_GEN_2550
+        ~_GEN_2549
         & (_GEN_2512
              ? byte_sels_14_3
              : _GEN_2494
@@ -8049,14 +8021,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_0_fwd_valid_3);
       MOB_0_violation <=
-        ~_GEN_2550
+        ~_GEN_2549
         & (io_AGU_output_valid & age_vector_0 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_385 & MOB_0_valid
-           & incoming_is_store & is_load & (_MOB_update_commit_T | _is_complete_T_513)
+           & incoming_is_store & is_load & MOB_0_MOB_STATE != 4'h1 & (|MOB_0_MOB_STATE)
            | MOB_0_violation);
       MOB_1_valid <=
-        ~_GEN_2551 & (written_vec_3 ? _GEN_289 | _GEN_242 : _GEN_271 | _GEN_242);
-      if (_GEN_2551) begin
+        ~_GEN_2550 & (written_vec_3 ? _GEN_289 | _GEN_242 : _GEN_271 | _GEN_242);
+      if (_GEN_2550) begin
         MOB_1_memory_type <= 2'h0;
         MOB_1_ROB_index <= 6'h0;
         MOB_1_fetch_packet_index <= 2'h0;
@@ -8071,10 +8043,10 @@ module MOB(
         MOB_1_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2575;
         automatic logic _GEN_2576;
-        automatic logic _GEN_2577;
-        _GEN_2576 = io_AGU_output_valid & _GEN_318;
-        _GEN_2577 =
+        _GEN_2575 = io_AGU_output_valid & _GEN_318;
+        _GEN_2576 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h1;
         if (written_vec_3 & _GEN_288) begin
@@ -8105,11 +8077,11 @@ module MOB(
           MOB_1_access_width <= io_reserve_0_bits_access_width;
           MOB_1_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2576)
+        if (_GEN_2575)
           MOB_1_address <= io_AGU_output_bits_address;
-        if (_GEN_2577)
+        if (_GEN_2576)
           MOB_1_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2576)
+        else if (_GEN_2575)
           MOB_1_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1703)
           MOB_1_fwd_data_0 <= wr_bytes_14_0;
@@ -8355,20 +8327,20 @@ module MOB(
             & is_store_1)
           MOB_1_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2577;
           automatic logic _GEN_2578;
           automatic logic _GEN_2579;
           automatic logic _GEN_2580;
           automatic logic _GEN_2581;
           automatic logic _GEN_2582;
           automatic logic _GEN_2583;
-          automatic logic _GEN_2584;
-          _GEN_2578 = written_vec_1 & _GEN_241 | _GEN_224;
-          _GEN_2579 = written_vec_3 ? _GEN_289 | _GEN_2578 : _GEN_271 | _GEN_2578;
-          _GEN_2580 = _GEN_334 & _GEN_318;
-          _GEN_2581 = _GEN_2528 & load_index == 4'h1;
-          _GEN_2582 = fire_store & _GEN_2528 & _GEN_2530;
-          _GEN_2583 = _GEN_2545 & CDB_write_index == 4'h1;
-          _GEN_2584 =
+          _GEN_2577 = written_vec_1 & _GEN_241 | _GEN_224;
+          _GEN_2578 = written_vec_3 ? _GEN_289 | _GEN_2577 : _GEN_271 | _GEN_2577;
+          _GEN_2579 = _GEN_334 & _GEN_318;
+          _GEN_2580 = _GEN_2528 & load_index == 4'h1;
+          _GEN_2581 = fire_store & _GEN_2528 & _GEN_2530;
+          _GEN_2582 = _GEN_2545 & CDB_write_index == 4'h1;
+          _GEN_2583 =
             {matrix_15[1],
              matrix_14[1],
              matrix_13[1],
@@ -8384,142 +8356,142 @@ module MOB(
              matrix_3[1],
              matrix_2[1],
              matrix_1[1],
-             matrix_0[1]} == 16'h0 & _is_complete_T_515;
+             matrix_0[1]} == 16'h0 & MOB_1_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2585;
-            _GEN_2585 = _selected_MOB_entry_for_commit_T_14 == 4'h1;
+            automatic logic _GEN_2584;
+            _GEN_2584 = _selected_MOB_entry_for_commit_T_14 == 4'h1;
             if (_GEN_219) begin
-              if (_GEN_2585)
+              if (_GEN_2584)
                 MOB_1_MOB_STATE <= 4'h9;
-              else if (_GEN_2584)
-                MOB_1_MOB_STATE <= 4'h6;
               else if (_GEN_2583)
+                MOB_1_MOB_STATE <= 4'h6;
+              else if (_GEN_2582)
                 MOB_1_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2577)
+              else if (_GEN_2576)
                 MOB_1_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2581)
+                if (_GEN_2580)
                   MOB_1_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_318)
                       MOB_1_MOB_STATE <= 4'h2;
-                    else if (_GEN_2579)
+                    else if (_GEN_2578)
                       MOB_1_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2580)
-                    MOB_1_MOB_STATE <= 4'h6;
                   else if (_GEN_2579)
+                    MOB_1_MOB_STATE <= 4'h6;
+                  else if (_GEN_2578)
                     MOB_1_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2579)
+                else if (_GEN_2578)
                   MOB_1_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2582)
+              else if (_GEN_2581)
                 MOB_1_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_318)
                     MOB_1_MOB_STATE <= 4'h2;
-                  else if (_GEN_2579)
+                  else if (_GEN_2578)
                     MOB_1_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2580)
-                  MOB_1_MOB_STATE <= 4'h6;
                 else if (_GEN_2579)
+                  MOB_1_MOB_STATE <= 4'h6;
+                else if (_GEN_2578)
                   MOB_1_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2579)
+              else if (_GEN_2578)
                 MOB_1_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2585)
+            else if (_GEN_220 & _GEN_2584)
               MOB_1_MOB_STATE <= 4'h7;
-            else if (_GEN_2584)
-              MOB_1_MOB_STATE <= 4'h6;
             else if (_GEN_2583)
+              MOB_1_MOB_STATE <= 4'h6;
+            else if (_GEN_2582)
               MOB_1_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2577)
+            else if (_GEN_2576)
               MOB_1_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2581)
+              if (_GEN_2580)
                 MOB_1_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_318)
                     MOB_1_MOB_STATE <= 4'h2;
-                  else if (_GEN_2579)
+                  else if (_GEN_2578)
                     MOB_1_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2580)
-                  MOB_1_MOB_STATE <= 4'h6;
                 else if (_GEN_2579)
+                  MOB_1_MOB_STATE <= 4'h6;
+                else if (_GEN_2578)
                   MOB_1_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2579)
+              else if (_GEN_2578)
                 MOB_1_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2582)
+            else if (_GEN_2581)
               MOB_1_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_318)
                   MOB_1_MOB_STATE <= 4'h2;
-                else if (_GEN_2579)
+                else if (_GEN_2578)
                   MOB_1_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2580)
-                MOB_1_MOB_STATE <= 4'h6;
               else if (_GEN_2579)
+                MOB_1_MOB_STATE <= 4'h6;
+              else if (_GEN_2578)
                 MOB_1_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2579)
+            else if (_GEN_2578)
               MOB_1_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2584)
-            MOB_1_MOB_STATE <= 4'h6;
           else if (_GEN_2583)
+            MOB_1_MOB_STATE <= 4'h6;
+          else if (_GEN_2582)
             MOB_1_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2577)
+          else if (_GEN_2576)
             MOB_1_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2581)
+            if (_GEN_2580)
               MOB_1_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_318)
                   MOB_1_MOB_STATE <= 4'h2;
-                else if (_GEN_2579)
+                else if (_GEN_2578)
                   MOB_1_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2580)
-                MOB_1_MOB_STATE <= 4'h6;
               else if (_GEN_2579)
+                MOB_1_MOB_STATE <= 4'h6;
+              else if (_GEN_2578)
                 MOB_1_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2579)
+            else if (_GEN_2578)
               MOB_1_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2582)
+          else if (_GEN_2581)
             MOB_1_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_318)
                 MOB_1_MOB_STATE <= 4'h2;
-              else if (_GEN_2579)
+              else if (_GEN_2578)
                 MOB_1_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2580)
-              MOB_1_MOB_STATE <= 4'h6;
             else if (_GEN_2579)
+              MOB_1_MOB_STATE <= 4'h6;
+            else if (_GEN_2578)
               MOB_1_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2579)
+          else if (_GEN_2578)
             MOB_1_MOB_STATE <= 4'h1;
         end
       end
-      MOB_1_data_valid <= ~_GEN_2551 & MOB_1_data_valid;
+      MOB_1_data_valid <= ~_GEN_2550 & MOB_1_data_valid;
       MOB_1_fwd_valid_0 <=
-        ~_GEN_2551
+        ~_GEN_2550
         & (_GEN_1703
              ? byte_sels_14_0
              : _GEN_1685
@@ -8582,7 +8554,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_1_fwd_valid_0);
       MOB_1_fwd_valid_1 <=
-        ~_GEN_2551
+        ~_GEN_2550
         & (_GEN_1973
              ? byte_sels_14_1
              : _GEN_1955
@@ -8645,7 +8617,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_1_fwd_valid_1);
       MOB_1_fwd_valid_2 <=
-        ~_GEN_2551
+        ~_GEN_2550
         & (_GEN_2243
              ? byte_sels_14_2
              : _GEN_2225
@@ -8708,7 +8680,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_1_fwd_valid_2);
       MOB_1_fwd_valid_3 <=
-        ~_GEN_2551
+        ~_GEN_2550
         & (_GEN_2513
              ? byte_sels_14_3
              : _GEN_2495
@@ -8771,14 +8743,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_1_fwd_valid_3);
       MOB_1_violation <=
-        ~_GEN_2551
+        ~_GEN_2550
         & (io_AGU_output_valid & age_vector_1 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_387 & MOB_1_valid
-           & incoming_is_store & is_load_1 & (_MOB_update_commit_T_1 | _is_complete_T_515)
+           & incoming_is_store & is_load_1 & MOB_1_MOB_STATE != 4'h1 & (|MOB_1_MOB_STATE)
            | MOB_1_violation);
       MOB_2_valid <=
-        ~_GEN_2552 & (written_vec_3 ? _GEN_291 | _GEN_244 : _GEN_272 | _GEN_244);
-      if (_GEN_2552) begin
+        ~_GEN_2551 & (written_vec_3 ? _GEN_291 | _GEN_244 : _GEN_272 | _GEN_244);
+      if (_GEN_2551) begin
         MOB_2_memory_type <= 2'h0;
         MOB_2_ROB_index <= 6'h0;
         MOB_2_fetch_packet_index <= 2'h0;
@@ -8793,10 +8765,10 @@ module MOB(
         MOB_2_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2585;
         automatic logic _GEN_2586;
-        automatic logic _GEN_2587;
-        _GEN_2586 = io_AGU_output_valid & _GEN_319;
-        _GEN_2587 =
+        _GEN_2585 = io_AGU_output_valid & _GEN_319;
+        _GEN_2586 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h2;
         if (written_vec_3 & _GEN_290) begin
@@ -8827,11 +8799,11 @@ module MOB(
           MOB_2_access_width <= io_reserve_0_bits_access_width;
           MOB_2_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2586)
+        if (_GEN_2585)
           MOB_2_address <= io_AGU_output_bits_address;
-        if (_GEN_2587)
+        if (_GEN_2586)
           MOB_2_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2586)
+        else if (_GEN_2585)
           MOB_2_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1704)
           MOB_2_fwd_data_0 <= wr_bytes_14_0;
@@ -9077,20 +9049,20 @@ module MOB(
             & is_store_2)
           MOB_2_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2587;
           automatic logic _GEN_2588;
           automatic logic _GEN_2589;
           automatic logic _GEN_2590;
           automatic logic _GEN_2591;
           automatic logic _GEN_2592;
           automatic logic _GEN_2593;
-          automatic logic _GEN_2594;
-          _GEN_2588 = written_vec_1 & _GEN_243 | _GEN_225;
-          _GEN_2589 = written_vec_3 ? _GEN_291 | _GEN_2588 : _GEN_272 | _GEN_2588;
-          _GEN_2590 = _GEN_334 & _GEN_319;
-          _GEN_2591 = _GEN_2528 & load_index == 4'h2;
-          _GEN_2592 = fire_store & _GEN_2528 & _GEN_2531;
-          _GEN_2593 = _GEN_2545 & CDB_write_index == 4'h2;
-          _GEN_2594 =
+          _GEN_2587 = written_vec_1 & _GEN_243 | _GEN_225;
+          _GEN_2588 = written_vec_3 ? _GEN_291 | _GEN_2587 : _GEN_272 | _GEN_2587;
+          _GEN_2589 = _GEN_334 & _GEN_319;
+          _GEN_2590 = _GEN_2528 & load_index == 4'h2;
+          _GEN_2591 = fire_store & _GEN_2528 & _GEN_2531;
+          _GEN_2592 = _GEN_2545 & CDB_write_index == 4'h2;
+          _GEN_2593 =
             {matrix_15[2],
              matrix_14[2],
              matrix_13[2],
@@ -9106,142 +9078,142 @@ module MOB(
              matrix_3[2],
              matrix_2[2],
              matrix_1[2],
-             matrix_0[2]} == 16'h0 & _is_complete_T_517;
+             matrix_0[2]} == 16'h0 & MOB_2_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2595;
-            _GEN_2595 = _selected_MOB_entry_for_commit_T_14 == 4'h2;
+            automatic logic _GEN_2594;
+            _GEN_2594 = _selected_MOB_entry_for_commit_T_14 == 4'h2;
             if (_GEN_219) begin
-              if (_GEN_2595)
+              if (_GEN_2594)
                 MOB_2_MOB_STATE <= 4'h9;
-              else if (_GEN_2594)
-                MOB_2_MOB_STATE <= 4'h6;
               else if (_GEN_2593)
+                MOB_2_MOB_STATE <= 4'h6;
+              else if (_GEN_2592)
                 MOB_2_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2587)
+              else if (_GEN_2586)
                 MOB_2_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2591)
+                if (_GEN_2590)
                   MOB_2_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_319)
                       MOB_2_MOB_STATE <= 4'h2;
-                    else if (_GEN_2589)
+                    else if (_GEN_2588)
                       MOB_2_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2590)
-                    MOB_2_MOB_STATE <= 4'h6;
                   else if (_GEN_2589)
+                    MOB_2_MOB_STATE <= 4'h6;
+                  else if (_GEN_2588)
                     MOB_2_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2589)
+                else if (_GEN_2588)
                   MOB_2_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2592)
+              else if (_GEN_2591)
                 MOB_2_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_319)
                     MOB_2_MOB_STATE <= 4'h2;
-                  else if (_GEN_2589)
+                  else if (_GEN_2588)
                     MOB_2_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2590)
-                  MOB_2_MOB_STATE <= 4'h6;
                 else if (_GEN_2589)
+                  MOB_2_MOB_STATE <= 4'h6;
+                else if (_GEN_2588)
                   MOB_2_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2589)
+              else if (_GEN_2588)
                 MOB_2_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2595)
+            else if (_GEN_220 & _GEN_2594)
               MOB_2_MOB_STATE <= 4'h7;
-            else if (_GEN_2594)
-              MOB_2_MOB_STATE <= 4'h6;
             else if (_GEN_2593)
+              MOB_2_MOB_STATE <= 4'h6;
+            else if (_GEN_2592)
               MOB_2_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2587)
+            else if (_GEN_2586)
               MOB_2_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2591)
+              if (_GEN_2590)
                 MOB_2_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_319)
                     MOB_2_MOB_STATE <= 4'h2;
-                  else if (_GEN_2589)
+                  else if (_GEN_2588)
                     MOB_2_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2590)
-                  MOB_2_MOB_STATE <= 4'h6;
                 else if (_GEN_2589)
+                  MOB_2_MOB_STATE <= 4'h6;
+                else if (_GEN_2588)
                   MOB_2_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2589)
+              else if (_GEN_2588)
                 MOB_2_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2592)
+            else if (_GEN_2591)
               MOB_2_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_319)
                   MOB_2_MOB_STATE <= 4'h2;
-                else if (_GEN_2589)
+                else if (_GEN_2588)
                   MOB_2_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2590)
-                MOB_2_MOB_STATE <= 4'h6;
               else if (_GEN_2589)
+                MOB_2_MOB_STATE <= 4'h6;
+              else if (_GEN_2588)
                 MOB_2_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2589)
+            else if (_GEN_2588)
               MOB_2_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2594)
-            MOB_2_MOB_STATE <= 4'h6;
           else if (_GEN_2593)
+            MOB_2_MOB_STATE <= 4'h6;
+          else if (_GEN_2592)
             MOB_2_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2587)
+          else if (_GEN_2586)
             MOB_2_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2591)
+            if (_GEN_2590)
               MOB_2_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_319)
                   MOB_2_MOB_STATE <= 4'h2;
-                else if (_GEN_2589)
+                else if (_GEN_2588)
                   MOB_2_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2590)
-                MOB_2_MOB_STATE <= 4'h6;
               else if (_GEN_2589)
+                MOB_2_MOB_STATE <= 4'h6;
+              else if (_GEN_2588)
                 MOB_2_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2589)
+            else if (_GEN_2588)
               MOB_2_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2592)
+          else if (_GEN_2591)
             MOB_2_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_319)
                 MOB_2_MOB_STATE <= 4'h2;
-              else if (_GEN_2589)
+              else if (_GEN_2588)
                 MOB_2_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2590)
-              MOB_2_MOB_STATE <= 4'h6;
             else if (_GEN_2589)
+              MOB_2_MOB_STATE <= 4'h6;
+            else if (_GEN_2588)
               MOB_2_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2589)
+          else if (_GEN_2588)
             MOB_2_MOB_STATE <= 4'h1;
         end
       end
-      MOB_2_data_valid <= ~_GEN_2552 & MOB_2_data_valid;
+      MOB_2_data_valid <= ~_GEN_2551 & MOB_2_data_valid;
       MOB_2_fwd_valid_0 <=
-        ~_GEN_2552
+        ~_GEN_2551
         & (_GEN_1704
              ? byte_sels_14_0
              : _GEN_1686
@@ -9304,7 +9276,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_2_fwd_valid_0);
       MOB_2_fwd_valid_1 <=
-        ~_GEN_2552
+        ~_GEN_2551
         & (_GEN_1974
              ? byte_sels_14_1
              : _GEN_1956
@@ -9367,7 +9339,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_2_fwd_valid_1);
       MOB_2_fwd_valid_2 <=
-        ~_GEN_2552
+        ~_GEN_2551
         & (_GEN_2244
              ? byte_sels_14_2
              : _GEN_2226
@@ -9430,7 +9402,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_2_fwd_valid_2);
       MOB_2_fwd_valid_3 <=
-        ~_GEN_2552
+        ~_GEN_2551
         & (_GEN_2514
              ? byte_sels_14_3
              : _GEN_2496
@@ -9493,14 +9465,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_2_fwd_valid_3);
       MOB_2_violation <=
-        ~_GEN_2552
+        ~_GEN_2551
         & (io_AGU_output_valid & age_vector_2 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_389 & MOB_2_valid
-           & incoming_is_store & is_load_2 & (_MOB_update_commit_T_2 | _is_complete_T_517)
+           & incoming_is_store & is_load_2 & MOB_2_MOB_STATE != 4'h1 & (|MOB_2_MOB_STATE)
            | MOB_2_violation);
       MOB_3_valid <=
-        ~_GEN_2553 & (written_vec_3 ? _GEN_293 | _GEN_246 : _GEN_273 | _GEN_246);
-      if (_GEN_2553) begin
+        ~_GEN_2552 & (written_vec_3 ? _GEN_293 | _GEN_246 : _GEN_273 | _GEN_246);
+      if (_GEN_2552) begin
         MOB_3_memory_type <= 2'h0;
         MOB_3_ROB_index <= 6'h0;
         MOB_3_fetch_packet_index <= 2'h0;
@@ -9515,10 +9487,10 @@ module MOB(
         MOB_3_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2595;
         automatic logic _GEN_2596;
-        automatic logic _GEN_2597;
-        _GEN_2596 = io_AGU_output_valid & _GEN_320;
-        _GEN_2597 =
+        _GEN_2595 = io_AGU_output_valid & _GEN_320;
+        _GEN_2596 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h3;
         if (written_vec_3 & _GEN_292) begin
@@ -9549,11 +9521,11 @@ module MOB(
           MOB_3_access_width <= io_reserve_0_bits_access_width;
           MOB_3_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2596)
+        if (_GEN_2595)
           MOB_3_address <= io_AGU_output_bits_address;
-        if (_GEN_2597)
+        if (_GEN_2596)
           MOB_3_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2596)
+        else if (_GEN_2595)
           MOB_3_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1705)
           MOB_3_fwd_data_0 <= wr_bytes_14_0;
@@ -9799,20 +9771,20 @@ module MOB(
             & is_store_3)
           MOB_3_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2597;
           automatic logic _GEN_2598;
           automatic logic _GEN_2599;
           automatic logic _GEN_2600;
           automatic logic _GEN_2601;
           automatic logic _GEN_2602;
           automatic logic _GEN_2603;
-          automatic logic _GEN_2604;
-          _GEN_2598 = written_vec_1 & _GEN_245 | _GEN_226;
-          _GEN_2599 = written_vec_3 ? _GEN_293 | _GEN_2598 : _GEN_273 | _GEN_2598;
-          _GEN_2600 = _GEN_334 & _GEN_320;
-          _GEN_2601 = _GEN_2528 & load_index == 4'h3;
-          _GEN_2602 = fire_store & _GEN_2528 & _GEN_2532;
-          _GEN_2603 = _GEN_2545 & CDB_write_index == 4'h3;
-          _GEN_2604 =
+          _GEN_2597 = written_vec_1 & _GEN_245 | _GEN_226;
+          _GEN_2598 = written_vec_3 ? _GEN_293 | _GEN_2597 : _GEN_273 | _GEN_2597;
+          _GEN_2599 = _GEN_334 & _GEN_320;
+          _GEN_2600 = _GEN_2528 & load_index == 4'h3;
+          _GEN_2601 = fire_store & _GEN_2528 & _GEN_2532;
+          _GEN_2602 = _GEN_2545 & CDB_write_index == 4'h3;
+          _GEN_2603 =
             {matrix_15[3],
              matrix_14[3],
              matrix_13[3],
@@ -9828,142 +9800,142 @@ module MOB(
              matrix_3[3],
              matrix_2[3],
              matrix_1[3],
-             matrix_0[3]} == 16'h0 & _is_complete_T_519;
+             matrix_0[3]} == 16'h0 & MOB_3_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2605;
-            _GEN_2605 = _selected_MOB_entry_for_commit_T_14 == 4'h3;
+            automatic logic _GEN_2604;
+            _GEN_2604 = _selected_MOB_entry_for_commit_T_14 == 4'h3;
             if (_GEN_219) begin
-              if (_GEN_2605)
+              if (_GEN_2604)
                 MOB_3_MOB_STATE <= 4'h9;
-              else if (_GEN_2604)
-                MOB_3_MOB_STATE <= 4'h6;
               else if (_GEN_2603)
+                MOB_3_MOB_STATE <= 4'h6;
+              else if (_GEN_2602)
                 MOB_3_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2597)
+              else if (_GEN_2596)
                 MOB_3_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2601)
+                if (_GEN_2600)
                   MOB_3_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_320)
                       MOB_3_MOB_STATE <= 4'h2;
-                    else if (_GEN_2599)
+                    else if (_GEN_2598)
                       MOB_3_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2600)
-                    MOB_3_MOB_STATE <= 4'h6;
                   else if (_GEN_2599)
+                    MOB_3_MOB_STATE <= 4'h6;
+                  else if (_GEN_2598)
                     MOB_3_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2599)
+                else if (_GEN_2598)
                   MOB_3_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2602)
+              else if (_GEN_2601)
                 MOB_3_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_320)
                     MOB_3_MOB_STATE <= 4'h2;
-                  else if (_GEN_2599)
+                  else if (_GEN_2598)
                     MOB_3_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2600)
-                  MOB_3_MOB_STATE <= 4'h6;
                 else if (_GEN_2599)
+                  MOB_3_MOB_STATE <= 4'h6;
+                else if (_GEN_2598)
                   MOB_3_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2599)
+              else if (_GEN_2598)
                 MOB_3_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2605)
+            else if (_GEN_220 & _GEN_2604)
               MOB_3_MOB_STATE <= 4'h7;
-            else if (_GEN_2604)
-              MOB_3_MOB_STATE <= 4'h6;
             else if (_GEN_2603)
+              MOB_3_MOB_STATE <= 4'h6;
+            else if (_GEN_2602)
               MOB_3_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2597)
+            else if (_GEN_2596)
               MOB_3_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2601)
+              if (_GEN_2600)
                 MOB_3_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_320)
                     MOB_3_MOB_STATE <= 4'h2;
-                  else if (_GEN_2599)
+                  else if (_GEN_2598)
                     MOB_3_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2600)
-                  MOB_3_MOB_STATE <= 4'h6;
                 else if (_GEN_2599)
+                  MOB_3_MOB_STATE <= 4'h6;
+                else if (_GEN_2598)
                   MOB_3_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2599)
+              else if (_GEN_2598)
                 MOB_3_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2602)
+            else if (_GEN_2601)
               MOB_3_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_320)
                   MOB_3_MOB_STATE <= 4'h2;
-                else if (_GEN_2599)
+                else if (_GEN_2598)
                   MOB_3_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2600)
-                MOB_3_MOB_STATE <= 4'h6;
               else if (_GEN_2599)
+                MOB_3_MOB_STATE <= 4'h6;
+              else if (_GEN_2598)
                 MOB_3_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2599)
+            else if (_GEN_2598)
               MOB_3_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2604)
-            MOB_3_MOB_STATE <= 4'h6;
           else if (_GEN_2603)
+            MOB_3_MOB_STATE <= 4'h6;
+          else if (_GEN_2602)
             MOB_3_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2597)
+          else if (_GEN_2596)
             MOB_3_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2601)
+            if (_GEN_2600)
               MOB_3_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_320)
                   MOB_3_MOB_STATE <= 4'h2;
-                else if (_GEN_2599)
+                else if (_GEN_2598)
                   MOB_3_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2600)
-                MOB_3_MOB_STATE <= 4'h6;
               else if (_GEN_2599)
+                MOB_3_MOB_STATE <= 4'h6;
+              else if (_GEN_2598)
                 MOB_3_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2599)
+            else if (_GEN_2598)
               MOB_3_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2602)
+          else if (_GEN_2601)
             MOB_3_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_320)
                 MOB_3_MOB_STATE <= 4'h2;
-              else if (_GEN_2599)
+              else if (_GEN_2598)
                 MOB_3_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2600)
-              MOB_3_MOB_STATE <= 4'h6;
             else if (_GEN_2599)
+              MOB_3_MOB_STATE <= 4'h6;
+            else if (_GEN_2598)
               MOB_3_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2599)
+          else if (_GEN_2598)
             MOB_3_MOB_STATE <= 4'h1;
         end
       end
-      MOB_3_data_valid <= ~_GEN_2553 & MOB_3_data_valid;
+      MOB_3_data_valid <= ~_GEN_2552 & MOB_3_data_valid;
       MOB_3_fwd_valid_0 <=
-        ~_GEN_2553
+        ~_GEN_2552
         & (_GEN_1705
              ? byte_sels_14_0
              : _GEN_1687
@@ -10026,7 +9998,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_3_fwd_valid_0);
       MOB_3_fwd_valid_1 <=
-        ~_GEN_2553
+        ~_GEN_2552
         & (_GEN_1975
              ? byte_sels_14_1
              : _GEN_1957
@@ -10089,7 +10061,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_3_fwd_valid_1);
       MOB_3_fwd_valid_2 <=
-        ~_GEN_2553
+        ~_GEN_2552
         & (_GEN_2245
              ? byte_sels_14_2
              : _GEN_2227
@@ -10152,7 +10124,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_3_fwd_valid_2);
       MOB_3_fwd_valid_3 <=
-        ~_GEN_2553
+        ~_GEN_2552
         & (_GEN_2515
              ? byte_sels_14_3
              : _GEN_2497
@@ -10215,14 +10187,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_3_fwd_valid_3);
       MOB_3_violation <=
-        ~_GEN_2553
+        ~_GEN_2552
         & (io_AGU_output_valid & age_vector_3 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_391 & MOB_3_valid
-           & incoming_is_store & is_load_3 & (_MOB_update_commit_T_3 | _is_complete_T_519)
+           & incoming_is_store & is_load_3 & MOB_3_MOB_STATE != 4'h1 & (|MOB_3_MOB_STATE)
            | MOB_3_violation);
       MOB_4_valid <=
-        ~_GEN_2554 & (written_vec_3 ? _GEN_295 | _GEN_248 : _GEN_274 | _GEN_248);
-      if (_GEN_2554) begin
+        ~_GEN_2553 & (written_vec_3 ? _GEN_295 | _GEN_248 : _GEN_274 | _GEN_248);
+      if (_GEN_2553) begin
         MOB_4_memory_type <= 2'h0;
         MOB_4_ROB_index <= 6'h0;
         MOB_4_fetch_packet_index <= 2'h0;
@@ -10237,10 +10209,10 @@ module MOB(
         MOB_4_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2605;
         automatic logic _GEN_2606;
-        automatic logic _GEN_2607;
-        _GEN_2606 = io_AGU_output_valid & _GEN_321;
-        _GEN_2607 =
+        _GEN_2605 = io_AGU_output_valid & _GEN_321;
+        _GEN_2606 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h4;
         if (written_vec_3 & _GEN_294) begin
@@ -10271,11 +10243,11 @@ module MOB(
           MOB_4_access_width <= io_reserve_0_bits_access_width;
           MOB_4_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2606)
+        if (_GEN_2605)
           MOB_4_address <= io_AGU_output_bits_address;
-        if (_GEN_2607)
+        if (_GEN_2606)
           MOB_4_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2606)
+        else if (_GEN_2605)
           MOB_4_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1706)
           MOB_4_fwd_data_0 <= wr_bytes_14_0;
@@ -10521,20 +10493,20 @@ module MOB(
             & is_store_4)
           MOB_4_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2607;
           automatic logic _GEN_2608;
           automatic logic _GEN_2609;
           automatic logic _GEN_2610;
           automatic logic _GEN_2611;
           automatic logic _GEN_2612;
           automatic logic _GEN_2613;
-          automatic logic _GEN_2614;
-          _GEN_2608 = written_vec_1 & _GEN_247 | _GEN_227;
-          _GEN_2609 = written_vec_3 ? _GEN_295 | _GEN_2608 : _GEN_274 | _GEN_2608;
-          _GEN_2610 = _GEN_334 & _GEN_321;
-          _GEN_2611 = _GEN_2528 & load_index == 4'h4;
-          _GEN_2612 = fire_store & _GEN_2528 & _GEN_2533;
-          _GEN_2613 = _GEN_2545 & CDB_write_index == 4'h4;
-          _GEN_2614 =
+          _GEN_2607 = written_vec_1 & _GEN_247 | _GEN_227;
+          _GEN_2608 = written_vec_3 ? _GEN_295 | _GEN_2607 : _GEN_274 | _GEN_2607;
+          _GEN_2609 = _GEN_334 & _GEN_321;
+          _GEN_2610 = _GEN_2528 & load_index == 4'h4;
+          _GEN_2611 = fire_store & _GEN_2528 & _GEN_2533;
+          _GEN_2612 = _GEN_2545 & CDB_write_index == 4'h4;
+          _GEN_2613 =
             {matrix_15[4],
              matrix_14[4],
              matrix_13[4],
@@ -10550,142 +10522,142 @@ module MOB(
              matrix_3[4],
              matrix_2[4],
              matrix_1[4],
-             matrix_0[4]} == 16'h0 & _is_complete_T_521;
+             matrix_0[4]} == 16'h0 & MOB_4_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2615;
-            _GEN_2615 = _selected_MOB_entry_for_commit_T_14 == 4'h4;
+            automatic logic _GEN_2614;
+            _GEN_2614 = _selected_MOB_entry_for_commit_T_14 == 4'h4;
             if (_GEN_219) begin
-              if (_GEN_2615)
+              if (_GEN_2614)
                 MOB_4_MOB_STATE <= 4'h9;
-              else if (_GEN_2614)
-                MOB_4_MOB_STATE <= 4'h6;
               else if (_GEN_2613)
+                MOB_4_MOB_STATE <= 4'h6;
+              else if (_GEN_2612)
                 MOB_4_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2607)
+              else if (_GEN_2606)
                 MOB_4_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2611)
+                if (_GEN_2610)
                   MOB_4_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_321)
                       MOB_4_MOB_STATE <= 4'h2;
-                    else if (_GEN_2609)
+                    else if (_GEN_2608)
                       MOB_4_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2610)
-                    MOB_4_MOB_STATE <= 4'h6;
                   else if (_GEN_2609)
+                    MOB_4_MOB_STATE <= 4'h6;
+                  else if (_GEN_2608)
                     MOB_4_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2609)
+                else if (_GEN_2608)
                   MOB_4_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2612)
+              else if (_GEN_2611)
                 MOB_4_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_321)
                     MOB_4_MOB_STATE <= 4'h2;
-                  else if (_GEN_2609)
+                  else if (_GEN_2608)
                     MOB_4_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2610)
-                  MOB_4_MOB_STATE <= 4'h6;
                 else if (_GEN_2609)
+                  MOB_4_MOB_STATE <= 4'h6;
+                else if (_GEN_2608)
                   MOB_4_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2609)
+              else if (_GEN_2608)
                 MOB_4_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2615)
+            else if (_GEN_220 & _GEN_2614)
               MOB_4_MOB_STATE <= 4'h7;
-            else if (_GEN_2614)
-              MOB_4_MOB_STATE <= 4'h6;
             else if (_GEN_2613)
+              MOB_4_MOB_STATE <= 4'h6;
+            else if (_GEN_2612)
               MOB_4_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2607)
+            else if (_GEN_2606)
               MOB_4_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2611)
+              if (_GEN_2610)
                 MOB_4_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_321)
                     MOB_4_MOB_STATE <= 4'h2;
-                  else if (_GEN_2609)
+                  else if (_GEN_2608)
                     MOB_4_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2610)
-                  MOB_4_MOB_STATE <= 4'h6;
                 else if (_GEN_2609)
+                  MOB_4_MOB_STATE <= 4'h6;
+                else if (_GEN_2608)
                   MOB_4_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2609)
+              else if (_GEN_2608)
                 MOB_4_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2612)
+            else if (_GEN_2611)
               MOB_4_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_321)
                   MOB_4_MOB_STATE <= 4'h2;
-                else if (_GEN_2609)
+                else if (_GEN_2608)
                   MOB_4_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2610)
-                MOB_4_MOB_STATE <= 4'h6;
               else if (_GEN_2609)
+                MOB_4_MOB_STATE <= 4'h6;
+              else if (_GEN_2608)
                 MOB_4_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2609)
+            else if (_GEN_2608)
               MOB_4_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2614)
-            MOB_4_MOB_STATE <= 4'h6;
           else if (_GEN_2613)
+            MOB_4_MOB_STATE <= 4'h6;
+          else if (_GEN_2612)
             MOB_4_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2607)
+          else if (_GEN_2606)
             MOB_4_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2611)
+            if (_GEN_2610)
               MOB_4_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_321)
                   MOB_4_MOB_STATE <= 4'h2;
-                else if (_GEN_2609)
+                else if (_GEN_2608)
                   MOB_4_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2610)
-                MOB_4_MOB_STATE <= 4'h6;
               else if (_GEN_2609)
+                MOB_4_MOB_STATE <= 4'h6;
+              else if (_GEN_2608)
                 MOB_4_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2609)
+            else if (_GEN_2608)
               MOB_4_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2612)
+          else if (_GEN_2611)
             MOB_4_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_321)
                 MOB_4_MOB_STATE <= 4'h2;
-              else if (_GEN_2609)
+              else if (_GEN_2608)
                 MOB_4_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2610)
-              MOB_4_MOB_STATE <= 4'h6;
             else if (_GEN_2609)
+              MOB_4_MOB_STATE <= 4'h6;
+            else if (_GEN_2608)
               MOB_4_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2609)
+          else if (_GEN_2608)
             MOB_4_MOB_STATE <= 4'h1;
         end
       end
-      MOB_4_data_valid <= ~_GEN_2554 & MOB_4_data_valid;
+      MOB_4_data_valid <= ~_GEN_2553 & MOB_4_data_valid;
       MOB_4_fwd_valid_0 <=
-        ~_GEN_2554
+        ~_GEN_2553
         & (_GEN_1706
              ? byte_sels_14_0
              : _GEN_1688
@@ -10748,7 +10720,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_4_fwd_valid_0);
       MOB_4_fwd_valid_1 <=
-        ~_GEN_2554
+        ~_GEN_2553
         & (_GEN_1976
              ? byte_sels_14_1
              : _GEN_1958
@@ -10811,7 +10783,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_4_fwd_valid_1);
       MOB_4_fwd_valid_2 <=
-        ~_GEN_2554
+        ~_GEN_2553
         & (_GEN_2246
              ? byte_sels_14_2
              : _GEN_2228
@@ -10874,7 +10846,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_4_fwd_valid_2);
       MOB_4_fwd_valid_3 <=
-        ~_GEN_2554
+        ~_GEN_2553
         & (_GEN_2516
              ? byte_sels_14_3
              : _GEN_2498
@@ -10937,14 +10909,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_4_fwd_valid_3);
       MOB_4_violation <=
-        ~_GEN_2554
+        ~_GEN_2553
         & (io_AGU_output_valid & age_vector_4 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_393 & MOB_4_valid
-           & incoming_is_store & is_load_4 & (_MOB_update_commit_T_4 | _is_complete_T_521)
+           & incoming_is_store & is_load_4 & MOB_4_MOB_STATE != 4'h1 & (|MOB_4_MOB_STATE)
            | MOB_4_violation);
       MOB_5_valid <=
-        ~_GEN_2555 & (written_vec_3 ? _GEN_297 | _GEN_250 : _GEN_275 | _GEN_250);
-      if (_GEN_2555) begin
+        ~_GEN_2554 & (written_vec_3 ? _GEN_297 | _GEN_250 : _GEN_275 | _GEN_250);
+      if (_GEN_2554) begin
         MOB_5_memory_type <= 2'h0;
         MOB_5_ROB_index <= 6'h0;
         MOB_5_fetch_packet_index <= 2'h0;
@@ -10959,10 +10931,10 @@ module MOB(
         MOB_5_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2615;
         automatic logic _GEN_2616;
-        automatic logic _GEN_2617;
-        _GEN_2616 = io_AGU_output_valid & _GEN_322;
-        _GEN_2617 =
+        _GEN_2615 = io_AGU_output_valid & _GEN_322;
+        _GEN_2616 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h5;
         if (written_vec_3 & _GEN_296) begin
@@ -10993,11 +10965,11 @@ module MOB(
           MOB_5_access_width <= io_reserve_0_bits_access_width;
           MOB_5_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2616)
+        if (_GEN_2615)
           MOB_5_address <= io_AGU_output_bits_address;
-        if (_GEN_2617)
+        if (_GEN_2616)
           MOB_5_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2616)
+        else if (_GEN_2615)
           MOB_5_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1707)
           MOB_5_fwd_data_0 <= wr_bytes_14_0;
@@ -11243,20 +11215,20 @@ module MOB(
             & is_store_5)
           MOB_5_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2617;
           automatic logic _GEN_2618;
           automatic logic _GEN_2619;
           automatic logic _GEN_2620;
           automatic logic _GEN_2621;
           automatic logic _GEN_2622;
           automatic logic _GEN_2623;
-          automatic logic _GEN_2624;
-          _GEN_2618 = written_vec_1 & _GEN_249 | _GEN_228;
-          _GEN_2619 = written_vec_3 ? _GEN_297 | _GEN_2618 : _GEN_275 | _GEN_2618;
-          _GEN_2620 = _GEN_334 & _GEN_322;
-          _GEN_2621 = _GEN_2528 & load_index == 4'h5;
-          _GEN_2622 = fire_store & _GEN_2528 & _GEN_2534;
-          _GEN_2623 = _GEN_2545 & CDB_write_index == 4'h5;
-          _GEN_2624 =
+          _GEN_2617 = written_vec_1 & _GEN_249 | _GEN_228;
+          _GEN_2618 = written_vec_3 ? _GEN_297 | _GEN_2617 : _GEN_275 | _GEN_2617;
+          _GEN_2619 = _GEN_334 & _GEN_322;
+          _GEN_2620 = _GEN_2528 & load_index == 4'h5;
+          _GEN_2621 = fire_store & _GEN_2528 & _GEN_2534;
+          _GEN_2622 = _GEN_2545 & CDB_write_index == 4'h5;
+          _GEN_2623 =
             {matrix_15[5],
              matrix_14[5],
              matrix_13[5],
@@ -11272,142 +11244,142 @@ module MOB(
              matrix_3[5],
              matrix_2[5],
              matrix_1[5],
-             matrix_0[5]} == 16'h0 & _is_complete_T_523;
+             matrix_0[5]} == 16'h0 & MOB_5_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2625;
-            _GEN_2625 = _selected_MOB_entry_for_commit_T_14 == 4'h5;
+            automatic logic _GEN_2624;
+            _GEN_2624 = _selected_MOB_entry_for_commit_T_14 == 4'h5;
             if (_GEN_219) begin
-              if (_GEN_2625)
+              if (_GEN_2624)
                 MOB_5_MOB_STATE <= 4'h9;
-              else if (_GEN_2624)
-                MOB_5_MOB_STATE <= 4'h6;
               else if (_GEN_2623)
+                MOB_5_MOB_STATE <= 4'h6;
+              else if (_GEN_2622)
                 MOB_5_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2617)
+              else if (_GEN_2616)
                 MOB_5_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2621)
+                if (_GEN_2620)
                   MOB_5_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_322)
                       MOB_5_MOB_STATE <= 4'h2;
-                    else if (_GEN_2619)
+                    else if (_GEN_2618)
                       MOB_5_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2620)
-                    MOB_5_MOB_STATE <= 4'h6;
                   else if (_GEN_2619)
+                    MOB_5_MOB_STATE <= 4'h6;
+                  else if (_GEN_2618)
                     MOB_5_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2619)
+                else if (_GEN_2618)
                   MOB_5_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2622)
+              else if (_GEN_2621)
                 MOB_5_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_322)
                     MOB_5_MOB_STATE <= 4'h2;
-                  else if (_GEN_2619)
+                  else if (_GEN_2618)
                     MOB_5_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2620)
-                  MOB_5_MOB_STATE <= 4'h6;
                 else if (_GEN_2619)
+                  MOB_5_MOB_STATE <= 4'h6;
+                else if (_GEN_2618)
                   MOB_5_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2619)
+              else if (_GEN_2618)
                 MOB_5_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2625)
+            else if (_GEN_220 & _GEN_2624)
               MOB_5_MOB_STATE <= 4'h7;
-            else if (_GEN_2624)
-              MOB_5_MOB_STATE <= 4'h6;
             else if (_GEN_2623)
+              MOB_5_MOB_STATE <= 4'h6;
+            else if (_GEN_2622)
               MOB_5_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2617)
+            else if (_GEN_2616)
               MOB_5_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2621)
+              if (_GEN_2620)
                 MOB_5_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_322)
                     MOB_5_MOB_STATE <= 4'h2;
-                  else if (_GEN_2619)
+                  else if (_GEN_2618)
                     MOB_5_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2620)
-                  MOB_5_MOB_STATE <= 4'h6;
                 else if (_GEN_2619)
+                  MOB_5_MOB_STATE <= 4'h6;
+                else if (_GEN_2618)
                   MOB_5_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2619)
+              else if (_GEN_2618)
                 MOB_5_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2622)
+            else if (_GEN_2621)
               MOB_5_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_322)
                   MOB_5_MOB_STATE <= 4'h2;
-                else if (_GEN_2619)
+                else if (_GEN_2618)
                   MOB_5_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2620)
-                MOB_5_MOB_STATE <= 4'h6;
               else if (_GEN_2619)
+                MOB_5_MOB_STATE <= 4'h6;
+              else if (_GEN_2618)
                 MOB_5_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2619)
+            else if (_GEN_2618)
               MOB_5_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2624)
-            MOB_5_MOB_STATE <= 4'h6;
           else if (_GEN_2623)
+            MOB_5_MOB_STATE <= 4'h6;
+          else if (_GEN_2622)
             MOB_5_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2617)
+          else if (_GEN_2616)
             MOB_5_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2621)
+            if (_GEN_2620)
               MOB_5_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_322)
                   MOB_5_MOB_STATE <= 4'h2;
-                else if (_GEN_2619)
+                else if (_GEN_2618)
                   MOB_5_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2620)
-                MOB_5_MOB_STATE <= 4'h6;
               else if (_GEN_2619)
+                MOB_5_MOB_STATE <= 4'h6;
+              else if (_GEN_2618)
                 MOB_5_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2619)
+            else if (_GEN_2618)
               MOB_5_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2622)
+          else if (_GEN_2621)
             MOB_5_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_322)
                 MOB_5_MOB_STATE <= 4'h2;
-              else if (_GEN_2619)
+              else if (_GEN_2618)
                 MOB_5_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2620)
-              MOB_5_MOB_STATE <= 4'h6;
             else if (_GEN_2619)
+              MOB_5_MOB_STATE <= 4'h6;
+            else if (_GEN_2618)
               MOB_5_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2619)
+          else if (_GEN_2618)
             MOB_5_MOB_STATE <= 4'h1;
         end
       end
-      MOB_5_data_valid <= ~_GEN_2555 & MOB_5_data_valid;
+      MOB_5_data_valid <= ~_GEN_2554 & MOB_5_data_valid;
       MOB_5_fwd_valid_0 <=
-        ~_GEN_2555
+        ~_GEN_2554
         & (_GEN_1707
              ? byte_sels_14_0
              : _GEN_1689
@@ -11470,7 +11442,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_5_fwd_valid_0);
       MOB_5_fwd_valid_1 <=
-        ~_GEN_2555
+        ~_GEN_2554
         & (_GEN_1977
              ? byte_sels_14_1
              : _GEN_1959
@@ -11533,7 +11505,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_5_fwd_valid_1);
       MOB_5_fwd_valid_2 <=
-        ~_GEN_2555
+        ~_GEN_2554
         & (_GEN_2247
              ? byte_sels_14_2
              : _GEN_2229
@@ -11596,7 +11568,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_5_fwd_valid_2);
       MOB_5_fwd_valid_3 <=
-        ~_GEN_2555
+        ~_GEN_2554
         & (_GEN_2517
              ? byte_sels_14_3
              : _GEN_2499
@@ -11659,14 +11631,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_5_fwd_valid_3);
       MOB_5_violation <=
-        ~_GEN_2555
+        ~_GEN_2554
         & (io_AGU_output_valid & age_vector_5 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_395 & MOB_5_valid
-           & incoming_is_store & is_load_5 & (_MOB_update_commit_T_5 | _is_complete_T_523)
+           & incoming_is_store & is_load_5 & MOB_5_MOB_STATE != 4'h1 & (|MOB_5_MOB_STATE)
            | MOB_5_violation);
       MOB_6_valid <=
-        ~_GEN_2556 & (written_vec_3 ? _GEN_299 | _GEN_252 : _GEN_276 | _GEN_252);
-      if (_GEN_2556) begin
+        ~_GEN_2555 & (written_vec_3 ? _GEN_299 | _GEN_252 : _GEN_276 | _GEN_252);
+      if (_GEN_2555) begin
         MOB_6_memory_type <= 2'h0;
         MOB_6_ROB_index <= 6'h0;
         MOB_6_fetch_packet_index <= 2'h0;
@@ -11681,10 +11653,10 @@ module MOB(
         MOB_6_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2625;
         automatic logic _GEN_2626;
-        automatic logic _GEN_2627;
-        _GEN_2626 = io_AGU_output_valid & _GEN_323;
-        _GEN_2627 =
+        _GEN_2625 = io_AGU_output_valid & _GEN_323;
+        _GEN_2626 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h6;
         if (written_vec_3 & _GEN_298) begin
@@ -11715,11 +11687,11 @@ module MOB(
           MOB_6_access_width <= io_reserve_0_bits_access_width;
           MOB_6_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2626)
+        if (_GEN_2625)
           MOB_6_address <= io_AGU_output_bits_address;
-        if (_GEN_2627)
+        if (_GEN_2626)
           MOB_6_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2626)
+        else if (_GEN_2625)
           MOB_6_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1708)
           MOB_6_fwd_data_0 <= wr_bytes_14_0;
@@ -11965,20 +11937,20 @@ module MOB(
             & is_store_6)
           MOB_6_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2627;
           automatic logic _GEN_2628;
           automatic logic _GEN_2629;
           automatic logic _GEN_2630;
           automatic logic _GEN_2631;
           automatic logic _GEN_2632;
           automatic logic _GEN_2633;
-          automatic logic _GEN_2634;
-          _GEN_2628 = written_vec_1 & _GEN_251 | _GEN_229;
-          _GEN_2629 = written_vec_3 ? _GEN_299 | _GEN_2628 : _GEN_276 | _GEN_2628;
-          _GEN_2630 = _GEN_334 & _GEN_323;
-          _GEN_2631 = _GEN_2528 & load_index == 4'h6;
-          _GEN_2632 = fire_store & _GEN_2528 & _GEN_2535;
-          _GEN_2633 = _GEN_2545 & CDB_write_index == 4'h6;
-          _GEN_2634 =
+          _GEN_2627 = written_vec_1 & _GEN_251 | _GEN_229;
+          _GEN_2628 = written_vec_3 ? _GEN_299 | _GEN_2627 : _GEN_276 | _GEN_2627;
+          _GEN_2629 = _GEN_334 & _GEN_323;
+          _GEN_2630 = _GEN_2528 & load_index == 4'h6;
+          _GEN_2631 = fire_store & _GEN_2528 & _GEN_2535;
+          _GEN_2632 = _GEN_2545 & CDB_write_index == 4'h6;
+          _GEN_2633 =
             {matrix_15[6],
              matrix_14[6],
              matrix_13[6],
@@ -11994,142 +11966,142 @@ module MOB(
              matrix_3[6],
              matrix_2[6],
              matrix_1[6],
-             matrix_0[6]} == 16'h0 & _is_complete_T_525;
+             matrix_0[6]} == 16'h0 & MOB_6_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2635;
-            _GEN_2635 = _selected_MOB_entry_for_commit_T_14 == 4'h6;
+            automatic logic _GEN_2634;
+            _GEN_2634 = _selected_MOB_entry_for_commit_T_14 == 4'h6;
             if (_GEN_219) begin
-              if (_GEN_2635)
+              if (_GEN_2634)
                 MOB_6_MOB_STATE <= 4'h9;
-              else if (_GEN_2634)
-                MOB_6_MOB_STATE <= 4'h6;
               else if (_GEN_2633)
+                MOB_6_MOB_STATE <= 4'h6;
+              else if (_GEN_2632)
                 MOB_6_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2627)
+              else if (_GEN_2626)
                 MOB_6_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2631)
+                if (_GEN_2630)
                   MOB_6_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_323)
                       MOB_6_MOB_STATE <= 4'h2;
-                    else if (_GEN_2629)
+                    else if (_GEN_2628)
                       MOB_6_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2630)
-                    MOB_6_MOB_STATE <= 4'h6;
                   else if (_GEN_2629)
+                    MOB_6_MOB_STATE <= 4'h6;
+                  else if (_GEN_2628)
                     MOB_6_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2629)
+                else if (_GEN_2628)
                   MOB_6_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2632)
+              else if (_GEN_2631)
                 MOB_6_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_323)
                     MOB_6_MOB_STATE <= 4'h2;
-                  else if (_GEN_2629)
+                  else if (_GEN_2628)
                     MOB_6_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2630)
-                  MOB_6_MOB_STATE <= 4'h6;
                 else if (_GEN_2629)
+                  MOB_6_MOB_STATE <= 4'h6;
+                else if (_GEN_2628)
                   MOB_6_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2629)
+              else if (_GEN_2628)
                 MOB_6_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2635)
+            else if (_GEN_220 & _GEN_2634)
               MOB_6_MOB_STATE <= 4'h7;
-            else if (_GEN_2634)
-              MOB_6_MOB_STATE <= 4'h6;
             else if (_GEN_2633)
+              MOB_6_MOB_STATE <= 4'h6;
+            else if (_GEN_2632)
               MOB_6_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2627)
+            else if (_GEN_2626)
               MOB_6_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2631)
+              if (_GEN_2630)
                 MOB_6_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_323)
                     MOB_6_MOB_STATE <= 4'h2;
-                  else if (_GEN_2629)
+                  else if (_GEN_2628)
                     MOB_6_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2630)
-                  MOB_6_MOB_STATE <= 4'h6;
                 else if (_GEN_2629)
+                  MOB_6_MOB_STATE <= 4'h6;
+                else if (_GEN_2628)
                   MOB_6_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2629)
+              else if (_GEN_2628)
                 MOB_6_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2632)
+            else if (_GEN_2631)
               MOB_6_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_323)
                   MOB_6_MOB_STATE <= 4'h2;
-                else if (_GEN_2629)
+                else if (_GEN_2628)
                   MOB_6_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2630)
-                MOB_6_MOB_STATE <= 4'h6;
               else if (_GEN_2629)
+                MOB_6_MOB_STATE <= 4'h6;
+              else if (_GEN_2628)
                 MOB_6_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2629)
+            else if (_GEN_2628)
               MOB_6_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2634)
-            MOB_6_MOB_STATE <= 4'h6;
           else if (_GEN_2633)
+            MOB_6_MOB_STATE <= 4'h6;
+          else if (_GEN_2632)
             MOB_6_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2627)
+          else if (_GEN_2626)
             MOB_6_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2631)
+            if (_GEN_2630)
               MOB_6_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_323)
                   MOB_6_MOB_STATE <= 4'h2;
-                else if (_GEN_2629)
+                else if (_GEN_2628)
                   MOB_6_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2630)
-                MOB_6_MOB_STATE <= 4'h6;
               else if (_GEN_2629)
+                MOB_6_MOB_STATE <= 4'h6;
+              else if (_GEN_2628)
                 MOB_6_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2629)
+            else if (_GEN_2628)
               MOB_6_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2632)
+          else if (_GEN_2631)
             MOB_6_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_323)
                 MOB_6_MOB_STATE <= 4'h2;
-              else if (_GEN_2629)
+              else if (_GEN_2628)
                 MOB_6_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2630)
-              MOB_6_MOB_STATE <= 4'h6;
             else if (_GEN_2629)
+              MOB_6_MOB_STATE <= 4'h6;
+            else if (_GEN_2628)
               MOB_6_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2629)
+          else if (_GEN_2628)
             MOB_6_MOB_STATE <= 4'h1;
         end
       end
-      MOB_6_data_valid <= ~_GEN_2556 & MOB_6_data_valid;
+      MOB_6_data_valid <= ~_GEN_2555 & MOB_6_data_valid;
       MOB_6_fwd_valid_0 <=
-        ~_GEN_2556
+        ~_GEN_2555
         & (_GEN_1708
              ? byte_sels_14_0
              : _GEN_1690
@@ -12192,7 +12164,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_6_fwd_valid_0);
       MOB_6_fwd_valid_1 <=
-        ~_GEN_2556
+        ~_GEN_2555
         & (_GEN_1978
              ? byte_sels_14_1
              : _GEN_1960
@@ -12255,7 +12227,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_6_fwd_valid_1);
       MOB_6_fwd_valid_2 <=
-        ~_GEN_2556
+        ~_GEN_2555
         & (_GEN_2248
              ? byte_sels_14_2
              : _GEN_2230
@@ -12318,7 +12290,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_6_fwd_valid_2);
       MOB_6_fwd_valid_3 <=
-        ~_GEN_2556
+        ~_GEN_2555
         & (_GEN_2518
              ? byte_sels_14_3
              : _GEN_2500
@@ -12381,14 +12353,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_6_fwd_valid_3);
       MOB_6_violation <=
-        ~_GEN_2556
+        ~_GEN_2555
         & (io_AGU_output_valid & age_vector_6 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_397 & MOB_6_valid
-           & incoming_is_store & is_load_6 & (_MOB_update_commit_T_6 | _is_complete_T_525)
+           & incoming_is_store & is_load_6 & MOB_6_MOB_STATE != 4'h1 & (|MOB_6_MOB_STATE)
            | MOB_6_violation);
       MOB_7_valid <=
-        ~_GEN_2557 & (written_vec_3 ? _GEN_301 | _GEN_254 : _GEN_277 | _GEN_254);
-      if (_GEN_2557) begin
+        ~_GEN_2556 & (written_vec_3 ? _GEN_301 | _GEN_254 : _GEN_277 | _GEN_254);
+      if (_GEN_2556) begin
         MOB_7_memory_type <= 2'h0;
         MOB_7_ROB_index <= 6'h0;
         MOB_7_fetch_packet_index <= 2'h0;
@@ -12403,10 +12375,10 @@ module MOB(
         MOB_7_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2635;
         automatic logic _GEN_2636;
-        automatic logic _GEN_2637;
-        _GEN_2636 = io_AGU_output_valid & _GEN_324;
-        _GEN_2637 =
+        _GEN_2635 = io_AGU_output_valid & _GEN_324;
+        _GEN_2636 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h7;
         if (written_vec_3 & _GEN_300) begin
@@ -12437,11 +12409,11 @@ module MOB(
           MOB_7_access_width <= io_reserve_0_bits_access_width;
           MOB_7_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2636)
+        if (_GEN_2635)
           MOB_7_address <= io_AGU_output_bits_address;
-        if (_GEN_2637)
+        if (_GEN_2636)
           MOB_7_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2636)
+        else if (_GEN_2635)
           MOB_7_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1709)
           MOB_7_fwd_data_0 <= wr_bytes_14_0;
@@ -12687,20 +12659,20 @@ module MOB(
             & is_store_7)
           MOB_7_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2637;
           automatic logic _GEN_2638;
           automatic logic _GEN_2639;
           automatic logic _GEN_2640;
           automatic logic _GEN_2641;
           automatic logic _GEN_2642;
           automatic logic _GEN_2643;
-          automatic logic _GEN_2644;
-          _GEN_2638 = written_vec_1 & _GEN_253 | _GEN_230;
-          _GEN_2639 = written_vec_3 ? _GEN_301 | _GEN_2638 : _GEN_277 | _GEN_2638;
-          _GEN_2640 = _GEN_334 & _GEN_324;
-          _GEN_2641 = _GEN_2528 & load_index == 4'h7;
-          _GEN_2642 = fire_store & _GEN_2528 & _GEN_2536;
-          _GEN_2643 = _GEN_2545 & CDB_write_index == 4'h7;
-          _GEN_2644 =
+          _GEN_2637 = written_vec_1 & _GEN_253 | _GEN_230;
+          _GEN_2638 = written_vec_3 ? _GEN_301 | _GEN_2637 : _GEN_277 | _GEN_2637;
+          _GEN_2639 = _GEN_334 & _GEN_324;
+          _GEN_2640 = _GEN_2528 & load_index == 4'h7;
+          _GEN_2641 = fire_store & _GEN_2528 & _GEN_2536;
+          _GEN_2642 = _GEN_2545 & CDB_write_index == 4'h7;
+          _GEN_2643 =
             {matrix_15[7],
              matrix_14[7],
              matrix_13[7],
@@ -12716,142 +12688,142 @@ module MOB(
              matrix_3[7],
              matrix_2[7],
              matrix_1[7],
-             matrix_0[7]} == 16'h0 & _is_complete_T_527;
+             matrix_0[7]} == 16'h0 & MOB_7_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2645;
-            _GEN_2645 = _selected_MOB_entry_for_commit_T_14 == 4'h7;
+            automatic logic _GEN_2644;
+            _GEN_2644 = _selected_MOB_entry_for_commit_T_14 == 4'h7;
             if (_GEN_219) begin
-              if (_GEN_2645)
+              if (_GEN_2644)
                 MOB_7_MOB_STATE <= 4'h9;
-              else if (_GEN_2644)
-                MOB_7_MOB_STATE <= 4'h6;
               else if (_GEN_2643)
+                MOB_7_MOB_STATE <= 4'h6;
+              else if (_GEN_2642)
                 MOB_7_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2637)
+              else if (_GEN_2636)
                 MOB_7_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2641)
+                if (_GEN_2640)
                   MOB_7_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_324)
                       MOB_7_MOB_STATE <= 4'h2;
-                    else if (_GEN_2639)
+                    else if (_GEN_2638)
                       MOB_7_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2640)
-                    MOB_7_MOB_STATE <= 4'h6;
                   else if (_GEN_2639)
+                    MOB_7_MOB_STATE <= 4'h6;
+                  else if (_GEN_2638)
                     MOB_7_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2639)
+                else if (_GEN_2638)
                   MOB_7_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2642)
+              else if (_GEN_2641)
                 MOB_7_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_324)
                     MOB_7_MOB_STATE <= 4'h2;
-                  else if (_GEN_2639)
+                  else if (_GEN_2638)
                     MOB_7_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2640)
-                  MOB_7_MOB_STATE <= 4'h6;
                 else if (_GEN_2639)
+                  MOB_7_MOB_STATE <= 4'h6;
+                else if (_GEN_2638)
                   MOB_7_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2639)
+              else if (_GEN_2638)
                 MOB_7_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2645)
+            else if (_GEN_220 & _GEN_2644)
               MOB_7_MOB_STATE <= 4'h7;
-            else if (_GEN_2644)
-              MOB_7_MOB_STATE <= 4'h6;
             else if (_GEN_2643)
+              MOB_7_MOB_STATE <= 4'h6;
+            else if (_GEN_2642)
               MOB_7_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2637)
+            else if (_GEN_2636)
               MOB_7_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2641)
+              if (_GEN_2640)
                 MOB_7_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_324)
                     MOB_7_MOB_STATE <= 4'h2;
-                  else if (_GEN_2639)
+                  else if (_GEN_2638)
                     MOB_7_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2640)
-                  MOB_7_MOB_STATE <= 4'h6;
                 else if (_GEN_2639)
+                  MOB_7_MOB_STATE <= 4'h6;
+                else if (_GEN_2638)
                   MOB_7_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2639)
+              else if (_GEN_2638)
                 MOB_7_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2642)
+            else if (_GEN_2641)
               MOB_7_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_324)
                   MOB_7_MOB_STATE <= 4'h2;
-                else if (_GEN_2639)
+                else if (_GEN_2638)
                   MOB_7_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2640)
-                MOB_7_MOB_STATE <= 4'h6;
               else if (_GEN_2639)
+                MOB_7_MOB_STATE <= 4'h6;
+              else if (_GEN_2638)
                 MOB_7_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2639)
+            else if (_GEN_2638)
               MOB_7_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2644)
-            MOB_7_MOB_STATE <= 4'h6;
           else if (_GEN_2643)
+            MOB_7_MOB_STATE <= 4'h6;
+          else if (_GEN_2642)
             MOB_7_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2637)
+          else if (_GEN_2636)
             MOB_7_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2641)
+            if (_GEN_2640)
               MOB_7_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_324)
                   MOB_7_MOB_STATE <= 4'h2;
-                else if (_GEN_2639)
+                else if (_GEN_2638)
                   MOB_7_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2640)
-                MOB_7_MOB_STATE <= 4'h6;
               else if (_GEN_2639)
+                MOB_7_MOB_STATE <= 4'h6;
+              else if (_GEN_2638)
                 MOB_7_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2639)
+            else if (_GEN_2638)
               MOB_7_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2642)
+          else if (_GEN_2641)
             MOB_7_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_324)
                 MOB_7_MOB_STATE <= 4'h2;
-              else if (_GEN_2639)
+              else if (_GEN_2638)
                 MOB_7_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2640)
-              MOB_7_MOB_STATE <= 4'h6;
             else if (_GEN_2639)
+              MOB_7_MOB_STATE <= 4'h6;
+            else if (_GEN_2638)
               MOB_7_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2639)
+          else if (_GEN_2638)
             MOB_7_MOB_STATE <= 4'h1;
         end
       end
-      MOB_7_data_valid <= ~_GEN_2557 & MOB_7_data_valid;
+      MOB_7_data_valid <= ~_GEN_2556 & MOB_7_data_valid;
       MOB_7_fwd_valid_0 <=
-        ~_GEN_2557
+        ~_GEN_2556
         & (_GEN_1709
              ? byte_sels_14_0
              : _GEN_1691
@@ -12914,7 +12886,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_7_fwd_valid_0);
       MOB_7_fwd_valid_1 <=
-        ~_GEN_2557
+        ~_GEN_2556
         & (_GEN_1979
              ? byte_sels_14_1
              : _GEN_1961
@@ -12977,7 +12949,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_7_fwd_valid_1);
       MOB_7_fwd_valid_2 <=
-        ~_GEN_2557
+        ~_GEN_2556
         & (_GEN_2249
              ? byte_sels_14_2
              : _GEN_2231
@@ -13040,7 +13012,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_7_fwd_valid_2);
       MOB_7_fwd_valid_3 <=
-        ~_GEN_2557
+        ~_GEN_2556
         & (_GEN_2519
              ? byte_sels_14_3
              : _GEN_2501
@@ -13103,14 +13075,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_7_fwd_valid_3);
       MOB_7_violation <=
-        ~_GEN_2557
+        ~_GEN_2556
         & (io_AGU_output_valid & age_vector_7 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_399 & MOB_7_valid
-           & incoming_is_store & is_load_7 & (_MOB_update_commit_T_7 | _is_complete_T_527)
+           & incoming_is_store & is_load_7 & MOB_7_MOB_STATE != 4'h1 & (|MOB_7_MOB_STATE)
            | MOB_7_violation);
       MOB_8_valid <=
-        ~_GEN_2558 & (written_vec_3 ? _GEN_303 | _GEN_256 : _GEN_278 | _GEN_256);
-      if (_GEN_2558) begin
+        ~_GEN_2557 & (written_vec_3 ? _GEN_303 | _GEN_256 : _GEN_278 | _GEN_256);
+      if (_GEN_2557) begin
         MOB_8_memory_type <= 2'h0;
         MOB_8_ROB_index <= 6'h0;
         MOB_8_fetch_packet_index <= 2'h0;
@@ -13125,10 +13097,10 @@ module MOB(
         MOB_8_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2645;
         automatic logic _GEN_2646;
-        automatic logic _GEN_2647;
-        _GEN_2646 = io_AGU_output_valid & _GEN_325;
-        _GEN_2647 =
+        _GEN_2645 = io_AGU_output_valid & _GEN_325;
+        _GEN_2646 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h8;
         if (written_vec_3 & _GEN_302) begin
@@ -13159,11 +13131,11 @@ module MOB(
           MOB_8_access_width <= io_reserve_0_bits_access_width;
           MOB_8_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2646)
+        if (_GEN_2645)
           MOB_8_address <= io_AGU_output_bits_address;
-        if (_GEN_2647)
+        if (_GEN_2646)
           MOB_8_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2646)
+        else if (_GEN_2645)
           MOB_8_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1710)
           MOB_8_fwd_data_0 <= wr_bytes_14_0;
@@ -13409,20 +13381,20 @@ module MOB(
             & is_store_8)
           MOB_8_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2647;
           automatic logic _GEN_2648;
           automatic logic _GEN_2649;
           automatic logic _GEN_2650;
           automatic logic _GEN_2651;
           automatic logic _GEN_2652;
           automatic logic _GEN_2653;
-          automatic logic _GEN_2654;
-          _GEN_2648 = written_vec_1 & _GEN_255 | _GEN_231;
-          _GEN_2649 = written_vec_3 ? _GEN_303 | _GEN_2648 : _GEN_278 | _GEN_2648;
-          _GEN_2650 = _GEN_334 & _GEN_325;
-          _GEN_2651 = _GEN_2528 & load_index == 4'h8;
-          _GEN_2652 = fire_store & _GEN_2528 & _GEN_2537;
-          _GEN_2653 = _GEN_2545 & CDB_write_index == 4'h8;
-          _GEN_2654 =
+          _GEN_2647 = written_vec_1 & _GEN_255 | _GEN_231;
+          _GEN_2648 = written_vec_3 ? _GEN_303 | _GEN_2647 : _GEN_278 | _GEN_2647;
+          _GEN_2649 = _GEN_334 & _GEN_325;
+          _GEN_2650 = _GEN_2528 & load_index == 4'h8;
+          _GEN_2651 = fire_store & _GEN_2528 & _GEN_2537;
+          _GEN_2652 = _GEN_2545 & CDB_write_index == 4'h8;
+          _GEN_2653 =
             {matrix_15[8],
              matrix_14[8],
              matrix_13[8],
@@ -13438,142 +13410,142 @@ module MOB(
              matrix_3[8],
              matrix_2[8],
              matrix_1[8],
-             matrix_0[8]} == 16'h0 & _is_complete_T_529;
+             matrix_0[8]} == 16'h0 & MOB_8_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2655;
-            _GEN_2655 = _selected_MOB_entry_for_commit_T_14 == 4'h8;
+            automatic logic _GEN_2654;
+            _GEN_2654 = _selected_MOB_entry_for_commit_T_14 == 4'h8;
             if (_GEN_219) begin
-              if (_GEN_2655)
+              if (_GEN_2654)
                 MOB_8_MOB_STATE <= 4'h9;
-              else if (_GEN_2654)
-                MOB_8_MOB_STATE <= 4'h6;
               else if (_GEN_2653)
+                MOB_8_MOB_STATE <= 4'h6;
+              else if (_GEN_2652)
                 MOB_8_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2647)
+              else if (_GEN_2646)
                 MOB_8_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2651)
+                if (_GEN_2650)
                   MOB_8_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_325)
                       MOB_8_MOB_STATE <= 4'h2;
-                    else if (_GEN_2649)
+                    else if (_GEN_2648)
                       MOB_8_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2650)
-                    MOB_8_MOB_STATE <= 4'h6;
                   else if (_GEN_2649)
+                    MOB_8_MOB_STATE <= 4'h6;
+                  else if (_GEN_2648)
                     MOB_8_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2649)
+                else if (_GEN_2648)
                   MOB_8_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2652)
+              else if (_GEN_2651)
                 MOB_8_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_325)
                     MOB_8_MOB_STATE <= 4'h2;
-                  else if (_GEN_2649)
+                  else if (_GEN_2648)
                     MOB_8_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2650)
-                  MOB_8_MOB_STATE <= 4'h6;
                 else if (_GEN_2649)
+                  MOB_8_MOB_STATE <= 4'h6;
+                else if (_GEN_2648)
                   MOB_8_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2649)
+              else if (_GEN_2648)
                 MOB_8_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2655)
+            else if (_GEN_220 & _GEN_2654)
               MOB_8_MOB_STATE <= 4'h7;
-            else if (_GEN_2654)
-              MOB_8_MOB_STATE <= 4'h6;
             else if (_GEN_2653)
+              MOB_8_MOB_STATE <= 4'h6;
+            else if (_GEN_2652)
               MOB_8_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2647)
+            else if (_GEN_2646)
               MOB_8_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2651)
+              if (_GEN_2650)
                 MOB_8_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_325)
                     MOB_8_MOB_STATE <= 4'h2;
-                  else if (_GEN_2649)
+                  else if (_GEN_2648)
                     MOB_8_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2650)
-                  MOB_8_MOB_STATE <= 4'h6;
                 else if (_GEN_2649)
+                  MOB_8_MOB_STATE <= 4'h6;
+                else if (_GEN_2648)
                   MOB_8_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2649)
+              else if (_GEN_2648)
                 MOB_8_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2652)
+            else if (_GEN_2651)
               MOB_8_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_325)
                   MOB_8_MOB_STATE <= 4'h2;
-                else if (_GEN_2649)
+                else if (_GEN_2648)
                   MOB_8_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2650)
-                MOB_8_MOB_STATE <= 4'h6;
               else if (_GEN_2649)
+                MOB_8_MOB_STATE <= 4'h6;
+              else if (_GEN_2648)
                 MOB_8_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2649)
+            else if (_GEN_2648)
               MOB_8_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2654)
-            MOB_8_MOB_STATE <= 4'h6;
           else if (_GEN_2653)
+            MOB_8_MOB_STATE <= 4'h6;
+          else if (_GEN_2652)
             MOB_8_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2647)
+          else if (_GEN_2646)
             MOB_8_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2651)
+            if (_GEN_2650)
               MOB_8_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_325)
                   MOB_8_MOB_STATE <= 4'h2;
-                else if (_GEN_2649)
+                else if (_GEN_2648)
                   MOB_8_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2650)
-                MOB_8_MOB_STATE <= 4'h6;
               else if (_GEN_2649)
+                MOB_8_MOB_STATE <= 4'h6;
+              else if (_GEN_2648)
                 MOB_8_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2649)
+            else if (_GEN_2648)
               MOB_8_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2652)
+          else if (_GEN_2651)
             MOB_8_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_325)
                 MOB_8_MOB_STATE <= 4'h2;
-              else if (_GEN_2649)
+              else if (_GEN_2648)
                 MOB_8_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2650)
-              MOB_8_MOB_STATE <= 4'h6;
             else if (_GEN_2649)
+              MOB_8_MOB_STATE <= 4'h6;
+            else if (_GEN_2648)
               MOB_8_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2649)
+          else if (_GEN_2648)
             MOB_8_MOB_STATE <= 4'h1;
         end
       end
-      MOB_8_data_valid <= ~_GEN_2558 & MOB_8_data_valid;
+      MOB_8_data_valid <= ~_GEN_2557 & MOB_8_data_valid;
       MOB_8_fwd_valid_0 <=
-        ~_GEN_2558
+        ~_GEN_2557
         & (_GEN_1710
              ? byte_sels_14_0
              : _GEN_1692
@@ -13636,7 +13608,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_8_fwd_valid_0);
       MOB_8_fwd_valid_1 <=
-        ~_GEN_2558
+        ~_GEN_2557
         & (_GEN_1980
              ? byte_sels_14_1
              : _GEN_1962
@@ -13699,7 +13671,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_8_fwd_valid_1);
       MOB_8_fwd_valid_2 <=
-        ~_GEN_2558
+        ~_GEN_2557
         & (_GEN_2250
              ? byte_sels_14_2
              : _GEN_2232
@@ -13762,7 +13734,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_8_fwd_valid_2);
       MOB_8_fwd_valid_3 <=
-        ~_GEN_2558
+        ~_GEN_2557
         & (_GEN_2520
              ? byte_sels_14_3
              : _GEN_2502
@@ -13825,14 +13797,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_8_fwd_valid_3);
       MOB_8_violation <=
-        ~_GEN_2558
+        ~_GEN_2557
         & (io_AGU_output_valid & age_vector_8 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_401 & MOB_8_valid
-           & incoming_is_store & is_load_8 & (_MOB_update_commit_T_8 | _is_complete_T_529)
+           & incoming_is_store & is_load_8 & MOB_8_MOB_STATE != 4'h1 & (|MOB_8_MOB_STATE)
            | MOB_8_violation);
       MOB_9_valid <=
-        ~_GEN_2559 & (written_vec_3 ? _GEN_305 | _GEN_258 : _GEN_279 | _GEN_258);
-      if (_GEN_2559) begin
+        ~_GEN_2558 & (written_vec_3 ? _GEN_305 | _GEN_258 : _GEN_279 | _GEN_258);
+      if (_GEN_2558) begin
         MOB_9_memory_type <= 2'h0;
         MOB_9_ROB_index <= 6'h0;
         MOB_9_fetch_packet_index <= 2'h0;
@@ -13847,10 +13819,10 @@ module MOB(
         MOB_9_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2655;
         automatic logic _GEN_2656;
-        automatic logic _GEN_2657;
-        _GEN_2656 = io_AGU_output_valid & _GEN_326;
-        _GEN_2657 =
+        _GEN_2655 = io_AGU_output_valid & _GEN_326;
+        _GEN_2656 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'h9;
         if (written_vec_3 & _GEN_304) begin
@@ -13881,11 +13853,11 @@ module MOB(
           MOB_9_access_width <= io_reserve_0_bits_access_width;
           MOB_9_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2656)
+        if (_GEN_2655)
           MOB_9_address <= io_AGU_output_bits_address;
-        if (_GEN_2657)
+        if (_GEN_2656)
           MOB_9_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2656)
+        else if (_GEN_2655)
           MOB_9_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1711)
           MOB_9_fwd_data_0 <= wr_bytes_14_0;
@@ -14131,20 +14103,20 @@ module MOB(
             & is_store_9)
           MOB_9_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2657;
           automatic logic _GEN_2658;
           automatic logic _GEN_2659;
           automatic logic _GEN_2660;
           automatic logic _GEN_2661;
           automatic logic _GEN_2662;
           automatic logic _GEN_2663;
-          automatic logic _GEN_2664;
-          _GEN_2658 = written_vec_1 & _GEN_257 | _GEN_232;
-          _GEN_2659 = written_vec_3 ? _GEN_305 | _GEN_2658 : _GEN_279 | _GEN_2658;
-          _GEN_2660 = _GEN_334 & _GEN_326;
-          _GEN_2661 = _GEN_2528 & load_index == 4'h9;
-          _GEN_2662 = fire_store & _GEN_2528 & _GEN_2538;
-          _GEN_2663 = _GEN_2545 & CDB_write_index == 4'h9;
-          _GEN_2664 =
+          _GEN_2657 = written_vec_1 & _GEN_257 | _GEN_232;
+          _GEN_2658 = written_vec_3 ? _GEN_305 | _GEN_2657 : _GEN_279 | _GEN_2657;
+          _GEN_2659 = _GEN_334 & _GEN_326;
+          _GEN_2660 = _GEN_2528 & load_index == 4'h9;
+          _GEN_2661 = fire_store & _GEN_2528 & _GEN_2538;
+          _GEN_2662 = _GEN_2545 & CDB_write_index == 4'h9;
+          _GEN_2663 =
             {matrix_15[9],
              matrix_14[9],
              matrix_13[9],
@@ -14160,142 +14132,142 @@ module MOB(
              matrix_3[9],
              matrix_2[9],
              matrix_1[9],
-             matrix_0[9]} == 16'h0 & _is_complete_T_531;
+             matrix_0[9]} == 16'h0 & MOB_9_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2665;
-            _GEN_2665 = _selected_MOB_entry_for_commit_T_14 == 4'h9;
+            automatic logic _GEN_2664;
+            _GEN_2664 = _selected_MOB_entry_for_commit_T_14 == 4'h9;
             if (_GEN_219) begin
-              if (_GEN_2665)
+              if (_GEN_2664)
                 MOB_9_MOB_STATE <= 4'h9;
-              else if (_GEN_2664)
-                MOB_9_MOB_STATE <= 4'h6;
               else if (_GEN_2663)
+                MOB_9_MOB_STATE <= 4'h6;
+              else if (_GEN_2662)
                 MOB_9_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2657)
+              else if (_GEN_2656)
                 MOB_9_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2661)
+                if (_GEN_2660)
                   MOB_9_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_326)
                       MOB_9_MOB_STATE <= 4'h2;
-                    else if (_GEN_2659)
+                    else if (_GEN_2658)
                       MOB_9_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2660)
-                    MOB_9_MOB_STATE <= 4'h6;
                   else if (_GEN_2659)
+                    MOB_9_MOB_STATE <= 4'h6;
+                  else if (_GEN_2658)
                     MOB_9_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2659)
+                else if (_GEN_2658)
                   MOB_9_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2662)
+              else if (_GEN_2661)
                 MOB_9_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_326)
                     MOB_9_MOB_STATE <= 4'h2;
-                  else if (_GEN_2659)
+                  else if (_GEN_2658)
                     MOB_9_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2660)
-                  MOB_9_MOB_STATE <= 4'h6;
                 else if (_GEN_2659)
+                  MOB_9_MOB_STATE <= 4'h6;
+                else if (_GEN_2658)
                   MOB_9_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2659)
+              else if (_GEN_2658)
                 MOB_9_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2665)
+            else if (_GEN_220 & _GEN_2664)
               MOB_9_MOB_STATE <= 4'h7;
-            else if (_GEN_2664)
-              MOB_9_MOB_STATE <= 4'h6;
             else if (_GEN_2663)
+              MOB_9_MOB_STATE <= 4'h6;
+            else if (_GEN_2662)
               MOB_9_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2657)
+            else if (_GEN_2656)
               MOB_9_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2661)
+              if (_GEN_2660)
                 MOB_9_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_326)
                     MOB_9_MOB_STATE <= 4'h2;
-                  else if (_GEN_2659)
+                  else if (_GEN_2658)
                     MOB_9_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2660)
-                  MOB_9_MOB_STATE <= 4'h6;
                 else if (_GEN_2659)
+                  MOB_9_MOB_STATE <= 4'h6;
+                else if (_GEN_2658)
                   MOB_9_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2659)
+              else if (_GEN_2658)
                 MOB_9_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2662)
+            else if (_GEN_2661)
               MOB_9_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_326)
                   MOB_9_MOB_STATE <= 4'h2;
-                else if (_GEN_2659)
+                else if (_GEN_2658)
                   MOB_9_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2660)
-                MOB_9_MOB_STATE <= 4'h6;
               else if (_GEN_2659)
+                MOB_9_MOB_STATE <= 4'h6;
+              else if (_GEN_2658)
                 MOB_9_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2659)
+            else if (_GEN_2658)
               MOB_9_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2664)
-            MOB_9_MOB_STATE <= 4'h6;
           else if (_GEN_2663)
+            MOB_9_MOB_STATE <= 4'h6;
+          else if (_GEN_2662)
             MOB_9_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2657)
+          else if (_GEN_2656)
             MOB_9_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2661)
+            if (_GEN_2660)
               MOB_9_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_326)
                   MOB_9_MOB_STATE <= 4'h2;
-                else if (_GEN_2659)
+                else if (_GEN_2658)
                   MOB_9_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2660)
-                MOB_9_MOB_STATE <= 4'h6;
               else if (_GEN_2659)
+                MOB_9_MOB_STATE <= 4'h6;
+              else if (_GEN_2658)
                 MOB_9_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2659)
+            else if (_GEN_2658)
               MOB_9_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2662)
+          else if (_GEN_2661)
             MOB_9_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_326)
                 MOB_9_MOB_STATE <= 4'h2;
-              else if (_GEN_2659)
+              else if (_GEN_2658)
                 MOB_9_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2660)
-              MOB_9_MOB_STATE <= 4'h6;
             else if (_GEN_2659)
+              MOB_9_MOB_STATE <= 4'h6;
+            else if (_GEN_2658)
               MOB_9_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2659)
+          else if (_GEN_2658)
             MOB_9_MOB_STATE <= 4'h1;
         end
       end
-      MOB_9_data_valid <= ~_GEN_2559 & MOB_9_data_valid;
+      MOB_9_data_valid <= ~_GEN_2558 & MOB_9_data_valid;
       MOB_9_fwd_valid_0 <=
-        ~_GEN_2559
+        ~_GEN_2558
         & (_GEN_1711
              ? byte_sels_14_0
              : _GEN_1693
@@ -14358,7 +14330,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_9_fwd_valid_0);
       MOB_9_fwd_valid_1 <=
-        ~_GEN_2559
+        ~_GEN_2558
         & (_GEN_1981
              ? byte_sels_14_1
              : _GEN_1963
@@ -14421,7 +14393,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_9_fwd_valid_1);
       MOB_9_fwd_valid_2 <=
-        ~_GEN_2559
+        ~_GEN_2558
         & (_GEN_2251
              ? byte_sels_14_2
              : _GEN_2233
@@ -14484,7 +14456,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_9_fwd_valid_2);
       MOB_9_fwd_valid_3 <=
-        ~_GEN_2559
+        ~_GEN_2558
         & (_GEN_2521
              ? byte_sels_14_3
              : _GEN_2503
@@ -14547,14 +14519,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_9_fwd_valid_3);
       MOB_9_violation <=
-        ~_GEN_2559
+        ~_GEN_2558
         & (io_AGU_output_valid & age_vector_9 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_403 & MOB_9_valid
-           & incoming_is_store & is_load_9 & (_MOB_update_commit_T_9 | _is_complete_T_531)
+           & incoming_is_store & is_load_9 & MOB_9_MOB_STATE != 4'h1 & (|MOB_9_MOB_STATE)
            | MOB_9_violation);
       MOB_10_valid <=
-        ~_GEN_2560 & (written_vec_3 ? _GEN_307 | _GEN_260 : _GEN_280 | _GEN_260);
-      if (_GEN_2560) begin
+        ~_GEN_2559 & (written_vec_3 ? _GEN_307 | _GEN_260 : _GEN_280 | _GEN_260);
+      if (_GEN_2559) begin
         MOB_10_memory_type <= 2'h0;
         MOB_10_ROB_index <= 6'h0;
         MOB_10_fetch_packet_index <= 2'h0;
@@ -14569,10 +14541,10 @@ module MOB(
         MOB_10_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2665;
         automatic logic _GEN_2666;
-        automatic logic _GEN_2667;
-        _GEN_2666 = io_AGU_output_valid & _GEN_327;
-        _GEN_2667 =
+        _GEN_2665 = io_AGU_output_valid & _GEN_327;
+        _GEN_2666 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'hA;
         if (written_vec_3 & _GEN_306) begin
@@ -14603,11 +14575,11 @@ module MOB(
           MOB_10_access_width <= io_reserve_0_bits_access_width;
           MOB_10_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2666)
+        if (_GEN_2665)
           MOB_10_address <= io_AGU_output_bits_address;
-        if (_GEN_2667)
+        if (_GEN_2666)
           MOB_10_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2666)
+        else if (_GEN_2665)
           MOB_10_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1712)
           MOB_10_fwd_data_0 <= wr_bytes_14_0;
@@ -14853,20 +14825,20 @@ module MOB(
             & is_store_10)
           MOB_10_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2667;
           automatic logic _GEN_2668;
           automatic logic _GEN_2669;
           automatic logic _GEN_2670;
           automatic logic _GEN_2671;
           automatic logic _GEN_2672;
           automatic logic _GEN_2673;
-          automatic logic _GEN_2674;
-          _GEN_2668 = written_vec_1 & _GEN_259 | _GEN_233;
-          _GEN_2669 = written_vec_3 ? _GEN_307 | _GEN_2668 : _GEN_280 | _GEN_2668;
-          _GEN_2670 = _GEN_334 & _GEN_327;
-          _GEN_2671 = _GEN_2528 & load_index == 4'hA;
-          _GEN_2672 = fire_store & _GEN_2528 & _GEN_2539;
-          _GEN_2673 = _GEN_2545 & CDB_write_index == 4'hA;
-          _GEN_2674 =
+          _GEN_2667 = written_vec_1 & _GEN_259 | _GEN_233;
+          _GEN_2668 = written_vec_3 ? _GEN_307 | _GEN_2667 : _GEN_280 | _GEN_2667;
+          _GEN_2669 = _GEN_334 & _GEN_327;
+          _GEN_2670 = _GEN_2528 & load_index == 4'hA;
+          _GEN_2671 = fire_store & _GEN_2528 & _GEN_2539;
+          _GEN_2672 = _GEN_2545 & CDB_write_index == 4'hA;
+          _GEN_2673 =
             {matrix_15[10],
              matrix_14[10],
              matrix_13[10],
@@ -14882,142 +14854,142 @@ module MOB(
              matrix_3[10],
              matrix_2[10],
              matrix_1[10],
-             matrix_0[10]} == 16'h0 & _is_complete_T_533;
+             matrix_0[10]} == 16'h0 & MOB_10_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2675;
-            _GEN_2675 = _selected_MOB_entry_for_commit_T_14 == 4'hA;
+            automatic logic _GEN_2674;
+            _GEN_2674 = _selected_MOB_entry_for_commit_T_14 == 4'hA;
             if (_GEN_219) begin
-              if (_GEN_2675)
+              if (_GEN_2674)
                 MOB_10_MOB_STATE <= 4'h9;
-              else if (_GEN_2674)
-                MOB_10_MOB_STATE <= 4'h6;
               else if (_GEN_2673)
+                MOB_10_MOB_STATE <= 4'h6;
+              else if (_GEN_2672)
                 MOB_10_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2667)
+              else if (_GEN_2666)
                 MOB_10_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2671)
+                if (_GEN_2670)
                   MOB_10_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_327)
                       MOB_10_MOB_STATE <= 4'h2;
-                    else if (_GEN_2669)
+                    else if (_GEN_2668)
                       MOB_10_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2670)
-                    MOB_10_MOB_STATE <= 4'h6;
                   else if (_GEN_2669)
+                    MOB_10_MOB_STATE <= 4'h6;
+                  else if (_GEN_2668)
                     MOB_10_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2669)
+                else if (_GEN_2668)
                   MOB_10_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2672)
+              else if (_GEN_2671)
                 MOB_10_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_327)
                     MOB_10_MOB_STATE <= 4'h2;
-                  else if (_GEN_2669)
+                  else if (_GEN_2668)
                     MOB_10_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2670)
-                  MOB_10_MOB_STATE <= 4'h6;
                 else if (_GEN_2669)
+                  MOB_10_MOB_STATE <= 4'h6;
+                else if (_GEN_2668)
                   MOB_10_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2669)
+              else if (_GEN_2668)
                 MOB_10_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2675)
+            else if (_GEN_220 & _GEN_2674)
               MOB_10_MOB_STATE <= 4'h7;
-            else if (_GEN_2674)
-              MOB_10_MOB_STATE <= 4'h6;
             else if (_GEN_2673)
+              MOB_10_MOB_STATE <= 4'h6;
+            else if (_GEN_2672)
               MOB_10_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2667)
+            else if (_GEN_2666)
               MOB_10_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2671)
+              if (_GEN_2670)
                 MOB_10_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_327)
                     MOB_10_MOB_STATE <= 4'h2;
-                  else if (_GEN_2669)
+                  else if (_GEN_2668)
                     MOB_10_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2670)
-                  MOB_10_MOB_STATE <= 4'h6;
                 else if (_GEN_2669)
+                  MOB_10_MOB_STATE <= 4'h6;
+                else if (_GEN_2668)
                   MOB_10_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2669)
+              else if (_GEN_2668)
                 MOB_10_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2672)
+            else if (_GEN_2671)
               MOB_10_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_327)
                   MOB_10_MOB_STATE <= 4'h2;
-                else if (_GEN_2669)
+                else if (_GEN_2668)
                   MOB_10_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2670)
-                MOB_10_MOB_STATE <= 4'h6;
               else if (_GEN_2669)
+                MOB_10_MOB_STATE <= 4'h6;
+              else if (_GEN_2668)
                 MOB_10_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2669)
+            else if (_GEN_2668)
               MOB_10_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2674)
-            MOB_10_MOB_STATE <= 4'h6;
           else if (_GEN_2673)
+            MOB_10_MOB_STATE <= 4'h6;
+          else if (_GEN_2672)
             MOB_10_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2667)
+          else if (_GEN_2666)
             MOB_10_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2671)
+            if (_GEN_2670)
               MOB_10_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_327)
                   MOB_10_MOB_STATE <= 4'h2;
-                else if (_GEN_2669)
+                else if (_GEN_2668)
                   MOB_10_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2670)
-                MOB_10_MOB_STATE <= 4'h6;
               else if (_GEN_2669)
+                MOB_10_MOB_STATE <= 4'h6;
+              else if (_GEN_2668)
                 MOB_10_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2669)
+            else if (_GEN_2668)
               MOB_10_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2672)
+          else if (_GEN_2671)
             MOB_10_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_327)
                 MOB_10_MOB_STATE <= 4'h2;
-              else if (_GEN_2669)
+              else if (_GEN_2668)
                 MOB_10_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2670)
-              MOB_10_MOB_STATE <= 4'h6;
             else if (_GEN_2669)
+              MOB_10_MOB_STATE <= 4'h6;
+            else if (_GEN_2668)
               MOB_10_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2669)
+          else if (_GEN_2668)
             MOB_10_MOB_STATE <= 4'h1;
         end
       end
-      MOB_10_data_valid <= ~_GEN_2560 & MOB_10_data_valid;
+      MOB_10_data_valid <= ~_GEN_2559 & MOB_10_data_valid;
       MOB_10_fwd_valid_0 <=
-        ~_GEN_2560
+        ~_GEN_2559
         & (_GEN_1712
              ? byte_sels_14_0
              : _GEN_1694
@@ -15080,7 +15052,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_10_fwd_valid_0);
       MOB_10_fwd_valid_1 <=
-        ~_GEN_2560
+        ~_GEN_2559
         & (_GEN_1982
              ? byte_sels_14_1
              : _GEN_1964
@@ -15143,7 +15115,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_10_fwd_valid_1);
       MOB_10_fwd_valid_2 <=
-        ~_GEN_2560
+        ~_GEN_2559
         & (_GEN_2252
              ? byte_sels_14_2
              : _GEN_2234
@@ -15206,7 +15178,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_10_fwd_valid_2);
       MOB_10_fwd_valid_3 <=
-        ~_GEN_2560
+        ~_GEN_2559
         & (_GEN_2522
              ? byte_sels_14_3
              : _GEN_2504
@@ -15269,14 +15241,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_10_fwd_valid_3);
       MOB_10_violation <=
-        ~_GEN_2560
+        ~_GEN_2559
         & (io_AGU_output_valid & age_vector_10 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_405 & MOB_10_valid
-           & incoming_is_store & is_load_10
-           & (_MOB_update_commit_T_10 | _is_complete_T_533) | MOB_10_violation);
+           & incoming_is_store & is_load_10 & MOB_10_MOB_STATE != 4'h1
+           & (|MOB_10_MOB_STATE) | MOB_10_violation);
       MOB_11_valid <=
-        ~_GEN_2561 & (written_vec_3 ? _GEN_309 | _GEN_262 : _GEN_281 | _GEN_262);
-      if (_GEN_2561) begin
+        ~_GEN_2560 & (written_vec_3 ? _GEN_309 | _GEN_262 : _GEN_281 | _GEN_262);
+      if (_GEN_2560) begin
         MOB_11_memory_type <= 2'h0;
         MOB_11_ROB_index <= 6'h0;
         MOB_11_fetch_packet_index <= 2'h0;
@@ -15291,10 +15263,10 @@ module MOB(
         MOB_11_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2675;
         automatic logic _GEN_2676;
-        automatic logic _GEN_2677;
-        _GEN_2676 = io_AGU_output_valid & _GEN_328;
-        _GEN_2677 =
+        _GEN_2675 = io_AGU_output_valid & _GEN_328;
+        _GEN_2676 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'hB;
         if (written_vec_3 & _GEN_308) begin
@@ -15325,11 +15297,11 @@ module MOB(
           MOB_11_access_width <= io_reserve_0_bits_access_width;
           MOB_11_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2676)
+        if (_GEN_2675)
           MOB_11_address <= io_AGU_output_bits_address;
-        if (_GEN_2677)
+        if (_GEN_2676)
           MOB_11_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2676)
+        else if (_GEN_2675)
           MOB_11_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1713)
           MOB_11_fwd_data_0 <= wr_bytes_14_0;
@@ -15575,20 +15547,20 @@ module MOB(
             & is_store_11)
           MOB_11_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2677;
           automatic logic _GEN_2678;
           automatic logic _GEN_2679;
           automatic logic _GEN_2680;
           automatic logic _GEN_2681;
           automatic logic _GEN_2682;
           automatic logic _GEN_2683;
-          automatic logic _GEN_2684;
-          _GEN_2678 = written_vec_1 & _GEN_261 | _GEN_234;
-          _GEN_2679 = written_vec_3 ? _GEN_309 | _GEN_2678 : _GEN_281 | _GEN_2678;
-          _GEN_2680 = _GEN_334 & _GEN_328;
-          _GEN_2681 = _GEN_2528 & load_index == 4'hB;
-          _GEN_2682 = fire_store & _GEN_2528 & _GEN_2540;
-          _GEN_2683 = _GEN_2545 & CDB_write_index == 4'hB;
-          _GEN_2684 =
+          _GEN_2677 = written_vec_1 & _GEN_261 | _GEN_234;
+          _GEN_2678 = written_vec_3 ? _GEN_309 | _GEN_2677 : _GEN_281 | _GEN_2677;
+          _GEN_2679 = _GEN_334 & _GEN_328;
+          _GEN_2680 = _GEN_2528 & load_index == 4'hB;
+          _GEN_2681 = fire_store & _GEN_2528 & _GEN_2540;
+          _GEN_2682 = _GEN_2545 & CDB_write_index == 4'hB;
+          _GEN_2683 =
             {matrix_15[11],
              matrix_14[11],
              matrix_13[11],
@@ -15604,142 +15576,142 @@ module MOB(
              matrix_3[11],
              matrix_2[11],
              matrix_1[11],
-             matrix_0[11]} == 16'h0 & _is_complete_T_535;
+             matrix_0[11]} == 16'h0 & MOB_11_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2685;
-            _GEN_2685 = _selected_MOB_entry_for_commit_T_14 == 4'hB;
+            automatic logic _GEN_2684;
+            _GEN_2684 = _selected_MOB_entry_for_commit_T_14 == 4'hB;
             if (_GEN_219) begin
-              if (_GEN_2685)
+              if (_GEN_2684)
                 MOB_11_MOB_STATE <= 4'h9;
-              else if (_GEN_2684)
-                MOB_11_MOB_STATE <= 4'h6;
               else if (_GEN_2683)
+                MOB_11_MOB_STATE <= 4'h6;
+              else if (_GEN_2682)
                 MOB_11_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2677)
+              else if (_GEN_2676)
                 MOB_11_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2681)
+                if (_GEN_2680)
                   MOB_11_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_328)
                       MOB_11_MOB_STATE <= 4'h2;
-                    else if (_GEN_2679)
+                    else if (_GEN_2678)
                       MOB_11_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2680)
-                    MOB_11_MOB_STATE <= 4'h6;
                   else if (_GEN_2679)
+                    MOB_11_MOB_STATE <= 4'h6;
+                  else if (_GEN_2678)
                     MOB_11_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2679)
+                else if (_GEN_2678)
                   MOB_11_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2682)
+              else if (_GEN_2681)
                 MOB_11_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_328)
                     MOB_11_MOB_STATE <= 4'h2;
-                  else if (_GEN_2679)
+                  else if (_GEN_2678)
                     MOB_11_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2680)
-                  MOB_11_MOB_STATE <= 4'h6;
                 else if (_GEN_2679)
+                  MOB_11_MOB_STATE <= 4'h6;
+                else if (_GEN_2678)
                   MOB_11_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2679)
+              else if (_GEN_2678)
                 MOB_11_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2685)
+            else if (_GEN_220 & _GEN_2684)
               MOB_11_MOB_STATE <= 4'h7;
-            else if (_GEN_2684)
-              MOB_11_MOB_STATE <= 4'h6;
             else if (_GEN_2683)
+              MOB_11_MOB_STATE <= 4'h6;
+            else if (_GEN_2682)
               MOB_11_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2677)
+            else if (_GEN_2676)
               MOB_11_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2681)
+              if (_GEN_2680)
                 MOB_11_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_328)
                     MOB_11_MOB_STATE <= 4'h2;
-                  else if (_GEN_2679)
+                  else if (_GEN_2678)
                     MOB_11_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2680)
-                  MOB_11_MOB_STATE <= 4'h6;
                 else if (_GEN_2679)
+                  MOB_11_MOB_STATE <= 4'h6;
+                else if (_GEN_2678)
                   MOB_11_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2679)
+              else if (_GEN_2678)
                 MOB_11_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2682)
+            else if (_GEN_2681)
               MOB_11_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_328)
                   MOB_11_MOB_STATE <= 4'h2;
-                else if (_GEN_2679)
+                else if (_GEN_2678)
                   MOB_11_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2680)
-                MOB_11_MOB_STATE <= 4'h6;
               else if (_GEN_2679)
+                MOB_11_MOB_STATE <= 4'h6;
+              else if (_GEN_2678)
                 MOB_11_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2679)
+            else if (_GEN_2678)
               MOB_11_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2684)
-            MOB_11_MOB_STATE <= 4'h6;
           else if (_GEN_2683)
+            MOB_11_MOB_STATE <= 4'h6;
+          else if (_GEN_2682)
             MOB_11_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2677)
+          else if (_GEN_2676)
             MOB_11_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2681)
+            if (_GEN_2680)
               MOB_11_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_328)
                   MOB_11_MOB_STATE <= 4'h2;
-                else if (_GEN_2679)
+                else if (_GEN_2678)
                   MOB_11_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2680)
-                MOB_11_MOB_STATE <= 4'h6;
               else if (_GEN_2679)
+                MOB_11_MOB_STATE <= 4'h6;
+              else if (_GEN_2678)
                 MOB_11_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2679)
+            else if (_GEN_2678)
               MOB_11_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2682)
+          else if (_GEN_2681)
             MOB_11_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_328)
                 MOB_11_MOB_STATE <= 4'h2;
-              else if (_GEN_2679)
+              else if (_GEN_2678)
                 MOB_11_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2680)
-              MOB_11_MOB_STATE <= 4'h6;
             else if (_GEN_2679)
+              MOB_11_MOB_STATE <= 4'h6;
+            else if (_GEN_2678)
               MOB_11_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2679)
+          else if (_GEN_2678)
             MOB_11_MOB_STATE <= 4'h1;
         end
       end
-      MOB_11_data_valid <= ~_GEN_2561 & MOB_11_data_valid;
+      MOB_11_data_valid <= ~_GEN_2560 & MOB_11_data_valid;
       MOB_11_fwd_valid_0 <=
-        ~_GEN_2561
+        ~_GEN_2560
         & (_GEN_1713
              ? byte_sels_14_0
              : _GEN_1695
@@ -15802,7 +15774,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_11_fwd_valid_0);
       MOB_11_fwd_valid_1 <=
-        ~_GEN_2561
+        ~_GEN_2560
         & (_GEN_1983
              ? byte_sels_14_1
              : _GEN_1965
@@ -15865,7 +15837,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_11_fwd_valid_1);
       MOB_11_fwd_valid_2 <=
-        ~_GEN_2561
+        ~_GEN_2560
         & (_GEN_2253
              ? byte_sels_14_2
              : _GEN_2235
@@ -15928,7 +15900,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_11_fwd_valid_2);
       MOB_11_fwd_valid_3 <=
-        ~_GEN_2561
+        ~_GEN_2560
         & (_GEN_2523
              ? byte_sels_14_3
              : _GEN_2505
@@ -15991,14 +15963,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_11_fwd_valid_3);
       MOB_11_violation <=
-        ~_GEN_2561
+        ~_GEN_2560
         & (io_AGU_output_valid & age_vector_11 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_407 & MOB_11_valid
-           & incoming_is_store & is_load_11
-           & (_MOB_update_commit_T_11 | _is_complete_T_535) | MOB_11_violation);
+           & incoming_is_store & is_load_11 & MOB_11_MOB_STATE != 4'h1
+           & (|MOB_11_MOB_STATE) | MOB_11_violation);
       MOB_12_valid <=
-        ~_GEN_2562 & (written_vec_3 ? _GEN_311 | _GEN_264 : _GEN_282 | _GEN_264);
-      if (_GEN_2562) begin
+        ~_GEN_2561 & (written_vec_3 ? _GEN_311 | _GEN_264 : _GEN_282 | _GEN_264);
+      if (_GEN_2561) begin
         MOB_12_memory_type <= 2'h0;
         MOB_12_ROB_index <= 6'h0;
         MOB_12_fetch_packet_index <= 2'h0;
@@ -16013,10 +15985,10 @@ module MOB(
         MOB_12_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2685;
         automatic logic _GEN_2686;
-        automatic logic _GEN_2687;
-        _GEN_2686 = io_AGU_output_valid & _GEN_329;
-        _GEN_2687 =
+        _GEN_2685 = io_AGU_output_valid & _GEN_329;
+        _GEN_2686 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'hC;
         if (written_vec_3 & _GEN_310) begin
@@ -16047,11 +16019,11 @@ module MOB(
           MOB_12_access_width <= io_reserve_0_bits_access_width;
           MOB_12_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2686)
+        if (_GEN_2685)
           MOB_12_address <= io_AGU_output_bits_address;
-        if (_GEN_2687)
+        if (_GEN_2686)
           MOB_12_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2686)
+        else if (_GEN_2685)
           MOB_12_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1714)
           MOB_12_fwd_data_0 <= wr_bytes_14_0;
@@ -16297,20 +16269,20 @@ module MOB(
             & is_store_12)
           MOB_12_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2687;
           automatic logic _GEN_2688;
           automatic logic _GEN_2689;
           automatic logic _GEN_2690;
           automatic logic _GEN_2691;
           automatic logic _GEN_2692;
           automatic logic _GEN_2693;
-          automatic logic _GEN_2694;
-          _GEN_2688 = written_vec_1 & _GEN_263 | _GEN_235;
-          _GEN_2689 = written_vec_3 ? _GEN_311 | _GEN_2688 : _GEN_282 | _GEN_2688;
-          _GEN_2690 = _GEN_334 & _GEN_329;
-          _GEN_2691 = _GEN_2528 & load_index == 4'hC;
-          _GEN_2692 = fire_store & _GEN_2528 & _GEN_2541;
-          _GEN_2693 = _GEN_2545 & CDB_write_index == 4'hC;
-          _GEN_2694 =
+          _GEN_2687 = written_vec_1 & _GEN_263 | _GEN_235;
+          _GEN_2688 = written_vec_3 ? _GEN_311 | _GEN_2687 : _GEN_282 | _GEN_2687;
+          _GEN_2689 = _GEN_334 & _GEN_329;
+          _GEN_2690 = _GEN_2528 & load_index == 4'hC;
+          _GEN_2691 = fire_store & _GEN_2528 & _GEN_2541;
+          _GEN_2692 = _GEN_2545 & CDB_write_index == 4'hC;
+          _GEN_2693 =
             {matrix_15[12],
              matrix_14[12],
              matrix_13[12],
@@ -16326,142 +16298,142 @@ module MOB(
              matrix_3[12],
              matrix_2[12],
              matrix_1[12],
-             matrix_0[12]} == 16'h0 & _is_complete_T_537;
+             matrix_0[12]} == 16'h0 & MOB_12_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2695;
-            _GEN_2695 = _selected_MOB_entry_for_commit_T_14 == 4'hC;
+            automatic logic _GEN_2694;
+            _GEN_2694 = _selected_MOB_entry_for_commit_T_14 == 4'hC;
             if (_GEN_219) begin
-              if (_GEN_2695)
+              if (_GEN_2694)
                 MOB_12_MOB_STATE <= 4'h9;
-              else if (_GEN_2694)
-                MOB_12_MOB_STATE <= 4'h6;
               else if (_GEN_2693)
+                MOB_12_MOB_STATE <= 4'h6;
+              else if (_GEN_2692)
                 MOB_12_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2687)
+              else if (_GEN_2686)
                 MOB_12_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2691)
+                if (_GEN_2690)
                   MOB_12_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_329)
                       MOB_12_MOB_STATE <= 4'h2;
-                    else if (_GEN_2689)
+                    else if (_GEN_2688)
                       MOB_12_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2690)
-                    MOB_12_MOB_STATE <= 4'h6;
                   else if (_GEN_2689)
+                    MOB_12_MOB_STATE <= 4'h6;
+                  else if (_GEN_2688)
                     MOB_12_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2689)
+                else if (_GEN_2688)
                   MOB_12_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2692)
+              else if (_GEN_2691)
                 MOB_12_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_329)
                     MOB_12_MOB_STATE <= 4'h2;
-                  else if (_GEN_2689)
+                  else if (_GEN_2688)
                     MOB_12_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2690)
-                  MOB_12_MOB_STATE <= 4'h6;
                 else if (_GEN_2689)
+                  MOB_12_MOB_STATE <= 4'h6;
+                else if (_GEN_2688)
                   MOB_12_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2689)
+              else if (_GEN_2688)
                 MOB_12_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2695)
+            else if (_GEN_220 & _GEN_2694)
               MOB_12_MOB_STATE <= 4'h7;
-            else if (_GEN_2694)
-              MOB_12_MOB_STATE <= 4'h6;
             else if (_GEN_2693)
+              MOB_12_MOB_STATE <= 4'h6;
+            else if (_GEN_2692)
               MOB_12_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2687)
+            else if (_GEN_2686)
               MOB_12_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2691)
+              if (_GEN_2690)
                 MOB_12_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_329)
                     MOB_12_MOB_STATE <= 4'h2;
-                  else if (_GEN_2689)
+                  else if (_GEN_2688)
                     MOB_12_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2690)
-                  MOB_12_MOB_STATE <= 4'h6;
                 else if (_GEN_2689)
+                  MOB_12_MOB_STATE <= 4'h6;
+                else if (_GEN_2688)
                   MOB_12_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2689)
+              else if (_GEN_2688)
                 MOB_12_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2692)
+            else if (_GEN_2691)
               MOB_12_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_329)
                   MOB_12_MOB_STATE <= 4'h2;
-                else if (_GEN_2689)
+                else if (_GEN_2688)
                   MOB_12_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2690)
-                MOB_12_MOB_STATE <= 4'h6;
               else if (_GEN_2689)
+                MOB_12_MOB_STATE <= 4'h6;
+              else if (_GEN_2688)
                 MOB_12_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2689)
+            else if (_GEN_2688)
               MOB_12_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2694)
-            MOB_12_MOB_STATE <= 4'h6;
           else if (_GEN_2693)
+            MOB_12_MOB_STATE <= 4'h6;
+          else if (_GEN_2692)
             MOB_12_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2687)
+          else if (_GEN_2686)
             MOB_12_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2691)
+            if (_GEN_2690)
               MOB_12_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_329)
                   MOB_12_MOB_STATE <= 4'h2;
-                else if (_GEN_2689)
+                else if (_GEN_2688)
                   MOB_12_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2690)
-                MOB_12_MOB_STATE <= 4'h6;
               else if (_GEN_2689)
+                MOB_12_MOB_STATE <= 4'h6;
+              else if (_GEN_2688)
                 MOB_12_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2689)
+            else if (_GEN_2688)
               MOB_12_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2692)
+          else if (_GEN_2691)
             MOB_12_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_329)
                 MOB_12_MOB_STATE <= 4'h2;
-              else if (_GEN_2689)
+              else if (_GEN_2688)
                 MOB_12_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2690)
-              MOB_12_MOB_STATE <= 4'h6;
             else if (_GEN_2689)
+              MOB_12_MOB_STATE <= 4'h6;
+            else if (_GEN_2688)
               MOB_12_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2689)
+          else if (_GEN_2688)
             MOB_12_MOB_STATE <= 4'h1;
         end
       end
-      MOB_12_data_valid <= ~_GEN_2562 & MOB_12_data_valid;
+      MOB_12_data_valid <= ~_GEN_2561 & MOB_12_data_valid;
       MOB_12_fwd_valid_0 <=
-        ~_GEN_2562
+        ~_GEN_2561
         & (_GEN_1714
              ? byte_sels_14_0
              : _GEN_1696
@@ -16524,7 +16496,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_12_fwd_valid_0);
       MOB_12_fwd_valid_1 <=
-        ~_GEN_2562
+        ~_GEN_2561
         & (_GEN_1984
              ? byte_sels_14_1
              : _GEN_1966
@@ -16587,7 +16559,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_12_fwd_valid_1);
       MOB_12_fwd_valid_2 <=
-        ~_GEN_2562
+        ~_GEN_2561
         & (_GEN_2254
              ? byte_sels_14_2
              : _GEN_2236
@@ -16650,7 +16622,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_12_fwd_valid_2);
       MOB_12_fwd_valid_3 <=
-        ~_GEN_2562
+        ~_GEN_2561
         & (_GEN_2524
              ? byte_sels_14_3
              : _GEN_2506
@@ -16713,14 +16685,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_12_fwd_valid_3);
       MOB_12_violation <=
-        ~_GEN_2562
+        ~_GEN_2561
         & (io_AGU_output_valid & age_vector_12 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_409 & MOB_12_valid
-           & incoming_is_store & is_load_12
-           & (_MOB_update_commit_T_12 | _is_complete_T_537) | MOB_12_violation);
+           & incoming_is_store & is_load_12 & MOB_12_MOB_STATE != 4'h1
+           & (|MOB_12_MOB_STATE) | MOB_12_violation);
       MOB_13_valid <=
-        ~_GEN_2563 & (written_vec_3 ? _GEN_313 | _GEN_266 : _GEN_283 | _GEN_266);
-      if (_GEN_2563) begin
+        ~_GEN_2562 & (written_vec_3 ? _GEN_313 | _GEN_266 : _GEN_283 | _GEN_266);
+      if (_GEN_2562) begin
         MOB_13_memory_type <= 2'h0;
         MOB_13_ROB_index <= 6'h0;
         MOB_13_fetch_packet_index <= 2'h0;
@@ -16735,10 +16707,10 @@ module MOB(
         MOB_13_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2695;
         automatic logic _GEN_2696;
-        automatic logic _GEN_2697;
-        _GEN_2696 = io_AGU_output_valid & _GEN_330;
-        _GEN_2697 =
+        _GEN_2695 = io_AGU_output_valid & _GEN_330;
+        _GEN_2696 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'hD;
         if (written_vec_3 & _GEN_312) begin
@@ -16769,11 +16741,11 @@ module MOB(
           MOB_13_access_width <= io_reserve_0_bits_access_width;
           MOB_13_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2696)
+        if (_GEN_2695)
           MOB_13_address <= io_AGU_output_bits_address;
-        if (_GEN_2697)
+        if (_GEN_2696)
           MOB_13_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2696)
+        else if (_GEN_2695)
           MOB_13_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1715)
           MOB_13_fwd_data_0 <= wr_bytes_14_0;
@@ -17019,20 +16991,20 @@ module MOB(
             & is_store_13)
           MOB_13_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2697;
           automatic logic _GEN_2698;
           automatic logic _GEN_2699;
           automatic logic _GEN_2700;
           automatic logic _GEN_2701;
           automatic logic _GEN_2702;
           automatic logic _GEN_2703;
-          automatic logic _GEN_2704;
-          _GEN_2698 = written_vec_1 & _GEN_265 | _GEN_236;
-          _GEN_2699 = written_vec_3 ? _GEN_313 | _GEN_2698 : _GEN_283 | _GEN_2698;
-          _GEN_2700 = _GEN_334 & _GEN_330;
-          _GEN_2701 = _GEN_2528 & load_index == 4'hD;
-          _GEN_2702 = fire_store & _GEN_2528 & _GEN_2542;
-          _GEN_2703 = _GEN_2545 & CDB_write_index == 4'hD;
-          _GEN_2704 =
+          _GEN_2697 = written_vec_1 & _GEN_265 | _GEN_236;
+          _GEN_2698 = written_vec_3 ? _GEN_313 | _GEN_2697 : _GEN_283 | _GEN_2697;
+          _GEN_2699 = _GEN_334 & _GEN_330;
+          _GEN_2700 = _GEN_2528 & load_index == 4'hD;
+          _GEN_2701 = fire_store & _GEN_2528 & _GEN_2542;
+          _GEN_2702 = _GEN_2545 & CDB_write_index == 4'hD;
+          _GEN_2703 =
             {matrix_15[13],
              matrix_14[13],
              matrix_13[13],
@@ -17048,142 +17020,142 @@ module MOB(
              matrix_3[13],
              matrix_2[13],
              matrix_1[13],
-             matrix_0[13]} == 16'h0 & _is_complete_T_539;
+             matrix_0[13]} == 16'h0 & MOB_13_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2705;
-            _GEN_2705 = _selected_MOB_entry_for_commit_T_14 == 4'hD;
+            automatic logic _GEN_2704;
+            _GEN_2704 = _selected_MOB_entry_for_commit_T_14 == 4'hD;
             if (_GEN_219) begin
-              if (_GEN_2705)
+              if (_GEN_2704)
                 MOB_13_MOB_STATE <= 4'h9;
-              else if (_GEN_2704)
-                MOB_13_MOB_STATE <= 4'h6;
               else if (_GEN_2703)
+                MOB_13_MOB_STATE <= 4'h6;
+              else if (_GEN_2702)
                 MOB_13_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2697)
+              else if (_GEN_2696)
                 MOB_13_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2701)
+                if (_GEN_2700)
                   MOB_13_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_330)
                       MOB_13_MOB_STATE <= 4'h2;
-                    else if (_GEN_2699)
+                    else if (_GEN_2698)
                       MOB_13_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2700)
-                    MOB_13_MOB_STATE <= 4'h6;
                   else if (_GEN_2699)
+                    MOB_13_MOB_STATE <= 4'h6;
+                  else if (_GEN_2698)
                     MOB_13_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2699)
+                else if (_GEN_2698)
                   MOB_13_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2702)
+              else if (_GEN_2701)
                 MOB_13_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_330)
                     MOB_13_MOB_STATE <= 4'h2;
-                  else if (_GEN_2699)
+                  else if (_GEN_2698)
                     MOB_13_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2700)
-                  MOB_13_MOB_STATE <= 4'h6;
                 else if (_GEN_2699)
+                  MOB_13_MOB_STATE <= 4'h6;
+                else if (_GEN_2698)
                   MOB_13_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2699)
+              else if (_GEN_2698)
                 MOB_13_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2705)
+            else if (_GEN_220 & _GEN_2704)
               MOB_13_MOB_STATE <= 4'h7;
-            else if (_GEN_2704)
-              MOB_13_MOB_STATE <= 4'h6;
             else if (_GEN_2703)
+              MOB_13_MOB_STATE <= 4'h6;
+            else if (_GEN_2702)
               MOB_13_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2697)
+            else if (_GEN_2696)
               MOB_13_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2701)
+              if (_GEN_2700)
                 MOB_13_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_330)
                     MOB_13_MOB_STATE <= 4'h2;
-                  else if (_GEN_2699)
+                  else if (_GEN_2698)
                     MOB_13_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2700)
-                  MOB_13_MOB_STATE <= 4'h6;
                 else if (_GEN_2699)
+                  MOB_13_MOB_STATE <= 4'h6;
+                else if (_GEN_2698)
                   MOB_13_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2699)
+              else if (_GEN_2698)
                 MOB_13_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2702)
+            else if (_GEN_2701)
               MOB_13_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_330)
                   MOB_13_MOB_STATE <= 4'h2;
-                else if (_GEN_2699)
+                else if (_GEN_2698)
                   MOB_13_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2700)
-                MOB_13_MOB_STATE <= 4'h6;
               else if (_GEN_2699)
+                MOB_13_MOB_STATE <= 4'h6;
+              else if (_GEN_2698)
                 MOB_13_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2699)
+            else if (_GEN_2698)
               MOB_13_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2704)
-            MOB_13_MOB_STATE <= 4'h6;
           else if (_GEN_2703)
+            MOB_13_MOB_STATE <= 4'h6;
+          else if (_GEN_2702)
             MOB_13_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2697)
+          else if (_GEN_2696)
             MOB_13_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2701)
+            if (_GEN_2700)
               MOB_13_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_330)
                   MOB_13_MOB_STATE <= 4'h2;
-                else if (_GEN_2699)
+                else if (_GEN_2698)
                   MOB_13_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2700)
-                MOB_13_MOB_STATE <= 4'h6;
               else if (_GEN_2699)
+                MOB_13_MOB_STATE <= 4'h6;
+              else if (_GEN_2698)
                 MOB_13_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2699)
+            else if (_GEN_2698)
               MOB_13_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2702)
+          else if (_GEN_2701)
             MOB_13_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_330)
                 MOB_13_MOB_STATE <= 4'h2;
-              else if (_GEN_2699)
+              else if (_GEN_2698)
                 MOB_13_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2700)
-              MOB_13_MOB_STATE <= 4'h6;
             else if (_GEN_2699)
+              MOB_13_MOB_STATE <= 4'h6;
+            else if (_GEN_2698)
               MOB_13_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2699)
+          else if (_GEN_2698)
             MOB_13_MOB_STATE <= 4'h1;
         end
       end
-      MOB_13_data_valid <= ~_GEN_2563 & MOB_13_data_valid;
+      MOB_13_data_valid <= ~_GEN_2562 & MOB_13_data_valid;
       MOB_13_fwd_valid_0 <=
-        ~_GEN_2563
+        ~_GEN_2562
         & (_GEN_1715
              ? byte_sels_14_0
              : _GEN_1697
@@ -17246,7 +17218,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_13_fwd_valid_0);
       MOB_13_fwd_valid_1 <=
-        ~_GEN_2563
+        ~_GEN_2562
         & (_GEN_1985
              ? byte_sels_14_1
              : _GEN_1967
@@ -17309,7 +17281,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_13_fwd_valid_1);
       MOB_13_fwd_valid_2 <=
-        ~_GEN_2563
+        ~_GEN_2562
         & (_GEN_2255
              ? byte_sels_14_2
              : _GEN_2237
@@ -17372,7 +17344,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_13_fwd_valid_2);
       MOB_13_fwd_valid_3 <=
-        ~_GEN_2563
+        ~_GEN_2562
         & (_GEN_2525
              ? byte_sels_14_3
              : _GEN_2507
@@ -17435,14 +17407,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_13_fwd_valid_3);
       MOB_13_violation <=
-        ~_GEN_2563
+        ~_GEN_2562
         & (io_AGU_output_valid & age_vector_13 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_411 & MOB_13_valid
-           & incoming_is_store & is_load_13
-           & (_MOB_update_commit_T_13 | _is_complete_T_539) | MOB_13_violation);
+           & incoming_is_store & is_load_13 & MOB_13_MOB_STATE != 4'h1
+           & (|MOB_13_MOB_STATE) | MOB_13_violation);
       MOB_14_valid <=
-        ~_GEN_2564 & (written_vec_3 ? _GEN_315 | _GEN_268 : _GEN_284 | _GEN_268);
-      if (_GEN_2564) begin
+        ~_GEN_2563 & (written_vec_3 ? _GEN_315 | _GEN_268 : _GEN_284 | _GEN_268);
+      if (_GEN_2563) begin
         MOB_14_memory_type <= 2'h0;
         MOB_14_ROB_index <= 6'h0;
         MOB_14_fetch_packet_index <= 2'h0;
@@ -17457,10 +17429,10 @@ module MOB(
         MOB_14_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2705;
         automatic logic _GEN_2706;
-        automatic logic _GEN_2707;
-        _GEN_2706 = io_AGU_output_valid & _GEN_331;
-        _GEN_2707 =
+        _GEN_2705 = io_AGU_output_valid & _GEN_331;
+        _GEN_2706 =
           io_backend_memory_response_valid & _GEN_2544
           & io_backend_memory_response_bits_MOB_index == 4'hE;
         if (written_vec_3 & _GEN_314) begin
@@ -17491,11 +17463,11 @@ module MOB(
           MOB_14_access_width <= io_reserve_0_bits_access_width;
           MOB_14_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2706)
+        if (_GEN_2705)
           MOB_14_address <= io_AGU_output_bits_address;
-        if (_GEN_2707)
+        if (_GEN_2706)
           MOB_14_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2706)
+        else if (_GEN_2705)
           MOB_14_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1716)
           MOB_14_fwd_data_0 <= wr_bytes_14_0;
@@ -17741,20 +17713,20 @@ module MOB(
             & is_store_14)
           MOB_14_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2707;
           automatic logic _GEN_2708;
           automatic logic _GEN_2709;
           automatic logic _GEN_2710;
           automatic logic _GEN_2711;
           automatic logic _GEN_2712;
           automatic logic _GEN_2713;
-          automatic logic _GEN_2714;
-          _GEN_2708 = written_vec_1 & _GEN_267 | _GEN_237;
-          _GEN_2709 = written_vec_3 ? _GEN_315 | _GEN_2708 : _GEN_284 | _GEN_2708;
-          _GEN_2710 = _GEN_334 & _GEN_331;
-          _GEN_2711 = _GEN_2528 & load_index == 4'hE;
-          _GEN_2712 = fire_store & _GEN_2528 & _GEN_2543;
-          _GEN_2713 = _GEN_2545 & CDB_write_index == 4'hE;
-          _GEN_2714 =
+          _GEN_2707 = written_vec_1 & _GEN_267 | _GEN_237;
+          _GEN_2708 = written_vec_3 ? _GEN_315 | _GEN_2707 : _GEN_284 | _GEN_2707;
+          _GEN_2709 = _GEN_334 & _GEN_331;
+          _GEN_2710 = _GEN_2528 & load_index == 4'hE;
+          _GEN_2711 = fire_store & _GEN_2528 & _GEN_2543;
+          _GEN_2712 = _GEN_2545 & CDB_write_index == 4'hE;
+          _GEN_2713 =
             {matrix_15[14],
              matrix_14[14],
              matrix_13[14],
@@ -17770,142 +17742,142 @@ module MOB(
              matrix_3[14],
              matrix_2[14],
              matrix_1[14],
-             matrix_0[14]} == 16'h0 & _is_complete_T_541;
+             matrix_0[14]} == 16'h0 & MOB_14_MOB_STATE == 4'h5;
           if (_GEN_218) begin
-            automatic logic _GEN_2715;
-            _GEN_2715 = _selected_MOB_entry_for_commit_T_14 == 4'hE;
+            automatic logic _GEN_2714;
+            _GEN_2714 = _selected_MOB_entry_for_commit_T_14 == 4'hE;
             if (_GEN_219) begin
-              if (_GEN_2715)
+              if (_GEN_2714)
                 MOB_14_MOB_STATE <= 4'h9;
-              else if (_GEN_2714)
-                MOB_14_MOB_STATE <= 4'h6;
               else if (_GEN_2713)
+                MOB_14_MOB_STATE <= 4'h6;
+              else if (_GEN_2712)
                 MOB_14_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2707)
+              else if (_GEN_2706)
                 MOB_14_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2711)
+                if (_GEN_2710)
                   MOB_14_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (_GEN_331)
                       MOB_14_MOB_STATE <= 4'h2;
-                    else if (_GEN_2709)
+                    else if (_GEN_2708)
                       MOB_14_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2710)
-                    MOB_14_MOB_STATE <= 4'h6;
                   else if (_GEN_2709)
+                    MOB_14_MOB_STATE <= 4'h6;
+                  else if (_GEN_2708)
                     MOB_14_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2709)
+                else if (_GEN_2708)
                   MOB_14_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2712)
+              else if (_GEN_2711)
                 MOB_14_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_331)
                     MOB_14_MOB_STATE <= 4'h2;
-                  else if (_GEN_2709)
+                  else if (_GEN_2708)
                     MOB_14_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2710)
-                  MOB_14_MOB_STATE <= 4'h6;
                 else if (_GEN_2709)
+                  MOB_14_MOB_STATE <= 4'h6;
+                else if (_GEN_2708)
                   MOB_14_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2709)
+              else if (_GEN_2708)
                 MOB_14_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_220 & _GEN_2715)
+            else if (_GEN_220 & _GEN_2714)
               MOB_14_MOB_STATE <= 4'h7;
-            else if (_GEN_2714)
-              MOB_14_MOB_STATE <= 4'h6;
             else if (_GEN_2713)
+              MOB_14_MOB_STATE <= 4'h6;
+            else if (_GEN_2712)
               MOB_14_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2707)
+            else if (_GEN_2706)
               MOB_14_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2711)
+              if (_GEN_2710)
                 MOB_14_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (_GEN_331)
                     MOB_14_MOB_STATE <= 4'h2;
-                  else if (_GEN_2709)
+                  else if (_GEN_2708)
                     MOB_14_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2710)
-                  MOB_14_MOB_STATE <= 4'h6;
                 else if (_GEN_2709)
+                  MOB_14_MOB_STATE <= 4'h6;
+                else if (_GEN_2708)
                   MOB_14_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2709)
+              else if (_GEN_2708)
                 MOB_14_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2712)
+            else if (_GEN_2711)
               MOB_14_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_331)
                   MOB_14_MOB_STATE <= 4'h2;
-                else if (_GEN_2709)
+                else if (_GEN_2708)
                   MOB_14_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2710)
-                MOB_14_MOB_STATE <= 4'h6;
               else if (_GEN_2709)
+                MOB_14_MOB_STATE <= 4'h6;
+              else if (_GEN_2708)
                 MOB_14_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2709)
+            else if (_GEN_2708)
               MOB_14_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2714)
-            MOB_14_MOB_STATE <= 4'h6;
           else if (_GEN_2713)
+            MOB_14_MOB_STATE <= 4'h6;
+          else if (_GEN_2712)
             MOB_14_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2707)
+          else if (_GEN_2706)
             MOB_14_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2711)
+            if (_GEN_2710)
               MOB_14_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (_GEN_331)
                   MOB_14_MOB_STATE <= 4'h2;
-                else if (_GEN_2709)
+                else if (_GEN_2708)
                   MOB_14_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2710)
-                MOB_14_MOB_STATE <= 4'h6;
               else if (_GEN_2709)
+                MOB_14_MOB_STATE <= 4'h6;
+              else if (_GEN_2708)
                 MOB_14_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2709)
+            else if (_GEN_2708)
               MOB_14_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2712)
+          else if (_GEN_2711)
             MOB_14_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (_GEN_331)
                 MOB_14_MOB_STATE <= 4'h2;
-              else if (_GEN_2709)
+              else if (_GEN_2708)
                 MOB_14_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2710)
-              MOB_14_MOB_STATE <= 4'h6;
             else if (_GEN_2709)
+              MOB_14_MOB_STATE <= 4'h6;
+            else if (_GEN_2708)
               MOB_14_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2709)
+          else if (_GEN_2708)
             MOB_14_MOB_STATE <= 4'h1;
         end
       end
-      MOB_14_data_valid <= ~_GEN_2564 & MOB_14_data_valid;
+      MOB_14_data_valid <= ~_GEN_2563 & MOB_14_data_valid;
       MOB_14_fwd_valid_0 <=
-        ~_GEN_2564
+        ~_GEN_2563
         & (_GEN_1716
              ? byte_sels_14_0
              : _GEN_1698
@@ -17968,7 +17940,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_14_fwd_valid_0);
       MOB_14_fwd_valid_1 <=
-        ~_GEN_2564
+        ~_GEN_2563
         & (_GEN_1986
              ? byte_sels_14_1
              : _GEN_1968
@@ -18031,7 +18003,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_14_fwd_valid_1);
       MOB_14_fwd_valid_2 <=
-        ~_GEN_2564
+        ~_GEN_2563
         & (_GEN_2256
              ? byte_sels_14_2
              : _GEN_2238
@@ -18094,7 +18066,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_14_fwd_valid_2);
       MOB_14_fwd_valid_3 <=
-        ~_GEN_2564
+        ~_GEN_2563
         & (_GEN_2526
              ? byte_sels_14_3
              : _GEN_2508
@@ -18157,14 +18129,14 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_14_fwd_valid_3);
       MOB_14_violation <=
-        ~_GEN_2564
+        ~_GEN_2563
         & (io_AGU_output_valid & age_vector_14 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_413 & MOB_14_valid
-           & incoming_is_store & is_load_14
-           & (_MOB_update_commit_T_14 | _is_complete_T_541) | MOB_14_violation);
+           & incoming_is_store & is_load_14 & MOB_14_MOB_STATE != 4'h1
+           & (|MOB_14_MOB_STATE) | MOB_14_violation);
       MOB_15_valid <=
-        ~_GEN_2565 & (written_vec_3 ? _GEN_316 | _GEN_269 : _GEN_285 | _GEN_269);
-      if (_GEN_2565) begin
+        ~_GEN_2564 & (written_vec_3 ? _GEN_316 | _GEN_269 : _GEN_285 | _GEN_269);
+      if (_GEN_2564) begin
         MOB_15_memory_type <= 2'h0;
         MOB_15_ROB_index <= 6'h0;
         MOB_15_fetch_packet_index <= 2'h0;
@@ -18179,10 +18151,10 @@ module MOB(
         MOB_15_MOB_STATE <= 4'h0;
       end
       else begin
+        automatic logic _GEN_2715;
         automatic logic _GEN_2716;
-        automatic logic _GEN_2717;
-        _GEN_2716 = io_AGU_output_valid & (&io_AGU_output_bits_MOB_index);
-        _GEN_2717 =
+        _GEN_2715 = io_AGU_output_valid & (&io_AGU_output_bits_MOB_index);
+        _GEN_2716 =
           io_backend_memory_response_valid & _GEN_2544
           & (&io_backend_memory_response_bits_MOB_index);
         if (written_vec_3 & (&_io_reserved_pointers_3_bits_T)) begin
@@ -18213,11 +18185,11 @@ module MOB(
           MOB_15_access_width <= io_reserve_0_bits_access_width;
           MOB_15_RD <= io_reserve_0_bits_RD;
         end
-        if (_GEN_2716)
+        if (_GEN_2715)
           MOB_15_address <= io_AGU_output_bits_address;
-        if (_GEN_2717)
+        if (_GEN_2716)
           MOB_15_data <= _MOB_data_T_1[31:0];
-        else if (_GEN_2716)
+        else if (_GEN_2715)
           MOB_15_data <= io_AGU_output_bits_wr_data;
         if (_GEN_1717)
           MOB_15_fwd_data_0 <= wr_bytes_14_0;
@@ -18463,20 +18435,20 @@ module MOB(
             & is_store_15)
           MOB_15_MOB_STATE <= 4'h8;
         else begin
+          automatic logic _GEN_2717;
           automatic logic _GEN_2718;
           automatic logic _GEN_2719;
           automatic logic _GEN_2720;
           automatic logic _GEN_2721;
           automatic logic _GEN_2722;
           automatic logic _GEN_2723;
-          automatic logic _GEN_2724;
-          _GEN_2718 = written_vec_1 & (&_io_reserved_pointers_1_bits_T) | _GEN_238;
-          _GEN_2719 = written_vec_3 ? _GEN_316 | _GEN_2718 : _GEN_285 | _GEN_2718;
-          _GEN_2720 = _GEN_334 & (&io_AGU_output_bits_MOB_index);
-          _GEN_2721 = _GEN_2528 & (&load_index);
-          _GEN_2722 = fire_store & _GEN_2528 & (&age_vector_15);
-          _GEN_2723 = _GEN_2545 & (&CDB_write_index);
-          _GEN_2724 =
+          _GEN_2717 = written_vec_1 & (&_io_reserved_pointers_1_bits_T) | _GEN_238;
+          _GEN_2718 = written_vec_3 ? _GEN_316 | _GEN_2717 : _GEN_285 | _GEN_2717;
+          _GEN_2719 = _GEN_334 & (&io_AGU_output_bits_MOB_index);
+          _GEN_2720 = _GEN_2528 & (&load_index);
+          _GEN_2721 = fire_store & _GEN_2528 & (&age_vector_15);
+          _GEN_2722 = _GEN_2545 & (&CDB_write_index);
+          _GEN_2723 =
             {matrix_15[15],
              matrix_14[15],
              matrix_13[15],
@@ -18492,140 +18464,140 @@ module MOB(
              matrix_3[15],
              matrix_2[15],
              matrix_1[15],
-             matrix_0[15]} == 16'h0 & _is_complete_T_543;
+             matrix_0[15]} == 16'h0 & MOB_15_MOB_STATE == 4'h5;
           if (_GEN_218) begin
             if (_GEN_219) begin
               if (&_selected_MOB_entry_for_commit_T_14)
                 MOB_15_MOB_STATE <= 4'h9;
-              else if (_GEN_2724)
-                MOB_15_MOB_STATE <= 4'h6;
               else if (_GEN_2723)
+                MOB_15_MOB_STATE <= 4'h6;
+              else if (_GEN_2722)
                 MOB_15_MOB_STATE <= _GEN_2547;
-              else if (_GEN_2717)
+              else if (_GEN_2716)
                 MOB_15_MOB_STATE <= 4'h4;
               else if (_GEN_202) begin
-                if (_GEN_2721)
+                if (_GEN_2720)
                   MOB_15_MOB_STATE <= 4'h3;
                 else if (io_AGU_output_valid) begin
                   if (_GEN_333) begin
                     if (&io_AGU_output_bits_MOB_index)
                       MOB_15_MOB_STATE <= 4'h2;
-                    else if (_GEN_2719)
+                    else if (_GEN_2718)
                       MOB_15_MOB_STATE <= 4'h1;
                   end
-                  else if (_GEN_2720)
-                    MOB_15_MOB_STATE <= 4'h6;
                   else if (_GEN_2719)
+                    MOB_15_MOB_STATE <= 4'h6;
+                  else if (_GEN_2718)
                     MOB_15_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2719)
+                else if (_GEN_2718)
                   MOB_15_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2722)
+              else if (_GEN_2721)
                 MOB_15_MOB_STATE <= 4'h9;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (&io_AGU_output_bits_MOB_index)
                     MOB_15_MOB_STATE <= 4'h2;
-                  else if (_GEN_2719)
+                  else if (_GEN_2718)
                     MOB_15_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2720)
-                  MOB_15_MOB_STATE <= 4'h6;
                 else if (_GEN_2719)
+                  MOB_15_MOB_STATE <= 4'h6;
+                else if (_GEN_2718)
                   MOB_15_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2719)
+              else if (_GEN_2718)
                 MOB_15_MOB_STATE <= 4'h1;
             end
             else if (_GEN_220 & (&_selected_MOB_entry_for_commit_T_14))
               MOB_15_MOB_STATE <= 4'h7;
-            else if (_GEN_2724)
-              MOB_15_MOB_STATE <= 4'h6;
             else if (_GEN_2723)
+              MOB_15_MOB_STATE <= 4'h6;
+            else if (_GEN_2722)
               MOB_15_MOB_STATE <= _GEN_2547;
-            else if (_GEN_2717)
+            else if (_GEN_2716)
               MOB_15_MOB_STATE <= 4'h4;
             else if (_GEN_202) begin
-              if (_GEN_2721)
+              if (_GEN_2720)
                 MOB_15_MOB_STATE <= 4'h3;
               else if (io_AGU_output_valid) begin
                 if (_GEN_333) begin
                   if (&io_AGU_output_bits_MOB_index)
                     MOB_15_MOB_STATE <= 4'h2;
-                  else if (_GEN_2719)
+                  else if (_GEN_2718)
                     MOB_15_MOB_STATE <= 4'h1;
                 end
-                else if (_GEN_2720)
-                  MOB_15_MOB_STATE <= 4'h6;
                 else if (_GEN_2719)
+                  MOB_15_MOB_STATE <= 4'h6;
+                else if (_GEN_2718)
                   MOB_15_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2719)
+              else if (_GEN_2718)
                 MOB_15_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2722)
+            else if (_GEN_2721)
               MOB_15_MOB_STATE <= 4'h9;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (&io_AGU_output_bits_MOB_index)
                   MOB_15_MOB_STATE <= 4'h2;
-                else if (_GEN_2719)
+                else if (_GEN_2718)
                   MOB_15_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2720)
-                MOB_15_MOB_STATE <= 4'h6;
               else if (_GEN_2719)
+                MOB_15_MOB_STATE <= 4'h6;
+              else if (_GEN_2718)
                 MOB_15_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2719)
+            else if (_GEN_2718)
               MOB_15_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2724)
-            MOB_15_MOB_STATE <= 4'h6;
           else if (_GEN_2723)
+            MOB_15_MOB_STATE <= 4'h6;
+          else if (_GEN_2722)
             MOB_15_MOB_STATE <= _GEN_2547;
-          else if (_GEN_2717)
+          else if (_GEN_2716)
             MOB_15_MOB_STATE <= 4'h4;
           else if (_GEN_202) begin
-            if (_GEN_2721)
+            if (_GEN_2720)
               MOB_15_MOB_STATE <= 4'h3;
             else if (io_AGU_output_valid) begin
               if (_GEN_333) begin
                 if (&io_AGU_output_bits_MOB_index)
                   MOB_15_MOB_STATE <= 4'h2;
-                else if (_GEN_2719)
+                else if (_GEN_2718)
                   MOB_15_MOB_STATE <= 4'h1;
               end
-              else if (_GEN_2720)
-                MOB_15_MOB_STATE <= 4'h6;
               else if (_GEN_2719)
+                MOB_15_MOB_STATE <= 4'h6;
+              else if (_GEN_2718)
                 MOB_15_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2719)
+            else if (_GEN_2718)
               MOB_15_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2722)
+          else if (_GEN_2721)
             MOB_15_MOB_STATE <= 4'h9;
           else if (io_AGU_output_valid) begin
             if (_GEN_333) begin
               if (&io_AGU_output_bits_MOB_index)
                 MOB_15_MOB_STATE <= 4'h2;
-              else if (_GEN_2719)
+              else if (_GEN_2718)
                 MOB_15_MOB_STATE <= 4'h1;
             end
-            else if (_GEN_2720)
-              MOB_15_MOB_STATE <= 4'h6;
             else if (_GEN_2719)
+              MOB_15_MOB_STATE <= 4'h6;
+            else if (_GEN_2718)
               MOB_15_MOB_STATE <= 4'h1;
           end
-          else if (_GEN_2719)
+          else if (_GEN_2718)
             MOB_15_MOB_STATE <= 4'h1;
         end
       end
-      MOB_15_data_valid <= ~_GEN_2565 & MOB_15_data_valid;
+      MOB_15_data_valid <= ~_GEN_2564 & MOB_15_data_valid;
       MOB_15_fwd_valid_0 <=
-        ~_GEN_2565
+        ~_GEN_2564
         & (_GEN_1717
              ? byte_sels_14_0
              : _GEN_1699
@@ -18688,7 +18660,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_0
                                                                                                                                  : MOB_15_fwd_valid_0);
       MOB_15_fwd_valid_1 <=
-        ~_GEN_2565
+        ~_GEN_2564
         & (_GEN_1987
              ? byte_sels_14_1
              : _GEN_1969
@@ -18751,7 +18723,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_1
                                                                                                                                  : MOB_15_fwd_valid_1);
       MOB_15_fwd_valid_2 <=
-        ~_GEN_2565
+        ~_GEN_2564
         & (_GEN_2257
              ? byte_sels_14_2
              : _GEN_2239
@@ -18814,7 +18786,7 @@ module MOB(
                                                                                                                                  ? byte_sels_1_2
                                                                                                                                  : MOB_15_fwd_valid_2);
       MOB_15_fwd_valid_3 <=
-        ~_GEN_2565
+        ~_GEN_2564
         & (_GEN_2527
              ? byte_sels_14_3
              : _GEN_2509
@@ -18877,12 +18849,12 @@ module MOB(
                                                                                                                                  ? byte_sels_1_3
                                                                                                                                  : MOB_15_fwd_valid_3);
       MOB_15_violation <=
-        ~_GEN_2565
+        ~_GEN_2564
         & (io_AGU_output_valid & age_vector_15 < _GEN_335[io_AGU_output_bits_MOB_index]
            & _is_conflicting_T_414 == _is_conflicting_T_415 & MOB_15_valid
-           & incoming_is_store & MOB_15_memory_type == 2'h1
-           & (_MOB_update_commit_T_15 | _is_complete_T_543) | MOB_15_violation);
-      if (_GEN_2549) begin
+           & incoming_is_store & MOB_15_memory_type == 2'h1 & MOB_15_MOB_STATE != 4'h1
+           & (|MOB_15_MOB_STATE) | MOB_15_violation);
+      if (io_flush) begin
         front_pointer <= 5'h0;
         back_pointer <= 5'h0;
       end
@@ -18895,199 +18867,199 @@ module MOB(
       if (io_AGU_output_valid & _GEN_332 == 4'h0)
         matrix_0 <= 16'h0;
       else begin
+        automatic logic _GEN_2724;
         automatic logic _GEN_2725;
         automatic logic _GEN_2726;
-        automatic logic _GEN_2727;
-        _GEN_2725 = _GEN_222 == 4'h0;
-        _GEN_2726 = written_vec_1 & _GEN_2725 | written_vec_0 & _GEN_2725;
-        _GEN_2727 = written_vec_2 & _GEN_2725;
-        if (written_vec_3 ? _GEN_2725 | _GEN_2727 | _GEN_2726 : _GEN_2727 | _GEN_2726)
+        _GEN_2724 = _GEN_222 == 4'h0;
+        _GEN_2725 = written_vec_1 & _GEN_2724 | written_vec_0 & _GEN_2724;
+        _GEN_2726 = written_vec_2 & _GEN_2724;
+        if (written_vec_3 ? _GEN_2724 | _GEN_2726 | _GEN_2725 : _GEN_2726 | _GEN_2725)
           matrix_0 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h1)
         matrix_1 <= 16'h0;
       else begin
+        automatic logic _GEN_2727;
         automatic logic _GEN_2728;
         automatic logic _GEN_2729;
-        automatic logic _GEN_2730;
-        _GEN_2728 = _GEN_222 == 4'h1;
-        _GEN_2729 = written_vec_1 & _GEN_2728 | written_vec_0 & _GEN_2728;
-        _GEN_2730 = written_vec_2 & _GEN_2728;
-        if (written_vec_3 ? _GEN_2728 | _GEN_2730 | _GEN_2729 : _GEN_2730 | _GEN_2729)
+        _GEN_2727 = _GEN_222 == 4'h1;
+        _GEN_2728 = written_vec_1 & _GEN_2727 | written_vec_0 & _GEN_2727;
+        _GEN_2729 = written_vec_2 & _GEN_2727;
+        if (written_vec_3 ? _GEN_2727 | _GEN_2729 | _GEN_2728 : _GEN_2729 | _GEN_2728)
           matrix_1 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h2)
         matrix_2 <= 16'h0;
       else begin
+        automatic logic _GEN_2730;
         automatic logic _GEN_2731;
         automatic logic _GEN_2732;
-        automatic logic _GEN_2733;
-        _GEN_2731 = _GEN_222 == 4'h2;
-        _GEN_2732 = written_vec_1 & _GEN_2731 | written_vec_0 & _GEN_2731;
-        _GEN_2733 = written_vec_2 & _GEN_2731;
-        if (written_vec_3 ? _GEN_2731 | _GEN_2733 | _GEN_2732 : _GEN_2733 | _GEN_2732)
+        _GEN_2730 = _GEN_222 == 4'h2;
+        _GEN_2731 = written_vec_1 & _GEN_2730 | written_vec_0 & _GEN_2730;
+        _GEN_2732 = written_vec_2 & _GEN_2730;
+        if (written_vec_3 ? _GEN_2730 | _GEN_2732 | _GEN_2731 : _GEN_2732 | _GEN_2731)
           matrix_2 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h3)
         matrix_3 <= 16'h0;
       else begin
+        automatic logic _GEN_2733;
         automatic logic _GEN_2734;
         automatic logic _GEN_2735;
-        automatic logic _GEN_2736;
-        _GEN_2734 = _GEN_222 == 4'h3;
-        _GEN_2735 = written_vec_1 & _GEN_2734 | written_vec_0 & _GEN_2734;
-        _GEN_2736 = written_vec_2 & _GEN_2734;
-        if (written_vec_3 ? _GEN_2734 | _GEN_2736 | _GEN_2735 : _GEN_2736 | _GEN_2735)
+        _GEN_2733 = _GEN_222 == 4'h3;
+        _GEN_2734 = written_vec_1 & _GEN_2733 | written_vec_0 & _GEN_2733;
+        _GEN_2735 = written_vec_2 & _GEN_2733;
+        if (written_vec_3 ? _GEN_2733 | _GEN_2735 | _GEN_2734 : _GEN_2735 | _GEN_2734)
           matrix_3 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h4)
         matrix_4 <= 16'h0;
       else begin
+        automatic logic _GEN_2736;
         automatic logic _GEN_2737;
         automatic logic _GEN_2738;
-        automatic logic _GEN_2739;
-        _GEN_2737 = _GEN_222 == 4'h4;
-        _GEN_2738 = written_vec_1 & _GEN_2737 | written_vec_0 & _GEN_2737;
-        _GEN_2739 = written_vec_2 & _GEN_2737;
-        if (written_vec_3 ? _GEN_2737 | _GEN_2739 | _GEN_2738 : _GEN_2739 | _GEN_2738)
+        _GEN_2736 = _GEN_222 == 4'h4;
+        _GEN_2737 = written_vec_1 & _GEN_2736 | written_vec_0 & _GEN_2736;
+        _GEN_2738 = written_vec_2 & _GEN_2736;
+        if (written_vec_3 ? _GEN_2736 | _GEN_2738 | _GEN_2737 : _GEN_2738 | _GEN_2737)
           matrix_4 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h5)
         matrix_5 <= 16'h0;
       else begin
+        automatic logic _GEN_2739;
         automatic logic _GEN_2740;
         automatic logic _GEN_2741;
-        automatic logic _GEN_2742;
-        _GEN_2740 = _GEN_222 == 4'h5;
-        _GEN_2741 = written_vec_1 & _GEN_2740 | written_vec_0 & _GEN_2740;
-        _GEN_2742 = written_vec_2 & _GEN_2740;
-        if (written_vec_3 ? _GEN_2740 | _GEN_2742 | _GEN_2741 : _GEN_2742 | _GEN_2741)
+        _GEN_2739 = _GEN_222 == 4'h5;
+        _GEN_2740 = written_vec_1 & _GEN_2739 | written_vec_0 & _GEN_2739;
+        _GEN_2741 = written_vec_2 & _GEN_2739;
+        if (written_vec_3 ? _GEN_2739 | _GEN_2741 | _GEN_2740 : _GEN_2741 | _GEN_2740)
           matrix_5 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h6)
         matrix_6 <= 16'h0;
       else begin
+        automatic logic _GEN_2742;
         automatic logic _GEN_2743;
         automatic logic _GEN_2744;
-        automatic logic _GEN_2745;
-        _GEN_2743 = _GEN_222 == 4'h6;
-        _GEN_2744 = written_vec_1 & _GEN_2743 | written_vec_0 & _GEN_2743;
-        _GEN_2745 = written_vec_2 & _GEN_2743;
-        if (written_vec_3 ? _GEN_2743 | _GEN_2745 | _GEN_2744 : _GEN_2745 | _GEN_2744)
+        _GEN_2742 = _GEN_222 == 4'h6;
+        _GEN_2743 = written_vec_1 & _GEN_2742 | written_vec_0 & _GEN_2742;
+        _GEN_2744 = written_vec_2 & _GEN_2742;
+        if (written_vec_3 ? _GEN_2742 | _GEN_2744 | _GEN_2743 : _GEN_2744 | _GEN_2743)
           matrix_6 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h7)
         matrix_7 <= 16'h0;
       else begin
+        automatic logic _GEN_2745;
         automatic logic _GEN_2746;
         automatic logic _GEN_2747;
-        automatic logic _GEN_2748;
-        _GEN_2746 = _GEN_222 == 4'h7;
-        _GEN_2747 = written_vec_1 & _GEN_2746 | written_vec_0 & _GEN_2746;
-        _GEN_2748 = written_vec_2 & _GEN_2746;
-        if (written_vec_3 ? _GEN_2746 | _GEN_2748 | _GEN_2747 : _GEN_2748 | _GEN_2747)
+        _GEN_2745 = _GEN_222 == 4'h7;
+        _GEN_2746 = written_vec_1 & _GEN_2745 | written_vec_0 & _GEN_2745;
+        _GEN_2747 = written_vec_2 & _GEN_2745;
+        if (written_vec_3 ? _GEN_2745 | _GEN_2747 | _GEN_2746 : _GEN_2747 | _GEN_2746)
           matrix_7 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h8)
         matrix_8 <= 16'h0;
       else begin
+        automatic logic _GEN_2748;
         automatic logic _GEN_2749;
         automatic logic _GEN_2750;
-        automatic logic _GEN_2751;
-        _GEN_2749 = _GEN_222 == 4'h8;
-        _GEN_2750 = written_vec_1 & _GEN_2749 | written_vec_0 & _GEN_2749;
-        _GEN_2751 = written_vec_2 & _GEN_2749;
-        if (written_vec_3 ? _GEN_2749 | _GEN_2751 | _GEN_2750 : _GEN_2751 | _GEN_2750)
+        _GEN_2748 = _GEN_222 == 4'h8;
+        _GEN_2749 = written_vec_1 & _GEN_2748 | written_vec_0 & _GEN_2748;
+        _GEN_2750 = written_vec_2 & _GEN_2748;
+        if (written_vec_3 ? _GEN_2748 | _GEN_2750 | _GEN_2749 : _GEN_2750 | _GEN_2749)
           matrix_8 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'h9)
         matrix_9 <= 16'h0;
       else begin
+        automatic logic _GEN_2751;
         automatic logic _GEN_2752;
         automatic logic _GEN_2753;
-        automatic logic _GEN_2754;
-        _GEN_2752 = _GEN_222 == 4'h9;
-        _GEN_2753 = written_vec_1 & _GEN_2752 | written_vec_0 & _GEN_2752;
-        _GEN_2754 = written_vec_2 & _GEN_2752;
-        if (written_vec_3 ? _GEN_2752 | _GEN_2754 | _GEN_2753 : _GEN_2754 | _GEN_2753)
+        _GEN_2751 = _GEN_222 == 4'h9;
+        _GEN_2752 = written_vec_1 & _GEN_2751 | written_vec_0 & _GEN_2751;
+        _GEN_2753 = written_vec_2 & _GEN_2751;
+        if (written_vec_3 ? _GEN_2751 | _GEN_2753 | _GEN_2752 : _GEN_2753 | _GEN_2752)
           matrix_9 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'hA)
         matrix_10 <= 16'h0;
       else begin
+        automatic logic _GEN_2754;
         automatic logic _GEN_2755;
         automatic logic _GEN_2756;
-        automatic logic _GEN_2757;
-        _GEN_2755 = _GEN_222 == 4'hA;
-        _GEN_2756 = written_vec_1 & _GEN_2755 | written_vec_0 & _GEN_2755;
-        _GEN_2757 = written_vec_2 & _GEN_2755;
-        if (written_vec_3 ? _GEN_2755 | _GEN_2757 | _GEN_2756 : _GEN_2757 | _GEN_2756)
+        _GEN_2754 = _GEN_222 == 4'hA;
+        _GEN_2755 = written_vec_1 & _GEN_2754 | written_vec_0 & _GEN_2754;
+        _GEN_2756 = written_vec_2 & _GEN_2754;
+        if (written_vec_3 ? _GEN_2754 | _GEN_2756 | _GEN_2755 : _GEN_2756 | _GEN_2755)
           matrix_10 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'hB)
         matrix_11 <= 16'h0;
       else begin
+        automatic logic _GEN_2757;
         automatic logic _GEN_2758;
         automatic logic _GEN_2759;
-        automatic logic _GEN_2760;
-        _GEN_2758 = _GEN_222 == 4'hB;
-        _GEN_2759 = written_vec_1 & _GEN_2758 | written_vec_0 & _GEN_2758;
-        _GEN_2760 = written_vec_2 & _GEN_2758;
-        if (written_vec_3 ? _GEN_2758 | _GEN_2760 | _GEN_2759 : _GEN_2760 | _GEN_2759)
+        _GEN_2757 = _GEN_222 == 4'hB;
+        _GEN_2758 = written_vec_1 & _GEN_2757 | written_vec_0 & _GEN_2757;
+        _GEN_2759 = written_vec_2 & _GEN_2757;
+        if (written_vec_3 ? _GEN_2757 | _GEN_2759 | _GEN_2758 : _GEN_2759 | _GEN_2758)
           matrix_11 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'hC)
         matrix_12 <= 16'h0;
       else begin
+        automatic logic _GEN_2760;
         automatic logic _GEN_2761;
         automatic logic _GEN_2762;
-        automatic logic _GEN_2763;
-        _GEN_2761 = _GEN_222 == 4'hC;
-        _GEN_2762 = written_vec_1 & _GEN_2761 | written_vec_0 & _GEN_2761;
-        _GEN_2763 = written_vec_2 & _GEN_2761;
-        if (written_vec_3 ? _GEN_2761 | _GEN_2763 | _GEN_2762 : _GEN_2763 | _GEN_2762)
+        _GEN_2760 = _GEN_222 == 4'hC;
+        _GEN_2761 = written_vec_1 & _GEN_2760 | written_vec_0 & _GEN_2760;
+        _GEN_2762 = written_vec_2 & _GEN_2760;
+        if (written_vec_3 ? _GEN_2760 | _GEN_2762 | _GEN_2761 : _GEN_2762 | _GEN_2761)
           matrix_12 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'hD)
         matrix_13 <= 16'h0;
       else begin
+        automatic logic _GEN_2763;
         automatic logic _GEN_2764;
         automatic logic _GEN_2765;
-        automatic logic _GEN_2766;
-        _GEN_2764 = _GEN_222 == 4'hD;
-        _GEN_2765 = written_vec_1 & _GEN_2764 | written_vec_0 & _GEN_2764;
-        _GEN_2766 = written_vec_2 & _GEN_2764;
-        if (written_vec_3 ? _GEN_2764 | _GEN_2766 | _GEN_2765 : _GEN_2766 | _GEN_2765)
+        _GEN_2763 = _GEN_222 == 4'hD;
+        _GEN_2764 = written_vec_1 & _GEN_2763 | written_vec_0 & _GEN_2763;
+        _GEN_2765 = written_vec_2 & _GEN_2763;
+        if (written_vec_3 ? _GEN_2763 | _GEN_2765 | _GEN_2764 : _GEN_2765 | _GEN_2764)
           matrix_13 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & _GEN_332 == 4'hE)
         matrix_14 <= 16'h0;
       else begin
+        automatic logic _GEN_2766;
         automatic logic _GEN_2767;
         automatic logic _GEN_2768;
-        automatic logic _GEN_2769;
-        _GEN_2767 = _GEN_222 == 4'hE;
-        _GEN_2768 = written_vec_1 & _GEN_2767 | written_vec_0 & _GEN_2767;
-        _GEN_2769 = written_vec_2 & _GEN_2767;
-        if (written_vec_3 ? _GEN_2767 | _GEN_2769 | _GEN_2768 : _GEN_2769 | _GEN_2768)
+        _GEN_2766 = _GEN_222 == 4'hE;
+        _GEN_2767 = written_vec_1 & _GEN_2766 | written_vec_0 & _GEN_2766;
+        _GEN_2768 = written_vec_2 & _GEN_2766;
+        if (written_vec_3 ? _GEN_2766 | _GEN_2768 | _GEN_2767 : _GEN_2768 | _GEN_2767)
           matrix_14 <= 16'hFFFF;
       end
       if (io_AGU_output_valid & (&_GEN_332))
         matrix_15 <= 16'h0;
       else begin
+        automatic logic _GEN_2769;
         automatic logic _GEN_2770;
-        automatic logic _GEN_2771;
-        _GEN_2770 = written_vec_1 & (&_GEN_222) | written_vec_0 & (&_GEN_222);
-        _GEN_2771 = written_vec_2 & (&_GEN_222);
-        if (written_vec_3 ? (&_GEN_222) | _GEN_2771 | _GEN_2770 : _GEN_2771 | _GEN_2770)
+        _GEN_2769 = written_vec_1 & (&_GEN_222) | written_vec_0 & (&_GEN_222);
+        _GEN_2770 = written_vec_2 & (&_GEN_222);
+        if (written_vec_3 ? (&_GEN_222) | _GEN_2770 | _GEN_2769 : _GEN_2770 | _GEN_2769)
           matrix_15 <= 16'hFFFF;
       end
     end
   end // always @(posedge)
-  assign io_reserve_0_ready = |_availalbe_MOB_entries_4to2;
-  assign io_reserve_1_ready = |_availalbe_MOB_entries_4to2;
-  assign io_reserve_2_ready = |_availalbe_MOB_entries_4to2;
-  assign io_reserve_3_ready = |_availalbe_MOB_entries_4to2;
+  assign io_reserve_0_ready = io_reserve_0_ready_0;
+  assign io_reserve_1_ready = io_reserve_1_ready_0;
+  assign io_reserve_2_ready = io_reserve_2_ready_0;
+  assign io_reserve_3_ready = io_reserve_3_ready_0;
   assign io_reserved_pointers_0_valid = written_vec_0;
   assign io_reserved_pointers_0_bits =
     written_vec_0 ? _io_reserved_pointers_0_bits_T : 4'h0;

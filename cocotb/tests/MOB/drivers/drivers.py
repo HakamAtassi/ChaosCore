@@ -73,6 +73,8 @@ class MOB_driver:
 
         self.AGU_pool = []
 
+        self.uncommitted_pool = []
+
         self.ROB_entries = [[{
             "accepted": 0,
             "valid": 0,
@@ -158,12 +160,13 @@ class MOB_driver:
         getattr(self.dut, f"io_AGU_output_bits_memory_violation").value =   0
 
 
+        print(self.AGU_pool)
         if random.uniform(0, 1) < 0.6:
             if len(self.AGU_pool) != 0:
-                #index = random.randint(0, len(self.AGU_pool) - 1)
-                #AGU = self.AGU_pool.pop(index)
+                index = random.randint(0, len(self.AGU_pool) - 1)
+                AGU = self.AGU_pool.pop(index)
 
-                AGU = self.AGU_pool.pop(0)
+                #AGU = self.AGU_pool.pop(0)
 
                 getattr(self.dut, f"io_AGU_output_valid").value = AGU["valid"]
                 getattr(self.dut, f"io_AGU_output_bits_RD_data").value =  0
@@ -198,6 +201,7 @@ class MOB_driver:
         entry_valid = [self.ROB_entries[self.ROB_front_pointer % 64][i]["valid"] for i in range(4)]
         entry_complete = [self.ROB_entries[self.ROB_front_pointer % 64][i]["complete"] for i in range(4)]
         entry_accepted = [self.ROB_entries[self.ROB_front_pointer % 64][i]["accepted"] for i in range(4)]
+        entry_accepted = [self.ROB_entries[self.ROB_front_pointer % 64][i]["accepted"] for i in range(4)]
 
         # Entry i is good to go if it's either valid and complete, or not valid
         good_to_go = [
@@ -206,8 +210,11 @@ class MOB_driver:
         ]
 
 
+
+
         # All entries must be good to go for can_commit to be True
         can_commit = all(good_to_go)
+        replay = any([self.ROB_entries[self.ROB_front_pointer % 64][i]["violation"] for i in range(4)])
 
 #        print(f"writing to ROB {self.ROB_front_pointer}")
         ##print(f"MOB front {self.ROB_entries[0]}")
@@ -218,12 +225,33 @@ class MOB_driver:
         #print(can_commit)
         #print("----------")
 
-
-
         
         self.dut.io_commit_valid.value = 0
         self.dut.io_commit_bits_ROB_index.value = self.ROB_front_pointer % 64
-        if can_commit:
+
+
+        self.dut.io_flush.value = 0
+        if(can_commit and replay):
+            print("FLUSH")
+            self.dut.io_flush.value = 1
+            self.memory_operations = self.uncommitted_pool + self.memory_operations # realloacte the instructions that you performed but never committed
+            self.AGU_pool = []
+
+            self.ROB_entries[self.ROB_front_pointer] = [{
+                        "valid": 0,
+                        "complete": 0,
+                        "violation": 0,
+                        "accepted": 0,
+                    } for i in range(4)]
+
+
+            self.ROB_back_pointer = self.ROB_front_pointer
+
+            #self.ROB_back_pointer = self.ROB_front_pointer
+
+        
+        elif can_commit:
+            self.uncommitted_pool.pop(0)
 
             #print(f"Can commit {self.ROB_front_pointer}")
             #print(f"{self.ROB_entries[self.ROB_front_pointer%64]}")
@@ -327,10 +355,15 @@ class MOB_driver:
 
         if(fetch_packet_accepted):
             accepted_mem_request = self.memory_operations.pop(0)
-            for i in range(4):
-                accepted_mem_request[i]["MOB_index"] = int(getattr(self.dut, f"io_reserved_pointers_{i}_bits").value)
-                self.AGU_pool.append(accepted_mem_request[i])
-                #self.ROB_entries[input_ROB_index]["bits"][i]["valid"] = valid
 
+            self.uncommitted_pool.append(accepted_mem_request)
+
+            for i in range(4):
+                if(int(getattr(self.dut, f"io_reserve_{i}_valid"))):
+                    accepted_mem_request[i]["MOB_index"] = int(getattr(self.dut, f"io_reserved_pointers_{i}_bits").value)
+                    self.AGU_pool.append(accepted_mem_request[i])
+                    #self.ROB_entries[input_ROB_index]["bits"][i]["valid"] = valid
+
+            #print(accepted_mem_request)
 
 

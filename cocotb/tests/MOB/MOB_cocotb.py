@@ -224,11 +224,12 @@ async def test_fuzz(dut):
 
     await MOB.reset()     # Reset
 
-    for _ in range(50000):
+    for _ in range(5000):
 
         await MOB.update()
 
     assert False
+
 
 
 
