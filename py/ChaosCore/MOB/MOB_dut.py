@@ -28,7 +28,7 @@ class MOB_dut:
 
     async def reset(self):  # Do not touch
         await self.clock()
-        self.MOB.reset = 1
+        self.MOB.reset.value = 1
         await self.clock()
         await self.clock()
         await self.clock()

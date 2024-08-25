@@ -221,39 +221,72 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     dontTouch(age_vector)
 
+    dontTouch(wr_bytes)
+    dontTouch(byte_sels)
+
     //  Input is Load //
     // Search for older conflicting stores. Merge as needed
-    for(i <- 0 until MOBEntries){
-        val is_input_load   = MOB(i).valid
-        val is_valid        = MOB(i).valid
-        val is_younger      = age_vector(i) < incoming_age
-        val is_older        = age_vector(i) > incoming_age
-        val is_conflicting  = incoming_address === (get_fetch_packet_aligned_address(coreParameters, MOB(i).address))
 
-        val is_load         = MOB(i).memory_type === memory_type_t.LOAD
-        val is_store        = MOB(i).memory_type === memory_type_t.STORE
-        val is_complete     = MOB(i).MOB_STATE === MOB_STATES.COMPLETE
+    // search lower half
 
-        when(io.AGU_output.valid && is_older && is_conflicting && is_valid){
-            when(incoming_is_load && is_store && is_complete){
-                MOB(MOB_index).fwd_valid := byte_sels(i)
-                MOB(MOB_index).fwd_data := wr_bytes(i)
+    for(b <- 0 until 4){
+        for(i <- 0 until MOBEntries){
+            val is_lower_half   = i.U > MOB_index
+            val is_valid        = MOB(i).valid
+            val is_older        = age_vector(i) > incoming_age
+
+            // FIXME: conflicting should be for each byte, not each word...
+            val is_conflicting  = (incoming_address & "hFFFFFFFC".U) === ("hFFFFFFFC".U & MOB(i).address) && byte_sels(i)(b)
+
+            val is_store        = MOB(i).memory_type === memory_type_t.STORE
+            val is_complete     = ((MOB(i).MOB_STATE === MOB_STATES.COMPLETE) || (MOB(i).MOB_STATE === MOB_STATES.WAIT) || (MOB(i).MOB_STATE === MOB_STATES.COMMITTED))
+
+            when(io.AGU_output.valid && is_older && is_conflicting && is_valid){
+                when(incoming_is_load && is_store && is_complete && is_lower_half){
+                    MOB(MOB_index).fwd_valid(b) := byte_sels(i)(b)
+                    MOB(MOB_index).fwd_data(b) := wr_bytes(i)(b)
+                }
+            }
+        }
+    }
+
+    // search upper half
+
+    for(b <- 0 until 4){
+        for(i <- 0 until MOBEntries){
+
+            val is_upper_half   = i.U < MOB_index
+            val is_valid        = MOB(i).valid
+            val is_older        = age_vector(i) > incoming_age
+
+            // FIXME: conflicting should be for each byte, not each word...
+            val is_conflicting  = (incoming_address & "hFFFFFFFC".U) === ("hFFFFFFFC".U & MOB(i).address) && byte_sels(i)(b)
+
+            val is_store        = MOB(i).memory_type === memory_type_t.STORE
+            val is_complete     = ((MOB(i).MOB_STATE === MOB_STATES.COMPLETE) || (MOB(i).MOB_STATE === MOB_STATES.WAIT) || (MOB(i).MOB_STATE === MOB_STATES.COMMITTED))
+
+            when(io.AGU_output.valid && is_older && is_conflicting && is_valid){
+                when(incoming_is_load && is_store && is_complete && is_upper_half){
+                    MOB(MOB_index).fwd_valid(b) := byte_sels(i)(b)
+                    MOB(MOB_index).fwd_data(b) := wr_bytes(i)(b)
+                }
             }
         }
     }
 
 
+
     // Input is Store //
     // Search for younger conflicting loads. Set violation as needed.
     for(i <- 0 until MOBEntries){
-        val is_input_load   = MOB(i).valid
         val is_valid        = MOB(i).valid
         val is_younger      = age_vector(i) < incoming_age
-        val is_conflicting  = incoming_address === (get_fetch_packet_aligned_address(coreParameters, MOB(i).address))
+        val is_conflicting  = (incoming_address & "hFFFFFFFC".U) === ("hFFFFFFFC".U & MOB(i).address)
         val is_complete     = (MOB(i).MOB_STATE === MOB_STATES.COMPLETE) ||  (MOB(i).MOB_STATE === MOB_STATES.ALMOST_COMPLETE)
         val is_load         = MOB(i).memory_type === memory_type_t.LOAD
         val is_store        = MOB(i).memory_type === memory_type_t.STORE
 
+        // FIXME: here, the conflicting depends on the TYPE of store and TYPE of load...
         when(io.AGU_output.valid && is_younger && is_conflicting && is_valid){
             when(incoming_is_store && is_load && is_complete){
                 MOB(i).violation := 1.B
@@ -279,8 +312,8 @@ class MOB(coreParameters:CoreParameters) extends Module{
     possible_load_vec    := MOB.map(MOB_entry => MOB_entry.valid && (MOB_entry.MOB_STATE === MOB_STATES.READY) && (MOB_entry.memory_type === memory_type_t.LOAD))
     fire_store           := MOB(front_index).valid && (MOB(front_index).MOB_STATE === MOB_STATES.COMMITTED) && !MOB(front_index).violation && (MOB(front_index).memory_type === memory_type_t.STORE)    // stores are sent only from front of queue
 
-    when(possible_load_vec.asUInt =/= 0.U){    // possible load, do that
-        val load_index                               = PriorityEncoder(possible_load_vec)
+    val load_index                               = PriorityEncoder(possible_load_vec)
+    when(MOB(load_index).valid && (MOB(load_index).MOB_STATE === MOB_STATES.READY) && (MOB(load_index).memory_type === memory_type_t.LOAD)){
         io.backend_memory_request.valid             := 1.B
         io.backend_memory_request.bits.addr         := MOB(load_index).address
         io.backend_memory_request.bits.memory_type  := MOB(load_index).memory_type
@@ -299,7 +332,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
         io.backend_memory_request.bits.MOB_index    := front_index
 
         when(io.backend_memory_request.fire){
-            MOB(front_index).MOB_STATE === MOB_STATES.DONE
+            MOB(front_index).MOB_STATE := MOB_STATES.DONE
         }
     }
 
@@ -307,11 +340,14 @@ class MOB(coreParameters:CoreParameters) extends Module{
     ////////////////////
     // CACHE RESPONSE //
     ////////////////////
+
+    val test = Wire(UInt(2.W))
+    val response_MOB_index = io.backend_memory_response.bits.MOB_index
+    test := (MOB(response_MOB_index).address) & 0x3.U
     when(io.backend_memory_response.valid){
-        val response_MOB_index = io.backend_memory_response.bits.MOB_index
         when(MOB(response_MOB_index).memory_type === memory_type_t.LOAD){   // stores dont return anything
             MOB(response_MOB_index).MOB_STATE := MOB_STATES.CDB_WRITE   // update state
-            MOB(response_MOB_index).data := io.backend_memory_response.bits.data
+            MOB(response_MOB_index).data := io.backend_memory_response.bits.data << (test*8.U)  // this shift helps with forwarding logic (everything is aligned to the word)
         }
     }
 
@@ -320,7 +356,11 @@ class MOB(coreParameters:CoreParameters) extends Module{
     ///////////////
     // Select entry to write to CDB.
     // Update state to almost complete or complete based on violation valid status
-    io.MOB_output                   := DontCare
+
+    // FIXME: this part is really not optimal
+    // Currently, the forwarding forwards the entire word aligned data
+    // then, that data is swizzled based on the required byte from the load
+    // based on the buffered address
 
     val select_MOB_entry_for_CDB_WRITE = MOB.map(MOB_entry => (MOB_entry.valid) && (MOB_entry.memory_type === memory_type_t.LOAD) && (MOB_entry.MOB_STATE === MOB_STATES.CDB_WRITE))
     val CDB_write_index = Wire(UInt(log2Ceil(MOBEntries).W))
@@ -329,20 +369,47 @@ class MOB(coreParameters:CoreParameters) extends Module{
     val merged_data = Wire(Vec(4, UInt(8.W)))
     merged_data := VecInit(Seq.fill(4)(0.U(8.W)))
 
+    val word_offset = Wire(UInt(2.W)) 
+    word_offset := (MOB(CDB_write_index).address & 0x3.U)
+
+    for(i<-0 until 4){
+        merged_data(i) := MOB(CDB_write_index).data((i+1)*8-1, i*8)
+    }
+    // forward word
+
+
     for(i <- 0 until 4){
-        when(MOB(CDB_write_index).fwd_valid(i)){
-            merged_data(i) := MOB(CDB_write_index).fwd_data(i)
+        when(MOB(CDB_write_index).fwd_valid(i)){    // for W access, forward all colliding bits
+            merged_data(i.U) := MOB(CDB_write_index).fwd_data(i.U)
         }
     }
 
-    io.MOB_output.bits                      := DontCare
-    io.MOB_output.bits.ROB_index            := MOB(CDB_write_index).ROB_index // this should not do anything
-    io.MOB_output.bits.RD                   := MOB(CDB_write_index).RD
-    io.MOB_output.bits.fetch_packet_index   := MOB(CDB_write_index).fetch_packet_index
-    io.MOB_output.bits.RD_data              := merged_data.asUInt
-    io.MOB_output.bits.RD_valid             := 1.B
+    dontTouch(word_offset)
 
-    when(MOB(CDB_write_index).valid){
+    io.MOB_output.valid                     := 0.B
+    io.MOB_output.bits                      := 0.U.asTypeOf(new FU_output(coreParameters))
+
+    when(MOB(CDB_write_index).valid && (MOB(CDB_write_index).memory_type === memory_type_t.LOAD) && (MOB(CDB_write_index).MOB_STATE === MOB_STATES.CDB_WRITE)){
+        io.MOB_output.bits                      := DontCare
+        io.MOB_output.valid                     := 1.B
+        io.MOB_output.bits.ROB_index            := MOB(CDB_write_index).ROB_index // this should not do anything
+        io.MOB_output.bits.MOB_index            := CDB_write_index
+        io.MOB_output.bits.address              := MOB(CDB_write_index).address
+        io.MOB_output.bits.RD                   := MOB(CDB_write_index).RD
+        io.MOB_output.bits.fetch_packet_index   := MOB(CDB_write_index).fetch_packet_index
+        
+        when(MOB(CDB_write_index).access_width === access_width_t.W){
+            io.MOB_output.bits.RD_data              := ((merged_data.asUInt) >> (word_offset*8.U))
+        }.elsewhen(MOB(CDB_write_index).access_width === access_width_t.HW){
+            io.MOB_output.bits.RD_data              := ((merged_data.asUInt) >> (word_offset*8.U)) & 0xFFFF.U
+        }.elsewhen(MOB(CDB_write_index).access_width === access_width_t.B){
+            io.MOB_output.bits.RD_data              := ((merged_data.asUInt) >> (word_offset*8.U)) & 0xFF.U
+        }
+
+        io.MOB_output.bits.RD_valid             := 1.B
+    }
+
+    when(MOB(CDB_write_index).valid && (MOB(CDB_write_index).MOB_STATE === MOB_STATES.CDB_WRITE) && (MOB(CDB_write_index).memory_type === memory_type_t.LOAD)){   // FIXME: what if load/store?
         when(get_indetermination_matrix_row(CDB_write_index).orR){
             MOB(CDB_write_index).MOB_STATE := MOB_STATES.ALMOST_COMPLETE
         }.otherwise{
@@ -371,20 +438,32 @@ class MOB(coreParameters:CoreParameters) extends Module{
     val selected_MOB_entry_for_commit = MOB(PriorityEncoder(MOB_update_commit))
 
 
+    io.complete.valid               := 0.B
+    io.complete.bits                := 0.U.asTypeOf(new FU_output(coreParameters))
 
-    when(selected_MOB_entry_for_commit.valid){
+    when(selected_MOB_entry_for_commit.valid && (selected_MOB_entry_for_commit.MOB_STATE === MOB_STATES.COMPLETE)){
         when(selected_MOB_entry_for_commit.memory_type === memory_type_t.LOAD){
             selected_MOB_entry_for_commit.MOB_STATE := MOB_STATES.DONE
-        }.elsewhen(selected_MOB_entry_for_commit.memory_type === memory_type_t.STORE){
+
+            io.complete.valid          := selected_MOB_entry_for_commit.valid
+            io.complete.bits.ROB_index := selected_MOB_entry_for_commit.ROB_index
+            io.complete.bits.MOB_index := PriorityEncoder(MOB_update_commit)
+            io.complete.bits.fetch_packet_index := selected_MOB_entry_for_commit.fetch_packet_index
+            io.complete.bits.violation := selected_MOB_entry_for_commit.violation
+        }.elsewhen(selected_MOB_entry_for_commit.memory_type === memory_type_t.STORE && (selected_MOB_entry_for_commit.MOB_STATE === MOB_STATES.COMPLETE)){
             selected_MOB_entry_for_commit.MOB_STATE := MOB_STATES.WAIT
+
+            io.complete.valid          := selected_MOB_entry_for_commit.valid
+            io.complete.bits.ROB_index := selected_MOB_entry_for_commit.ROB_index
+            io.complete.bits.MOB_index := PriorityEncoder(MOB_update_commit)
+            io.complete.bits.fetch_packet_index := selected_MOB_entry_for_commit.fetch_packet_index
+            io.complete.bits.violation := selected_MOB_entry_for_commit.violation
         }
     }
 
 
-    io.complete                := DontCare
-    io.complete.valid          := selected_MOB_entry_for_commit.valid
-    io.complete.bits.ROB_index := selected_MOB_entry_for_commit.ROB_index
-    io.complete.bits.violation := selected_MOB_entry_for_commit.violation
+
+
 
 
     ///////////////////
@@ -392,7 +471,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
     ///////////////////
     // Update commit bit
     for(i <- 0 until MOBEntries){
-        when(MOB(i).valid && io.commit.valid && (MOB(i).ROB_index === io.commit.bits.ROB_index)){
+        when(MOB(i).valid && io.commit.valid && (MOB(i).ROB_index === io.commit.bits.ROB_index) && (MOB(i).memory_type === memory_type_t.STORE)){
             MOB(i).MOB_STATE := MOB_STATES.COMMITTED
         }
     }

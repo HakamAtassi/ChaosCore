@@ -7,7 +7,7 @@ import random
 class memory_model:
     def __init__(self, dut, mem):
         self.dut = dut
-        self.mem = mem
+        self.mem = bytearray(mem)
         self.request_map = {}   # map cache lines to request queues
 
     def write_response(self, response):
@@ -23,6 +23,7 @@ class memory_model:
         access_width_map = [0, 1, 2, 4]
 
         valid       = int(self.dut.io_backend_memory_request_valid.value)
+        ready       = int(self.dut.io_backend_memory_request_ready.value)
         address     = int(self.dut.io_backend_memory_request_bits_addr.value)
         cache_line  = address & 0xFFFF_FFE0
         data        = int(self.dut.io_backend_memory_request_bits_data.value)
@@ -30,7 +31,9 @@ class memory_model:
         MOB_index   = int(self.dut.io_backend_memory_request_bits_MOB_index.value)
         byte_count  = access_width_map[int(self.dut.io_backend_memory_request_bits_access_width.value)]
 
-        if(valid):
+        if(valid and ready):
+            #print(f"Detected request {hex(address)}")
+            #print(f"Assumed response {self.mem[address:address]}")
             request = {
                 "valid" : valid,
                 "addr" : address,
@@ -77,16 +80,24 @@ class memory_model:
                 wr_en = random_request["wr_en"]
                 MOB_index = random_request["MOB_index"]
 
-                if(wr_en):  # random outstanding request is a store
-                    self.mem[address:address+byte_count] = data
+                if(byte_count == 1): data=data & 0xFF
+                if(byte_count == 2): data=data & 0xFFFF
+                if(byte_count == 4): data=data & 0xFFFF_FFFF
 
-                else:       # random outstanding request is a load
+
+                if(wr_en):  # random outstanding request is a store
+                    #print(f"Detected write {hex(address)}")
+                    self.mem[address:address+byte_count] = data.to_bytes(byte_count, byteorder="little")
+
+                elif(valid):       # random outstanding request is a load
                     response = {
                         "valid": valid,
                         "addr": address,
                         "data": int.from_bytes(self.mem[address:address+byte_count], "little"),
                         "MOB_index": MOB_index
                     }
+                    #resp_Data = int.from_bytes(self.mem[address:address+byte_count], "little")
+                    #print(f"Detected read {hex(address)} = {hex(resp_Data)}")
 
                     self.write_response(response)
 
