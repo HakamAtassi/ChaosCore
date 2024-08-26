@@ -135,7 +135,8 @@ class RAT(coreParameters:CoreParameters) extends Module{
     ////////////////
     // write RAT
     for (i <- 0 until fetchWidth){
-        when(io.commit.valid && (io.commit.bits.RD_valid(i) && !(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)))){
+        //FIXME: use global flush signal and do not reconstruct
+        when(io.commit.valid && (io.commit.bits.RD_valid(i) && !(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.violation)))){
             commit_RAT(io.commit.bits.RDold(i)) := io.commit.bits.RD(i)
         }
     }
@@ -143,7 +144,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     ////////////
     // REVERT //
     ////////////
-    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)){
+    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.violation)){
         for(i <- 0 until architecturalRegCount){
             speculative_RAT(i) := commit_RAT(i)
         }
@@ -282,18 +283,10 @@ class rename(coreParameters:CoreParameters) extends Module{
     ////////////////
 
     val ready_memory  = RegInit(VecInit(Seq.fill(physicalRegCount)(0.B)))
-
-    // setting ready bit
-    // whenever an instruction completes
-    // if the completing instruction(s) is writing to the mapping that exists in the ith entry of the ROB
-    // and that completing instruction is valid
-    // set that ready bit, and bypass it as needed
-
     val comb_ready_bits = Wire(Vec(physicalRegCount, Bool()))
 
-    for(i <- 0 until physicalRegCount){
-        comb_ready_bits(i) := ready_memory(i)
-    }
+
+    comb_ready_bits := ready_memory
 
     // Set ready bit from FU
     for(i <- 0 until fetchWidth){   // FIXME: this should be port width...
@@ -307,8 +300,8 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     // Reset ready bit
     for(i <- 0 until fetchWidth){
-        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD //renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD //io.free_list_RD(i)
-        val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid //renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid
+        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD 
+        val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid 
 
         when(RD_valid && io.renamed_decoded_fetch_packet.valid){    // is this fine?
             comb_ready_bits(set_RD) := 0.B
@@ -318,11 +311,14 @@ class rename(coreParameters:CoreParameters) extends Module{
     // x0 as a dest or source is never remapped
     // x0 always ready
     comb_ready_bits(0) := 1.U
+    
 
     // Update ready register
-    for(i <- 1 until physicalRegCount){
-        ready_memory(i) := comb_ready_bits(i)
-    }
+    ready_memory := comb_ready_bits
+
+
+    dontTouch(ready_memory)
+    dontTouch(comb_ready_bits)
 
     /////////////////
     // SKID BUFFER //

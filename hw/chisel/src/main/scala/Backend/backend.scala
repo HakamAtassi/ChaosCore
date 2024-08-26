@@ -64,11 +64,8 @@ class backend(coreParameters:CoreParameters) extends Module{
 
         // ALLOCATE //
         val fetch_PC                    =   Input(UInt(32.W))  // DEBUG
-        val backend_packet              =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
+        val backend_packet              =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
-        val MEMRS_ready                 =   Output(Vec(fetchWidth, Bool()))
-        val INTRS_ready                 =   Output(Vec(fetchWidth, Bool()))
-        val MOB_ready                   =   Output(Vec(fetchWidth, Bool()))
 
         // UPDATE //
         val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
@@ -81,7 +78,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     //////////////////////////
 
     val INT_RS   =  Module(new RS(coreParameters))
-    val MEM_RS   =  Module(new MEMRS(coreParameters))
+    val MEM_RS   =  Module(new RS(coreParameters, "MEMRS"))
 
 
     /////////
@@ -90,41 +87,50 @@ class backend(coreParameters:CoreParameters) extends Module{
     val MOB   =  Module(new MOB(coreParameters))
 
 
+    ///////////////////////////
+    // SCHEDULE INSTRUCTIONS //
+    ///////////////////////////
 
-    // Assign Reservation Stations
-
-    INT_RS.io.commit <> io.commit
+    val backend_can_allocate = MEM_RS.io.backend_packet.map(_.ready).reduce(_ && _) && INT_RS.io.backend_packet.map(_.ready).reduce(_ && _) && MOB.io.reserve.map(_.ready).reduce(_ && _)
+    
     for (i <- 0 until fetchWidth){
-        INT_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
-        INT_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.INT) && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid
-        
-        // does this entry correspond to RS
+        io.backend_packet(i).ready        := backend_can_allocate
     }
 
 
-    MEM_RS.io.commit <> io.commit
+    // INT RS //
     for (i <- 0 until fetchWidth){
-        MEM_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
-        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM) && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid // does this entry correspond to RS
-        MEM_RS.io.fetch_PC := io.fetch_PC
+        INT_RS.io.backend_packet(i).bits     := io.backend_packet(i).bits  // pass data along
+        INT_RS.io.backend_packet(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.INT) && io.backend_packet(i).valid
     }
 
+    for (i <- 0 until fetchWidth){
+        MEM_RS.io.backend_packet(i).bits     := io.backend_packet(i).bits  // pass data along
+        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM) && io.backend_packet(i).valid
+    }
 
     MOB.io.commit <> io.commit
     for (i <- 0 until fetchWidth){
-        MOB.io.reserve(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
-        MOB.io.reserve(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid
-        //MOB.io.fetch_PC := io.fetch_PC
+        MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
+        MOB.io.reserve(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM) && io.backend_packet(i).valid
     }
 
-    // Assign ready bits
-    for (i <- 0 until fetchWidth){
-        io.MEMRS_ready(i)        := MEM_RS.io.backend_packet(i).ready && MOB.io.reserve(i).ready
-        io.MOB_ready(i)          := MEM_RS.io.backend_packet(i).ready && MOB.io.reserve(i).ready
-        io.INTRS_ready(i)        := INT_RS.io.backend_packet(i).ready
-    }
+    //// Assign ready bits
+    //for (i <- 0 until fetchWidth){
+        //when(io.backend_packet(i).bits.RS_type === RS_types.MEM){
+            //io.backend_packet(i).ready := MEM_RS.io.backend_packet(i).ready && MOB.io.reserve(i).ready
+        //}.elsewhen(io.backend_packet(i).bits.RS_type === RS_types.INT){
+            //io.backend_packet(i).ready := INT_RS.io.backend_packet(i).ready 
+        //}.otherwise{
+            //io.backend_packet(i).ready := 1.B
+        //}
+    //}
 
-    MOB.io.reserved_pointers <> MEM_RS.io.reserved_pointers
+    
+    // ASSIGN MOB POINTERS FOR MEMRS //
+    for(i <- 0 until fetchWidth){
+        MEM_RS.io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
+    }
 
 
     ///////////////////////////
@@ -138,15 +144,19 @@ class backend(coreParameters:CoreParameters) extends Module{
     // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports
     val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))
 
+    
     // FIXME: the assignemnt of these should be based on some central config
+    // FIXME: RS should have a parameterizable number of output ports
+
     INT_PRF.io.raddr_0  :=    INT_RS.io.RF_inputs(0).bits.RS1   // INT RS PORT 0
     INT_PRF.io.raddr_1  :=    INT_RS.io.RF_inputs(0).bits.RS2   // INT RS PORT 0
     INT_PRF.io.raddr_2  :=    INT_RS.io.RF_inputs(1).bits.RS1   // INT RS PORT 1
     INT_PRF.io.raddr_3  :=    INT_RS.io.RF_inputs(1).bits.RS2   // INT RS PORT 1
     INT_PRF.io.raddr_4  :=    INT_RS.io.RF_inputs(2).bits.RS1   // INT RS PORT 2
     INT_PRF.io.raddr_5  :=    INT_RS.io.RF_inputs(2).bits.RS2   // INT RS PORT 2
-    INT_PRF.io.raddr_6  :=    MEM_RS.io.RF_inputs(3).bits.RS1   // MEM RS PORT 0
-    INT_PRF.io.raddr_7  :=    MEM_RS.io.RF_inputs(3).bits.RS2   // MEM RS PORT 0
+
+    INT_PRF.io.raddr_6  :=    MEM_RS.io.RF_inputs(0).bits.RS1   // MEM RS PORT 0
+    INT_PRF.io.raddr_7  :=    MEM_RS.io.RF_inputs(0).bits.RS2   // MEM RS PORT 0
 
     io.PC_file_exec_addr := INT_RS.io.RF_inputs(0).bits.ROB_index
 
@@ -174,7 +184,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     read_decoded_instructions(0).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(0).bits)
     read_decoded_instructions(1).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(1).bits)
     read_decoded_instructions(2).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(2).bits)
-    read_decoded_instructions(3).decoded_instruction <> RegNext(MEM_RS.io.RF_inputs(3).bits)
+    read_decoded_instructions(3).decoded_instruction <> RegNext(MEM_RS.io.RF_inputs(0).bits)
 
     ////////////////////
     // PC REG FILE ?? //
@@ -202,8 +212,12 @@ class backend(coreParameters:CoreParameters) extends Module{
     FU2.io.FU_input.valid           := RegNext(INT_RS.io.RF_inputs(2).valid)
 
     AGU.io.FU_input.bits            <> read_decoded_instructions(3)
-    AGU.io.FU_input.valid           := RegNext(MEM_RS.io.RF_inputs(3).valid)
+    AGU.io.FU_input.valid           := RegNext(MEM_RS.io.RF_inputs(0).valid)
 
+
+    // This connects the actual ALU ready bits to the RS
+    // FIXME: should be parameterized or at least a loop
+    // MEMRS only has 1 output port...
 
     // INT RS ready assignemnt
     INT_RS.io.RF_inputs(0).ready        := FU0.io.FU_input.ready
@@ -211,10 +225,9 @@ class backend(coreParameters:CoreParameters) extends Module{
     INT_RS.io.RF_inputs(2).ready        := FU2.io.FU_input.ready
 
     // MEM RS ready assignemnt
-    MEM_RS.io.RF_inputs(0).ready       := FU0.io.FU_input.ready
-    MEM_RS.io.RF_inputs(1).ready       := FU1.io.FU_input.ready
-    MEM_RS.io.RF_inputs(2).ready       := FU2.io.FU_input.ready
-    MEM_RS.io.RF_inputs(3).ready       := AGU.io.FU_input.ready
+    MEM_RS.io.RF_inputs(0).ready       := AGU.io.FU_input.ready
+    MEM_RS.io.RF_inputs(1).ready       := 0.B
+    MEM_RS.io.RF_inputs(2).ready       := 0.B
 
 
 
@@ -269,8 +282,6 @@ class backend(coreParameters:CoreParameters) extends Module{
     io.FU_outputs(2) <> FU2.io.FU_output
     io.FU_outputs(3) <> MOB.io.complete
 
-    INT_RS.io.commit := io.commit
-    MEM_RS.io.commit := io.commit
 
     ///////////////////
     // MEM_RS TO MEM //
@@ -294,6 +305,5 @@ class backend(coreParameters:CoreParameters) extends Module{
     io.backend_memory_response      <>  MOB.io.backend_memory_response
 
 
-    io.backend_packet.ready := DontCare
 
 }

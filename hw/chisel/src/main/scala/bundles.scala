@@ -126,7 +126,7 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val is_misprediction        = Bool()
-    val exception               = Bool()
+    val violation               = Bool()
     val expected_PC             = UInt(32.W)    // For BTB aswell
 
     // SAVED STATE
@@ -233,6 +233,9 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val memory_type         =  memory_type_t()   // LOAD/STORE
     val access_width        =  access_width_t()  // B/HW/W
 
+
+    val instruction_ID          = UInt(64.W)    // for debug only
+
     // ADD atomic instructions
 }
 
@@ -246,6 +249,7 @@ class decoded_fetch_packet(coreParameters:CoreParameters) extends Bundle{
     val GHR                     = UInt(GHRWidth.W)
     val TOS                     = UInt(log2Ceil(RASEntries).W)
     val NEXT                    = UInt(log2Ceil(RASEntries).W)
+
 
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
@@ -370,7 +374,7 @@ class ROB_output(coreParameters:CoreParameters) extends Bundle{
     // N per row 
     val ROB_entries             = Vec(fetchWidth, new ROB_entry(coreParameters))    // "static" instruction data
     val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
-    val exception               = Vec(fetchWidth, Bool())                      // Is instruction complete
+    val violation               = Vec(fetchWidth, Bool())                      // Is instruction complete
 }
 
 class ROB_shared(coreParameters:CoreParameters) extends Bundle{
@@ -401,8 +405,8 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
 
 class ROB_WB(coreParameters:CoreParameters) extends Bundle{
     val busy                = Bool()
-    val exception           = Bool()
-    val memory_violation    = Bool()
+    //val exception           = Bool()
+    val violation    = Bool()
 }
 
 class sources_ready extends Bundle{
@@ -467,7 +471,6 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
     val fetch_packet_index  =   UInt(log2Ceil(fetchWidth).W)
 
     val violation           =   Bool()
-    val memory_violation    =   Bool()
 }
 
 

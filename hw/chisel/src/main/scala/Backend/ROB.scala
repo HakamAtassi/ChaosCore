@@ -162,21 +162,22 @@ class ROB(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         val ROB_WB_data = Wire(new ROB_WB(coreParameters))
         ROB_WB_data.busy := 0.B
-        ROB_WB_data.exception := 0.B
-        ROB_WB_data.memory_violation := 0.B
+        ROB_WB_data.violation := 0.B
+        ROB_WB_data.violation := 0.B
 
         // allocate
         ROB_WB_banks(i).io.addrA          := back_index
         ROB_WB_banks(i).io.writeDataA     := ROB_WB_data
         ROB_WB_banks(i).io.writeEnableA   := allocate
 
+        
+        // FIXEM: wire up violation...
         // WB (connect all ports)
 
         // FU0
         val ROB_WB_data_FU0 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU0.busy             :=  io.FU_outputs(0).valid
-        ROB_WB_data_FU0.exception        :=  0.B
-        ROB_WB_data_FU0.memory_violation        :=  0.B
+        ROB_WB_data_FU0.violation        :=  io.FU_outputs(0).bits.violation
         ROB_WB_banks(i).io.addrB         :=  io.FU_outputs(0).bits.ROB_index
         ROB_WB_banks(i).io.writeDataB    :=  ROB_WB_data_FU0
         ROB_WB_banks(i).io.writeEnableB  :=  io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U)
@@ -184,8 +185,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU1
         val ROB_WB_data_FU1 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU1.busy             :=  io.FU_outputs(1).valid
-        ROB_WB_data_FU1.exception        :=  0.B
-        ROB_WB_data_FU1.memory_violation        :=  0.B
+        ROB_WB_data_FU1.violation        :=  io.FU_outputs(1).bits.violation
         ROB_WB_banks(i).io.addrC         :=  io.FU_outputs(1).bits.ROB_index
         ROB_WB_banks(i).io.writeDataC    :=  ROB_WB_data_FU1
         ROB_WB_banks(i).io.writeEnableC  :=  io.FU_outputs(1).valid && (io.FU_outputs(1).bits.fetch_packet_index === i.U)
@@ -193,8 +193,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU2
         val ROB_WB_data_FU2 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU2.busy             :=  io.FU_outputs(2).valid
-        ROB_WB_data_FU2.exception        :=  0.B
-        ROB_WB_data_FU2.memory_violation :=  0.B
+        ROB_WB_data_FU2.violation        :=  io.FU_outputs(2).bits.violation
         ROB_WB_banks(i).io.addrD         :=  io.FU_outputs(2).bits.ROB_index
         ROB_WB_banks(i).io.writeDataD    :=  ROB_WB_data_FU2
         ROB_WB_banks(i).io.writeEnableD  :=  io.FU_outputs(2).valid && (io.FU_outputs(2).bits.fetch_packet_index === i.U)
@@ -202,8 +201,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU3
         val ROB_WB_data_FU3 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU3.busy             :=  io.FU_outputs(3).valid
-        ROB_WB_data_FU3.exception        :=  0.B
-        ROB_WB_data_FU3.memory_violation :=  0.B
+        ROB_WB_data_FU3.violation        :=  io.FU_outputs(3).bits.violation
         ROB_WB_banks(i).io.addrE         :=  io.FU_outputs(3).bits.ROB_index
         ROB_WB_banks(i).io.writeDataE    :=  ROB_WB_data_FU3
         ROB_WB_banks(i).io.writeEnableE  :=  io.FU_outputs(3).valid && (io.FU_outputs(3).bits.fetch_packet_index === i.U)
@@ -284,7 +282,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until fetchWidth){
 
-        io.ROB_output.exception(i)         := ROB_WB_banks(i).io.readDataG.exception    
+        io.ROB_output.violation(i)         := ROB_WB_banks(i).io.readDataG.violation    
+        //io.ROB_output.exception(i)         := ROB_WB_banks(i).io.readDataG.exception    
         io.ROB_output.complete(i)          := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
         io.ROB_output.ROB_entries(i)       := ROB_entry_banks(i).io.readDataB
     }

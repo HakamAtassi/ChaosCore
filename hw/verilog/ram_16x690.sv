@@ -29,36 +29,20 @@
 `endif // not def STOP_COND_
 
 // VCS coverage exclude_file
-module mem_64x2(
-  input  [5:0] R0_addr,
-  input        R0_en,
-               R0_clk,
-  output [1:0] R0_data,
-  input  [5:0] W0_addr,
-  input        W0_en,
-               W0_clk,
-  input  [1:0] W0_data,
-  input  [5:0] W1_addr,
-  input        W1_en,
-               W1_clk,
-  input  [1:0] W1_data,
-  input  [5:0] W2_addr,
-  input        W2_en,
-               W2_clk,
-  input  [1:0] W2_data,
-  input  [5:0] W3_addr,
-  input        W3_en,
-               W3_clk,
-  input  [1:0] W3_data,
-  input  [5:0] W4_addr,
-  input        W4_en,
-               W4_clk,
-  input  [1:0] W4_data
+module ram_16x690(
+  input  [3:0]   R0_addr,
+  input          R0_en,
+                 R0_clk,
+  output [689:0] R0_data,
+  input  [3:0]   W0_addr,
+  input          W0_en,
+                 W0_clk,
+  input  [689:0] W0_data
 );
 
-  reg [1:0] Memory[0:63];
-  reg       _R0_en_d0;
-  reg [5:0] _R0_addr_d0;
+  reg [689:0] Memory[0:15];
+  reg         _R0_en_d0;
+  reg [3:0]   _R0_addr_d0;
   always @(posedge R0_clk) begin
     _R0_en_d0 <= R0_en;
     _R0_addr_d0 <= R0_addr;
@@ -66,15 +50,7 @@ module mem_64x2(
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
-    if (W1_en & 1'h1)
-      Memory[W1_addr] <= W1_data;
-    if (W2_en & 1'h1)
-      Memory[W2_addr] <= W2_data;
-    if (W3_en & 1'h1)
-      Memory[W3_addr] <= W3_data;
-    if (W4_en & 1'h1)
-      Memory[W4_addr] <= W4_data;
   end // always @(posedge)
-  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 2'bx;
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 690'bx;
 endmodule
 

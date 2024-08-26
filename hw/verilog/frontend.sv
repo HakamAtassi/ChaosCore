@@ -66,7 +66,7 @@ module frontend(
   input  [2:0]  io_commit_bits_br_type,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
-                io_commit_bits_exception,
+                io_commit_bits_violation,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,
@@ -123,6 +123,7 @@ module frontend(
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width,
+  output [63:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instruction_ID,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold,
@@ -149,6 +150,7 @@ module frontend(
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width,
+  output [63:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instruction_ID,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold,
@@ -175,6 +177,7 @@ module frontend(
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width,
+  output [63:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instruction_ID,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold,
@@ -201,6 +204,7 @@ module frontend(
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width,
+  output [63:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instruction_ID,
   output        io_renamed_decoded_fetch_packet_bits_valid_bits_0,
                 io_renamed_decoded_fetch_packet_bits_valid_bits_1,
                 io_renamed_decoded_fetch_packet_bits_valid_bits_2,
@@ -227,7 +231,6 @@ module frontend(
   input  [3:0]  io_FU_outputs_0_bits_FTQ_index,
   input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
   input         io_FU_outputs_0_bits_violation,
-                io_FU_outputs_0_bits_memory_violation,
                 io_FU_outputs_1_valid,
   input  [6:0]  io_FU_outputs_1_bits_RD,
   input  [31:0] io_FU_outputs_1_bits_RD_data,
@@ -246,7 +249,6 @@ module frontend(
   input  [3:0]  io_FU_outputs_1_bits_FTQ_index,
   input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
   input         io_FU_outputs_1_bits_violation,
-                io_FU_outputs_1_bits_memory_violation,
                 io_FU_outputs_2_valid,
   input  [6:0]  io_FU_outputs_2_bits_RD,
   input  [31:0] io_FU_outputs_2_bits_RD_data,
@@ -265,7 +267,6 @@ module frontend(
   input  [3:0]  io_FU_outputs_2_bits_FTQ_index,
   input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
   input         io_FU_outputs_2_bits_violation,
-                io_FU_outputs_2_bits_memory_violation,
                 io_FU_outputs_3_valid,
   input  [6:0]  io_FU_outputs_3_bits_RD,
   input  [31:0] io_FU_outputs_3_bits_RD_data,
@@ -284,7 +285,6 @@ module frontend(
   input  [3:0]  io_FU_outputs_3_bits_FTQ_index,
   input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index,
   input         io_FU_outputs_3_bits_violation,
-                io_FU_outputs_3_bits_memory_violation,
   output        io_revert_valid,
   output [31:0] io_revert_bits_PC
 );
@@ -331,6 +331,7 @@ module frontend(
   wire        _instruction_queue_io_deq_bits_decoded_instruction_0_IS_IMM;
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_memory_type;
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_access_width;
+  wire [63:0] _instruction_queue_io_deq_bits_decoded_instruction_0_instruction_ID;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready;
   wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_RDold;
@@ -357,6 +358,7 @@ module frontend(
   wire        _instruction_queue_io_deq_bits_decoded_instruction_1_IS_IMM;
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_memory_type;
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_access_width;
+  wire [63:0] _instruction_queue_io_deq_bits_decoded_instruction_1_instruction_ID;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready;
   wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_RDold;
@@ -383,6 +385,7 @@ module frontend(
   wire        _instruction_queue_io_deq_bits_decoded_instruction_2_IS_IMM;
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_memory_type;
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_access_width;
+  wire [63:0] _instruction_queue_io_deq_bits_decoded_instruction_2_instruction_ID;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready;
   wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_RDold;
@@ -409,6 +412,7 @@ module frontend(
   wire        _instruction_queue_io_deq_bits_decoded_instruction_3_IS_IMM;
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_memory_type;
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_access_width;
+  wire [63:0] _instruction_queue_io_deq_bits_decoded_instruction_3_instruction_ID;
   wire        _instruction_queue_io_deq_bits_valid_bits_0;
   wire        _instruction_queue_io_deq_bits_valid_bits_1;
   wire        _instruction_queue_io_deq_bits_valid_bits_2;
@@ -451,6 +455,7 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type;
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_access_width;
+  wire [63:0] _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_instruction_ID;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready;
   wire
@@ -481,6 +486,7 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type;
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_access_width;
+  wire [63:0] _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_instruction_ID;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready;
   wire
@@ -511,6 +517,7 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type;
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_access_width;
+  wire [63:0] _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_instruction_ID;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready;
   wire
@@ -541,6 +548,7 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type;
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_access_width;
+  wire [63:0] _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_instruction_ID;
   wire        _decoders_io_decoded_fetch_packet_bits_valid_bits_0;
   wire        _decoders_io_decoded_fetch_packet_bits_valid_bits_1;
   wire        _decoders_io_decoded_fetch_packet_bits_valid_bits_2;
@@ -599,7 +607,7 @@ module frontend(
       (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
       (io_commit_bits_is_misprediction),
-    .io_commit_bits_exception                            (io_commit_bits_exception),
+    .io_commit_bits_violation                            (io_commit_bits_violation),
     .io_commit_bits_expected_PC                          (io_commit_bits_expected_PC),
     .io_commit_bits_GHR                                  (io_commit_bits_GHR),
     .io_commit_bits_TOS                                  (io_commit_bits_TOS),
@@ -843,6 +851,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_access_width
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_access_width),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_instruction_ID
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_instruction_ID),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -895,6 +905,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_access_width
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_access_width),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_instruction_ID
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_instruction_ID),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -947,6 +959,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_access_width
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_access_width),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_instruction_ID
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_instruction_ID),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -999,6 +1013,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_access_width
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_access_width),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_instruction_ID
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_instruction_ID),
     .io_decoded_fetch_packet_bits_valid_bits_0
       (_decoders_io_decoded_fetch_packet_bits_valid_bits_0),
     .io_decoded_fetch_packet_bits_valid_bits_1
@@ -1099,6 +1115,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
     .io_enq_bits_decoded_instruction_0_access_width
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_access_width),
+    .io_enq_bits_decoded_instruction_0_instruction_ID
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_instruction_ID),
     .io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -1151,6 +1169,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
     .io_enq_bits_decoded_instruction_1_access_width
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_access_width),
+    .io_enq_bits_decoded_instruction_1_instruction_ID
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_instruction_ID),
     .io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -1203,6 +1223,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
     .io_enq_bits_decoded_instruction_2_access_width
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_access_width),
+    .io_enq_bits_decoded_instruction_2_instruction_ID
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_instruction_ID),
     .io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -1255,6 +1277,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
     .io_enq_bits_decoded_instruction_3_access_width
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_access_width),
+    .io_enq_bits_decoded_instruction_3_instruction_ID
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_instruction_ID),
     .io_enq_bits_valid_bits_0
       (_decoders_io_decoded_fetch_packet_bits_valid_bits_0),
     .io_enq_bits_valid_bits_1
@@ -1329,6 +1353,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_0_memory_type),
     .io_deq_bits_decoded_instruction_0_access_width
       (_instruction_queue_io_deq_bits_decoded_instruction_0_access_width),
+    .io_deq_bits_decoded_instruction_0_instruction_ID
+      (_instruction_queue_io_deq_bits_decoded_instruction_0_instruction_ID),
     .io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -1381,6 +1407,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_1_memory_type),
     .io_deq_bits_decoded_instruction_1_access_width
       (_instruction_queue_io_deq_bits_decoded_instruction_1_access_width),
+    .io_deq_bits_decoded_instruction_1_instruction_ID
+      (_instruction_queue_io_deq_bits_decoded_instruction_1_instruction_ID),
     .io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -1433,6 +1461,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_2_memory_type),
     .io_deq_bits_decoded_instruction_2_access_width
       (_instruction_queue_io_deq_bits_decoded_instruction_2_access_width),
+    .io_deq_bits_decoded_instruction_2_instruction_ID
+      (_instruction_queue_io_deq_bits_decoded_instruction_2_instruction_ID),
     .io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -1485,6 +1515,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_3_memory_type),
     .io_deq_bits_decoded_instruction_3_access_width
       (_instruction_queue_io_deq_bits_decoded_instruction_3_access_width),
+    .io_deq_bits_decoded_instruction_3_instruction_ID
+      (_instruction_queue_io_deq_bits_decoded_instruction_3_instruction_ID),
     .io_deq_bits_valid_bits_0
       (_instruction_queue_io_deq_bits_valid_bits_0),
     .io_deq_bits_valid_bits_1
@@ -1552,8 +1584,8 @@ module frontend(
       (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
       (io_commit_bits_is_misprediction),
-    .io_commit_bits_exception
-      (io_commit_bits_exception),
+    .io_commit_bits_violation
+      (io_commit_bits_violation),
     .io_commit_bits_expected_PC
       (io_commit_bits_expected_PC),
     .io_commit_bits_GHR
@@ -1690,6 +1722,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_0_memory_type),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_access_width
       (_instruction_queue_io_deq_bits_decoded_instruction_0_access_width),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_instruction_ID
+      (_instruction_queue_io_deq_bits_decoded_instruction_0_instruction_ID),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -1742,6 +1776,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_1_memory_type),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_access_width
       (_instruction_queue_io_deq_bits_decoded_instruction_1_access_width),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_instruction_ID
+      (_instruction_queue_io_deq_bits_decoded_instruction_1_instruction_ID),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -1794,6 +1830,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_2_memory_type),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_access_width
       (_instruction_queue_io_deq_bits_decoded_instruction_2_access_width),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_instruction_ID
+      (_instruction_queue_io_deq_bits_decoded_instruction_2_instruction_ID),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -1846,6 +1884,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_3_memory_type),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_access_width
       (_instruction_queue_io_deq_bits_decoded_instruction_3_access_width),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_instruction_ID
+      (_instruction_queue_io_deq_bits_decoded_instruction_3_instruction_ID),
     .io_decoded_fetch_packet_bits_valid_bits_0
       (_instruction_queue_io_deq_bits_valid_bits_0),
     .io_decoded_fetch_packet_bits_valid_bits_1
@@ -1898,8 +1938,6 @@ module frontend(
       (io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_0_bits_violation
       (io_FU_outputs_0_bits_violation),
-    .io_FU_outputs_0_bits_memory_violation
-      (io_FU_outputs_0_bits_memory_violation),
     .io_FU_outputs_1_valid
       (io_FU_outputs_1_valid),
     .io_FU_outputs_1_bits_RD
@@ -1936,8 +1974,6 @@ module frontend(
       (io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_1_bits_violation
       (io_FU_outputs_1_bits_violation),
-    .io_FU_outputs_1_bits_memory_violation
-      (io_FU_outputs_1_bits_memory_violation),
     .io_FU_outputs_2_valid
       (io_FU_outputs_2_valid),
     .io_FU_outputs_2_bits_RD
@@ -1974,8 +2010,6 @@ module frontend(
       (io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_2_bits_violation
       (io_FU_outputs_2_bits_violation),
-    .io_FU_outputs_2_bits_memory_violation
-      (io_FU_outputs_2_bits_memory_violation),
     .io_FU_outputs_3_valid
       (io_FU_outputs_3_valid),
     .io_FU_outputs_3_bits_RD
@@ -2012,8 +2046,6 @@ module frontend(
       (io_FU_outputs_3_bits_fetch_packet_index),
     .io_FU_outputs_3_bits_violation
       (io_FU_outputs_3_bits_violation),
-    .io_FU_outputs_3_bits_memory_violation
-      (io_FU_outputs_3_bits_memory_violation),
     .io_renamed_decoded_fetch_packet_ready
       (io_renamed_decoded_fetch_packet_ready),
     .io_renamed_decoded_fetch_packet_valid
@@ -2072,6 +2104,8 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instruction_ID
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instruction_ID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -2124,6 +2158,8 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instruction_ID
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instruction_ID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -2176,6 +2212,8 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instruction_ID
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instruction_ID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -2228,6 +2266,8 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instruction_ID
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instruction_ID),
     .io_renamed_decoded_fetch_packet_bits_valid_bits_0
       (io_renamed_decoded_fetch_packet_bits_valid_bits_0),
     .io_renamed_decoded_fetch_packet_bits_valid_bits_1

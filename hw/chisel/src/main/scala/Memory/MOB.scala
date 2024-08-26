@@ -37,6 +37,11 @@ import chisel3.util._
 import getPortCount._
 
 
+//FIXME: 
+// Update this module that that it has partial ordering
+// Meaning that loads cannot execute if there are previous unresolved stores
+// when an entry is found to have no oustanding previous stores, use it to look up the mob, forward the data, and request the load. 
+
 
 class MOB(coreParameters:CoreParameters) extends Module{
     import coreParameters._
@@ -97,30 +102,31 @@ class MOB(coreParameters:CoreParameters) extends Module{
     // Setting col 1 => Setting row N-2
     // Reading row 0 => Reading col N-1
     // Reading row 1 => Reading col N-2
- 	val matrix = RegInit(VecInit.tabulate(MOBEntries){x => 0.U((x+1).W) })
+ 	//val matrix = RegInit(VecInit.tabulate(MOBEntries){x => 0.U((x+1).W) })
+
+
+
+
+  	val matrix = RegInit(VecInit.tabulate(MOBEntries, MOBEntries){(x, y) => 0.B })
+    // pretend this is a half-matrix
+    // matrix[0] = [0]
+    // matrix[1] = [0, 0]
+    // matrix[3] = [0, 0, 0]
+    // etc...
+
 
     def get_indetermination_matrix_row(row: UInt): UInt = {
-        // from Row row, read bit 0, 
-        // from Row row + 1, read bit 1
-        // from Row row + N, read bit N
-        // collect bits and return them as a UINT
+        matrix(row).asUInt
+    }
 
-        // Collect bits from each row entry and combine into a single UInt
-        val bits = (0 until MOBEntries).map { i =>
-            matrix(i)(row)
+    def set_indetermination_matrix_col(col: UInt, bit: Bool): Unit = {
+        for (row <- 0 until MOBEntries) {
+            when(row.U >= col) {
+                matrix(row)(col) := bit
+            }
         }
-        
-        // Combine collected bits into a single UInt value
-        VecInit(bits).asUInt
     }
 
-    def set_indetermination_matrix_col(col:UInt): Unit = {
-        matrix(MOBEntries.U - 1.U - col) := ((1<<MOBEntries)-1).U
-    }
-
-    def reset_indetermination_matrix_col(col:UInt): Unit = {
-        matrix(MOBEntries.U - 1.U - col) := 0.U
-    }
 
     /////////////////////////
     // GENERATE AGE VECTOR //
@@ -158,7 +164,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
         io.reserved_pointers(i).bits  := 0.U
         when(written_vec(i)){
             val index_offset = PopCount(written_vec.take(i+1))-1.U
-            set_indetermination_matrix_col(back_index)
+            set_indetermination_matrix_col(back_index+index_offset, 1.B)
 
             MOB(back_index + index_offset).valid                :=  1.B
             MOB(back_index + index_offset).MOB_STATE            :=  MOB_STATES.VALID
@@ -176,7 +182,6 @@ class MOB(coreParameters:CoreParameters) extends Module{
     back_pointer := back_pointer + PopCount(written_vec)
 
 
-    // Update indetermination matrix 
 
     /////////////
     // AGU OUT //
@@ -209,12 +214,12 @@ class MOB(coreParameters:CoreParameters) extends Module{
         MOB(MOB_index).data            := io.AGU_output.bits.wr_data
 
         // Update indet. matrix
-        reset_indetermination_matrix_col(MOB_index)
+        set_indetermination_matrix_col(MOB_index, 0.B)
         
         // Update MOB entry state
-        when((MOB(MOB_index).memory_type === memory_type_t.LOAD) && MOB(MOB_index).valid){
+        when((MOB(MOB_index).memory_type === memory_type_t.LOAD) && (MOB(MOB_index).MOB_STATE === MOB_STATES.VALID) && MOB(MOB_index).valid){
             MOB(MOB_index).MOB_STATE       := MOB_STATES.READY
-        }.elsewhen((MOB(MOB_index).memory_type === memory_type_t.STORE) && MOB(MOB_index).valid){
+        }.elsewhen((MOB(MOB_index).memory_type === memory_type_t.STORE) && (MOB(MOB_index).MOB_STATE === MOB_STATES.VALID) && MOB(MOB_index).valid){
             MOB(MOB_index).MOB_STATE       := MOB_STATES.COMPLETE
         }
     }
@@ -277,20 +282,20 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     // Input is Store //
     // Search for younger conflicting loads. Set violation as needed.
-    for(i <- 0 until MOBEntries){
-        val is_valid        = MOB(i).valid
-        val is_younger      = age_vector(i) < incoming_age
-        val is_conflicting  = (incoming_address & "hFFFFFFFC".U) === ("hFFFFFFFC".U & MOB(i).address)
-        val is_complete     = !(MOB(i).MOB_STATE === MOB_STATES.VALID) &&  !(MOB(i).MOB_STATE === MOB_STATES.INVALID)
-        val is_load         = MOB(i).memory_type === memory_type_t.LOAD
+        for(i <- 0 until MOBEntries){
+            val is_valid        = MOB(i).valid
+            val is_younger      = age_vector(i) < incoming_age
+            val is_conflicting  = (incoming_address & "hFFFFFFFC".U) === ("hFFFFFFFC".U & MOB(i).address)
+            val is_complete     = !(MOB(i).MOB_STATE === MOB_STATES.VALID) &&  !(MOB(i).MOB_STATE === MOB_STATES.INVALID)
+            val is_load         = MOB(i).memory_type === memory_type_t.LOAD
 
-        // FIXME: here, the conflicting depends on the TYPE of store and TYPE of load...
-        when(io.AGU_output.valid && is_younger && is_conflicting && is_valid){
-            when(incoming_is_store && is_load && is_complete){
-                MOB(i).violation := 1.B
+            // FIXME: here, the conflicting depends on the TYPE of store and TYPE of load...
+            when(io.AGU_output.valid && is_younger && is_conflicting && is_valid){
+                when(incoming_is_store && is_load && is_complete){
+                    MOB(i).violation := 1.B
+                }
             }
         }
-    }
 
     //////////////////
     // CACHE ACCESS //
@@ -307,10 +312,18 @@ class MOB(coreParameters:CoreParameters) extends Module{
     io.backend_memory_request.bits   := 0.U.asTypeOf(new backend_memory_request(coreParameters))
     io.backend_memory_request.valid  := 0.B
 
+    
+
     possible_load_vec    := MOB.map(MOB_entry => MOB_entry.valid && (MOB_entry.MOB_STATE === MOB_STATES.READY) && (MOB_entry.memory_type === memory_type_t.LOAD))
+
+
+    
     fire_store           := MOB(front_index).valid && (MOB(front_index).MOB_STATE === MOB_STATES.COMMITTED) && !MOB(front_index).violation && (MOB(front_index).memory_type === memory_type_t.STORE)    // stores are sent only from front of queue
 
     val load_index                               = PriorityEncoder(possible_load_vec)
+
+    val prev_resolved = get_indetermination_matrix_row(load_index) === 0.U
+
     when(MOB(load_index).valid && (MOB(load_index).MOB_STATE === MOB_STATES.READY) && (MOB(load_index).memory_type === memory_type_t.LOAD)){
         io.backend_memory_request.valid             := 1.B
         io.backend_memory_request.bits.addr         := MOB(load_index).address

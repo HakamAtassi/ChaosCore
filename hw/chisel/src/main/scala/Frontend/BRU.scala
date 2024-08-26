@@ -73,7 +73,7 @@ class BRU(coreParameters:CoreParameters) extends Module{
     io.commit.bits.ROB_index                     := io.ROB_output.ROB_index
     io.commit.bits.free_list_front_pointer       := io.ROB_output.free_list_front_pointer
     io.commit.bits.fetch_PC                      := io.ROB_output.fetch_PC
-    io.commit.bits.exception                     := io.ROB_output.exception.reduce(_ || _)
+    io.commit.bits.violation                     := io.ROB_output.violation.reduce(_ || _)
 
     for(i <- 0 until fetchWidth){
         io.commit.bits.RDold(i)                  := io.ROB_output.ROB_entries(i).RDold
