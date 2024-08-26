@@ -53,7 +53,7 @@ module RAT(
                io_free_list_RD_3,
   input        io_commit_valid,
                io_commit_bits_is_misprediction,
-               io_commit_bits_exception,
+               io_commit_bits_violation,
   input  [4:0] io_commit_bits_RDold_0,
                io_commit_bits_RDold_1,
                io_commit_bits_RDold_2,
@@ -242,7 +242,7 @@ module RAT(
     end
     else begin
       automatic logic _GEN_0 =
-        io_commit_valid & (io_commit_bits_is_misprediction | io_commit_bits_exception);
+        io_commit_valid & (io_commit_bits_is_misprediction | io_commit_bits_violation);
       automatic logic _GEN_1;
       automatic logic _GEN_2;
       automatic logic _GEN_3;

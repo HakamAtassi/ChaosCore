@@ -67,8 +67,6 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     require(isPow2(ROBEntries), "ROB entries not a power of 2")
     require(isPow2(RSEntries), "Reservation station entries not a power of 2")
 
-
-
     /////////////
     // MODULES //
     /////////////
@@ -158,7 +156,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ///////////
     // FLUSH //
     ///////////
-    flush := BRU.io.commit.valid && BRU.io.commit.bits.is_misprediction
+    flush := BRU.io.commit.valid && (BRU.io.commit.bits.is_misprediction || BRU.io.commit.bits.violation)
 
     frontend.io.flush   <>  flush
     backend.io.flush    <>  flush
@@ -170,58 +168,30 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // ALLOCATION LOGIC //
     //////////////////////
 
-    // Cant dequeue a fetchpacket from the frontend unless the entire fetch packet is ready
-    // This is only true when the ROB has available space and the RS entries (both INT and MEM)
-    // Have enough available space
-
-    //FIXME: 
-    //Problem: 
-    //MEMRS is still allocating partially if not all fetch packets are accepted. this causes instructions to leak...
+    val backend_can_allocate = backend.io.backend_packet.map(_.ready).reduce(_ && _) && ROB.io.ROB_packet.ready
 
 
-    // overwrite frontend renamed_decoded_fetch_packet ready bit
-
-    val needs_INTRS          = Wire(Vec(fetchWidth, Bool()))
-    val needs_MEMRS          = Wire(Vec(fetchWidth, Bool()))
-
-    for(i <- 0 until fetchWidth){
-        needs_INTRS(i) := (frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS_type === RS_types.INT) && frontend.io.renamed_decoded_fetch_packet.bits.valid_bits(i)
-        needs_MEMRS(i) := (frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM) && frontend.io.renamed_decoded_fetch_packet.bits.valid_bits(i)
-    }
-
-    val all_INT_RS_accepted = Wire(Bool())  // every valid INT RS instruction has an available spot
-    val all_MEM_RS_accepted = Wire(Bool())  // every valid MEM RS instruction has an available spot
-
-    // there must be more available RS entries than requesting instructions for that RS
-    // Otherwise, entry doesnt allocate
-    all_INT_RS_accepted := PopCount(backend.io.INTRS_ready) >= PopCount(needs_INTRS)
-    all_MEM_RS_accepted := (PopCount(backend.io.MEMRS_ready) >= PopCount(needs_MEMRS)) && (PopCount(backend.io.MOB_ready) >= PopCount(needs_MEMRS))
-
-
-    // ROB and RS do not update until ready
-    backend.io.backend_packet   <> frontend.io.renamed_decoded_fetch_packet
     backend.io.fetch_PC   <> frontend.io.renamed_decoded_fetch_packet.bits.fetch_PC
-
-
-    for(i <- 0 until fetchWidth){   // pass along the ROB index for each instruction (for commit and PC read)
-        backend.io.backend_packet.bits.decoded_instruction(i).ROB_index := ROB.io.ROB_index
-        backend.io.backend_packet.bits.decoded_instruction(i).FTQ_index := FTQ.io.FTQ_index
+    // ROB and RS do not update until ready
+    for(i <- 0 until fetchWidth){
+        backend.io.backend_packet(i).bits   := frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)
+        backend.io.backend_packet(i).valid  := frontend.io.renamed_decoded_fetch_packet.valid && frontend.io.renamed_decoded_fetch_packet.bits.valid_bits(i) && backend_can_allocate
+        backend.io.backend_packet(i).bits.ROB_index := ROB.io.ROB_index
+        backend.io.backend_packet(i).bits.FTQ_index := FTQ.io.FTQ_index
     }
 
     // FIXME: does the frontend have appropriate backpressure incase the ROB cant accept/is not ready????
     ROB.io.ROB_packet           <> frontend.io.renamed_decoded_fetch_packet
-    ROB.io.ROB_packet.valid     := frontend.io.renamed_decoded_fetch_packet.valid && all_INT_RS_accepted && all_MEM_RS_accepted
+    ROB.io.ROB_packet.valid     := frontend.io.renamed_decoded_fetch_packet.valid && backend_can_allocate
 
     frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
     FTQ.io.ROB_index <> ROB.io.ROB_index
-    //FTQ.io.predictions.valid := frontend.io.renamed_decoded_fetch_packet.valid && all_INT_RS_accepted && all_MEM_RS_accepted
 
     // Connect branch unit to PC file (which exists in the ROB)
     backend.io.PC_file_exec_addr <> ROB.io.PC_file_exec_addr
     backend.io.PC_file_exec_data <> ROB.io.PC_file_exec_data
 
 
-    frontend.io.renamed_decoded_fetch_packet.ready := (ROB.io.ROB_packet.ready && all_INT_RS_accepted && all_MEM_RS_accepted)
-
+    frontend.io.renamed_decoded_fetch_packet.ready := backend_can_allocate
 
 }

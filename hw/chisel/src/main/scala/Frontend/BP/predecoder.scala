@@ -189,7 +189,8 @@ class predecoder(coreParameters:CoreParameters) extends Module{
 
     final_fetch_packet_out.valid    := input_fetch_packet_valid
     when(input_fetch_packet_valid && final_fetch_packet_out_Q.io.enq.ready){expected_next_PC := target_address}
-    when(io.commit.valid && io.commit.bits.is_misprediction){expected_next_PC := io.commit.bits.fetch_PC}
+    // FIXME: this should be a global signal...
+    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.violation)){expected_next_PC := io.commit.bits.fetch_PC}
 
     ////////////
     // REVERT //

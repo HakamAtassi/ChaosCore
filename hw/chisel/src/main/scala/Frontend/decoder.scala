@@ -165,6 +165,9 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
 
 
+    io.decoded_instruction.bits.instruction_ID           := DontCare
+
+
     // TODO: ECALL / EBREAK
 
     // There is currently only 1 branch unit, 1 div unit, and 1 CSR unit. 

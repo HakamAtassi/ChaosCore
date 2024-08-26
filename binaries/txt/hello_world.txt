@@ -12,14 +12,14 @@ Disassembly of section .text:
 
 00000010 <putchar>:
   10:	fd010113          	addi	x2,x2,-48             ; x2 = 0x3fc0
-  14:	02812623          	sw	x8,44(x2)               ; mem[0x3fec] = 0x4000
+  14:	02812623          	sw	x8,44(x2)               ; mem[0x3fec] = 0x4000          ; good
   18:	03010413          	addi	x8,x2,48              ; x8 = 0x3ff0
-  1c:	fca42e23          	sw	x10,-36(x8)             ; mem[0x3fcc] = 72
-  20:	800007b7          	lui	x15,0x80000             ; x15 = 0x80000
-  24:	fef42623          	sw	x15,-20(x8)             ; mem[0x3fdc] = 0x8000_0000
-  28:	fdc42703          	lw	x14,-36(x8)             ; x14 = mem[0x3fcc]
-  2c:	fec42783          	lw	x15,-20(x8)             ; x15 = mem[0x3fdc]
-  30:	00e7a023          	sw	x14,0(x15)              ; mem[0x8000_0000] = 72 ; missing??
+  1c:	fca42e23          	sw	x10,-36(x8)             ; mem[0x3fcc] = 72              ; good
+  20:	800007b7          	lui	x15,0x80000             ; x15 = 0x80000                 
+  24:	fef42623          	sw	x15,-20(x8)             ; mem[0x3fdc] = 0x8000_0000            
+  28:	fdc42703          	lw	x14,-36(x8)             ; x14 = mem[0x3fcc]                     
+  2c:	fec42783          	lw	x15,-20(x8)             ; x15 = mem[0x3fdc]                   
+  30:	00e7a023          	sw	x14,0(x15)              ; mem[0x8000_0000] = 72               
   34:	00000013          	nop
   38:	02c12403          	lw	x8,44(x2)               ; x8 = mem[0x3fec]
   3c:	03010113          	addi	x2,x2,48

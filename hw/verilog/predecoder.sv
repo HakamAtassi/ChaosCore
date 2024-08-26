@@ -73,7 +73,7 @@ module predecoder(
   input  [2:0]  io_commit_bits_br_type,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
-                io_commit_bits_exception,
+                io_commit_bits_violation,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,
@@ -299,7 +299,7 @@ module predecoder(
       GHR <= 16'h0;
     end
     else begin
-      if (io_commit_valid & io_commit_bits_is_misprediction)
+      if (io_commit_valid & (io_commit_bits_is_misprediction | io_commit_bits_violation))
         expected_next_PC <= io_commit_bits_fetch_PC;
       else if (input_fetch_packet_valid & _final_fetch_packet_out_Q_io_enq_ready)
         expected_next_PC <= target_address;

@@ -60,6 +60,7 @@ module FU_1(
                 io_FU_input_bits_decoded_instruction_IS_IMM,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
+  input  [63:0] io_FU_input_bits_decoded_instruction_instruction_ID,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_fetch_PC,
@@ -80,8 +81,7 @@ module FU_1(
   output [5:0]  io_FU_output_bits_ROB_index,
   output [3:0]  io_FU_output_bits_FTQ_index,
   output [1:0]  io_FU_output_bits_fetch_packet_index,
-  output        io_FU_output_bits_violation,
-                io_FU_output_bits_memory_violation
+  output        io_FU_output_bits_violation
 );
 
   reg  monitor_output_REG;
@@ -141,6 +141,5 @@ module FU_1(
   assign io_FU_output_bits_is_unsigned = 1'h0;
   assign io_FU_output_bits_wr_data = 32'h0;
   assign io_FU_output_bits_violation = 1'h0;
-  assign io_FU_output_bits_memory_violation = 1'h0;
 endmodule
 

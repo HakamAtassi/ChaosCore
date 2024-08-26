@@ -171,7 +171,7 @@ module ChaosCore_tile(
     .io_commit_bits_br_type                                       (/* unused */),
     .io_commit_bits_fetch_packet_index                            (/* unused */),
     .io_commit_bits_is_misprediction                              (/* unused */),
-    .io_commit_bits_exception                                     (/* unused */),
+    .io_commit_bits_violation                                     (/* unused */),
     .io_commit_bits_expected_PC                                   (/* unused */),
     .io_commit_bits_GHR                                           (/* unused */),
     .io_commit_bits_TOS                                           (/* unused */),

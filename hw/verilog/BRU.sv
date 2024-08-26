@@ -63,10 +63,10 @@ module BRU(
                 io_ROB_output_complete_1,
                 io_ROB_output_complete_2,
                 io_ROB_output_complete_3,
-                io_ROB_output_exception_0,
-                io_ROB_output_exception_1,
-                io_ROB_output_exception_2,
-                io_ROB_output_exception_3,
+                io_ROB_output_violation_0,
+                io_ROB_output_violation_1,
+                io_ROB_output_violation_2,
+                io_ROB_output_violation_3,
   output        io_commit_valid,
   output [31:0] io_commit_bits_fetch_PC,
   output        io_commit_bits_T_NT,
@@ -74,7 +74,7 @@ module BRU(
   output [2:0]  io_commit_bits_br_type,
   output [1:0]  io_commit_bits_fetch_packet_index,
   output        io_commit_bits_is_misprediction,
-                io_commit_bits_exception,
+                io_commit_bits_violation,
   output [31:0] io_commit_bits_expected_PC,
   output [15:0] io_commit_bits_GHR,
   output [6:0]  io_commit_bits_TOS,
@@ -114,9 +114,9 @@ module BRU(
   assign io_commit_bits_fetch_packet_index = branch_commit ? io_FTQ_dominant_index : 2'h0;
   assign io_commit_bits_is_misprediction =
     branch_commit & io_FTQ_predicted_PC != io_FTQ_resolved_PC;
-  assign io_commit_bits_exception =
-    io_ROB_output_exception_0 | io_ROB_output_exception_1 | io_ROB_output_exception_2
-    | io_ROB_output_exception_3;
+  assign io_commit_bits_violation =
+    io_ROB_output_violation_0 | io_ROB_output_violation_1 | io_ROB_output_violation_2
+    | io_ROB_output_violation_3;
   assign io_commit_bits_expected_PC = branch_commit ? io_FTQ_resolved_PC : 32'h0;
   assign io_commit_bits_GHR = io_ROB_output_GHR;
   assign io_commit_bits_TOS = io_ROB_output_TOS;
