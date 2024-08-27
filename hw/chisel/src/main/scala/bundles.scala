@@ -579,29 +579,6 @@ val Acquire,
 }
 
 
-class TileLink_Channel_A extends Bundle {
-  val a_opcode   = UInt(3.W) 
-  val a_param    = UInt(3.W) 
-  val a_size     = UInt(3.W) 
-  val a_source   = UInt(4.W) 
-  val a_address  = UInt(32.W)
-  val a_mask     = UInt(4.W) 
-  val a_data     = UInt(256.W)
-}
-
-class TileLink_Channel_D extends Bundle {
-  val d_opcode   = UInt(3.W)
-  val d_param    = UInt(3.W)
-  val d_size     = UInt(3.W)
-  val d_source   = UInt(4.W)
-  val d_sink     = UInt(4.W)
-  val d_data     = UInt(256.W)
-}
-
-
-
-
-
 /*loads mark as complete when they are 100% correct and non-speculative.*/
 /*That is, loads can mark the RD ready to avoid stalling the pipeline*/
 /*But have the possibility of causing an exception that prevents them from committing*/
@@ -614,11 +591,8 @@ object MOB_STATES extends ChiselEnum {
     READY,              // 2
     REQUESTED,          // 3
     CDB_WRITE,          // 4
-    ALMOST_COMPLETE,    // 5
-    COMPLETE,           // 6
-    WAIT,               // 7
-    COMMITTED,          // 8
-    DONE = Value        // 9
+    WAIT,               // 5
+    DONE = Value        // 6
 }
 
 class MOB_entry(coreParameters:CoreParameters) extends Bundle{
@@ -640,6 +614,9 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
 
     val fwd_valid              = Vec(4, Bool())
     val fwd_data               = Vec(4, UInt(8.W))
+
+    val committed               = Bool()
+    val resolved                = Bool()    // all previous stores resolved?
 
 
 

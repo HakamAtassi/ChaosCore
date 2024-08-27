@@ -96,38 +96,26 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
     // UPDATE RS ENTRIES //
     ///////////////////////
 
-    // FIXME: these needs to be fixed.
-    // 2) the ready can also be "bypassed" such that it can issue that same cycle rather than writing 1 cycle then reading the ready bits from the reg another
-    val RS1_match = Wire(Vec(RSEntries, Bool()))    // what instructions have both inputs ready?
-    val RS2_match = Wire(Vec(RSEntries, Bool()))    // what instructions have both inputs ready?
-    
+    //FIXME: make sure that the ready bit will update if its being broadcasted the same cycle the RS entry is being updated
+
+
     for (i <- 0 until RSEntries) {
-        var _RS1_match = false.B
-        var _RS2_match = false.B
-
         for (FU <- 0 until portCount) {
-            _RS1_match = _RS1_match || ((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS1) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid)
-        }
-        for (FU <- 0 until portCount) {
-            _RS2_match = _RS2_match || ((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS2) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid)
-        }
 
-        RS1_match(i) := _RS1_match
-        RS2_match(i) := _RS2_match
-    }
+            when((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS1) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid){
+                when(reservation_station(i).valid){
+                    reservation_station(i).decoded_instruction.ready_bits.RS1_ready := 1.B
+                }
+            }
 
-
-    for(i <- 0 until RSEntries){
-        when(!reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).valid){
-            reservation_station(i).decoded_instruction.ready_bits.RS1_ready := RS1_match(i)
+            when((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS2) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid){
+                when(reservation_station(i).valid){
+                    reservation_station(i).decoded_instruction.ready_bits.RS2_ready := 1.B
+                }
+            }
         }
     }
 
-    for(i <- 0 until RSEntries){
-        when(!reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).valid){
-            reservation_station(i).decoded_instruction.ready_bits.RS2_ready := RS2_match(i)
-        }
-    }
 
 
 

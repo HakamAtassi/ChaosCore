@@ -77,7 +77,6 @@ class FTQ(coreParameters:CoreParameters) extends Module{
     val FTQ = RegInit(VecInit(Seq.fill(FTQEntries)(0.U.asTypeOf(new FTQ_entry(coreParameters)))))
 
 
-    io.FTQ_index := back_index
 
     // whenever input branch is valid, try to write to FTQ
 
