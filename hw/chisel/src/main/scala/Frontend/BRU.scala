@@ -56,9 +56,9 @@ class BRU(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         val is_completed    = (io.ROB_output.complete(i) && io.ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!io.ROB_output.ROB_entries(i).valid)
-        val is_load         = io.ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD
-        val is_store        = io.ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE
-        commit_row_complete(i) := is_completed || is_invalid
+        val is_load         = io.ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && io.ROB_output.ROB_entries(i).valid
+        val is_store        = io.ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && io.ROB_output.ROB_entries(i).valid
+        commit_row_complete(i) := is_completed || is_invalid || is_store // stores happen after they commit
     }
     commit_valid := io.ROB_output.row_valid && commit_row_complete.reduce(_ && _)
 
@@ -81,6 +81,7 @@ class BRU(coreParameters:CoreParameters) extends Module{
         io.commit.bits.RD_valid(i)               := io.ROB_output.ROB_entries(i).RD_valid
     }
 
+    // FIXME: Does FTQ need ROB index?
     val branch_commit = Wire(Bool())
 
     io.commit.valid := commit_valid

@@ -71,6 +71,7 @@ module backend(
                 io_commit_bits_RD_valid_3,
   output [5:0]  io_PC_file_exec_addr,
   input  [31:0] io_PC_file_exec_data,
+                io_fetch_PC,
   output        io_backend_packet_0_ready,
   input         io_backend_packet_0_valid,
                 io_backend_packet_0_bits_ready_bits_RS1_ready,
@@ -1583,25 +1584,6 @@ module backend(
     .io_reserved_pointers_2_bits                 (_MOB_io_reserved_pointers_2_bits),
     .io_reserved_pointers_3_valid                (/* unused */),
     .io_reserved_pointers_3_bits                 (_MOB_io_reserved_pointers_3_bits),
-    .io_complete_valid                           (io_FU_outputs_3_valid),
-    .io_complete_bits_RD                         (io_FU_outputs_3_bits_RD),
-    .io_complete_bits_RD_data                    (io_FU_outputs_3_bits_RD_data),
-    .io_complete_bits_RD_valid                   (io_FU_outputs_3_bits_RD_valid),
-    .io_complete_bits_fetch_PC                   (io_FU_outputs_3_bits_fetch_PC),
-    .io_complete_bits_branch_taken               (io_FU_outputs_3_bits_branch_taken),
-    .io_complete_bits_target_address             (io_FU_outputs_3_bits_target_address),
-    .io_complete_bits_branch_valid               (io_FU_outputs_3_bits_branch_valid),
-    .io_complete_bits_address                    (io_FU_outputs_3_bits_address),
-    .io_complete_bits_memory_type                (io_FU_outputs_3_bits_memory_type),
-    .io_complete_bits_access_width               (io_FU_outputs_3_bits_access_width),
-    .io_complete_bits_is_unsigned                (io_FU_outputs_3_bits_is_unsigned),
-    .io_complete_bits_wr_data                    (io_FU_outputs_3_bits_wr_data),
-    .io_complete_bits_MOB_index                  (io_FU_outputs_3_bits_MOB_index),
-    .io_complete_bits_ROB_index                  (io_FU_outputs_3_bits_ROB_index),
-    .io_complete_bits_FTQ_index                  (io_FU_outputs_3_bits_FTQ_index),
-    .io_complete_bits_fetch_packet_index
-      (io_FU_outputs_3_bits_fetch_packet_index),
-    .io_complete_bits_violation                  (io_FU_outputs_3_bits_violation),
     .io_AGU_output_valid                         (_AGU_io_FU_output_valid),
     .io_AGU_output_bits_RD                       (_AGU_io_FU_output_bits_RD),
     .io_AGU_output_bits_RD_data                  (32'h0),
@@ -2105,5 +2087,24 @@ module backend(
   assign io_FU_outputs_2_bits_fetch_packet_index =
     _FU2_io_FU_output_bits_fetch_packet_index;
   assign io_FU_outputs_2_bits_violation = _FU2_io_FU_output_bits_violation;
+  assign io_FU_outputs_3_valid = _MOB_io_MOB_output_valid;
+  assign io_FU_outputs_3_bits_RD = _MOB_io_MOB_output_bits_RD;
+  assign io_FU_outputs_3_bits_RD_data = _MOB_io_MOB_output_bits_RD_data;
+  assign io_FU_outputs_3_bits_RD_valid = _MOB_io_MOB_output_bits_RD_valid;
+  assign io_FU_outputs_3_bits_fetch_PC = _MOB_io_MOB_output_bits_fetch_PC;
+  assign io_FU_outputs_3_bits_branch_taken = _MOB_io_MOB_output_bits_branch_taken;
+  assign io_FU_outputs_3_bits_target_address = _MOB_io_MOB_output_bits_target_address;
+  assign io_FU_outputs_3_bits_branch_valid = _MOB_io_MOB_output_bits_branch_valid;
+  assign io_FU_outputs_3_bits_address = _MOB_io_MOB_output_bits_address;
+  assign io_FU_outputs_3_bits_memory_type = _MOB_io_MOB_output_bits_memory_type;
+  assign io_FU_outputs_3_bits_access_width = _MOB_io_MOB_output_bits_access_width;
+  assign io_FU_outputs_3_bits_is_unsigned = _MOB_io_MOB_output_bits_is_unsigned;
+  assign io_FU_outputs_3_bits_wr_data = _MOB_io_MOB_output_bits_wr_data;
+  assign io_FU_outputs_3_bits_MOB_index = _MOB_io_MOB_output_bits_MOB_index;
+  assign io_FU_outputs_3_bits_ROB_index = _MOB_io_MOB_output_bits_ROB_index;
+  assign io_FU_outputs_3_bits_FTQ_index = _MOB_io_MOB_output_bits_FTQ_index;
+  assign io_FU_outputs_3_bits_fetch_packet_index =
+    _MOB_io_MOB_output_bits_fetch_packet_index;
+  assign io_FU_outputs_3_bits_violation = _MOB_io_MOB_output_bits_violation;
 endmodule
 

@@ -44,18 +44,22 @@ module BRU(
                 io_ROB_output_TOS,
   input  [7:0]  io_ROB_output_free_list_front_pointer,
   input         io_ROB_output_ROB_entries_0_valid,
+  input  [1:0]  io_ROB_output_ROB_entries_0_memory_type,
   input  [6:0]  io_ROB_output_ROB_entries_0_RD,
   input         io_ROB_output_ROB_entries_0_RD_valid,
   input  [4:0]  io_ROB_output_ROB_entries_0_RDold,
   input         io_ROB_output_ROB_entries_1_valid,
+  input  [1:0]  io_ROB_output_ROB_entries_1_memory_type,
   input  [6:0]  io_ROB_output_ROB_entries_1_RD,
   input         io_ROB_output_ROB_entries_1_RD_valid,
   input  [4:0]  io_ROB_output_ROB_entries_1_RDold,
   input         io_ROB_output_ROB_entries_2_valid,
+  input  [1:0]  io_ROB_output_ROB_entries_2_memory_type,
   input  [6:0]  io_ROB_output_ROB_entries_2_RD,
   input         io_ROB_output_ROB_entries_2_RD_valid,
   input  [4:0]  io_ROB_output_ROB_entries_2_RDold,
   input         io_ROB_output_ROB_entries_3_valid,
+  input  [1:0]  io_ROB_output_ROB_entries_3_memory_type,
   input  [6:0]  io_ROB_output_ROB_entries_3_RD,
   input         io_ROB_output_ROB_entries_3_RD_valid,
   input  [4:0]  io_ROB_output_ROB_entries_3_RDold,
@@ -97,13 +101,21 @@ module BRU(
   wire commit_valid =
     io_ROB_output_row_valid
     & (io_ROB_output_complete_0 & io_ROB_output_ROB_entries_0_valid
-       | ~io_ROB_output_ROB_entries_0_valid)
+       | ~io_ROB_output_ROB_entries_0_valid
+       | io_ROB_output_ROB_entries_0_memory_type == 2'h2
+       & io_ROB_output_ROB_entries_0_valid)
     & (io_ROB_output_complete_1 & io_ROB_output_ROB_entries_1_valid
-       | ~io_ROB_output_ROB_entries_1_valid)
+       | ~io_ROB_output_ROB_entries_1_valid
+       | io_ROB_output_ROB_entries_1_memory_type == 2'h2
+       & io_ROB_output_ROB_entries_1_valid)
     & (io_ROB_output_complete_2 & io_ROB_output_ROB_entries_2_valid
-       | ~io_ROB_output_ROB_entries_2_valid)
+       | ~io_ROB_output_ROB_entries_2_valid
+       | io_ROB_output_ROB_entries_2_memory_type == 2'h2
+       & io_ROB_output_ROB_entries_2_valid)
     & (io_ROB_output_complete_3 & io_ROB_output_ROB_entries_3_valid
-       | ~io_ROB_output_ROB_entries_3_valid);
+       | ~io_ROB_output_ROB_entries_3_valid
+       | io_ROB_output_ROB_entries_3_memory_type == 2'h2
+       & io_ROB_output_ROB_entries_3_valid);
   wire branch_commit =
     commit_valid & io_ROB_output_fetch_PC == io_FTQ_fetch_PC & io_FTQ_valid;
   assign io_commit_valid = commit_valid;

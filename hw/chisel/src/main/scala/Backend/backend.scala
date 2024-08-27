@@ -67,9 +67,10 @@ class backend(coreParameters:CoreParameters) extends Module{
         val backend_packet              =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
 
+
         // UPDATE //
         val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
-    })
+    }); dontTouch(io)
 
 
 
@@ -280,7 +281,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     io.FU_outputs(0) <> FU0.io.FU_output
     io.FU_outputs(1) <> FU1.io.FU_output
     io.FU_outputs(2) <> FU2.io.FU_output
-    io.FU_outputs(3) <> MOB.io.complete
+    io.FU_outputs(3) <> MOB.io.MOB_output
 
 
     ///////////////////

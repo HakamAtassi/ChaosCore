@@ -12,9 +12,9 @@ Disassembly of section .text:
 
 00000010 <putchar>:
   10:	fd010113          	addi	x2,x2,-48             ; x2 = 0x3fc0
-  14:	02812623          	sw	x8,44(x2)               ; mem[0x3fec] = 0x4000          ; good
+  14:	02812623          	sw	x8,44(x2)               ; mem[0x3fec] = 0x4000          ; 
   18:	03010413          	addi	x8,x2,48              ; x8 = 0x3ff0
-  1c:	fca42e23          	sw	x10,-36(x8)             ; mem[0x3fcc] = 72              ; good
+  1c:	fca42e23          	sw	x10,-36(x8)             ; mem[0x3fcc] = 72              ; 
   20:	800007b7          	lui	x15,0x80000             ; x15 = 0x80000                 
   24:	fef42623          	sw	x15,-20(x8)             ; mem[0x3fdc] = 0x8000_0000            
   28:	fdc42703          	lw	x14,-36(x8)             ; x14 = mem[0x3fcc]                     

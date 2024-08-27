@@ -168,7 +168,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // ALLOCATION LOGIC //
     //////////////////////
 
-    val backend_can_allocate = backend.io.backend_packet.map(_.ready).reduce(_ && _) && ROB.io.ROB_packet.ready
+    val backend_can_allocate = backend.io.backend_packet.map(_.ready).reduce(_ && _) && ROB.io.ROB_packet.ready && FTQ.io.predictions.ready
 
 
     backend.io.fetch_PC   <> frontend.io.renamed_decoded_fetch_packet.bits.fetch_PC
@@ -176,15 +176,20 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         backend.io.backend_packet(i).bits   := frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)
         backend.io.backend_packet(i).valid  := frontend.io.renamed_decoded_fetch_packet.valid && frontend.io.renamed_decoded_fetch_packet.bits.valid_bits(i) && backend_can_allocate
-        backend.io.backend_packet(i).bits.ROB_index := ROB.io.ROB_index
         backend.io.backend_packet(i).bits.FTQ_index := FTQ.io.FTQ_index
+        backend.io.backend_packet(i).bits.ROB_index := ROB.io.ROB_index
     }
 
     // FIXME: does the frontend have appropriate backpressure incase the ROB cant accept/is not ready????
     ROB.io.ROB_packet           <> frontend.io.renamed_decoded_fetch_packet
     ROB.io.ROB_packet.valid     := frontend.io.renamed_decoded_fetch_packet.valid && backend_can_allocate
 
-    frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
+   
+    frontend.io.predictions.ready := backend_can_allocate
+    FTQ.io.predictions.valid  := frontend.io.predictions.valid && backend_can_allocate
+    FTQ.io.predictions.bits  := frontend.io.predictions.bits
+
+
     FTQ.io.ROB_index <> ROB.io.ROB_index
 
     // Connect branch unit to PC file (which exists in the ROB)
