@@ -77,17 +77,17 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
 
     // FIXME: why do I reconstruct flush here....??
     is_misprediction    := (io.commit.valid && io.commit.bits.is_misprediction)
-    is_violation        := (io.commit.valid && io.commit.bits.violation)
+    is_violation        := (io.commit.valid)
     is_revert           := (io.revert.valid)
     is_branch           := (io.prediction.bits.br_type === br_type_t.BR)     && io.prediction.valid
     is_jalr             := (io.prediction.bits.br_type === br_type_t.JALR)   && io.prediction.valid
     is_ret              := (io.prediction.bits.br_type === br_type_t.RET)    && io.prediction.valid
     use_BTB             := (io.prediction.bits.hit && io.prediction.valid && !is_ret)
     use_RAS             := is_ret
-    flushing_event      := is_misprediction || is_revert || is_violation
+    flushing_event      := is_misprediction || is_revert 
 
     // FLUSHING MUX //
-    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.violation)){
+    when(io.commit.valid && (io.commit.bits.is_misprediction)){
         flush_PC_mux := io.commit.bits.fetch_PC
     }.elsewhen(io.revert.valid){
         flush_PC_mux := io.revert.bits.PC

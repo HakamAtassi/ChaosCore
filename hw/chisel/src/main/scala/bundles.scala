@@ -46,6 +46,8 @@ class fetch_packet(coreParameters:CoreParameters) extends Bundle{
     val valid_bits      = Vec(fetchWidth, Bool())
     val instructions    = Vec(fetchWidth, new Instruction(coreParameters))
 
+    val prediction              = new prediction(coreParameters)
+
     val GHR             = UInt(GHRWidth.W)
     val NEXT            = UInt(log2Ceil(RASEntries).W)
     val TOS             = UInt(log2Ceil(RASEntries).W)
@@ -126,7 +128,6 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val is_misprediction        = Bool()
-    val violation               = Bool()
     val expected_PC             = UInt(32.W)    // For BTB aswell
 
     // SAVED STATE
@@ -196,6 +197,8 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // coreParameters
     import coreParameters._
 
+
+    // ~30 bits
     val ready_bits          =  new sources_ready()
 
     val RDold               =  UInt(architecturalRegBits.W) // Actual dest
@@ -208,13 +211,12 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val IMM                 =  UInt(21.W)
     val FUNCT3              =  UInt(3.W)
 
-
+    // ~12 bits
     val packet_index        =  UInt(log2Ceil(fetchWidth).W)
     val ROB_index           =  UInt(log2Ceil(ROBEntries).W)
     val MOB_index           =  UInt(log2Ceil(MOBEntries).W)
-    val FTQ_index           =  UInt(log2Ceil(FTQEntries).W)
 
-    // uOp info
+    // uOp info ~20 bits
     val instructionType     =  InstructionType()
 
     val portID              =  UInt(log2Ceil(4).W)  // Decoder assings port ID
@@ -234,7 +236,7 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val access_width        =  access_width_t()  // B/HW/W
 
 
-    val instruction_ID          = UInt(64.W)    // for debug only
+    //val instruction_ID          = UInt(64.W)    // for debug only
 
     // ADD atomic instructions
 }
@@ -250,7 +252,7 @@ class decoded_fetch_packet(coreParameters:CoreParameters) extends Bundle{
     val TOS                     = UInt(log2Ceil(RASEntries).W)
     val NEXT                    = UInt(log2Ceil(RASEntries).W)
 
-
+    val prediction              = new prediction(coreParameters)
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
@@ -374,7 +376,6 @@ class ROB_output(coreParameters:CoreParameters) extends Bundle{
     // N per row 
     val ROB_entries             = Vec(fetchWidth, new ROB_entry(coreParameters))    // "static" instruction data
     val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
-    val violation               = Vec(fetchWidth, Bool())                      // Is instruction complete
 }
 
 class ROB_shared(coreParameters:CoreParameters) extends Bundle{
@@ -406,7 +407,6 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
 class ROB_WB(coreParameters:CoreParameters) extends Bundle{
     val busy                = Bool()
     //val exception           = Bool()
-    val violation    = Bool()
 }
 
 class sources_ready extends Bundle{
@@ -466,11 +466,9 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
 
 
     val ROB_index           =   UInt(log2Ceil(ROBEntries).W)
-    val FTQ_index           =   UInt(log2Ceil(FTQEntries).W)
     
     val fetch_packet_index  =   UInt(log2Ceil(fetchWidth).W)
 
-    val violation           =   Bool()
 }
 
 
@@ -621,7 +619,6 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
 
 
     // Entry state
-    val violation               = Bool()
     val MOB_STATE               = MOB_STATES()
 
 }

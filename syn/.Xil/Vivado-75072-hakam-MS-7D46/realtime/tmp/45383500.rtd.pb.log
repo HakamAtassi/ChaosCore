@@ -1,0 +1,5 @@
+xilinx rtfpga
+rt::do_reinfer_area_combined 1
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+1
+WORKER_RUN_ENDED

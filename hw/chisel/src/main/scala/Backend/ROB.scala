@@ -54,11 +54,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val FU_outputs                  =   Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
         // COMMIT //
-        val ROB_output                  =   Output(new ROB_output(coreParameters))
-
-        // REDIRECTS // 
-        val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
-        
+        val commit                      =   ValidIO(new commit(coreParameters))
         val ROB_index                   =   Output(UInt(log2Ceil(ROBEntries).W))
 
         // PC FILE //
@@ -87,7 +83,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     
     val allocate = Wire(Bool())
 
-    allocate := io.ROB_packet.valid && io.ROB_packet.ready
+    allocate := io.ROB_packet.fire
 
 
     //////////////
@@ -102,7 +98,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     //| Read to commit        |//
     //|-----------------------|//
 
-    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
+    val row_valid_mem        =   RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
     val row_valid       =   row_valid_mem(front_pointer(pointer_width-2, 0))
 
     when(io.ROB_packet.valid){  // Allocate
@@ -140,7 +136,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     shared_mem.io.writeEnableA  := allocate
 
     // Port B / commit
-    shared_mem.io.addrB         := front_index
+    shared_mem.io.addrB         := front_index + io.commit.valid
 
     // Port C / FUs
     shared_mem.io.addrC         := io.PC_file_exec_addr
@@ -162,22 +158,17 @@ class ROB(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         val ROB_WB_data = Wire(new ROB_WB(coreParameters))
         ROB_WB_data.busy := 0.B
-        ROB_WB_data.violation := 0.B
-        ROB_WB_data.violation := 0.B
 
         // allocate
         ROB_WB_banks(i).io.addrA          := back_index
         ROB_WB_banks(i).io.writeDataA     := ROB_WB_data
         ROB_WB_banks(i).io.writeEnableA   := allocate
 
-        
-        // FIXEM: wire up violation...
         // WB (connect all ports)
 
         // FU0
         val ROB_WB_data_FU0 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU0.busy             :=  io.FU_outputs(0).valid
-        ROB_WB_data_FU0.violation        :=  io.FU_outputs(0).bits.violation
         ROB_WB_banks(i).io.addrB         :=  io.FU_outputs(0).bits.ROB_index
         ROB_WB_banks(i).io.writeDataB    :=  ROB_WB_data_FU0
         ROB_WB_banks(i).io.writeEnableB  :=  io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U)
@@ -185,7 +176,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU1
         val ROB_WB_data_FU1 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU1.busy             :=  io.FU_outputs(1).valid
-        ROB_WB_data_FU1.violation        :=  io.FU_outputs(1).bits.violation
         ROB_WB_banks(i).io.addrC         :=  io.FU_outputs(1).bits.ROB_index
         ROB_WB_banks(i).io.writeDataC    :=  ROB_WB_data_FU1
         ROB_WB_banks(i).io.writeEnableC  :=  io.FU_outputs(1).valid && (io.FU_outputs(1).bits.fetch_packet_index === i.U)
@@ -193,7 +183,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU2
         val ROB_WB_data_FU2 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU2.busy             :=  io.FU_outputs(2).valid
-        ROB_WB_data_FU2.violation        :=  io.FU_outputs(2).bits.violation
         ROB_WB_banks(i).io.addrD         :=  io.FU_outputs(2).bits.ROB_index
         ROB_WB_banks(i).io.writeDataD    :=  ROB_WB_data_FU2
         ROB_WB_banks(i).io.writeEnableD  :=  io.FU_outputs(2).valid && (io.FU_outputs(2).bits.fetch_packet_index === i.U)
@@ -201,13 +190,12 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU3
         val ROB_WB_data_FU3 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU3.busy             :=  io.FU_outputs(3).valid
-        ROB_WB_data_FU3.violation        :=  io.FU_outputs(3).bits.violation
         ROB_WB_banks(i).io.addrE         :=  io.FU_outputs(3).bits.ROB_index
         ROB_WB_banks(i).io.writeDataE    :=  ROB_WB_data_FU3
         ROB_WB_banks(i).io.writeEnableE  :=  io.FU_outputs(3).valid && (io.FU_outputs(3).bits.fetch_packet_index === i.U)
 
         // commit (connect all ports)
-        ROB_WB_banks(i).io.addrG         := front_index
+        ROB_WB_banks(i).io.addrG         := front_index + io.commit.valid
 
     }
 
@@ -237,56 +225,200 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_entry_banks(i).io.writeEnableA   := allocate
 
         // commit
-        ROB_entry_banks(i).io.addrB          := front_index
+        ROB_entry_banks(i).io.addrB          := front_index + io.commit.valid
     }
+
+
+    //|----------------------------|//
+    //| FETCH PREDICTION MEM       |//
+    //| 1R/1W                      |//
+    //| Write on allocate          |//
+    //| Read to commit             |//
+    //|----------------------------|//
+
+    val fetch_prediction_bank   = SyncReadMem(ROBEntries, new prediction(coreParameters))
+    val commit_prediction       = Wire(new prediction(coreParameters))
+
+
+
+    // allocate
+
+    when(allocate && io.ROB_packet.valid){
+        fetch_prediction_bank.write(back_index, io.ROB_packet.bits.prediction)
+    }
+
+    // commit
+    commit_prediction := fetch_prediction_bank.read(front_index + io.commit.valid, 1.B)
+
+    //|----------------------------|//
+    //| FETCH RESOLVED MEM         |//
+    //| 1R/1W                      |//
+    //| Write on allocate          |//
+    //| Read to commit             |//
+    //|----------------------------|//
+
+
+    // Since this memory is not written to on allocate with a default value, 
+    // Keep track of whether these entries are valid
+    // if they are not valid and the instruction is committing (all instructions in that packet have completed)
+    // then do not worry about a misprediction
+
+  	//val resolved_valid = RegInit(VecInit.tabulate(MOBEntries, MOBEntries){(x, y) => 0.B })
+
+    //FIXME: these need a valid bit
+    val fetch_resolved_banks: Seq[SyncReadMem[prediction]] = Seq.tabulate(fetchWidth) { w =>
+        SyncReadMem(ROBEntries, new prediction(coreParameters))
+    }
+
+
+    
+    
+    val commit_resolved = Wire(Vec(fetchWidth, new prediction(coreParameters)))
+
+    dontTouch(commit_resolved)
+
+    for(i <- 0 until fetchWidth){
+        val FU_resolved_prediction = Wire(new prediction(coreParameters))
+        FU_resolved_prediction.target   := io.FU_outputs(0).bits.target_address
+        FU_resolved_prediction.T_NT     := io.FU_outputs(0).bits.branch_taken
+        FU_resolved_prediction.br_type  := DontCare  //io.FU_outputs(i).bits.
+        FU_resolved_prediction.hit      := DontCare  // FIXME: what is this for? 
+        FU_resolved_prediction.GHR      := DontCare
+
+
+        // allocate
+        when(io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U) && (io.FU_outputs(0).bits.branch_valid)){
+            fetch_resolved_banks(i).write(io.FU_outputs(0).bits.ROB_index, FU_resolved_prediction)
+
+        }
+
+        // commit
+        commit_resolved(i) := Mux(RegNext(io.FU_outputs(0).bits.ROB_index === front_index), RegNext(FU_resolved_prediction), fetch_resolved_banks(i).read(front_index + io.commit.valid))
+    }
+
 
     /////////////////////////////////
     // FRONT POINTER CTRL / COMMIT //
     /////////////////////////////////
     front_pointer := front_pointer + io.commit.valid
+    back_pointer := back_pointer + io.ROB_packet.fire
 
+    back_index   := back_pointer(pointer_width-2, 0)
+    front_index  := front_pointer(pointer_width-2, 0)
+    dontTouch(back_pointer)
+    dontTouch(front_pointer)
 
-    when(io.flush){
-        front_pointer := 0.U
-        front_index   := 0.U
-    }.elsewhen(io.commit.valid){   // bypass
-        val bypassed_pointer = (front_pointer + 1.U)
-        front_index := bypassed_pointer(pointer_width-2, 0)
-        front_pointer := front_pointer + 1.U
-    }.otherwise{
-        front_index := front_pointer(pointer_width-2, 0)
-    }
-
-    when(io.flush){
-        back_pointer := 0.U
-        back_index  := 0.U
-    }.otherwise{
-        back_pointer := back_pointer + allocate
-        back_index   := back_pointer(pointer_width-2, 0)
-    }
 
     ///////////////////////
     // ASSIGN ROB OUTPUT //
     ///////////////////////
+    val ROB_output = Wire(new ROB_output(coreParameters))
 
-    io.ROB_output.row_valid                := row_valid
-    io.ROB_output.ROB_index                := RegNext(front_index)    // you want the unbypassed version of this pointer
+    dontTouch(ROB_output)
 
-    io.ROB_output.fetch_PC                 := shared_mem.io.readDataB.fetch_PC
-    //io.ROB_output.RAT_index                := shared_mem.io.readDataB.RAT_index
-    io.ROB_output.GHR                      := shared_mem.io.readDataB.GHR
-    io.ROB_output.NEXT                     := shared_mem.io.readDataB.NEXT
-    io.ROB_output.TOS                      := shared_mem.io.readDataB.TOS
+    ROB_output.row_valid                := row_valid
+    ROB_output.ROB_index                := front_index    // you want the unbypassed version of this pointer
 
-    io.ROB_output.free_list_front_pointer  := shared_mem.io.readDataB.free_list_front_pointer
+    ROB_output.fetch_PC                 := shared_mem.io.readDataB.fetch_PC
+    ROB_output.GHR                      := shared_mem.io.readDataB.GHR
+    ROB_output.NEXT                     := shared_mem.io.readDataB.NEXT
+    ROB_output.TOS                      := shared_mem.io.readDataB.TOS
+
+    ROB_output.free_list_front_pointer  := shared_mem.io.readDataB.free_list_front_pointer
 
     for(i <- 0 until fetchWidth){
-
-        io.ROB_output.violation(i)         := ROB_WB_banks(i).io.readDataG.violation    
-        //io.ROB_output.exception(i)         := ROB_WB_banks(i).io.readDataG.exception    
-        io.ROB_output.complete(i)          := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
-        io.ROB_output.ROB_entries(i)       := ROB_entry_banks(i).io.readDataB
+        ROB_output.complete(i)          := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
+        ROB_output.ROB_entries(i)       := ROB_entry_banks(i).io.readDataB
     }
+
+    ////////////
+    // COMMIT //
+    ////////////
+
+    val commit_valid        = Wire(Bool())
+    val commit_row_complete = Wire(Vec(fetchWidth, Bool()))  // all valid instructions in that row are complete
+
+    dontTouch(commit_prediction)
+    dontTouch(commit_row_complete)
+
+    for(i <- 0 until fetchWidth){
+        val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
+        val is_invalid      = (!ROB_output.ROB_entries(i).valid)
+        val is_load         = ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && ROB_output.ROB_entries(i).valid
+        val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
+        commit_row_complete(i) := (is_completed || is_invalid || is_store) && ROB_output.row_valid  // stores happen after they commit
+    }
+    commit_valid := commit_row_complete.reduce(_ && _)
+
+
+    io.commit.bits.GHR                           := ROB_output.GHR
+    io.commit.bits.TOS                           := ROB_output.TOS
+    io.commit.bits.NEXT                          := ROB_output.NEXT
+    io.commit.bits.ROB_index                     := ROB_output.ROB_index
+    io.commit.bits.free_list_front_pointer       := ROB_output.free_list_front_pointer
+    io.commit.bits.fetch_PC                      := ROB_output.fetch_PC
+
+    for(i <- 0 until fetchWidth){
+        io.commit.bits.RDold(i)                  := ROB_output.ROB_entries(i).RDold
+        io.commit.bits.RD(i)                     := ROB_output.ROB_entries(i).RD
+        io.commit.bits.RD_valid(i)               := ROB_output.ROB_entries(i).RD_valid
+    }
+
+    io.commit.valid := commit_valid
+
+
+
+    val has_taken_branch_vec = VecInit(Seq.tabulate(fetchWidth) { i =>
+        ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch
+    })
+
+    val has_taken_branch = has_taken_branch_vec.reduce(_ || _)
+
+    dontTouch(has_taken_branch)
+
+    val earliest_taken_index = Mux1H(has_taken_branch_vec.zipWithIndex.map { case (taken, idx) =>
+        taken -> idx.U
+    })
+
+    // Calculate the expected PC
+    val expected_PC = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + 0x10.U)
+
+    io.commit.bits.is_misprediction      := 0.B
+    io.commit.bits.T_NT                  := 0.B
+    io.commit.bits.br_type               := br_type_t.NONE
+    io.commit.bits.fetch_packet_index    := 0.U
+    io.commit.bits.expected_PC           := expected_PC
+
+    dontTouch(expected_PC)
+    dontTouch(earliest_taken_index)
+
+
+    // Check for misprediction
+    when((expected_PC =/= commit_prediction.target) && commit_valid) {
+        io.commit.bits.is_misprediction      := 1.B
+        io.commit.bits.T_NT := commit_resolved(earliest_taken_index).T_NT
+        io.commit.bits.br_type := commit_resolved(earliest_taken_index).br_type
+        io.commit.bits.fetch_packet_index := earliest_taken_index
+        io.commit.bits.expected_PC := commit_resolved(earliest_taken_index).target
+    }
+
+
+
+    // COMMIT //
+    when(io.commit.valid){
+        row_valid_mem(io.commit.bits.ROB_index) := 0.B
+    }
+
+
+
+
+
+    when(io.commit.valid && io.commit.bits.is_misprediction){
+        row_valid_mem := Seq.fill(ROBEntries)(0.B)
+        front_pointer := 0.U
+        back_pointer  := 0.U
+    }
+
 
     ///////////
     // READY //
@@ -295,12 +427,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val full = (front_pointer(pointer_width-2, 0) === back_pointer(pointer_width-2, 0)) && (front_pointer =/= back_pointer)
 
     io.ROB_packet.ready := !full
-
-    ///////////
-    // DEBUG //
-    ///////////
-
-
 
 
 }

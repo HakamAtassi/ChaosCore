@@ -18,7 +18,7 @@ Disassembly of section .text:
   20:	800007b7          	lui	x15,0x80000             ; x15 = 0x80000                 
   24:	fef42623          	sw	x15,-20(x8)             ; mem[0x3fdc] = 0x8000_0000            
   28:	fdc42703          	lw	x14,-36(x8)             ; x14 = mem[0x3fcc]                     
-  2c:	fec42783          	lw	x15,-20(x8)             ; x15 = mem[0x3fdc]                   
+  2c:	fec42783          	lw	x15,-20(x8)             ; x15 = mem[0x3fdc]             ; stall here 
   30:	00e7a023          	sw	x14,0(x15)              ; mem[0x8000_0000] = 72               
   34:	00000013          	nop
   38:	02c12403          	lw	x8,44(x2)               ; x8 = mem[0x3fec]

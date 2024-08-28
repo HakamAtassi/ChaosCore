@@ -52,9 +52,6 @@ class frontend(coreParameters:CoreParameters) extends Module{
         
         // COMMIT // 
         val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
-        
-        // PREDICTIONS //
-        val predictions                     =   Decoupled(new FTQ_entry(coreParameters))
 
         // INSTRUCTION OUT //
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
@@ -75,7 +72,6 @@ class frontend(coreParameters:CoreParameters) extends Module{
     val decoders            = Module(new fetch_packet_decoder(coreParameters))
     
     val instruction_queue   = Module(new Queue(new decoded_fetch_packet(coreParameters), 16, flow=false, hasFlush=true, useSyncReadMem=true))
-    val FTQ_queue           = Module(new Queue(new FTQ_entry(coreParameters), 16, flow=false, hasFlush=true, useSyncReadMem=true))
 
     val rename              = Module(new rename(coreParameters))
 
@@ -100,20 +96,10 @@ class frontend(coreParameters:CoreParameters) extends Module{
     // DECODERS //
     //////////////
     decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
-    decoders.io.decoded_fetch_packet.ready := FTQ_queue.io.enq.ready && instruction_queue.io.enq.ready
+    decoders.io.decoded_fetch_packet.ready := instruction_queue.io.enq.ready
 
-    ///////////////
-    // FTQ INPUT //
-    ///////////////
     decoders.io.flush := io.flush
-    decoders.io.predictions_in <> instruction_fetch.io.predictions
 
-    ///////////////
-    // FTQ QUEUE //
-    ///////////////
-    FTQ_queue.io.enq <> decoders.io.predictions_out
-    FTQ_queue.io.enq.valid := decoders.io.predictions_out.valid && instruction_queue.io.enq.ready
-    FTQ_queue.io.flush.get := io.flush 
     
     ////////////
     // RENAME //
@@ -123,8 +109,6 @@ class frontend(coreParameters:CoreParameters) extends Module{
     rename.io.FU_outputs           <>     io.FU_outputs
     rename.io.flush                <>     io.flush
     rename.io.commit               <>     io.commit
-    rename.io.predictions_in       <>     FTQ_queue.io.deq
-    rename.io.predictions_out      <>     io.predictions
 
     ////////////
     // OUTPUT //
@@ -136,7 +120,7 @@ class frontend(coreParameters:CoreParameters) extends Module{
     // INSTRUCTION QUEUE //
     ///////////////////////
     instruction_queue.io.enq         <> decoders.io.decoded_fetch_packet
-    instruction_queue.io.enq.valid   := decoders.io.decoded_fetch_packet.valid && FTQ_queue.io.enq.ready
+    instruction_queue.io.enq.valid   := decoders.io.decoded_fetch_packet.valid 
     instruction_queue.io.flush.get   <> io.flush
 
 

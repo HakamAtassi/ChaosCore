@@ -48,7 +48,6 @@ module MOB(
   input  [1:0]  io_reserve_0_bits_packet_index,
   input  [5:0]  io_reserve_0_bits_ROB_index,
   input  [3:0]  io_reserve_0_bits_MOB_index,
-                io_reserve_0_bits_FTQ_index,
   input  [4:0]  io_reserve_0_bits_instructionType,
   input  [1:0]  io_reserve_0_bits_portID,
                 io_reserve_0_bits_RS_type,
@@ -60,7 +59,6 @@ module MOB(
                 io_reserve_0_bits_IS_IMM,
   input  [1:0]  io_reserve_0_bits_memory_type,
                 io_reserve_0_bits_access_width,
-  input  [63:0] io_reserve_0_bits_instruction_ID,
   output        io_reserve_1_ready,
   input         io_reserve_1_valid,
                 io_reserve_1_bits_ready_bits_RS1_ready,
@@ -77,7 +75,6 @@ module MOB(
   input  [1:0]  io_reserve_1_bits_packet_index,
   input  [5:0]  io_reserve_1_bits_ROB_index,
   input  [3:0]  io_reserve_1_bits_MOB_index,
-                io_reserve_1_bits_FTQ_index,
   input  [4:0]  io_reserve_1_bits_instructionType,
   input  [1:0]  io_reserve_1_bits_portID,
                 io_reserve_1_bits_RS_type,
@@ -89,7 +86,6 @@ module MOB(
                 io_reserve_1_bits_IS_IMM,
   input  [1:0]  io_reserve_1_bits_memory_type,
                 io_reserve_1_bits_access_width,
-  input  [63:0] io_reserve_1_bits_instruction_ID,
   output        io_reserve_2_ready,
   input         io_reserve_2_valid,
                 io_reserve_2_bits_ready_bits_RS1_ready,
@@ -106,7 +102,6 @@ module MOB(
   input  [1:0]  io_reserve_2_bits_packet_index,
   input  [5:0]  io_reserve_2_bits_ROB_index,
   input  [3:0]  io_reserve_2_bits_MOB_index,
-                io_reserve_2_bits_FTQ_index,
   input  [4:0]  io_reserve_2_bits_instructionType,
   input  [1:0]  io_reserve_2_bits_portID,
                 io_reserve_2_bits_RS_type,
@@ -118,7 +113,6 @@ module MOB(
                 io_reserve_2_bits_IS_IMM,
   input  [1:0]  io_reserve_2_bits_memory_type,
                 io_reserve_2_bits_access_width,
-  input  [63:0] io_reserve_2_bits_instruction_ID,
   output        io_reserve_3_ready,
   input         io_reserve_3_valid,
                 io_reserve_3_bits_ready_bits_RS1_ready,
@@ -135,7 +129,6 @@ module MOB(
   input  [1:0]  io_reserve_3_bits_packet_index,
   input  [5:0]  io_reserve_3_bits_ROB_index,
   input  [3:0]  io_reserve_3_bits_MOB_index,
-                io_reserve_3_bits_FTQ_index,
   input  [4:0]  io_reserve_3_bits_instructionType,
   input  [1:0]  io_reserve_3_bits_portID,
                 io_reserve_3_bits_RS_type,
@@ -147,7 +140,6 @@ module MOB(
                 io_reserve_3_bits_IS_IMM,
   input  [1:0]  io_reserve_3_bits_memory_type,
                 io_reserve_3_bits_access_width,
-  input  [63:0] io_reserve_3_bits_instruction_ID,
   output        io_reserved_pointers_0_valid,
   output [3:0]  io_reserved_pointers_0_bits,
   output        io_reserved_pointers_1_valid,
@@ -171,9 +163,7 @@ module MOB(
   input  [31:0] io_AGU_output_bits_wr_data,
   input  [3:0]  io_AGU_output_bits_MOB_index,
   input  [5:0]  io_AGU_output_bits_ROB_index,
-  input  [3:0]  io_AGU_output_bits_FTQ_index,
   input  [1:0]  io_AGU_output_bits_fetch_packet_index,
-  input         io_AGU_output_bits_violation,
   output        io_MOB_output_valid,
   output [6:0]  io_MOB_output_bits_RD,
   output [31:0] io_MOB_output_bits_RD_data,
@@ -189,9 +179,7 @@ module MOB(
   output [31:0] io_MOB_output_bits_wr_data,
   output [3:0]  io_MOB_output_bits_MOB_index,
   output [5:0]  io_MOB_output_bits_ROB_index,
-  output [3:0]  io_MOB_output_bits_FTQ_index,
   output [1:0]  io_MOB_output_bits_fetch_packet_index,
-  output        io_MOB_output_bits_violation,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
@@ -199,7 +187,6 @@ module MOB(
   input  [2:0]  io_commit_bits_br_type,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
-                io_commit_bits_violation,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,
@@ -18444,10 +18431,8 @@ module MOB(
       : _CDB_write_index_T_13;
   assign io_MOB_output_bits_ROB_index =
     io_MOB_output_valid_0 ? _GEN_235[CDB_write_index] : 6'h0;
-  assign io_MOB_output_bits_FTQ_index = 4'h0;
   assign io_MOB_output_bits_fetch_packet_index =
     io_MOB_output_valid_0 ? _GEN_236[CDB_write_index] : 2'h0;
-  assign io_MOB_output_bits_violation = 1'h0;
   assign io_backend_memory_request_valid = io_backend_memory_request_valid_0;
   assign io_backend_memory_request_bits_addr =
     _GEN_234 ? _GEN_230[load_index] : fire_store ? _GEN_230[age_vector_15] : 32'h0;

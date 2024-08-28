@@ -39,7 +39,6 @@ module branch_unit(
   input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_bits_decoded_instruction_MOB_index,
-                io_FU_input_bits_decoded_instruction_FTQ_index,
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
@@ -54,7 +53,6 @@ module branch_unit(
   output        io_FU_output_bits_branch_valid,
   output [3:0]  io_FU_output_bits_MOB_index,
   output [5:0]  io_FU_output_bits_ROB_index,
-  output [3:0]  io_FU_output_bits_FTQ_index,
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
@@ -67,7 +65,6 @@ module branch_unit(
   reg        io_FU_output_bits_RD_valid_REG;
   reg [31:0] io_FU_output_bits_RD_data_REG;
   reg [5:0]  io_FU_output_bits_ROB_index_REG;
-  reg [3:0]  io_FU_output_bits_FTQ_index_REG;
   reg [3:0]  io_FU_output_bits_MOB_index_REG;
   reg        io_FU_output_valid_REG;
   always @(posedge clock) begin
@@ -132,7 +129,6 @@ module branch_unit(
     io_FU_output_bits_RD_valid_REG <= io_FU_input_bits_decoded_instruction_RD_valid;
     io_FU_output_bits_RD_data_REG <= _instruction_PC_T_1 + 32'h4;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
-    io_FU_output_bits_FTQ_index_REG <= io_FU_input_bits_decoded_instruction_FTQ_index;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
     io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;
   end // always @(posedge)
@@ -146,7 +142,6 @@ module branch_unit(
   assign io_FU_output_bits_branch_valid = io_FU_output_bits_branch_valid_REG;
   assign io_FU_output_bits_MOB_index = io_FU_output_bits_MOB_index_REG;
   assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;
-  assign io_FU_output_bits_FTQ_index = io_FU_output_bits_FTQ_index_REG;
   assign io_FU_output_bits_fetch_packet_index = io_FU_output_bits_fetch_packet_index_REG;
 endmodule
 

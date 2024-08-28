@@ -60,6 +60,11 @@ module predecoder(
   input  [31:0] io_fetch_packet_bits_instructions_3_instruction,
   input  [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
   input  [5:0]  io_fetch_packet_bits_instructions_3_ROB_index,
+  input         io_fetch_packet_bits_prediction_hit,
+  input  [31:0] io_fetch_packet_bits_prediction_target,
+  input  [2:0]  io_fetch_packet_bits_prediction_br_type,
+  input  [15:0] io_fetch_packet_bits_prediction_GHR,
+  input         io_fetch_packet_bits_prediction_T_NT,
   input  [15:0] io_fetch_packet_bits_GHR,
   input  [6:0]  io_fetch_packet_bits_NEXT,
                 io_fetch_packet_bits_TOS,
@@ -73,7 +78,6 @@ module predecoder(
   input  [2:0]  io_commit_bits_br_type,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
-                io_commit_bits_violation,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,
@@ -91,18 +95,7 @@ module predecoder(
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
-                io_predictions_ready,
-  output        io_predictions_valid,
-                io_predictions_bits_valid,
-  output [31:0] io_predictions_bits_fetch_PC,
-  output        io_predictions_bits_is_misprediction,
-  output [31:0] io_predictions_bits_predicted_PC,
-  output [5:0]  io_predictions_bits_ROB_index,
-  output        io_predictions_bits_T_NT,
-  output [2:0]  io_predictions_bits_br_type,
-  output [1:0]  io_predictions_bits_dominant_index,
-  output [31:0] io_predictions_bits_resolved_PC,
-  input         io_final_fetch_packet_ready,
+                io_final_fetch_packet_ready,
   output        io_final_fetch_packet_valid,
   output [31:0] io_final_fetch_packet_bits_fetch_PC,
   output        io_final_fetch_packet_bits_valid_bits_0,
@@ -121,6 +114,11 @@ module predecoder(
   output [31:0] io_final_fetch_packet_bits_instructions_3_instruction,
   output [3:0]  io_final_fetch_packet_bits_instructions_3_packet_index,
   output [5:0]  io_final_fetch_packet_bits_instructions_3_ROB_index,
+  output        io_final_fetch_packet_bits_prediction_hit,
+  output [31:0] io_final_fetch_packet_bits_prediction_target,
+  output [2:0]  io_final_fetch_packet_bits_prediction_br_type,
+  output [15:0] io_final_fetch_packet_bits_prediction_GHR,
+  output        io_final_fetch_packet_bits_prediction_T_NT,
   output [15:0] io_final_fetch_packet_bits_GHR,
   output [6:0]  io_final_fetch_packet_bits_NEXT,
                 io_final_fetch_packet_bits_TOS,
@@ -151,7 +149,6 @@ module predecoder(
     curr_is_BRANCH & _is_BTB_taken_T_9 & io_prediction_bits_T_NT
     & io_fetch_packet_bits_valid_bits_3 & io_fetch_packet_valid | curr_is_JALR
     | curr_is_JAL;
-  wire             is_control_3 = curr_is_BRANCH | curr_is_JAL | curr_is_JALR;
   wire             curr_is_JAL_1 =
     io_fetch_packet_bits_instructions_2_instruction[6:2] == 5'h1B
     & io_fetch_packet_bits_valid_bits_2 & io_fetch_packet_valid;
@@ -167,7 +164,6 @@ module predecoder(
     curr_is_BRANCH_1 & _is_BTB_taken_T_9 & io_prediction_bits_T_NT
     & io_fetch_packet_bits_valid_bits_2 & io_fetch_packet_valid | curr_is_JALR_1
     | curr_is_JAL_1;
-  wire             is_control_2 = curr_is_BRANCH_1 | curr_is_JAL_1 | curr_is_JALR_1;
   wire             curr_is_JAL_2 =
     io_fetch_packet_bits_instructions_1_instruction[6:2] == 5'h1B
     & io_fetch_packet_bits_valid_bits_1 & io_fetch_packet_valid;
@@ -282,24 +278,22 @@ module predecoder(
     io_fetch_packet_ready_REG & io_fetch_packet_valid;
   wire             _input_fetch_packet_valid_T_1 =
     io_prediction_ready_REG & io_prediction_valid;
-  wire             output_ready = io_final_fetch_packet_ready & io_predictions_ready;
   wire             input_fetch_packet_valid =
     _input_fetch_packet_valid_T & (_input_fetch_packet_valid_T_1 | ~io_prediction_valid)
     & expected_next_PC == io_fetch_packet_bits_fetch_PC & ~io_flush;
   reg  [15:0]      GHR;
-  wire             _push_FTQ_T =
+  wire             _GEN_4 =
     curr_is_BRANCH_3 | curr_is_JAL_3 | curr_is_JALR_3 | curr_is_BRANCH_2 | curr_is_JAL_2
-    | curr_is_JALR_2;
-  wire             _GEN_4 = _push_FTQ_T | is_control_2 | is_control_3;
+    | curr_is_JALR_2 | curr_is_BRANCH_1 | curr_is_JAL_1 | curr_is_JALR_1 | curr_is_BRANCH
+    | curr_is_JAL | curr_is_JALR;
   wire [15:0]      _GEN_5 = {GHR[14:0], T_NT_0 | T_NT_1 | T_NT_2 | is_taken};
-  wire             predictions_out_bits_T_NT = T_NT_0 | T_NT_1 | T_NT_2 | is_taken;
   always @(posedge clock) begin
     if (reset) begin
       expected_next_PC <= 32'h0;
       GHR <= 16'h0;
     end
     else begin
-      if (io_commit_valid & (io_commit_bits_is_misprediction | io_commit_bits_violation))
+      if (io_commit_valid & io_commit_bits_is_misprediction)
         expected_next_PC <= io_commit_bits_fetch_PC;
       else if (input_fetch_packet_valid & _final_fetch_packet_out_Q_io_enq_ready)
         expected_next_PC <= target_address;
@@ -308,42 +302,9 @@ module predecoder(
       else if (_GEN_4)
         GHR <= _GEN_5;
     end
-    io_prediction_ready_REG <= output_ready;
-    io_fetch_packet_ready_REG <= output_ready;
+    io_prediction_ready_REG <= io_final_fetch_packet_ready;
+    io_fetch_packet_ready_REG <= io_final_fetch_packet_ready;
   end // always @(posedge)
-  Queue2_FTQ_entry predictions_out_Q (
-    .clock                        (clock),
-    .reset                        (reset),
-    .io_enq_valid
-      ((_push_FTQ_T | is_control_2 | is_control_3) & input_fetch_packet_valid),
-    .io_enq_bits_valid            (1'h0),
-    .io_enq_bits_fetch_PC         (io_fetch_packet_bits_fetch_PC),
-    .io_enq_bits_is_misprediction (1'h0),
-    .io_enq_bits_predicted_PC
-      (predictions_out_bits_T_NT
-         ? target_address
-         : io_fetch_packet_bits_fetch_PC + 32'h10),
-    .io_enq_bits_ROB_index        (6'h0),
-    .io_enq_bits_T_NT             (predictions_out_bits_T_NT),
-    .io_enq_bits_br_type
-      (is_BRANCH
-         ? 3'h1
-         : is_RET ? 3'h4 : is_CALL ? 3'h5 : is_JALR ? 3'h3 : {1'h0, is_JAL, 1'h0}),
-    .io_enq_bits_dominant_index   (2'h3),
-    .io_enq_bits_resolved_PC      (io_fetch_packet_bits_fetch_PC + 32'h10),
-    .io_deq_ready                 (output_ready),
-    .io_deq_valid                 (io_predictions_valid),
-    .io_deq_bits_valid            (io_predictions_bits_valid),
-    .io_deq_bits_fetch_PC         (io_predictions_bits_fetch_PC),
-    .io_deq_bits_is_misprediction (io_predictions_bits_is_misprediction),
-    .io_deq_bits_predicted_PC     (io_predictions_bits_predicted_PC),
-    .io_deq_bits_ROB_index        (io_predictions_bits_ROB_index),
-    .io_deq_bits_T_NT             (io_predictions_bits_T_NT),
-    .io_deq_bits_br_type          (io_predictions_bits_br_type),
-    .io_deq_bits_dominant_index   (io_predictions_bits_dominant_index),
-    .io_deq_bits_resolved_PC      (io_predictions_bits_resolved_PC),
-    .io_flush                     (io_flush)
-  );
   Queue2_fetch_packet final_fetch_packet_out_Q (
     .clock                                   (clock),
     .reset                                   (reset),
@@ -384,10 +345,17 @@ module predecoder(
       (io_fetch_packet_bits_instructions_3_packet_index),
     .io_enq_bits_instructions_3_ROB_index
       (io_fetch_packet_bits_instructions_3_ROB_index),
+    .io_enq_bits_prediction_target           (target_address),
+    .io_enq_bits_prediction_br_type
+      (is_BRANCH
+         ? 3'h1
+         : is_RET ? 3'h4 : is_CALL ? 3'h5 : is_JALR ? 3'h3 : {1'h0, is_JAL, 1'h0}),
+    .io_enq_bits_prediction_GHR              (GHR),
+    .io_enq_bits_prediction_T_NT             (T_NT_0 | T_NT_1 | T_NT_2 | is_taken),
     .io_enq_bits_GHR                         (GHR),
     .io_enq_bits_NEXT                        (io_RAS_read_NEXT),
     .io_enq_bits_TOS                         (io_RAS_read_TOS),
-    .io_deq_ready                            (output_ready),
+    .io_deq_ready                            (io_final_fetch_packet_ready),
     .io_deq_valid                            (io_final_fetch_packet_valid),
     .io_deq_bits_fetch_PC                    (io_final_fetch_packet_bits_fetch_PC),
     .io_deq_bits_valid_bits_0                (io_final_fetch_packet_bits_valid_bits_0),
@@ -418,6 +386,13 @@ module predecoder(
       (io_final_fetch_packet_bits_instructions_3_packet_index),
     .io_deq_bits_instructions_3_ROB_index
       (io_final_fetch_packet_bits_instructions_3_ROB_index),
+    .io_deq_bits_prediction_hit              (io_final_fetch_packet_bits_prediction_hit),
+    .io_deq_bits_prediction_target
+      (io_final_fetch_packet_bits_prediction_target),
+    .io_deq_bits_prediction_br_type
+      (io_final_fetch_packet_bits_prediction_br_type),
+    .io_deq_bits_prediction_GHR              (io_final_fetch_packet_bits_prediction_GHR),
+    .io_deq_bits_prediction_T_NT             (io_final_fetch_packet_bits_prediction_T_NT),
     .io_deq_bits_GHR                         (io_final_fetch_packet_bits_GHR),
     .io_deq_bits_NEXT                        (io_final_fetch_packet_bits_NEXT),
     .io_deq_bits_TOS                         (io_final_fetch_packet_bits_TOS),

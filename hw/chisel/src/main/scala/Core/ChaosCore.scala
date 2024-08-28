@@ -75,9 +75,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     val backend     = Module(new backend(coreParameters))
 
 
-    val FTQ         = Module(new FTQ(coreParameters))
     val ROB         = Module(new ROB(coreParameters))
-    val BRU         = Module(new BRU(coreParameters))
 
 
     val flush       = Wire(Bool())
@@ -94,12 +92,12 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     backend.io.backend_memory_request     <>  io.backend_memory_request
 
     ////////////////////
-    // BACKEND <> BRU //
+    // BACKEND <> ROB //
     ////////////////////
 
-    backend.io.commit <> BRU.io.commit
+    backend.io.commit <> ROB.io.commit
 
-    io.commit <> BRU.io.commit
+    io.commit <> ROB.io.commit
 
     /////////////////////
     // FRONTEND <> FTQ //
@@ -112,9 +110,9 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     frontend.io.memory_response      <>  io.frontend_memory_response
 
     /////////////////////
-    // FRONTEND <> BRU //
+    // FRONTEND <> ROB //
     /////////////////////
-    frontend.io.commit <> BRU.io.commit
+    frontend.io.commit <> ROB.io.commit
 
     /////////////////////////
     // FRONTEND <> BACKEND //
@@ -126,49 +124,27 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ////////////////////
     ROB.io.FU_outputs <> backend.io.FU_outputs 
 
-    ////////////////////
-    // FTQ <> BACKEND //
-    ////////////////////
-    FTQ.io.FU_outputs <> backend.io.FU_outputs
-
-    ////////////////
-    // FTQ <> BRU //
-    ////////////////
-    FTQ.io.commit    <>  BRU.io.commit
-
-    ////////////////
-    // ROB <> FTQ //
-    ////////////////
-    ROB.io.commit <> BRU.io.commit
 
 
-    ////////////////
-    // ROB <> BRU //
-    ////////////////
-    ROB.io.ROB_output <>  BRU.io.ROB_output
 
-    ////////////////
-    // BRU <> FTQ //
-    ////////////////
-    BRU.io.FTQ <> FTQ.io.FTQ
+
 
 
     ///////////
     // FLUSH //
     ///////////
-    flush := BRU.io.commit.valid && (BRU.io.commit.bits.is_misprediction || BRU.io.commit.bits.violation)
+    flush := ROB.io.commit.valid && (ROB.io.commit.bits.is_misprediction)
 
     frontend.io.flush   <>  flush
     backend.io.flush    <>  flush
     ROB.io.flush        <>  flush
-    FTQ.io.flush        <>  flush
 
 
     //////////////////////
     // ALLOCATION LOGIC //
     //////////////////////
 
-    val backend_can_allocate = backend.io.backend_packet.map(_.ready).reduce(_ && _) && ROB.io.ROB_packet.ready && FTQ.io.predictions.ready
+    val backend_can_allocate = backend.io.backend_packet.map(_.ready).reduce(_ && _) && ROB.io.ROB_packet.ready
 
 
     backend.io.fetch_PC   <> frontend.io.renamed_decoded_fetch_packet.bits.fetch_PC
@@ -176,7 +152,6 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         backend.io.backend_packet(i).bits   := frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)
         backend.io.backend_packet(i).valid  := frontend.io.renamed_decoded_fetch_packet.valid && frontend.io.renamed_decoded_fetch_packet.bits.valid_bits(i) && backend_can_allocate
-        backend.io.backend_packet(i).bits.FTQ_index := FTQ.io.FTQ_index
         backend.io.backend_packet(i).bits.ROB_index := ROB.io.ROB_index
     }
 
@@ -185,12 +160,6 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ROB.io.ROB_packet.valid     := frontend.io.renamed_decoded_fetch_packet.valid && backend_can_allocate
 
    
-    frontend.io.predictions.ready := backend_can_allocate
-    FTQ.io.predictions.valid  := frontend.io.predictions.valid && backend_can_allocate
-    FTQ.io.predictions.bits  := frontend.io.predictions.bits
-
-
-    FTQ.io.ROB_index <> ROB.io.ROB_index
 
     // Connect branch unit to PC file (which exists in the ROB)
     backend.io.PC_file_exec_addr <> ROB.io.PC_file_exec_addr
