@@ -51,7 +51,6 @@ module backend(
   input  [2:0]  io_commit_bits_br_type,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
-                io_commit_bits_violation,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,
@@ -88,7 +87,6 @@ module backend(
   input  [1:0]  io_backend_packet_0_bits_packet_index,
   input  [5:0]  io_backend_packet_0_bits_ROB_index,
   input  [3:0]  io_backend_packet_0_bits_MOB_index,
-                io_backend_packet_0_bits_FTQ_index,
   input  [4:0]  io_backend_packet_0_bits_instructionType,
   input  [1:0]  io_backend_packet_0_bits_portID,
                 io_backend_packet_0_bits_RS_type,
@@ -100,7 +98,6 @@ module backend(
                 io_backend_packet_0_bits_IS_IMM,
   input  [1:0]  io_backend_packet_0_bits_memory_type,
                 io_backend_packet_0_bits_access_width,
-  input  [63:0] io_backend_packet_0_bits_instruction_ID,
   output        io_backend_packet_1_ready,
   input         io_backend_packet_1_valid,
                 io_backend_packet_1_bits_ready_bits_RS1_ready,
@@ -117,7 +114,6 @@ module backend(
   input  [1:0]  io_backend_packet_1_bits_packet_index,
   input  [5:0]  io_backend_packet_1_bits_ROB_index,
   input  [3:0]  io_backend_packet_1_bits_MOB_index,
-                io_backend_packet_1_bits_FTQ_index,
   input  [4:0]  io_backend_packet_1_bits_instructionType,
   input  [1:0]  io_backend_packet_1_bits_portID,
                 io_backend_packet_1_bits_RS_type,
@@ -129,7 +125,6 @@ module backend(
                 io_backend_packet_1_bits_IS_IMM,
   input  [1:0]  io_backend_packet_1_bits_memory_type,
                 io_backend_packet_1_bits_access_width,
-  input  [63:0] io_backend_packet_1_bits_instruction_ID,
   output        io_backend_packet_2_ready,
   input         io_backend_packet_2_valid,
                 io_backend_packet_2_bits_ready_bits_RS1_ready,
@@ -146,7 +141,6 @@ module backend(
   input  [1:0]  io_backend_packet_2_bits_packet_index,
   input  [5:0]  io_backend_packet_2_bits_ROB_index,
   input  [3:0]  io_backend_packet_2_bits_MOB_index,
-                io_backend_packet_2_bits_FTQ_index,
   input  [4:0]  io_backend_packet_2_bits_instructionType,
   input  [1:0]  io_backend_packet_2_bits_portID,
                 io_backend_packet_2_bits_RS_type,
@@ -158,7 +152,6 @@ module backend(
                 io_backend_packet_2_bits_IS_IMM,
   input  [1:0]  io_backend_packet_2_bits_memory_type,
                 io_backend_packet_2_bits_access_width,
-  input  [63:0] io_backend_packet_2_bits_instruction_ID,
   output        io_backend_packet_3_ready,
   input         io_backend_packet_3_valid,
                 io_backend_packet_3_bits_ready_bits_RS1_ready,
@@ -175,7 +168,6 @@ module backend(
   input  [1:0]  io_backend_packet_3_bits_packet_index,
   input  [5:0]  io_backend_packet_3_bits_ROB_index,
   input  [3:0]  io_backend_packet_3_bits_MOB_index,
-                io_backend_packet_3_bits_FTQ_index,
   input  [4:0]  io_backend_packet_3_bits_instructionType,
   input  [1:0]  io_backend_packet_3_bits_portID,
                 io_backend_packet_3_bits_RS_type,
@@ -187,7 +179,6 @@ module backend(
                 io_backend_packet_3_bits_IS_IMM,
   input  [1:0]  io_backend_packet_3_bits_memory_type,
                 io_backend_packet_3_bits_access_width,
-  input  [63:0] io_backend_packet_3_bits_instruction_ID,
   output        io_FU_outputs_0_valid,
   output [6:0]  io_FU_outputs_0_bits_RD,
   output [31:0] io_FU_outputs_0_bits_RD_data,
@@ -203,10 +194,8 @@ module backend(
   output [31:0] io_FU_outputs_0_bits_wr_data,
   output [3:0]  io_FU_outputs_0_bits_MOB_index,
   output [5:0]  io_FU_outputs_0_bits_ROB_index,
-  output [3:0]  io_FU_outputs_0_bits_FTQ_index,
   output [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
-  output        io_FU_outputs_0_bits_violation,
-                io_FU_outputs_1_valid,
+  output        io_FU_outputs_1_valid,
   output [6:0]  io_FU_outputs_1_bits_RD,
   output [31:0] io_FU_outputs_1_bits_RD_data,
   output        io_FU_outputs_1_bits_RD_valid,
@@ -221,10 +210,8 @@ module backend(
   output [31:0] io_FU_outputs_1_bits_wr_data,
   output [3:0]  io_FU_outputs_1_bits_MOB_index,
   output [5:0]  io_FU_outputs_1_bits_ROB_index,
-  output [3:0]  io_FU_outputs_1_bits_FTQ_index,
   output [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
-  output        io_FU_outputs_1_bits_violation,
-                io_FU_outputs_2_valid,
+  output        io_FU_outputs_2_valid,
   output [6:0]  io_FU_outputs_2_bits_RD,
   output [31:0] io_FU_outputs_2_bits_RD_data,
   output        io_FU_outputs_2_bits_RD_valid,
@@ -239,10 +226,8 @@ module backend(
   output [31:0] io_FU_outputs_2_bits_wr_data,
   output [3:0]  io_FU_outputs_2_bits_MOB_index,
   output [5:0]  io_FU_outputs_2_bits_ROB_index,
-  output [3:0]  io_FU_outputs_2_bits_FTQ_index,
   output [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
-  output        io_FU_outputs_2_bits_violation,
-                io_FU_outputs_3_valid,
+  output        io_FU_outputs_3_valid,
   output [6:0]  io_FU_outputs_3_bits_RD,
   output [31:0] io_FU_outputs_3_bits_RD_data,
   output        io_FU_outputs_3_bits_RD_valid,
@@ -257,9 +242,7 @@ module backend(
   output [31:0] io_FU_outputs_3_bits_wr_data,
   output [3:0]  io_FU_outputs_3_bits_MOB_index,
   output [5:0]  io_FU_outputs_3_bits_ROB_index,
-  output [3:0]  io_FU_outputs_3_bits_FTQ_index,
-  output [1:0]  io_FU_outputs_3_bits_fetch_packet_index,
-  output        io_FU_outputs_3_bits_violation
+  output [1:0]  io_FU_outputs_3_bits_fetch_packet_index
 );
 
   wire        _AGU_io_FU_output_valid;
@@ -286,9 +269,7 @@ module backend(
   wire [31:0] _FU2_io_FU_output_bits_wr_data;
   wire [3:0]  _FU2_io_FU_output_bits_MOB_index;
   wire [5:0]  _FU2_io_FU_output_bits_ROB_index;
-  wire [3:0]  _FU2_io_FU_output_bits_FTQ_index;
   wire [1:0]  _FU2_io_FU_output_bits_fetch_packet_index;
-  wire        _FU2_io_FU_output_bits_violation;
   wire        _FU1_io_FU_input_ready;
   wire        _FU1_io_FU_output_valid;
   wire [6:0]  _FU1_io_FU_output_bits_RD;
@@ -305,9 +286,7 @@ module backend(
   wire [31:0] _FU1_io_FU_output_bits_wr_data;
   wire [3:0]  _FU1_io_FU_output_bits_MOB_index;
   wire [5:0]  _FU1_io_FU_output_bits_ROB_index;
-  wire [3:0]  _FU1_io_FU_output_bits_FTQ_index;
   wire [1:0]  _FU1_io_FU_output_bits_fetch_packet_index;
-  wire        _FU1_io_FU_output_bits_violation;
   wire        _FU0_io_FU_input_ready;
   wire        _FU0_io_FU_output_valid;
   wire [6:0]  _FU0_io_FU_output_bits_RD;
@@ -324,9 +303,7 @@ module backend(
   wire [31:0] _FU0_io_FU_output_bits_wr_data;
   wire [3:0]  _FU0_io_FU_output_bits_MOB_index;
   wire [5:0]  _FU0_io_FU_output_bits_ROB_index;
-  wire [3:0]  _FU0_io_FU_output_bits_FTQ_index;
   wire [1:0]  _FU0_io_FU_output_bits_fetch_packet_index;
-  wire        _FU0_io_FU_output_bits_violation;
   wire [31:0] _INT_PRF_io_rdata_0;
   wire [31:0] _INT_PRF_io_rdata_1;
   wire [31:0] _INT_PRF_io_rdata_2;
@@ -358,9 +335,7 @@ module backend(
   wire [31:0] _MOB_io_MOB_output_bits_wr_data;
   wire [3:0]  _MOB_io_MOB_output_bits_MOB_index;
   wire [5:0]  _MOB_io_MOB_output_bits_ROB_index;
-  wire [3:0]  _MOB_io_MOB_output_bits_FTQ_index;
   wire [1:0]  _MOB_io_MOB_output_bits_fetch_packet_index;
-  wire        _MOB_io_MOB_output_bits_violation;
   wire        _MEM_RS_io_backend_packet_0_ready;
   wire        _MEM_RS_io_backend_packet_1_ready;
   wire        _MEM_RS_io_backend_packet_2_ready;
@@ -393,7 +368,6 @@ module backend(
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_packet_index;
   wire [5:0]  _INT_RS_io_RF_inputs_0_bits_ROB_index;
   wire [3:0]  _INT_RS_io_RF_inputs_0_bits_MOB_index;
-  wire [3:0]  _INT_RS_io_RF_inputs_0_bits_FTQ_index;
   wire [4:0]  _INT_RS_io_RF_inputs_0_bits_instructionType;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_portID;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_RS_type;
@@ -405,7 +379,6 @@ module backend(
   wire        _INT_RS_io_RF_inputs_0_bits_IS_IMM;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_access_width;
-  wire [63:0] _INT_RS_io_RF_inputs_0_bits_instruction_ID;
   wire        _INT_RS_io_RF_inputs_1_valid;
   wire        _INT_RS_io_RF_inputs_1_bits_ready_bits_RS1_ready;
   wire        _INT_RS_io_RF_inputs_1_bits_ready_bits_RS2_ready;
@@ -421,7 +394,6 @@ module backend(
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_packet_index;
   wire [5:0]  _INT_RS_io_RF_inputs_1_bits_ROB_index;
   wire [3:0]  _INT_RS_io_RF_inputs_1_bits_MOB_index;
-  wire [3:0]  _INT_RS_io_RF_inputs_1_bits_FTQ_index;
   wire [4:0]  _INT_RS_io_RF_inputs_1_bits_instructionType;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_portID;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_RS_type;
@@ -433,7 +405,6 @@ module backend(
   wire        _INT_RS_io_RF_inputs_1_bits_IS_IMM;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_access_width;
-  wire [63:0] _INT_RS_io_RF_inputs_1_bits_instruction_ID;
   wire        _INT_RS_io_RF_inputs_2_valid;
   wire        _INT_RS_io_RF_inputs_2_bits_ready_bits_RS1_ready;
   wire        _INT_RS_io_RF_inputs_2_bits_ready_bits_RS2_ready;
@@ -449,7 +420,6 @@ module backend(
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_packet_index;
   wire [5:0]  _INT_RS_io_RF_inputs_2_bits_ROB_index;
   wire [3:0]  _INT_RS_io_RF_inputs_2_bits_MOB_index;
-  wire [3:0]  _INT_RS_io_RF_inputs_2_bits_FTQ_index;
   wire [4:0]  _INT_RS_io_RF_inputs_2_bits_instructionType;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_portID;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_RS_type;
@@ -461,7 +431,6 @@ module backend(
   wire        _INT_RS_io_RF_inputs_2_bits_IS_IMM;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_access_width;
-  wire [63:0] _INT_RS_io_RF_inputs_2_bits_instruction_ID;
   wire        backend_can_allocate =
     _MEM_RS_io_backend_packet_0_ready & _MEM_RS_io_backend_packet_1_ready
     & _MEM_RS_io_backend_packet_2_ready & _MEM_RS_io_backend_packet_3_ready
@@ -487,7 +456,6 @@ module backend(
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_packet_index;
   reg  [5:0]  read_decoded_instructions_0_decoded_instruction_REG_ROB_index;
   reg  [3:0]  read_decoded_instructions_0_decoded_instruction_REG_MOB_index;
-  reg  [3:0]  read_decoded_instructions_0_decoded_instruction_REG_FTQ_index;
   reg  [4:0]  read_decoded_instructions_0_decoded_instruction_REG_instructionType;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_portID;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_RS_type;
@@ -499,7 +467,6 @@ module backend(
   reg         read_decoded_instructions_0_decoded_instruction_REG_IS_IMM;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_access_width;
-  reg  [63:0] read_decoded_instructions_0_decoded_instruction_REG_instruction_ID;
   reg         read_decoded_instructions_1_decoded_instruction_REG_ready_bits_RS1_ready;
   reg         read_decoded_instructions_1_decoded_instruction_REG_ready_bits_RS2_ready;
   reg  [4:0]  read_decoded_instructions_1_decoded_instruction_REG_RDold;
@@ -514,7 +481,6 @@ module backend(
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_packet_index;
   reg  [5:0]  read_decoded_instructions_1_decoded_instruction_REG_ROB_index;
   reg  [3:0]  read_decoded_instructions_1_decoded_instruction_REG_MOB_index;
-  reg  [3:0]  read_decoded_instructions_1_decoded_instruction_REG_FTQ_index;
   reg  [4:0]  read_decoded_instructions_1_decoded_instruction_REG_instructionType;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_portID;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_RS_type;
@@ -526,7 +492,6 @@ module backend(
   reg         read_decoded_instructions_1_decoded_instruction_REG_IS_IMM;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_access_width;
-  reg  [63:0] read_decoded_instructions_1_decoded_instruction_REG_instruction_ID;
   reg         read_decoded_instructions_2_decoded_instruction_REG_ready_bits_RS1_ready;
   reg         read_decoded_instructions_2_decoded_instruction_REG_ready_bits_RS2_ready;
   reg  [4:0]  read_decoded_instructions_2_decoded_instruction_REG_RDold;
@@ -541,7 +506,6 @@ module backend(
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_packet_index;
   reg  [5:0]  read_decoded_instructions_2_decoded_instruction_REG_ROB_index;
   reg  [3:0]  read_decoded_instructions_2_decoded_instruction_REG_MOB_index;
-  reg  [3:0]  read_decoded_instructions_2_decoded_instruction_REG_FTQ_index;
   reg  [4:0]  read_decoded_instructions_2_decoded_instruction_REG_instructionType;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_portID;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_RS_type;
@@ -553,7 +517,6 @@ module backend(
   reg         read_decoded_instructions_2_decoded_instruction_REG_IS_IMM;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_access_width;
-  reg  [63:0] read_decoded_instructions_2_decoded_instruction_REG_instruction_ID;
   reg  [6:0]  read_decoded_instructions_3_decoded_instruction_REG_RD;
   reg  [20:0] read_decoded_instructions_3_decoded_instruction_REG_IMM;
   reg  [2:0]  read_decoded_instructions_3_decoded_instruction_REG_FUNCT3;
@@ -593,8 +556,6 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_ROB_index;
     read_decoded_instructions_0_decoded_instruction_REG_MOB_index <=
       _INT_RS_io_RF_inputs_0_bits_MOB_index;
-    read_decoded_instructions_0_decoded_instruction_REG_FTQ_index <=
-      _INT_RS_io_RF_inputs_0_bits_FTQ_index;
     read_decoded_instructions_0_decoded_instruction_REG_instructionType <=
       _INT_RS_io_RF_inputs_0_bits_instructionType;
     read_decoded_instructions_0_decoded_instruction_REG_portID <=
@@ -617,8 +578,6 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_memory_type;
     read_decoded_instructions_0_decoded_instruction_REG_access_width <=
       _INT_RS_io_RF_inputs_0_bits_access_width;
-    read_decoded_instructions_0_decoded_instruction_REG_instruction_ID <=
-      _INT_RS_io_RF_inputs_0_bits_instruction_ID;
     read_decoded_instructions_1_decoded_instruction_REG_ready_bits_RS1_ready <=
       _INT_RS_io_RF_inputs_1_bits_ready_bits_RS1_ready;
     read_decoded_instructions_1_decoded_instruction_REG_ready_bits_RS2_ready <=
@@ -647,8 +606,6 @@ module backend(
       _INT_RS_io_RF_inputs_1_bits_ROB_index;
     read_decoded_instructions_1_decoded_instruction_REG_MOB_index <=
       _INT_RS_io_RF_inputs_1_bits_MOB_index;
-    read_decoded_instructions_1_decoded_instruction_REG_FTQ_index <=
-      _INT_RS_io_RF_inputs_1_bits_FTQ_index;
     read_decoded_instructions_1_decoded_instruction_REG_instructionType <=
       _INT_RS_io_RF_inputs_1_bits_instructionType;
     read_decoded_instructions_1_decoded_instruction_REG_portID <=
@@ -671,8 +628,6 @@ module backend(
       _INT_RS_io_RF_inputs_1_bits_memory_type;
     read_decoded_instructions_1_decoded_instruction_REG_access_width <=
       _INT_RS_io_RF_inputs_1_bits_access_width;
-    read_decoded_instructions_1_decoded_instruction_REG_instruction_ID <=
-      _INT_RS_io_RF_inputs_1_bits_instruction_ID;
     read_decoded_instructions_2_decoded_instruction_REG_ready_bits_RS1_ready <=
       _INT_RS_io_RF_inputs_2_bits_ready_bits_RS1_ready;
     read_decoded_instructions_2_decoded_instruction_REG_ready_bits_RS2_ready <=
@@ -701,8 +656,6 @@ module backend(
       _INT_RS_io_RF_inputs_2_bits_ROB_index;
     read_decoded_instructions_2_decoded_instruction_REG_MOB_index <=
       _INT_RS_io_RF_inputs_2_bits_MOB_index;
-    read_decoded_instructions_2_decoded_instruction_REG_FTQ_index <=
-      _INT_RS_io_RF_inputs_2_bits_FTQ_index;
     read_decoded_instructions_2_decoded_instruction_REG_instructionType <=
       _INT_RS_io_RF_inputs_2_bits_instructionType;
     read_decoded_instructions_2_decoded_instruction_REG_portID <=
@@ -725,8 +678,6 @@ module backend(
       _INT_RS_io_RF_inputs_2_bits_memory_type;
     read_decoded_instructions_2_decoded_instruction_REG_access_width <=
       _INT_RS_io_RF_inputs_2_bits_access_width;
-    read_decoded_instructions_2_decoded_instruction_REG_instruction_ID <=
-      _INT_RS_io_RF_inputs_2_bits_instruction_ID;
     read_decoded_instructions_3_decoded_instruction_REG_RD <=
       _MEM_RS_io_RF_inputs_0_bits_RD;
     read_decoded_instructions_3_decoded_instruction_REG_IMM <=
@@ -768,7 +719,6 @@ module backend(
       (io_backend_packet_0_bits_packet_index),
     .io_backend_packet_0_bits_ROB_index            (io_backend_packet_0_bits_ROB_index),
     .io_backend_packet_0_bits_MOB_index            (io_backend_packet_0_bits_MOB_index),
-    .io_backend_packet_0_bits_FTQ_index            (io_backend_packet_0_bits_FTQ_index),
     .io_backend_packet_0_bits_instructionType
       (io_backend_packet_0_bits_instructionType),
     .io_backend_packet_0_bits_portID               (io_backend_packet_0_bits_portID),
@@ -783,8 +733,6 @@ module backend(
     .io_backend_packet_0_bits_memory_type          (io_backend_packet_0_bits_memory_type),
     .io_backend_packet_0_bits_access_width
       (io_backend_packet_0_bits_access_width),
-    .io_backend_packet_0_bits_instruction_ID
-      (io_backend_packet_0_bits_instruction_ID),
     .io_backend_packet_1_ready                     (_INT_RS_io_backend_packet_1_ready),
     .io_backend_packet_1_valid
       (io_backend_packet_1_bits_RS_type == 2'h0 & io_backend_packet_1_valid),
@@ -805,7 +753,6 @@ module backend(
       (io_backend_packet_1_bits_packet_index),
     .io_backend_packet_1_bits_ROB_index            (io_backend_packet_1_bits_ROB_index),
     .io_backend_packet_1_bits_MOB_index            (io_backend_packet_1_bits_MOB_index),
-    .io_backend_packet_1_bits_FTQ_index            (io_backend_packet_1_bits_FTQ_index),
     .io_backend_packet_1_bits_instructionType
       (io_backend_packet_1_bits_instructionType),
     .io_backend_packet_1_bits_portID               (io_backend_packet_1_bits_portID),
@@ -820,8 +767,6 @@ module backend(
     .io_backend_packet_1_bits_memory_type          (io_backend_packet_1_bits_memory_type),
     .io_backend_packet_1_bits_access_width
       (io_backend_packet_1_bits_access_width),
-    .io_backend_packet_1_bits_instruction_ID
-      (io_backend_packet_1_bits_instruction_ID),
     .io_backend_packet_2_ready                     (_INT_RS_io_backend_packet_2_ready),
     .io_backend_packet_2_valid
       (io_backend_packet_2_bits_RS_type == 2'h0 & io_backend_packet_2_valid),
@@ -842,7 +787,6 @@ module backend(
       (io_backend_packet_2_bits_packet_index),
     .io_backend_packet_2_bits_ROB_index            (io_backend_packet_2_bits_ROB_index),
     .io_backend_packet_2_bits_MOB_index            (io_backend_packet_2_bits_MOB_index),
-    .io_backend_packet_2_bits_FTQ_index            (io_backend_packet_2_bits_FTQ_index),
     .io_backend_packet_2_bits_instructionType
       (io_backend_packet_2_bits_instructionType),
     .io_backend_packet_2_bits_portID               (io_backend_packet_2_bits_portID),
@@ -857,8 +801,6 @@ module backend(
     .io_backend_packet_2_bits_memory_type          (io_backend_packet_2_bits_memory_type),
     .io_backend_packet_2_bits_access_width
       (io_backend_packet_2_bits_access_width),
-    .io_backend_packet_2_bits_instruction_ID
-      (io_backend_packet_2_bits_instruction_ID),
     .io_backend_packet_3_ready                     (_INT_RS_io_backend_packet_3_ready),
     .io_backend_packet_3_valid
       (io_backend_packet_3_bits_RS_type == 2'h0 & io_backend_packet_3_valid),
@@ -879,7 +821,6 @@ module backend(
       (io_backend_packet_3_bits_packet_index),
     .io_backend_packet_3_bits_ROB_index            (io_backend_packet_3_bits_ROB_index),
     .io_backend_packet_3_bits_MOB_index            (io_backend_packet_3_bits_MOB_index),
-    .io_backend_packet_3_bits_FTQ_index            (io_backend_packet_3_bits_FTQ_index),
     .io_backend_packet_3_bits_instructionType
       (io_backend_packet_3_bits_instructionType),
     .io_backend_packet_3_bits_portID               (io_backend_packet_3_bits_portID),
@@ -894,8 +835,6 @@ module backend(
     .io_backend_packet_3_bits_memory_type          (io_backend_packet_3_bits_memory_type),
     .io_backend_packet_3_bits_access_width
       (io_backend_packet_3_bits_access_width),
-    .io_backend_packet_3_bits_instruction_ID
-      (io_backend_packet_3_bits_instruction_ID),
     .io_FU_outputs_0_valid                         (_FU0_io_FU_output_valid),
     .io_FU_outputs_0_bits_RD                       (_FU0_io_FU_output_bits_RD),
     .io_FU_outputs_0_bits_RD_data                  (_FU0_io_FU_output_bits_RD_data),
@@ -912,10 +851,8 @@ module backend(
     .io_FU_outputs_0_bits_wr_data                  (_FU0_io_FU_output_bits_wr_data),
     .io_FU_outputs_0_bits_MOB_index                (_FU0_io_FU_output_bits_MOB_index),
     .io_FU_outputs_0_bits_ROB_index                (_FU0_io_FU_output_bits_ROB_index),
-    .io_FU_outputs_0_bits_FTQ_index                (_FU0_io_FU_output_bits_FTQ_index),
     .io_FU_outputs_0_bits_fetch_packet_index
       (_FU0_io_FU_output_bits_fetch_packet_index),
-    .io_FU_outputs_0_bits_violation                (_FU0_io_FU_output_bits_violation),
     .io_FU_outputs_1_valid                         (_FU1_io_FU_output_valid),
     .io_FU_outputs_1_bits_RD                       (_FU1_io_FU_output_bits_RD),
     .io_FU_outputs_1_bits_RD_data                  (_FU1_io_FU_output_bits_RD_data),
@@ -932,10 +869,8 @@ module backend(
     .io_FU_outputs_1_bits_wr_data                  (_FU1_io_FU_output_bits_wr_data),
     .io_FU_outputs_1_bits_MOB_index                (_FU1_io_FU_output_bits_MOB_index),
     .io_FU_outputs_1_bits_ROB_index                (_FU1_io_FU_output_bits_ROB_index),
-    .io_FU_outputs_1_bits_FTQ_index                (_FU1_io_FU_output_bits_FTQ_index),
     .io_FU_outputs_1_bits_fetch_packet_index
       (_FU1_io_FU_output_bits_fetch_packet_index),
-    .io_FU_outputs_1_bits_violation                (_FU1_io_FU_output_bits_violation),
     .io_FU_outputs_2_valid                         (_FU2_io_FU_output_valid),
     .io_FU_outputs_2_bits_RD                       (_FU2_io_FU_output_bits_RD),
     .io_FU_outputs_2_bits_RD_data                  (_FU2_io_FU_output_bits_RD_data),
@@ -952,10 +887,8 @@ module backend(
     .io_FU_outputs_2_bits_wr_data                  (_FU2_io_FU_output_bits_wr_data),
     .io_FU_outputs_2_bits_MOB_index                (_FU2_io_FU_output_bits_MOB_index),
     .io_FU_outputs_2_bits_ROB_index                (_FU2_io_FU_output_bits_ROB_index),
-    .io_FU_outputs_2_bits_FTQ_index                (_FU2_io_FU_output_bits_FTQ_index),
     .io_FU_outputs_2_bits_fetch_packet_index
       (_FU2_io_FU_output_bits_fetch_packet_index),
-    .io_FU_outputs_2_bits_violation                (_FU2_io_FU_output_bits_violation),
     .io_FU_outputs_3_valid                         (_MOB_io_MOB_output_valid),
     .io_FU_outputs_3_bits_RD                       (_MOB_io_MOB_output_bits_RD),
     .io_FU_outputs_3_bits_RD_data                  (_MOB_io_MOB_output_bits_RD_data),
@@ -972,10 +905,8 @@ module backend(
     .io_FU_outputs_3_bits_wr_data                  (_MOB_io_MOB_output_bits_wr_data),
     .io_FU_outputs_3_bits_MOB_index                (_MOB_io_MOB_output_bits_MOB_index),
     .io_FU_outputs_3_bits_ROB_index                (_MOB_io_MOB_output_bits_ROB_index),
-    .io_FU_outputs_3_bits_FTQ_index                (_MOB_io_MOB_output_bits_FTQ_index),
     .io_FU_outputs_3_bits_fetch_packet_index
       (_MOB_io_MOB_output_bits_fetch_packet_index),
-    .io_FU_outputs_3_bits_violation                (_MOB_io_MOB_output_bits_violation),
     .io_RF_inputs_0_ready                          (_FU0_io_FU_input_ready),
     .io_RF_inputs_0_valid                          (_INT_RS_io_RF_inputs_0_valid),
     .io_RF_inputs_0_bits_ready_bits_RS1_ready
@@ -999,8 +930,6 @@ module backend(
       (_INT_RS_io_RF_inputs_0_bits_ROB_index),
     .io_RF_inputs_0_bits_MOB_index
       (_INT_RS_io_RF_inputs_0_bits_MOB_index),
-    .io_RF_inputs_0_bits_FTQ_index
-      (_INT_RS_io_RF_inputs_0_bits_FTQ_index),
     .io_RF_inputs_0_bits_instructionType
       (_INT_RS_io_RF_inputs_0_bits_instructionType),
     .io_RF_inputs_0_bits_portID                    (_INT_RS_io_RF_inputs_0_bits_portID),
@@ -1018,8 +947,6 @@ module backend(
       (_INT_RS_io_RF_inputs_0_bits_memory_type),
     .io_RF_inputs_0_bits_access_width
       (_INT_RS_io_RF_inputs_0_bits_access_width),
-    .io_RF_inputs_0_bits_instruction_ID
-      (_INT_RS_io_RF_inputs_0_bits_instruction_ID),
     .io_RF_inputs_1_ready                          (_FU1_io_FU_input_ready),
     .io_RF_inputs_1_valid                          (_INT_RS_io_RF_inputs_1_valid),
     .io_RF_inputs_1_bits_ready_bits_RS1_ready
@@ -1043,8 +970,6 @@ module backend(
       (_INT_RS_io_RF_inputs_1_bits_ROB_index),
     .io_RF_inputs_1_bits_MOB_index
       (_INT_RS_io_RF_inputs_1_bits_MOB_index),
-    .io_RF_inputs_1_bits_FTQ_index
-      (_INT_RS_io_RF_inputs_1_bits_FTQ_index),
     .io_RF_inputs_1_bits_instructionType
       (_INT_RS_io_RF_inputs_1_bits_instructionType),
     .io_RF_inputs_1_bits_portID                    (_INT_RS_io_RF_inputs_1_bits_portID),
@@ -1062,8 +987,6 @@ module backend(
       (_INT_RS_io_RF_inputs_1_bits_memory_type),
     .io_RF_inputs_1_bits_access_width
       (_INT_RS_io_RF_inputs_1_bits_access_width),
-    .io_RF_inputs_1_bits_instruction_ID
-      (_INT_RS_io_RF_inputs_1_bits_instruction_ID),
     .io_RF_inputs_2_ready                          (_FU2_io_FU_input_ready),
     .io_RF_inputs_2_valid                          (_INT_RS_io_RF_inputs_2_valid),
     .io_RF_inputs_2_bits_ready_bits_RS1_ready
@@ -1087,8 +1010,6 @@ module backend(
       (_INT_RS_io_RF_inputs_2_bits_ROB_index),
     .io_RF_inputs_2_bits_MOB_index
       (_INT_RS_io_RF_inputs_2_bits_MOB_index),
-    .io_RF_inputs_2_bits_FTQ_index
-      (_INT_RS_io_RF_inputs_2_bits_FTQ_index),
     .io_RF_inputs_2_bits_instructionType
       (_INT_RS_io_RF_inputs_2_bits_instructionType),
     .io_RF_inputs_2_bits_portID                    (_INT_RS_io_RF_inputs_2_bits_portID),
@@ -1105,9 +1026,7 @@ module backend(
     .io_RF_inputs_2_bits_memory_type
       (_INT_RS_io_RF_inputs_2_bits_memory_type),
     .io_RF_inputs_2_bits_access_width
-      (_INT_RS_io_RF_inputs_2_bits_access_width),
-    .io_RF_inputs_2_bits_instruction_ID
-      (_INT_RS_io_RF_inputs_2_bits_instruction_ID)
+      (_INT_RS_io_RF_inputs_2_bits_access_width)
   );
   RS_1 MEM_RS (
     .clock                                         (clock),
@@ -1133,7 +1052,6 @@ module backend(
       (io_backend_packet_0_bits_packet_index),
     .io_backend_packet_0_bits_ROB_index            (io_backend_packet_0_bits_ROB_index),
     .io_backend_packet_0_bits_MOB_index            (_MOB_io_reserved_pointers_0_bits),
-    .io_backend_packet_0_bits_FTQ_index            (io_backend_packet_0_bits_FTQ_index),
     .io_backend_packet_0_bits_instructionType
       (io_backend_packet_0_bits_instructionType),
     .io_backend_packet_0_bits_portID               (io_backend_packet_0_bits_portID),
@@ -1148,8 +1066,6 @@ module backend(
     .io_backend_packet_0_bits_memory_type          (io_backend_packet_0_bits_memory_type),
     .io_backend_packet_0_bits_access_width
       (io_backend_packet_0_bits_access_width),
-    .io_backend_packet_0_bits_instruction_ID
-      (io_backend_packet_0_bits_instruction_ID),
     .io_backend_packet_1_ready                     (_MEM_RS_io_backend_packet_1_ready),
     .io_backend_packet_1_valid
       (_MOB_io_reserve_1_valid_T & io_backend_packet_1_valid),
@@ -1170,7 +1086,6 @@ module backend(
       (io_backend_packet_1_bits_packet_index),
     .io_backend_packet_1_bits_ROB_index            (io_backend_packet_1_bits_ROB_index),
     .io_backend_packet_1_bits_MOB_index            (_MOB_io_reserved_pointers_1_bits),
-    .io_backend_packet_1_bits_FTQ_index            (io_backend_packet_1_bits_FTQ_index),
     .io_backend_packet_1_bits_instructionType
       (io_backend_packet_1_bits_instructionType),
     .io_backend_packet_1_bits_portID               (io_backend_packet_1_bits_portID),
@@ -1185,8 +1100,6 @@ module backend(
     .io_backend_packet_1_bits_memory_type          (io_backend_packet_1_bits_memory_type),
     .io_backend_packet_1_bits_access_width
       (io_backend_packet_1_bits_access_width),
-    .io_backend_packet_1_bits_instruction_ID
-      (io_backend_packet_1_bits_instruction_ID),
     .io_backend_packet_2_ready                     (_MEM_RS_io_backend_packet_2_ready),
     .io_backend_packet_2_valid
       (_MOB_io_reserve_2_valid_T & io_backend_packet_2_valid),
@@ -1207,7 +1120,6 @@ module backend(
       (io_backend_packet_2_bits_packet_index),
     .io_backend_packet_2_bits_ROB_index            (io_backend_packet_2_bits_ROB_index),
     .io_backend_packet_2_bits_MOB_index            (_MOB_io_reserved_pointers_2_bits),
-    .io_backend_packet_2_bits_FTQ_index            (io_backend_packet_2_bits_FTQ_index),
     .io_backend_packet_2_bits_instructionType
       (io_backend_packet_2_bits_instructionType),
     .io_backend_packet_2_bits_portID               (io_backend_packet_2_bits_portID),
@@ -1222,8 +1134,6 @@ module backend(
     .io_backend_packet_2_bits_memory_type          (io_backend_packet_2_bits_memory_type),
     .io_backend_packet_2_bits_access_width
       (io_backend_packet_2_bits_access_width),
-    .io_backend_packet_2_bits_instruction_ID
-      (io_backend_packet_2_bits_instruction_ID),
     .io_backend_packet_3_ready                     (_MEM_RS_io_backend_packet_3_ready),
     .io_backend_packet_3_valid
       (_MOB_io_reserve_3_valid_T & io_backend_packet_3_valid),
@@ -1244,7 +1154,6 @@ module backend(
       (io_backend_packet_3_bits_packet_index),
     .io_backend_packet_3_bits_ROB_index            (io_backend_packet_3_bits_ROB_index),
     .io_backend_packet_3_bits_MOB_index            (_MOB_io_reserved_pointers_3_bits),
-    .io_backend_packet_3_bits_FTQ_index            (io_backend_packet_3_bits_FTQ_index),
     .io_backend_packet_3_bits_instructionType
       (io_backend_packet_3_bits_instructionType),
     .io_backend_packet_3_bits_portID               (io_backend_packet_3_bits_portID),
@@ -1259,8 +1168,6 @@ module backend(
     .io_backend_packet_3_bits_memory_type          (io_backend_packet_3_bits_memory_type),
     .io_backend_packet_3_bits_access_width
       (io_backend_packet_3_bits_access_width),
-    .io_backend_packet_3_bits_instruction_ID
-      (io_backend_packet_3_bits_instruction_ID),
     .io_FU_outputs_0_valid                         (_FU0_io_FU_output_valid),
     .io_FU_outputs_0_bits_RD                       (_FU0_io_FU_output_bits_RD),
     .io_FU_outputs_0_bits_RD_data                  (_FU0_io_FU_output_bits_RD_data),
@@ -1277,10 +1184,8 @@ module backend(
     .io_FU_outputs_0_bits_wr_data                  (_FU0_io_FU_output_bits_wr_data),
     .io_FU_outputs_0_bits_MOB_index                (_FU0_io_FU_output_bits_MOB_index),
     .io_FU_outputs_0_bits_ROB_index                (_FU0_io_FU_output_bits_ROB_index),
-    .io_FU_outputs_0_bits_FTQ_index                (_FU0_io_FU_output_bits_FTQ_index),
     .io_FU_outputs_0_bits_fetch_packet_index
       (_FU0_io_FU_output_bits_fetch_packet_index),
-    .io_FU_outputs_0_bits_violation                (_FU0_io_FU_output_bits_violation),
     .io_FU_outputs_1_valid                         (_FU1_io_FU_output_valid),
     .io_FU_outputs_1_bits_RD                       (_FU1_io_FU_output_bits_RD),
     .io_FU_outputs_1_bits_RD_data                  (_FU1_io_FU_output_bits_RD_data),
@@ -1297,10 +1202,8 @@ module backend(
     .io_FU_outputs_1_bits_wr_data                  (_FU1_io_FU_output_bits_wr_data),
     .io_FU_outputs_1_bits_MOB_index                (_FU1_io_FU_output_bits_MOB_index),
     .io_FU_outputs_1_bits_ROB_index                (_FU1_io_FU_output_bits_ROB_index),
-    .io_FU_outputs_1_bits_FTQ_index                (_FU1_io_FU_output_bits_FTQ_index),
     .io_FU_outputs_1_bits_fetch_packet_index
       (_FU1_io_FU_output_bits_fetch_packet_index),
-    .io_FU_outputs_1_bits_violation                (_FU1_io_FU_output_bits_violation),
     .io_FU_outputs_2_valid                         (_FU2_io_FU_output_valid),
     .io_FU_outputs_2_bits_RD                       (_FU2_io_FU_output_bits_RD),
     .io_FU_outputs_2_bits_RD_data                  (_FU2_io_FU_output_bits_RD_data),
@@ -1317,10 +1220,8 @@ module backend(
     .io_FU_outputs_2_bits_wr_data                  (_FU2_io_FU_output_bits_wr_data),
     .io_FU_outputs_2_bits_MOB_index                (_FU2_io_FU_output_bits_MOB_index),
     .io_FU_outputs_2_bits_ROB_index                (_FU2_io_FU_output_bits_ROB_index),
-    .io_FU_outputs_2_bits_FTQ_index                (_FU2_io_FU_output_bits_FTQ_index),
     .io_FU_outputs_2_bits_fetch_packet_index
       (_FU2_io_FU_output_bits_fetch_packet_index),
-    .io_FU_outputs_2_bits_violation                (_FU2_io_FU_output_bits_violation),
     .io_FU_outputs_3_valid                         (_MOB_io_MOB_output_valid),
     .io_FU_outputs_3_bits_RD                       (_MOB_io_MOB_output_bits_RD),
     .io_FU_outputs_3_bits_RD_data                  (_MOB_io_MOB_output_bits_RD_data),
@@ -1337,10 +1238,8 @@ module backend(
     .io_FU_outputs_3_bits_wr_data                  (_MOB_io_MOB_output_bits_wr_data),
     .io_FU_outputs_3_bits_MOB_index                (_MOB_io_MOB_output_bits_MOB_index),
     .io_FU_outputs_3_bits_ROB_index                (_MOB_io_MOB_output_bits_ROB_index),
-    .io_FU_outputs_3_bits_FTQ_index                (_MOB_io_MOB_output_bits_FTQ_index),
     .io_FU_outputs_3_bits_fetch_packet_index
       (_MOB_io_MOB_output_bits_fetch_packet_index),
-    .io_FU_outputs_3_bits_violation                (_MOB_io_MOB_output_bits_violation),
     .io_RF_inputs_0_ready                          (1'h1),
     .io_RF_inputs_0_valid                          (_MEM_RS_io_RF_inputs_0_valid),
     .io_RF_inputs_0_bits_ready_bits_RS1_ready      (/* unused */),
@@ -1358,7 +1257,6 @@ module backend(
     .io_RF_inputs_0_bits_ROB_index                 (/* unused */),
     .io_RF_inputs_0_bits_MOB_index
       (_MEM_RS_io_RF_inputs_0_bits_MOB_index),
-    .io_RF_inputs_0_bits_FTQ_index                 (/* unused */),
     .io_RF_inputs_0_bits_instructionType           (/* unused */),
     .io_RF_inputs_0_bits_portID                    (/* unused */),
     .io_RF_inputs_0_bits_RS_type                   (/* unused */),
@@ -1372,7 +1270,6 @@ module backend(
       (_MEM_RS_io_RF_inputs_0_bits_memory_type),
     .io_RF_inputs_0_bits_access_width
       (_MEM_RS_io_RF_inputs_0_bits_access_width),
-    .io_RF_inputs_0_bits_instruction_ID            (/* unused */),
     .io_RF_inputs_1_ready                          (1'h0),
     .io_RF_inputs_1_valid                          (/* unused */),
     .io_RF_inputs_1_bits_ready_bits_RS1_ready      (/* unused */),
@@ -1389,7 +1286,6 @@ module backend(
     .io_RF_inputs_1_bits_packet_index              (/* unused */),
     .io_RF_inputs_1_bits_ROB_index                 (/* unused */),
     .io_RF_inputs_1_bits_MOB_index                 (/* unused */),
-    .io_RF_inputs_1_bits_FTQ_index                 (/* unused */),
     .io_RF_inputs_1_bits_instructionType           (/* unused */),
     .io_RF_inputs_1_bits_portID                    (/* unused */),
     .io_RF_inputs_1_bits_RS_type                   (/* unused */),
@@ -1401,7 +1297,6 @@ module backend(
     .io_RF_inputs_1_bits_IS_IMM                    (/* unused */),
     .io_RF_inputs_1_bits_memory_type               (/* unused */),
     .io_RF_inputs_1_bits_access_width              (/* unused */),
-    .io_RF_inputs_1_bits_instruction_ID            (/* unused */),
     .io_RF_inputs_2_ready                          (1'h0),
     .io_RF_inputs_2_valid                          (/* unused */),
     .io_RF_inputs_2_bits_ready_bits_RS1_ready      (/* unused */),
@@ -1418,7 +1313,6 @@ module backend(
     .io_RF_inputs_2_bits_packet_index              (/* unused */),
     .io_RF_inputs_2_bits_ROB_index                 (/* unused */),
     .io_RF_inputs_2_bits_MOB_index                 (/* unused */),
-    .io_RF_inputs_2_bits_FTQ_index                 (/* unused */),
     .io_RF_inputs_2_bits_instructionType           (/* unused */),
     .io_RF_inputs_2_bits_portID                    (/* unused */),
     .io_RF_inputs_2_bits_RS_type                   (/* unused */),
@@ -1429,8 +1323,7 @@ module backend(
     .io_RF_inputs_2_bits_MULTIPLY                  (/* unused */),
     .io_RF_inputs_2_bits_IS_IMM                    (/* unused */),
     .io_RF_inputs_2_bits_memory_type               (/* unused */),
-    .io_RF_inputs_2_bits_access_width              (/* unused */),
-    .io_RF_inputs_2_bits_instruction_ID            (/* unused */)
+    .io_RF_inputs_2_bits_access_width              (/* unused */)
   );
   MOB MOB (
     .clock                                       (clock),
@@ -1455,7 +1348,6 @@ module backend(
     .io_reserve_0_bits_packet_index              (io_backend_packet_0_bits_packet_index),
     .io_reserve_0_bits_ROB_index                 (io_backend_packet_0_bits_ROB_index),
     .io_reserve_0_bits_MOB_index                 (io_backend_packet_0_bits_MOB_index),
-    .io_reserve_0_bits_FTQ_index                 (io_backend_packet_0_bits_FTQ_index),
     .io_reserve_0_bits_instructionType
       (io_backend_packet_0_bits_instructionType),
     .io_reserve_0_bits_portID                    (io_backend_packet_0_bits_portID),
@@ -1469,8 +1361,6 @@ module backend(
     .io_reserve_0_bits_IS_IMM                    (io_backend_packet_0_bits_IS_IMM),
     .io_reserve_0_bits_memory_type               (io_backend_packet_0_bits_memory_type),
     .io_reserve_0_bits_access_width              (io_backend_packet_0_bits_access_width),
-    .io_reserve_0_bits_instruction_ID
-      (io_backend_packet_0_bits_instruction_ID),
     .io_reserve_1_ready                          (_MOB_io_reserve_1_ready),
     .io_reserve_1_valid
       (_MOB_io_reserve_1_valid_T & io_backend_packet_1_valid),
@@ -1490,7 +1380,6 @@ module backend(
     .io_reserve_1_bits_packet_index              (io_backend_packet_1_bits_packet_index),
     .io_reserve_1_bits_ROB_index                 (io_backend_packet_1_bits_ROB_index),
     .io_reserve_1_bits_MOB_index                 (io_backend_packet_1_bits_MOB_index),
-    .io_reserve_1_bits_FTQ_index                 (io_backend_packet_1_bits_FTQ_index),
     .io_reserve_1_bits_instructionType
       (io_backend_packet_1_bits_instructionType),
     .io_reserve_1_bits_portID                    (io_backend_packet_1_bits_portID),
@@ -1504,8 +1393,6 @@ module backend(
     .io_reserve_1_bits_IS_IMM                    (io_backend_packet_1_bits_IS_IMM),
     .io_reserve_1_bits_memory_type               (io_backend_packet_1_bits_memory_type),
     .io_reserve_1_bits_access_width              (io_backend_packet_1_bits_access_width),
-    .io_reserve_1_bits_instruction_ID
-      (io_backend_packet_1_bits_instruction_ID),
     .io_reserve_2_ready                          (_MOB_io_reserve_2_ready),
     .io_reserve_2_valid
       (_MOB_io_reserve_2_valid_T & io_backend_packet_2_valid),
@@ -1525,7 +1412,6 @@ module backend(
     .io_reserve_2_bits_packet_index              (io_backend_packet_2_bits_packet_index),
     .io_reserve_2_bits_ROB_index                 (io_backend_packet_2_bits_ROB_index),
     .io_reserve_2_bits_MOB_index                 (io_backend_packet_2_bits_MOB_index),
-    .io_reserve_2_bits_FTQ_index                 (io_backend_packet_2_bits_FTQ_index),
     .io_reserve_2_bits_instructionType
       (io_backend_packet_2_bits_instructionType),
     .io_reserve_2_bits_portID                    (io_backend_packet_2_bits_portID),
@@ -1539,8 +1425,6 @@ module backend(
     .io_reserve_2_bits_IS_IMM                    (io_backend_packet_2_bits_IS_IMM),
     .io_reserve_2_bits_memory_type               (io_backend_packet_2_bits_memory_type),
     .io_reserve_2_bits_access_width              (io_backend_packet_2_bits_access_width),
-    .io_reserve_2_bits_instruction_ID
-      (io_backend_packet_2_bits_instruction_ID),
     .io_reserve_3_ready                          (_MOB_io_reserve_3_ready),
     .io_reserve_3_valid
       (_MOB_io_reserve_3_valid_T & io_backend_packet_3_valid),
@@ -1560,7 +1444,6 @@ module backend(
     .io_reserve_3_bits_packet_index              (io_backend_packet_3_bits_packet_index),
     .io_reserve_3_bits_ROB_index                 (io_backend_packet_3_bits_ROB_index),
     .io_reserve_3_bits_MOB_index                 (io_backend_packet_3_bits_MOB_index),
-    .io_reserve_3_bits_FTQ_index                 (io_backend_packet_3_bits_FTQ_index),
     .io_reserve_3_bits_instructionType
       (io_backend_packet_3_bits_instructionType),
     .io_reserve_3_bits_portID                    (io_backend_packet_3_bits_portID),
@@ -1574,8 +1457,6 @@ module backend(
     .io_reserve_3_bits_IS_IMM                    (io_backend_packet_3_bits_IS_IMM),
     .io_reserve_3_bits_memory_type               (io_backend_packet_3_bits_memory_type),
     .io_reserve_3_bits_access_width              (io_backend_packet_3_bits_access_width),
-    .io_reserve_3_bits_instruction_ID
-      (io_backend_packet_3_bits_instruction_ID),
     .io_reserved_pointers_0_valid                (/* unused */),
     .io_reserved_pointers_0_bits                 (_MOB_io_reserved_pointers_0_bits),
     .io_reserved_pointers_1_valid                (/* unused */),
@@ -1599,9 +1480,7 @@ module backend(
     .io_AGU_output_bits_wr_data                  (_AGU_io_FU_output_bits_wr_data),
     .io_AGU_output_bits_MOB_index                (_AGU_io_FU_output_bits_MOB_index),
     .io_AGU_output_bits_ROB_index                (6'h0),
-    .io_AGU_output_bits_FTQ_index                (4'h0),
     .io_AGU_output_bits_fetch_packet_index       (2'h0),
-    .io_AGU_output_bits_violation                (1'h0),
     .io_MOB_output_valid                         (_MOB_io_MOB_output_valid),
     .io_MOB_output_bits_RD                       (_MOB_io_MOB_output_bits_RD),
     .io_MOB_output_bits_RD_data                  (_MOB_io_MOB_output_bits_RD_data),
@@ -1617,10 +1496,8 @@ module backend(
     .io_MOB_output_bits_wr_data                  (_MOB_io_MOB_output_bits_wr_data),
     .io_MOB_output_bits_MOB_index                (_MOB_io_MOB_output_bits_MOB_index),
     .io_MOB_output_bits_ROB_index                (_MOB_io_MOB_output_bits_ROB_index),
-    .io_MOB_output_bits_FTQ_index                (_MOB_io_MOB_output_bits_FTQ_index),
     .io_MOB_output_bits_fetch_packet_index
       (_MOB_io_MOB_output_bits_fetch_packet_index),
-    .io_MOB_output_bits_violation                (_MOB_io_MOB_output_bits_violation),
     .io_commit_valid                             (io_commit_valid),
     .io_commit_bits_fetch_PC                     (io_commit_bits_fetch_PC),
     .io_commit_bits_T_NT                         (io_commit_bits_T_NT),
@@ -1628,7 +1505,6 @@ module backend(
     .io_commit_bits_br_type                      (io_commit_bits_br_type),
     .io_commit_bits_fetch_packet_index           (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction             (io_commit_bits_is_misprediction),
-    .io_commit_bits_violation                    (io_commit_bits_violation),
     .io_commit_bits_expected_PC                  (io_commit_bits_expected_PC),
     .io_commit_bits_GHR                          (io_commit_bits_GHR),
     .io_commit_bits_TOS                          (io_commit_bits_TOS),
@@ -1729,8 +1605,6 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_ROB_index),
     .io_FU_input_bits_decoded_instruction_MOB_index
       (read_decoded_instructions_0_decoded_instruction_REG_MOB_index),
-    .io_FU_input_bits_decoded_instruction_FTQ_index
-      (read_decoded_instructions_0_decoded_instruction_REG_FTQ_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (read_decoded_instructions_0_decoded_instruction_REG_instructionType),
     .io_FU_input_bits_decoded_instruction_portID
@@ -1753,8 +1627,6 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_memory_type),
     .io_FU_input_bits_decoded_instruction_access_width
       (read_decoded_instructions_0_decoded_instruction_REG_access_width),
-    .io_FU_input_bits_decoded_instruction_instruction_ID
-      (read_decoded_instructions_0_decoded_instruction_REG_instruction_ID),
     .io_FU_input_bits_RS1_data                                 (_INT_PRF_io_rdata_0),
     .io_FU_input_bits_RS2_data                                 (_INT_PRF_io_rdata_1),
     .io_FU_input_bits_fetch_PC                                 (io_PC_file_exec_data),
@@ -1787,12 +1659,8 @@ module backend(
       (_FU0_io_FU_output_bits_MOB_index),
     .io_FU_output_bits_ROB_index
       (_FU0_io_FU_output_bits_ROB_index),
-    .io_FU_output_bits_FTQ_index
-      (_FU0_io_FU_output_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
-      (_FU0_io_FU_output_bits_fetch_packet_index),
-    .io_FU_output_bits_violation
-      (_FU0_io_FU_output_bits_violation)
+      (_FU0_io_FU_output_bits_fetch_packet_index)
   );
   FU_1 FU1 (
     .clock                                                     (clock),
@@ -1829,8 +1697,6 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_ROB_index),
     .io_FU_input_bits_decoded_instruction_MOB_index
       (read_decoded_instructions_1_decoded_instruction_REG_MOB_index),
-    .io_FU_input_bits_decoded_instruction_FTQ_index
-      (read_decoded_instructions_1_decoded_instruction_REG_FTQ_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (read_decoded_instructions_1_decoded_instruction_REG_instructionType),
     .io_FU_input_bits_decoded_instruction_portID
@@ -1853,8 +1719,6 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_memory_type),
     .io_FU_input_bits_decoded_instruction_access_width
       (read_decoded_instructions_1_decoded_instruction_REG_access_width),
-    .io_FU_input_bits_decoded_instruction_instruction_ID
-      (read_decoded_instructions_1_decoded_instruction_REG_instruction_ID),
     .io_FU_input_bits_RS1_data                                 (_INT_PRF_io_rdata_2),
     .io_FU_input_bits_RS2_data                                 (_INT_PRF_io_rdata_3),
     .io_FU_input_bits_fetch_PC                                 (32'h0),
@@ -1887,12 +1751,8 @@ module backend(
       (_FU1_io_FU_output_bits_MOB_index),
     .io_FU_output_bits_ROB_index
       (_FU1_io_FU_output_bits_ROB_index),
-    .io_FU_output_bits_FTQ_index
-      (_FU1_io_FU_output_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
-      (_FU1_io_FU_output_bits_fetch_packet_index),
-    .io_FU_output_bits_violation
-      (_FU1_io_FU_output_bits_violation)
+      (_FU1_io_FU_output_bits_fetch_packet_index)
   );
   FU_1 FU2 (
     .clock                                                     (clock),
@@ -1929,8 +1789,6 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_ROB_index),
     .io_FU_input_bits_decoded_instruction_MOB_index
       (read_decoded_instructions_2_decoded_instruction_REG_MOB_index),
-    .io_FU_input_bits_decoded_instruction_FTQ_index
-      (read_decoded_instructions_2_decoded_instruction_REG_FTQ_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (read_decoded_instructions_2_decoded_instruction_REG_instructionType),
     .io_FU_input_bits_decoded_instruction_portID
@@ -1953,8 +1811,6 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_memory_type),
     .io_FU_input_bits_decoded_instruction_access_width
       (read_decoded_instructions_2_decoded_instruction_REG_access_width),
-    .io_FU_input_bits_decoded_instruction_instruction_ID
-      (read_decoded_instructions_2_decoded_instruction_REG_instruction_ID),
     .io_FU_input_bits_RS1_data                                 (_INT_PRF_io_rdata_4),
     .io_FU_input_bits_RS2_data                                 (_INT_PRF_io_rdata_5),
     .io_FU_input_bits_fetch_PC                                 (32'h0),
@@ -1987,12 +1843,8 @@ module backend(
       (_FU2_io_FU_output_bits_MOB_index),
     .io_FU_output_bits_ROB_index
       (_FU2_io_FU_output_bits_ROB_index),
-    .io_FU_output_bits_FTQ_index
-      (_FU2_io_FU_output_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
-      (_FU2_io_FU_output_bits_fetch_packet_index),
-    .io_FU_output_bits_violation
-      (_FU2_io_FU_output_bits_violation)
+      (_FU2_io_FU_output_bits_fetch_packet_index)
   );
   AGU AGU (
     .clock                                             (clock),
@@ -2045,10 +1897,8 @@ module backend(
   assign io_FU_outputs_0_bits_wr_data = _FU0_io_FU_output_bits_wr_data;
   assign io_FU_outputs_0_bits_MOB_index = _FU0_io_FU_output_bits_MOB_index;
   assign io_FU_outputs_0_bits_ROB_index = _FU0_io_FU_output_bits_ROB_index;
-  assign io_FU_outputs_0_bits_FTQ_index = _FU0_io_FU_output_bits_FTQ_index;
   assign io_FU_outputs_0_bits_fetch_packet_index =
     _FU0_io_FU_output_bits_fetch_packet_index;
-  assign io_FU_outputs_0_bits_violation = _FU0_io_FU_output_bits_violation;
   assign io_FU_outputs_1_valid = _FU1_io_FU_output_valid;
   assign io_FU_outputs_1_bits_RD = _FU1_io_FU_output_bits_RD;
   assign io_FU_outputs_1_bits_RD_data = _FU1_io_FU_output_bits_RD_data;
@@ -2064,10 +1914,8 @@ module backend(
   assign io_FU_outputs_1_bits_wr_data = _FU1_io_FU_output_bits_wr_data;
   assign io_FU_outputs_1_bits_MOB_index = _FU1_io_FU_output_bits_MOB_index;
   assign io_FU_outputs_1_bits_ROB_index = _FU1_io_FU_output_bits_ROB_index;
-  assign io_FU_outputs_1_bits_FTQ_index = _FU1_io_FU_output_bits_FTQ_index;
   assign io_FU_outputs_1_bits_fetch_packet_index =
     _FU1_io_FU_output_bits_fetch_packet_index;
-  assign io_FU_outputs_1_bits_violation = _FU1_io_FU_output_bits_violation;
   assign io_FU_outputs_2_valid = _FU2_io_FU_output_valid;
   assign io_FU_outputs_2_bits_RD = _FU2_io_FU_output_bits_RD;
   assign io_FU_outputs_2_bits_RD_data = _FU2_io_FU_output_bits_RD_data;
@@ -2083,10 +1931,8 @@ module backend(
   assign io_FU_outputs_2_bits_wr_data = _FU2_io_FU_output_bits_wr_data;
   assign io_FU_outputs_2_bits_MOB_index = _FU2_io_FU_output_bits_MOB_index;
   assign io_FU_outputs_2_bits_ROB_index = _FU2_io_FU_output_bits_ROB_index;
-  assign io_FU_outputs_2_bits_FTQ_index = _FU2_io_FU_output_bits_FTQ_index;
   assign io_FU_outputs_2_bits_fetch_packet_index =
     _FU2_io_FU_output_bits_fetch_packet_index;
-  assign io_FU_outputs_2_bits_violation = _FU2_io_FU_output_bits_violation;
   assign io_FU_outputs_3_valid = _MOB_io_MOB_output_valid;
   assign io_FU_outputs_3_bits_RD = _MOB_io_MOB_output_bits_RD;
   assign io_FU_outputs_3_bits_RD_data = _MOB_io_MOB_output_bits_RD_data;
@@ -2102,9 +1948,7 @@ module backend(
   assign io_FU_outputs_3_bits_wr_data = _MOB_io_MOB_output_bits_wr_data;
   assign io_FU_outputs_3_bits_MOB_index = _MOB_io_MOB_output_bits_MOB_index;
   assign io_FU_outputs_3_bits_ROB_index = _MOB_io_MOB_output_bits_ROB_index;
-  assign io_FU_outputs_3_bits_FTQ_index = _MOB_io_MOB_output_bits_FTQ_index;
   assign io_FU_outputs_3_bits_fetch_packet_index =
     _MOB_io_MOB_output_bits_fetch_packet_index;
-  assign io_FU_outputs_3_bits_violation = _MOB_io_MOB_output_bits_violation;
 endmodule
 

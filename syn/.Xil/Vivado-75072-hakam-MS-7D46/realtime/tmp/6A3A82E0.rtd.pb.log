@@ -1,0 +1,466 @@
+xilinx rtfpga
+rt::do_reinfer_area_combined 1
+INFO: [Synth 8-4471] merging register 'LRU_memory_io_wr_addr_REG_reg[5:0]' into 'LRU_memory/mem_ext/_R0_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/L1_instruction_cache.sv:302]
+INFO: [Synth 8-6904] The RAM "instruction_cache/LRU_memory/mem_ext/Memory_reg" of size (depth=64 x width=2) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/cacheable_request_Q/ram_ext/Memory_reg" of size (depth=8 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/non_cacheable_request_Q/ram_ext/Memory_reg" of size (depth=8 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/cacheable_response_Q/ram_ext/Memory_reg" of size (depth=8 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/non_cacheable_response_Q/ram_ext/Memory_reg" of size (depth=8 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/CPU_response_skid_buffer/ram_ext/Memory_reg" of size (depth=3 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/AXI_request_Q/ram_ext/Memory_reg" of size (depth=2 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_1/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_2/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_3/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_0/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_0/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_1/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_2/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_3/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_4/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_5/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_6/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_7/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_8/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_9/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_10/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_11/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_12/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_13/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_14/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_15/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_16/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_17/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_18/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_19/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_20/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_21/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_22/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_23/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_24/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_25/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_26/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_27/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_28/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_29/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_30/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_31/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+WARNING: [Synth 8-7129] Port m_axi_bid[7] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[6] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[5] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[4] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[3] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[2] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[1] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[0] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bresp[1] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bresp[0] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_buser in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_rresp[1] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_rresp[0] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_ruser in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_awready in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[7] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[6] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[5] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[4] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[3] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[2] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[1] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[0] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bresp[1] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bresp[0] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_buser in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_rresp[1] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_rresp[0] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_ruser in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[31] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[30] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[29] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[28] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[27] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[26] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[25] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[24] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[23] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[22] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[21] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[20] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[19] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[18] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[17] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[16] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[15] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[14] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[13] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[12] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[11] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[10] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[9] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[8] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[7] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[6] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[5] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[4] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[3] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[2] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[1] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_data[0] in module L1_instruction_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_CPU_request_bits_wr_en in module L1_instruction_cache is either unconnected or has no load
+RAM Pipeline Warning: Read Address Register Found For RAM data_memory_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM data_memory_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM data_memory_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM data_memory_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM data_memory_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM data_memory_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "instruction_cache/LRU_memory/mem_ext/Memory_reg" of size (depth=64 x width=2) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/cacheable_request_Q/ram_ext/Memory_reg" of size (depth=8 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/non_cacheable_request_Q/ram_ext/Memory_reg" of size (depth=8 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/cacheable_response_Q/ram_ext/Memory_reg" of size (depth=8 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/non_cacheable_response_Q/ram_ext/Memory_reg" of size (depth=8 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/CPU_response_skid_buffer/ram_ext/Memory_reg" of size (depth=3 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/AXI_request_Q/ram_ext/Memory_reg" of size (depth=2 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_1/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_2/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_3/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_0/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_0/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_1/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_2/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_3/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_4/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_5/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_6/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_7/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_8/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_9/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_10/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_11/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_12/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_13/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_14/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_15/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_16/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_17/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_18/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_19/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_20/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_21/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_22/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_23/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_24/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_25/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_26/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_27/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_28/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_29/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_30/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_31/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM data_memory_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM data_memory_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_5_5 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_8_8 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_7_7 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_6_6 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_11_11 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_10_10 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_9_9 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_14_14 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_13_13 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_12_12 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_17_17 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_16_16 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_15_15 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_20_20 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_19_19 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_18_18 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_5_5 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_8_8 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_7_7 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_6_6 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_11_11 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_10_10 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_9_9 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_14_14 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_13_13 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_12_12 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_17_17 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_16_16 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_15_15 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_20_20 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_19_19 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_18_18 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_5_5 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_8_8 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_7_7 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_6_6 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_11_11 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_10_10 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_9_9 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_14_14 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_13_13 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_12_12 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_17_17 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_16_16 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_15_15 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_20_20 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_19_19 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_18_18 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_5_5 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_8_8 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_7_7 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_6_6 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_11_11 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_10_10 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_9_9 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_14_14 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_13_13 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_12_12 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_17_17 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_16_16 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_15_15 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_20_20 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_19_19 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_8/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_18_18 from module extram__68 due to constant propagation
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[128]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[129]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[96]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[97]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[64]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[65]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[32]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[33]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[0]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[1]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[129]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[130]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[97]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[98]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[65]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[66]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[33]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[34]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[1]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[2]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[130]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[131]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[98]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[99]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[66]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[67]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[34]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[35]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[2]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[3]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[131]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[132]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[99]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[100]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[67]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[68]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[35]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[36]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[3]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[4]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[132]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[133]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[100]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[101]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[68]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[69]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[36]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[37]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[4]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[5]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[133]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[134]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[101]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[102]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[69]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[70]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[37]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[38]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[5]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[6]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[134]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[135]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[102]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[103]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[70]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[71]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[38]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[39]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[6]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[7]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[135]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[136]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[103]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[104]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[71]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[72]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[39]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[40]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[7]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[8]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[136]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[137]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[104]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[105]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[72]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[73]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[40]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[41]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[8]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[9]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[137]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[138]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[105]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[106]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[73]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[74]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[41]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[42]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[9]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[10]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[138]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[139]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[106]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[107]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[74]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[75]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[42]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[43]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[10]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[11]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[139]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[140]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[107]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[108]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[75]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[76]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[43]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[44]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[11]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[12]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[140]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[141]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[108]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[109]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[76]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[77]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[44]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[45]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[12]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[13]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[141]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[142]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[109]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[110]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[77]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[78]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[45]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[46]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[13]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[14]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[142]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[143]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[110]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[111]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[78]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[79]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[46]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[47]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[14]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[15]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[143]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[144]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[111]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[112]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[79]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[80]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[47]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[48]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[15]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[16]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[144]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[145]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[112]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[113]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[80]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[81]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[48]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[49]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[16]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[17]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[145]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[146]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[113]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[114]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[81]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[82]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[49]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[50]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[17]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[18]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[146]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[147]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[114]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[115]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[82]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[83]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[50]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[51]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[18]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[19]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[147]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[148]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[115]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[116]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[83]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[84]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[51]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[52]'
+INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[19]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[20]'
+INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/\AXI_AW_DATA_BUFFER_reg[159] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_read_address_REG_1_reg[3] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_read_address_REG_1_reg[4] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[3] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[4] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_read_address_REG_1_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_read_address_REG_1_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_read_address_REG_1_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\MSHRs_0_address_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\MSHRs_1_address_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\MSHRs_3_address_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\MSHRs_2_address_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_8/\tag_memories_3/dataOut_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_5/\tag_memories_1/dataOut_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_6/\tag_memories_2/dataOut_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_9/\tag_memories_0/dataOut_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AR_buf_arsize_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AR_buf_arsize_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AW_buf_awsize_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AW_buf_awsize_reg[2] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (instruction_cache/CPU_response_skid_buffer/\ram_reg[110] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/CPU_response_skid_buffer/\ram_reg[71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/\AXI_AR_buf_arlen_reg[7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/\request_addr_reg[4] )
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_350_351 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_84_97 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_70_83 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_126_139 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_112_125 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_98_111 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_154_167 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_140_153 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_182_195 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_168_181 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_224_237 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_210_223 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_196_209 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_252_265 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_238_251 from module extram__54 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_266_279 from module extram__54 due to constant propagation
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/\AXI_AW_DATA_BUFFER_reg[159] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[25] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[26] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[23] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[24] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[21] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[22] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[19] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[20] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[17] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[18] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[16] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[29] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[30] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[27] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\cacheable_request_Q_io_enq_bits_write_address_REG_reg[28] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/\AXI_AR_buf_araddr_reg[4] )
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/non_cacheable_request_Q/i_0/i_0/ram_ext/Memory_reg_0_7_84_97 from module extram__54 due to constant propagation
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/\AXI_AW_DATA_BUFFER_reg[159] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AR_buf_arid_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AR_buf_arid_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AR_buf_arid_reg[3] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AR_buf_arid_reg[4] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AR_buf_arid_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AR_buf_arid_reg[6] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AW_buf_awid_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AW_buf_awid_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AW_buf_awid_reg[3] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AW_buf_awid_reg[4] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AW_buf_awid_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\AXI_AW_buf_awid_reg[6] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/\AXI_AW_DATA_BUFFER_reg[159] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (instruction_cache/\AXI_AW_DATA_BUFFER_reg[159] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[126] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[190] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[62] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[222] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[94] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[158] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[30] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[110] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[174] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[46] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[206] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[78] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[142] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[14] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[118] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[182] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[54] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[214] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[86] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[150] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[22] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[102] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[166] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[38] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[198] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[70] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[134] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[6] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[191] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[63] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[223] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[95] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[159] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[111] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[175] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[47] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[207] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/final_response_buffer/\ram_reg[79] )
+INFO: [Common 17-14] Message 'Synth 8-3333' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.

@@ -38,7 +38,6 @@ module PC_gen(
   input  [2:0]  io_commit_bits_br_type,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
-                io_commit_bits_violation,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,
@@ -77,11 +76,10 @@ module PC_gen(
 
   reg  [31:0] PC_reg;
   reg  [31:0] flush_PC_reg;
+  wire        is_misprediction = io_commit_valid & io_commit_bits_is_misprediction;
   wire        use_RAS = io_prediction_bits_br_type == 3'h4 & io_prediction_valid;
   wire        use_BTB = io_prediction_bits_hit & io_prediction_valid & ~use_RAS;
-  wire        flushing_event =
-    io_commit_valid & io_commit_bits_is_misprediction | io_revert_valid | io_commit_valid
-    & io_commit_bits_violation;
+  wire        flushing_event = is_misprediction | io_revert_valid;
   reg         REG;
   reg         REG_1;
   wire [31:0] PC_mux =
@@ -97,7 +95,7 @@ module PC_gen(
       if (io_PC_next_ready & ~flushing_event)
         PC_reg <= PC_mux + {26'h0, 6'h10 - {2'h0, PC_mux[3:0]}};
       flush_PC_reg <=
-        io_commit_valid & (io_commit_bits_is_misprediction | io_commit_bits_violation)
+        is_misprediction
           ? io_commit_bits_fetch_PC
           : io_revert_valid ? io_revert_bits_PC : 32'h0;
     end

@@ -50,7 +50,6 @@ module free_list(
   input  [2:0]  io_commit_bits_br_type,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
-                io_commit_bits_violation,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,

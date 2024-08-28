@@ -40,7 +40,6 @@ module ALU(
   input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_bits_decoded_instruction_MOB_index,
-                io_FU_input_bits_decoded_instruction_FTQ_index,
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
   input         io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
@@ -55,7 +54,6 @@ module ALU(
   output [31:0] io_FU_output_bits_fetch_PC,
   output [3:0]  io_FU_output_bits_MOB_index,
   output [5:0]  io_FU_output_bits_ROB_index,
-  output [3:0]  io_FU_output_bits_FTQ_index,
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
@@ -65,7 +63,6 @@ module ALU(
   reg [6:0]  io_FU_output_bits_RD_REG;
   reg        io_FU_output_bits_RD_valid_REG;
   reg [3:0]  io_FU_output_bits_MOB_index_REG;
-  reg [3:0]  io_FU_output_bits_FTQ_index_REG;
   reg [5:0]  io_FU_output_bits_ROB_index_REG;
   reg        io_FU_output_valid_REG;
   always @(posedge clock) begin
@@ -156,7 +153,6 @@ module ALU(
     io_FU_output_bits_RD_REG <= io_FU_input_bits_decoded_instruction_RD;
     io_FU_output_bits_RD_valid_REG <= io_FU_input_bits_decoded_instruction_RD_valid;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
-    io_FU_output_bits_FTQ_index_REG <= io_FU_input_bits_decoded_instruction_FTQ_index;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
     io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;
   end // always @(posedge)
@@ -167,7 +163,6 @@ module ALU(
   assign io_FU_output_bits_fetch_PC = io_FU_output_bits_fetch_PC_REG;
   assign io_FU_output_bits_MOB_index = io_FU_output_bits_MOB_index_REG;
   assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;
-  assign io_FU_output_bits_FTQ_index = io_FU_output_bits_FTQ_index_REG;
   assign io_FU_output_bits_fetch_packet_index = io_FU_output_bits_fetch_packet_index_REG;
 endmodule
 

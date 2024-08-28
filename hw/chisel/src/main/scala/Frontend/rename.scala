@@ -136,7 +136,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     // write RAT
     for (i <- 0 until fetchWidth){
         //FIXME: use global flush signal and do not reconstruct
-        when(io.commit.valid && (io.commit.bits.RD_valid(i) && !(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.violation)))){
+        when(io.commit.valid && (io.commit.bits.RD_valid(i) && !(io.commit.valid && (io.commit.bits.is_misprediction)))){
             commit_RAT(io.commit.bits.RDold(i)) := io.commit.bits.RD(i)
         }
     }
@@ -144,7 +144,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     ////////////
     // REVERT //
     ////////////
-    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.violation)){
+    when(io.commit.valid && (io.commit.bits.is_misprediction)){
         for(i <- 0 until architecturalRegCount){
             speculative_RAT(i) := commit_RAT(i)
         }
@@ -172,10 +172,6 @@ class rename(coreParameters:CoreParameters) extends Module{
         // CHECKPOINT 
         val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
 
-        // FTQ forwarding
-        val predictions_in                  =   Flipped(Decoupled(new FTQ_entry(coreParameters)))
-        val predictions_out                 =   Decoupled(new FTQ_entry(coreParameters))
-
         // Instruction input (decoded)
         val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
@@ -190,7 +186,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     //////////////////
     
     // FIXME: broke
-    val fire = (io.predictions_in.fire || !io.predictions_in.valid) && (io.decoded_fetch_packet.fire)
+    val fire = (io.decoded_fetch_packet.fire)
 
     ////////////////////
     // OUTPUT BUNDLES //
@@ -303,6 +299,8 @@ class rename(coreParameters:CoreParameters) extends Module{
         val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD 
         val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid 
 
+        //renamed_decoded_fetch_packet.bits.decoded_instruction(i).instruction_ID             := DontCare
+
         when(RD_valid && io.renamed_decoded_fetch_packet.valid){    // is this fine?
             comb_ready_bits(set_RD) := 0.B
         }
@@ -325,14 +323,14 @@ class rename(coreParameters:CoreParameters) extends Module{
     /////////////////
 
     // FTQ FORWARDING // 
-    val predictions_out_Q               = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
     // fetch packet Q takes up a lot of area...
-    val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=true))
+    val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
-    val outputs_ready                   = free_list.io.can_allocate && io.renamed_decoded_fetch_packet.ready && io.predictions_out.ready 
+    val outputs_ready                   = free_list.io.can_allocate && io.renamed_decoded_fetch_packet.ready 
+
 
     renamed_decoded_fetch_packet_Q.io.enq                   <> renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_Q.io.enq.valid             := (io.decoded_fetch_packet.fire && (io.predictions_in.fire || !io.predictions_in.valid)) && !io.flush
+    renamed_decoded_fetch_packet_Q.io.enq.valid             := (io.decoded_fetch_packet.fire) && !io.flush
 
     renamed_decoded_fetch_packet_Q.io.deq                   <> io.renamed_decoded_fetch_packet
     renamed_decoded_fetch_packet_Q.io.flush.get             := io.flush
@@ -342,15 +340,11 @@ class rename(coreParameters:CoreParameters) extends Module{
         initialReady.RS1_ready := comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1)
         initialReady.RS2_ready := comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2)
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits := initialReady
+
+        //io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).instruction_ID             := DontCare
     }
 
-    predictions_out_Q.io.enq                                <> io.predictions_in
-    predictions_out_Q.io.enq.valid                          := (io.predictions_in.fire && io.decoded_fetch_packet.fire) && !io.flush
-    
-    predictions_out_Q.io.deq                                <> io.predictions_out
-    predictions_out_Q.io.flush.get                          <> io.flush
 
     io.decoded_fetch_packet.ready                           := RegNext(outputs_ready)
-    io.predictions_in.ready                                 := RegNext(outputs_ready)
 
 }

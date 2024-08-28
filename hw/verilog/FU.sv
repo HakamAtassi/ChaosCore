@@ -48,7 +48,6 @@ module FU(
   input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_bits_decoded_instruction_MOB_index,
-                io_FU_input_bits_decoded_instruction_FTQ_index,
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
   input  [1:0]  io_FU_input_bits_decoded_instruction_portID,
                 io_FU_input_bits_decoded_instruction_RS_type,
@@ -60,7 +59,6 @@ module FU(
                 io_FU_input_bits_decoded_instruction_IS_IMM,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
-  input  [63:0] io_FU_input_bits_decoded_instruction_instruction_ID,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_fetch_PC,
@@ -79,9 +77,7 @@ module FU(
   output [31:0] io_FU_output_bits_wr_data,
   output [3:0]  io_FU_output_bits_MOB_index,
   output [5:0]  io_FU_output_bits_ROB_index,
-  output [3:0]  io_FU_output_bits_FTQ_index,
-  output [1:0]  io_FU_output_bits_fetch_packet_index,
-  output        io_FU_output_bits_violation
+  output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
   wire        _branch_unit_io_FU_output_valid;
@@ -94,7 +90,6 @@ module FU(
   wire        _branch_unit_io_FU_output_bits_branch_valid;
   wire [3:0]  _branch_unit_io_FU_output_bits_MOB_index;
   wire [5:0]  _branch_unit_io_FU_output_bits_ROB_index;
-  wire [3:0]  _branch_unit_io_FU_output_bits_FTQ_index;
   wire [1:0]  _branch_unit_io_FU_output_bits_fetch_packet_index;
   wire        _ALU_io_FU_output_valid;
   wire [6:0]  _ALU_io_FU_output_bits_RD;
@@ -103,7 +98,6 @@ module FU(
   wire [31:0] _ALU_io_FU_output_bits_fetch_PC;
   wire [3:0]  _ALU_io_FU_output_bits_MOB_index;
   wire [5:0]  _ALU_io_FU_output_bits_ROB_index;
-  wire [3:0]  _ALU_io_FU_output_bits_FTQ_index;
   wire [1:0]  _ALU_io_FU_output_bits_fetch_packet_index;
   reg         REG_1;
   reg         monitor_output_REG;
@@ -131,8 +125,6 @@ module FU(
       (io_FU_input_bits_decoded_instruction_ROB_index),
     .io_FU_input_bits_decoded_instruction_MOB_index
       (io_FU_input_bits_decoded_instruction_MOB_index),
-    .io_FU_input_bits_decoded_instruction_FTQ_index
-      (io_FU_input_bits_decoded_instruction_FTQ_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_bits_decoded_instruction_instructionType),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
@@ -156,8 +148,6 @@ module FU(
       (_ALU_io_FU_output_bits_MOB_index),
     .io_FU_output_bits_ROB_index
       (_ALU_io_FU_output_bits_ROB_index),
-    .io_FU_output_bits_FTQ_index
-      (_ALU_io_FU_output_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
       (_ALU_io_FU_output_bits_fetch_packet_index)
   );
@@ -179,8 +169,6 @@ module FU(
       (io_FU_input_bits_decoded_instruction_ROB_index),
     .io_FU_input_bits_decoded_instruction_MOB_index
       (io_FU_input_bits_decoded_instruction_MOB_index),
-    .io_FU_input_bits_decoded_instruction_FTQ_index
-      (io_FU_input_bits_decoded_instruction_FTQ_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_bits_decoded_instruction_instructionType),
     .io_FU_input_bits_RS1_data                            (io_FU_input_bits_RS1_data),
@@ -206,8 +194,6 @@ module FU(
       (_branch_unit_io_FU_output_bits_MOB_index),
     .io_FU_output_bits_ROB_index
       (_branch_unit_io_FU_output_bits_ROB_index),
-    .io_FU_output_bits_FTQ_index
-      (_branch_unit_io_FU_output_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
       (_branch_unit_io_FU_output_bits_fetch_packet_index)
   );
@@ -237,12 +223,9 @@ module FU(
     REG_1 ? _branch_unit_io_FU_output_bits_MOB_index : _ALU_io_FU_output_bits_MOB_index;
   assign io_FU_output_bits_ROB_index =
     REG_1 ? _branch_unit_io_FU_output_bits_ROB_index : _ALU_io_FU_output_bits_ROB_index;
-  assign io_FU_output_bits_FTQ_index =
-    REG_1 ? _branch_unit_io_FU_output_bits_FTQ_index : _ALU_io_FU_output_bits_FTQ_index;
   assign io_FU_output_bits_fetch_packet_index =
     REG_1
       ? _branch_unit_io_FU_output_bits_fetch_packet_index
       : _ALU_io_FU_output_bits_fetch_packet_index;
-  assign io_FU_output_bits_violation = 1'h0;
 endmodule
 

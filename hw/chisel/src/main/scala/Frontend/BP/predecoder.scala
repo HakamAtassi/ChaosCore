@@ -53,7 +53,6 @@ class predecoder(coreParameters:CoreParameters) extends Module{
         val commit              = Flipped(ValidIO(new commit(coreParameters)))
 
         // outputs
-        val predictions         = Decoupled(new FTQ_entry(coreParameters))                 // FTQ...
         val final_fetch_packet  = Decoupled(new fetch_packet(coreParameters))              // Output validated instructions
 
         val GHR                 = Output(UInt(GHRWidth.W))
@@ -64,10 +63,8 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     ////////////////////////
     // SKID BUFFER INPUTS //
     ////////////////////////
-    val predictions_out         = Wire(Decoupled(new FTQ_entry(coreParameters)))
     val final_fetch_packet_out  = Wire(Decoupled(new fetch_packet(coreParameters)))
 
-    val predictions_out_Q                      = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
     val final_fetch_packet_out_Q               = Module(new Queue(new fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
     ///////////////////
@@ -183,14 +180,14 @@ class predecoder(coreParameters:CoreParameters) extends Module{
                                        io.prediction.fire      && 
                                        !io.flush
 
-    output_ready                    := io.final_fetch_packet.ready && io.predictions.ready 
+    output_ready                    := io.final_fetch_packet.ready
     
     input_fetch_packet_valid        := (io.fetch_packet.fire && (io.prediction.fire || !io.prediction.valid)) && PC_match && !io.flush
 
     final_fetch_packet_out.valid    := input_fetch_packet_valid
     when(input_fetch_packet_valid && final_fetch_packet_out_Q.io.enq.ready){expected_next_PC := target_address}
     // FIXME: this should be a global signal...
-    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.violation)){expected_next_PC := io.commit.bits.fetch_PC}
+    when(io.commit.valid && (io.commit.bits.is_misprediction)){expected_next_PC := io.commit.bits.fetch_PC}
 
     ////////////
     // REVERT //
@@ -237,40 +234,20 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     /////////////////////////
     // GENERATE FTQ OUTPUT //
     /////////////////////////
-    val push_FTQ = is_control.reduce(_ || _)
 
-    predictions_out.ready                              := io.predictions.ready
-    predictions_out.valid                              := push_FTQ && input_fetch_packet_valid
+    // FIXME: generate branch information in ROB packet
 
-    // Buffer branch state
-    predictions_out.bits.fetch_PC                      := io.fetch_packet.bits.fetch_PC
-
-    predictions_out.bits.dominant_index                := (fetchWidth-1).U                                      // Set to lowest priority 
-    predictions_out.bits.resolved_PC                   := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)    // Default to next PC (assume no branches taken)
-
-    // Init FTQ entry data
-    predictions_out.bits.T_NT                          := T_NT.reduce(_ || _)
-    when(predictions_out.bits.T_NT){
-        predictions_out.bits.predicted_PC              := target_address
-    }.otherwise{
-        predictions_out.bits.predicted_PC              := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)
-    }
-    predictions_out.bits.valid                         := 0.B
-    predictions_out.bits.is_misprediction              := 0.B
-    predictions_out.bits.br_type                       := dominantbr_type_t
-    predictions_out.bits.ROB_index                     := 0.U
+    final_fetch_packet_out.bits.prediction.target    := target_address
+    final_fetch_packet_out.bits.prediction.hit       := DontCare
+    final_fetch_packet_out.bits.prediction.br_type   := dominantbr_type_t
+    final_fetch_packet_out.bits.prediction.GHR       := GHR
+    final_fetch_packet_out.bits.prediction.T_NT      := T_NT.reduce(_ || _)
 
 
     //////////////////////
     // I/O SKID BUFFERS //
     //////////////////////
     // predecoded instruction & FTQ outputs passed through a skid buffer
-
-
-    predictions_out_Q.io.enq                  <> predictions_out
-    predictions_out_Q.io.deq                  <> io.predictions
-    predictions_out_Q.io.deq.ready            := output_ready
-    predictions_out_Q.io.flush.get            := io.flush
 
     final_fetch_packet_out_Q.io.enq           <> final_fetch_packet_out
     final_fetch_packet_out_Q.io.deq           <> io.final_fetch_packet

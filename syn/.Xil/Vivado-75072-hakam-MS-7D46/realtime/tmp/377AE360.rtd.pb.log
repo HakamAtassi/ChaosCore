@@ -1,0 +1,287 @@
+xilinx rtfpga
+rt::do_reinfer_area_combined 1
+INFO: [Synth 8-6904] The RAM "frontend/instruction_fetch/bp/RAS/RAS_memory/mem_ext/Memory_reg" of size (depth=128 x width=39) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_fetch/instruction_Q/ram_ext/Memory_reg" of size (depth=16 x width=287) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_fetch/PC_Q/ram_ext/Memory_reg" of size (depth=16 x width=65) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_fetch/BTB_Q/ram_ext/Memory_reg" of size (depth=16 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/rename/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg" of size (depth=2 x width=743) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_queue/ram_ext/Memory_reg" of size (depth=16 x width=743) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-4471] merging register 'ROB_entry_banks_0/mem_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x17.sv:48]
+INFO: [Synth 8-4471] merging register 'ROB_entry_banks_1/mem_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x17.sv:48]
+INFO: [Synth 8-4471] merging register 'ROB_entry_banks_2/mem_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x17.sv:48]
+INFO: [Synth 8-4471] merging register 'ROB_entry_banks_3/mem_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x17.sv:48]
+INFO: [Synth 8-4471] merging register 'fetch_prediction_bank_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x53.sv:48]
+INFO: [Synth 8-4471] merging register 'fetch_resolved_banks_0_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x53.sv:48]
+INFO: [Synth 8-4471] merging register 'fetch_resolved_banks_1_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x53.sv:48]
+INFO: [Synth 8-4471] merging register 'fetch_resolved_banks_2_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x53.sv:48]
+INFO: [Synth 8-4471] merging register 'fetch_resolved_banks_3_ext/_R0_addr_d0_reg[5:0]' into 'shared_mem/mem_ext/_R1_addr_d0_reg[5:0]' [/home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x53.sv:48]
+INFO: [Synth 8-6904] The RAM "ROB/shared_mem/mem_ext/Memory_reg" of size (depth=64 x width=70) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/ROB_entry_banks_0/mem_ext/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/ROB_entry_banks_1/mem_ext/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/ROB_entry_banks_2/mem_ext/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/ROB_entry_banks_3/mem_ext/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_resolved_banks_0_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_resolved_banks_1_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_resolved_banks_2_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_resolved_banks_3_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_prediction_bank_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+WARNING: [Synth 8-7129] Port R0_en in module mem_busy_64x1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W1_clk in module mem_busy_64x1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W2_clk in module mem_busy_64x1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W3_clk in module mem_busy_64x1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W4_clk in module mem_busy_64x1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module mem_busy_64x1__3 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W1_clk in module mem_busy_64x1__3 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W2_clk in module mem_busy_64x1__3 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W3_clk in module mem_busy_64x1__3 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W4_clk in module mem_busy_64x1__3 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module mem_busy_64x1__2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W1_clk in module mem_busy_64x1__2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W2_clk in module mem_busy_64x1__2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W3_clk in module mem_busy_64x1__2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W4_clk in module mem_busy_64x1__2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module mem_busy_64x1__1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W1_clk in module mem_busy_64x1__1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W2_clk in module mem_busy_64x1__1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W3_clk in module mem_busy_64x1__1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port W4_clk in module mem_busy_64x1__1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_ready_bits_RS1_ready in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_ready_bits_RS2_ready in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS1[6] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS1[5] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS1[4] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS1[3] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS1[2] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS1[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS1[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS1_valid in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS2[6] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS2[5] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS2[4] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS2[3] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS2[2] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS2[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS2[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS2_valid in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[20] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[19] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[18] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[17] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[16] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[15] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[14] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[13] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[12] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[11] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[10] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[9] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[8] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[7] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[6] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[5] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[4] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[3] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[2] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IMM[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_FUNCT3[2] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_FUNCT3[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_FUNCT3[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_packet_index[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_packet_index[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_ROB_index[5] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_ROB_index[4] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_ROB_index[3] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_ROB_index[2] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_ROB_index[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_ROB_index[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_MOB_index[3] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_MOB_index[2] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_MOB_index[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_MOB_index[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_FTQ_index[3] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_FTQ_index[2] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_FTQ_index[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_FTQ_index[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instructionType[4] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instructionType[3] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instructionType[2] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instructionType[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instructionType[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_portID[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_portID[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS_type[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_RS_type[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_needs_ALU in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_needs_CSRs in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_SUBTRACT in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_MULTIPLY in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_IS_IMM in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_access_width[1] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_access_width[0] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instruction_ID[63] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instruction_ID[62] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instruction_ID[61] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instruction_ID[60] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instruction_ID[59] in module ROB is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_ROB_packet_bits_decoded_instruction_0_instruction_ID[58] in module ROB is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+RAM Pipeline Warning: Read Address Register Found For RAM bp/gshare/PHT/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/gshare/PHT/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/gshare/PHT/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+WARNING: [Synth 8-6430] The Block RAM "frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+INFO: [Synth 8-3971] The signal "frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg" was recognized as a true dual port RAM template.
+RAM Pipeline Warning: Read Address Register Found For RAM bp/BTB/BTB_memory/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/BTB/BTB_memory/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/BTB/BTB_memory/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/RAS/RAS_memory/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/RAS/RAS_memory/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/RAS/RAS_memory/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_fetch/bp/RAS/RAS_memory/mem_ext/Memory_reg" of size (depth=128 x width=39) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM instruction_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM instruction_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM instruction_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_fetch/instruction_Q/ram_ext/Memory_reg" of size (depth=16 x width=287) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM PC_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM PC_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM PC_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_fetch/PC_Q/ram_ext/Memory_reg" of size (depth=16 x width=65) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM BTB_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM BTB_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM BTB_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_fetch/BTB_Q/ram_ext/Memory_reg" of size (depth=16 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "frontend/rename/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg" of size (depth=2 x width=743) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM instruction_queue/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM instruction_queue/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM instruction_queue/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "frontend/instruction_queue/ram_ext/Memory_reg" of size (depth=16 x width=743) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM shared_mem/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM shared_mem/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM shared_mem/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/shared_mem/mem_ext/Memory_reg" of size (depth=64 x width=70) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/ROB_entry_banks_0/mem_ext/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/ROB_entry_banks_1/mem_ext/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_2/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_2/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_2/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/ROB_entry_banks_2/mem_ext/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_3/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_3/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_3/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/ROB_entry_banks_3/mem_ext/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_0_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_0_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_0_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_resolved_banks_0_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_1_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_1_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_1_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_resolved_banks_1_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_2_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_2_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_2_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_resolved_banks_2_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_3_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_3_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_3_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_resolved_banks_3_ext/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_prediction_bank_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_prediction_bank_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_prediction_bank_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "ROB/fetch_prediction_bank_ext/Memory_reg" of size (depth=64 x width=33) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/gshare/PHT/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/BTB/BTB_memory/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM bp/RAS/RAS_memory/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM instruction_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM PC_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM BTB_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM instruction_queue/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM shared_mem/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_2/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ROB_entry_banks_3/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_0_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_1_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_2_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_resolved_banks_3_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM fetch_prediction_bank_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-7067] Removed DRAM instance ROB/i_5/i_0/fetch_resolved_banks_0_ext/Memory_reg_0_63_35_41 from module extram__49 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance ROB/i_6/i_0/fetch_resolved_banks_1_ext/Memory_reg_0_63_35_41 from module extram__51 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance ROB/i_7/i_0/fetch_resolved_banks_2_ext/Memory_reg_0_63_35_41 from module extram__53 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance ROB/i_8/i_0/fetch_resolved_banks_3_ext/Memory_reg_0_63_35_41 from module extram__55 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_742_742 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_168_181 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_154_167 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_140_153 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_126_139 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_322_335 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_308_321 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_294_307 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_280_293 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_476_489 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_462_475 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_448_461 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_434_447 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_630_643 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_616_629 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_602_615 from module frontend due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_0/decoders/decoded_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_588_601 from module frontend due to constant propagation
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (frontend/instruction_fetch/\bp/gshare/PHT_io_writeEnableC_REG_reg )
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/RAS/RAS_memory/din_buff_reg[0]' (FDR) to 'frontend/instruction_fetch/bp/RAS/RAS_memory/din_buff_reg[1]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (frontend/instruction_fetch/\PC_gen/PC_reg_reg[0] )
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/RAS/RAS_memory/din_buff_reg[1]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[2]'
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_tag_reg[16]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[2]'
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_tag_reg[17]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[2]'
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[2]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[1]'
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[1]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[0]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (frontend/instruction_fetch/\bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[0] )
+INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_56_64 from module extram__31 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_42_55 from module extram__31 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_168_181 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_154_167 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_140_153 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_126_139 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_322_335 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_308_321 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_294_307 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_280_293 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_476_489 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_462_475 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_448_461 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_434_447 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_630_643 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_616_629 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_602_615 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/i_1/i_0/instruction_queue/ram_ext/Memory_reg_0_15_588_601 from module extram__37 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_42_55 from module extram__31 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_168_181 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_154_167 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_140_153 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_126_139 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_322_335 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_308_321 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_294_307 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_280_293 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_476_489 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_462_475 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_448_461 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_434_447 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_630_643 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_616_629 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_602_615 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_588_601 from module extram__35 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance frontend/rename/i_0/i_0/renamed_decoded_fetch_packet_Q/ram_ext/Memory_reg_0_1_168_181 from module extram__35 due to constant propagation
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.

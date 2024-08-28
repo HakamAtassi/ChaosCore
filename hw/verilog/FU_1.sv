@@ -48,7 +48,6 @@ module FU_1(
   input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_bits_decoded_instruction_MOB_index,
-                io_FU_input_bits_decoded_instruction_FTQ_index,
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
   input  [1:0]  io_FU_input_bits_decoded_instruction_portID,
                 io_FU_input_bits_decoded_instruction_RS_type,
@@ -60,7 +59,6 @@ module FU_1(
                 io_FU_input_bits_decoded_instruction_IS_IMM,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
-  input  [63:0] io_FU_input_bits_decoded_instruction_instruction_ID,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_fetch_PC,
@@ -79,9 +77,7 @@ module FU_1(
   output [31:0] io_FU_output_bits_wr_data,
   output [3:0]  io_FU_output_bits_MOB_index,
   output [5:0]  io_FU_output_bits_ROB_index,
-  output [3:0]  io_FU_output_bits_FTQ_index,
-  output [1:0]  io_FU_output_bits_fetch_packet_index,
-  output        io_FU_output_bits_violation
+  output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
   reg  monitor_output_REG;
@@ -107,8 +103,6 @@ module FU_1(
       (io_FU_input_bits_decoded_instruction_ROB_index),
     .io_FU_input_bits_decoded_instruction_MOB_index
       (io_FU_input_bits_decoded_instruction_MOB_index),
-    .io_FU_input_bits_decoded_instruction_FTQ_index
-      (io_FU_input_bits_decoded_instruction_FTQ_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_bits_decoded_instruction_instructionType),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
@@ -127,7 +121,6 @@ module FU_1(
     .io_FU_output_bits_fetch_PC                           (io_FU_output_bits_fetch_PC),
     .io_FU_output_bits_MOB_index                          (io_FU_output_bits_MOB_index),
     .io_FU_output_bits_ROB_index                          (io_FU_output_bits_ROB_index),
-    .io_FU_output_bits_FTQ_index                          (io_FU_output_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
       (io_FU_output_bits_fetch_packet_index)
   );
@@ -140,6 +133,5 @@ module FU_1(
   assign io_FU_output_bits_access_width = 2'h0;
   assign io_FU_output_bits_is_unsigned = 1'h0;
   assign io_FU_output_bits_wr_data = 32'h0;
-  assign io_FU_output_bits_violation = 1'h0;
 endmodule
 

@@ -45,7 +45,6 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
 
         val memory_request        =   Decoupled(new frontend_memory_request(coreParameters))
         val fetch_packet          =   Decoupled(new fetch_packet(coreParameters))                     // Fetch packet result (To Decoders)
-        val predictions           =   Decoupled(new FTQ_entry(coreParameters))
 
         val revert                =   ValidIO(new revert(coreParameters))
     })
@@ -79,7 +78,6 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     predecoder.io.final_fetch_packet    <> io.fetch_packet 
     predecoder.io.fetch_packet          <> instruction_Q.io.deq
     predecoder.io.RAS_read              <> bp.io.RAS_read
-    predecoder.io.predictions           <> io.predictions
     predecoder.io.commit                <> io.commit
     
     //////////////

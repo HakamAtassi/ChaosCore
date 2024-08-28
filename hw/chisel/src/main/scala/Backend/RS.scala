@@ -188,8 +188,8 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
         for(i <- 0 until RSEntries){
             val current_instruction = reservation_station(i)
             when((current_instruction.decoded_instruction.portID === 3.U) && schedulable_instructions(i)){
-                io.RF_inputs(0).bits <> reservation_station(i.U).decoded_instruction
-                io.RF_inputs(0).valid <> reservation_station(i.U).valid
+                io.RF_inputs(0).bits := RegNext(reservation_station(i.U).decoded_instruction)
+                io.RF_inputs(0).valid := RegNext(reservation_station(i.U).valid)
                 port0_RS_index := i.U
             }
         }
@@ -201,8 +201,8 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
         for(i <- 0 until RSEntries){
             val current_instruction = reservation_station(i)
             when((current_instruction.decoded_instruction.portID === 0.U) && schedulable_instructions(i)){
-                io.RF_inputs(0).bits <> reservation_station(i.U).decoded_instruction
-                io.RF_inputs(0).valid <> reservation_station(i.U).valid
+                io.RF_inputs(0).bits := RegNext(reservation_station(i.U).decoded_instruction)
+                io.RF_inputs(0).valid := RegNext(reservation_station(i.U).valid)
                 port0_RS_index := i.U
             }
         }
@@ -218,8 +218,8 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
     for(i <- 0 until RSEntries){
         val current_instruction = reservation_station(i)
         when((current_instruction.decoded_instruction.portID === 1.U) && schedulable_instructions(i)){
-            io.RF_inputs(1).bits <> reservation_station(i.U).decoded_instruction
-            io.RF_inputs(1).valid <> reservation_station(i.U).valid
+            io.RF_inputs(1).bits := RegNext(reservation_station(i.U).decoded_instruction)
+            io.RF_inputs(1).valid := RegNext(reservation_station(i.U).valid)
             port1_RS_index := i.U
         }
     }
@@ -235,8 +235,8 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
     for(i <- 0 until RSEntries){
         val current_instruction = reservation_station(i)
         when((current_instruction.decoded_instruction.portID === 2.U) && schedulable_instructions(i)){
-            io.RF_inputs(2).bits <> reservation_station(i.U).decoded_instruction
-            io.RF_inputs(2).valid <> reservation_station(i.U).valid
+            io.RF_inputs(2).bits := RegNext(reservation_station(i.U).decoded_instruction)
+            io.RF_inputs(2).valid := RegNext(reservation_station(i.U).valid)
             port2_RS_index := i.U
         }
     }
@@ -254,8 +254,8 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
         for(i <- 0 until RSEntries){
             val current_instruction = reservation_station(i)
             when((current_instruction.decoded_instruction.portID === 3.U) && schedulable_instructions(i)){
-                io.RF_inputs(3).bits <> reservation_station(i.U).decoded_instruction
-                io.RF_inputs(3).valid <> reservation_station(i.U).valid
+                io.RF_inputs(3).bits := RegNext(reservation_station(i.U).decoded_instruction)
+                io.RF_inputs(3).valid := RegNext(reservation_station(i.U).valid)
                 port3_RS_index := i.U
             }
         }

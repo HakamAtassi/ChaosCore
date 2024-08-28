@@ -222,7 +222,6 @@ class ALU(coreParameters:CoreParameters) extends Module{
 
 
     io.FU_output.bits.MOB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
-    io.FU_output.bits.FTQ_index  :=   RegNext(io.FU_input.bits.decoded_instruction.FTQ_index)
     io.FU_output.bits.address    :=   0.U
 
     io.FU_output.bits.address             :=   DontCare
@@ -230,7 +229,6 @@ class ALU(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.access_width        :=   DontCare
     io.FU_output.bits.is_unsigned         :=   DontCare
     io.FU_output.bits.wr_data             :=   DontCare
-    io.FU_output.bits.violation           :=   0.B
     
 
 
@@ -364,7 +362,6 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     io.FU_output.bits.RD_data           :=      RegNext(instruction_PC + 4.U)
     io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-    io.FU_output.bits.FTQ_index         :=      RegNext(io.FU_input.bits.decoded_instruction.FTQ_index)
     io.FU_output.bits.MOB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
     io.FU_output.bits.address           :=      0.U
 
@@ -374,7 +371,6 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.access_width        :=   DontCare
     io.FU_output.bits.is_unsigned         :=   DontCare
     io.FU_output.bits.wr_data             :=   DontCare
-    io.FU_output.bits.violation           :=   0.B
 
 
     io.FU_output.valid                  :=      RegNext(io.FU_input.valid && !io.flush)

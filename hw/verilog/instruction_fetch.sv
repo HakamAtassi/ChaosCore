@@ -39,7 +39,6 @@ module instruction_fetch(
   input  [2:0]  io_commit_bits_br_type,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
-                io_commit_bits_violation,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,
@@ -76,6 +75,11 @@ module instruction_fetch(
   input  [31:0] io_memory_response_bits_instructions_3_instruction,
   input  [3:0]  io_memory_response_bits_instructions_3_packet_index,
   input  [5:0]  io_memory_response_bits_instructions_3_ROB_index,
+  input         io_memory_response_bits_prediction_hit,
+  input  [31:0] io_memory_response_bits_prediction_target,
+  input  [2:0]  io_memory_response_bits_prediction_br_type,
+  input  [15:0] io_memory_response_bits_prediction_GHR,
+  input         io_memory_response_bits_prediction_T_NT,
   input  [15:0] io_memory_response_bits_GHR,
   input  [6:0]  io_memory_response_bits_NEXT,
                 io_memory_response_bits_TOS,
@@ -99,20 +103,14 @@ module instruction_fetch(
   output [3:0]  io_fetch_packet_bits_instructions_2_packet_index,
   output [31:0] io_fetch_packet_bits_instructions_3_instruction,
   output [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
+  output        io_fetch_packet_bits_prediction_hit,
+  output [31:0] io_fetch_packet_bits_prediction_target,
+  output [2:0]  io_fetch_packet_bits_prediction_br_type,
+  output [15:0] io_fetch_packet_bits_prediction_GHR,
+  output        io_fetch_packet_bits_prediction_T_NT,
   output [15:0] io_fetch_packet_bits_GHR,
   output [6:0]  io_fetch_packet_bits_NEXT,
                 io_fetch_packet_bits_TOS,
-  input         io_predictions_ready,
-  output        io_predictions_valid,
-                io_predictions_bits_valid,
-  output [31:0] io_predictions_bits_fetch_PC,
-  output        io_predictions_bits_is_misprediction,
-  output [31:0] io_predictions_bits_predicted_PC,
-  output [5:0]  io_predictions_bits_ROB_index,
-  output        io_predictions_bits_T_NT,
-  output [2:0]  io_predictions_bits_br_type,
-  output [1:0]  io_predictions_bits_dominant_index,
-  output [31:0] io_predictions_bits_resolved_PC,
   output        io_revert_valid,
   output [31:0] io_revert_bits_PC
 );
@@ -143,6 +141,11 @@ module instruction_fetch(
   wire [31:0] _instruction_Q_io_deq_bits_instructions_3_instruction;
   wire [3:0]  _instruction_Q_io_deq_bits_instructions_3_packet_index;
   wire [5:0]  _instruction_Q_io_deq_bits_instructions_3_ROB_index;
+  wire        _instruction_Q_io_deq_bits_prediction_hit;
+  wire [31:0] _instruction_Q_io_deq_bits_prediction_target;
+  wire [2:0]  _instruction_Q_io_deq_bits_prediction_br_type;
+  wire [15:0] _instruction_Q_io_deq_bits_prediction_GHR;
+  wire        _instruction_Q_io_deq_bits_prediction_T_NT;
   wire [15:0] _instruction_Q_io_deq_bits_GHR;
   wire [6:0]  _instruction_Q_io_deq_bits_NEXT;
   wire [6:0]  _instruction_Q_io_deq_bits_TOS;
@@ -253,6 +256,16 @@ module instruction_fetch(
       (_instruction_Q_io_deq_bits_instructions_3_packet_index),
     .io_fetch_packet_bits_instructions_3_ROB_index
       (_instruction_Q_io_deq_bits_instructions_3_ROB_index),
+    .io_fetch_packet_bits_prediction_hit
+      (_instruction_Q_io_deq_bits_prediction_hit),
+    .io_fetch_packet_bits_prediction_target
+      (_instruction_Q_io_deq_bits_prediction_target),
+    .io_fetch_packet_bits_prediction_br_type
+      (_instruction_Q_io_deq_bits_prediction_br_type),
+    .io_fetch_packet_bits_prediction_GHR
+      (_instruction_Q_io_deq_bits_prediction_GHR),
+    .io_fetch_packet_bits_prediction_T_NT
+      (_instruction_Q_io_deq_bits_prediction_T_NT),
     .io_fetch_packet_bits_GHR
       (_instruction_Q_io_deq_bits_GHR),
     .io_fetch_packet_bits_NEXT
@@ -271,7 +284,6 @@ module instruction_fetch(
       (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
       (io_commit_bits_is_misprediction),
-    .io_commit_bits_violation                               (io_commit_bits_violation),
     .io_commit_bits_expected_PC                             (io_commit_bits_expected_PC),
     .io_commit_bits_GHR                                     (io_commit_bits_GHR),
     .io_commit_bits_TOS                                     (io_commit_bits_TOS),
@@ -290,23 +302,6 @@ module instruction_fetch(
     .io_commit_bits_RD_valid_1                              (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2                              (io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3                              (io_commit_bits_RD_valid_3),
-    .io_predictions_ready                                   (io_predictions_ready),
-    .io_predictions_valid                                   (io_predictions_valid),
-    .io_predictions_bits_valid                              (io_predictions_bits_valid),
-    .io_predictions_bits_fetch_PC
-      (io_predictions_bits_fetch_PC),
-    .io_predictions_bits_is_misprediction
-      (io_predictions_bits_is_misprediction),
-    .io_predictions_bits_predicted_PC
-      (io_predictions_bits_predicted_PC),
-    .io_predictions_bits_ROB_index
-      (io_predictions_bits_ROB_index),
-    .io_predictions_bits_T_NT                               (io_predictions_bits_T_NT),
-    .io_predictions_bits_br_type                            (io_predictions_bits_br_type),
-    .io_predictions_bits_dominant_index
-      (io_predictions_bits_dominant_index),
-    .io_predictions_bits_resolved_PC
-      (io_predictions_bits_resolved_PC),
     .io_final_fetch_packet_ready                            (io_fetch_packet_ready),
     .io_final_fetch_packet_valid                            (io_fetch_packet_valid),
     .io_final_fetch_packet_bits_fetch_PC
@@ -339,6 +334,16 @@ module instruction_fetch(
     .io_final_fetch_packet_bits_instructions_3_packet_index
       (io_fetch_packet_bits_instructions_3_packet_index),
     .io_final_fetch_packet_bits_instructions_3_ROB_index    (/* unused */),
+    .io_final_fetch_packet_bits_prediction_hit
+      (io_fetch_packet_bits_prediction_hit),
+    .io_final_fetch_packet_bits_prediction_target
+      (io_fetch_packet_bits_prediction_target),
+    .io_final_fetch_packet_bits_prediction_br_type
+      (io_fetch_packet_bits_prediction_br_type),
+    .io_final_fetch_packet_bits_prediction_GHR
+      (io_fetch_packet_bits_prediction_GHR),
+    .io_final_fetch_packet_bits_prediction_T_NT
+      (io_fetch_packet_bits_prediction_T_NT),
     .io_final_fetch_packet_bits_GHR                         (io_fetch_packet_bits_GHR),
     .io_final_fetch_packet_bits_NEXT                        (io_fetch_packet_bits_NEXT),
     .io_final_fetch_packet_bits_TOS                         (io_fetch_packet_bits_TOS),
@@ -360,7 +365,6 @@ module instruction_fetch(
     .io_commit_bits_br_type                 (io_commit_bits_br_type),
     .io_commit_bits_fetch_packet_index      (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction        (io_commit_bits_is_misprediction),
-    .io_commit_bits_violation               (io_commit_bits_violation),
     .io_commit_bits_expected_PC             (io_commit_bits_expected_PC),
     .io_commit_bits_GHR                     (io_commit_bits_GHR),
     .io_commit_bits_TOS                     (io_commit_bits_TOS),
@@ -430,6 +434,11 @@ module instruction_fetch(
       (io_memory_response_bits_instructions_3_packet_index),
     .io_enq_bits_instructions_3_ROB_index
       (io_memory_response_bits_instructions_3_ROB_index),
+    .io_enq_bits_prediction_hit              (io_memory_response_bits_prediction_hit),
+    .io_enq_bits_prediction_target           (io_memory_response_bits_prediction_target),
+    .io_enq_bits_prediction_br_type          (io_memory_response_bits_prediction_br_type),
+    .io_enq_bits_prediction_GHR              (io_memory_response_bits_prediction_GHR),
+    .io_enq_bits_prediction_T_NT             (io_memory_response_bits_prediction_T_NT),
     .io_enq_bits_GHR                         (io_memory_response_bits_GHR),
     .io_enq_bits_NEXT                        (io_memory_response_bits_NEXT),
     .io_enq_bits_TOS                         (io_memory_response_bits_TOS),
@@ -464,6 +473,13 @@ module instruction_fetch(
       (_instruction_Q_io_deq_bits_instructions_3_packet_index),
     .io_deq_bits_instructions_3_ROB_index
       (_instruction_Q_io_deq_bits_instructions_3_ROB_index),
+    .io_deq_bits_prediction_hit              (_instruction_Q_io_deq_bits_prediction_hit),
+    .io_deq_bits_prediction_target
+      (_instruction_Q_io_deq_bits_prediction_target),
+    .io_deq_bits_prediction_br_type
+      (_instruction_Q_io_deq_bits_prediction_br_type),
+    .io_deq_bits_prediction_GHR              (_instruction_Q_io_deq_bits_prediction_GHR),
+    .io_deq_bits_prediction_T_NT             (_instruction_Q_io_deq_bits_prediction_T_NT),
     .io_deq_bits_GHR                         (_instruction_Q_io_deq_bits_GHR),
     .io_deq_bits_NEXT                        (_instruction_Q_io_deq_bits_NEXT),
     .io_deq_bits_TOS                         (_instruction_Q_io_deq_bits_TOS),

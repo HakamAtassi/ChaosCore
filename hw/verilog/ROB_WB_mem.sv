@@ -34,53 +34,45 @@ module ROB_WB_mem(
   input        io_writeEnableA,
   input  [5:0] io_addrB,
   input        io_writeDataB_busy,
-               io_writeDataB_violation,
                io_writeEnableB,
   input  [5:0] io_addrC,
   input        io_writeDataC_busy,
-               io_writeDataC_violation,
                io_writeEnableC,
   input  [5:0] io_addrD,
   input        io_writeDataD_busy,
-               io_writeDataD_violation,
                io_writeEnableD,
   input  [5:0] io_addrE,
   input        io_writeDataE_busy,
-               io_writeDataE_violation,
                io_writeEnableE,
   input  [5:0] io_addrG,
-  output       io_readDataG_busy,
-               io_readDataG_violation
+  output       io_readDataG_busy
 );
 
-  wire [1:0] _mem_ext_R0_data;
-  mem_64x2 mem_ext (
+  mem_busy_64x1 mem_busy_ext (
     .R0_addr (io_addrG),
     .R0_en   (1'h1),
     .R0_clk  (clock),
-    .R0_data (_mem_ext_R0_data),
+    .R0_data (io_readDataG_busy),
     .W0_addr (io_addrE),
     .W0_en   (io_writeEnableE),
     .W0_clk  (clock),
-    .W0_data ({io_writeDataE_violation, io_writeDataE_busy}),
+    .W0_data (io_writeDataE_busy),
     .W1_addr (io_addrD),
     .W1_en   (io_writeEnableD),
     .W1_clk  (clock),
-    .W1_data ({io_writeDataD_violation, io_writeDataD_busy}),
+    .W1_data (io_writeDataD_busy),
     .W2_addr (io_addrC),
     .W2_en   (io_writeEnableC),
     .W2_clk  (clock),
-    .W2_data ({io_writeDataC_violation, io_writeDataC_busy}),
+    .W2_data (io_writeDataC_busy),
     .W3_addr (io_addrB),
     .W3_en   (io_writeEnableB),
     .W3_clk  (clock),
-    .W3_data ({io_writeDataB_violation, io_writeDataB_busy}),
+    .W3_data (io_writeDataB_busy),
     .W4_addr (io_addrA),
     .W4_en   (io_writeEnableA),
     .W4_clk  (clock),
-    .W4_data (2'h0)
+    .W4_data (1'h0)
   );
-  assign io_readDataG_busy = _mem_ext_R0_data[0];
-  assign io_readDataG_violation = _mem_ext_R0_data[1];
 endmodule
 

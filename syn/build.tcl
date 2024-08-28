@@ -15,6 +15,12 @@ set bdf_dir [file normalize "./bdf"]
 #set origin_dir [file normalize "./../../"]
 
 # Add RTL source files from filelist.f
+set fp [open "$lib_dir/axi_filelist.f" r]
+   while {[gets $fp line] >= 0} {
+   read_verilog -sv "${lib_dir}/$line" 
+}
+
+# Add RTL source files from filelist.f
 set fp [open "$lib_dir/filelist.f" r]
    while {[gets $fp line] >= 0} {
    read_verilog -sv "${lib_dir}/$line" 
@@ -38,9 +44,9 @@ report_utilization -file utilization_synth.rpt -hierarchical -hierarchical_depth
 report_timing_summary -file timing_synth.rpt
 
 # place and route
-opt_design
-place_design
-route_design
+#opt_design
+#place_design
+#route_design
 
 # write bitstream
 #write_bitstream -force "${origin_dir}/${arch}/${design_name}.bit"

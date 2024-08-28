@@ -67,7 +67,6 @@ class backend(coreParameters:CoreParameters) extends Module{
         val backend_packet              =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
 
-
         // UPDATE //
         val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
     }); dontTouch(io)
@@ -115,19 +114,8 @@ class backend(coreParameters:CoreParameters) extends Module{
         MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
         MOB.io.reserve(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM) && io.backend_packet(i).valid
     }
-
-    //// Assign ready bits
-    //for (i <- 0 until fetchWidth){
-        //when(io.backend_packet(i).bits.RS_type === RS_types.MEM){
-            //io.backend_packet(i).ready := MEM_RS.io.backend_packet(i).ready && MOB.io.reserve(i).ready
-        //}.elsewhen(io.backend_packet(i).bits.RS_type === RS_types.INT){
-            //io.backend_packet(i).ready := INT_RS.io.backend_packet(i).ready 
-        //}.otherwise{
-            //io.backend_packet(i).ready := 1.B
-        //}
-    //}
-
     
+
     // ASSIGN MOB POINTERS FOR MEMRS //
     for(i <- 0 until fetchWidth){
         MEM_RS.io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
