@@ -115,7 +115,6 @@ class MOB_driver:
             getattr(self.dut, f"io_reserve_{i}_bits_packet_index").value =  i
             getattr(self.dut, f"io_reserve_{i}_bits_ROB_index").value =     self.ROB_back_pointer % 64
             getattr(self.dut, f"io_reserve_{i}_bits_MOB_index").value =     0
-            getattr(self.dut, f"io_reserve_{i}_bits_FTQ_index").value =     0
             getattr(self.dut, f"io_reserve_{i}_bits_instructionType").value =   0
             getattr(self.dut, f"io_reserve_{i}_bits_portID").value =    0
             getattr(self.dut, f"io_reserve_{i}_bits_RS_type").value =   0
@@ -154,19 +153,16 @@ class MOB_driver:
         getattr(self.dut, f"io_AGU_output_bits_is_unsigned").value =    0
         getattr(self.dut, f"io_AGU_output_bits_wr_data").value =   0
         getattr(self.dut, f"io_AGU_output_bits_ROB_index").value =  0
-        getattr(self.dut, f"io_AGU_output_bits_FTQ_index").value =  0
         getattr(self.dut, f"io_AGU_output_bits_fetch_packet_index").value = 0
-        getattr(self.dut, f"io_AGU_output_bits_violation").value =  0
-        getattr(self.dut, f"io_AGU_output_bits_memory_violation").value =   0
 
 
         print(self.AGU_pool)
         if random.uniform(0, 1) < 0.6:
             if len(self.AGU_pool) != 0:
-                index = random.randint(0, len(self.AGU_pool) - 1)
-                AGU = self.AGU_pool.pop(index)
+                #index = random.randint(0, len(self.AGU_pool) - 1)
+                #AGU = self.AGU_pool.pop(index)
 
-                #AGU = self.AGU_pool.pop(0)
+                AGU = self.AGU_pool.pop(0)
 
                 getattr(self.dut, f"io_AGU_output_valid").value = AGU["valid"]
                 getattr(self.dut, f"io_AGU_output_bits_RD_data").value =  0
@@ -185,8 +181,6 @@ class MOB_driver:
                 getattr(self.dut, f"io_AGU_output_bits_ROB_index").value =  0
                 getattr(self.dut, f"io_AGU_output_bits_FTQ_index").value =  0
                 getattr(self.dut, f"io_AGU_output_bits_fetch_packet_index").value = 0
-                getattr(self.dut, f"io_AGU_output_bits_violation").value =  0
-                getattr(self.dut, f"io_AGU_output_bits_memory_violation").value =   0
 
 
             # Check for commit

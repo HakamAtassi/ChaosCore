@@ -34,11 +34,6 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
-
-// The PC segment of the ROB
-// Is accessed during the register read phase
-//class PC_file(coreParameters:CoreParameters) extends Module{}
-
 class ROB(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     val portCount = getPortCount(coreParameters)
@@ -239,8 +234,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val fetch_prediction_bank   = SyncReadMem(ROBEntries, new prediction(coreParameters))
     val commit_prediction       = Wire(new prediction(coreParameters))
 
-
-
     // allocate
 
     when(allocate && io.ROB_packet.valid){
@@ -263,14 +256,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // if they are not valid and the instruction is committing (all instructions in that packet have completed)
     // then do not worry about a misprediction
 
-  	//val resolved_valid = RegInit(VecInit.tabulate(MOBEntries, MOBEntries){(x, y) => 0.B })
-
-    //FIXME: these need a valid bit
     val fetch_resolved_banks: Seq[SyncReadMem[prediction]] = Seq.tabulate(fetchWidth) { w =>
         SyncReadMem(ROBEntries, new prediction(coreParameters))
     }
-
-
     
     
     val commit_resolved = Wire(Vec(fetchWidth, new prediction(coreParameters)))
@@ -351,20 +339,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     commit_valid := commit_row_complete.reduce(_ && _)
 
 
-    io.commit.bits.GHR                           := ROB_output.GHR
-    io.commit.bits.TOS                           := ROB_output.TOS
-    io.commit.bits.NEXT                          := ROB_output.NEXT
-    io.commit.bits.ROB_index                     := ROB_output.ROB_index
-    io.commit.bits.free_list_front_pointer       := ROB_output.free_list_front_pointer
-    io.commit.bits.fetch_PC                      := ROB_output.fetch_PC
-
-    for(i <- 0 until fetchWidth){
-        io.commit.bits.RDold(i)                  := ROB_output.ROB_entries(i).RDold
-        io.commit.bits.RD(i)                     := ROB_output.ROB_entries(i).RD
-        io.commit.bits.RD_valid(i)               := ROB_output.ROB_entries(i).RD_valid
-    }
-
-    io.commit.valid := commit_valid
 
 
 
@@ -383,6 +357,20 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // Calculate the expected PC
     val expected_PC = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + 0x10.U)
 
+    io.commit.valid                              := commit_valid
+    io.commit.bits.GHR                           := ROB_output.GHR
+    io.commit.bits.TOS                           := ROB_output.TOS
+    io.commit.bits.NEXT                          := ROB_output.NEXT
+    io.commit.bits.ROB_index                     := ROB_output.ROB_index
+    io.commit.bits.free_list_front_pointer       := ROB_output.free_list_front_pointer
+    io.commit.bits.fetch_PC                      := ROB_output.fetch_PC
+
+    for(i <- 0 until fetchWidth){
+        io.commit.bits.RDold(i)                  := ROB_output.ROB_entries(i).RDold
+        io.commit.bits.RD(i)                     := ROB_output.ROB_entries(i).RD
+        io.commit.bits.RD_valid(i)               := ROB_output.ROB_entries(i).RD_valid
+    }
+
     io.commit.bits.is_misprediction      := 0.B
     io.commit.bits.T_NT                  := 0.B
     io.commit.bits.br_type               := br_type_t.NONE
@@ -396,9 +384,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // Check for misprediction
     when((expected_PC =/= commit_prediction.target) && commit_valid) {
         io.commit.bits.is_misprediction      := 1.B
-        io.commit.bits.T_NT := commit_resolved(earliest_taken_index).T_NT
-        io.commit.bits.br_type := commit_resolved(earliest_taken_index).br_type
-        io.commit.bits.fetch_packet_index := earliest_taken_index
+        io.commit.bits.T_NT                  := commit_resolved(earliest_taken_index).T_NT
+        io.commit.bits.br_type               := commit_resolved(earliest_taken_index).br_type
+        io.commit.bits.fetch_packet_index    := earliest_taken_index
         io.commit.bits.expected_PC := commit_resolved(earliest_taken_index).target
     }
 
@@ -408,10 +396,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     when(io.commit.valid){
         row_valid_mem(io.commit.bits.ROB_index) := 0.B
     }
-
-
-
-
 
     when(io.commit.valid && io.commit.bits.is_misprediction){
         row_valid_mem := Seq.fill(ROBEntries)(0.B)

@@ -58,7 +58,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
         val reserve                 =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))         // reserve entry (rename)
         val reserved_pointers       =      Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry
 
-        //val fetch_PC                =      Input(UInt(32.W))                                                                  // DEBUG
+        val fetch_PC                =      Input(UInt(32.W))                                                                  // DEBUG
 
         //val complete                =      ValidIO(new FU_output(coreParameters))                                               // update ROB (front of MOB)
         val AGU_output              =      Flipped(ValidIO(new FU_output(coreParameters)))                                      // update address (AGU)
@@ -103,6 +103,12 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
 
 
+    //for(i <- 0 until fetchWidth){
+        //when(io.reserve(i).fire){
+            //printf("MOB accepted packet @ PC: 0x(%x)\n", io.fetch_PC)
+            //printf("=============\n")
+        //}
+    //}
 
 
 
@@ -113,6 +119,8 @@ class MOB(coreParameters:CoreParameters) extends Module{
     // matrix[1] = [0, 0]
     // matrix[3] = [0, 0, 0]
     // etc...
+
+    dontTouch(matrix)
 
 
     def get_indetermination_matrix_row(row: UInt): UInt = {
@@ -215,11 +223,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
         
         // Update MOB entry state
         when((MOB(MOB_index).memory_type === memory_type_t.LOAD) && (MOB(MOB_index).MOB_STATE === MOB_STATES.VALID) && MOB(MOB_index).valid){
-            when(matrix(MOB_index).asUInt === 0.U){
-                MOB(MOB_index).MOB_STATE       := MOB_STATES.READY  // no outstanding stores to worry about
-            }.otherwise{
-                MOB(MOB_index).MOB_STATE       := MOB_STATES.WAIT   // unresolved stores. wait till their address is known
-            }
+            MOB(MOB_index).MOB_STATE       := MOB_STATES.WAIT  // no outstanding stores to worry about
         }.elsewhen((MOB(MOB_index).memory_type === memory_type_t.STORE) && (MOB(MOB_index).MOB_STATE === MOB_STATES.VALID) && MOB(MOB_index).valid){
             MOB(MOB_index).MOB_STATE       := MOB_STATES.WAIT
         }
@@ -443,7 +447,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     ///////////////////
     // UPDATE COMMIT //
-    ///////////////////
+    ///////////////////ROB
     // Update commit bit
     for(i <- 0 until MOBEntries){
         when(MOB(i).valid && io.commit.valid && (MOB(i).ROB_index === io.commit.bits.ROB_index) && (MOB(i).memory_type === memory_type_t.STORE)){

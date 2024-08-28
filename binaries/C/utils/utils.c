@@ -12,3 +12,6 @@ void printf(const char* str)
         str++;
     }
 }
+
+
+
