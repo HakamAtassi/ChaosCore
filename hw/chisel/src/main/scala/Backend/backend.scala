@@ -73,6 +73,8 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
 
+
+
     //////////////////////////
     // RESERVATION STATIONS //
     //////////////////////////
@@ -225,6 +227,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     ////////////////
     MOB.io.AGU_output <> AGU.io.FU_output
     MOB.io.flush <> io.flush
+    MOB.io.fetch_PC <> io.fetch_PC
 
     ////////////////////////////
     // REGISTER FILES (WRITE) //

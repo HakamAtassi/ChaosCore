@@ -1,4 +1,5 @@
 import random
+import re
 import numpy as np
 import cocotb
 from cocotb.triggers import Timer
@@ -160,3 +161,62 @@ def compare_decoded_fetch_packet(model_decoded_fetch_packet, dut_decoded_fetch_p
 
         assert model_decoded_fetch_packet["needs_ALU"][i]          == dut_decoded_fetch_packet["needs_ALU"][i]
         assert model_decoded_fetch_packet["needs_branch_unit"][i]  == dut_decoded_fetch_packet["needs_branch_unit"][i]
+
+
+def extract_signals(dut, base_name, t_hex=None): # add an int/hex option
+    result = []
+    pattern = fr"io_{base_name}_(\d+)_(.+)"  # Note the 'r' before the string
+    
+    # Get all attributes of dut that match the pattern
+    matching_attrs = [attr for attr in dir(dut) if re.match(pattern, attr)]
+    
+    # Find the maximum index
+    max_index = max([int(re.match(pattern, attr).group(1)) for attr in matching_attrs])
+    
+    for i in range(max_index + 1):
+        entry = {"valid": None, "ready":None, "bits": {}}
+        
+        for attr in matching_attrs:
+            match = re.match(pattern, attr)
+            if match and int(match.group(1)) == i:
+                if match.group(2) == "valid":
+                    entry["valid"] = int(getattr(dut, attr).value)
+                if match.group(2) == "ready":
+                    entry["ready"] = int(getattr(dut, attr).value)
+                elif match.group(2).startswith("bits_"):
+                    bit_name = match.group(2)[5:]  # Remove 'bits_' prefix
+                    entry["bits"][bit_name] = int(getattr(dut, attr).value)
+                    if t_hex:
+                        entry["bits"][bit_name] = hex(entry["bits"][bit_name])
+
+        
+        result.append(entry)
+    
+    return result
+
+def write_signals(dut, base_name, data_dict):
+    pattern = fr"io_{base_name}_(\d+)_(.+)"
+    
+    # Get all attributes of dut that match the pattern
+    matching_attrs = [attr for attr in dir(dut) if re.match(pattern, attr)]
+    
+    for attr in matching_attrs:
+        match = re.match(pattern, attr)
+        
+        if match:
+            index = int(match.group(1))
+            field = match.group(2)
+            
+            if index < len(data_dict):
+                if field == "valid":
+                    getattr(dut, attr).value= data_dict[index].get("valid", 0)
+                elif field.startswith("bits_"):
+                    bit_name = field[5:]  # Remove 'bits_' prefix
+                    value = data_dict[index].get("bits", {}).get(bit_name, 0)
+                    getattr(dut, attr).value =  value
+            else:
+                # Set to 0 if index is out of range of provided data
+                getattr(dut, attr).value = 0
+
+
+

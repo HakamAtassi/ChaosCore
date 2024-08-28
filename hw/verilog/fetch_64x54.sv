@@ -43,14 +43,18 @@ module fetch_64x54(
   reg [53:0] Memory[0:63];
   reg        _R0_en_d0;
   reg [5:0]  _R0_addr_d0;
+
+  reg [53:0] test;
+
   always @(posedge R0_clk) begin
     _R0_en_d0 <= R0_en;
     _R0_addr_d0 <= R0_addr;
+    test <= _R0_en_d0 ? Memory[_R0_addr_d0] : 54'bx;
   end // always @(posedge)
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 54'bx;
+  assign R0_data = test;
 endmodule
 

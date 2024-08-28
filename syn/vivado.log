@@ -3,8 +3,8 @@
 # SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
 # IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
 # SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-# Start of session at: Wed Aug 28 07:44:18 2024
-# Process ID: 81764
+# Start of session at: Wed Aug 28 17:39:09 2024
+# Process ID: 13472
 # Current directory: /home/hakam/Repos/ChaosCore/syn
 # Command line: vivado -mode batch -source build.tcl
 # Log file: /home/hakam/Repos/ChaosCore/syn/vivado.log
@@ -13,13 +13,13 @@
 # Platform          :Ubuntu
 # Operating System  :Ubuntu 24.04 LTS
 # Processor Detail  :12th Gen Intel(R) Core(TM) i3-12100F
-# CPU Frequency     :4013.620 MHz
+# CPU Frequency     :3253.719 MHz
 # CPU Physical cores:4
 # CPU Logical cores :8
 # Host memory       :16615 MB
 # Swap memory       :4294 MB
 # Total Virtual     :20910 MB
-# Available Virtual :16239 MB
+# Available Virtual :16828 MB
 #-----------------------------------------------------------
 source build.tcl
 # set top_module "SOC"
@@ -42,7 +42,6 @@ source build.tcl
 #    read_verilog -sv "${lib_dir}/$line" 
 # }
 WARNING: [filemgmt 56-12] File '/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_wrap_2x2.v' cannot be added to the project because it already exists in the project, skipping this file
-WARNING: [filemgmt 56-12] File '/home/hakam/Repos/ChaosCore/hw/verilog/nReadmWrite.v' cannot be added to the project because it already exists in the project, skipping this file
 # read_xdc "${constraints_dir}/constraints.xdc"
 # synth_design -top "$top_module" -part ${fpga_part} -mode out_of_context
 Command: synth_design -top SOC -part xczu3eg-sbva484-1-i -mode out_of_context
@@ -52,9 +51,9 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu3eg
 INFO: [Device 21-403] Loading part xczu3eg-sbva484-1-i
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 81788
+INFO: [Synth 8-7075] Helper process launched with PID 13508
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2563.473 ; gain = 303.691 ; free physical = 8146 ; free virtual = 13716
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2563.664 ; gain = 303.691 ; free physical = 7065 ; free virtual = 14307
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-11065] parameter 'LEVELS' becomes localparam in 'priority_encoder' with formal parameter declaration list [/home/hakam/Repos/ChaosCore/hw/verilog/priority_encoder.v:47]
 WARNING: [Synth 8-11065] parameter 'W' becomes localparam in 'priority_encoder' with formal parameter declaration list [/home/hakam/Repos/ChaosCore/hw/verilog/priority_encoder.v:48]
@@ -145,8 +144,10 @@ INFO: [Synth 8-6157] synthesizing module 'RS_1' [/home/hakam/Repos/ChaosCore/hw/
 INFO: [Synth 8-6155] done synthesizing module 'RS_1' (0#1) [/home/hakam/Repos/ChaosCore/hw/verilog/RS_1.sv:31]
 INFO: [Synth 8-6157] synthesizing module 'MOB' [/home/hakam/Repos/ChaosCore/hw/verilog/MOB.sv:31]
 INFO: [Synth 8-6155] done synthesizing module 'MOB' (0#1) [/home/hakam/Repos/ChaosCore/hw/verilog/MOB.sv:31]
-INFO: [Synth 8-6157] synthesizing module 'nReadmWrite' [/home/hakam/Repos/ChaosCore/hw/verilog/nReadmWrite.v:2]
-INFO: [Synth 8-6155] done synthesizing module 'nReadmWrite' (0#1) [/home/hakam/Repos/ChaosCore/hw/verilog/nReadmWrite.v:2]
+INFO: [Synth 8-6157] synthesizing module 'sim_nReadmWrite' [/home/hakam/Repos/ChaosCore/hw/verilog/sim_nReadmWrite.sv:31]
+INFO: [Synth 8-6157] synthesizing module 'mem_64x32' [/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x32.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'mem_64x32' (0#1) [/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x32.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'sim_nReadmWrite' (0#1) [/home/hakam/Repos/ChaosCore/hw/verilog/sim_nReadmWrite.sv:31]
 INFO: [Synth 8-6157] synthesizing module 'FU' [/home/hakam/Repos/ChaosCore/hw/verilog/FU.sv:31]
 INFO: [Synth 8-6157] synthesizing module 'ALU' [/home/hakam/Repos/ChaosCore/hw/verilog/ALU.sv:31]
 INFO: [Synth 8-6155] done synthesizing module 'ALU' (0#1) [/home/hakam/Repos/ChaosCore/hw/verilog/ALU.sv:31]
@@ -404,6 +405,17 @@ WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS2_
 WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9569]
 INFO: [Common 17-14] Message 'Synth 8-6014' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 WARNING: [Synth 8-4767] Trying to implement RAM ' ' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+	1: RAM has multiple writes via different ports in same process. If RAM inferencing intended, write to one port per process. 
+	2: Unable to determine number of words or word size in RAM. 
+	3: No valid read/write found for RAM. 
+RAM dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'Memory_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM has multiple writes via different ports in same process. If RAM inferencing intended, write to one port per process. 
+	2: Unable to determine number of words or word size in RAM. 
+	3: No valid read/write found for RAM. 
+RAM "Memory_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM ' ' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
 	1: Invalid write to RAM. 
 	2: Unable to determine number of words or word size in RAM. 
 	3: No valid read/write found for RAM. 
@@ -522,18 +534,18 @@ WARNING: [Synth 8-7129] Port s_axi_awlen[7] in module AXI_debug_printer is eithe
 WARNING: [Synth 8-7129] Port s_axi_awlen[6] in module AXI_debug_printer is either unconnected or has no load
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 3249.113 ; gain = 989.332 ; free physical = 7316 ; free virtual = 12900
+Finished RTL Elaboration : Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 3245.336 ; gain = 985.363 ; free physical = 6349 ; free virtual = 13604
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 3249.113 ; gain = 989.332 ; free physical = 7316 ; free virtual = 12900
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:14 ; elapsed = 00:00:16 . Memory (MB): peak = 3245.336 ; gain = 985.363 ; free physical = 6409 ; free virtual = 13664
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 3249.113 ; gain = 989.332 ; free physical = 7316 ; free virtual = 12900
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:14 ; elapsed = 00:00:16 . Memory (MB): peak = 3245.336 ; gain = 985.363 ; free physical = 6409 ; free virtual = 13664
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00.37 ; elapsed = 00:00:00.37 . Memory (MB): peak = 3249.113 ; gain = 0.000 ; free physical = 7318 ; free virtual = 12902
+Netlist sorting complete. Time (s): cpu = 00:00:00.38 ; elapsed = 00:00:00.38 . Memory (MB): peak = 3245.336 ; gain = 0.000 ; free physical = 6420 ; free virtual = 13674
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
@@ -542,13 +554,13 @@ Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
 Finished Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3395.957 ; gain = 0.000 ; free physical = 7330 ; free virtual = 12914
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3392.180 ; gain = 0.000 ; free physical = 6384 ; free virtual = 13639
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.44 ; elapsed = 00:00:00.17 . Memory (MB): peak = 3407.879 ; gain = 0.000 ; free physical = 7319 ; free virtual = 12903
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.47 ; elapsed = 00:00:00.18 . Memory (MB): peak = 3404.102 ; gain = 0.000 ; free physical = 6376 ; free virtual = 13631
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3407.879 ; gain = 1148.098 ; free physical = 5994 ; free virtual = 11579
+Finished Constraint Validation : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3404.102 ; gain = 1144.129 ; free physical = 5092 ; free virtual = 12347
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
@@ -556,13 +568,13 @@ Start Loading Part and Timing Information
 Loading part: xczu3eg-sbva484-1-i
 INFO: [Synth 8-6742] Reading net delay rules and data
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3415.883 ; gain = 1156.102 ; free physical = 5994 ; free virtual = 11579
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3412.105 ; gain = 1152.133 ; free physical = 5091 ; free virtual = 12346
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3415.883 ; gain = 1156.102 ; free physical = 5994 ; free virtual = 11579
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3412.105 ; gain = 1152.133 ; free physical = 5091 ; free virtual = 12346
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-6430] The Block RAM "mem_65536x2:/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
 WARNING: [Synth 8-6430] The Block RAM "mem_65536x2:/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
@@ -573,10 +585,6 @@ INFO: [Synth 8-6904] The RAM "ram_16x287:/Memory_reg" of size (depth=16 x width=
 INFO: [Synth 8-6904] The RAM "ram_16x65:/Memory_reg" of size (depth=16 x width=65) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "ram_16x53:/Memory_reg" of size (depth=16 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "ram_16x471:/Memory_reg" of size (depth=16 x width=471) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "nReadmWrite:/rams_3_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "nReadmWrite:/rams_2_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "nReadmWrite:/rams_1_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "nReadmWrite:/rams_0_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "mem_64x70:/Memory_reg" of size (depth=64 x width=70) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "mem_64x17:/Memory_reg" of size (depth=64 x width=17) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "fetch_64x53:/Memory_reg" of size (depth=64 x width=53) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
@@ -587,7 +595,7 @@ INFO: [Synth 8-6904] The RAM "ram_2x352:/Memory_reg" of size (depth=2 x width=35
 INFO: [Synth 8-6904] The RAM "ram_8x68:/Memory_reg" of size (depth=8 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "ram_3x68:/Memory_reg" of size (depth=3 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:44 ; elapsed = 00:00:45 . Memory (MB): peak = 3415.883 ; gain = 1156.102 ; free physical = 594 ; free virtual = 6192
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:47 ; elapsed = 00:00:47 . Memory (MB): peak = 3416.191 ; gain = 1156.219 ; free physical = 173 ; free virtual = 6870
 ---------------------------------------------------------------------------------
 RAM Pipeline Warning: Read Address Register Found For RAM Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM Memory_reg. We will not be able to pipeline it. This may degrade performance. 
@@ -622,18 +630,18 @@ Detailed RTL Component Info :
 	              224 Bit    Registers := 1     
 	               53 Bit    Registers := 1     
 	               39 Bit    Registers := 1     
-	               32 Bit    Registers := 166   
+	               32 Bit    Registers := 198   
 	               21 Bit    Registers := 73    
 	               18 Bit    Registers := 1     
 	               16 Bit    Registers := 5     
 	               12 Bit    Registers := 1     
 	                8 Bit    Registers := 107   
 	                7 Bit    Registers := 296   
-	                6 Bit    Registers := 107   
+	                6 Bit    Registers := 115   
 	                5 Bit    Registers := 137   
 	                4 Bit    Registers := 192   
 	                3 Bit    Registers := 117   
-	                2 Bit    Registers := 569   
+	                2 Bit    Registers := 497   
 	                1 Bit    Registers := 2245  
 +---RAMs : 
 	             224K Bit	(4096 X 56 bit)          RAMs := 1     
@@ -644,7 +652,6 @@ Detailed RTL Component Info :
 	               4K Bit	(16 X 287 bit)          RAMs := 1     
 	               4K Bit	(64 X 70 bit)          RAMs := 1     
 	               3K Bit	(64 X 53 bit)          RAMs := 5     
-	               2K Bit	(64 X 32 bit)          RAMs := 4     
 	               2K Bit	(8 X 352 bit)          RAMs := 2     
 	               1K Bit	(16 X 65 bit)          RAMs := 1     
 	               1K Bit	(64 X 17 bit)          RAMs := 4     
@@ -654,11 +661,12 @@ Detailed RTL Component Info :
 	              204 Bit	(3 X 68 bit)          RAMs := 1     
 	              128 Bit	(64 X 2 bit)          RAMs := 1     
 +---Muxes : 
+	   2 Input 2048 Bit        Muxes := 2     
 	   2 Input  256 Bit        Muxes := 29    
 	   2 Input   64 Bit        Muxes := 12    
 	   2 Input   39 Bit        Muxes := 1     
-	   2 Input   32 Bit        Muxes := 95    
-	   4 Input   32 Bit        Muxes := 27    
+	   2 Input   32 Bit        Muxes := 100   
+	   4 Input   32 Bit        Muxes := 19    
 	   6 Input   32 Bit        Muxes := 1     
 	   8 Input   32 Bit        Muxes := 1     
 	   2 Input   21 Bit        Muxes := 111   
@@ -679,12 +687,12 @@ Detailed RTL Component Info :
 	   3 Input    3 Bit        Muxes := 17    
 	   4 Input    3 Bit        Muxes := 6     
 	   6 Input    3 Bit        Muxes := 2     
-	   2 Input    2 Bit        Muxes := 846   
+	   2 Input    2 Bit        Muxes := 718   
 	   3 Input    2 Bit        Muxes := 6     
 	   4 Input    2 Bit        Muxes := 18    
 	   5 Input    2 Bit        Muxes := 1     
 	   8 Input    2 Bit        Muxes := 10    
-	   2 Input    1 Bit        Muxes := 2461  
+	   2 Input    1 Bit        Muxes := 2205  
 	   5 Input    1 Bit        Muxes := 48    
 	   8 Input    1 Bit        Muxes := 13    
 ---------------------------------------------------------------------------------
@@ -702,119 +710,111 @@ Finished Part Resource Summary
 ---------------------------------------------------------------------------------
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[31] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[30] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[29] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[28] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[27] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[26] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[25] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[24] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[23] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[22] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[21] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[20] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[19] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[18] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[17] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[16] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[15] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[14] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[13] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[12] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[11] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[10] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[9] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[8] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[7] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[6] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[5] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[4] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[3] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[2] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[1] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_address[0] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_memory_type[1] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_memory_type[0] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_access_width[1] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_access_width[0] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_is_unsigned driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[31] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[30] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[29] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[28] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[27] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[26] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[25] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[24] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[23] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[22] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[21] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[20] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[19] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[18] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[17] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[16] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[15] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[14] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[13] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[12] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[11] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[10] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[9] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[8] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[7] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[6] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[5] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[4] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[3] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[2] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[1] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port io_FU_outputs_0_bits_wr_data[0] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB0 has port _FU0_io_FU_input_ready driven by constant 1
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-INFO: [Synth 8-6904] The RAM "INT_PRF/rams_3_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "INT_PRF/rams_2_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "INT_PRF/rams_1_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "INT_PRF/rams_0_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-WARNING: [Synth 8-3917] design backend__GCB2 has port _FU2_io_FU_input_ready driven by constant 1
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_branch_taken driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[31] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[30] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[29] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[28] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[27] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[26] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[25] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[24] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[23] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[22] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[21] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[20] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[19] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[18] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[17] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[16] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[15] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[14] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[13] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[12] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[11] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[10] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[9] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[8] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[7] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[6] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[5] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[4] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[3] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[2] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[1] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_target_address[0] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_branch_valid driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[31] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[30] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[29] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[28] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[27] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[26] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[25] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[24] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[23] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[22] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[21] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[20] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[19] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[18] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[17] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[16] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[15] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[14] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[13] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[12] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[11] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[10] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[9] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[8] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[7] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[6] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[5] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[4] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[3] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[2] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[1] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_address[0] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_memory_type[1] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_memory_type[0] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_access_width[1] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_access_width[0] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_is_unsigned driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[31] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[30] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[29] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[28] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[27] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[26] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[25] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[24] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[23] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[22] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[21] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[20] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[19] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[18] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[17] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[16] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[15] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[14] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[13] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[12] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[11] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[10] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[9] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[8] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[7] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[6] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[5] driven by constant 0
-WARNING: [Synth 8-3917] design backend__GCB2 has port io_FU_outputs_2_bits_wr_data[4] driven by constant 0
-INFO: [Common 17-14] Message 'Synth 8-3917' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-INFO: [Common 17-14] Message 'Synth 8-3917' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-INFO: [Synth 8-6904] The RAM "INT_PRF/rams_3_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "INT_PRF/rams_2_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "INT_PRF/rams_1_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Synth 8-6904] The RAM "INT_PRF/rams_0_reg" of size (depth=64 x width=32) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-3886] merging instance 'FU0/branch_unit/io_FU_output_bits_fetch_PC_REG_reg[0]' (FD) to 'FU0/branch_unit/io_FU_output_bits_RD_data_REG_reg[0]'
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_branch_taken driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[31] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[30] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[29] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[28] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[27] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[26] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[25] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[24] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[23] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[22] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[21] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[20] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[19] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[18] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[17] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[16] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[15] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[14] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[13] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[12] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[11] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[10] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[9] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[8] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[7] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[6] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[5] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[4] driven by constant 0
+WARNING: [Synth 8-3917] design backend__GCB1 has port io_FU_outputs_2_bits_target_address[3] driven by constant 0
+INFO: [Common 17-14] Message 'Synth 8-3917' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Common 17-14] Message 'Synth 8-3917' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 INFO: [Synth 8-3886] merging instance 'FU1/ALU/io_FU_output_bits_fetch_PC_REG_reg[0]' (FD) to 'FU1/ALU/io_FU_output_bits_fetch_PC_REG_reg[31]'
 INFO: [Synth 8-3886] merging instance 'FU1/ALU/io_FU_output_bits_fetch_PC_REG_reg[1]' (FD) to 'FU1/ALU/io_FU_output_bits_fetch_PC_REG_reg[31]'
 INFO: [Synth 8-3886] merging instance 'FU1/ALU/io_FU_output_bits_fetch_PC_REG_reg[2]' (FD) to 'FU1/ALU/io_FU_output_bits_fetch_PC_REG_reg[31]'
@@ -1061,22 +1061,34 @@ RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We
 RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 INFO: [Synth 8-6904] The RAM "data_cache/cacheable_request_Q/ram_ext/Memory_reg" of size (depth=8 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/non_cacheable_request_Q/ram_ext/Memory_reg" of size (depth=8 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/cacheable_response_Q/ram_ext/Memory_reg" of size (depth=8 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/non_cacheable_response_Q/ram_ext/Memory_reg" of size (depth=8 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/CPU_response_skid_buffer/ram_ext/Memory_reg" of size (depth=3 x width=68) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6904] The RAM "data_cache/AXI_request_Q/ram_ext/Memory_reg" of size (depth=2 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_1/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_2/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_3/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/tag_memories_0/ram_ext/Memory_reg" of size (depth=64 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_0/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_1/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "data_cache/data_memories_2/ram_ext/Memory_reg" of size (depth=256 x width=8) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Common 17-14] Message 'Synth 8-6904' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM data_memory_0/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM data_memory_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
@@ -1297,7 +1309,7 @@ INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cach
 INFO: [Common 17-14] Message 'Synth 8-3333' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 INFO: [Common 17-14] Message 'Synth 8-3333' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:37 ; elapsed = 00:01:43 . Memory (MB): peak = 3431.895 ; gain = 1172.113 ; free physical = 254 ; free virtual = 5139
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:41 ; elapsed = 00:01:48 . Memory (MB): peak = 3428.117 ; gain = 1168.145 ; free physical = 256 ; free virtual = 5459
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -1329,10 +1341,6 @@ Distributed RAM: Preliminary Mapping Report (see note below)
 +------------------------------------+--------------------------------------------------------+-----------+----------------------+----------------+
 |Module Name                         | RTL Object                                             | Inference | Size (Depth x Width) | Primitives     | 
 +------------------------------------+--------------------------------------------------------+-----------+----------------------+----------------+
-|INT_PRF                             | rams_3_reg                                             | Implied   | 64 x 32              | RAM64M8 x 40   | 
-|INT_PRF                             | rams_2_reg                                             | Implied   | 64 x 32              | RAM64M8 x 40   | 
-|INT_PRF                             | rams_1_reg                                             | Implied   | 64 x 32              | RAM64M8 x 40   | 
-|INT_PRF                             | rams_0_reg                                             | Implied   | 64 x 32              | RAM64M8 x 40   | 
 |frontend/instruction_fetch          | bp/RAS/RAS_memory/mem_ext/Memory_reg                   | Implied   | 128 x 39             | RAM64M8 x 12   | 
 |frontend/instruction_fetch          | predecoder/final_fetch_packet_out_Q/ram_ext/Memory_reg | Implied   | 2 x 287              | RAM32M16 x 21  | 
 |frontend/instruction_fetch          | instruction_Q/ram_ext/Memory_reg                       | Implied   | 16 x 287             | RAM32M16 x 21  | 
@@ -1404,12 +1412,12 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:43 ; elapsed = 00:01:49 . Memory (MB): peak = 3501.676 ; gain = 1241.895 ; free physical = 230 ; free virtual = 5070
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:47 ; elapsed = 00:01:55 . Memory (MB): peak = 3497.898 ; gain = 1237.926 ; free physical = 226 ; free virtual = 5429
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
-info: optimization accepted worst group hill climbing move (-9834.0/oG. 160.0ps)
+info: optimization accepted worst group hill climbing move (-9044.0/oG. 160.0ps)
 RAM Pipeline Warning: Read Address Register Found For RAM bp/gshare/PHT/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 INFO: [Synth 8-5582] The block RAM "ChaosCore_tilei_0/\ChaosCore_tile/ChaosCore/frontend /instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg" originally mapped as a shallow cascade chain, is remapped into deep block RAM for following reason(s): The timing constraints suggest that the chosen mapping will yield better timing results.
 WARNING: [Synth 8-6430] The Block RAM "ChaosCore_tilei_0/\ChaosCore_tile/ChaosCore/frontend /instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
@@ -1419,7 +1427,7 @@ RAM Pipeline Warning: Read Address Register Found For RAM bp/BTB/BTB_memory/mem_
 INFO: [Synth 8-5582] The block RAM "ChaosCore_tilei_0/\ChaosCore_tile/ChaosCore/frontend /instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg" originally mapped as a shallow cascade chain, is remapped into deep block RAM for following reason(s): The timing constraints suggest that the chosen mapping will yield better timing results.
 WARNING: [Synth 8-6430] The Block RAM "ChaosCore_tilei_0/\ChaosCore_tile/ChaosCore/frontend /instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:03:28 ; elapsed = 00:03:35 . Memory (MB): peak = 3941.871 ; gain = 1682.090 ; free physical = 270 ; free virtual = 4645
+Finished Timing Optimization : Time (s): cpu = 00:03:14 ; elapsed = 00:03:22 . Memory (MB): peak = 3973.000 ; gain = 1713.027 ; free physical = 257 ; free virtual = 4946
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -1439,10 +1447,6 @@ Distributed RAM: Final Mapping Report
 +------------------------------------+--------------------------------------------------------+-----------+----------------------+----------------+
 |Module Name                         | RTL Object                                             | Inference | Size (Depth x Width) | Primitives     | 
 +------------------------------------+--------------------------------------------------------+-----------+----------------------+----------------+
-|INT_PRF                             | rams_3_reg                                             | Implied   | 64 x 32              | RAM64M8 x 40   | 
-|INT_PRF                             | rams_2_reg                                             | Implied   | 64 x 32              | RAM64M8 x 40   | 
-|INT_PRF                             | rams_1_reg                                             | Implied   | 64 x 32              | RAM64M8 x 40   | 
-|INT_PRF                             | rams_0_reg                                             | Implied   | 64 x 32              | RAM64M8 x 40   | 
 |data_cache/cacheable_request_Q      | ram_ext/Memory_reg                                     | Implied   | 8 x 352              | RAM32M16 x 26  | 
 |data_cache/non_cacheable_request_Q  | ram_ext/Memory_reg                                     | Implied   | 8 x 352              | RAM32M16 x 26  | 
 |data_cache/cacheable_response_Q     | ram_ext/Memory_reg                                     | Implied   | 8 x 68               | RAM32M16 x 5   | 
@@ -1513,6 +1517,7 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-7067] Removed DRAM instance ChaosCore_tilei_0/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/instruction_Q/ram_ext/Memory_reg_0_15_196_209 from module SOC_GT0_tempName due to constant propagation
+INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 INFO: [Synth 8-7067] Removed DRAM instance ChaosCore_tilei_0/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/instruction_Q/ram_ext/Memory_reg_0_15_196_209 from module SOC_GT0_tempName due to constant propagation
 INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_0/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_1_0_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_0/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_1_1_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
@@ -1544,7 +1549,7 @@ INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_0/ChaosCore_til
 INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_0/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_0/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:03:33 ; elapsed = 00:03:49 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 203 ; free virtual = 2452
+Finished Technology Mapping : Time (s): cpu = 00:03:21 ; elapsed = 00:03:39 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 277 ; free virtual = 2449
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -1591,37 +1596,37 @@ INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cach
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:03:38 ; elapsed = 00:03:58 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 191 ; free virtual = 2467
+Finished IO Insertion : Time (s): cpu = 00:03:26 ; elapsed = 00:03:49 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 236 ; free virtual = 2445
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:03:38 ; elapsed = 00:03:58 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 183 ; free virtual = 2459
+Finished Renaming Generated Instances : Time (s): cpu = 00:03:26 ; elapsed = 00:03:49 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 236 ; free virtual = 2445
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:03:41 ; elapsed = 00:04:03 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 189 ; free virtual = 2465
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:03:30 ; elapsed = 00:03:54 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 220 ; free virtual = 2437
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:03:41 ; elapsed = 00:04:03 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 189 ; free virtual = 2466
+Finished Renaming Generated Ports : Time (s): cpu = 00:03:31 ; elapsed = 00:03:54 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 220 ; free virtual = 2436
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:03:42 ; elapsed = 00:04:04 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 198 ; free virtual = 2474
+Finished Handling Custom Attributes : Time (s): cpu = 00:03:32 ; elapsed = 00:03:56 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 226 ; free virtual = 2442
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:03:42 ; elapsed = 00:04:04 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 198 ; free virtual = 2474
+Finished Renaming Generated Nets : Time (s): cpu = 00:03:32 ; elapsed = 00:03:56 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 226 ; free virtual = 2442
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -1638,34 +1643,34 @@ Report Cell Usage:
 |      |Cell      |Count |
 +------+----------+------+
 |1     |CARRY8    |   171|
-|2     |LUT1      |   120|
-|3     |LUT2      |  2393|
-|4     |LUT3      |  4481|
-|5     |LUT4      |  3263|
-|6     |LUT5      |  8907|
-|7     |LUT6      | 19287|
-|8     |MUXF7     |  1369|
-|9     |MUXF8     |   347|
+|2     |LUT1      |   119|
+|3     |LUT2      |  2215|
+|4     |LUT3      |  4486|
+|5     |LUT4      |  2983|
+|6     |LUT5      |  8833|
+|7     |LUT6      | 29099|
+|8     |MUXF7     |  3765|
+|9     |MUXF8     |  1303|
 |10    |RAM256X1S |   256|
 |11    |RAM32M    |     3|
 |12    |RAM32M16  |   196|
 |13    |RAM64M    |     6|
-|14    |RAM64M8   |   218|
+|14    |RAM64M8   |    58|
 |15    |RAM64X1S  |    22|
 |16    |RAMB18E2  |     1|
 |17    |RAMB36E2  |    20|
-|20    |FDRE      | 14492|
-|21    |FDSE      |   137|
+|20    |FDRE      | 15617|
+|21    |FDSE      |     9|
 +------+----------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:03:43 ; elapsed = 00:04:04 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 198 ; free virtual = 2476
+Finished Writing Synthesis Report : Time (s): cpu = 00:03:32 ; elapsed = 00:03:56 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 226 ; free virtual = 2442
 ---------------------------------------------------------------------------------
-Synthesis finished with 0 errors, 0 critical warnings and 372 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:03:36 ; elapsed = 00:04:02 . Memory (MB): peak = 3953.797 ; gain = 1535.250 ; free physical = 10037 ; free virtual = 12898
-Synthesis Optimization Complete : Time (s): cpu = 00:03:45 ; elapsed = 00:04:10 . Memory (MB): peak = 3953.797 ; gain = 1694.016 ; free physical = 10044 ; free virtual = 12893
+Synthesis finished with 0 errors, 0 critical warnings and 442 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:03:26 ; elapsed = 00:03:52 . Memory (MB): peak = 3984.926 ; gain = 1566.188 ; free physical = 10327 ; free virtual = 13390
+Synthesis Optimization Complete : Time (s): cpu = 00:03:35 ; elapsed = 00:04:00 . Memory (MB): peak = 3984.926 ; gain = 1724.953 ; free physical = 10334 ; free virtual = 13384
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00.32 ; elapsed = 00:00:00.64 . Memory (MB): peak = 3953.797 ; gain = 0.000 ; free physical = 9938 ; free virtual = 12856
-INFO: [Netlist 29-17] Analyzing 2588 Unisim elements for replacement
+Netlist sorting complete. Time (s): cpu = 00:00:00.38 ; elapsed = 00:00:00.38 . Memory (MB): peak = 3984.926 ; gain = 0.000 ; free physical = 10263 ; free virtual = 13362
+INFO: [Netlist 29-17] Analyzing 5780 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
@@ -1679,23 +1684,23 @@ INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/i
 INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_1 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
 INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_2 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
 INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_3 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3953.797 ; gain = 0.000 ; free physical = 9797 ; free virtual = 12756
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3984.926 ; gain = 0.000 ; free physical = 10145 ; free virtual = 13291
 INFO: [Project 1-111] Unisim Transformation Summary:
-  A total of 701 instances were transformed.
+  A total of 541 instances were transformed.
   RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 256 instances
   RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 3 instances
   RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 196 instances
   RAM64M => RAM64M (RAMD64E(x4)): 6 instances
-  RAM64M8 => RAM64M8 (RAMD64E(x8)): 218 instances
+  RAM64M8 => RAM64M8 (RAMD64E(x8)): 58 instances
   RAM64X1S => RAM64X1S (RAMS64E): 22 instances
 
-Synth Design complete | Checksum: 734503ed
+Synth Design complete | Checksum: a9dcfc86
 INFO: [Common 17-83] Releasing license: Synthesis
-666 Infos, 335 Warnings, 0 Critical Warnings and 0 Errors encountered.
+669 Infos, 337 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:03:58 ; elapsed = 00:04:27 . Memory (MB): peak = 3953.797 ; gain = 2576.438 ; free physical = 9821 ; free virtual = 12846
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 11957.469; main = 2931.473; forked = 10356.235
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 19328.602; main = 3949.883; forked = 15378.723
+synth_design: Time (s): cpu = 00:03:48 ; elapsed = 00:04:16 . Memory (MB): peak = 3984.926 ; gain = 2565.961 ; free physical = 10074 ; free virtual = 13289
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 12327.645; main = 2804.034; forked = 10596.148
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 19911.039; main = 3981.012; forked = 15930.031
 # report_utilization -file utilization_synth.rpt -hierarchical -hierarchical_depth 10 -hierarchical_percentage
 # report_timing_summary -file timing_synth.rpt
 INFO: [Timing 38-35] Done setting XDC timing constraints.
@@ -1709,5 +1714,5 @@ WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_G
 WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_GLOBAL_LEAF
 WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clock" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
 Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
-report_timing_summary: Time (s): cpu = 00:00:25 ; elapsed = 00:00:20 . Memory (MB): peak = 4428.711 ; gain = 474.914 ; free physical = 9114 ; free virtual = 12431
-INFO: [Common 17-206] Exiting Vivado at Wed Aug 28 07:49:13 2024...
+report_timing_summary: Time (s): cpu = 00:00:26 ; elapsed = 00:00:20 . Memory (MB): peak = 4452.535 ; gain = 467.609 ; free physical = 9476 ; free virtual = 12873
+INFO: [Common 17-206] Exiting Vivado at Wed Aug 28 17:43:51 2024...

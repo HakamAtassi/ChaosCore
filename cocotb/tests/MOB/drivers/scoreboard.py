@@ -142,10 +142,7 @@ class MOB_scoreboard:
                 "wr_data": int(self.MOB.io_MOB_output_bits_wr_data.value),
                 "MOB_index": int(self.MOB.io_MOB_output_bits_MOB_index.value),
                 "ROB_index": int(self.MOB.io_MOB_output_bits_ROB_index.value),
-                "FTQ_index": int(self.MOB.io_MOB_output_bits_FTQ_index.value),
                 "fetch_packet_index": int(self.MOB.io_MOB_output_bits_fetch_packet_index.value),
-                "violation": int(self.MOB.io_MOB_output_bits_violation.value),
-                "memory_violation": int(self.MOB.io_MOB_output_bits_memory_violation.value),
             }
         }
 
@@ -160,7 +157,6 @@ class MOB_scoreboard:
                 "br_type": int(self.MOB.io_commit_bits_br_type.value),
                 "fetch_packet_index": int(self.MOB.io_commit_bits_fetch_packet_index.value),
                 "is_misprediction": int(self.MOB.io_commit_bits_is_misprediction.value),
-                "exception": int(self.MOB.io_commit_bits_exception.value),
                 "expected_PC": int(self.MOB.io_commit_bits_expected_PC.value),
                 "GHR": int(self.MOB.io_commit_bits_GHR.value),
                 "TOS": int(self.MOB.io_commit_bits_TOS.value),

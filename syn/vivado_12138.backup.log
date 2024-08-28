@@ -3,8 +3,8 @@
 # SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
 # IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
 # SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-# Start of session at: Wed Aug 28 07:41:26 2024
-# Process ID: 81198
+# Start of session at: Wed Aug 28 17:24:26 2024
+# Process ID: 12138
 # Current directory: /home/hakam/Repos/ChaosCore/syn
 # Command line: vivado -mode batch -source build.tcl
 # Log file: /home/hakam/Repos/ChaosCore/syn/vivado.log
@@ -13,11 +13,26 @@
 # Platform          :Ubuntu
 # Operating System  :Ubuntu 24.04 LTS
 # Processor Detail  :12th Gen Intel(R) Core(TM) i3-12100F
-# CPU Frequency     :4061.433 MHz
+# CPU Frequency     :3762.960 MHz
 # CPU Physical cores:4
 # CPU Logical cores :8
 # Host memory       :16615 MB
 # Swap memory       :4294 MB
 # Total Virtual     :20910 MB
-# Available Virtual :16301 MB
+# Available Virtual :16664 MB
 #-----------------------------------------------------------
+source build.tcl
+# set top_module "SOC"
+# set board_file "???"
+# set board_name "ultra96v2"
+# set fpga_part "xczu3eg-sbva484-1-i"
+# set lib_dir [file normalize "./../hw/verilog"]
+# set constraints_dir [file normalize "./constraints"]
+# set bdf_dir [file normalize "./bdf"]
+# set fp [open "$lib_dir/axi_filelist.f" r]
+# while {[gets $fp line] >= 0} {
+#    read_verilog -sv "${lib_dir}/$line" 
+# }
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+INFO: [Common 17-344] 'source' was cancelled
+INFO: [Common 17-206] Exiting Vivado at Wed Aug 28 17:24:32 2024...

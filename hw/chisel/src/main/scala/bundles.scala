@@ -178,7 +178,7 @@ class prediction(coreParameters:CoreParameters) extends Bundle{
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
     val br_type     =   br_type_t()
-    val GHR         =   UInt(GHRWidth.W)
+    val GHR         =   UInt(GHRWidth.W) // GHR is repeated twice here. (once again in decoded fetch packet)
     val T_NT        =   Bool()
 }
 

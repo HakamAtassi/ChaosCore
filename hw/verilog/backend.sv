@@ -1465,6 +1465,7 @@ module backend(
     .io_reserved_pointers_2_bits                 (_MOB_io_reserved_pointers_2_bits),
     .io_reserved_pointers_3_valid                (/* unused */),
     .io_reserved_pointers_3_bits                 (_MOB_io_reserved_pointers_3_bits),
+    .io_fetch_PC                                 (io_fetch_PC),
     .io_AGU_output_valid                         (_AGU_io_FU_output_valid),
     .io_AGU_output_bits_RD                       (_AGU_io_FU_output_bits_RD),
     .io_AGU_output_bits_RD_data                  (32'h0),
