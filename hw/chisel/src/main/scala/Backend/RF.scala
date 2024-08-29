@@ -38,6 +38,7 @@ import getPortCount._
 import chisel3.experimental._ 
 
 // Define the BlackBox module
+// FIXME: make sure this RF actually has 65 regs (0, 64)
 class nReadmWrite extends BlackBox with HasBlackBoxResource {
   val io = IO(new Bundle {
 

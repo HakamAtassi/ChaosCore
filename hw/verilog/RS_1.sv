@@ -890,68 +890,132 @@ module RS_1(
                                                                    & _allocate_index_T_5[15],
                                                                  15'h0};
   wire        schedulable_instructions_0 =
-    reservation_station_0_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_0_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_0_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_0_decoded_instruction_RS1_valid
+     | ~reservation_station_0_decoded_instruction_RS1_valid)
+    & (reservation_station_0_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_0_decoded_instruction_RS2_valid
+       | ~reservation_station_0_decoded_instruction_RS2_valid)
     & reservation_station_0_valid;
   wire        schedulable_instructions_1 =
-    reservation_station_1_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_1_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_1_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_1_decoded_instruction_RS1_valid
+     | ~reservation_station_1_decoded_instruction_RS1_valid)
+    & (reservation_station_1_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_1_decoded_instruction_RS2_valid
+       | ~reservation_station_1_decoded_instruction_RS2_valid)
     & reservation_station_1_valid;
   wire        schedulable_instructions_2 =
-    reservation_station_2_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_2_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_2_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_2_decoded_instruction_RS1_valid
+     | ~reservation_station_2_decoded_instruction_RS1_valid)
+    & (reservation_station_2_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_2_decoded_instruction_RS2_valid
+       | ~reservation_station_2_decoded_instruction_RS2_valid)
     & reservation_station_2_valid;
   wire        schedulable_instructions_3 =
-    reservation_station_3_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_3_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_3_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_3_decoded_instruction_RS1_valid
+     | ~reservation_station_3_decoded_instruction_RS1_valid)
+    & (reservation_station_3_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_3_decoded_instruction_RS2_valid
+       | ~reservation_station_3_decoded_instruction_RS2_valid)
     & reservation_station_3_valid;
   wire        schedulable_instructions_4 =
-    reservation_station_4_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_4_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_4_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_4_decoded_instruction_RS1_valid
+     | ~reservation_station_4_decoded_instruction_RS1_valid)
+    & (reservation_station_4_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_4_decoded_instruction_RS2_valid
+       | ~reservation_station_4_decoded_instruction_RS2_valid)
     & reservation_station_4_valid;
   wire        schedulable_instructions_5 =
-    reservation_station_5_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_5_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_5_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_5_decoded_instruction_RS1_valid
+     | ~reservation_station_5_decoded_instruction_RS1_valid)
+    & (reservation_station_5_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_5_decoded_instruction_RS2_valid
+       | ~reservation_station_5_decoded_instruction_RS2_valid)
     & reservation_station_5_valid;
   wire        schedulable_instructions_6 =
-    reservation_station_6_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_6_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_6_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_6_decoded_instruction_RS1_valid
+     | ~reservation_station_6_decoded_instruction_RS1_valid)
+    & (reservation_station_6_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_6_decoded_instruction_RS2_valid
+       | ~reservation_station_6_decoded_instruction_RS2_valid)
     & reservation_station_6_valid;
   wire        schedulable_instructions_7 =
-    reservation_station_7_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_7_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_7_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_7_decoded_instruction_RS1_valid
+     | ~reservation_station_7_decoded_instruction_RS1_valid)
+    & (reservation_station_7_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_7_decoded_instruction_RS2_valid
+       | ~reservation_station_7_decoded_instruction_RS2_valid)
     & reservation_station_7_valid;
   wire        schedulable_instructions_8 =
-    reservation_station_8_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_8_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_8_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_8_decoded_instruction_RS1_valid
+     | ~reservation_station_8_decoded_instruction_RS1_valid)
+    & (reservation_station_8_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_8_decoded_instruction_RS2_valid
+       | ~reservation_station_8_decoded_instruction_RS2_valid)
     & reservation_station_8_valid;
   wire        schedulable_instructions_9 =
-    reservation_station_9_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_9_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_9_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_9_decoded_instruction_RS1_valid
+     | ~reservation_station_9_decoded_instruction_RS1_valid)
+    & (reservation_station_9_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_9_decoded_instruction_RS2_valid
+       | ~reservation_station_9_decoded_instruction_RS2_valid)
     & reservation_station_9_valid;
   wire        schedulable_instructions_10 =
-    reservation_station_10_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_10_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_10_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_10_decoded_instruction_RS1_valid
+     | ~reservation_station_10_decoded_instruction_RS1_valid)
+    & (reservation_station_10_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_10_decoded_instruction_RS2_valid
+       | ~reservation_station_10_decoded_instruction_RS2_valid)
     & reservation_station_10_valid;
   wire        schedulable_instructions_11 =
-    reservation_station_11_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_11_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_11_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_11_decoded_instruction_RS1_valid
+     | ~reservation_station_11_decoded_instruction_RS1_valid)
+    & (reservation_station_11_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_11_decoded_instruction_RS2_valid
+       | ~reservation_station_11_decoded_instruction_RS2_valid)
     & reservation_station_11_valid;
   wire        schedulable_instructions_12 =
-    reservation_station_12_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_12_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_12_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_12_decoded_instruction_RS1_valid
+     | ~reservation_station_12_decoded_instruction_RS1_valid)
+    & (reservation_station_12_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_12_decoded_instruction_RS2_valid
+       | ~reservation_station_12_decoded_instruction_RS2_valid)
     & reservation_station_12_valid;
   wire        schedulable_instructions_13 =
-    reservation_station_13_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_13_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_13_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_13_decoded_instruction_RS1_valid
+     | ~reservation_station_13_decoded_instruction_RS1_valid)
+    & (reservation_station_13_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_13_decoded_instruction_RS2_valid
+       | ~reservation_station_13_decoded_instruction_RS2_valid)
     & reservation_station_13_valid;
   wire        schedulable_instructions_14 =
-    reservation_station_14_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_14_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_14_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_14_decoded_instruction_RS1_valid
+     | ~reservation_station_14_decoded_instruction_RS1_valid)
+    & (reservation_station_14_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_14_decoded_instruction_RS2_valid
+       | ~reservation_station_14_decoded_instruction_RS2_valid)
     & reservation_station_14_valid;
   wire        schedulable_instructions_15 =
-    reservation_station_15_decoded_instruction_ready_bits_RS1_ready
-    & reservation_station_15_decoded_instruction_ready_bits_RS2_ready
+    (reservation_station_15_decoded_instruction_ready_bits_RS1_ready
+     & reservation_station_15_decoded_instruction_RS1_valid
+     | ~reservation_station_15_decoded_instruction_RS1_valid)
+    & (reservation_station_15_decoded_instruction_ready_bits_RS2_ready
+       & reservation_station_15_decoded_instruction_RS2_valid
+       | ~reservation_station_15_decoded_instruction_RS2_valid)
     & reservation_station_15_valid;
   wire        _GEN_15 =
     (&reservation_station_0_decoded_instruction_portID) & schedulable_instructions_0;

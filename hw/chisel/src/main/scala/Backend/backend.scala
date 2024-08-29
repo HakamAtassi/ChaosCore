@@ -137,8 +137,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     // REGISTER FILES (READ) //
     ///////////////////////////
 
-    //val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;    // Connect blackbox
-    val INT_PRF = Module(new sim_nReadmWrite)
+    val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;    // Connect blackbox
+    //val INT_PRF = Module(new sim_nReadmWrite)
 
 
     // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports

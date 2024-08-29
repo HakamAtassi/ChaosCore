@@ -354,6 +354,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     // output must be disposable 
     io.CPU_request.ready := (cache_state === cacheState.Active) && !miss //&& io.CPU_response.ready
 
+    // FIXME: critical path here...
     val CPU_response_skid_buffer         = Module(new Queue(new fetch_packet(coreParameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
 
     CPU_response_skid_buffer.io.enq                  <> CPU_response
