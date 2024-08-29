@@ -1,0 +1,59 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Thu Aug 29 06:54:54 2024
+# Process ID: 79311
+# Current directory: /home/hakam/Repos/ChaosCore/syn
+# Command line: vivado -mode batch -source build.tcl
+# Log file: /home/hakam/Repos/ChaosCore/syn/vivado.log
+# Journal file: /home/hakam/Repos/ChaosCore/syn/vivado.jou
+# Running On        :hakam-MS-7D46
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 24.04 LTS
+# Processor Detail  :12th Gen Intel(R) Core(TM) i3-12100F
+# CPU Frequency     :2967.343 MHz
+# CPU Physical cores:4
+# CPU Logical cores :8
+# Host memory       :16615 MB
+# Swap memory       :4294 MB
+# Total Virtual     :20910 MB
+# Available Virtual :13727 MB
+#-----------------------------------------------------------
+source build.tcl
+# set top_module "SOC"
+# set board_file "???"
+# set board_name "ultra96v2"
+# set fpga_part "xczu3eg-sbva484-1-i"
+# set lib_dir [file normalize "./../hw/verilog"]
+# set constraints_dir [file normalize "./constraints"]
+# set bdf_dir [file normalize "./bdf"]
+# set fp [open "$lib_dir/axi_filelist.f" r]
+# while {[gets $fp line] >= 0} {
+#    read_verilog -sv "${lib_dir}/$line" 
+# }
+# set fp [open "$lib_dir/filelist.f" r]
+# while {[gets $fp line] >= 0} {
+#    read_verilog -sv "${lib_dir}/$line" 
+# }
+# set fp [open "$lib_dir/firrtl_black_box_resource_files.f" r]
+# while {[gets $fp line] >= 0} {
+#    read_verilog -sv "${lib_dir}/$line" 
+# }
+WARNING: [filemgmt 56-12] File '/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_wrap_2x2.v' cannot be added to the project because it already exists in the project, skipping this file
+# read_xdc "${constraints_dir}/constraints.xdc"
+# synth_design -top "$top_module" -part ${fpga_part} -mode out_of_context
+Command: synth_design -top SOC -part xczu3eg-sbva484-1-i -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xczu3eg'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu3eg'
+INFO: [Device 21-403] Loading part xczu3eg-sbva484-1-i
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+1
+INFO: [Common 17-83] Releasing license: Synthesis
+5 Infos, 0 Warnings, 0 Critical Warnings and 1 Errors encountered.
+synth_design failed
+INFO: [Common 17-344] 'source' was cancelled
+INFO: [Common 17-206] Exiting Vivado at Thu Aug 29 06:55:04 2024...

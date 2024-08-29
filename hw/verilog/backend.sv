@@ -32,10 +32,21 @@ module backend(
   input         clock,
                 reset,
                 io_flush,
+  output        io_reserved_pointers_0_valid,
+  output [3:0]  io_reserved_pointers_0_bits,
+  output        io_reserved_pointers_1_valid,
+  output [3:0]  io_reserved_pointers_1_bits,
+  output        io_reserved_pointers_2_valid,
+  output [3:0]  io_reserved_pointers_2_bits,
+  output        io_reserved_pointers_3_valid,
+  output [3:0]  io_reserved_pointers_3_bits,
   output        io_backend_memory_response_ready,
   input         io_backend_memory_response_valid,
   input  [31:0] io_backend_memory_response_bits_addr,
-                io_backend_memory_response_bits_data,
+                io_backend_memory_response_bits_RD,
+                io_backend_memory_response_bits_fetch_packet_index,
+  input  [5:0]  io_backend_memory_response_bits_ROB_index,
+  input  [31:0] io_backend_memory_response_bits_data,
   input  [3:0]  io_backend_memory_response_bits_MOB_index,
   input         io_backend_memory_request_ready,
   output        io_backend_memory_request_valid,
@@ -44,6 +55,9 @@ module backend(
   output [1:0]  io_backend_memory_request_bits_memory_type,
                 io_backend_memory_request_bits_access_width,
   output [3:0]  io_backend_memory_request_bits_MOB_index,
+  output [1:0]  io_backend_memory_request_bits_packet_index,
+  output [5:0]  io_backend_memory_request_bits_ROB_index,
+  output [6:0]  io_backend_memory_request_bits_RD,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
@@ -68,6 +82,22 @@ module backend(
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
+                io_partial_commit_ROB_index_0_valid,
+  input  [5:0]  io_partial_commit_ROB_index_0_bits,
+  input         io_partial_commit_ROB_index_1_valid,
+  input  [5:0]  io_partial_commit_ROB_index_1_bits,
+  input         io_partial_commit_ROB_index_2_valid,
+  input  [5:0]  io_partial_commit_ROB_index_2_bits,
+  input         io_partial_commit_ROB_index_3_valid,
+  input  [5:0]  io_partial_commit_ROB_index_3_bits,
+  input         io_partial_commit_MOB_index_0_valid,
+  input  [3:0]  io_partial_commit_MOB_index_0_bits,
+  input         io_partial_commit_MOB_index_1_valid,
+  input  [3:0]  io_partial_commit_MOB_index_1_bits,
+  input         io_partial_commit_MOB_index_2_valid,
+  input  [3:0]  io_partial_commit_MOB_index_2_bits,
+  input         io_partial_commit_MOB_index_3_valid,
+  input  [3:0]  io_partial_commit_MOB_index_3_bits,
   output [5:0]  io_PC_file_exec_addr,
   input  [31:0] io_PC_file_exec_data,
                 io_fetch_PC,
@@ -179,6 +209,22 @@ module backend(
                 io_backend_packet_3_bits_IS_IMM,
   input  [1:0]  io_backend_packet_3_bits_memory_type,
                 io_backend_packet_3_bits_access_width,
+  output        io_MOB_output_valid,
+  output [6:0]  io_MOB_output_bits_RD,
+  output [31:0] io_MOB_output_bits_RD_data,
+  output        io_MOB_output_bits_RD_valid,
+  output [31:0] io_MOB_output_bits_fetch_PC,
+  output        io_MOB_output_bits_branch_taken,
+  output [31:0] io_MOB_output_bits_target_address,
+  output        io_MOB_output_bits_branch_valid,
+  output [31:0] io_MOB_output_bits_address,
+  output [1:0]  io_MOB_output_bits_memory_type,
+                io_MOB_output_bits_access_width,
+  output        io_MOB_output_bits_is_unsigned,
+  output [31:0] io_MOB_output_bits_wr_data,
+  output [3:0]  io_MOB_output_bits_MOB_index,
+  output [5:0]  io_MOB_output_bits_ROB_index,
+  output [1:0]  io_MOB_output_bits_fetch_packet_index,
   output        io_FU_outputs_0_valid,
   output [6:0]  io_FU_outputs_0_bits_RD,
   output [31:0] io_FU_outputs_0_bits_RD_data,
@@ -253,6 +299,8 @@ module backend(
   wire        _AGU_io_FU_output_bits_is_unsigned;
   wire [31:0] _AGU_io_FU_output_bits_wr_data;
   wire [3:0]  _AGU_io_FU_output_bits_MOB_index;
+  wire [5:0]  _AGU_io_FU_output_bits_ROB_index;
+  wire [1:0]  _AGU_io_FU_output_bits_fetch_packet_index;
   wire        _FU2_io_FU_input_ready;
   wire        _FU2_io_FU_output_valid;
   wire [6:0]  _FU2_io_FU_output_bits_RD;
@@ -346,6 +394,8 @@ module backend(
   wire [6:0]  _MEM_RS_io_RF_inputs_0_bits_RS2;
   wire [20:0] _MEM_RS_io_RF_inputs_0_bits_IMM;
   wire [2:0]  _MEM_RS_io_RF_inputs_0_bits_FUNCT3;
+  wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_packet_index;
+  wire [5:0]  _MEM_RS_io_RF_inputs_0_bits_ROB_index;
   wire [3:0]  _MEM_RS_io_RF_inputs_0_bits_MOB_index;
   wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_memory_type;
   wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_access_width;
@@ -520,6 +570,8 @@ module backend(
   reg  [6:0]  read_decoded_instructions_3_decoded_instruction_REG_RD;
   reg  [20:0] read_decoded_instructions_3_decoded_instruction_REG_IMM;
   reg  [2:0]  read_decoded_instructions_3_decoded_instruction_REG_FUNCT3;
+  reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_packet_index;
+  reg  [5:0]  read_decoded_instructions_3_decoded_instruction_REG_ROB_index;
   reg  [3:0]  read_decoded_instructions_3_decoded_instruction_REG_MOB_index;
   reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_access_width;
@@ -684,6 +736,10 @@ module backend(
       _MEM_RS_io_RF_inputs_0_bits_IMM;
     read_decoded_instructions_3_decoded_instruction_REG_FUNCT3 <=
       _MEM_RS_io_RF_inputs_0_bits_FUNCT3;
+    read_decoded_instructions_3_decoded_instruction_REG_packet_index <=
+      _MEM_RS_io_RF_inputs_0_bits_packet_index;
+    read_decoded_instructions_3_decoded_instruction_REG_ROB_index <=
+      _MEM_RS_io_RF_inputs_0_bits_ROB_index;
     read_decoded_instructions_3_decoded_instruction_REG_MOB_index <=
       _MEM_RS_io_RF_inputs_0_bits_MOB_index;
     read_decoded_instructions_3_decoded_instruction_REG_memory_type <=
@@ -1253,8 +1309,10 @@ module backend(
     .io_RF_inputs_0_bits_RS2_valid                 (/* unused */),
     .io_RF_inputs_0_bits_IMM                       (_MEM_RS_io_RF_inputs_0_bits_IMM),
     .io_RF_inputs_0_bits_FUNCT3                    (_MEM_RS_io_RF_inputs_0_bits_FUNCT3),
-    .io_RF_inputs_0_bits_packet_index              (/* unused */),
-    .io_RF_inputs_0_bits_ROB_index                 (/* unused */),
+    .io_RF_inputs_0_bits_packet_index
+      (_MEM_RS_io_RF_inputs_0_bits_packet_index),
+    .io_RF_inputs_0_bits_ROB_index
+      (_MEM_RS_io_RF_inputs_0_bits_ROB_index),
     .io_RF_inputs_0_bits_MOB_index
       (_MEM_RS_io_RF_inputs_0_bits_MOB_index),
     .io_RF_inputs_0_bits_instructionType           (/* unused */),
@@ -1325,231 +1383,355 @@ module backend(
     .io_RF_inputs_2_bits_memory_type               (/* unused */),
     .io_RF_inputs_2_bits_access_width              (/* unused */)
   );
-  MOB MOB (
-    .clock                                       (clock),
-    .reset                                       (reset),
-    .io_flush                                    (io_flush),
-    .io_reserve_0_ready                          (_MOB_io_reserve_0_ready),
+  simple_MOB MOB (
+    .clock                                              (clock),
+    .reset                                              (reset),
+    .io_flush                                           (io_flush),
+    .io_reserve_0_ready                                 (_MOB_io_reserve_0_ready),
     .io_reserve_0_valid
       (_MOB_io_reserve_0_valid_T & io_backend_packet_0_valid),
     .io_reserve_0_bits_ready_bits_RS1_ready
       (io_backend_packet_0_bits_ready_bits_RS1_ready),
     .io_reserve_0_bits_ready_bits_RS2_ready
       (io_backend_packet_0_bits_ready_bits_RS2_ready),
-    .io_reserve_0_bits_RDold                     (io_backend_packet_0_bits_RDold),
-    .io_reserve_0_bits_RD                        (io_backend_packet_0_bits_RD),
-    .io_reserve_0_bits_RD_valid                  (io_backend_packet_0_bits_RD_valid),
-    .io_reserve_0_bits_RS1                       (io_backend_packet_0_bits_RS1),
-    .io_reserve_0_bits_RS1_valid                 (io_backend_packet_0_bits_RS1_valid),
-    .io_reserve_0_bits_RS2                       (io_backend_packet_0_bits_RS2),
-    .io_reserve_0_bits_RS2_valid                 (io_backend_packet_0_bits_RS2_valid),
-    .io_reserve_0_bits_IMM                       (io_backend_packet_0_bits_IMM),
-    .io_reserve_0_bits_FUNCT3                    (io_backend_packet_0_bits_FUNCT3),
-    .io_reserve_0_bits_packet_index              (io_backend_packet_0_bits_packet_index),
-    .io_reserve_0_bits_ROB_index                 (io_backend_packet_0_bits_ROB_index),
-    .io_reserve_0_bits_MOB_index                 (io_backend_packet_0_bits_MOB_index),
+    .io_reserve_0_bits_RDold                            (io_backend_packet_0_bits_RDold),
+    .io_reserve_0_bits_RD                               (io_backend_packet_0_bits_RD),
+    .io_reserve_0_bits_RD_valid
+      (io_backend_packet_0_bits_RD_valid),
+    .io_reserve_0_bits_RS1                              (io_backend_packet_0_bits_RS1),
+    .io_reserve_0_bits_RS1_valid
+      (io_backend_packet_0_bits_RS1_valid),
+    .io_reserve_0_bits_RS2                              (io_backend_packet_0_bits_RS2),
+    .io_reserve_0_bits_RS2_valid
+      (io_backend_packet_0_bits_RS2_valid),
+    .io_reserve_0_bits_IMM                              (io_backend_packet_0_bits_IMM),
+    .io_reserve_0_bits_FUNCT3                           (io_backend_packet_0_bits_FUNCT3),
+    .io_reserve_0_bits_packet_index
+      (io_backend_packet_0_bits_packet_index),
+    .io_reserve_0_bits_ROB_index
+      (io_backend_packet_0_bits_ROB_index),
+    .io_reserve_0_bits_MOB_index
+      (io_backend_packet_0_bits_MOB_index),
     .io_reserve_0_bits_instructionType
       (io_backend_packet_0_bits_instructionType),
-    .io_reserve_0_bits_portID                    (io_backend_packet_0_bits_portID),
-    .io_reserve_0_bits_RS_type                   (io_backend_packet_0_bits_RS_type),
-    .io_reserve_0_bits_needs_ALU                 (io_backend_packet_0_bits_needs_ALU),
+    .io_reserve_0_bits_portID                           (io_backend_packet_0_bits_portID),
+    .io_reserve_0_bits_RS_type
+      (io_backend_packet_0_bits_RS_type),
+    .io_reserve_0_bits_needs_ALU
+      (io_backend_packet_0_bits_needs_ALU),
     .io_reserve_0_bits_needs_branch_unit
       (io_backend_packet_0_bits_needs_branch_unit),
-    .io_reserve_0_bits_needs_CSRs                (io_backend_packet_0_bits_needs_CSRs),
-    .io_reserve_0_bits_SUBTRACT                  (io_backend_packet_0_bits_SUBTRACT),
-    .io_reserve_0_bits_MULTIPLY                  (io_backend_packet_0_bits_MULTIPLY),
-    .io_reserve_0_bits_IS_IMM                    (io_backend_packet_0_bits_IS_IMM),
-    .io_reserve_0_bits_memory_type               (io_backend_packet_0_bits_memory_type),
-    .io_reserve_0_bits_access_width              (io_backend_packet_0_bits_access_width),
-    .io_reserve_1_ready                          (_MOB_io_reserve_1_ready),
+    .io_reserve_0_bits_needs_CSRs
+      (io_backend_packet_0_bits_needs_CSRs),
+    .io_reserve_0_bits_SUBTRACT
+      (io_backend_packet_0_bits_SUBTRACT),
+    .io_reserve_0_bits_MULTIPLY
+      (io_backend_packet_0_bits_MULTIPLY),
+    .io_reserve_0_bits_IS_IMM                           (io_backend_packet_0_bits_IS_IMM),
+    .io_reserve_0_bits_memory_type
+      (io_backend_packet_0_bits_memory_type),
+    .io_reserve_0_bits_access_width
+      (io_backend_packet_0_bits_access_width),
+    .io_reserve_1_ready                                 (_MOB_io_reserve_1_ready),
     .io_reserve_1_valid
       (_MOB_io_reserve_1_valid_T & io_backend_packet_1_valid),
     .io_reserve_1_bits_ready_bits_RS1_ready
       (io_backend_packet_1_bits_ready_bits_RS1_ready),
     .io_reserve_1_bits_ready_bits_RS2_ready
       (io_backend_packet_1_bits_ready_bits_RS2_ready),
-    .io_reserve_1_bits_RDold                     (io_backend_packet_1_bits_RDold),
-    .io_reserve_1_bits_RD                        (io_backend_packet_1_bits_RD),
-    .io_reserve_1_bits_RD_valid                  (io_backend_packet_1_bits_RD_valid),
-    .io_reserve_1_bits_RS1                       (io_backend_packet_1_bits_RS1),
-    .io_reserve_1_bits_RS1_valid                 (io_backend_packet_1_bits_RS1_valid),
-    .io_reserve_1_bits_RS2                       (io_backend_packet_1_bits_RS2),
-    .io_reserve_1_bits_RS2_valid                 (io_backend_packet_1_bits_RS2_valid),
-    .io_reserve_1_bits_IMM                       (io_backend_packet_1_bits_IMM),
-    .io_reserve_1_bits_FUNCT3                    (io_backend_packet_1_bits_FUNCT3),
-    .io_reserve_1_bits_packet_index              (io_backend_packet_1_bits_packet_index),
-    .io_reserve_1_bits_ROB_index                 (io_backend_packet_1_bits_ROB_index),
-    .io_reserve_1_bits_MOB_index                 (io_backend_packet_1_bits_MOB_index),
+    .io_reserve_1_bits_RDold                            (io_backend_packet_1_bits_RDold),
+    .io_reserve_1_bits_RD                               (io_backend_packet_1_bits_RD),
+    .io_reserve_1_bits_RD_valid
+      (io_backend_packet_1_bits_RD_valid),
+    .io_reserve_1_bits_RS1                              (io_backend_packet_1_bits_RS1),
+    .io_reserve_1_bits_RS1_valid
+      (io_backend_packet_1_bits_RS1_valid),
+    .io_reserve_1_bits_RS2                              (io_backend_packet_1_bits_RS2),
+    .io_reserve_1_bits_RS2_valid
+      (io_backend_packet_1_bits_RS2_valid),
+    .io_reserve_1_bits_IMM                              (io_backend_packet_1_bits_IMM),
+    .io_reserve_1_bits_FUNCT3                           (io_backend_packet_1_bits_FUNCT3),
+    .io_reserve_1_bits_packet_index
+      (io_backend_packet_1_bits_packet_index),
+    .io_reserve_1_bits_ROB_index
+      (io_backend_packet_1_bits_ROB_index),
+    .io_reserve_1_bits_MOB_index
+      (io_backend_packet_1_bits_MOB_index),
     .io_reserve_1_bits_instructionType
       (io_backend_packet_1_bits_instructionType),
-    .io_reserve_1_bits_portID                    (io_backend_packet_1_bits_portID),
-    .io_reserve_1_bits_RS_type                   (io_backend_packet_1_bits_RS_type),
-    .io_reserve_1_bits_needs_ALU                 (io_backend_packet_1_bits_needs_ALU),
+    .io_reserve_1_bits_portID                           (io_backend_packet_1_bits_portID),
+    .io_reserve_1_bits_RS_type
+      (io_backend_packet_1_bits_RS_type),
+    .io_reserve_1_bits_needs_ALU
+      (io_backend_packet_1_bits_needs_ALU),
     .io_reserve_1_bits_needs_branch_unit
       (io_backend_packet_1_bits_needs_branch_unit),
-    .io_reserve_1_bits_needs_CSRs                (io_backend_packet_1_bits_needs_CSRs),
-    .io_reserve_1_bits_SUBTRACT                  (io_backend_packet_1_bits_SUBTRACT),
-    .io_reserve_1_bits_MULTIPLY                  (io_backend_packet_1_bits_MULTIPLY),
-    .io_reserve_1_bits_IS_IMM                    (io_backend_packet_1_bits_IS_IMM),
-    .io_reserve_1_bits_memory_type               (io_backend_packet_1_bits_memory_type),
-    .io_reserve_1_bits_access_width              (io_backend_packet_1_bits_access_width),
-    .io_reserve_2_ready                          (_MOB_io_reserve_2_ready),
+    .io_reserve_1_bits_needs_CSRs
+      (io_backend_packet_1_bits_needs_CSRs),
+    .io_reserve_1_bits_SUBTRACT
+      (io_backend_packet_1_bits_SUBTRACT),
+    .io_reserve_1_bits_MULTIPLY
+      (io_backend_packet_1_bits_MULTIPLY),
+    .io_reserve_1_bits_IS_IMM                           (io_backend_packet_1_bits_IS_IMM),
+    .io_reserve_1_bits_memory_type
+      (io_backend_packet_1_bits_memory_type),
+    .io_reserve_1_bits_access_width
+      (io_backend_packet_1_bits_access_width),
+    .io_reserve_2_ready                                 (_MOB_io_reserve_2_ready),
     .io_reserve_2_valid
       (_MOB_io_reserve_2_valid_T & io_backend_packet_2_valid),
     .io_reserve_2_bits_ready_bits_RS1_ready
       (io_backend_packet_2_bits_ready_bits_RS1_ready),
     .io_reserve_2_bits_ready_bits_RS2_ready
       (io_backend_packet_2_bits_ready_bits_RS2_ready),
-    .io_reserve_2_bits_RDold                     (io_backend_packet_2_bits_RDold),
-    .io_reserve_2_bits_RD                        (io_backend_packet_2_bits_RD),
-    .io_reserve_2_bits_RD_valid                  (io_backend_packet_2_bits_RD_valid),
-    .io_reserve_2_bits_RS1                       (io_backend_packet_2_bits_RS1),
-    .io_reserve_2_bits_RS1_valid                 (io_backend_packet_2_bits_RS1_valid),
-    .io_reserve_2_bits_RS2                       (io_backend_packet_2_bits_RS2),
-    .io_reserve_2_bits_RS2_valid                 (io_backend_packet_2_bits_RS2_valid),
-    .io_reserve_2_bits_IMM                       (io_backend_packet_2_bits_IMM),
-    .io_reserve_2_bits_FUNCT3                    (io_backend_packet_2_bits_FUNCT3),
-    .io_reserve_2_bits_packet_index              (io_backend_packet_2_bits_packet_index),
-    .io_reserve_2_bits_ROB_index                 (io_backend_packet_2_bits_ROB_index),
-    .io_reserve_2_bits_MOB_index                 (io_backend_packet_2_bits_MOB_index),
+    .io_reserve_2_bits_RDold                            (io_backend_packet_2_bits_RDold),
+    .io_reserve_2_bits_RD                               (io_backend_packet_2_bits_RD),
+    .io_reserve_2_bits_RD_valid
+      (io_backend_packet_2_bits_RD_valid),
+    .io_reserve_2_bits_RS1                              (io_backend_packet_2_bits_RS1),
+    .io_reserve_2_bits_RS1_valid
+      (io_backend_packet_2_bits_RS1_valid),
+    .io_reserve_2_bits_RS2                              (io_backend_packet_2_bits_RS2),
+    .io_reserve_2_bits_RS2_valid
+      (io_backend_packet_2_bits_RS2_valid),
+    .io_reserve_2_bits_IMM                              (io_backend_packet_2_bits_IMM),
+    .io_reserve_2_bits_FUNCT3                           (io_backend_packet_2_bits_FUNCT3),
+    .io_reserve_2_bits_packet_index
+      (io_backend_packet_2_bits_packet_index),
+    .io_reserve_2_bits_ROB_index
+      (io_backend_packet_2_bits_ROB_index),
+    .io_reserve_2_bits_MOB_index
+      (io_backend_packet_2_bits_MOB_index),
     .io_reserve_2_bits_instructionType
       (io_backend_packet_2_bits_instructionType),
-    .io_reserve_2_bits_portID                    (io_backend_packet_2_bits_portID),
-    .io_reserve_2_bits_RS_type                   (io_backend_packet_2_bits_RS_type),
-    .io_reserve_2_bits_needs_ALU                 (io_backend_packet_2_bits_needs_ALU),
+    .io_reserve_2_bits_portID                           (io_backend_packet_2_bits_portID),
+    .io_reserve_2_bits_RS_type
+      (io_backend_packet_2_bits_RS_type),
+    .io_reserve_2_bits_needs_ALU
+      (io_backend_packet_2_bits_needs_ALU),
     .io_reserve_2_bits_needs_branch_unit
       (io_backend_packet_2_bits_needs_branch_unit),
-    .io_reserve_2_bits_needs_CSRs                (io_backend_packet_2_bits_needs_CSRs),
-    .io_reserve_2_bits_SUBTRACT                  (io_backend_packet_2_bits_SUBTRACT),
-    .io_reserve_2_bits_MULTIPLY                  (io_backend_packet_2_bits_MULTIPLY),
-    .io_reserve_2_bits_IS_IMM                    (io_backend_packet_2_bits_IS_IMM),
-    .io_reserve_2_bits_memory_type               (io_backend_packet_2_bits_memory_type),
-    .io_reserve_2_bits_access_width              (io_backend_packet_2_bits_access_width),
-    .io_reserve_3_ready                          (_MOB_io_reserve_3_ready),
+    .io_reserve_2_bits_needs_CSRs
+      (io_backend_packet_2_bits_needs_CSRs),
+    .io_reserve_2_bits_SUBTRACT
+      (io_backend_packet_2_bits_SUBTRACT),
+    .io_reserve_2_bits_MULTIPLY
+      (io_backend_packet_2_bits_MULTIPLY),
+    .io_reserve_2_bits_IS_IMM                           (io_backend_packet_2_bits_IS_IMM),
+    .io_reserve_2_bits_memory_type
+      (io_backend_packet_2_bits_memory_type),
+    .io_reserve_2_bits_access_width
+      (io_backend_packet_2_bits_access_width),
+    .io_reserve_3_ready                                 (_MOB_io_reserve_3_ready),
     .io_reserve_3_valid
       (_MOB_io_reserve_3_valid_T & io_backend_packet_3_valid),
     .io_reserve_3_bits_ready_bits_RS1_ready
       (io_backend_packet_3_bits_ready_bits_RS1_ready),
     .io_reserve_3_bits_ready_bits_RS2_ready
       (io_backend_packet_3_bits_ready_bits_RS2_ready),
-    .io_reserve_3_bits_RDold                     (io_backend_packet_3_bits_RDold),
-    .io_reserve_3_bits_RD                        (io_backend_packet_3_bits_RD),
-    .io_reserve_3_bits_RD_valid                  (io_backend_packet_3_bits_RD_valid),
-    .io_reserve_3_bits_RS1                       (io_backend_packet_3_bits_RS1),
-    .io_reserve_3_bits_RS1_valid                 (io_backend_packet_3_bits_RS1_valid),
-    .io_reserve_3_bits_RS2                       (io_backend_packet_3_bits_RS2),
-    .io_reserve_3_bits_RS2_valid                 (io_backend_packet_3_bits_RS2_valid),
-    .io_reserve_3_bits_IMM                       (io_backend_packet_3_bits_IMM),
-    .io_reserve_3_bits_FUNCT3                    (io_backend_packet_3_bits_FUNCT3),
-    .io_reserve_3_bits_packet_index              (io_backend_packet_3_bits_packet_index),
-    .io_reserve_3_bits_ROB_index                 (io_backend_packet_3_bits_ROB_index),
-    .io_reserve_3_bits_MOB_index                 (io_backend_packet_3_bits_MOB_index),
+    .io_reserve_3_bits_RDold                            (io_backend_packet_3_bits_RDold),
+    .io_reserve_3_bits_RD                               (io_backend_packet_3_bits_RD),
+    .io_reserve_3_bits_RD_valid
+      (io_backend_packet_3_bits_RD_valid),
+    .io_reserve_3_bits_RS1                              (io_backend_packet_3_bits_RS1),
+    .io_reserve_3_bits_RS1_valid
+      (io_backend_packet_3_bits_RS1_valid),
+    .io_reserve_3_bits_RS2                              (io_backend_packet_3_bits_RS2),
+    .io_reserve_3_bits_RS2_valid
+      (io_backend_packet_3_bits_RS2_valid),
+    .io_reserve_3_bits_IMM                              (io_backend_packet_3_bits_IMM),
+    .io_reserve_3_bits_FUNCT3                           (io_backend_packet_3_bits_FUNCT3),
+    .io_reserve_3_bits_packet_index
+      (io_backend_packet_3_bits_packet_index),
+    .io_reserve_3_bits_ROB_index
+      (io_backend_packet_3_bits_ROB_index),
+    .io_reserve_3_bits_MOB_index
+      (io_backend_packet_3_bits_MOB_index),
     .io_reserve_3_bits_instructionType
       (io_backend_packet_3_bits_instructionType),
-    .io_reserve_3_bits_portID                    (io_backend_packet_3_bits_portID),
-    .io_reserve_3_bits_RS_type                   (io_backend_packet_3_bits_RS_type),
-    .io_reserve_3_bits_needs_ALU                 (io_backend_packet_3_bits_needs_ALU),
+    .io_reserve_3_bits_portID                           (io_backend_packet_3_bits_portID),
+    .io_reserve_3_bits_RS_type
+      (io_backend_packet_3_bits_RS_type),
+    .io_reserve_3_bits_needs_ALU
+      (io_backend_packet_3_bits_needs_ALU),
     .io_reserve_3_bits_needs_branch_unit
       (io_backend_packet_3_bits_needs_branch_unit),
-    .io_reserve_3_bits_needs_CSRs                (io_backend_packet_3_bits_needs_CSRs),
-    .io_reserve_3_bits_SUBTRACT                  (io_backend_packet_3_bits_SUBTRACT),
-    .io_reserve_3_bits_MULTIPLY                  (io_backend_packet_3_bits_MULTIPLY),
-    .io_reserve_3_bits_IS_IMM                    (io_backend_packet_3_bits_IS_IMM),
-    .io_reserve_3_bits_memory_type               (io_backend_packet_3_bits_memory_type),
-    .io_reserve_3_bits_access_width              (io_backend_packet_3_bits_access_width),
-    .io_reserved_pointers_0_valid                (/* unused */),
-    .io_reserved_pointers_0_bits                 (_MOB_io_reserved_pointers_0_bits),
-    .io_reserved_pointers_1_valid                (/* unused */),
-    .io_reserved_pointers_1_bits                 (_MOB_io_reserved_pointers_1_bits),
-    .io_reserved_pointers_2_valid                (/* unused */),
-    .io_reserved_pointers_2_bits                 (_MOB_io_reserved_pointers_2_bits),
-    .io_reserved_pointers_3_valid                (/* unused */),
-    .io_reserved_pointers_3_bits                 (_MOB_io_reserved_pointers_3_bits),
-    .io_fetch_PC                                 (io_fetch_PC),
-    .io_AGU_output_valid                         (_AGU_io_FU_output_valid),
-    .io_AGU_output_bits_RD                       (_AGU_io_FU_output_bits_RD),
-    .io_AGU_output_bits_RD_data                  (32'h0),
-    .io_AGU_output_bits_RD_valid                 (1'h0),
-    .io_AGU_output_bits_fetch_PC                 (32'h0),
-    .io_AGU_output_bits_branch_taken             (1'h0),
-    .io_AGU_output_bits_target_address           (32'h0),
-    .io_AGU_output_bits_branch_valid             (1'h0),
-    .io_AGU_output_bits_address                  (_AGU_io_FU_output_bits_address),
-    .io_AGU_output_bits_memory_type              (_AGU_io_FU_output_bits_memory_type),
-    .io_AGU_output_bits_access_width             (_AGU_io_FU_output_bits_access_width),
-    .io_AGU_output_bits_is_unsigned              (_AGU_io_FU_output_bits_is_unsigned),
-    .io_AGU_output_bits_wr_data                  (_AGU_io_FU_output_bits_wr_data),
-    .io_AGU_output_bits_MOB_index                (_AGU_io_FU_output_bits_MOB_index),
-    .io_AGU_output_bits_ROB_index                (6'h0),
-    .io_AGU_output_bits_fetch_packet_index       (2'h0),
-    .io_MOB_output_valid                         (_MOB_io_MOB_output_valid),
-    .io_MOB_output_bits_RD                       (_MOB_io_MOB_output_bits_RD),
-    .io_MOB_output_bits_RD_data                  (_MOB_io_MOB_output_bits_RD_data),
-    .io_MOB_output_bits_RD_valid                 (_MOB_io_MOB_output_bits_RD_valid),
-    .io_MOB_output_bits_fetch_PC                 (_MOB_io_MOB_output_bits_fetch_PC),
-    .io_MOB_output_bits_branch_taken             (_MOB_io_MOB_output_bits_branch_taken),
-    .io_MOB_output_bits_target_address           (_MOB_io_MOB_output_bits_target_address),
-    .io_MOB_output_bits_branch_valid             (_MOB_io_MOB_output_bits_branch_valid),
-    .io_MOB_output_bits_address                  (_MOB_io_MOB_output_bits_address),
-    .io_MOB_output_bits_memory_type              (_MOB_io_MOB_output_bits_memory_type),
-    .io_MOB_output_bits_access_width             (_MOB_io_MOB_output_bits_access_width),
-    .io_MOB_output_bits_is_unsigned              (_MOB_io_MOB_output_bits_is_unsigned),
-    .io_MOB_output_bits_wr_data                  (_MOB_io_MOB_output_bits_wr_data),
-    .io_MOB_output_bits_MOB_index                (_MOB_io_MOB_output_bits_MOB_index),
-    .io_MOB_output_bits_ROB_index                (_MOB_io_MOB_output_bits_ROB_index),
+    .io_reserve_3_bits_needs_CSRs
+      (io_backend_packet_3_bits_needs_CSRs),
+    .io_reserve_3_bits_SUBTRACT
+      (io_backend_packet_3_bits_SUBTRACT),
+    .io_reserve_3_bits_MULTIPLY
+      (io_backend_packet_3_bits_MULTIPLY),
+    .io_reserve_3_bits_IS_IMM                           (io_backend_packet_3_bits_IS_IMM),
+    .io_reserve_3_bits_memory_type
+      (io_backend_packet_3_bits_memory_type),
+    .io_reserve_3_bits_access_width
+      (io_backend_packet_3_bits_access_width),
+    .io_reserved_pointers_0_valid                       (io_reserved_pointers_0_valid),
+    .io_reserved_pointers_0_bits
+      (_MOB_io_reserved_pointers_0_bits),
+    .io_reserved_pointers_1_valid                       (io_reserved_pointers_1_valid),
+    .io_reserved_pointers_1_bits
+      (_MOB_io_reserved_pointers_1_bits),
+    .io_reserved_pointers_2_valid                       (io_reserved_pointers_2_valid),
+    .io_reserved_pointers_2_bits
+      (_MOB_io_reserved_pointers_2_bits),
+    .io_reserved_pointers_3_valid                       (io_reserved_pointers_3_valid),
+    .io_reserved_pointers_3_bits
+      (_MOB_io_reserved_pointers_3_bits),
+    .io_fetch_PC                                        (io_fetch_PC),
+    .io_AGU_output_valid                                (_AGU_io_FU_output_valid),
+    .io_AGU_output_bits_RD                              (_AGU_io_FU_output_bits_RD),
+    .io_AGU_output_bits_RD_data                         (32'h0),
+    .io_AGU_output_bits_RD_valid                        (1'h0),
+    .io_AGU_output_bits_fetch_PC                        (32'h0),
+    .io_AGU_output_bits_branch_taken                    (1'h0),
+    .io_AGU_output_bits_target_address                  (32'h0),
+    .io_AGU_output_bits_branch_valid                    (1'h0),
+    .io_AGU_output_bits_address                         (_AGU_io_FU_output_bits_address),
+    .io_AGU_output_bits_memory_type
+      (_AGU_io_FU_output_bits_memory_type),
+    .io_AGU_output_bits_access_width
+      (_AGU_io_FU_output_bits_access_width),
+    .io_AGU_output_bits_is_unsigned
+      (_AGU_io_FU_output_bits_is_unsigned),
+    .io_AGU_output_bits_wr_data                         (_AGU_io_FU_output_bits_wr_data),
+    .io_AGU_output_bits_MOB_index
+      (_AGU_io_FU_output_bits_MOB_index),
+    .io_AGU_output_bits_ROB_index
+      (_AGU_io_FU_output_bits_ROB_index),
+    .io_AGU_output_bits_fetch_packet_index
+      (_AGU_io_FU_output_bits_fetch_packet_index),
+    .io_MOB_output_valid                                (_MOB_io_MOB_output_valid),
+    .io_MOB_output_bits_RD                              (_MOB_io_MOB_output_bits_RD),
+    .io_MOB_output_bits_RD_data                         (_MOB_io_MOB_output_bits_RD_data),
+    .io_MOB_output_bits_RD_valid
+      (_MOB_io_MOB_output_bits_RD_valid),
+    .io_MOB_output_bits_fetch_PC
+      (_MOB_io_MOB_output_bits_fetch_PC),
+    .io_MOB_output_bits_branch_taken
+      (_MOB_io_MOB_output_bits_branch_taken),
+    .io_MOB_output_bits_target_address
+      (_MOB_io_MOB_output_bits_target_address),
+    .io_MOB_output_bits_branch_valid
+      (_MOB_io_MOB_output_bits_branch_valid),
+    .io_MOB_output_bits_address                         (_MOB_io_MOB_output_bits_address),
+    .io_MOB_output_bits_memory_type
+      (_MOB_io_MOB_output_bits_memory_type),
+    .io_MOB_output_bits_access_width
+      (_MOB_io_MOB_output_bits_access_width),
+    .io_MOB_output_bits_is_unsigned
+      (_MOB_io_MOB_output_bits_is_unsigned),
+    .io_MOB_output_bits_wr_data                         (_MOB_io_MOB_output_bits_wr_data),
+    .io_MOB_output_bits_MOB_index
+      (_MOB_io_MOB_output_bits_MOB_index),
+    .io_MOB_output_bits_ROB_index
+      (_MOB_io_MOB_output_bits_ROB_index),
     .io_MOB_output_bits_fetch_packet_index
       (_MOB_io_MOB_output_bits_fetch_packet_index),
-    .io_commit_valid                             (io_commit_valid),
-    .io_commit_bits_fetch_PC                     (io_commit_bits_fetch_PC),
-    .io_commit_bits_T_NT                         (io_commit_bits_T_NT),
-    .io_commit_bits_ROB_index                    (io_commit_bits_ROB_index),
-    .io_commit_bits_br_type                      (io_commit_bits_br_type),
-    .io_commit_bits_fetch_packet_index           (io_commit_bits_fetch_packet_index),
-    .io_commit_bits_is_misprediction             (io_commit_bits_is_misprediction),
-    .io_commit_bits_expected_PC                  (io_commit_bits_expected_PC),
-    .io_commit_bits_GHR                          (io_commit_bits_GHR),
-    .io_commit_bits_TOS                          (io_commit_bits_TOS),
-    .io_commit_bits_NEXT                         (io_commit_bits_NEXT),
-    .io_commit_bits_free_list_front_pointer      (io_commit_bits_free_list_front_pointer),
-    .io_commit_bits_RDold_0                      (io_commit_bits_RDold_0),
-    .io_commit_bits_RDold_1                      (io_commit_bits_RDold_1),
-    .io_commit_bits_RDold_2                      (io_commit_bits_RDold_2),
-    .io_commit_bits_RDold_3                      (io_commit_bits_RDold_3),
-    .io_commit_bits_RD_0                         (io_commit_bits_RD_0),
-    .io_commit_bits_RD_1                         (io_commit_bits_RD_1),
-    .io_commit_bits_RD_2                         (io_commit_bits_RD_2),
-    .io_commit_bits_RD_3                         (io_commit_bits_RD_3),
-    .io_commit_bits_RD_valid_0                   (io_commit_bits_RD_valid_0),
-    .io_commit_bits_RD_valid_1                   (io_commit_bits_RD_valid_1),
-    .io_commit_bits_RD_valid_2                   (io_commit_bits_RD_valid_2),
-    .io_commit_bits_RD_valid_3                   (io_commit_bits_RD_valid_3),
-    .io_backend_memory_request_ready             (io_backend_memory_request_ready),
-    .io_backend_memory_request_valid             (io_backend_memory_request_valid),
-    .io_backend_memory_request_bits_addr         (io_backend_memory_request_bits_addr),
-    .io_backend_memory_request_bits_data         (io_backend_memory_request_bits_data),
+    .io_commit_valid                                    (io_commit_valid),
+    .io_commit_bits_fetch_PC                            (io_commit_bits_fetch_PC),
+    .io_commit_bits_T_NT                                (io_commit_bits_T_NT),
+    .io_commit_bits_ROB_index                           (io_commit_bits_ROB_index),
+    .io_commit_bits_br_type                             (io_commit_bits_br_type),
+    .io_commit_bits_fetch_packet_index
+      (io_commit_bits_fetch_packet_index),
+    .io_commit_bits_is_misprediction                    (io_commit_bits_is_misprediction),
+    .io_commit_bits_expected_PC                         (io_commit_bits_expected_PC),
+    .io_commit_bits_GHR                                 (io_commit_bits_GHR),
+    .io_commit_bits_TOS                                 (io_commit_bits_TOS),
+    .io_commit_bits_NEXT                                (io_commit_bits_NEXT),
+    .io_commit_bits_free_list_front_pointer
+      (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RDold_0                             (io_commit_bits_RDold_0),
+    .io_commit_bits_RDold_1                             (io_commit_bits_RDold_1),
+    .io_commit_bits_RDold_2                             (io_commit_bits_RDold_2),
+    .io_commit_bits_RDold_3                             (io_commit_bits_RDold_3),
+    .io_commit_bits_RD_0                                (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1                                (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2                                (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3                                (io_commit_bits_RD_3),
+    .io_commit_bits_RD_valid_0                          (io_commit_bits_RD_valid_0),
+    .io_commit_bits_RD_valid_1                          (io_commit_bits_RD_valid_1),
+    .io_commit_bits_RD_valid_2                          (io_commit_bits_RD_valid_2),
+    .io_commit_bits_RD_valid_3                          (io_commit_bits_RD_valid_3),
+    .io_partial_commit_ROB_index_0_valid
+      (io_partial_commit_ROB_index_0_valid),
+    .io_partial_commit_ROB_index_0_bits
+      (io_partial_commit_ROB_index_0_bits),
+    .io_partial_commit_ROB_index_1_valid
+      (io_partial_commit_ROB_index_1_valid),
+    .io_partial_commit_ROB_index_1_bits
+      (io_partial_commit_ROB_index_1_bits),
+    .io_partial_commit_ROB_index_2_valid
+      (io_partial_commit_ROB_index_2_valid),
+    .io_partial_commit_ROB_index_2_bits
+      (io_partial_commit_ROB_index_2_bits),
+    .io_partial_commit_ROB_index_3_valid
+      (io_partial_commit_ROB_index_3_valid),
+    .io_partial_commit_ROB_index_3_bits
+      (io_partial_commit_ROB_index_3_bits),
+    .io_partial_commit_MOB_index_0_valid
+      (io_partial_commit_MOB_index_0_valid),
+    .io_partial_commit_MOB_index_0_bits
+      (io_partial_commit_MOB_index_0_bits),
+    .io_partial_commit_MOB_index_1_valid
+      (io_partial_commit_MOB_index_1_valid),
+    .io_partial_commit_MOB_index_1_bits
+      (io_partial_commit_MOB_index_1_bits),
+    .io_partial_commit_MOB_index_2_valid
+      (io_partial_commit_MOB_index_2_valid),
+    .io_partial_commit_MOB_index_2_bits
+      (io_partial_commit_MOB_index_2_bits),
+    .io_partial_commit_MOB_index_3_valid
+      (io_partial_commit_MOB_index_3_valid),
+    .io_partial_commit_MOB_index_3_bits
+      (io_partial_commit_MOB_index_3_bits),
+    .io_backend_memory_request_ready                    (io_backend_memory_request_ready),
+    .io_backend_memory_request_valid                    (io_backend_memory_request_valid),
+    .io_backend_memory_request_bits_addr
+      (io_backend_memory_request_bits_addr),
+    .io_backend_memory_request_bits_data
+      (io_backend_memory_request_bits_data),
     .io_backend_memory_request_bits_memory_type
       (io_backend_memory_request_bits_memory_type),
     .io_backend_memory_request_bits_access_width
       (io_backend_memory_request_bits_access_width),
     .io_backend_memory_request_bits_MOB_index
       (io_backend_memory_request_bits_MOB_index),
-    .io_backend_memory_response_ready            (io_backend_memory_response_ready),
-    .io_backend_memory_response_valid            (io_backend_memory_response_valid),
-    .io_backend_memory_response_bits_addr        (io_backend_memory_response_bits_addr),
-    .io_backend_memory_response_bits_data        (io_backend_memory_response_bits_data),
+    .io_backend_memory_request_bits_packet_index
+      (io_backend_memory_request_bits_packet_index),
+    .io_backend_memory_request_bits_ROB_index
+      (io_backend_memory_request_bits_ROB_index),
+    .io_backend_memory_request_bits_RD
+      (io_backend_memory_request_bits_RD),
+    .io_backend_memory_response_ready
+      (io_backend_memory_response_ready),
+    .io_backend_memory_response_valid
+      (io_backend_memory_response_valid),
+    .io_backend_memory_response_bits_addr
+      (io_backend_memory_response_bits_addr),
+    .io_backend_memory_response_bits_RD
+      (io_backend_memory_response_bits_RD),
+    .io_backend_memory_response_bits_fetch_packet_index
+      (io_backend_memory_response_bits_fetch_packet_index),
+    .io_backend_memory_response_bits_ROB_index
+      (io_backend_memory_response_bits_ROB_index),
+    .io_backend_memory_response_bits_data
+      (io_backend_memory_response_bits_data),
     .io_backend_memory_response_bits_MOB_index
       (io_backend_memory_response_bits_MOB_index)
   );
   sim_nReadmWrite INT_PRF (
     .clock      (clock),
-    .io_raddr_0 (_INT_RS_io_RF_inputs_0_bits_RS1[5:0]),
-    .io_raddr_1 (_INT_RS_io_RF_inputs_0_bits_RS2[5:0]),
-    .io_raddr_2 (_INT_RS_io_RF_inputs_1_bits_RS1[5:0]),
-    .io_raddr_3 (_INT_RS_io_RF_inputs_1_bits_RS2[5:0]),
-    .io_raddr_4 (_INT_RS_io_RF_inputs_2_bits_RS1[5:0]),
-    .io_raddr_5 (_INT_RS_io_RF_inputs_2_bits_RS2[5:0]),
-    .io_raddr_6 (_MEM_RS_io_RF_inputs_0_bits_RS1[5:0]),
-    .io_raddr_7 (_MEM_RS_io_RF_inputs_0_bits_RS2[5:0]),
+    .io_raddr_0 (_INT_RS_io_RF_inputs_0_bits_RS1),
+    .io_raddr_1 (_INT_RS_io_RF_inputs_0_bits_RS2),
+    .io_raddr_2 (_INT_RS_io_RF_inputs_1_bits_RS1),
+    .io_raddr_3 (_INT_RS_io_RF_inputs_1_bits_RS2),
+    .io_raddr_4 (_INT_RS_io_RF_inputs_2_bits_RS1),
+    .io_raddr_5 (_INT_RS_io_RF_inputs_2_bits_RS2),
+    .io_raddr_6 (_MEM_RS_io_RF_inputs_0_bits_RS1),
+    .io_raddr_7 (_MEM_RS_io_RF_inputs_0_bits_RS2),
     .io_rdata_0 (_INT_PRF_io_rdata_0),
     .io_rdata_1 (_INT_PRF_io_rdata_1),
     .io_rdata_2 (_INT_PRF_io_rdata_2),
@@ -1558,10 +1740,10 @@ module backend(
     .io_rdata_5 (_INT_PRF_io_rdata_5),
     .io_rdata_6 (_INT_PRF_io_rdata_6),
     .io_rdata_7 (_INT_PRF_io_rdata_7),
-    .io_waddr_0 (_FU0_io_FU_output_bits_RD[5:0]),
-    .io_waddr_1 (_FU1_io_FU_output_bits_RD[5:0]),
-    .io_waddr_2 (_FU2_io_FU_output_bits_RD[5:0]),
-    .io_waddr_3 (_MOB_io_MOB_output_bits_RD[5:0]),
+    .io_waddr_0 (_FU0_io_FU_output_bits_RD),
+    .io_waddr_1 (_FU1_io_FU_output_bits_RD),
+    .io_waddr_2 (_FU2_io_FU_output_bits_RD),
+    .io_waddr_3 (_MOB_io_MOB_output_bits_RD),
     .io_wen_0   (_FU0_io_FU_output_valid & _FU0_io_FU_output_bits_RD_valid),
     .io_wen_1   (_FU1_io_FU_output_valid & _FU1_io_FU_output_bits_RD_valid),
     .io_wen_2   (_FU2_io_FU_output_valid & _FU2_io_FU_output_bits_RD_valid),
@@ -1858,6 +2040,10 @@ module backend(
       (read_decoded_instructions_3_decoded_instruction_REG_IMM),
     .io_FU_input_bits_decoded_instruction_FUNCT3
       (read_decoded_instructions_3_decoded_instruction_REG_FUNCT3),
+    .io_FU_input_bits_decoded_instruction_packet_index
+      (read_decoded_instructions_3_decoded_instruction_REG_packet_index),
+    .io_FU_input_bits_decoded_instruction_ROB_index
+      (read_decoded_instructions_3_decoded_instruction_REG_ROB_index),
     .io_FU_input_bits_decoded_instruction_MOB_index
       (read_decoded_instructions_3_decoded_instruction_REG_MOB_index),
     .io_FU_input_bits_decoded_instruction_memory_type
@@ -1876,13 +2062,37 @@ module backend(
     .io_FU_output_bits_is_unsigned
       (_AGU_io_FU_output_bits_is_unsigned),
     .io_FU_output_bits_wr_data                         (_AGU_io_FU_output_bits_wr_data),
-    .io_FU_output_bits_MOB_index                       (_AGU_io_FU_output_bits_MOB_index)
+    .io_FU_output_bits_MOB_index                       (_AGU_io_FU_output_bits_MOB_index),
+    .io_FU_output_bits_ROB_index                       (_AGU_io_FU_output_bits_ROB_index),
+    .io_FU_output_bits_fetch_packet_index
+      (_AGU_io_FU_output_bits_fetch_packet_index)
   );
+  assign io_reserved_pointers_0_bits = _MOB_io_reserved_pointers_0_bits;
+  assign io_reserved_pointers_1_bits = _MOB_io_reserved_pointers_1_bits;
+  assign io_reserved_pointers_2_bits = _MOB_io_reserved_pointers_2_bits;
+  assign io_reserved_pointers_3_bits = _MOB_io_reserved_pointers_3_bits;
   assign io_PC_file_exec_addr = _INT_RS_io_RF_inputs_0_bits_ROB_index;
   assign io_backend_packet_0_ready = backend_can_allocate;
   assign io_backend_packet_1_ready = backend_can_allocate;
   assign io_backend_packet_2_ready = backend_can_allocate;
   assign io_backend_packet_3_ready = backend_can_allocate;
+  assign io_MOB_output_valid = _MOB_io_MOB_output_valid;
+  assign io_MOB_output_bits_RD = _MOB_io_MOB_output_bits_RD;
+  assign io_MOB_output_bits_RD_data = _MOB_io_MOB_output_bits_RD_data;
+  assign io_MOB_output_bits_RD_valid = _MOB_io_MOB_output_bits_RD_valid;
+  assign io_MOB_output_bits_fetch_PC = _MOB_io_MOB_output_bits_fetch_PC;
+  assign io_MOB_output_bits_branch_taken = _MOB_io_MOB_output_bits_branch_taken;
+  assign io_MOB_output_bits_target_address = _MOB_io_MOB_output_bits_target_address;
+  assign io_MOB_output_bits_branch_valid = _MOB_io_MOB_output_bits_branch_valid;
+  assign io_MOB_output_bits_address = _MOB_io_MOB_output_bits_address;
+  assign io_MOB_output_bits_memory_type = _MOB_io_MOB_output_bits_memory_type;
+  assign io_MOB_output_bits_access_width = _MOB_io_MOB_output_bits_access_width;
+  assign io_MOB_output_bits_is_unsigned = _MOB_io_MOB_output_bits_is_unsigned;
+  assign io_MOB_output_bits_wr_data = _MOB_io_MOB_output_bits_wr_data;
+  assign io_MOB_output_bits_MOB_index = _MOB_io_MOB_output_bits_MOB_index;
+  assign io_MOB_output_bits_ROB_index = _MOB_io_MOB_output_bits_ROB_index;
+  assign io_MOB_output_bits_fetch_packet_index =
+    _MOB_io_MOB_output_bits_fetch_packet_index;
   assign io_FU_outputs_0_valid = _FU0_io_FU_output_valid;
   assign io_FU_outputs_0_bits_RD = _FU0_io_FU_output_bits_RD;
   assign io_FU_outputs_0_bits_RD_data = _FU0_io_FU_output_bits_RD_data;
@@ -1934,22 +2144,22 @@ module backend(
   assign io_FU_outputs_2_bits_ROB_index = _FU2_io_FU_output_bits_ROB_index;
   assign io_FU_outputs_2_bits_fetch_packet_index =
     _FU2_io_FU_output_bits_fetch_packet_index;
-  assign io_FU_outputs_3_valid = _MOB_io_MOB_output_valid;
-  assign io_FU_outputs_3_bits_RD = _MOB_io_MOB_output_bits_RD;
-  assign io_FU_outputs_3_bits_RD_data = _MOB_io_MOB_output_bits_RD_data;
-  assign io_FU_outputs_3_bits_RD_valid = _MOB_io_MOB_output_bits_RD_valid;
-  assign io_FU_outputs_3_bits_fetch_PC = _MOB_io_MOB_output_bits_fetch_PC;
-  assign io_FU_outputs_3_bits_branch_taken = _MOB_io_MOB_output_bits_branch_taken;
-  assign io_FU_outputs_3_bits_target_address = _MOB_io_MOB_output_bits_target_address;
-  assign io_FU_outputs_3_bits_branch_valid = _MOB_io_MOB_output_bits_branch_valid;
-  assign io_FU_outputs_3_bits_address = _MOB_io_MOB_output_bits_address;
-  assign io_FU_outputs_3_bits_memory_type = _MOB_io_MOB_output_bits_memory_type;
-  assign io_FU_outputs_3_bits_access_width = _MOB_io_MOB_output_bits_access_width;
-  assign io_FU_outputs_3_bits_is_unsigned = _MOB_io_MOB_output_bits_is_unsigned;
-  assign io_FU_outputs_3_bits_wr_data = _MOB_io_MOB_output_bits_wr_data;
-  assign io_FU_outputs_3_bits_MOB_index = _MOB_io_MOB_output_bits_MOB_index;
-  assign io_FU_outputs_3_bits_ROB_index = _MOB_io_MOB_output_bits_ROB_index;
+  assign io_FU_outputs_3_valid = _AGU_io_FU_output_valid;
+  assign io_FU_outputs_3_bits_RD = _AGU_io_FU_output_bits_RD;
+  assign io_FU_outputs_3_bits_RD_data = 32'h0;
+  assign io_FU_outputs_3_bits_RD_valid = 1'h0;
+  assign io_FU_outputs_3_bits_fetch_PC = 32'h0;
+  assign io_FU_outputs_3_bits_branch_taken = 1'h0;
+  assign io_FU_outputs_3_bits_target_address = 32'h0;
+  assign io_FU_outputs_3_bits_branch_valid = 1'h0;
+  assign io_FU_outputs_3_bits_address = _AGU_io_FU_output_bits_address;
+  assign io_FU_outputs_3_bits_memory_type = _AGU_io_FU_output_bits_memory_type;
+  assign io_FU_outputs_3_bits_access_width = _AGU_io_FU_output_bits_access_width;
+  assign io_FU_outputs_3_bits_is_unsigned = _AGU_io_FU_output_bits_is_unsigned;
+  assign io_FU_outputs_3_bits_wr_data = _AGU_io_FU_output_bits_wr_data;
+  assign io_FU_outputs_3_bits_MOB_index = _AGU_io_FU_output_bits_MOB_index;
+  assign io_FU_outputs_3_bits_ROB_index = _AGU_io_FU_output_bits_ROB_index;
   assign io_FU_outputs_3_bits_fetch_packet_index =
-    _MOB_io_MOB_output_bits_fetch_packet_index;
+    _AGU_io_FU_output_bits_fetch_packet_index;
 endmodule
 

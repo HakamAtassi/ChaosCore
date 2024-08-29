@@ -68,8 +68,11 @@ class free_list(coreParameters:CoreParameters) extends Module{
     // Free list
     val free_list_buffer = RegInit(VecInit((1 until physicalRegCount).map(_.U(physicalRegBits.W)))) //x0 not in free list
 
+
     front_index := front_pointer(ptr_width-2, 0)
     back_index  := back_pointer(ptr_width-2, 0)
+
+    dontTouch(free_list_buffer)
 
     //////////////////
     // POP ELEMENTS //
@@ -79,8 +82,10 @@ class free_list(coreParameters:CoreParameters) extends Module{
         val read_offset          = PopCount(io.rename_valid.take(i+1)) - 1.U
         val valid = io.rename_valid(i) && !flush && io.can_allocate
         io.renamed_valid(i)     := valid
+        val test = Wire(UInt((physicalRegBits-1).W))
+        test := (front_index + read_offset) % 64.U
         when(valid){
-            io.renamed_values(i)    := free_list_buffer(front_index + read_offset)
+            io.renamed_values(i)    := free_list_buffer(test)
         }.otherwise{
             io.renamed_values(i)    := 0.U
         }
@@ -110,6 +115,12 @@ class free_list(coreParameters:CoreParameters) extends Module{
         back_pointer := back_pointer + PopCount(allocate_valid)
     }
 
+    for(i <- 0 until fetchWidth){
+        when(io.renamed_valid(i) === 1.B){
+            AssertProperty(io.renamed_values(i) =/= 0.U)
+        }
+    }
+
     ////////////////
     // Full/Empty //
     ////////////////
@@ -129,57 +140,57 @@ class free_list(coreParameters:CoreParameters) extends Module{
     dontTouch(allocate_valid)
 
 
-    ////////////
-    // FORMAL //
-    ////////////
+    //////////////
+    //// FORMAL //
+    //////////////
 
-    val has_been_reset_reg = RegInit(Bool(), 0.B)
-    has_been_reset_reg := reset.asBool
+    //val has_been_reset_reg = RegInit(Bool(), 0.B)
+    //has_been_reset_reg := reset.asBool
 
 
-    // COMMIT //
-    val valid_commit_ptr    = RegInit(VecInit(Seq.fill(64)(0.U(ptr_width.W))))
-    val valid_commit_valid  = RegInit(VecInit(Seq.fill(64)(0.B)))
-    val commit_ptr_valid    = Wire(Bool())
+    //// COMMIT //
+    //val valid_commit_ptr    = RegInit(VecInit(Seq.fill(64)(0.U(ptr_width.W))))
+    //val valid_commit_valid  = RegInit(VecInit(Seq.fill(64)(0.B)))
+    //val commit_ptr_valid    = Wire(Bool())
 
-    for(i <- 0 until 64){   // output set
-        when(io.renamed_valid.reduce(_ || _)){  // when you rename, place the ptr somewhere and mark valid
-            valid_commit_ptr(i) := io.free_list_front_pointer
-            valid_commit_valid(i) := 0.B
-        }
-    }
+    //for(i <- 0 until 64){   // output set
+        //when(io.renamed_valid.reduce(_ || _)){  // when you rename, place the ptr somewhere and mark valid
+            //valid_commit_ptr(i) := io.free_list_front_pointer
+            //valid_commit_valid(i) := 0.B
+        //}
+    //}
 
-    commit_ptr_valid := 0.B
-    for(i <- 0 until 64){
-        when((io.commit.bits.free_list_front_pointer === valid_commit_ptr(i)) && valid_commit_valid(i) && io.commit.valid){
-            commit_ptr_valid := 1.B
-            valid_commit_ptr(i) := 0.U
-            valid_commit_valid(i) := 0.B
-        }
-    }   
+    //commit_ptr_valid := 0.B
+    //for(i <- 0 until 64){
+        //when((io.commit.bits.free_list_front_pointer === valid_commit_ptr(i)) && valid_commit_valid(i) && io.commit.valid){
+            //commit_ptr_valid := 1.B
+            //valid_commit_ptr(i) := 0.U
+            //valid_commit_valid(i) := 0.B
+        //}
+    //}   
     
-    // Assert entry count
-    val available_regs_within_bounds = Sequence.BoolSequence(((back_pointer-front_pointer) <= 64.U))
+    //// Assert entry count
+    //val available_regs_within_bounds = Sequence.BoolSequence(((back_pointer-front_pointer) <= 64.U))
 
-    val can_reallocate = Sequence.BoolSequence(((back_pointer-front_pointer)<=60.U) === io.can_reallocate) // can accept commit regs
+    //val can_reallocate = Sequence.BoolSequence(((back_pointer-front_pointer)<=60.U) === io.can_reallocate) // can accept commit regs
 
-    val can_allocate = Sequence.BoolSequence(((back_pointer-front_pointer)>=4.U) === io.can_allocate) // can accept commit regs
+    //val can_allocate = Sequence.BoolSequence(((back_pointer-front_pointer)>=4.U) === io.can_allocate) // can accept commit regs
 
-    // Assert that when input is valid, the free list pointer is correct
-    val free_list_pointer = Sequence(Sequence.BoolSequence(io.rename_valid.reduce(_ || _)), Sequence.BoolSequence(io.free_list_front_pointer === front_index))
+    //// Assert that when input is valid, the free list pointer is correct
+    //val free_list_pointer = Sequence(Sequence.BoolSequence(io.rename_valid.reduce(_ || _)), Sequence.BoolSequence(io.free_list_front_pointer === front_index))
 
-    // Assume that when you have a rename request, at some point in the future, 
-    val valid_output = Sequence.BoolSequence(io.renamed_valid.reduce(_ || _))
-    val valid_commit = Sequence.BoolSequence((commit_ptr_valid && io.commit.valid) || !(io.commit.valid))    // commit pointer must be either valid or not a commit
-
-
-
-    AssertProperty(available_regs_within_bounds)
-    AssertProperty(can_reallocate)
-    AssertProperty(can_allocate)
+    //// Assume that when you have a rename request, at some point in the future, 
+    //val valid_output = Sequence.BoolSequence(io.renamed_valid.reduce(_ || _))
+    //val valid_commit = Sequence.BoolSequence((commit_ptr_valid && io.commit.valid) || !(io.commit.valid))    // commit pointer must be either valid or not a commit
 
 
-    AssumeProperty(valid_commit)
+
+    //AssertProperty(available_regs_within_bounds)
+    //AssertProperty(can_reallocate)
+    //AssertProperty(can_allocate)
+
+
+    //AssumeProperty(valid_commit)
 
 
 

@@ -30,7 +30,7 @@
 
 module sim_nReadmWrite(
   input         clock,
-  input  [5:0]  io_raddr_0,
+  input  [6:0]  io_raddr_0,
                 io_raddr_1,
                 io_raddr_2,
                 io_raddr_3,
@@ -46,7 +46,7 @@ module sim_nReadmWrite(
                 io_rdata_5,
                 io_rdata_6,
                 io_rdata_7,
-  input  [5:0]  io_waddr_0,
+  input  [6:0]  io_waddr_0,
                 io_waddr_1,
                 io_waddr_2,
                 io_waddr_3,
@@ -60,7 +60,7 @@ module sim_nReadmWrite(
                 io_wdata_3
 );
 
-  mem_64x32 mem_ext (
+  mem_65x32 mem_ext (
     .R0_addr (io_raddr_7),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -96,19 +96,19 @@ module sim_nReadmWrite(
     .W0_addr (io_waddr_3),
     .W0_en   (io_wen_3),
     .W0_clk  (clock),
-    .W0_data (io_waddr_3 == 6'h0 ? 32'h0 : io_wdata_3),
+    .W0_data (io_waddr_3 == 7'h0 ? 32'h0 : io_wdata_3),
     .W1_addr (io_waddr_2),
     .W1_en   (io_wen_2),
     .W1_clk  (clock),
-    .W1_data (io_waddr_2 == 6'h0 ? 32'h0 : io_wdata_2),
+    .W1_data (io_waddr_2 == 7'h0 ? 32'h0 : io_wdata_2),
     .W2_addr (io_waddr_1),
     .W2_en   (io_wen_1),
     .W2_clk  (clock),
-    .W2_data (io_waddr_1 == 6'h0 ? 32'h0 : io_wdata_1),
+    .W2_data (io_waddr_1 == 7'h0 ? 32'h0 : io_wdata_1),
     .W3_addr (io_waddr_0),
     .W3_en   (io_wen_0),
     .W3_clk  (clock),
-    .W3_data (io_waddr_0 == 6'h0 ? 32'h0 : io_wdata_0)
+    .W3_data (io_waddr_0 == 7'h0 ? 32'h0 : io_wdata_0)
   );
 endmodule
 

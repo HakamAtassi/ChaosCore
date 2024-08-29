@@ -73,86 +73,162 @@ module free_list(
 );
 
   wire [4:0]       _available_elemets_6to2;
-  wire [63:0][6:0] _GEN =
-    '{7'h40,
-      7'h3F,
-      7'h3E,
-      7'h3D,
-      7'h3C,
-      7'h3B,
-      7'h3A,
-      7'h39,
-      7'h38,
-      7'h37,
-      7'h36,
-      7'h35,
-      7'h34,
-      7'h33,
-      7'h32,
-      7'h31,
-      7'h30,
-      7'h2F,
-      7'h2E,
-      7'h2D,
-      7'h2C,
-      7'h2B,
-      7'h2A,
-      7'h29,
-      7'h28,
-      7'h27,
-      7'h26,
-      7'h25,
-      7'h24,
-      7'h23,
-      7'h22,
-      7'h21,
-      7'h20,
-      7'h1F,
-      7'h1E,
-      7'h1D,
-      7'h1C,
-      7'h1B,
-      7'h1A,
-      7'h19,
-      7'h18,
-      7'h17,
-      7'h16,
-      7'h15,
-      7'h14,
-      7'h13,
-      7'h12,
-      7'h11,
-      7'h10,
-      7'hF,
-      7'hE,
-      7'hD,
-      7'hC,
-      7'hB,
-      7'hA,
-      7'h9,
-      7'h8,
-      7'h7,
-      7'h6,
-      7'h5,
-      7'h4,
-      7'h3,
-      7'h2,
-      7'h1};
   wire             flush = io_commit_valid & io_commit_bits_is_misprediction;
   reg  [6:0]       front_pointer;
   reg  [6:0]       back_pointer;
+  reg  [6:0]       free_list_buffer_0;
+  reg  [6:0]       free_list_buffer_1;
+  reg  [6:0]       free_list_buffer_2;
+  reg  [6:0]       free_list_buffer_3;
+  reg  [6:0]       free_list_buffer_4;
+  reg  [6:0]       free_list_buffer_5;
+  reg  [6:0]       free_list_buffer_6;
+  reg  [6:0]       free_list_buffer_7;
+  reg  [6:0]       free_list_buffer_8;
+  reg  [6:0]       free_list_buffer_9;
+  reg  [6:0]       free_list_buffer_10;
+  reg  [6:0]       free_list_buffer_11;
+  reg  [6:0]       free_list_buffer_12;
+  reg  [6:0]       free_list_buffer_13;
+  reg  [6:0]       free_list_buffer_14;
+  reg  [6:0]       free_list_buffer_15;
+  reg  [6:0]       free_list_buffer_16;
+  reg  [6:0]       free_list_buffer_17;
+  reg  [6:0]       free_list_buffer_18;
+  reg  [6:0]       free_list_buffer_19;
+  reg  [6:0]       free_list_buffer_20;
+  reg  [6:0]       free_list_buffer_21;
+  reg  [6:0]       free_list_buffer_22;
+  reg  [6:0]       free_list_buffer_23;
+  reg  [6:0]       free_list_buffer_24;
+  reg  [6:0]       free_list_buffer_25;
+  reg  [6:0]       free_list_buffer_26;
+  reg  [6:0]       free_list_buffer_27;
+  reg  [6:0]       free_list_buffer_28;
+  reg  [6:0]       free_list_buffer_29;
+  reg  [6:0]       free_list_buffer_30;
+  reg  [6:0]       free_list_buffer_31;
+  reg  [6:0]       free_list_buffer_32;
+  reg  [6:0]       free_list_buffer_33;
+  reg  [6:0]       free_list_buffer_34;
+  reg  [6:0]       free_list_buffer_35;
+  reg  [6:0]       free_list_buffer_36;
+  reg  [6:0]       free_list_buffer_37;
+  reg  [6:0]       free_list_buffer_38;
+  reg  [6:0]       free_list_buffer_39;
+  reg  [6:0]       free_list_buffer_40;
+  reg  [6:0]       free_list_buffer_41;
+  reg  [6:0]       free_list_buffer_42;
+  reg  [6:0]       free_list_buffer_43;
+  reg  [6:0]       free_list_buffer_44;
+  reg  [6:0]       free_list_buffer_45;
+  reg  [6:0]       free_list_buffer_46;
+  reg  [6:0]       free_list_buffer_47;
+  reg  [6:0]       free_list_buffer_48;
+  reg  [6:0]       free_list_buffer_49;
+  reg  [6:0]       free_list_buffer_50;
+  reg  [6:0]       free_list_buffer_51;
+  reg  [6:0]       free_list_buffer_52;
+  reg  [6:0]       free_list_buffer_53;
+  reg  [6:0]       free_list_buffer_54;
+  reg  [6:0]       free_list_buffer_55;
+  reg  [6:0]       free_list_buffer_56;
+  reg  [6:0]       free_list_buffer_57;
+  reg  [6:0]       free_list_buffer_58;
+  reg  [6:0]       free_list_buffer_59;
+  reg  [6:0]       free_list_buffer_60;
+  reg  [6:0]       free_list_buffer_61;
+  reg  [6:0]       free_list_buffer_62;
+  reg  [6:0]       free_list_buffer_63;
   wire [5:0]       front_index = front_pointer[5:0];
   wire [5:0]       back_index = back_pointer[5:0];
-  wire [1:0]       _GEN_0 = {1'h0, io_rename_valid_0};
+  wire [1:0]       _GEN = {1'h0, io_rename_valid_0};
   wire             valid = io_rename_valid_0 & ~flush & (|_available_elemets_6to2);
+  wire [6:0]       _test_T_2 =
+    {1'h0, front_index + {5'h0, io_rename_valid_0 - 1'h1}} % 7'h40;
+  wire [63:0][6:0] _GEN_0 =
+    {{free_list_buffer_63},
+     {free_list_buffer_62},
+     {free_list_buffer_61},
+     {free_list_buffer_60},
+     {free_list_buffer_59},
+     {free_list_buffer_58},
+     {free_list_buffer_57},
+     {free_list_buffer_56},
+     {free_list_buffer_55},
+     {free_list_buffer_54},
+     {free_list_buffer_53},
+     {free_list_buffer_52},
+     {free_list_buffer_51},
+     {free_list_buffer_50},
+     {free_list_buffer_49},
+     {free_list_buffer_48},
+     {free_list_buffer_47},
+     {free_list_buffer_46},
+     {free_list_buffer_45},
+     {free_list_buffer_44},
+     {free_list_buffer_43},
+     {free_list_buffer_42},
+     {free_list_buffer_41},
+     {free_list_buffer_40},
+     {free_list_buffer_39},
+     {free_list_buffer_38},
+     {free_list_buffer_37},
+     {free_list_buffer_36},
+     {free_list_buffer_35},
+     {free_list_buffer_34},
+     {free_list_buffer_33},
+     {free_list_buffer_32},
+     {free_list_buffer_31},
+     {free_list_buffer_30},
+     {free_list_buffer_29},
+     {free_list_buffer_28},
+     {free_list_buffer_27},
+     {free_list_buffer_26},
+     {free_list_buffer_25},
+     {free_list_buffer_24},
+     {free_list_buffer_23},
+     {free_list_buffer_22},
+     {free_list_buffer_21},
+     {free_list_buffer_20},
+     {free_list_buffer_19},
+     {free_list_buffer_18},
+     {free_list_buffer_17},
+     {free_list_buffer_16},
+     {free_list_buffer_15},
+     {free_list_buffer_14},
+     {free_list_buffer_13},
+     {free_list_buffer_12},
+     {free_list_buffer_11},
+     {free_list_buffer_10},
+     {free_list_buffer_9},
+     {free_list_buffer_8},
+     {free_list_buffer_7},
+     {free_list_buffer_6},
+     {free_list_buffer_5},
+     {free_list_buffer_4},
+     {free_list_buffer_3},
+     {free_list_buffer_2},
+     {free_list_buffer_1},
+     {free_list_buffer_0}};
+  wire [6:0]       io_renamed_values_0_0 = valid ? _GEN_0[_test_T_2[5:0]] : 7'h0;
   wire [1:0]       _GEN_1 = {1'h0, io_rename_valid_1};
-  wire [1:0]       _front_pointer_T_1 = _GEN_0 + _GEN_1;
+  wire [1:0]       _front_pointer_T_1 = _GEN + _GEN_1;
   wire [2:0]       _GEN_2 = {1'h0, _front_pointer_T_1};
   wire             valid_1 = io_rename_valid_1 & ~flush & (|_available_elemets_6to2);
+  wire [6:0]       _test_T_5 =
+    {1'h0, front_index + {4'h0, _front_pointer_T_1 - 2'h1}} % 7'h40;
+  wire [6:0]       io_renamed_values_1_0 = valid_1 ? _GEN_0[_test_T_5[5:0]] : 7'h0;
   wire [1:0]       _GEN_3 = {1'h0, io_rename_valid_2};
   wire             valid_2 = io_rename_valid_2 & ~flush & (|_available_elemets_6to2);
+  wire [6:0]       _test_T_8 =
+    {1'h0, front_index + {4'h0, _GEN + _GEN_1 + _GEN_3 - 2'h1}} % 7'h40;
+  wire [6:0]       io_renamed_values_2_0 = valid_2 ? _GEN_0[_test_T_8[5:0]] : 7'h0;
   wire [2:0]       _GEN_4 = {1'h0, _GEN_3 + {1'h0, io_rename_valid_3}};
   wire             valid_3 = io_rename_valid_3 & ~flush & (|_available_elemets_6to2);
+  wire [6:0]       _test_T_11 =
+    {1'h0, front_index + {3'h0, _GEN_2 + _GEN_4 - 3'h1}} % 7'h40;
+  wire [6:0]       io_renamed_values_3_0 = valid_3 ? _GEN_0[_test_T_11[5:0]] : 7'h0;
   wire             allocate_valid_0 =
     io_commit_bits_RD_valid_0 & (|io_commit_bits_RD_0) & io_commit_valid;
   wire             allocate_valid_1 =
@@ -161,25 +237,86 @@ module free_list(
     io_commit_bits_RD_valid_2 & (|io_commit_bits_RD_2) & io_commit_valid;
   wire             allocate_valid_3 =
     io_commit_bits_RD_valid_3 & (|io_commit_bits_RD_3) & io_commit_valid;
-  wire [6:0]       available_elemets = back_pointer - front_pointer;
-  wire             io_can_reallocate_0 = available_elemets + 7'h4 < 7'h41;
-  assign _available_elemets_6to2 = available_elemets[6:2];
   reg              hasBeenResetReg;
   initial
     hasBeenResetReg = 1'bx;
   wire             hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;
-  assert property (@(posedge clock) disable iff (~hasBeenReset)
-                   available_elemets < 7'h41);
-  assert property (@(posedge clock) disable iff (~hasBeenReset)
-                   available_elemets < 7'h3D == io_can_reallocate_0);
-  assert property (@(posedge clock) disable iff (~hasBeenReset)
-                   (|(available_elemets[6:2])) == (|_available_elemets_6to2));
-  assume property (@(posedge clock) disable iff (~hasBeenReset) ~io_commit_valid);
+  assert property (@(posedge clock) disable iff (~hasBeenReset) |io_renamed_values_0_0);
+  assert property (@(posedge clock) disable iff (~hasBeenReset) |io_renamed_values_1_0);
+  assert property (@(posedge clock) disable iff (~hasBeenReset) |io_renamed_values_2_0);
+  assert property (@(posedge clock) disable iff (~hasBeenReset) |io_renamed_values_3_0);
+  wire [6:0]       available_elemets = back_pointer - front_pointer;
+  wire             io_can_reallocate_0 = available_elemets + 7'h4 < 7'h41;
+  assign _available_elemets_6to2 = available_elemets[6:2];
   always @(posedge clock) begin
     if (reset) begin
       hasBeenResetReg <= 1'h1;
       front_pointer <= 7'h0;
       back_pointer <= 7'h40;
+      free_list_buffer_0 <= 7'h1;
+      free_list_buffer_1 <= 7'h2;
+      free_list_buffer_2 <= 7'h3;
+      free_list_buffer_3 <= 7'h4;
+      free_list_buffer_4 <= 7'h5;
+      free_list_buffer_5 <= 7'h6;
+      free_list_buffer_6 <= 7'h7;
+      free_list_buffer_7 <= 7'h8;
+      free_list_buffer_8 <= 7'h9;
+      free_list_buffer_9 <= 7'hA;
+      free_list_buffer_10 <= 7'hB;
+      free_list_buffer_11 <= 7'hC;
+      free_list_buffer_12 <= 7'hD;
+      free_list_buffer_13 <= 7'hE;
+      free_list_buffer_14 <= 7'hF;
+      free_list_buffer_15 <= 7'h10;
+      free_list_buffer_16 <= 7'h11;
+      free_list_buffer_17 <= 7'h12;
+      free_list_buffer_18 <= 7'h13;
+      free_list_buffer_19 <= 7'h14;
+      free_list_buffer_20 <= 7'h15;
+      free_list_buffer_21 <= 7'h16;
+      free_list_buffer_22 <= 7'h17;
+      free_list_buffer_23 <= 7'h18;
+      free_list_buffer_24 <= 7'h19;
+      free_list_buffer_25 <= 7'h1A;
+      free_list_buffer_26 <= 7'h1B;
+      free_list_buffer_27 <= 7'h1C;
+      free_list_buffer_28 <= 7'h1D;
+      free_list_buffer_29 <= 7'h1E;
+      free_list_buffer_30 <= 7'h1F;
+      free_list_buffer_31 <= 7'h20;
+      free_list_buffer_32 <= 7'h21;
+      free_list_buffer_33 <= 7'h22;
+      free_list_buffer_34 <= 7'h23;
+      free_list_buffer_35 <= 7'h24;
+      free_list_buffer_36 <= 7'h25;
+      free_list_buffer_37 <= 7'h26;
+      free_list_buffer_38 <= 7'h27;
+      free_list_buffer_39 <= 7'h28;
+      free_list_buffer_40 <= 7'h29;
+      free_list_buffer_41 <= 7'h2A;
+      free_list_buffer_42 <= 7'h2B;
+      free_list_buffer_43 <= 7'h2C;
+      free_list_buffer_44 <= 7'h2D;
+      free_list_buffer_45 <= 7'h2E;
+      free_list_buffer_46 <= 7'h2F;
+      free_list_buffer_47 <= 7'h30;
+      free_list_buffer_48 <= 7'h31;
+      free_list_buffer_49 <= 7'h32;
+      free_list_buffer_50 <= 7'h33;
+      free_list_buffer_51 <= 7'h34;
+      free_list_buffer_52 <= 7'h35;
+      free_list_buffer_53 <= 7'h36;
+      free_list_buffer_54 <= 7'h37;
+      free_list_buffer_55 <= 7'h38;
+      free_list_buffer_56 <= 7'h39;
+      free_list_buffer_57 <= 7'h3A;
+      free_list_buffer_58 <= 7'h3B;
+      free_list_buffer_59 <= 7'h3C;
+      free_list_buffer_60 <= 7'h3D;
+      free_list_buffer_61 <= 7'h3E;
+      free_list_buffer_62 <= 7'h3F;
+      free_list_buffer_63 <= 7'h40;
     end
     else begin
       if (~flush & (|_available_elemets_6to2))
@@ -194,14 +331,10 @@ module free_list(
                + {1'h0, {1'h0, allocate_valid_2} + {1'h0, allocate_valid_3}}};
     end
   end // always @(posedge)
-  assign io_renamed_values_0 =
-    valid ? _GEN[front_index + {5'h0, io_rename_valid_0 - 1'h1}] : 7'h0;
-  assign io_renamed_values_1 =
-    valid_1 ? _GEN[front_index + {4'h0, _front_pointer_T_1 - 2'h1}] : 7'h0;
-  assign io_renamed_values_2 =
-    valid_2 ? _GEN[front_index + {4'h0, _GEN_0 + _GEN_1 + _GEN_3 - 2'h1}] : 7'h0;
-  assign io_renamed_values_3 =
-    valid_3 ? _GEN[front_index + {3'h0, _GEN_2 + _GEN_4 - 3'h1}] : 7'h0;
+  assign io_renamed_values_0 = io_renamed_values_0_0;
+  assign io_renamed_values_1 = io_renamed_values_1_0;
+  assign io_renamed_values_2 = io_renamed_values_2_0;
+  assign io_renamed_values_3 = io_renamed_values_3_0;
   assign io_renamed_valid_0 = valid;
   assign io_renamed_valid_1 = valid_1;
   assign io_renamed_valid_2 = valid_2;

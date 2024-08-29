@@ -174,7 +174,10 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val active_memory_type			= Wire(memory_type_t())
 	val active_access_width			= Wire(access_width_t())
 	val active_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
+	val active_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
+	val active_RD					= Wire(UInt(physicalRegBits.W))
 	val active_data					= Wire(UInt(32.W))									// The currently active request address
+	val active_packet_index			= Wire(UInt(log2Ceil(fetchWidth).W))
 
 	val active_non_cacheable		= Wire(Bool())
 	val active_non_cacheable_read	= Wire(Bool())
@@ -188,6 +191,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val backend_memory_type			= Wire(memory_type_t())
 	val backend_access_width		= Wire(access_width_t())
 	val backend_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
+	val backend_packet_index		= Wire(UInt(log2Ceil(fetchWidth).W))
+	val backend_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
+	val backend_RD					= Wire(UInt(physicalRegBits.W))
 
 	val replay_request_valid		= Wire(Bool())										// Current request valid?
 	val replay_address				= Wire(UInt(32.W))									// The currently active request address
@@ -197,6 +203,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val replay_access_width			= Wire(access_width_t())
 	val replay_data					= Wire(UInt(32.W))
 	val replay_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
+	val replay_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
+	val replay_packet_index			= Wire(UInt(log2Ceil(fetchWidth).W))
+	val replay_RD					= Wire(UInt(physicalRegBits.W))
 
 	val allocate_address			= Wire(UInt(32.W))
 	val allocate_set				= Wire(UInt(log2Ceil(L1_DataCacheSets).W))
@@ -212,6 +221,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val output_address				= Wire(UInt(32.W))
 	val output_operation			= Wire(access_width_t())
 	val output_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
+	val output_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
+	val output_packet_index			= Wire(UInt(log2Ceil(fetchWidth).W))
+	val output_RD					= Wire(UInt(physicalRegBits.W))
 
 	val data_way 					= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
 
@@ -238,6 +250,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	active_memory_type			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_memory_type, 	backend_memory_type)
 	active_access_width			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_access_width, backend_access_width)
 	active_MOB_index			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_MOB_index, 	backend_MOB_index)
+	active_ROB_index			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_ROB_index, 	backend_ROB_index)
+	active_packet_index			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_packet_index,	backend_packet_index)
+	active_RD					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_RD, 			backend_RD)
 
 
 	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.fire) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
@@ -272,13 +287,13 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	backend_memory_type		:=  io.CPU_request.bits.memory_type
 	backend_access_width	:=  io.CPU_request.bits.access_width
 	backend_MOB_index		:=  io.CPU_request.bits.MOB_index
+	backend_packet_index	:=  io.CPU_request.bits.packet_index
+	backend_ROB_index		:=  io.CPU_request.bits.ROB_index
+	backend_RD				:=  io.CPU_request.bits.RD
 
 
 	// FIXME: todo
-	output_data					:= 0.U
-	output_address				:= 0.U
 	output_operation			:= access_width_t.NONE
-	output_MOB_index			:= 0.U
 
 	///////////////////
 	// REQUEST QUEUE //
@@ -736,7 +751,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	// Outgoing request queues
 	// FIXME: change these to shift regs
-	// These are shifted by 2 after a miss because you need 1 cycle to get the miss data (tag lookup)
 	// And another to read out potential eviction data
 
 	// Buffer cacheable requests //
@@ -859,6 +873,10 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	replay_access_width		:=	MSHRs(MSHR_front_index).front.access_width
     replay_data				:=	MSHRs(MSHR_front_index).front.data
 	replay_MOB_index		:=	MSHRs(MSHR_front_index).front.MOB_index
+	replay_ROB_index		:=	MSHRs(MSHR_front_index).front.ROB_index
+	replay_packet_index		:=	MSHRs(MSHR_front_index).front.packet_index
+	replay_RD				:=	MSHRs(MSHR_front_index).front.RD
+
 
 
 	////////////
@@ -875,6 +893,11 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val output_cacheable  = ShiftRegister(active_cacheable, 2)
 	output_address		 := ShiftRegister(active_address, 2)
 	output_operation	 := ShiftRegister(active_access_width, 2)
+	output_RD            := ShiftRegister(active_RD, 2)
+	output_ROB_index	 := ShiftRegister(active_ROB_index, 2)
+	output_packet_index	 := ShiftRegister(active_packet_index, 2)
+
+	
 
 
 	dontTouch(output_address)
@@ -907,6 +930,11 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	cacheable_response_Q.io.enq.valid 			:= output_valid
 	cacheable_response_Q.io.enq.bits.addr  		:= output_address
 	cacheable_response_Q.io.enq.bits.data  		:= output_data
+
+	// FIXME: these cant be dont cares...
+	cacheable_response_Q.io.enq.bits.RD  		:= output_RD
+	cacheable_response_Q.io.enq.bits.ROB_index	:= output_ROB_index
+	cacheable_response_Q.io.enq.bits.fetch_packet_index	:= output_packet_index
 	cacheable_response_Q.io.enq.bits.MOB_index  := output_MOB_index
 	cacheable_response_Q.io.deq.ready 			:= 1.B		// FIXME: not always ready
 
@@ -920,6 +948,12 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	non_cacheable_response_Q.io.enq.valid 			:= axi_response_valid && (axi_response_ID === AXI_NON_CACHEABLE_RESPONSE_ID.U).asBool
 	// FIXME: why top 32 bits??
 	non_cacheable_response_Q.io.enq.bits.addr  		:= non_cacheable_buffer_front.addr
+
+	non_cacheable_response_Q.io.enq.bits.RD  		:= DontCare
+	non_cacheable_response_Q.io.enq.bits.ROB_index	:= DontCare
+	non_cacheable_response_Q.io.enq.bits.fetch_packet_index	:= DontCare
+
+
 	non_cacheable_response_Q.io.enq.bits.data  		:= axi_response.data(255,256-32)	// non cacheable responses are always 32 bits 
 	non_cacheable_response_Q.io.enq.bits.MOB_index  := non_cacheable_buffer_front.MOB_index
 	non_cacheable_response_Q.io.deq.ready 			:= 1.B	// FIXME: not always ready

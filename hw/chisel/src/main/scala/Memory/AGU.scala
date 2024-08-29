@@ -109,6 +109,8 @@ class AGU(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.address       := RegNext(address)         // ADDRESS
     io.FU_output.bits.wr_data       := RegNext(wr_data)         // WR DATA
     io.FU_output.bits.MOB_index     := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    io.FU_output.bits.ROB_index     := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    io.FU_output.bits.fetch_packet_index  := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
     io.FU_output.bits.memory_type   := RegNext(io.FU_input.bits.decoded_instruction.memory_type)
     io.FU_output.bits.access_width  := RegNext(io.FU_input.bits.decoded_instruction.access_width)
 

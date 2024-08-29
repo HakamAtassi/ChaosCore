@@ -31,7 +31,8 @@
 module ROB_WB_mem(
   input        clock,
   input  [5:0] io_addrA,
-  input        io_writeEnableA,
+  input        io_writeDataA_busy,
+               io_writeEnableA,
   input  [5:0] io_addrB,
   input        io_writeDataB_busy,
                io_writeEnableB,
@@ -72,7 +73,7 @@ module ROB_WB_mem(
     .W4_addr (io_addrA),
     .W4_en   (io_writeEnableA),
     .W4_clk  (clock),
-    .W4_data (1'h0)
+    .W4_data (io_writeDataA_busy)
   );
 endmodule
 
