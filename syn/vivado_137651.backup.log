@@ -3,8 +3,8 @@
 # SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
 # IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
 # SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-# Start of session at: Thu Aug 29 20:04:00 2024
-# Process ID: 7413
+# Start of session at: Thu Aug 29 19:15:15 2024
+# Process ID: 137651
 # Current directory: /home/hakam/Repos/ChaosCore/syn
 # Command line: vivado -mode batch -source build.tcl
 # Log file: /home/hakam/Repos/ChaosCore/syn/vivado.log
@@ -13,13 +13,13 @@
 # Platform          :Ubuntu
 # Operating System  :Ubuntu 24.04 LTS
 # Processor Detail  :12th Gen Intel(R) Core(TM) i3-12100F
-# CPU Frequency     :4029.947 MHz
+# CPU Frequency     :1711.448 MHz
 # CPU Physical cores:4
 # CPU Logical cores :8
 # Host memory       :16615 MB
 # Swap memory       :4294 MB
 # Total Virtual     :20910 MB
-# Available Virtual :18703 MB
+# Available Virtual :12635 MB
 #-----------------------------------------------------------
 source build.tcl
 # set top_module "SOC"
@@ -52,9 +52,9 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu3eg
 INFO: [Device 21-403] Loading part xczu3eg-sbva484-1-i
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 7439
+INFO: [Synth 8-7075] Helper process launched with PID 137682
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2604.125 ; gain = 304.691 ; free physical = 8408 ; free virtual = 15985
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2563.535 ; gain = 303.691 ; free physical = 4326 ; free virtual = 10272
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-11065] parameter 'LEVELS' becomes localparam in 'priority_encoder' with formal parameter declaration list [/home/hakam/Repos/ChaosCore/hw/verilog/priority_encoder.v:47]
 WARNING: [Synth 8-11065] parameter 'W' becomes localparam in 'priority_encoder' with formal parameter declaration list [/home/hakam/Repos/ChaosCore/hw/verilog/priority_encoder.v:48]
@@ -326,94 +326,94 @@ WARNING: [Synth 8-6014] Unused sequential element _R0_en_d0_reg was removed.  [/
 WARNING: [Synth 8-6014] Unused sequential element _R0_en_d0_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x471.sv:47]
 WARNING: [Synth 8-6014] Unused sequential element hasBeenResetReg_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/free_list.sv:243]
 WARNING: [Synth 8-6014] Unused sequential element ready_memory_0_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/rename.sv:2279]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_ready_bits_RS1_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9491]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_ready_bits_RS2_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9493]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RDold_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9495]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RD_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9496]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RD_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9497]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9499]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS1_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9500]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9502]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS2_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9503]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9505]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_FUNCT3_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9506]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_packet_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9507]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_ROB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9509]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_MOB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9511]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_instructionType_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9513]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_portID_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9515]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9516]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_needs_ALU_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9517]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_needs_branch_unit_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9519]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_needs_CSRs_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9521]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_SUBTRACT_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9523]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_MULTIPLY_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9525]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_IS_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9527]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_memory_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9528]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_access_width_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9530]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_valid_REG_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:2021]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_ready_bits_RS1_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9533]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_ready_bits_RS2_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9535]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RDold_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9537]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RD_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9538]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RD_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9539]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9541]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS1_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9542]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9544]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS2_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9545]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9547]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_FUNCT3_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9548]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_packet_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9549]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_ROB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9551]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_MOB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9553]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_instructionType_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9555]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_portID_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9557]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9558]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_needs_ALU_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9560]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_needs_branch_unit_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9562]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_needs_CSRs_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9564]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_SUBTRACT_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9566]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_MULTIPLY_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9568]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_IS_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9570]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_memory_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9571]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_access_width_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9573]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_valid_REG_1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:2019]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_ready_bits_RS1_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9576]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_ready_bits_RS2_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9578]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RDold_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9580]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RD_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9581]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RD_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9582]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9584]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS1_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9585]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9587]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS2_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9588]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9590]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_FUNCT3_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9591]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_packet_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9592]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_ROB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9594]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_MOB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9596]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_instructionType_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9598]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_portID_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9600]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9601]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_needs_ALU_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9603]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_needs_branch_unit_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9605]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_needs_CSRs_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9607]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_SUBTRACT_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9609]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_MULTIPLY_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9611]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_IS_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9613]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_memory_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9614]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_access_width_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9616]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_valid_REG_2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:2017]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_ready_bits_RS1_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9619]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_ready_bits_RS2_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9621]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RDold_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9623]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RD_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9624]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RD_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9625]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9627]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS1_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9628]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9630]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS2_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9631]
-WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9633]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_ready_bits_RS1_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9427]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_ready_bits_RS2_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9429]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RDold_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9431]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RD_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9432]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RD_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9433]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9435]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS1_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9436]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9438]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS2_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9439]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9441]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_FUNCT3_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9442]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_packet_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9443]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_ROB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9445]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_MOB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9447]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_instructionType_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9449]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_portID_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9451]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_RS_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9452]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_needs_ALU_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9453]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_needs_branch_unit_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9455]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_needs_CSRs_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9457]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_SUBTRACT_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9459]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_MULTIPLY_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9461]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_IS_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9463]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_memory_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9464]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_access_width_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9466]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_valid_REG_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:1957]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_ready_bits_RS1_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9469]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_ready_bits_RS2_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9471]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RDold_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9473]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RD_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9474]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RD_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9475]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9477]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS1_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9478]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9480]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS2_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9481]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9483]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_FUNCT3_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9484]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_packet_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9485]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_ROB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9487]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_MOB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9489]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_instructionType_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9491]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_portID_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9493]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_RS_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9494]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_needs_ALU_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9496]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_needs_branch_unit_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9498]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_needs_CSRs_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9500]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_SUBTRACT_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9502]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_MULTIPLY_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9504]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_IS_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9506]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_memory_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9507]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_1_access_width_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9509]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_valid_REG_1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:1955]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_ready_bits_RS1_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9512]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_ready_bits_RS2_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9514]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RDold_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9516]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RD_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9517]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RD_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9518]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9520]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS1_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9521]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9523]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS2_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9524]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9526]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_FUNCT3_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9527]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_packet_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9528]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_ROB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9530]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_MOB_index_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9532]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_instructionType_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9534]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_portID_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9536]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_RS_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9537]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_needs_ALU_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9539]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_needs_branch_unit_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9541]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_needs_CSRs_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9543]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_SUBTRACT_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9545]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_MULTIPLY_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9547]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_IS_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9549]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_memory_type_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9550]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_2_access_width_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9552]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_valid_REG_2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:1953]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_ready_bits_RS1_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9555]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_ready_bits_RS2_ready_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9557]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RDold_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9559]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RD_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9560]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RD_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9561]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS1_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9563]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS1_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9564]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS2_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9566]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_RS2_valid_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9567]
+WARNING: [Synth 8-6014] Unused sequential element io_RF_inputs_1_bits_REG_3_IMM_reg was removed.  [/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv:9569]
 INFO: [Common 17-14] Message 'Synth 8-6014' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 WARNING: [Synth 8-4767] Trying to implement RAM ' ' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
 	1: Invalid write to RAM. 
@@ -534,18 +534,18 @@ WARNING: [Synth 8-7129] Port s_axi_awlen[7] in module AXI_debug_printer is eithe
 WARNING: [Synth 8-7129] Port s_axi_awlen[6] in module AXI_debug_printer is either unconnected or has no load
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 3134.055 ; gain = 834.621 ; free physical = 7829 ; free virtual = 15417
+Finished RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 3093.465 ; gain = 833.621 ; free physical = 3731 ; free virtual = 9686
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 3134.055 ; gain = 834.621 ; free physical = 7876 ; free virtual = 15464
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 3093.465 ; gain = 833.621 ; free physical = 3747 ; free virtual = 9702
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 3134.055 ; gain = 834.621 ; free physical = 7876 ; free virtual = 15464
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 3093.465 ; gain = 833.621 ; free physical = 3747 ; free virtual = 9702
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00.32 ; elapsed = 00:00:00.32 . Memory (MB): peak = 3134.055 ; gain = 0.000 ; free physical = 7876 ; free virtual = 15464
+Netlist sorting complete. Time (s): cpu = 00:00:00.32 ; elapsed = 00:00:00.32 . Memory (MB): peak = 3093.465 ; gain = 0.000 ; free physical = 3748 ; free virtual = 9702
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
@@ -554,13 +554,13 @@ Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
 Finished Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3266.898 ; gain = 0.000 ; free physical = 7836 ; free virtual = 15440
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3225.309 ; gain = 0.000 ; free physical = 3721 ; free virtual = 9675
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.36 ; elapsed = 00:00:00.15 . Memory (MB): peak = 3278.820 ; gain = 0.000 ; free physical = 7833 ; free virtual = 15437
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.36 ; elapsed = 00:00:00.15 . Memory (MB): peak = 3237.230 ; gain = 0.000 ; free physical = 3717 ; free virtual = 9672
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:22 ; elapsed = 00:00:21 . Memory (MB): peak = 3278.820 ; gain = 979.387 ; free physical = 6807 ; free virtual = 14412
+Finished Constraint Validation : Time (s): cpu = 00:00:22 ; elapsed = 00:00:21 . Memory (MB): peak = 3237.230 ; gain = 977.387 ; free physical = 2769 ; free virtual = 8725
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
@@ -568,13 +568,13 @@ Start Loading Part and Timing Information
 Loading part: xczu3eg-sbva484-1-i
 INFO: [Synth 8-6742] Reading net delay rules and data
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:22 ; elapsed = 00:00:21 . Memory (MB): peak = 3286.824 ; gain = 987.391 ; free physical = 6807 ; free virtual = 14412
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:22 ; elapsed = 00:00:21 . Memory (MB): peak = 3245.234 ; gain = 985.391 ; free physical = 2761 ; free virtual = 8717
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:22 ; elapsed = 00:00:21 . Memory (MB): peak = 3286.824 ; gain = 987.391 ; free physical = 6799 ; free virtual = 14404
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:22 ; elapsed = 00:00:21 . Memory (MB): peak = 3245.234 ; gain = 985.391 ; free physical = 2761 ; free virtual = 8717
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-6430] The Block RAM "mem_65536x2:/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
 WARNING: [Synth 8-6430] The Block RAM "mem_65536x2:/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
@@ -599,7 +599,7 @@ INFO: [Synth 8-6904] The RAM "ram_2x352:/Memory_reg" of size (depth=2 x width=35
 INFO: [Synth 8-6904] The RAM "ram_8x138:/Memory_reg" of size (depth=8 x width=138) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "ram_3x138:/Memory_reg" of size (depth=3 x width=138) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:33 ; elapsed = 00:00:34 . Memory (MB): peak = 3286.824 ; gain = 987.391 ; free physical = 1884 ; free virtual = 9500
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:35 ; elapsed = 00:00:36 . Memory (MB): peak = 3245.234 ; gain = 985.391 ; free physical = 243 ; free virtual = 3888
 ---------------------------------------------------------------------------------
 RAM Pipeline Warning: Read Address Register Found For RAM Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM Memory_reg. We will not be able to pipeline it. This may degrade performance. 
@@ -1320,7 +1320,7 @@ INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cach
 INFO: [Common 17-14] Message 'Synth 8-3333' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 INFO: [Common 17-14] Message 'Synth 8-3333' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:11 ; elapsed = 00:01:24 . Memory (MB): peak = 3302.836 ; gain = 1003.402 ; free physical = 174 ; free virtual = 7796
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:14 ; elapsed = 00:01:30 . Memory (MB): peak = 3261.246 ; gain = 1001.402 ; free physical = 339 ; free virtual = 2195
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -1416,7 +1416,7 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:17 ; elapsed = 00:01:30 . Memory (MB): peak = 3457.883 ; gain = 1158.449 ; free physical = 180 ; free virtual = 7684
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:21 ; elapsed = 00:01:39 . Memory (MB): peak = 3416.293 ; gain = 1156.449 ; free physical = 167 ; free virtual = 2001
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
@@ -1430,7 +1430,7 @@ RAM Pipeline Warning: Read Address Register Found For RAM bp/BTB/BTB_memory/mem_
 INFO: [Synth 8-5582] The block RAM "ChaosCore_tilei_2/\ChaosCore_tile/ChaosCore/frontend/instruction_fetch /bp/BTB/BTB_memory/mem_ext/Memory_reg" originally mapped as a shallow cascade chain, is remapped into deep block RAM for following reason(s): The timing constraints suggest that the chosen mapping will yield better timing results.
 WARNING: [Synth 8-6430] The Block RAM "ChaosCore_tilei_2/\ChaosCore_tile/ChaosCore/frontend/instruction_fetch /bp/BTB/BTB_memory/mem_ext/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:02:12 ; elapsed = 00:02:26 . Memory (MB): peak = 4002.500 ; gain = 1703.066 ; free physical = 231 ; free virtual = 7207
+Finished Timing Optimization : Time (s): cpu = 00:02:16 ; elapsed = 00:02:37 . Memory (MB): peak = 3960.598 ; gain = 1700.754 ; free physical = 217 ; free virtual = 1529
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -1523,203 +1523,3 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-7067] Removed DRAM instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/instruction_Q/ram_ext/Memory_reg_0_15_196_209 from module SOC_GT0__2_tempName due to constant propagation
-INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-INFO: [Synth 8-7067] Removed DRAM instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/instruction_Q/ram_ext/Memory_reg_0_15_196_209 from module SOC_GT0__2_tempName due to constant propagation
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_1_0_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_1_1_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_2_0_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_2_0_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_2_1_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_2_1_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_4 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_5 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_6 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_1/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
----------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:02:17 ; elapsed = 00:02:38 . Memory (MB): peak = 4014.426 ; gain = 1714.992 ; free physical = 261 ; free virtual = 5013
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start IO Insertion
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Flattening Before IO Insertion
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Flattening Before IO Insertion
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Final Netlist Cleanup
----------------------------------------------------------------------------------
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_1_0_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_1_1_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_2_0_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_2_0_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_2_1_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/gshare/PHT/mem_ext/Memory_reg_2_1_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_4 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_5 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_6 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
-INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
----------------------------------------------------------------------------------
-Finished Final Netlist Cleanup
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:02:21 ; elapsed = 00:02:44 . Memory (MB): peak = 4027.832 ; gain = 1728.398 ; free physical = 190 ; free virtual = 4962
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Renaming Generated Instances
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:02:21 ; elapsed = 00:02:44 . Memory (MB): peak = 4027.832 ; gain = 1728.398 ; free physical = 193 ; free virtual = 4965
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Rebuilding User Hierarchy
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:23 ; elapsed = 00:02:46 . Memory (MB): peak = 4027.832 ; gain = 1728.398 ; free physical = 197 ; free virtual = 4971
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Renaming Generated Ports
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:02:23 ; elapsed = 00:02:46 . Memory (MB): peak = 4027.832 ; gain = 1728.398 ; free physical = 202 ; free virtual = 4976
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Handling Custom Attributes
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:02:24 ; elapsed = 00:02:47 . Memory (MB): peak = 4027.832 ; gain = 1728.398 ; free physical = 197 ; free virtual = 4976
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Renaming Generated Nets
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:02:24 ; elapsed = 00:02:47 . Memory (MB): peak = 4027.832 ; gain = 1728.398 ; free physical = 197 ; free virtual = 4976
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Writing Synthesis Report
----------------------------------------------------------------------------------
-
-Report BlackBoxes: 
-+-+--------------+----------+
-| |BlackBox name |Instances |
-+-+--------------+----------+
-+-+--------------+----------+
-
-Report Cell Usage: 
-+------+----------+------+
-|      |Cell      |Count |
-+------+----------+------+
-|1     |CARRY8    |   139|
-|2     |LUT1      |   110|
-|3     |LUT2      |  1219|
-|4     |LUT3      |  2983|
-|5     |LUT4      |  2256|
-|6     |LUT5      |  6715|
-|7     |LUT6      | 11761|
-|8     |MUXF7     |  1120|
-|9     |MUXF8     |   299|
-|10    |RAM256X1S |   256|
-|11    |RAM32M    |     3|
-|12    |RAM32M16  |   198|
-|13    |RAM64M    |     2|
-|14    |RAM64M8   |   222|
-|15    |RAM64X1S  |    22|
-|16    |RAMB18E2  |     1|
-|17    |RAMB36E2  |    20|
-|20    |FDRE      | 14556|
-|21    |FDSE      |   137|
-+------+----------+------+
----------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:02:24 ; elapsed = 00:02:47 . Memory (MB): peak = 4027.832 ; gain = 1728.398 ; free physical = 197 ; free virtual = 4977
----------------------------------------------------------------------------------
-Synthesis finished with 0 errors, 0 critical warnings and 472 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:02:19 ; elapsed = 00:02:46 . Memory (MB): peak = 4027.832 ; gain = 1583.633 ; free physical = 10233 ; free virtual = 15011
-Synthesis Optimization Complete : Time (s): cpu = 00:02:26 ; elapsed = 00:02:53 . Memory (MB): peak = 4027.832 ; gain = 1728.398 ; free physical = 10241 ; free virtual = 15014
-INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00.27 ; elapsed = 00:00:00.26 . Memory (MB): peak = 4027.832 ; gain = 0.000 ; free physical = 10243 ; free virtual = 15023
-INFO: [Netlist 29-17] Analyzing 2261 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
-INFO: [Project 1-570] Preparing netlist for logic optimization
-Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
-Finished Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
-INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_1 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_2 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_0/mem_ext/Memory_reg_3 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_0 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_1 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_2 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg_3 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4027.832 ; gain = 0.000 ; free physical = 10215 ; free virtual = 15027
-INFO: [Project 1-111] Unisim Transformation Summary:
-  A total of 703 instances were transformed.
-  RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 256 instances
-  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 3 instances
-  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 198 instances
-  RAM64M => RAM64M (RAMD64E(x4)): 2 instances
-  RAM64M8 => RAM64M8 (RAMD64E(x8)): 222 instances
-  RAM64X1S => RAM64X1S (RAMS64E): 22 instances
-
-Synth Design complete | Checksum: b5f72466
-INFO: [Common 17-83] Releasing license: Synthesis
-677 Infos, 347 Warnings, 0 Critical Warnings and 0 Errors encountered.
-synth_design completed successfully
-synth_design: Time (s): cpu = 00:02:38 ; elapsed = 00:03:05 . Memory (MB): peak = 4027.832 ; gain = 2610.789 ; free physical = 10215 ; free virtual = 15031
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 12559.626; main = 2957.244; forked = 10080.938
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 19053.398; main = 4027.836; forked = 15025.562
-# report_utilization -file utilization_synth.rpt -hierarchical -hierarchical_depth 10 -hierarchical_percentage
-# report_timing_summary -file timing_synth.rpt
-INFO: [Timing 38-35] Done setting XDC timing constraints.
-INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Temperature grade: I, Delay Type: min_max.
-INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
-WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_GLOBAL_VDISTR
-WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_GLOBAL_VROUTE
-WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_GLOBAL_HDISTR
-WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_GLOBAL_HROUTE
-WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_GLOBAL_BUFG
-WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_GLOBAL_LEAF
-WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clock" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
-Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
-report_timing_summary: Time (s): cpu = 00:00:23 ; elapsed = 00:00:18 . Memory (MB): peak = 4534.832 ; gain = 507.000 ; free physical = 9647 ; free virtual = 14618
-INFO: [Common 17-206] Exiting Vivado at Thu Aug 29 20:07:32 2024...

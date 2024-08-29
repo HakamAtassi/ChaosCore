@@ -139,8 +139,8 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
     // to this (more functional)
   for(i <- 0 until RSEntries){
 
-        schedulable_instructions(i) :=  (reservation_station(i).decoded_instruction.ready_bits.RS1_ready) &&
-                                        (reservation_station(i).decoded_instruction.ready_bits.RS2_ready) && 
+        schedulable_instructions(i) :=  ((reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid) &&
+                                        ((reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid) && 
                                         reservation_station(i).valid
     }
      

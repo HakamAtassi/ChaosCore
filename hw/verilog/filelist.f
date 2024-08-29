@@ -34,8 +34,7 @@ frontend.sv
 RS.sv
 RS_1.sv
 simple_MOB.sv
-mem_65x32.sv
-sim_nReadmWrite.sv
+extern_modules.sv
 ALU.sv
 branch_unit.sv
 FU.sv
@@ -76,7 +75,7 @@ Arbiter2_backend_memory_response.sv
 L1_data_cache.sv
 ChaosCore_tile.sv
 AXI_debug_printer.sv
-extern_modules.sv
 axi_interconnect_2x2.sv
 SOC.sv
+./nReadmWrite.v
 ./axi_interconnect_wrap_2x2.v
