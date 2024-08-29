@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date              : Wed Aug 28 17:43:51 2024
+| Date              : Thu Aug 29 06:59:16 2024
 | Host              : hakam-MS-7D46 running 64-bit Ubuntu 24.04 LTS
 | Command           : report_timing_summary -file timing_synth.rpt
 | Design            : SOC
@@ -139,7 +139,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
     -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-     -1.779    -2922.748                   5627                58375        0.000        0.000                      0                58375        1.927        0.000                       0                 20362  
+     -1.759    -2090.464                   4471                54858        0.000        0.000                      0                54858        1.927        0.000                       0                 16740  
 
 
 Timing constraints are not met.
@@ -162,7 +162,7 @@ clock  {0.000 2.500}        5.000           200.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
 -----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-clock              -1.779    -2922.748                   5627                58375        0.000        0.000                      0                58375        1.927        0.000                       0                 20362  
+clock              -1.759    -2090.464                   4471                54858        0.000        0.000                      0                54858        1.927        0.000                       0                 16740  
 
 
 ------------------------------------------------------------------------------------------------
@@ -193,7 +193,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clock
   To Clock:  clock
 
-Setup :         5627  Failing Endpoints,  Worst Slack       -1.779ns,  Total Violation    -2922.748ns
+Setup :         4471  Failing Endpoints,  Worst Slack       -1.759ns,  Total Violation    -2090.464ns
 Hold  :            0  Failing Endpoints,  Worst Slack        0.000ns,  Total Violation        0.000ns
 PW    :            0  Failing Endpoints,  Worst Slack        1.927ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -201,18 +201,18 @@ PW    :            0  Failing Endpoints,  Worst Slack        1.927ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (VIOLATED) :        -1.779ns  (required time - arrival time)
+Slack (VIOLATED) :        -1.759ns  (required time - arrival time)
   Source:                 ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg[51][0]/C
                             (rising edge-triggered cell FDRE clocked by clock  {rise@0.000ns fall@2.500ns period=5.000ns})
-  Destination:            ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_11_reg/D
-                            (rising edge-triggered cell FDRE clocked by clock  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            predecoder/final_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_224_237/RAMF/I
+                            (rising edge-triggered cell RAMD32 clocked by clock  {rise@0.000ns fall@2.500ns period=5.000ns})
   Path Group:             clock
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            5.000ns  (clock rise@5.000ns - clock rise@0.000ns)
-  Data Path Delay:        6.760ns  (logic 1.666ns (24.645%)  route 5.094ns (75.355%))
-  Logic Levels:           26  (CARRY8=2 LUT2=1 LUT4=3 LUT5=3 LUT6=14 MUXF7=2 MUXF8=1)
-  Clock Path Skew:        -0.011ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.026ns = ( 5.026 - 5.000 ) 
+  Data Path Delay:        6.678ns  (logic 1.785ns (26.730%)  route 4.893ns (73.270%))
+  Logic Levels:           23  (CARRY8=3 LUT3=1 LUT4=2 LUT5=4 LUT6=11 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        0.015ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.052ns = ( 5.052 - 5.000 ) 
     Source Clock Delay      (SCD):    0.037ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -225,80 +225,76 @@ Slack (VIOLATED) :        -1.779ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clock rise edge)      0.000     0.000 r  
                                                       0.000     0.000 r  clock (IN)
-                         net (fo=20361, unset)        0.037     0.037    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/clock
+                         net (fo=16739, unset)        0.037     0.037    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/clock
                          FDRE                                         r  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg[51][0]/C
   -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_FDRE_C_Q)         0.093     0.130 f  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg[51][0]/Q
-                         net (fo=4, unplaced)         0.189     0.319    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg[51][0]_0
-                         LUT6 (Prop_LUT6_I0_O)        0.174     0.493 f  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_0_i_93/O
-                         net (fo=1, unplaced)         0.034     0.527    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_0_i_93_n_0
-                         MUXF7 (Prop_MUXF7_I0_O)      0.090     0.617 f  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_0_i_60__0/O
-                         net (fo=1, unplaced)         0.000     0.617    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_0_i_60__0_n_0
-                         MUXF8 (Prop_MUXF8_I0_O)      0.030     0.647 f  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_0_i_41__0/O
-                         net (fo=1, unplaced)         0.215     0.862    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_0_i_41__0_n_0
-                         LUT6 (Prop_LUT6_I0_O)        0.116     0.978 f  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_0_i_34__0/O
-                         net (fo=3, unplaced)         0.220     1.198    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_3/mem_ext/ROB_output_complete_3
-                         LUT6 (Prop_LUT6_I0_O)        0.040     1.238 f  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_3/mem_ext/Memory_reg_0_i_28__0/O
-                         net (fo=8, unplaced)         0.242     1.480    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/Memory_reg_6
-                         LUT5 (Prop_LUT5_I4_O)        0.040     1.520 f  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/Memory_reg_6_i_3/O
-                         net (fo=6, unplaced)         0.236     1.756    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_2/mem_ext/earliest_taken_index[0]
-                         LUT4 (Prop_LUT4_I2_O)        0.040     1.796 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_2/mem_ext/Memory_reg_2_i_37__0/O
-                         net (fo=32, unplaced)        0.274     2.070    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_2/mem_ext/Memory_reg_2_i_37__0_n_0
-                         LUT6 (Prop_LUT6_I3_O)        0.040     2.110 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_2/mem_ext/Memory_reg_2_i_26__0/O
-                         net (fo=1, unplaced)         0.214     2.324    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/Memory_reg_2_2
-                         LUT6 (Prop_LUT6_I3_O)        0.040     2.364 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/Memory_reg_2_i_13__0/O
-                         net (fo=2, unplaced)         0.214     2.578    ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/_GEN_1[4]
-                         LUT6 (Prop_LUT6_I3_O)        0.040     2.618 r  ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/prediction_valid_REG_i_61/O
-                         net (fo=1, unplaced)         0.214     2.832    ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/prediction_valid_REG_i_61_n_0
-                         LUT5 (Prop_LUT5_I0_O)        0.039     2.871 r  ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/prediction_valid_REG_i_34/O
-                         net (fo=1, unplaced)         0.025     2.896    ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/prediction_valid_REG_i_34_n_0
+                         FDRE (Prop_FDRE_C_Q)         0.093     0.130 r  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg[51][0]/Q
+                         net (fo=3, unplaced)         0.183     0.313    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg[51]_203
+                         LUT6 (Prop_LUT6_I0_O)        0.174     0.487 r  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_6_i_47/O
+                         net (fo=1, unplaced)         0.034     0.521    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_6_i_47_n_0
+                         MUXF7 (Prop_MUXF7_I0_O)      0.090     0.611 r  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_6_i_23/O
+                         net (fo=1, unplaced)         0.000     0.611    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_6_i_23_n_0
+                         MUXF8 (Prop_MUXF8_I0_O)      0.030     0.641 r  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_6_i_11/O
+                         net (fo=1, unplaced)         0.215     0.856    ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_6_i_11_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.116     0.972 r  ChaosCore_tile/ChaosCore/ROB/ROB_WB_banks_3/mem_busy_ext/Memory_reg_6_i_6/O
+                         net (fo=2, unplaced)         0.214     1.186    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_3/mem_ext/ROB_output_complete_3
+                         LUT6 (Prop_LUT6_I0_O)        0.040     1.226 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_3/mem_ext/Memory_reg_6_i_4/O
+                         net (fo=8, unplaced)         0.242     1.468    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_2/mem_ext/Memory_reg_6
+                         LUT5 (Prop_LUT5_I4_O)        0.040     1.508 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_2/mem_ext/Memory_reg_0_i_29/O
+                         net (fo=6, unplaced)         0.236     1.744    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/earliest_taken_index[0]
+                         LUT4 (Prop_LUT4_I2_O)        0.040     1.784 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/Memory_reg_2_i_37__0/O
+                         net (fo=32, unplaced)        0.274     2.058    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/commit_resolved_0_REG_reg_1
+                         LUT6 (Prop_LUT6_I3_O)        0.040     2.098 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/Memory_reg_2_i_26__0/O
+                         net (fo=1, unplaced)         0.214     2.312    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_2/mem_ext/Memory_reg_2_1
+                         LUT6 (Prop_LUT6_I3_O)        0.040     2.352 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_2/mem_ext/Memory_reg_2_i_13__0/O
+                         net (fo=2, unplaced)         0.214     2.566    ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/_GEN_1[4]
+                         LUT6 (Prop_LUT6_I3_O)        0.040     2.606 r  ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/back_pointer[6]_i_44/O
+                         net (fo=1, unplaced)         0.214     2.820    ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/back_pointer[6]_i_44_n_0
+                         LUT5 (Prop_LUT5_I0_O)        0.039     2.859 r  ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/back_pointer[6]_i_21/O
+                         net (fo=1, unplaced)         0.025     2.884    ChaosCore_tile/ChaosCore/ROB/fetch_resolved_banks_3_ext/S[1]
                          CARRY8 (Prop_CARRY8_S[1]_CO[7])
-                                                      0.245     3.141 f  ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/prediction_valid_REG_reg_i_13/CO[7]
-                         net (fo=1, unplaced)         0.007     3.148    ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/prediction_valid_REG_reg_i_13_n_0
+                                                      0.245     3.129 f  ChaosCore_tile/ChaosCore/ROB/fetch_resolved_banks_3_ext/back_pointer_reg[6]_i_8/CO[7]
+                         net (fo=1, unplaced)         0.007     3.136    ChaosCore_tile/ChaosCore/ROB/fetch_resolved_banks_3_ext/back_pointer_reg[6]_i_8_n_0
                          CARRY8 (Prop_CARRY8_CI_CO[2])
-                                                      0.073     3.221 f  ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/prediction_valid_REG_reg_i_7/CO[2]
-                         net (fo=48, unplaced)        0.283     3.504    ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/CO[0]
-                         LUT6 (Prop_LUT6_I5_O)        0.040     3.544 f  ChaosCore_tile/ChaosCore/ROB/fetch_prediction_bank_ext/prediction_valid_REG_i_1/O
-                         net (fo=214, unplaced)       0.317     3.861    ChaosCore_tile/ChaosCore/backend/MOB/reservation_station_0_decoded_instruction_MOB_index_reg[3]
-                         LUT2 (Prop_LUT2_I1_O)        0.040     3.901 r  ChaosCore_tile/ChaosCore/backend/MOB/i__i_3/O
-                         net (fo=2, unplaced)         0.214     4.115    ChaosCore_tile/ChaosCore/backend/_MOB_io_reserve_3_ready
-                         LUT4 (Prop_LUT4_I2_O)        0.040     4.155 r  ChaosCore_tile/ChaosCore/backend/backend_can_allocate/i_/O
-                         net (fo=24, unplaced)        0.267     4.422    ChaosCore_tile/ChaosCore/frontend/rename/renamed_decoded_fetch_packet_Q/ram_ext/p_4_in
-                         LUT5 (Prop_LUT5_I3_O)        0.040     4.462 r  ChaosCore_tile/ChaosCore/frontend/rename/renamed_decoded_fetch_packet_Q/ram_ext/reservation_station_0_decoded_instruction_MOB_index[3]_i_2/O
-                         net (fo=28, unplaced)        0.271     4.733    ChaosCore_tile/ChaosCore/backend/MOB/io_backend_packet_0_valid00_out
-                         LUT4 (Prop_LUT4_I3_O)        0.040     4.773 r  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_5_i_7/O
-                         net (fo=6, unplaced)         0.236     5.009    ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_5_i_7_n_0
-                         LUT6 (Prop_LUT6_I2_O)        0.039     5.048 r  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_1_i_11/O
-                         net (fo=1, unplaced)         0.025     5.073    ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_1_i_11_n_0
-                         MUXF7 (Prop_MUXF7_I0_O)      0.087     5.160 r  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_1_reg_i_10/O
-                         net (fo=1, unplaced)         0.212     5.372    ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_1_reg_i_10_n_0
-                         LUT6 (Prop_LUT6_I5_O)        0.040     5.412 r  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_1_i_8/O
-                         net (fo=1, unplaced)         0.214     5.626    ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_1_i_8_n_0
-                         LUT6 (Prop_LUT6_I5_O)        0.040     5.666 f  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_1_i_5/O
-                         net (fo=13, unplaced)        0.253     5.919    ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_1_i_5_n_0
-                         LUT6 (Prop_LUT6_I0_O)        0.040     5.959 f  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_7_i_7/O
-                         net (fo=3, unplaced)         0.220     6.179    ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_7_i_7_n_0
-                         LUT6 (Prop_LUT6_I3_O)        0.040     6.219 r  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_11_i_3/O
-                         net (fo=1, unplaced)         0.214     6.433    ChaosCore_tile/ChaosCore/frontend/rename/renamed_decoded_fetch_packet_Q/ram_ext/matrix_0_11_reg
-                         LUT6 (Prop_LUT6_I5_O)        0.040     6.473 r  ChaosCore_tile/ChaosCore/frontend/rename/renamed_decoded_fetch_packet_Q/ram_ext/matrix_0_11_i_2/O
-                         net (fo=4, unplaced)         0.226     6.699    ChaosCore_tile/ChaosCore/backend/AGU/matrix_0_11_reg
-                         LUT6 (Prop_LUT6_I4_O)        0.040     6.739 r  ChaosCore_tile/ChaosCore/backend/AGU/matrix_0_11_i_1/O
-                         net (fo=1, unplaced)         0.058     6.797    ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_11_reg_0
-                         FDRE                                         r  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_11_reg/D
+                                                      0.073     3.209 f  ChaosCore_tile/ChaosCore/ROB/fetch_resolved_banks_3_ext/back_pointer_reg[6]_i_4/CO[2]
+                         net (fo=29, unplaced)        0.271     3.480    ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/CO[0]
+                         LUT6 (Prop_LUT6_I5_O)        0.040     3.520 r  ChaosCore_tile/ChaosCore/ROB/ROB_entry_banks_1/mem_ext/io_FU_output_valid_REG_i_2/O
+                         net (fo=164, unplaced)       0.311     3.831    ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/Memory_1_mux_sel_b_pos_0__0_i_4_1
+                         LUT6 (Prop_LUT6_I4_O)        0.040     3.871 r  ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/Memory_reg_0_15_28_41_i_6__0/O
+                         net (fo=3, unplaced)         0.220     4.091    ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/ram_reg[193]_0[32]
+                         LUT6 (Prop_LUT6_I3_O)        0.040     4.131 r  ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/target_address1_carry_i_16/O
+                         net (fo=14, unplaced)        0.255     4.386    ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/target_address1_carry_i_16_n_0
+                         LUT5 (Prop_LUT5_I2_O)        0.040     4.426 f  ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/Memory_reg_0_1_28_41_i_15/O
+                         net (fo=26, unplaced)        0.214     4.640    ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/Memory_reg_0_1_28_41_i_15_n_0
+                         LUT6 (Prop_LUT6_I2_O)        0.100     4.740 f  ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/Memory_reg_1_0_1_i_19/O
+                         net (fo=28, unplaced)        0.271     5.011    ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/Memory_reg_1_0_1_i_19_n_0
+                         LUT3 (Prop_LUT3_I2_O)        0.040     5.051 f  ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/target_address1_carry_i_38/O
+                         net (fo=8, unplaced)         0.242     5.293    ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/target_address1_carry_i_38_n_0
+                         LUT6 (Prop_LUT6_I4_O)        0.040     5.333 f  ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/target_address1_carry_i_19/O
+                         net (fo=41, unplaced)        0.279     5.612    ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/target_address1_carry_i_19_n_0
+                         LUT4 (Prop_LUT4_I2_O)        0.085     5.697 r  ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/target_address1_carry__2_i_6/O
+                         net (fo=1, unplaced)         0.287     5.984    ChaosCore_tile/ChaosCore/frontend/instruction_fetch/predecoder/Memory_reg_0_1_224_237_i_8__0[0]
+                         CARRY8 (Prop_CARRY8_DI[0]_O[4])
+                                                      0.220     6.204 r  ChaosCore_tile/ChaosCore/frontend/instruction_fetch/predecoder/target_address1_carry__2/O[4]
+                         net (fo=2, unplaced)         0.212     6.416    ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/expected_next_PC_reg[31]_1[26]
+                         LUT5 (Prop_LUT5_I3_O)        0.040     6.456 r  ChaosCore_tile/instruction_cache/CPU_response_skid_buffer/Memory_reg_0_1_224_237_i_12__0/O
+                         net (fo=1, unplaced)         0.259     6.715    predecoder/final_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_224_237/DIF0
+                         RAMD32                                       r  predecoder/final_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_224_237/RAMF/I
   -------------------------------------------------------------------    -------------------
 
                          (clock clock rise edge)      5.000     5.000 r  
                                                       0.000     5.000 r  clock (IN)
-                         net (fo=20361, unset)        0.026     5.026    ChaosCore_tile/ChaosCore/backend/MOB/clock
-                         FDRE                                         r  ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_11_reg/C
-                         clock pessimism              0.000     5.026    
-                         clock uncertainty           -0.035     4.991    
-                         FDRE (Setup_FDRE_C_D)        0.027     5.018    ChaosCore_tile/ChaosCore/backend/MOB/matrix_0_11_reg
+                         net (fo=16739, unset)        0.052     5.052    predecoder/final_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_224_237/WCLK
+                         RAMD32                                       r  predecoder/final_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_224_237/RAMF/CLK
+                         clock pessimism              0.000     5.052    
+                         clock uncertainty           -0.035     5.017    
+                         RAMD32 (Setup_RAMD32_CLK_I)
+                                                     -0.061     4.956    predecoder/final_fetch_packet_out_Q/ram_ext/Memory_reg_0_1_224_237/RAMF
   -------------------------------------------------------------------
-                         required time                          5.018    
-                         arrival time                          -6.797    
+                         required time                          4.956    
+                         arrival time                          -6.715    
   -------------------------------------------------------------------
-                         slack                                 -1.779    
+                         slack                                 -1.759    
 
 
 
@@ -325,7 +321,7 @@ Slack (MET) :             0.000ns  (arrival time - required time)
   -------------------------------------------------------------------    -------------------
                          (clock clock rise edge)      0.000     0.000 r  
                                                       0.000     0.000 r  clock (IN)
-                         net (fo=20361, unset)        0.013     0.013    ChaosCore_tile/instruction_cache/LRU_memory/mem_ext/clock
+                         net (fo=16739, unset)        0.013     0.013    ChaosCore_tile/instruction_cache/LRU_memory/mem_ext/clock
                          FDRE                                         r  ChaosCore_tile/instruction_cache/LRU_memory/mem_ext/_R0_addr_d0_reg[3]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_FDRE_C_Q)         0.038     0.051 r  ChaosCore_tile/instruction_cache/LRU_memory/mem_ext/_R0_addr_d0_reg[3]/Q
@@ -335,7 +331,7 @@ Slack (MET) :             0.000ns  (arrival time - required time)
 
                          (clock clock rise edge)      0.000     0.000 r  
                                                       0.000     0.000 r  clock (IN)
-                         net (fo=20361, unset)        0.039     0.039    ChaosCore_tile/instruction_cache/LRU_memory/mem_ext/Memory_reg_0_63_0_0/WCLK
+                         net (fo=16739, unset)        0.039     0.039    ChaosCore_tile/instruction_cache/LRU_memory/mem_ext/Memory_reg_0_63_0_0/WCLK
                          RAMS64E                                      r  ChaosCore_tile/instruction_cache/LRU_memory/mem_ext/Memory_reg_0_63_0_0/SP/CLK
                          clock pessimism              0.000     0.039    
                          RAMS64E (Hold_RAMS64E_CLK_ADR3)

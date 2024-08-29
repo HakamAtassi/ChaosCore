@@ -29,6 +29,11 @@
 
 
 
+
+// FIXME: add partial commit logic
+// when you are flushing, just flush + replay.
+// Do not allow flushes and commits at the same time
+
 package ChaosCore
 
 import chisel3._
@@ -50,6 +55,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
         // COMMIT //
         val commit                      =   ValidIO(new commit(coreParameters))
+        val partial_commit              =   Output(new partial_commit(coreParameters))
         val ROB_index                   =   Output(UInt(log2Ceil(ROBEntries).W))
 
         // PC FILE //
@@ -154,11 +160,12 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val ROB_WB_data = Wire(new ROB_WB(coreParameters))
         ROB_WB_data.busy := 0.B
 
-        // allocate
-        ROB_WB_banks(i).io.addrA          := back_index
-        ROB_WB_banks(i).io.writeDataA     := ROB_WB_data
-        ROB_WB_banks(i).io.writeEnableA   := allocate
+        dontTouch(ROB_WB_data)
 
+        // commit (clear complete when done with the row)
+        ROB_WB_banks(i).io.addrA          := front_index
+        ROB_WB_banks(i).io.writeDataA     := ROB_WB_data
+        ROB_WB_banks(i).io.writeEnableA   := io.commit.valid
         // WB (connect all ports)
 
         // FU0
@@ -211,6 +218,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
         ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
         ROB_entry_data.RD                    := io.ROB_packet.bits.decoded_instruction(i).RD
+        ROB_entry_data.MOB_index             := io.ROB_packet.bits.decoded_instruction(i).MOB_index
         ROB_entry_data.RDold                 := io.ROB_packet.bits.decoded_instruction(i).RDold
         ROB_entry_data.RD_valid              := io.ROB_packet.bits.decoded_instruction(i).RD_valid
 
@@ -262,6 +270,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     
     
     val commit_resolved = Wire(Vec(fetchWidth, new prediction(coreParameters)))
+    //val fwd_commit_resolved = Wire(Vec(fetchWidth, new prediction(coreParameters)))
 
     dontTouch(commit_resolved)
 
@@ -274,15 +283,28 @@ class ROB(coreParameters:CoreParameters) extends Module{
         FU_resolved_prediction.GHR      := DontCare
 
 
+        commit_resolved(i) := fetch_resolved_banks(i).read(front_index + io.commit.valid)
         // allocate
         when(io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U) && (io.FU_outputs(0).bits.branch_valid)){
             fetch_resolved_banks(i).write(io.FU_outputs(0).bits.ROB_index, FU_resolved_prediction)
 
+            when(RegNext(io.FU_outputs(0).bits.ROB_index === front_index && io.FU_outputs(0).bits.fetch_packet_index === i.U)){
+                commit_resolved(i.U) := RegNext(FU_resolved_prediction)
+            }
         }
 
         // commit
-        commit_resolved(i) := Mux(RegNext(io.FU_outputs(0).bits.ROB_index === front_index), RegNext(FU_resolved_prediction), fetch_resolved_banks(i).read(front_index + io.commit.valid))
+        //commit_resolved(i) := Mux(RegNext(io.FU_outputs(0).bits.ROB_index === front_index), RegNext(FU_resolved_prediction), fetch_resolved_banks(i).read(front_index + io.commit.valid))
+
+
+
+
+
+        
     }
+
+
+
 
 
     /////////////////////////////////
@@ -322,6 +344,16 @@ class ROB(coreParameters:CoreParameters) extends Module{
     ////////////
     // COMMIT //
     ////////////
+    ////////////////////
+    // PARTIAL COMMIT //
+    ////////////////////
+    // the commit signal for this module is resposible for committing an entire fetch packet at once. 
+    // this is convinent for things like the front end that updates structures at the granuality of complete fetch packets. 
+    // The load store queue, however, requires a more granular approach to committing, as without it, a store instruction for exmaple may block the entire load store queue
+
+
+
+
 
     val commit_valid        = Wire(Bool())
     val commit_row_complete = Wire(Vec(fetchWidth, Bool()))  // all valid instructions in that row are complete
@@ -334,13 +366,20 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
         val is_load         = ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && ROB_output.ROB_entries(i).valid
         val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
-        commit_row_complete(i) := (is_completed || is_invalid || is_store) && ROB_output.row_valid  // stores happen after they commit
+
+        io.partial_commit.ROB_index(i).valid := (is_completed || is_invalid) && ROB_output.row_valid && !io.commit.bits.is_misprediction
+        io.partial_commit.ROB_index(i).bits  := front_index
+
+        io.partial_commit.MOB_index(i).valid := (is_completed || is_invalid) && ROB_output.row_valid && !io.commit.bits.is_misprediction
+        io.partial_commit.MOB_index(i).bits  := ROB_output.ROB_entries(i).MOB_index
+
+        commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
     }
     commit_valid := commit_row_complete.reduce(_ && _)
 
 
 
-
+    dontTouch(commit_resolved)
 
     val has_taken_branch_vec = VecInit(Seq.tabulate(fetchWidth) { i =>
         ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch

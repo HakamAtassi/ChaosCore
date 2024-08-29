@@ -118,11 +118,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // FRONTEND <> BACKEND //
     /////////////////////////
     frontend.io.FU_outputs <> backend.io.FU_outputs
-
-
-
-
-
+    frontend.io.FU_outputs(3) <> backend.io.MOB_output
 
 
     ////////////////////
@@ -130,10 +126,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ////////////////////
     ROB.io.FU_outputs <> backend.io.FU_outputs 
 
-
-
-
-
+    ROB.io.partial_commit <> backend.io.partial_commit
 
 
     ///////////
@@ -164,12 +157,11 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // FIXME: does the frontend have appropriate backpressure incase the ROB cant accept/is not ready????
     ROB.io.ROB_packet           <> frontend.io.renamed_decoded_fetch_packet
     ROB.io.ROB_packet.valid     := frontend.io.renamed_decoded_fetch_packet.valid && backend_can_allocate
+    
 
-    //when(backend.io.backend_packet.map(_.fire).reduce(_||_)){
-        //printf("Backend accepted packet @ PC: 0x(%x)\n", backend.io.fetch_PC)
-        //printf("=============\n")
-    //}
-
+    for(i <- 0 until fetchWidth){
+        ROB.io.ROB_packet.bits.decoded_instruction(i).MOB_index := backend.io.reserved_pointers(i).bits
+    }
 
 
 

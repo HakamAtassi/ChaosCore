@@ -117,6 +117,7 @@ class BTB_entry(coreParameters:CoreParameters) extends Bundle{
     val BTB_fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 }
 
+// FIXME: needs a vector of valid bits, indicating which entries in the fetch packet are being comitted
 class commit(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
@@ -140,6 +141,12 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val RDold                   = Vec(fetchWidth, UInt(architecturalRegBits.W))
     val RD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
+}
+
+class partial_commit(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+    val ROB_index               = Vec(fetchWidth, ValidIO(UInt(log2Ceil(ROBEntries).W)))
+    val MOB_index               = Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))
 }
 
 //class exception(coreParameters:CoreParameters) extends Bundle{
@@ -399,6 +406,8 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
 
     val memory_type = memory_type_t()
 
+    val MOB_index   =   UInt(log2Ceil(MOBEntries).W)
+
     val RD          =   UInt(physicalRegBits.W)
     val RD_valid    =   Bool()
     val RDold       =   UInt(architecturalRegBits.W)
@@ -517,11 +526,18 @@ class backend_memory_request(coreParameters:CoreParameters) extends Bundle{
     val access_width    = access_width_t()              // B/HW/W
 
     val MOB_index       = UInt(log2Ceil(MOBEntries).W)
+    val packet_index    = UInt(log2Ceil(fetchWidth).W)
+    val ROB_index       = UInt(log2Ceil(ROBEntries).W)
+    val RD              = UInt(physicalRegBits.W)
 }
 
 class backend_memory_response(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val addr            = UInt(32.W)
+    val RD              = UInt(32.W)
+    val fetch_packet_index = UInt(32.W)
+    val ROB_index       = UInt(log2Ceil(ROBEntries).W)
+
     val data            = UInt(32.W)
     //val memory_type     = memory_type_t() // LOAD/STORE
     //val access_width    = access_width_t()              // B/HW/W

@@ -212,10 +212,16 @@ module MOB(
   output [1:0]  io_backend_memory_request_bits_memory_type,
                 io_backend_memory_request_bits_access_width,
   output [3:0]  io_backend_memory_request_bits_MOB_index,
+  output [1:0]  io_backend_memory_request_bits_packet_index,
+  output [5:0]  io_backend_memory_request_bits_ROB_index,
+  output [6:0]  io_backend_memory_request_bits_RD,
   output        io_backend_memory_response_ready,
   input         io_backend_memory_response_valid,
   input  [31:0] io_backend_memory_response_bits_addr,
-                io_backend_memory_response_bits_data,
+                io_backend_memory_response_bits_RD,
+                io_backend_memory_response_bits_fetch_packet_index,
+  input  [5:0]  io_backend_memory_response_bits_ROB_index,
+  input  [31:0] io_backend_memory_response_bits_data,
   input  [3:0]  io_backend_memory_response_bits_MOB_index
 );
 
@@ -18697,6 +18703,9 @@ module MOB(
     _GEN_234 ? _GEN_231[load_index] : fire_store ? _GEN_231[age_vector_15] : 2'h0;
   assign io_backend_memory_request_bits_MOB_index =
     _GEN_234 ? load_index : fire_store ? age_vector_15 : 4'h0;
+  assign io_backend_memory_request_bits_packet_index = 2'h0;
+  assign io_backend_memory_request_bits_ROB_index = 6'h0;
+  assign io_backend_memory_request_bits_RD = 7'h0;
   assign io_backend_memory_response_ready = 1'h1;
 endmodule
 

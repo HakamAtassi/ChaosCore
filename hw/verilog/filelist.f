@@ -33,8 +33,8 @@ rename.sv
 frontend.sv
 RS.sv
 RS_1.sv
-MOB.sv
-mem_64x32.sv
+simple_MOB.sv
+mem_65x32.sv
 sim_nReadmWrite.sv
 ALU.sv
 branch_unit.sv
@@ -46,7 +46,7 @@ mem_64x70.sv
 ROB_shared_mem.sv
 mem_busy_64x1.sv
 ROB_WB_mem.sv
-mem_64x17.sv
+mem_64x21.sv
 ROB_entry_mem.sv
 fetch_64x53.sv
 ROB.sv
@@ -63,9 +63,9 @@ ram_8x352.sv
 Queue8_AXI_request_Q_entry.sv
 ram_2x352.sv
 Queue2_AXI_request_Q_entry.sv
-ram_8x68.sv
+ram_8x138.sv
 Queue8_backend_memory_response.sv
-ram_3x68.sv
+ram_3x138.sv
 Queue3_backend_memory_response.sv
 ram_256x8.sv
 ReadWriteSmem.sv

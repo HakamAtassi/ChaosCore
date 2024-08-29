@@ -36,6 +36,8 @@ module AGU(
   input  [6:0]  io_FU_input_bits_decoded_instruction_RD,
   input  [20:0] io_FU_input_bits_decoded_instruction_IMM,
   input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
+  input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,
+  input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_bits_decoded_instruction_MOB_index,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
@@ -48,7 +50,9 @@ module AGU(
                 io_FU_output_bits_access_width,
   output        io_FU_output_bits_is_unsigned,
   output [31:0] io_FU_output_bits_wr_data,
-  output [3:0]  io_FU_output_bits_MOB_index
+  output [3:0]  io_FU_output_bits_MOB_index,
+  output [5:0]  io_FU_output_bits_ROB_index,
+  output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
   wire        _is_store_T = io_FU_input_bits_decoded_instruction_memory_type == 2'h2;
@@ -61,6 +65,8 @@ module AGU(
   reg  [31:0] io_FU_output_bits_address_REG;
   reg  [31:0] io_FU_output_bits_wr_data_REG;
   reg  [3:0]  io_FU_output_bits_MOB_index_REG;
+  reg  [5:0]  io_FU_output_bits_ROB_index_REG;
+  reg  [1:0]  io_FU_output_bits_fetch_packet_index_REG;
   reg  [1:0]  io_FU_output_bits_memory_type_REG;
   reg  [1:0]  io_FU_output_bits_access_width_REG;
   reg         hasBeenResetReg;
@@ -103,6 +109,9 @@ module AGU(
                 ? {24'h0, io_FU_input_bits_RS2_data[7:0]}
                 : 32'h0;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
+    io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
+    io_FU_output_bits_fetch_packet_index_REG <=
+      io_FU_input_bits_decoded_instruction_packet_index;
     io_FU_output_bits_memory_type_REG <= io_FU_input_bits_decoded_instruction_memory_type;
     io_FU_output_bits_access_width_REG <=
       io_FU_input_bits_decoded_instruction_access_width;
@@ -115,5 +124,7 @@ module AGU(
   assign io_FU_output_bits_is_unsigned = io_FU_output_bits_is_unsigned_REG;
   assign io_FU_output_bits_wr_data = io_FU_output_bits_wr_data_REG;
   assign io_FU_output_bits_MOB_index = io_FU_output_bits_MOB_index_REG;
+  assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;
+  assign io_FU_output_bits_fetch_packet_index = io_FU_output_bits_fetch_packet_index_REG;
 endmodule
 

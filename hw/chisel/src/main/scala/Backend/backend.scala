@@ -52,11 +52,15 @@ class backend(coreParameters:CoreParameters) extends Module{
         // FLUSH //
         val flush                       =   Input(Bool())
 
+        // pointers to MOB entries for updating later
+        val reserved_pointers           =      Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry
+
         val backend_memory_response     =   Flipped(Decoupled(new backend_memory_response(coreParameters))) // From MEM
         val backend_memory_request      =   Decoupled(new backend_memory_request(coreParameters))     // To MEM
 
         // REDIRECTS // 
         val commit                      =    Flipped(ValidIO(new commit(coreParameters)))
+        val partial_commit              =    Flipped(new partial_commit(coreParameters))
 
         // PC_file access (for branch unit)
         val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))
@@ -67,10 +71,12 @@ class backend(coreParameters:CoreParameters) extends Module{
         val backend_packet              =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
 
+        val MOB_output              =      ValidIO(new FU_output(coreParameters))                                               // broadcast load data
+
+
         // UPDATE //
         val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
     }); dontTouch(io)
-
 
 
 
@@ -86,7 +92,9 @@ class backend(coreParameters:CoreParameters) extends Module{
     /////////
     // MOB //
     /////////
-    val MOB   =  Module(new MOB(coreParameters))
+    val MOB   =  Module(new simple_MOB(coreParameters))
+
+
 
 
     ///////////////////////////
@@ -112,6 +120,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
     MOB.io.commit <> io.commit
+    MOB.io.partial_commit <> io.partial_commit
     for (i <- 0 until fetchWidth){
         MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
         MOB.io.reserve(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM) && io.backend_packet(i).valid
@@ -259,7 +268,6 @@ class backend(coreParameters:CoreParameters) extends Module{
     INT_RS.io.FU_outputs(2) <> FU2.io.FU_output
     INT_RS.io.FU_outputs(3) <> MOB.io.MOB_output
 
-
     MEM_RS.io.FU_outputs(0) <> FU0.io.FU_output
     MEM_RS.io.FU_outputs(1) <> FU1.io.FU_output
     MEM_RS.io.FU_outputs(2) <> FU2.io.FU_output
@@ -272,7 +280,9 @@ class backend(coreParameters:CoreParameters) extends Module{
     io.FU_outputs(0) <> FU0.io.FU_output
     io.FU_outputs(1) <> FU1.io.FU_output
     io.FU_outputs(2) <> FU2.io.FU_output
-    io.FU_outputs(3) <> MOB.io.MOB_output
+    io.FU_outputs(3) <> AGU.io.FU_output    // this updates the ROB
+
+    io.MOB_output   <> MOB.io.MOB_output   // this updates reg status etc...
 
 
     ///////////////////
@@ -292,6 +302,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     FU2.io.flush    <> io.flush
     AGU.io.flush    <> io.flush
 
+    io.reserved_pointers <> MOB.io.reserved_pointers
     
     io.backend_memory_request       <>  MOB.io.backend_memory_request
     io.backend_memory_response      <>  MOB.io.backend_memory_response
