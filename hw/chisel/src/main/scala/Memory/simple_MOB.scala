@@ -157,8 +157,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until fetchWidth){
         // update commit
-        when(io.partial_commit.MOB_index(i).valid && MOB(io.partial_commit.MOB_index(i).bits).valid){
-            MOB(io.partial_commit.MOB_index(i).bits).committed := 1.B
+        when(io.partial_commit.valid(i) && MOB(io.partial_commit.MOB_index(i)).valid){
+            MOB(io.partial_commit.MOB_index(i)).committed := 1.B
         }
     }
 

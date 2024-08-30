@@ -155,7 +155,6 @@ class BP(coreParameters:CoreParameters) extends Module{
     prediction.bits.target    := BTB.io.BTB_output.BTB_target
     prediction.bits.br_type   := BTB.io.BTB_output.BTBbr_type_t
     prediction.bits.hit       := BTB.io.BTB_hit
-    prediction.bits.GHR       := io.GHR
     prediction.bits.T_NT      := gshare.io.T_NT
 
     prediction.valid        := RegNext(io.predict.valid && !io.flush) //BTB.io.BTB_output.valid && gshare.io.valid
