@@ -240,7 +240,6 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     final_fetch_packet_out.bits.prediction.target    := target_address
     final_fetch_packet_out.bits.prediction.hit       := DontCare
     final_fetch_packet_out.bits.prediction.br_type   := dominantbr_type_t
-    final_fetch_packet_out.bits.prediction.GHR       := GHR
     final_fetch_packet_out.bits.prediction.T_NT      := T_NT.reduce(_ || _)
 
 

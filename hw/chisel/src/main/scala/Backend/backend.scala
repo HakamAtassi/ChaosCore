@@ -137,8 +137,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     // REGISTER FILES (READ) //
     ///////////////////////////
 
-    val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;    // Connect blackbox
-    //val INT_PRF = Module(new sim_nReadmWrite)
+    //val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;    // Connect blackbox
+    val INT_PRF = Module(new sim_nReadmWrite)
 
 
     // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports
@@ -148,15 +148,15 @@ class backend(coreParameters:CoreParameters) extends Module{
     // FIXME: the assignemnt of these should be based on some central config
     // FIXME: RS should have a parameterizable number of output ports
 
-    INT_PRF.io.raddr_0  :=    INT_RS.io.RF_inputs(0).bits.RS1   // INT RS PORT 0
-    INT_PRF.io.raddr_1  :=    INT_RS.io.RF_inputs(0).bits.RS2   // INT RS PORT 0
-    INT_PRF.io.raddr_2  :=    INT_RS.io.RF_inputs(1).bits.RS1   // INT RS PORT 1
-    INT_PRF.io.raddr_3  :=    INT_RS.io.RF_inputs(1).bits.RS2   // INT RS PORT 1
-    INT_PRF.io.raddr_4  :=    INT_RS.io.RF_inputs(2).bits.RS1   // INT RS PORT 2
-    INT_PRF.io.raddr_5  :=    INT_RS.io.RF_inputs(2).bits.RS2   // INT RS PORT 2
+    INT_PRF.io.raddr_0   :=    INT_RS.io.RF_inputs(0).bits.RS1   // INT RS PORT 0
+    INT_PRF.io.raddr_1   :=    INT_RS.io.RF_inputs(0).bits.RS2   // INT RS PORT 0
+    INT_PRF.io.raddr_2   :=    INT_RS.io.RF_inputs(1).bits.RS1   // INT RS PORT 1
+    INT_PRF.io.raddr_3   :=    INT_RS.io.RF_inputs(1).bits.RS2   // INT RS PORT 1
+    INT_PRF.io.raddr_4   :=    INT_RS.io.RF_inputs(2).bits.RS1   // INT RS PORT 2
+    INT_PRF.io.raddr_5   :=    INT_RS.io.RF_inputs(2).bits.RS2   // INT RS PORT 2
 
-    INT_PRF.io.raddr_6  :=    MEM_RS.io.RF_inputs(0).bits.RS1   // MEM RS PORT 0
-    INT_PRF.io.raddr_7  :=    MEM_RS.io.RF_inputs(0).bits.RS2   // MEM RS PORT 0
+    INT_PRF.io.raddr_6   :=    MEM_RS.io.RF_inputs(0).bits.RS1   // MEM RS PORT 0
+    INT_PRF.io.raddr_7   :=    MEM_RS.io.RF_inputs(0).bits.RS2   // MEM RS PORT 0
 
     io.PC_file_exec_addr := INT_RS.io.RF_inputs(0).bits.ROB_index
 

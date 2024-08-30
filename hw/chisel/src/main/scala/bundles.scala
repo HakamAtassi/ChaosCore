@@ -145,8 +145,13 @@ class commit(coreParameters:CoreParameters) extends Bundle{
 
 class partial_commit(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
-    val ROB_index               = Vec(fetchWidth, ValidIO(UInt(log2Ceil(ROBEntries).W)))
-    val MOB_index               = Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))
+    val valid                   = Vec(fetchWidth, Bool())
+    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
+    val MOB_index               = Vec(fetchWidth, UInt(log2Ceil(MOBEntries).W))
+
+    val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
+    val RD_valid                = Vec(fetchWidth, Bool())
+    val RDold                   = Vec(fetchWidth, UInt(physicalRegBits.W))
 }
 
 //class exception(coreParameters:CoreParameters) extends Bundle{
@@ -185,7 +190,6 @@ class prediction(coreParameters:CoreParameters) extends Bundle{
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
     val br_type     =   br_type_t()
-    val GHR         =   UInt(GHRWidth.W) // GHR is repeated twice here. (once again in decoded fetch packet)
     val T_NT        =   Bool()
 }
 
