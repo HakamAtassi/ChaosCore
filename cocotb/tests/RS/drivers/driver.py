@@ -92,19 +92,19 @@ class driver:
 
         for input in FU_inputs:
             if input["valid"]:  # FU inputs have no ready
-                RD = input["bits"]["RD"]
+                PRD = input["bits"]["PRD"]
                 RD_data = input["bits"]["RD_data"]
             
                 for instruction in self.accepted_instructions_hash_map.values():
                     bits = instruction.get("bits", {})
         
                     # Check RS1
-                    if bits.get("RS1_valid") and bits.get("RS1") == RD:
+                    if bits.get("RS1_valid") and bits.get("RS1") == PRD:
                         bits["ready_bits_RS1_ready"] = 1
                         bits["RS1_data"] = RD_data
         
                     # Check RS2
-                    if bits.get("RS2_valid") and bits.get("RS2") == RD:
+                    if bits.get("RS2_valid") and bits.get("RS2") == PRD:
                         bits["ready_bits_RS2_ready"] = 1
                         bits["RS2_data"] = RD_data
         
@@ -155,7 +155,7 @@ class driver:
             "bits":{
                 "RS1_ready": 0,
                 "RS2_ready": 0,
-                "RD": 0,
+                "PRD": 0,
                 "RS1_valid": 0,
                 "RS2_valid": 0,
                 "portID":0,
@@ -164,13 +164,13 @@ class driver:
             }
         } for _ in range(4)]
 
-        # FIXME: RD will increment % 64
+        # FIXME: PRD will increment % 64
         for i in range(4):
             random_backend_packet[i]["valid"]               =   random.getrandbits(1)
-            random_backend_packet[i]["bits"]["RD"]          =   random.getrandbits(6)
+            random_backend_packet[i]["bits"]["PRD"]          =   random.getrandbits(6)
             random_backend_packet[i]["bits"]["portID"]      =   random.randint(0, 2)
             
-            # FIXME: this can be ANY past RD, done or not
+            # FIXME: this can be ANY past PRD, done or not
             if(random.randint(0, 1)): # Has RS1
                 valid = 1
                 ready = random.randint(0, 1)
@@ -178,7 +178,7 @@ class driver:
                 random_backend_packet[i]["bits"]["RS1_ready"]   =  ready 
                 random_backend_packet[i]["bits"]["RS1"]         =  random.getrandbits(6)    
 
-            # FIXME: this can be ANY past RD, done or not
+            # FIXME: this can be ANY past PRD, done or not
             if(random.randint(0, 1)): # Has RS1
                 valid = 1
                 ready = random.randint(0, 1)
@@ -205,14 +205,14 @@ class driver:
         random_FU_input = [{
             "valid": 0,
             "bits":{
-                "RD": 0,
+                "PRD": 0,
                 "RD_valid": 0,
             }
         } for _ in range(4)]
 
         for i in range(4):
             if(random.randint(0,1)):
-                random_FU_input[i]["bits"]["RD"]        = random.getrandbits(6)
+                random_FU_input[i]["bits"]["PRD"]        = random.getrandbits(6)
                 random_FU_input[i]["valid"]             = 1
                 random_FU_input[i]["bits"]["RD_valid"]  = 1
 
@@ -264,7 +264,7 @@ class driver:
 # which returns a dict in the form of 
 # { "valid": X,
 #    "bits":{
-#       # "RD":?
+#       # "PRD":?
 #       # "RD_data":?
 #       # "...":?
 #     }

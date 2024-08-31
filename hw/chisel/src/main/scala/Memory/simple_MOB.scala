@@ -121,7 +121,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
             MOB_entry.MOB_STATE            :=  MOB_STATES.VALID
             MOB_entry.memory_type          :=  io.reserve(i).bits.memory_type
             MOB_entry.access_width         :=  io.reserve(i).bits.access_width
-            MOB_entry.RD                   :=  io.reserve(i).bits.RD
+            MOB_entry.PRD                   :=  io.reserve(i).bits.PRD
             MOB_entry.ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB_entry.fetch_packet_index   :=  io.reserve(i).bits.packet_index
 
@@ -188,7 +188,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.backend_memory_request.bits.addr         := MOB_front.address
     io.backend_memory_request.bits.memory_type  := MOB_front.memory_type
     io.backend_memory_request.bits.access_width := MOB_front.access_width
-    io.backend_memory_request.bits.RD := MOB_front.RD
+    io.backend_memory_request.bits.PRD := MOB_front.PRD
     io.backend_memory_request.bits.ROB_index := MOB_front.ROB_index
     io.backend_memory_request.bits.MOB_index    := front_index
     io.backend_memory_request.bits.data    := MOB_front.data
@@ -206,7 +206,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.MOB_output.bits.ROB_index            := io.backend_memory_response.bits.ROB_index
     io.MOB_output.bits.MOB_index            := io.backend_memory_response.bits.MOB_index    // why is this needed?
     io.MOB_output.bits.address              := io.backend_memory_response.bits.addr
-    io.MOB_output.bits.RD                   := io.backend_memory_response.bits.RD
+    io.MOB_output.bits.PRD                   := io.backend_memory_response.bits.PRD
     io.MOB_output.bits.RD_data                   := io.backend_memory_response.bits.data
     io.MOB_output.bits.RD_valid             := io.backend_memory_response.valid
     io.MOB_output.bits.fetch_packet_index   := io.backend_memory_response.bits.fetch_packet_index

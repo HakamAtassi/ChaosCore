@@ -53,6 +53,25 @@ object SelectFirstN
   }
 }
 
+object SelectFirstNInt {
+  def apply(in: UInt, n: Int): Vec[UInt] = {
+    val sels = Wire(Vec(n, UInt(log2Ceil(in.getWidth).W)))
+    var mask = in
+
+    dontTouch(sels)
+
+    for (i <- 0 until n) {
+      val index = PriorityEncoder(mask)
+      sels(i) := index
+      mask = mask & ~(1.U << index)
+    }
+
+    sels
+  }
+}
+
+
+
 object Thermometor
 {
   // 0 => 0b0

@@ -59,7 +59,7 @@ class branch_decoder(index:Int, coreParameters:CoreParameters) extends Module{
     val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
 
     val RS1     = io.instruction(19, 15)
-    val RD      = io.instruction(11, 7)
+    val PRD      = io.instruction(11, 7)
     val _imm    = Wire(SInt(32.W))
     val imm     = Wire(UInt(32.W))
 
@@ -69,8 +69,8 @@ class branch_decoder(index:Int, coreParameters:CoreParameters) extends Module{
     val JAL     = (instructionType === InstructionType.JAL)
     val JALR    = (instructionType === InstructionType.JALR)
     val BR      = (instructionType === InstructionType.BRANCH)
-    val CALL    = (JALR && (RD === 1.U)) || (JAL && (RD === 1.U))
-    val RET     = (JALR && (RD === 0.U) && (RS1 === 1.U) && imm === 0.U)
+    val CALL    = (JALR && (PRD === 1.U)) || (JAL && (PRD === 1.U))
+    val RET     = (JALR && (PRD === 0.U) && (RS1 === 1.U) && imm === 0.U)
 
     dontTouch(CALL)
 

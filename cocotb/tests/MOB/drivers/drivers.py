@@ -45,7 +45,7 @@ def generate_load_store(address_pool):
             "memory_type": memory_type,
             "access_width": access_width,
             "wr_data": random.getrandbits(32) if memory_type== 0b10 else 0,
-            "RD": random.randint(0, 63),
+            "PRD": random.randint(0, 63),
             "address": random.choice(possible_offsets) + random.choice(address_pool),
             "MOB_index": 0
         }
@@ -55,7 +55,7 @@ def generate_load_store(address_pool):
             "memory_type": 0,
             "access_width": 0,
             "wr_data": 0,
-            "RD": 0,
+            "PRD": 0,
             "address": 0,
             "MOB_index": 0
         }
@@ -104,7 +104,7 @@ class MOB_driver:
             getattr(self.dut, f"io_reserve_{i}_bits_ready_bits_RS1_ready").value =  0
             getattr(self.dut, f"io_reserve_{i}_bits_ready_bits_RS2_ready").value =  0
             getattr(self.dut, f"io_reserve_{i}_bits_RDold").value =     0
-            getattr(self.dut, f"io_reserve_{i}_bits_RD").value =    self.memory_operations[0][i]["RD"]
+            getattr(self.dut, f"io_reserve_{i}_bits_RD").value =    self.memory_operations[0][i]["PRD"]
             getattr(self.dut, f"io_reserve_{i}_bits_RD_valid").value =  0
             getattr(self.dut, f"io_reserve_{i}_bits_RS1").value =   0
             getattr(self.dut, f"io_reserve_{i}_bits_RS1_valid").value =    0
@@ -268,11 +268,11 @@ class MOB_driver:
             self.dut.io_commit_bits_NEXT.value = 0
             self.dut.io_commit_bits_free_list_front_pointer.value = 0
             
-            # Set RDold values
+            # Set RD values
             for i in range(4):
                 getattr(self.dut, f"io_commit_bits_RDold_{i}").value = 0
             
-            # Set RD and RD_valid values
+            # Set PRD and RD_valid values
             for i in range(4):
                 getattr(self.dut, f"io_commit_bits_RD_{i}").value = 0
                 getattr(self.dut, f"io_commit_bits_RD_valid_{i}").value = 0

@@ -124,7 +124,7 @@ module ChaosCore_tile(
   wire        _data_cache_io_CPU_request_ready;
   wire        _data_cache_io_CPU_response_valid;
   wire [31:0] _data_cache_io_CPU_response_bits_addr;
-  wire [31:0] _data_cache_io_CPU_response_bits_RD;
+  wire [31:0] _data_cache_io_CPU_response_bits_PRD;
   wire [31:0] _data_cache_io_CPU_response_bits_fetch_packet_index;
   wire [5:0]  _data_cache_io_CPU_response_bits_ROB_index;
   wire [31:0] _data_cache_io_CPU_response_bits_data;
@@ -169,7 +169,7 @@ module ChaosCore_tile(
   wire [3:0]  _ChaosCore_io_backend_memory_request_bits_MOB_index;
   wire [1:0]  _ChaosCore_io_backend_memory_request_bits_packet_index;
   wire [5:0]  _ChaosCore_io_backend_memory_request_bits_ROB_index;
-  wire [6:0]  _ChaosCore_io_backend_memory_request_bits_RD;
+  wire [6:0]  _ChaosCore_io_backend_memory_request_bits_PRD;
   wire        _ChaosCore_io_backend_memory_response_ready;
   ChaosCore ChaosCore (
     .clock                                                        (clock),
@@ -186,14 +186,14 @@ module ChaosCore_tile(
     .io_commit_bits_TOS                                           (/* unused */),
     .io_commit_bits_NEXT                                          (/* unused */),
     .io_commit_bits_free_list_front_pointer                       (/* unused */),
-    .io_commit_bits_RDold_0                                       (/* unused */),
-    .io_commit_bits_RDold_1                                       (/* unused */),
-    .io_commit_bits_RDold_2                                       (/* unused */),
-    .io_commit_bits_RDold_3                                       (/* unused */),
     .io_commit_bits_RD_0                                          (/* unused */),
     .io_commit_bits_RD_1                                          (/* unused */),
     .io_commit_bits_RD_2                                          (/* unused */),
     .io_commit_bits_RD_3                                          (/* unused */),
+    .io_commit_bits_PRD_0                                         (/* unused */),
+    .io_commit_bits_PRD_1                                         (/* unused */),
+    .io_commit_bits_PRD_2                                         (/* unused */),
+    .io_commit_bits_PRD_3                                         (/* unused */),
     .io_commit_bits_RD_valid_0                                    (/* unused */),
     .io_commit_bits_RD_valid_1                                    (/* unused */),
     .io_commit_bits_RD_valid_2                                    (/* unused */),
@@ -281,16 +281,16 @@ module ChaosCore_tile(
       (_ChaosCore_io_backend_memory_request_bits_packet_index),
     .io_backend_memory_request_bits_ROB_index
       (_ChaosCore_io_backend_memory_request_bits_ROB_index),
-    .io_backend_memory_request_bits_RD
-      (_ChaosCore_io_backend_memory_request_bits_RD),
+    .io_backend_memory_request_bits_PRD
+      (_ChaosCore_io_backend_memory_request_bits_PRD),
     .io_backend_memory_response_ready
       (_ChaosCore_io_backend_memory_response_ready),
     .io_backend_memory_response_valid
       (_data_cache_io_CPU_response_valid),
     .io_backend_memory_response_bits_addr
       (_data_cache_io_CPU_response_bits_addr),
-    .io_backend_memory_response_bits_RD
-      (_data_cache_io_CPU_response_bits_RD),
+    .io_backend_memory_response_bits_PRD
+      (_data_cache_io_CPU_response_bits_PRD),
     .io_backend_memory_response_bits_fetch_packet_index
       (_data_cache_io_CPU_response_bits_fetch_packet_index),
     .io_backend_memory_response_bits_ROB_index
@@ -520,13 +520,13 @@ module ChaosCore_tile(
       (_ChaosCore_io_backend_memory_request_bits_packet_index),
     .io_CPU_request_bits_ROB_index
       (_ChaosCore_io_backend_memory_request_bits_ROB_index),
-    .io_CPU_request_bits_RD
-      (_ChaosCore_io_backend_memory_request_bits_RD),
+    .io_CPU_request_bits_PRD
+      (_ChaosCore_io_backend_memory_request_bits_PRD),
     .io_CPU_response_ready
       (_ChaosCore_io_backend_memory_response_ready),
     .io_CPU_response_valid                   (_data_cache_io_CPU_response_valid),
     .io_CPU_response_bits_addr               (_data_cache_io_CPU_response_bits_addr),
-    .io_CPU_response_bits_RD                 (_data_cache_io_CPU_response_bits_RD),
+    .io_CPU_response_bits_PRD                (_data_cache_io_CPU_response_bits_PRD),
     .io_CPU_response_bits_fetch_packet_index
       (_data_cache_io_CPU_response_bits_fetch_packet_index),
     .io_CPU_response_bits_ROB_index          (_data_cache_io_CPU_response_bits_ROB_index),

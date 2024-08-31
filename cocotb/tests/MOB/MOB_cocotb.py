@@ -64,8 +64,8 @@ async def test_fuzz(dut):
             "bits": {
                 "ready_bits_RS1_ready": 0,
                 "ready_bits_RS2_ready": 0,
-                "RDold": 0,
                 "RD": 0,
+                "PRD": 0,
                 "RD_valid": 0,
                 "RS1": 0,
                 "RS1_valid": 0,
@@ -95,7 +95,7 @@ async def test_fuzz(dut):
     AGU = {
         "valid": 0,
         "bits": {
-            "RD": 0,
+            "PRD": 0,
             "RD_data": 0,
             "RD_valid": 0,
             "fetch_PC": 0,
@@ -119,7 +119,7 @@ async def test_fuzz(dut):
     reserve[0]["valid"] = 1
     reserve[0]["bits"]["memory_type"] = memory_type_t.STORE.value
     reserve[0]["bits"]["access_width"] = access_width_t.W.value
-    reserve[0]["bits"]["RD"] = 5
+    reserve[0]["bits"]["PRD"] = 5
 
     await MOB.write_reserve(reserve)
 
@@ -127,14 +127,14 @@ async def test_fuzz(dut):
     reserve[0]["valid"] = 1
     reserve[0]["bits"]["memory_type"] = memory_type_t.STORE.value
     reserve[0]["bits"]["access_width"] = access_width_t.W.value
-    reserve[0]["bits"]["RD"] = 5
+    reserve[0]["bits"]["PRD"] = 5
     await MOB.write_reserve(reserve)
 
     # Reserve load 0
     reserve[0]["valid"] = 1
     reserve[0]["bits"]["memory_type"] = memory_type_t.LOAD.value
     reserve[0]["bits"]["access_width"] = access_width_t.W.value
-    reserve[0]["bits"]["RD"] = 8
+    reserve[0]["bits"]["PRD"] = 8
     await MOB.write_reserve(reserve)
 
 

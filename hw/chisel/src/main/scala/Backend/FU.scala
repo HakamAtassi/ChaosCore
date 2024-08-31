@@ -59,7 +59,7 @@ class ALU(coreParameters:CoreParameters) extends Module{
     val instruction_PC      =   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
 
     // Dest reg
-    val RD                  =   io.FU_input.bits.decoded_instruction.RD
+    val PRD                  =   io.FU_input.bits.decoded_instruction.PRD
 
     // Op select
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
@@ -216,7 +216,7 @@ class ALU(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     // Actual Outputs
-    io.FU_output.bits.RD         :=   RegNext(io.FU_input.bits.decoded_instruction.RD)
+    io.FU_output.bits.PRD         :=   RegNext(io.FU_input.bits.decoded_instruction.PRD)
     io.FU_output.bits.RD_valid   :=   RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     io.FU_output.bits.RD_data    :=   arithmetic_result
 
@@ -267,7 +267,7 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     instruction_PC          :=   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
 
     // Dest reg
-    val RD                  =   io.FU_input.bits.decoded_instruction.RD
+    val PRD                  =   io.FU_input.bits.decoded_instruction.PRD
 
     // Op select
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
@@ -358,7 +358,7 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.target_address    :=      RegNext(target_address)
 
     // Actual Outputs
-    io.FU_output.bits.RD                :=      RegNext(io.FU_input.bits.decoded_instruction.RD)
+    io.FU_output.bits.PRD                :=      RegNext(io.FU_input.bits.decoded_instruction.PRD)
     io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     io.FU_output.bits.RD_data           :=      RegNext(instruction_PC + 4.U)
     io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)

@@ -66,7 +66,7 @@ class AGU(coreParameters:CoreParameters) extends Module{
     val RS2_data               =   io.FU_input.bits.RS2_data
     val IMM                    =   imm
     val PC                     =   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
-    val RD                     =   io.FU_input.bits.decoded_instruction.RD
+    val PRD                     =   io.FU_input.bits.decoded_instruction.PRD
 
     val FUNCT3                 =   io.FU_input.bits.decoded_instruction.FUNCT3
 
@@ -104,7 +104,7 @@ class AGU(coreParameters:CoreParameters) extends Module{
 
     // Everything needed to perform the memory request (LSQ request)    
     io.FU_output.valid              := RegNext(io.FU_input.valid && !io.flush)
-    io.FU_output.bits.RD            := RegNext(RD)              // LOAD DEST
+    io.FU_output.bits.PRD            := RegNext(PRD)              // LOAD DEST
     io.FU_output.bits.is_unsigned   := RegNext(unsigned)        // SIGNED/UNSIGNED
     io.FU_output.bits.address       := RegNext(address)         // ADDRESS
     io.FU_output.bits.wr_data       := RegNext(wr_data)         // WR DATA

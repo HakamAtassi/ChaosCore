@@ -38,6 +38,8 @@ import java.rmi.server.UID
 
 
 
+
+
 class free_list(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     val ptr_width = log2Ceil(physicalRegCount-1) + 1
@@ -47,152 +49,93 @@ class free_list(coreParameters:CoreParameters) extends Module{
         val renamed_values          = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))       // Renamed RDs
         val renamed_valid           = Output(Vec(fetchWidth, Bool()))                                   // Renamed RDs valid
 
+        val partial_commit          =      Input(new partial_commit(coreParameters))                                         // commit mem op
         val commit                  = Flipped(ValidIO(new commit(coreParameters)))                          // Free regs on commit
 
         val free_list_front_pointer = Output(UInt(ptr_width.W))                  // To ROB
 
-        val can_reallocate          = Output(Bool())
         val can_allocate            = Output(Bool())
-    })
-    dontTouch(io)
+    }); dontTouch(io)
 
     val flush = io.commit.valid && io.commit.bits.is_misprediction
 
     // Pointers
-    val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)                       // front pointer starts at 0
-    val back_pointer    = RegInit(UInt(ptr_width.W), (physicalRegCount-1).U)    // back pointer starts at N-1
 
-    val front_index     = Wire(UInt((ptr_width-1).W))
-    val back_index      = Wire(UInt((ptr_width-1).W))
+    val free_list_buffer               = RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B))) //RegInit(VecInit((1 until physicalRegCount).map(1.B))) //x0 not in free list
+    val commit_free_list_buffer        = RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B))) //RegInit(VecInit((1 until physicalRegCount).map(1.B))) //x0 not in free list
 
-    // Free list
-    val free_list_buffer = RegInit(VecInit((1 until physicalRegCount).map(_.U(physicalRegBits.W)))) //x0 not in free list
-
-
-    front_index := front_pointer(ptr_width-2, 0)
-    back_index  := back_pointer(ptr_width-2, 0)
-
-    dontTouch(free_list_buffer)
 
     //////////////////
     // POP ELEMENTS //
     //////////////////
 
-    for(i <- 0 until fetchWidth){
-        val read_offset          = PopCount(io.rename_valid.take(i+1)) - 1.U
-        val valid = io.rename_valid(i) && !flush && io.can_allocate
-        io.renamed_valid(i)     := valid
-        val test = Wire(UInt((physicalRegBits-1).W))
-        test := (front_index + read_offset) % 64.U
-        when(valid){
-            io.renamed_values(i)    := free_list_buffer(test)
-        }.otherwise{
-            io.renamed_values(i)    := 0.U
+    val selectedPRDs = SelectFirstNInt(free_list_buffer.asUInt, fetchWidth)
+
+    for(i <- 0 until fetchWidth){   // remove from freelist
+        io.renamed_values(i) := 0.U 
+        io.renamed_valid(i)  := io.rename_valid(i) && !flush && io.can_allocate
+        when(io.rename_valid(i)){
+            val PRD = selectedPRDs(i)  // because index 0 actually maps to x1
+            free_list_buffer(PRD)       := 0.B
+            io.renamed_values(i)        := PRD + 1.U
         }
     }
 
-    io.free_list_front_pointer  := front_pointer
-    
-    ///////////////////
-    // PUSH ELEMENTS //
-    ///////////////////
-    //////////////////
-    // POINTER CTRL //
-    //////////////////
-    val allocate_valid  =   Wire(Vec(fetchWidth, Bool()))
+    io.free_list_front_pointer  := 0.U
 
-    for(i <- 0 until fetchWidth){
-        allocate_valid(i) := (io.commit.bits.RD_valid(i)) && (io.commit.bits.RD(i) =/= 0.U) && io.commit.valid
-    }
-
-    when(!(io.commit.valid && io.commit.bits.is_misprediction) && io.can_allocate){            // Allocate elements
-        front_pointer := front_pointer + PopCount(io.rename_valid)
-    }.elsewhen(io.commit.valid && io.commit.bits.is_misprediction){                            // misprediction 
-        front_pointer := io.commit.bits.free_list_front_pointer
-    }
-
-    when(io.commit.valid && io.can_reallocate && ~flush){                                      // reallocate
-        back_pointer := back_pointer + PopCount(allocate_valid)
-    }
-
-    for(i <- 0 until fetchWidth){
-        when(io.renamed_valid(i) === 1.B){
-            AssertProperty(io.renamed_values(i) =/= 0.U)
+    when(io.commit.valid){  // add to freelist
+        for(i <- 0 until fetchWidth){
+            when(io.partial_commit.RD_valid(i) && io.partial_commit.PRDold(i) =/= 0.U){    // dont add x0
+                val commit_PRDold = io.partial_commit.PRDold(i) - 1.U
+                free_list_buffer(commit_PRDold) := 1.B
+                commit_free_list_buffer(commit_PRDold) := 1.B
+            }
         }
     }
+
+    when(io.commit.valid){  // remove to freelist (commit)
+        for(i <- 0 until fetchWidth){
+            when(io.partial_commit.RD_valid(i) && io.partial_commit.PRD(i) =/= 0.U){
+                val commit_PRD = io.partial_commit.PRD(i) - 1.U
+                commit_free_list_buffer(commit_PRD) := 0.B
+            }
+        }
+    }
+
+
+    ///////////////////
+    // MISPREDICTION //
+    ///////////////////
+
+    when(io.commit.valid && io.commit.bits.is_misprediction){
+        for(i <- 0 until fetchWidth){
+            when(io.partial_commit.RD_valid(i)){
+                val commit_PRD = io.partial_commit.PRD(i) - 1.U
+                free_list_buffer(commit_PRD) := 1.B
+            }
+        }
+        for(i <- 0 until fetchWidth){
+            when(io.partial_commit.RD_valid(i)){
+                val commit_PRDold = io.partial_commit.PRDold(i) - 1.U
+                free_list_buffer(commit_PRDold) := 1.B
+            }
+        }
+        free_list_buffer := commit_free_list_buffer
+    }
+
 
     ////////////////
     // Full/Empty //
     ////////////////
 
-    val available_elemets   = back_pointer - front_pointer
-
-    io.can_reallocate := (available_elemets + fetchWidth.U) <= (physicalRegCount.U - 1.U)  // elements are reallocated if they fit into the buffer
-    io.can_allocate   := fetchWidth.U <= available_elemets
+    io.can_allocate   := PopCount(free_list_buffer) >= (fetchWidth).U   // +1 because x0 is always ready
 
     ////////////////
     // ASSERTIONS //
     ////////////////
 
-    dontTouch(front_index)
-    dontTouch(back_index)
-    dontTouch(available_elemets)
-    dontTouch(allocate_valid)
-
-
-    //////////////
-    //// FORMAL //
-    //////////////
-
-    //val has_been_reset_reg = RegInit(Bool(), 0.B)
-    //has_been_reset_reg := reset.asBool
-
-
-    //// COMMIT //
-    //val valid_commit_ptr    = RegInit(VecInit(Seq.fill(64)(0.U(ptr_width.W))))
-    //val valid_commit_valid  = RegInit(VecInit(Seq.fill(64)(0.B)))
-    //val commit_ptr_valid    = Wire(Bool())
-
-    //for(i <- 0 until 64){   // output set
-        //when(io.renamed_valid.reduce(_ || _)){  // when you rename, place the ptr somewhere and mark valid
-            //valid_commit_ptr(i) := io.free_list_front_pointer
-            //valid_commit_valid(i) := 0.B
-        //}
-    //}
-
-    //commit_ptr_valid := 0.B
-    //for(i <- 0 until 64){
-        //when((io.commit.bits.free_list_front_pointer === valid_commit_ptr(i)) && valid_commit_valid(i) && io.commit.valid){
-            //commit_ptr_valid := 1.B
-            //valid_commit_ptr(i) := 0.U
-            //valid_commit_valid(i) := 0.B
-        //}
-    //}   
-    
-    //// Assert entry count
-    //val available_regs_within_bounds = Sequence.BoolSequence(((back_pointer-front_pointer) <= 64.U))
-
-    //val can_reallocate = Sequence.BoolSequence(((back_pointer-front_pointer)<=60.U) === io.can_reallocate) // can accept commit regs
-
-    //val can_allocate = Sequence.BoolSequence(((back_pointer-front_pointer)>=4.U) === io.can_allocate) // can accept commit regs
-
-    //// Assert that when input is valid, the free list pointer is correct
-    //val free_list_pointer = Sequence(Sequence.BoolSequence(io.rename_valid.reduce(_ || _)), Sequence.BoolSequence(io.free_list_front_pointer === front_index))
-
-    //// Assume that when you have a rename request, at some point in the future, 
-    //val valid_output = Sequence.BoolSequence(io.renamed_valid.reduce(_ || _))
-    //val valid_commit = Sequence.BoolSequence((commit_ptr_valid && io.commit.valid) || !(io.commit.valid))    // commit pointer must be either valid or not a commit
-
-
-
-    //AssertProperty(available_regs_within_bounds)
-    //AssertProperty(can_reallocate)
-    //AssertProperty(can_allocate)
-
-
-    //AssumeProperty(valid_commit)
-
-
+    dontTouch(free_list_buffer)
+    dontTouch(commit_free_list_buffer)
 
 }
 

@@ -47,8 +47,8 @@ class MOB_dut:
             setattr(self.MOB, f"io_reserve_{i}_valid", reserve[i]["valid"])
             setattr(self.MOB, f"io_reserve_{i}_bits_ready_bits_RS1_ready", reserve[i]["bits"]["ready_bits_RS1_ready"])
             setattr(self.MOB, f"io_reserve_{i}_bits_ready_bits_RS2_ready", reserve[i]["bits"]["ready_bits_RS2_ready"])
-            setattr(self.MOB, f"io_reserve_{i}_bits_RDold", reserve[i]["bits"]["RDold"])
-            setattr(self.MOB, f"io_reserve_{i}_bits_RD", reserve[i]["bits"]["RD"])
+            setattr(self.MOB, f"io_reserve_{i}_bits_RDold", reserve[i]["bits"]["RD"])
+            setattr(self.MOB, f"io_reserve_{i}_bits_RD", reserve[i]["bits"]["PRD"])
             setattr(self.MOB, f"io_reserve_{i}_bits_RD_valid", reserve[i]["bits"]["RD_valid"])
             setattr(self.MOB, f"io_reserve_{i}_bits_RS1", reserve[i]["bits"]["RS1"])
             setattr(self.MOB, f"io_reserve_{i}_bits_RS1_valid", reserve[i]["bits"]["RS1_valid"])
@@ -95,8 +95,8 @@ class MOB_dut:
                 "bits": {
                     "ready_bits_RS1_ready": int(getattr(self.MOB, f"io_reserve_{i}_bits_ready_bits_RS1_ready").value),
                     "ready_bits_RS2_ready": int(getattr(self.MOB, f"io_reserve_{i}_bits_ready_bits_RS2_ready").value),
-                    "RDold": int(getattr(self.MOB, f"io_reserve_{i}_bits_RDold").value),
-                    "RD": int(getattr(self.MOB, f"io_reserve_{i}_bits_RD").value),
+                    "RD": int(getattr(self.MOB, f"io_reserve_{i}_bits_RDold").value),
+                    "PRD": int(getattr(self.MOB, f"io_reserve_{i}_bits_RD").value),
                     "RD_valid": int(getattr(self.MOB, f"io_reserve_{i}_bits_RD_valid").value),
                     "RS1": int(getattr(self.MOB, f"io_reserve_{i}_bits_RS1").value),
                     "RS1_valid": int(getattr(self.MOB, f"io_reserve_{i}_bits_RS1_valid").value),
@@ -140,7 +140,7 @@ class MOB_dut:
 
     def write_AGU_output(self, AGU):
         setattr(self.MOB, f"io_AGU_output_valid", AGU["valid"])
-        setattr(self.MOB, f"io_AGU_output_bits_RD", AGU["bits"]["RD"])
+        setattr(self.MOB, f"io_AGU_output_bits_RD", AGU["bits"]["PRD"])
         setattr(self.MOB, f"io_AGU_output_bits_RD_data", AGU["bits"]["RD_data"])
         setattr(self.MOB, f"io_AGU_output_bits_RD_valid", AGU["bits"]["RD_valid"])
         setattr(self.MOB, f"io_AGU_output_bits_fetch_PC", AGU["bits"]["fetch_PC"])
@@ -164,7 +164,7 @@ class MOB_dut:
         AGU = {
             "valid": int(self.MOB.io_AGU_output_valid.value),
             "bits": {
-                "RD": int(self.MOB.io_AGU_output_bits_RD.value),
+                "PRD": int(self.MOB.io_AGU_output_bits_RD.value),
                 "RD_data": int(self.MOB.io_AGU_output_bits_RD_data.value),
                 "RD_valid": int(self.MOB.io_AGU_output_bits_RD_valid.value),
                 "fetch_PC": int(self.MOB.io_AGU_output_bits_fetch_PC.value),
@@ -190,7 +190,7 @@ class MOB_dut:
         MOB_output = {
             "valid": int(self.MOB.io_MOB_output_valid.value),
             "bits": {
-                "RD": int(self.MOB.io_MOB_output_bits_RD.value),
+                "PRD": int(self.MOB.io_MOB_output_bits_RD.value),
                 "RD_data": int(self.MOB.io_MOB_output_bits_RD_data.value),
                 "RD_valid": int(self.MOB.io_MOB_output_bits_RD_valid.value),
                 "fetch_PC": int(self.MOB.io_MOB_output_bits_fetch_PC.value),

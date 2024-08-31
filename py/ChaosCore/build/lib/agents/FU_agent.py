@@ -114,8 +114,8 @@ class FU_agent:
             assert model_FU_output["fetch_PC"] == dut_FU_output["fetch_PC"]
 
             valid = model_FU_output["valid"]
-            compare_RD = model_FU_output["RD"] & valid
+            compare_RD = model_FU_output["PRD"] & valid
             if(compare_RD & valid):
-                assert model_FU_output["RD"] == dut_FU_output["RD"]
+                assert model_FU_output["PRD"] == dut_FU_output["PRD"]
                 assert model_FU_output["RD_data"] == dut_FU_output["RD_data"]
                 assert model_FU_output["RD_valid"] == dut_FU_output["RD_valid"]

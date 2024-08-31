@@ -52,7 +52,7 @@ class MOB_scoreboard:
         self.MOB_results = [[{
             "valid": 0,
             "bits": {
-                "RD": 0,
+                "PRD": 0,
                 "RD_data": 0,
                 "RD_valid": 0,
                 "fetch_PC": 0,
@@ -128,7 +128,7 @@ class MOB_scoreboard:
         return {
             "valid": int(self.MOB.io_MOB_output_valid.value),
             "bits": {
-                "RD": int(self.MOB.io_MOB_output_bits_RD.value),
+                "PRD": int(self.MOB.io_MOB_output_bits_RD.value),
                 "RD_data": int(self.MOB.io_MOB_output_bits_RD_data.value),
                 "RD_valid": int(self.MOB.io_MOB_output_bits_RD_valid.value),
                 "fetch_PC": int(self.MOB.io_MOB_output_bits_fetch_PC.value),
@@ -162,8 +162,8 @@ class MOB_scoreboard:
                 "TOS": int(self.MOB.io_commit_bits_TOS.value),
                 "NEXT": int(self.MOB.io_commit_bits_NEXT.value),
                 "free_list_front_pointer": int(self.MOB.io_commit_bits_free_list_front_pointer.value),
-                "RDold": [int(getattr(self.MOB, f"io_commit_bits_RDold_{i}").value) for i in range(4)],
-                "RD": [int(getattr(self.MOB, f"io_commit_bits_RD_{i}").value) for i in range(4)],
+                "RD": [int(getattr(self.MOB, f"io_commit_bits_RDold_{i}").value) for i in range(4)],
+                "PRD": [int(getattr(self.MOB, f"io_commit_bits_RD_{i}").value) for i in range(4)],
                 "RD_valid": [int(getattr(self.MOB, f"io_commit_bits_RD_valid_{i}").value) for i in range(4)],
             }
         }
@@ -220,7 +220,7 @@ class MOB_scoreboard:
             self.MOB_results[ROB_index] =[{
             "valid": 0,
             "bits": {
-                "RD": 0,
+                "PRD": 0,
                 "RD_data": 0,
                 "RD_valid": 0,
                 "fetch_PC": 0,

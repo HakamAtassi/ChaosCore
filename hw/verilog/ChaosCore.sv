@@ -43,14 +43,14 @@ module ChaosCore(
   output [6:0]  io_commit_bits_TOS,
                 io_commit_bits_NEXT,
   output [7:0]  io_commit_bits_free_list_front_pointer,
-  output [4:0]  io_commit_bits_RDold_0,
-                io_commit_bits_RDold_1,
-                io_commit_bits_RDold_2,
-                io_commit_bits_RDold_3,
-  output [6:0]  io_commit_bits_RD_0,
+  output [4:0]  io_commit_bits_RD_0,
                 io_commit_bits_RD_1,
                 io_commit_bits_RD_2,
                 io_commit_bits_RD_3,
+  output [6:0]  io_commit_bits_PRD_0,
+                io_commit_bits_PRD_1,
+                io_commit_bits_PRD_2,
+                io_commit_bits_PRD_3,
   output        io_commit_bits_RD_valid_0,
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
@@ -98,11 +98,11 @@ module ChaosCore(
   output [3:0]  io_backend_memory_request_bits_MOB_index,
   output [1:0]  io_backend_memory_request_bits_packet_index,
   output [5:0]  io_backend_memory_request_bits_ROB_index,
-  output [6:0]  io_backend_memory_request_bits_RD,
+  output [6:0]  io_backend_memory_request_bits_PRD,
   output        io_backend_memory_response_ready,
   input         io_backend_memory_response_valid,
   input  [31:0] io_backend_memory_response_bits_addr,
-                io_backend_memory_response_bits_RD,
+                io_backend_memory_response_bits_PRD,
                 io_backend_memory_response_bits_fetch_packet_index,
   input  [5:0]  io_backend_memory_response_bits_ROB_index,
   input  [31:0] io_backend_memory_response_bits_data,
@@ -122,14 +122,14 @@ module ChaosCore(
   wire [6:0]  _ROB_io_commit_bits_TOS;
   wire [6:0]  _ROB_io_commit_bits_NEXT;
   wire [7:0]  _ROB_io_commit_bits_free_list_front_pointer;
-  wire [4:0]  _ROB_io_commit_bits_RDold_0;
-  wire [4:0]  _ROB_io_commit_bits_RDold_1;
-  wire [4:0]  _ROB_io_commit_bits_RDold_2;
-  wire [4:0]  _ROB_io_commit_bits_RDold_3;
-  wire [6:0]  _ROB_io_commit_bits_RD_0;
-  wire [6:0]  _ROB_io_commit_bits_RD_1;
-  wire [6:0]  _ROB_io_commit_bits_RD_2;
-  wire [6:0]  _ROB_io_commit_bits_RD_3;
+  wire [4:0]  _ROB_io_commit_bits_RD_0;
+  wire [4:0]  _ROB_io_commit_bits_RD_1;
+  wire [4:0]  _ROB_io_commit_bits_RD_2;
+  wire [4:0]  _ROB_io_commit_bits_RD_3;
+  wire [6:0]  _ROB_io_commit_bits_PRD_0;
+  wire [6:0]  _ROB_io_commit_bits_PRD_1;
+  wire [6:0]  _ROB_io_commit_bits_PRD_2;
+  wire [6:0]  _ROB_io_commit_bits_PRD_3;
   wire        _ROB_io_commit_bits_RD_valid_0;
   wire        _ROB_io_commit_bits_RD_valid_1;
   wire        _ROB_io_commit_bits_RD_valid_2;
@@ -143,18 +143,22 @@ module ChaosCore(
   wire [3:0]  _ROB_io_partial_commit_MOB_index_1;
   wire [3:0]  _ROB_io_partial_commit_MOB_index_2;
   wire [3:0]  _ROB_io_partial_commit_MOB_index_3;
-  wire [4:0]  _ROB_io_partial_commit_RD_0;
-  wire [4:0]  _ROB_io_partial_commit_RD_1;
-  wire [4:0]  _ROB_io_partial_commit_RD_2;
-  wire [4:0]  _ROB_io_partial_commit_RD_3;
+  wire [4:0]  _ROB_io_partial_commit_PRD_0;
+  wire [4:0]  _ROB_io_partial_commit_PRD_1;
+  wire [4:0]  _ROB_io_partial_commit_PRD_2;
+  wire [4:0]  _ROB_io_partial_commit_PRD_3;
+  wire [4:0]  _ROB_io_partial_commit_PRDold_0;
+  wire [4:0]  _ROB_io_partial_commit_PRDold_1;
+  wire [4:0]  _ROB_io_partial_commit_PRDold_2;
+  wire [4:0]  _ROB_io_partial_commit_PRDold_3;
   wire        _ROB_io_partial_commit_RD_valid_0;
   wire        _ROB_io_partial_commit_RD_valid_1;
   wire        _ROB_io_partial_commit_RD_valid_2;
   wire        _ROB_io_partial_commit_RD_valid_3;
-  wire [6:0]  _ROB_io_partial_commit_RDold_0;
-  wire [6:0]  _ROB_io_partial_commit_RDold_1;
-  wire [6:0]  _ROB_io_partial_commit_RDold_2;
-  wire [6:0]  _ROB_io_partial_commit_RDold_3;
+  wire [6:0]  _ROB_io_partial_commit_RD_0;
+  wire [6:0]  _ROB_io_partial_commit_RD_1;
+  wire [6:0]  _ROB_io_partial_commit_RD_2;
+  wire [6:0]  _ROB_io_partial_commit_RD_3;
   wire [5:0]  _ROB_io_ROB_index;
   wire [31:0] _ROB_io_PC_file_exec_data;
   wire [3:0]  _backend_io_reserved_pointers_0_bits;
@@ -167,7 +171,7 @@ module ChaosCore(
   wire        _backend_io_backend_packet_2_ready;
   wire        _backend_io_backend_packet_3_ready;
   wire        _backend_io_MOB_output_valid;
-  wire [6:0]  _backend_io_MOB_output_bits_RD;
+  wire [6:0]  _backend_io_MOB_output_bits_PRD;
   wire [31:0] _backend_io_MOB_output_bits_RD_data;
   wire        _backend_io_MOB_output_bits_RD_valid;
   wire [31:0] _backend_io_MOB_output_bits_fetch_PC;
@@ -183,7 +187,7 @@ module ChaosCore(
   wire [5:0]  _backend_io_MOB_output_bits_ROB_index;
   wire [1:0]  _backend_io_MOB_output_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_0_valid;
-  wire [6:0]  _backend_io_FU_outputs_0_bits_RD;
+  wire [6:0]  _backend_io_FU_outputs_0_bits_PRD;
   wire [31:0] _backend_io_FU_outputs_0_bits_RD_data;
   wire        _backend_io_FU_outputs_0_bits_RD_valid;
   wire [31:0] _backend_io_FU_outputs_0_bits_fetch_PC;
@@ -199,7 +203,7 @@ module ChaosCore(
   wire [5:0]  _backend_io_FU_outputs_0_bits_ROB_index;
   wire [1:0]  _backend_io_FU_outputs_0_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_1_valid;
-  wire [6:0]  _backend_io_FU_outputs_1_bits_RD;
+  wire [6:0]  _backend_io_FU_outputs_1_bits_PRD;
   wire [31:0] _backend_io_FU_outputs_1_bits_RD_data;
   wire        _backend_io_FU_outputs_1_bits_RD_valid;
   wire [31:0] _backend_io_FU_outputs_1_bits_fetch_PC;
@@ -215,7 +219,7 @@ module ChaosCore(
   wire [5:0]  _backend_io_FU_outputs_1_bits_ROB_index;
   wire [1:0]  _backend_io_FU_outputs_1_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_2_valid;
-  wire [6:0]  _backend_io_FU_outputs_2_bits_RD;
+  wire [6:0]  _backend_io_FU_outputs_2_bits_PRD;
   wire [31:0] _backend_io_FU_outputs_2_bits_RD_data;
   wire        _backend_io_FU_outputs_2_bits_RD_valid;
   wire [31:0] _backend_io_FU_outputs_2_bits_fetch_PC;
@@ -231,7 +235,7 @@ module ChaosCore(
   wire [5:0]  _backend_io_FU_outputs_2_bits_ROB_index;
   wire [1:0]  _backend_io_FU_outputs_2_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_3_valid;
-  wire [6:0]  _backend_io_FU_outputs_3_bits_RD;
+  wire [6:0]  _backend_io_FU_outputs_3_bits_PRD;
   wire [31:0] _backend_io_FU_outputs_3_bits_RD_data;
   wire        _backend_io_FU_outputs_3_bits_RD_valid;
   wire [31:0] _backend_io_FU_outputs_3_bits_fetch_PC;
@@ -252,8 +256,9 @@ module ChaosCore(
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready;
-  wire [4:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold;
-  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD;
+  wire [4:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD;
+  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD;
+  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;
   wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1;
@@ -294,8 +299,9 @@ module ChaosCore(
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready;
-  wire [4:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold;
-  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD;
+  wire [4:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD;
+  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD;
+  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;
   wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1;
@@ -336,8 +342,9 @@ module ChaosCore(
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready;
-  wire [4:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold;
-  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD;
+  wire [4:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD;
+  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD;
+  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;
   wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1;
@@ -378,8 +385,9 @@ module ChaosCore(
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready;
-  wire [4:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold;
-  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD;
+  wire [4:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD;
+  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD;
+  wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid;
   wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
@@ -520,14 +528,22 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
-    .io_partial_commit_RD_0
-      (_ROB_io_partial_commit_RD_0),
-    .io_partial_commit_RD_1
-      (_ROB_io_partial_commit_RD_1),
-    .io_partial_commit_RD_2
-      (_ROB_io_partial_commit_RD_2),
-    .io_partial_commit_RD_3
-      (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_PRD_0
+      (_ROB_io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1
+      (_ROB_io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2
+      (_ROB_io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3
+      (_ROB_io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (_ROB_io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (_ROB_io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (_ROB_io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (_ROB_io_partial_commit_PRDold_3),
     .io_partial_commit_RD_valid_0
       (_ROB_io_partial_commit_RD_valid_0),
     .io_partial_commit_RD_valid_1
@@ -536,14 +552,14 @@ module ChaosCore(
       (_ROB_io_partial_commit_RD_valid_2),
     .io_partial_commit_RD_valid_3
       (_ROB_io_partial_commit_RD_valid_3),
-    .io_partial_commit_RDold_0
-      (_ROB_io_partial_commit_RDold_0),
-    .io_partial_commit_RDold_1
-      (_ROB_io_partial_commit_RDold_1),
-    .io_partial_commit_RDold_2
-      (_ROB_io_partial_commit_RDold_2),
-    .io_partial_commit_RDold_3
-      (_ROB_io_partial_commit_RDold_3),
+    .io_partial_commit_RD_0
+      (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (_ROB_io_partial_commit_RD_3),
     .io_commit_valid
       (_ROB_io_commit_valid),
     .io_commit_bits_fetch_PC
@@ -568,14 +584,6 @@ module ChaosCore(
       (_ROB_io_commit_bits_NEXT),
     .io_commit_bits_free_list_front_pointer
       (_ROB_io_commit_bits_free_list_front_pointer),
-    .io_commit_bits_RDold_0
-      (_ROB_io_commit_bits_RDold_0),
-    .io_commit_bits_RDold_1
-      (_ROB_io_commit_bits_RDold_1),
-    .io_commit_bits_RDold_2
-      (_ROB_io_commit_bits_RDold_2),
-    .io_commit_bits_RDold_3
-      (_ROB_io_commit_bits_RDold_3),
     .io_commit_bits_RD_0
       (_ROB_io_commit_bits_RD_0),
     .io_commit_bits_RD_1
@@ -584,6 +592,14 @@ module ChaosCore(
       (_ROB_io_commit_bits_RD_2),
     .io_commit_bits_RD_3
       (_ROB_io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0
+      (_ROB_io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1
+      (_ROB_io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2
+      (_ROB_io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3
+      (_ROB_io_commit_bits_PRD_3),
     .io_commit_bits_RD_valid_0
       (_ROB_io_commit_bits_RD_valid_0),
     .io_commit_bits_RD_valid_1
@@ -602,10 +618,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1
@@ -652,10 +670,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1
@@ -702,10 +722,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1
@@ -752,10 +774,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1
@@ -824,8 +848,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_FU_outputs_0_valid
       (_backend_io_FU_outputs_0_valid),
-    .io_FU_outputs_0_bits_RD
-      (_backend_io_FU_outputs_0_bits_RD),
+    .io_FU_outputs_0_bits_PRD
+      (_backend_io_FU_outputs_0_bits_PRD),
     .io_FU_outputs_0_bits_RD_data
       (_backend_io_FU_outputs_0_bits_RD_data),
     .io_FU_outputs_0_bits_RD_valid
@@ -856,8 +880,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_1_valid
       (_backend_io_FU_outputs_1_valid),
-    .io_FU_outputs_1_bits_RD
-      (_backend_io_FU_outputs_1_bits_RD),
+    .io_FU_outputs_1_bits_PRD
+      (_backend_io_FU_outputs_1_bits_PRD),
     .io_FU_outputs_1_bits_RD_data
       (_backend_io_FU_outputs_1_bits_RD_data),
     .io_FU_outputs_1_bits_RD_valid
@@ -888,8 +912,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_2_valid
       (_backend_io_FU_outputs_2_valid),
-    .io_FU_outputs_2_bits_RD
-      (_backend_io_FU_outputs_2_bits_RD),
+    .io_FU_outputs_2_bits_PRD
+      (_backend_io_FU_outputs_2_bits_PRD),
     .io_FU_outputs_2_bits_RD_data
       (_backend_io_FU_outputs_2_bits_RD_data),
     .io_FU_outputs_2_bits_RD_valid
@@ -920,8 +944,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_3_valid
       (_backend_io_MOB_output_valid),
-    .io_FU_outputs_3_bits_RD
-      (_backend_io_MOB_output_bits_RD),
+    .io_FU_outputs_3_bits_PRD
+      (_backend_io_MOB_output_bits_PRD),
     .io_FU_outputs_3_bits_RD_data
       (_backend_io_MOB_output_bits_RD_data),
     .io_FU_outputs_3_bits_RD_valid
@@ -977,8 +1001,8 @@ module ChaosCore(
       (io_backend_memory_response_valid),
     .io_backend_memory_response_bits_addr
       (io_backend_memory_response_bits_addr),
-    .io_backend_memory_response_bits_RD
-      (io_backend_memory_response_bits_RD),
+    .io_backend_memory_response_bits_PRD
+      (io_backend_memory_response_bits_PRD),
     .io_backend_memory_response_bits_fetch_packet_index
       (io_backend_memory_response_bits_fetch_packet_index),
     .io_backend_memory_response_bits_ROB_index
@@ -1003,8 +1027,8 @@ module ChaosCore(
       (io_backend_memory_request_bits_packet_index),
     .io_backend_memory_request_bits_ROB_index
       (io_backend_memory_request_bits_ROB_index),
-    .io_backend_memory_request_bits_RD
-      (io_backend_memory_request_bits_RD),
+    .io_backend_memory_request_bits_PRD
+      (io_backend_memory_request_bits_PRD),
     .io_commit_valid                                    (_ROB_io_commit_valid),
     .io_commit_bits_fetch_PC                            (_ROB_io_commit_bits_fetch_PC),
     .io_commit_bits_T_NT                                (_ROB_io_commit_bits_T_NT),
@@ -1020,14 +1044,14 @@ module ChaosCore(
     .io_commit_bits_NEXT                                (_ROB_io_commit_bits_NEXT),
     .io_commit_bits_free_list_front_pointer
       (_ROB_io_commit_bits_free_list_front_pointer),
-    .io_commit_bits_RDold_0                             (_ROB_io_commit_bits_RDold_0),
-    .io_commit_bits_RDold_1                             (_ROB_io_commit_bits_RDold_1),
-    .io_commit_bits_RDold_2                             (_ROB_io_commit_bits_RDold_2),
-    .io_commit_bits_RDold_3                             (_ROB_io_commit_bits_RDold_3),
     .io_commit_bits_RD_0                                (_ROB_io_commit_bits_RD_0),
     .io_commit_bits_RD_1                                (_ROB_io_commit_bits_RD_1),
     .io_commit_bits_RD_2                                (_ROB_io_commit_bits_RD_2),
     .io_commit_bits_RD_3                                (_ROB_io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0                               (_ROB_io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1                               (_ROB_io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2                               (_ROB_io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3                               (_ROB_io_commit_bits_PRD_3),
     .io_commit_bits_RD_valid_0                          (_ROB_io_commit_bits_RD_valid_0),
     .io_commit_bits_RD_valid_1                          (_ROB_io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2                          (_ROB_io_commit_bits_RD_valid_2),
@@ -1046,10 +1070,14 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
-    .io_partial_commit_RD_0                             (_ROB_io_partial_commit_RD_0),
-    .io_partial_commit_RD_1                             (_ROB_io_partial_commit_RD_1),
-    .io_partial_commit_RD_2                             (_ROB_io_partial_commit_RD_2),
-    .io_partial_commit_RD_3                             (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_PRD_0                            (_ROB_io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1                            (_ROB_io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2                            (_ROB_io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3                            (_ROB_io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0                         (_ROB_io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1                         (_ROB_io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2                         (_ROB_io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3                         (_ROB_io_partial_commit_PRDold_3),
     .io_partial_commit_RD_valid_0
       (_ROB_io_partial_commit_RD_valid_0),
     .io_partial_commit_RD_valid_1
@@ -1058,10 +1086,10 @@ module ChaosCore(
       (_ROB_io_partial_commit_RD_valid_2),
     .io_partial_commit_RD_valid_3
       (_ROB_io_partial_commit_RD_valid_3),
-    .io_partial_commit_RDold_0                          (_ROB_io_partial_commit_RDold_0),
-    .io_partial_commit_RDold_1                          (_ROB_io_partial_commit_RDold_1),
-    .io_partial_commit_RDold_2                          (_ROB_io_partial_commit_RDold_2),
-    .io_partial_commit_RDold_3                          (_ROB_io_partial_commit_RDold_3),
+    .io_partial_commit_RD_0                             (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                             (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                             (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                             (_ROB_io_partial_commit_RD_3),
     .io_PC_file_exec_addr                               (_backend_io_PC_file_exec_addr),
     .io_PC_file_exec_data                               (_ROB_io_PC_file_exec_data),
     .io_fetch_PC
@@ -1076,10 +1104,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),
     .io_backend_packet_0_bits_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),
-    .io_backend_packet_0_bits_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold),
     .io_backend_packet_0_bits_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD),
+    .io_backend_packet_0_bits_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD),
+    .io_backend_packet_0_bits_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold),
     .io_backend_packet_0_bits_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
     .io_backend_packet_0_bits_RS1
@@ -1131,10 +1161,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_backend_packet_1_bits_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),
-    .io_backend_packet_1_bits_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold),
     .io_backend_packet_1_bits_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD),
+    .io_backend_packet_1_bits_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD),
+    .io_backend_packet_1_bits_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold),
     .io_backend_packet_1_bits_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
     .io_backend_packet_1_bits_RS1
@@ -1186,10 +1218,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_backend_packet_2_bits_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),
-    .io_backend_packet_2_bits_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold),
     .io_backend_packet_2_bits_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD),
+    .io_backend_packet_2_bits_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD),
+    .io_backend_packet_2_bits_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold),
     .io_backend_packet_2_bits_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
     .io_backend_packet_2_bits_RS1
@@ -1241,10 +1275,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_backend_packet_3_bits_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),
-    .io_backend_packet_3_bits_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold),
     .io_backend_packet_3_bits_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD),
+    .io_backend_packet_3_bits_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD),
+    .io_backend_packet_3_bits_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold),
     .io_backend_packet_3_bits_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
     .io_backend_packet_3_bits_RS1
@@ -1287,7 +1323,7 @@ module ChaosCore(
     .io_backend_packet_3_bits_access_width
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width),
     .io_MOB_output_valid                                (_backend_io_MOB_output_valid),
-    .io_MOB_output_bits_RD                              (_backend_io_MOB_output_bits_RD),
+    .io_MOB_output_bits_PRD                             (_backend_io_MOB_output_bits_PRD),
     .io_MOB_output_bits_RD_data
       (_backend_io_MOB_output_bits_RD_data),
     .io_MOB_output_bits_RD_valid
@@ -1317,8 +1353,8 @@ module ChaosCore(
     .io_MOB_output_bits_fetch_packet_index
       (_backend_io_MOB_output_bits_fetch_packet_index),
     .io_FU_outputs_0_valid                              (_backend_io_FU_outputs_0_valid),
-    .io_FU_outputs_0_bits_RD
-      (_backend_io_FU_outputs_0_bits_RD),
+    .io_FU_outputs_0_bits_PRD
+      (_backend_io_FU_outputs_0_bits_PRD),
     .io_FU_outputs_0_bits_RD_data
       (_backend_io_FU_outputs_0_bits_RD_data),
     .io_FU_outputs_0_bits_RD_valid
@@ -1348,8 +1384,8 @@ module ChaosCore(
     .io_FU_outputs_0_bits_fetch_packet_index
       (_backend_io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_1_valid                              (_backend_io_FU_outputs_1_valid),
-    .io_FU_outputs_1_bits_RD
-      (_backend_io_FU_outputs_1_bits_RD),
+    .io_FU_outputs_1_bits_PRD
+      (_backend_io_FU_outputs_1_bits_PRD),
     .io_FU_outputs_1_bits_RD_data
       (_backend_io_FU_outputs_1_bits_RD_data),
     .io_FU_outputs_1_bits_RD_valid
@@ -1379,8 +1415,8 @@ module ChaosCore(
     .io_FU_outputs_1_bits_fetch_packet_index
       (_backend_io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_2_valid                              (_backend_io_FU_outputs_2_valid),
-    .io_FU_outputs_2_bits_RD
-      (_backend_io_FU_outputs_2_bits_RD),
+    .io_FU_outputs_2_bits_PRD
+      (_backend_io_FU_outputs_2_bits_PRD),
     .io_FU_outputs_2_bits_RD_data
       (_backend_io_FU_outputs_2_bits_RD_data),
     .io_FU_outputs_2_bits_RD_valid
@@ -1410,8 +1446,8 @@ module ChaosCore(
     .io_FU_outputs_2_bits_fetch_packet_index
       (_backend_io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_3_valid                              (_backend_io_FU_outputs_3_valid),
-    .io_FU_outputs_3_bits_RD
-      (_backend_io_FU_outputs_3_bits_RD),
+    .io_FU_outputs_3_bits_PRD
+      (_backend_io_FU_outputs_3_bits_PRD),
     .io_FU_outputs_3_bits_RD_data
       (_backend_io_FU_outputs_3_bits_RD_data),
     .io_FU_outputs_3_bits_RD_valid
@@ -1455,10 +1491,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),
     .io_ROB_packet_bits_decoded_instruction_0_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),
-    .io_ROB_packet_bits_decoded_instruction_0_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold),
     .io_ROB_packet_bits_decoded_instruction_0_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD),
+    .io_ROB_packet_bits_decoded_instruction_0_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD),
+    .io_ROB_packet_bits_decoded_instruction_0_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold),
     .io_ROB_packet_bits_decoded_instruction_0_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
     .io_ROB_packet_bits_decoded_instruction_0_RS1
@@ -1505,10 +1543,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_ROB_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),
-    .io_ROB_packet_bits_decoded_instruction_1_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold),
     .io_ROB_packet_bits_decoded_instruction_1_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD),
+    .io_ROB_packet_bits_decoded_instruction_1_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD),
+    .io_ROB_packet_bits_decoded_instruction_1_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold),
     .io_ROB_packet_bits_decoded_instruction_1_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
     .io_ROB_packet_bits_decoded_instruction_1_RS1
@@ -1555,10 +1595,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_ROB_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),
-    .io_ROB_packet_bits_decoded_instruction_2_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold),
     .io_ROB_packet_bits_decoded_instruction_2_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD),
+    .io_ROB_packet_bits_decoded_instruction_2_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD),
+    .io_ROB_packet_bits_decoded_instruction_2_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold),
     .io_ROB_packet_bits_decoded_instruction_2_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
     .io_ROB_packet_bits_decoded_instruction_2_RS1
@@ -1605,10 +1647,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_ROB_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),
-    .io_ROB_packet_bits_decoded_instruction_3_RDold
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold),
     .io_ROB_packet_bits_decoded_instruction_3_RD
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD),
+    .io_ROB_packet_bits_decoded_instruction_3_PRD
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD),
+    .io_ROB_packet_bits_decoded_instruction_3_PRDold
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold),
     .io_ROB_packet_bits_decoded_instruction_3_RD_valid
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
     .io_ROB_packet_bits_decoded_instruction_3_RS1
@@ -1677,8 +1721,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_FU_outputs_0_valid
       (_backend_io_FU_outputs_0_valid),
-    .io_FU_outputs_0_bits_RD
-      (_backend_io_FU_outputs_0_bits_RD),
+    .io_FU_outputs_0_bits_PRD
+      (_backend_io_FU_outputs_0_bits_PRD),
     .io_FU_outputs_0_bits_RD_data
       (_backend_io_FU_outputs_0_bits_RD_data),
     .io_FU_outputs_0_bits_RD_valid
@@ -1709,8 +1753,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_1_valid
       (_backend_io_FU_outputs_1_valid),
-    .io_FU_outputs_1_bits_RD
-      (_backend_io_FU_outputs_1_bits_RD),
+    .io_FU_outputs_1_bits_PRD
+      (_backend_io_FU_outputs_1_bits_PRD),
     .io_FU_outputs_1_bits_RD_data
       (_backend_io_FU_outputs_1_bits_RD_data),
     .io_FU_outputs_1_bits_RD_valid
@@ -1741,8 +1785,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_2_valid
       (_backend_io_FU_outputs_2_valid),
-    .io_FU_outputs_2_bits_RD
-      (_backend_io_FU_outputs_2_bits_RD),
+    .io_FU_outputs_2_bits_PRD
+      (_backend_io_FU_outputs_2_bits_PRD),
     .io_FU_outputs_2_bits_RD_data
       (_backend_io_FU_outputs_2_bits_RD_data),
     .io_FU_outputs_2_bits_RD_valid
@@ -1773,8 +1817,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_3_valid
       (_backend_io_FU_outputs_3_valid),
-    .io_FU_outputs_3_bits_RD
-      (_backend_io_FU_outputs_3_bits_RD),
+    .io_FU_outputs_3_bits_PRD
+      (_backend_io_FU_outputs_3_bits_PRD),
     .io_FU_outputs_3_bits_RD_data
       (_backend_io_FU_outputs_3_bits_RD_data),
     .io_FU_outputs_3_bits_RD_valid
@@ -1826,14 +1870,6 @@ module ChaosCore(
       (_ROB_io_commit_bits_NEXT),
     .io_commit_bits_free_list_front_pointer
       (_ROB_io_commit_bits_free_list_front_pointer),
-    .io_commit_bits_RDold_0
-      (_ROB_io_commit_bits_RDold_0),
-    .io_commit_bits_RDold_1
-      (_ROB_io_commit_bits_RDold_1),
-    .io_commit_bits_RDold_2
-      (_ROB_io_commit_bits_RDold_2),
-    .io_commit_bits_RDold_3
-      (_ROB_io_commit_bits_RDold_3),
     .io_commit_bits_RD_0
       (_ROB_io_commit_bits_RD_0),
     .io_commit_bits_RD_1
@@ -1842,6 +1878,14 @@ module ChaosCore(
       (_ROB_io_commit_bits_RD_2),
     .io_commit_bits_RD_3
       (_ROB_io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0
+      (_ROB_io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1
+      (_ROB_io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2
+      (_ROB_io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3
+      (_ROB_io_commit_bits_PRD_3),
     .io_commit_bits_RD_valid_0
       (_ROB_io_commit_bits_RD_valid_0),
     .io_commit_bits_RD_valid_1
@@ -1868,14 +1912,22 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
-    .io_partial_commit_RD_0
-      (_ROB_io_partial_commit_RD_0),
-    .io_partial_commit_RD_1
-      (_ROB_io_partial_commit_RD_1),
-    .io_partial_commit_RD_2
-      (_ROB_io_partial_commit_RD_2),
-    .io_partial_commit_RD_3
-      (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_PRD_0
+      (_ROB_io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1
+      (_ROB_io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2
+      (_ROB_io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3
+      (_ROB_io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (_ROB_io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (_ROB_io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (_ROB_io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (_ROB_io_partial_commit_PRDold_3),
     .io_partial_commit_RD_valid_0
       (_ROB_io_partial_commit_RD_valid_0),
     .io_partial_commit_RD_valid_1
@@ -1884,14 +1936,14 @@ module ChaosCore(
       (_ROB_io_partial_commit_RD_valid_2),
     .io_partial_commit_RD_valid_3
       (_ROB_io_partial_commit_RD_valid_3),
-    .io_partial_commit_RDold_0
-      (_ROB_io_partial_commit_RDold_0),
-    .io_partial_commit_RDold_1
-      (_ROB_io_partial_commit_RDold_1),
-    .io_partial_commit_RDold_2
-      (_ROB_io_partial_commit_RDold_2),
-    .io_partial_commit_RDold_3
-      (_ROB_io_partial_commit_RDold_3),
+    .io_partial_commit_RD_0
+      (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (_ROB_io_partial_commit_RD_3),
     .io_ROB_index                                                  (_ROB_io_ROB_index),
     .io_PC_file_exec_addr
       (_backend_io_PC_file_exec_addr),
@@ -1911,14 +1963,14 @@ module ChaosCore(
   assign io_commit_bits_NEXT = _ROB_io_commit_bits_NEXT;
   assign io_commit_bits_free_list_front_pointer =
     _ROB_io_commit_bits_free_list_front_pointer;
-  assign io_commit_bits_RDold_0 = _ROB_io_commit_bits_RDold_0;
-  assign io_commit_bits_RDold_1 = _ROB_io_commit_bits_RDold_1;
-  assign io_commit_bits_RDold_2 = _ROB_io_commit_bits_RDold_2;
-  assign io_commit_bits_RDold_3 = _ROB_io_commit_bits_RDold_3;
   assign io_commit_bits_RD_0 = _ROB_io_commit_bits_RD_0;
   assign io_commit_bits_RD_1 = _ROB_io_commit_bits_RD_1;
   assign io_commit_bits_RD_2 = _ROB_io_commit_bits_RD_2;
   assign io_commit_bits_RD_3 = _ROB_io_commit_bits_RD_3;
+  assign io_commit_bits_PRD_0 = _ROB_io_commit_bits_PRD_0;
+  assign io_commit_bits_PRD_1 = _ROB_io_commit_bits_PRD_1;
+  assign io_commit_bits_PRD_2 = _ROB_io_commit_bits_PRD_2;
+  assign io_commit_bits_PRD_3 = _ROB_io_commit_bits_PRD_3;
   assign io_commit_bits_RD_valid_0 = _ROB_io_commit_bits_RD_valid_0;
   assign io_commit_bits_RD_valid_1 = _ROB_io_commit_bits_RD_valid_1;
   assign io_commit_bits_RD_valid_2 = _ROB_io_commit_bits_RD_valid_2;

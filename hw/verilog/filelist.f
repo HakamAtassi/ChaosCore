@@ -21,10 +21,10 @@ ram_16x37.sv
 Queue16_prediction.sv
 instruction_fetch.sv
 decoder.sv
-ram_2x455.sv
+ram_2x483.sv
 Queue2_decoded_fetch_packet.sv
 fetch_packet_decoder.sv
-ram_16x455.sv
+ram_16x483.sv
 Queue16_decoded_fetch_packet.sv
 free_list.sv
 WAW_handler.sv
@@ -46,7 +46,7 @@ mem_64x70.sv
 ROB_shared_mem.sv
 mem_busy_64x1.sv
 ROB_WB_mem.sv
-mem_64x21.sv
+mem_64x26.sv
 ROB_entry_mem.sv
 fetch_64x37.sv
 ROB.sv

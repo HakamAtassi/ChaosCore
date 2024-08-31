@@ -39,7 +39,7 @@ import chisel3.ltl._
 class WAW_handler(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     // sometimes, multiple instructions within a single fetch packet will 
-    // have the same RD. During rename, this RD will result in two different mappins between
+    // have the same PRD. During rename, this PRD will result in two different mappins between
     // arch. reg and physical reg from the free list. 
     // This module ensures that the RAT is updated with the most recent mapping in said fetch packet.
 
@@ -56,7 +56,7 @@ class WAW_handler(coreParameters:CoreParameters) extends Module{
         val FL_RD_values            = Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
     })
 
-    // Idea: every wr en is only high if no later instruction is actively renaming the same RD
+    // Idea: every wr en is only high if no later instruction is actively renaming the same PRD
 
     // pass values through
     // Only wr_en really matters
@@ -101,7 +101,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
 
 
         // renamed outputs
-        val RAT_RD                      =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
+        val RAT_PRDold                  =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
         val RAT_RS1                     =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
         val RAT_RS2                     =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
     })
@@ -120,9 +120,9 @@ class RAT(coreParameters:CoreParameters) extends Module{
 
     // read RAT
     for(i <- 0 until fetchWidth){
-        io.RAT_RD(i)  := speculative_RAT(io.instruction_RD(i))
-        io.RAT_RS1(i) := speculative_RAT(io.instruction_RS1(i))
-        io.RAT_RS2(i) := speculative_RAT(io.instruction_RS2(i))
+        io.RAT_RS1(i)    := speculative_RAT(io.instruction_RS1(i))
+        io.RAT_RS2(i)    := speculative_RAT(io.instruction_RS2(i))
+        io.RAT_PRDold(i) := speculative_RAT(io.instruction_RD(i))
     }
 
     // write RAT
@@ -140,7 +140,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
         //FIXME: use global flush signal and do not reconstruct
         //when(io.commit.valid && (io.commit.bits.RD_valid(i) && !(io.commit.valid && io.commit.bits.is_misprediction))){
         when(io.partial_commit.valid.take(i+1).reduce(_ && _) && io.commit.bits.RD_valid(i)){
-            commit_RAT(io.commit.bits.RDold(i)) := io.commit.bits.RD(i)
+            commit_RAT(io.commit.bits.RD(i)) := io.commit.bits.PRD(i)
         }
     }
 
@@ -150,7 +150,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     when(io.commit.valid && (io.commit.bits.is_misprediction)){
         for(i <- 0 until fetchWidth){
             when(io.partial_commit.valid.take(i+1).reduce(_ && _) && io.commit.bits.RD_valid(i)){
-                speculative_RAT(io.commit.bits.RDold(i)) := io.commit.bits.RD(i)
+                speculative_RAT(io.commit.bits.RD(i)) := io.commit.bits.PRD(i)
             }
         }
     }
@@ -167,9 +167,9 @@ class RAT(coreParameters:CoreParameters) extends Module{
 class rename(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     // Takes in N input instructions
-    // Reads the renamed versions of RS1, RS2, and RD (old)
-    // performs a rename to RD using the free list
-    // outputs RD(old), RD, RS1, RS2
+    // Reads the renamed versions of RS1, RS2, and PRD (old)
+    // performs a rename to PRD using the free list
+    // outputs PRD(old), PRD, RS1, RS2
 
     // Also provides checkpointing capability.
 
@@ -228,10 +228,11 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     free_list.io.commit := io.commit
     for(i <- 0 until fetchWidth){
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD              := free_list.io.renamed_values(i)
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RDold           := io.decoded_fetch_packet.bits.decoded_instruction(i).RDold
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD          := free_list.io.renamed_values(i)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD           := io.decoded_fetch_packet.bits.decoded_instruction(i).RD
+        //renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold       := io.decoded_fetch_packet.bits.decoded_instruction(i).PRDold
     }
-    renamed_decoded_fetch_packet.bits.free_list_front_pointer                    := free_list.io.free_list_front_pointer
+    renamed_decoded_fetch_packet.bits.free_list_front_pointer                 := free_list.io.free_list_front_pointer
 
     /////////
     // WAW //
@@ -259,13 +260,16 @@ class rename(coreParameters:CoreParameters) extends Module{
         RAT.io.instruction_RS2(i)                  :=  io.decoded_fetch_packet.bits.decoded_instruction(i).RS2
     }
 
-    val renamed_RS1 = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
-    val renamed_RS2 = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
+    val renamed_RS1     = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
+    val renamed_RS2     = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
+    val renamed_PRDold  = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
+
 
     // superscalar forwarding logic
     for(i <- 0 until fetchWidth){
        renamed_RS1(i) := RAT.io.RAT_RS1(i)   // default case (no forwarding)
        renamed_RS2(i) := RAT.io.RAT_RS2(i)   // default case (no forwarding)
+       renamed_PRDold(i) := RAT.io.RAT_PRDold(i)   // default case (no forwarding)
         for(j <- 0 until i){
             // forward RS1
             when((io.decoded_fetch_packet.bits.decoded_instruction(i).RS1 === io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
@@ -279,13 +283,22 @@ class rename(coreParameters:CoreParameters) extends Module{
             ){
                 renamed_RS2(i) := free_list.io.renamed_values(j)
             }
+            // forward RDold
+            when((io.decoded_fetch_packet.bits.decoded_instruction(i).RD === io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
+                            (io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid && 
+                            io.decoded_fetch_packet.bits.decoded_instruction(i).RD =/= 0.U && io.decoded_fetch_packet.bits.decoded_instruction(j).RD =/= 0.U)
+            ){
+                renamed_PRDold(i) := free_list.io.renamed_values(j)
+            }
         }
     }
 
-    for(i <- 0 until fetchWidth){
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1             := renamed_RS1(i)
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2             := renamed_RS2(i)
+    for (i <- 0 until renamed_decoded_fetch_packet.bits.decoded_instruction.length) {
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1    := renamed_RS1(i)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2    := renamed_RS2(i)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := renamed_PRDold(i)
     }
+
 
 
     ////////////////
@@ -300,7 +313,7 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     // Set ready bit from FU
     for(i <- 0 until fetchWidth){   // FIXME: this should be port width...
-        val set_RD      = io.FU_outputs(i).bits.RD
+        val set_RD      = io.FU_outputs(i).bits.PRD
         val RD_valid    = io.FU_outputs(i).valid && io.FU_outputs(i).bits.RD_valid
 
         when(RD_valid){
@@ -310,7 +323,7 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     // Reset ready bit
     for(i <- 0 until fetchWidth){
-        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD 
+        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD 
         val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid 
 
         //renamed_decoded_fetch_packet.bits.decoded_instruction(i).instruction_ID             := DontCare
@@ -321,6 +334,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     }
 
 
+    free_list.io.partial_commit                    <> io.partial_commit
 
     // x0 as a dest or source is never remapped
     // x0 always ready
@@ -342,12 +356,9 @@ class rename(coreParameters:CoreParameters) extends Module{
     // SKID BUFFER //
     /////////////////
 
-    // FTQ FORWARDING // 
     // fetch packet Q takes up a lot of area...
     val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
-
     val outputs_ready                   = free_list.io.can_allocate && io.renamed_decoded_fetch_packet.ready 
-
 
     renamed_decoded_fetch_packet_Q.io.enq                   <> renamed_decoded_fetch_packet
     renamed_decoded_fetch_packet_Q.io.enq.valid             := (io.decoded_fetch_packet.fire) && !io.flush
@@ -360,11 +371,7 @@ class rename(coreParameters:CoreParameters) extends Module{
         initialReady.RS1_ready := comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1)
         initialReady.RS2_ready := comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2)
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits := initialReady
-
-        //io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).instruction_ID             := DontCare
     }
 
-
     io.decoded_fetch_packet.ready                           := RegNext(outputs_ready)
-
 }

@@ -147,7 +147,7 @@ class ChaosCore_dut:
                 MOB_index = self.ChaosCore.io_backend_memory_request_bits_MOB_index.value
                 memory_type = self.ChaosCore.io_backend_memory_request_bits_memory_type.value
 
-                #print(f"rd: {hex(addr)}, data: {hex(data)}, MOB_index: {int(MOB_index)}")
+                #print(f"PRD: {hex(addr)}, data: {hex(data)}, MOB_index: {int(MOB_index)}")
                 self.write_dmem_response(data=data, valid = 1, MOB_index=MOB_index, memory_type=memory_type)
 
         await RisingEdge(self.clock())

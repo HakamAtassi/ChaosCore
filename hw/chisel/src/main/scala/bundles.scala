@@ -138,8 +138,8 @@ class commit(coreParameters:CoreParameters) extends Bundle{
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
-    val RDold                   = Vec(fetchWidth, UInt(architecturalRegBits.W))
-    val RD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
+    val RD                   = Vec(fetchWidth, UInt(architecturalRegBits.W))
+    val PRD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
 }
 
@@ -149,9 +149,10 @@ class partial_commit(coreParameters:CoreParameters) extends Bundle{
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
     val MOB_index               = Vec(fetchWidth, UInt(log2Ceil(MOBEntries).W))
 
-    val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
+    val PRD                     = Vec(fetchWidth, UInt(architecturalRegBits.W))
+    val PRDold                  = Vec(fetchWidth, UInt(architecturalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
-    val RDold                   = Vec(fetchWidth, UInt(physicalRegBits.W))
+    val RD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
 }
 
 //class exception(coreParameters:CoreParameters) extends Bundle{
@@ -212,8 +213,11 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // ~30 bits
     val ready_bits          =  new sources_ready()
 
-    val RDold               =  UInt(architecturalRegBits.W) // Actual dest
-    val RD                  =  UInt(physicalRegBits.W) // Actual dest
+    val RD                  =  UInt(architecturalRegBits.W) // Actual dest
+    val PRD                 =  UInt(physicalRegBits.W) // Actual dest
+    val PRDold              =  UInt(physicalRegBits.W) // Actual dest
+
+
     val RD_valid            =  Bool()
     val RS1                 =  UInt(physicalRegBits.W)
     val RS1_valid           =  Bool()
@@ -412,9 +416,10 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
 
     val MOB_index   =   UInt(log2Ceil(MOBEntries).W)
 
-    val RD          =   UInt(physicalRegBits.W)
     val RD_valid    =   Bool()
-    val RDold       =   UInt(architecturalRegBits.W)
+    val RD          =   UInt(architecturalRegBits.W)
+    val PRDold      =   UInt(architecturalRegBits.W)
+    val PRD         =   UInt(physicalRegBits.W)
 }
 
 class ROB_WB(coreParameters:CoreParameters) extends Bundle{
@@ -457,7 +462,7 @@ class MEMRS_entry(coreParameters:CoreParameters) extends Bundle{
 class FU_output(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     // Arithmetic/Load
-    val RD                  =   UInt(physicalRegBits.W)
+    val PRD                  =   UInt(physicalRegBits.W)
     val RD_data             =   UInt(32.W)
     val RD_valid            =   Bool()
 
@@ -532,13 +537,13 @@ class backend_memory_request(coreParameters:CoreParameters) extends Bundle{
     val MOB_index       = UInt(log2Ceil(MOBEntries).W)
     val packet_index    = UInt(log2Ceil(fetchWidth).W)
     val ROB_index       = UInt(log2Ceil(ROBEntries).W)
-    val RD              = UInt(physicalRegBits.W)
+    val PRD              = UInt(physicalRegBits.W)
 }
 
 class backend_memory_response(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val addr            = UInt(32.W)
-    val RD              = UInt(32.W)
+    val PRD              = UInt(32.W)
     val fetch_packet_index = UInt(32.W)
     val ROB_index       = UInt(log2Ceil(ROBEntries).W)
 
@@ -564,7 +569,7 @@ object access_width_t extends ChiselEnum{
 class memory_access(coreParameters:CoreParameters) extends Bundle{   // output of the AGU
     import coreParameters._
     val memory_type     = memory_type_t()   // LOAD/STORE
-    val RD              = UInt(physicalRegBits.W)
+    val PRD              = UInt(physicalRegBits.W)
     val access_width    = access_width_t()  // B/HW/W
     val is_unsigned     = Bool()            // signed/is_unsigned
     val address         = UInt(32.W)
@@ -598,7 +603,7 @@ val Acquire,
 
 
 /*loads mark as complete when they are 100% correct and non-speculative.*/
-/*That is, loads can mark the RD ready to avoid stalling the pipeline*/
+/*That is, loads can mark the PRD ready to avoid stalling the pipeline*/
 /*But have the possibility of causing an exception that prevents them from committing*/
 /*Loads are not freed until they actually commit.*/
 
@@ -625,7 +630,7 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
     val address                 = UInt(32.W)        // LOAD/STORE address
     val access_width            = access_width_t()  // B/HW/W
 
-    val RD                      = UInt(physicalRegBits.W) // dest reg
+    val PRD                      = UInt(physicalRegBits.W) // dest reg
     val data                    = UInt(32.W)              
     val data_valid              = Bool()
 

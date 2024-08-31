@@ -57,7 +57,7 @@ class frontend(coreParameters:CoreParameters) extends Module{
         // INSTRUCTION OUT //
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
 
-        // RD FREE //
+        // PRD FREE //
         val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
         val revert                          =   ValidIO(new revert(coreParameters))

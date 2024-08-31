@@ -516,7 +516,7 @@ circuit L1_data_cache :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~L1_data_cache|L1_data_cache>io.CPU_response.bits.RD"
+    "target":"~L1_data_cache|L1_data_cache>io.CPU_response.bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -532,7 +532,7 @@ circuit L1_data_cache :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~L1_data_cache|L1_data_cache>io.CPU_request.bits.RD"
+    "target":"~L1_data_cache|L1_data_cache>io.CPU_request.bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -1905,7 +1905,7 @@ circuit L1_data_cache :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~L1_data_cache|L1_data_cache>non_cacheable_buffer[0].RD"
+    "target":"~L1_data_cache|L1_data_cache>non_cacheable_buffer[0].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -1937,7 +1937,7 @@ circuit L1_data_cache :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~L1_data_cache|L1_data_cache>non_cacheable_buffer[1].RD"
+    "target":"~L1_data_cache|L1_data_cache>non_cacheable_buffer[1].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -1969,7 +1969,7 @@ circuit L1_data_cache :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~L1_data_cache|L1_data_cache>non_cacheable_buffer[2].RD"
+    "target":"~L1_data_cache|L1_data_cache>non_cacheable_buffer[2].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2001,7 +2001,7 @@ circuit L1_data_cache :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~L1_data_cache|L1_data_cache>non_cacheable_buffer[3].RD"
+    "target":"~L1_data_cache|L1_data_cache>non_cacheable_buffer[3].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2117,7 +2117,7 @@ circuit L1_data_cache :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~L1_data_cache|L1_data_cache>io.CPU_response.bits.RD"
+    "target":"~L1_data_cache|L1_data_cache>io.CPU_response.bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2133,7 +2133,7 @@ circuit L1_data_cache :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~L1_data_cache|L1_data_cache>io.CPU_request.bits.RD"
+    "target":"~L1_data_cache|L1_data_cache>io.CPU_request.bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2466,9 +2466,9 @@ circuit L1_data_cache :%[[
   module Queue8_backend_memory_response : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, count : UInt<4>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, count : UInt<4>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    smem ram : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>} [8] new @[src/main/scala/chisel3/util/Decoupled.scala 256:44]
+    smem ram : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>} [8] new @[src/main/scala/chisel3/util/Decoupled.scala 256:44]
     regreset enq_ptr_value : UInt<3>, clock, reset, UInt<3>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset deq_ptr_value : UInt<3>, clock, reset, UInt<3>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
@@ -2532,9 +2532,9 @@ circuit L1_data_cache :%[[
   module Queue8_backend_memory_response_1 : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, count : UInt<4>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, count : UInt<4>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    smem ram : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>} [8] new @[src/main/scala/chisel3/util/Decoupled.scala 256:44]
+    smem ram : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>} [8] new @[src/main/scala/chisel3/util/Decoupled.scala 256:44]
     regreset enq_ptr_value : UInt<3>, clock, reset, UInt<3>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset deq_ptr_value : UInt<3>, clock, reset, UInt<3>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
@@ -2598,9 +2598,9 @@ circuit L1_data_cache :%[[
   module Queue3_backend_memory_response : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, count : UInt<2>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, count : UInt<2>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    smem ram : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>} [3] new @[src/main/scala/chisel3/util/Decoupled.scala 256:44]
+    smem ram : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>} [3] new @[src/main/scala/chisel3/util/Decoupled.scala 256:44]
     regreset enq_ptr_value : UInt<2>, clock, reset, UInt<2>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset deq_ptr_value : UInt<2>, clock, reset, UInt<2>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
@@ -3237,7 +3237,7 @@ circuit L1_data_cache :%[[
   module Arbiter2_backend_memory_response : @[src/main/scala/chisel3/util/Arbiter.scala 133:7]
     input clock : Clock @[src/main/scala/chisel3/util/Arbiter.scala 133:7]
     input reset : Reset @[src/main/scala/chisel3/util/Arbiter.scala 133:7]
-    output io : { flip in : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}[2], out : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, chosen : UInt<1>} @[src/main/scala/chisel3/util/Arbiter.scala 140:14]
+    output io : { flip in : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}[2], out : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}, chosen : UInt<1>} @[src/main/scala/chisel3/util/Arbiter.scala 140:14]
 
     connect io.chosen, UInt<1>(0h1) @[src/main/scala/chisel3/util/Arbiter.scala 142:13]
     connect io.out.bits, io.in[1].bits @[src/main/scala/chisel3/util/Arbiter.scala 143:15]
@@ -3257,7 +3257,7 @@ circuit L1_data_cache :%[[
     input clock : Clock @[src/main/scala/L1Cache/L1_data_cache.scala 120:7]
     input reset : UInt<1> @[src/main/scala/L1Cache/L1_data_cache.scala 120:7]
     output m_axi : { awvalid : UInt<1>, flip awready : UInt<1>, awid : UInt<8>, awaddr : UInt<32>, awlen : UInt<8>, awsize : UInt<3>, awburst : UInt<2>, awlock : UInt<1>, awcache : UInt<4>, awprot : UInt<3>, awqos : UInt<4>, awregion : UInt<4>, awuser : UInt<1>, flip wready : UInt<1>, wvalid : UInt<1>, wdata : UInt<32>, wstrb : UInt<4>, wlast : UInt<1>, wuser : UInt<1>, bready : UInt<1>, flip bvalid : UInt<1>, flip bid : UInt<8>, flip bresp : UInt<2>, flip buser : UInt<1>, arvalid : UInt<1>, flip arready : UInt<1>, arid : UInt<8>, araddr : UInt<32>, arlen : UInt<8>, arsize : UInt<3>, arburst : UInt<2>, arlock : UInt<1>, arcache : UInt<4>, arprot : UInt<3>, arqos : UInt<4>, arregion : UInt<4>, aruser : UInt<1>, rready : UInt<1>, flip rvalid : UInt<1>, flip rid : UInt<8>, flip rdata : UInt<32>, flip rresp : UInt<2>, flip rlast : UInt<1>, flip ruser : UInt<1>} @[src/main/scala/NOC/AXI/AXI_cache_node.scala 23:17]
-    output io : { flip CPU_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, RD : UInt<7>}}, CPU_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, RD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}} @[src/main/scala/L1Cache/L1_data_cache.scala 123:20]
+    output io : { flip CPU_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, PRD : UInt<7>}}, CPU_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, PRD : UInt<32>, fetch_packet_index : UInt<32>, ROB_index : UInt<6>, data : UInt<32>, MOB_index : UInt<4>}}} @[src/main/scala/L1Cache/L1_data_cache.scala 123:20]
 
     connect m_axi.bready, UInt<1>(0h0) @[src/main/scala/NOC/AXI/AXI_cache_node.scala 36:26]
     connect m_axi.rready, UInt<1>(0h0) @[src/main/scala/NOC/AXI/AXI_cache_node.scala 37:26]
@@ -3850,7 +3850,7 @@ circuit L1_data_cache :%[[
     connect backend_MOB_index, io.CPU_request.bits.MOB_index @[src/main/scala/L1Cache/L1_data_cache.scala 289:41]
     connect backend_packet_index, io.CPU_request.bits.packet_index @[src/main/scala/L1Cache/L1_data_cache.scala 290:33]
     connect backend_ROB_index, io.CPU_request.bits.ROB_index @[src/main/scala/L1Cache/L1_data_cache.scala 291:41]
-    connect backend_RD, io.CPU_request.bits.RD @[src/main/scala/L1Cache/L1_data_cache.scala 292:49]
+    connect backend_RD, io.CPU_request.bits.PRD @[src/main/scala/L1Cache/L1_data_cache.scala 292:49]
     connect output_operation, UInt<1>(0h0) @[src/main/scala/L1Cache/L1_data_cache.scala 296:49]
     node _dram_addr_mask_T = dshl(UInt<1>(0h1), UInt<6>(0h20)) @[src/main/scala/L1Cache/L1_data_cache.scala 304:32]
     node _dram_addr_mask_T_1 = shl(UInt<1>(0h1), 5) @[src/main/scala/L1Cache/L1_data_cache.scala 304:48]
@@ -8599,7 +8599,7 @@ circuit L1_data_cache :%[[
     node writeback_address_hi = cat(writeback_tag, writeback_set) @[src/main/scala/L1Cache/L1_data_cache.scala 589:39]
     node _writeback_address_T = cat(writeback_address_hi, UInt<5>(0h0)) @[src/main/scala/L1Cache/L1_data_cache.scala 589:39]
     connect writeback_address, _writeback_address_T @[src/main/scala/L1Cache/L1_data_cache.scala 589:33]
-    reg MSHRs : { address : UInt<32>, miss_requests : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, RD : UInt<7>}[8], allocate_way : UInt<2>, front_pointer : UInt<3>, back_pointer : UInt<3>, valid : UInt<1>}[4], clock @[src/main/scala/L1Cache/L1_data_cache.scala 601:54]
+    reg MSHRs : { address : UInt<32>, miss_requests : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, PRD : UInt<7>}[8], allocate_way : UInt<2>, front_pointer : UInt<3>, back_pointer : UInt<3>, valid : UInt<1>}[4], clock @[src/main/scala/L1Cache/L1_data_cache.scala 601:54]
     regreset MSHR_front_pointer : UInt<3>, clock, reset, UInt<1>(0h0) @[src/main/scala/L1Cache/L1_data_cache.scala 603:42]
     regreset MSHR_back_pointer : UInt<3>, clock, reset, UInt<1>(0h0) @[src/main/scala/L1Cache/L1_data_cache.scala 604:42]
     node MSHR_front_index = bits(MSHR_front_pointer, 1, 0) @[src/main/scala/L1Cache/L1_data_cache.scala 606:53]
@@ -8608,7 +8608,7 @@ circuit L1_data_cache :%[[
     wire MSHR_back_pointer_next : UInt<3> @[src/main/scala/L1Cache/L1_data_cache.scala 610:47]
     node MSHR_front_index_next = bits(MSHR_front_pointer_next, 1, 0) @[src/main/scala/L1Cache/L1_data_cache.scala 612:66]
     node MSHR_back_index_next = bits(MSHR_back_pointer_next, 1, 0) @[src/main/scala/L1Cache/L1_data_cache.scala 613:65]
-    reg non_cacheable_buffer : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, RD : UInt<7>}[4], clock @[src/main/scala/L1Cache/L1_data_cache.scala 616:70]
+    reg non_cacheable_buffer : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, PRD : UInt<7>}[4], clock @[src/main/scala/L1Cache/L1_data_cache.scala 616:70]
     regreset non_cacheable_buffer_front_pointer : UInt<3>, clock, reset, UInt<1>(0h0) @[src/main/scala/L1Cache/L1_data_cache.scala 618:58]
     regreset non_cacheable_buffer_back_pointer : UInt<3>, clock, reset, UInt<1>(0h0) @[src/main/scala/L1Cache/L1_data_cache.scala 619:58]
     node non_cacheable_buffer_front_index = bits(non_cacheable_buffer_front_pointer, 1, 0) @[src/main/scala/L1Cache/L1_data_cache.scala 621:85]
@@ -8646,8 +8646,8 @@ circuit L1_data_cache :%[[
         connect hit_MSHR_index, UInt<2>(0h3) @[src/main/scala/L1Cache/L1_data_cache.scala 640:49]
         connect valid_MSHR_hit, UInt<1>(0h1) @[src/main/scala/L1Cache/L1_data_cache.scala 641:48]
         connect valid_MSHR_miss, UInt<1>(0h0) @[src/main/scala/L1Cache/L1_data_cache.scala 642:49]
-    wire miss_backend_memory_request : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, RD : UInt<7>} @[src/main/scala/L1Cache/L1_data_cache.scala 651:47]
-    reg miss_backend_memory_request_REG : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, RD : UInt<7>}, clock @[src/main/scala/L1Cache/L1_data_cache.scala 652:47]
+    wire miss_backend_memory_request : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, PRD : UInt<7>} @[src/main/scala/L1Cache/L1_data_cache.scala 651:47]
+    reg miss_backend_memory_request_REG : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, PRD : UInt<7>}, clock @[src/main/scala/L1Cache/L1_data_cache.scala 652:47]
     connect miss_backend_memory_request_REG, io.CPU_request.bits @[src/main/scala/L1Cache/L1_data_cache.scala 652:47]
     connect miss_backend_memory_request, miss_backend_memory_request_REG @[src/main/scala/L1Cache/L1_data_cache.scala 652:37]
     connect MSHR_front_pointer_next, MSHR_front_pointer @[src/main/scala/L1Cache/L1_data_cache.scala 658:33]
@@ -8681,32 +8681,32 @@ circuit L1_data_cache :%[[
     connect MSHR_replay_done, UInt<1>(0h0) @[src/main/scala/L1Cache/L1_data_cache.scala 690:26]
     node _T_139 = eq(DATA_CACHE_STATE, UInt<2>(0h3)) @[src/main/scala/L1Cache/L1_data_cache.scala 691:31]
     when _T_139 : @[src/main/scala/L1Cache/L1_data_cache.scala 691:60]
-      wire _MSHRs_miss_requests_WIRE : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, RD : UInt<7>} @[src/main/scala/bundles.scala 670:53]
-      connect _MSHRs_miss_requests_WIRE.RD, UInt<7>(0h0) @[src/main/scala/bundles.scala 670:53]
-      connect _MSHRs_miss_requests_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/bundles.scala 670:53]
-      connect _MSHRs_miss_requests_WIRE.packet_index, UInt<2>(0h0) @[src/main/scala/bundles.scala 670:53]
-      connect _MSHRs_miss_requests_WIRE.MOB_index, UInt<4>(0h0) @[src/main/scala/bundles.scala 670:53]
-      connect _MSHRs_miss_requests_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/bundles.scala 670:53]
-      connect _MSHRs_miss_requests_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/bundles.scala 670:53]
-      connect _MSHRs_miss_requests_WIRE.data, UInt<32>(0h0) @[src/main/scala/bundles.scala 670:53]
-      connect _MSHRs_miss_requests_WIRE.addr, UInt<32>(0h0) @[src/main/scala/bundles.scala 670:53]
-      connect MSHRs[MSHR_front_index].miss_requests[MSHRs[MSHR_front_index].front_pointer], _MSHRs_miss_requests_WIRE @[src/main/scala/bundles.scala 670:38]
-      node _MSHRs_front_pointer_T = add(MSHRs[MSHR_front_index].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 671:40]
-      node _MSHRs_front_pointer_T_1 = tail(_MSHRs_front_pointer_T, 1) @[src/main/scala/bundles.scala 671:40]
-      connect MSHRs[MSHR_front_index].front_pointer, _MSHRs_front_pointer_T_1 @[src/main/scala/bundles.scala 671:23]
-      node _T_140 = add(MSHRs[MSHR_front_index].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 687:24]
-      node _T_141 = tail(_T_140, 1) @[src/main/scala/bundles.scala 687:24]
-      node _T_142 = eq(_T_141, MSHRs[MSHR_front_index].back_pointer) @[src/main/scala/bundles.scala 687:31]
+      wire _MSHRs_miss_requests_WIRE : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>, packet_index : UInt<2>, ROB_index : UInt<6>, PRD : UInt<7>} @[src/main/scala/bundles.scala 675:53]
+      connect _MSHRs_miss_requests_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/bundles.scala 675:53]
+      connect _MSHRs_miss_requests_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/bundles.scala 675:53]
+      connect _MSHRs_miss_requests_WIRE.packet_index, UInt<2>(0h0) @[src/main/scala/bundles.scala 675:53]
+      connect _MSHRs_miss_requests_WIRE.MOB_index, UInt<4>(0h0) @[src/main/scala/bundles.scala 675:53]
+      connect _MSHRs_miss_requests_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/bundles.scala 675:53]
+      connect _MSHRs_miss_requests_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/bundles.scala 675:53]
+      connect _MSHRs_miss_requests_WIRE.data, UInt<32>(0h0) @[src/main/scala/bundles.scala 675:53]
+      connect _MSHRs_miss_requests_WIRE.addr, UInt<32>(0h0) @[src/main/scala/bundles.scala 675:53]
+      connect MSHRs[MSHR_front_index].miss_requests[MSHRs[MSHR_front_index].front_pointer], _MSHRs_miss_requests_WIRE @[src/main/scala/bundles.scala 675:38]
+      node _MSHRs_front_pointer_T = add(MSHRs[MSHR_front_index].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 676:40]
+      node _MSHRs_front_pointer_T_1 = tail(_MSHRs_front_pointer_T, 1) @[src/main/scala/bundles.scala 676:40]
+      connect MSHRs[MSHR_front_index].front_pointer, _MSHRs_front_pointer_T_1 @[src/main/scala/bundles.scala 676:23]
+      node _T_140 = add(MSHRs[MSHR_front_index].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 692:24]
+      node _T_141 = tail(_T_140, 1) @[src/main/scala/bundles.scala 692:24]
+      node _T_142 = eq(_T_141, MSHRs[MSHR_front_index].back_pointer) @[src/main/scala/bundles.scala 692:31]
       when _T_142 : @[src/main/scala/L1Cache/L1_data_cache.scala 694:51]
         connect MSHR_replay_done, UInt<1>(0h1) @[src/main/scala/L1Cache/L1_data_cache.scala 695:42]
         node _MSHR_front_pointer_next_T = add(MSHR_front_pointer, UInt<1>(0h1)) @[src/main/scala/L1Cache/L1_data_cache.scala 696:71]
         node _MSHR_front_pointer_next_T_1 = tail(_MSHR_front_pointer_next_T, 1) @[src/main/scala/L1Cache/L1_data_cache.scala 696:71]
         connect MSHR_front_pointer_next, _MSHR_front_pointer_next_T_1 @[src/main/scala/L1Cache/L1_data_cache.scala 696:49]
-        connect MSHRs[MSHR_front_index].front_pointer, UInt<1>(0h0) @[src/main/scala/bundles.scala 691:23]
-        connect MSHRs[MSHR_front_index].back_pointer, UInt<1>(0h0) @[src/main/scala/bundles.scala 692:22]
-        connect MSHRs[MSHR_front_index].address, UInt<1>(0h0) @[src/main/scala/bundles.scala 693:17]
-        connect MSHRs[MSHR_front_index].allocate_way, UInt<1>(0h0) @[src/main/scala/bundles.scala 694:22]
-        connect MSHRs[MSHR_front_index].valid, UInt<1>(0h0) @[src/main/scala/bundles.scala 695:15]
+        connect MSHRs[MSHR_front_index].front_pointer, UInt<1>(0h0) @[src/main/scala/bundles.scala 696:23]
+        connect MSHRs[MSHR_front_index].back_pointer, UInt<1>(0h0) @[src/main/scala/bundles.scala 697:22]
+        connect MSHRs[MSHR_front_index].address, UInt<1>(0h0) @[src/main/scala/bundles.scala 698:17]
+        connect MSHRs[MSHR_front_index].allocate_way, UInt<1>(0h0) @[src/main/scala/bundles.scala 699:22]
+        connect MSHRs[MSHR_front_index].valid, UInt<1>(0h0) @[src/main/scala/bundles.scala 700:15]
     connect MSHR_front_pointer, MSHR_front_pointer_next @[src/main/scala/L1Cache/L1_data_cache.scala 703:28]
     connect allocate_way, MSHRs[MSHR_front_index].allocate_way @[src/main/scala/L1Cache/L1_data_cache.scala 706:49]
     connect allocate_address, MSHRs[MSHR_front_index].address @[src/main/scala/L1Cache/L1_data_cache.scala 707:49]
@@ -8979,7 +8979,7 @@ circuit L1_data_cache :%[[
     connect replay_MOB_index, MSHRs[MSHR_front_index].miss_requests[MSHRs[MSHR_front_index].front_pointer].MOB_index @[src/main/scala/L1Cache/L1_data_cache.scala 875:41]
     connect replay_ROB_index, MSHRs[MSHR_front_index].miss_requests[MSHRs[MSHR_front_index].front_pointer].ROB_index @[src/main/scala/L1Cache/L1_data_cache.scala 876:41]
     connect replay_packet_index, MSHRs[MSHR_front_index].miss_requests[MSHRs[MSHR_front_index].front_pointer].packet_index @[src/main/scala/L1Cache/L1_data_cache.scala 877:41]
-    connect replay_RD, MSHRs[MSHR_front_index].miss_requests[MSHRs[MSHR_front_index].front_pointer].RD @[src/main/scala/L1Cache/L1_data_cache.scala 878:49]
+    connect replay_RD, MSHRs[MSHR_front_index].miss_requests[MSHRs[MSHR_front_index].front_pointer].PRD @[src/main/scala/L1Cache/L1_data_cache.scala 878:49]
     connect non_cacheable_response_Q.io.deq.ready, UInt<1>(0h0) @[src/main/scala/L1Cache/L1_data_cache.scala 891:47]
     reg output_cacheable_r : UInt<1>, clock @[src/main/scala/L1Cache/L1_data_cache.scala 893:46]
     when UInt<1>(0h1) : @[src/main/scala/L1Cache/L1_data_cache.scala 893:46]
@@ -9071,7 +9071,7 @@ circuit L1_data_cache :%[[
     connect cacheable_response_Q.io.enq.valid, output_valid @[src/main/scala/L1Cache/L1_data_cache.scala 930:65]
     connect cacheable_response_Q.io.enq.bits.addr, output_address @[src/main/scala/L1Cache/L1_data_cache.scala 931:57]
     connect cacheable_response_Q.io.enq.bits.data, output_data @[src/main/scala/L1Cache/L1_data_cache.scala 932:57]
-    connect cacheable_response_Q.io.enq.bits.RD, output_RD @[src/main/scala/L1Cache/L1_data_cache.scala 935:57]
+    connect cacheable_response_Q.io.enq.bits.PRD, output_RD @[src/main/scala/L1Cache/L1_data_cache.scala 935:57]
     connect cacheable_response_Q.io.enq.bits.ROB_index, output_ROB_index @[src/main/scala/L1Cache/L1_data_cache.scala 936:57]
     connect cacheable_response_Q.io.enq.bits.fetch_packet_index, output_packet_index @[src/main/scala/L1Cache/L1_data_cache.scala 937:65]
     connect cacheable_response_Q.io.enq.bits.MOB_index, output_MOB_index @[src/main/scala/L1Cache/L1_data_cache.scala 938:53]
@@ -9080,7 +9080,7 @@ circuit L1_data_cache :%[[
     node _non_cacheable_response_Q_io_enq_valid_T_1 = and(axi_response_valid, _non_cacheable_response_Q_io_enq_valid_T) @[src/main/scala/L1Cache/L1_data_cache.scala 948:87]
     connect non_cacheable_response_Q.io.enq.valid, _non_cacheable_response_Q_io_enq_valid_T_1 @[src/main/scala/L1Cache/L1_data_cache.scala 948:65]
     connect non_cacheable_response_Q.io.enq.bits.addr, non_cacheable_buffer[non_cacheable_buffer_front_index].addr @[src/main/scala/L1Cache/L1_data_cache.scala 950:65]
-    invalidate non_cacheable_response_Q.io.enq.bits.RD @[src/main/scala/L1Cache/L1_data_cache.scala 952:65]
+    invalidate non_cacheable_response_Q.io.enq.bits.PRD @[src/main/scala/L1Cache/L1_data_cache.scala 952:65]
     invalidate non_cacheable_response_Q.io.enq.bits.ROB_index @[src/main/scala/L1Cache/L1_data_cache.scala 953:57]
     invalidate non_cacheable_response_Q.io.enq.bits.fetch_packet_index @[src/main/scala/L1Cache/L1_data_cache.scala 954:65]
     node _non_cacheable_response_Q_io_enq_bits_data_T = bits(final_response_buffer.io.deq.bits.data, 255, 224) @[src/main/scala/L1Cache/L1_data_cache.scala 957:85]
@@ -9109,27 +9109,27 @@ circuit L1_data_cache :%[[
     node _MSHR_full_next_T_2 = and(_MSHR_full_next_T, _MSHR_full_next_T_1) @[src/main/scala/L1Cache/L1_data_cache.scala 1000:80]
     connect MSHR_full_next, _MSHR_full_next_T_2 @[src/main/scala/L1Cache/L1_data_cache.scala 1000:24]
     node _MSHR_full_and_input_match_T = eq(MSHRs[0].address, io.CPU_request.bits.addr) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:101]
-    node _MSHR_full_and_input_match_T_1 = add(MSHRs[0].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 681:24]
-    node _MSHR_full_and_input_match_T_2 = tail(_MSHR_full_and_input_match_T_1, 1) @[src/main/scala/bundles.scala 681:24]
-    node _MSHR_full_and_input_match_T_3 = eq(_MSHR_full_and_input_match_T_2, UInt<4>(0h8)) @[src/main/scala/bundles.scala 681:31]
+    node _MSHR_full_and_input_match_T_1 = add(MSHRs[0].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 686:24]
+    node _MSHR_full_and_input_match_T_2 = tail(_MSHR_full_and_input_match_T_1, 1) @[src/main/scala/bundles.scala 686:24]
+    node _MSHR_full_and_input_match_T_3 = eq(_MSHR_full_and_input_match_T_2, UInt<4>(0h8)) @[src/main/scala/bundles.scala 686:31]
     node _MSHR_full_and_input_match_T_4 = eq(_MSHR_full_and_input_match_T_3, UInt<1>(0h0)) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:134]
     node _MSHR_full_and_input_match_T_5 = and(_MSHR_full_and_input_match_T, _MSHR_full_and_input_match_T_4) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:131]
     node _MSHR_full_and_input_match_T_6 = eq(MSHRs[1].address, io.CPU_request.bits.addr) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:101]
-    node _MSHR_full_and_input_match_T_7 = add(MSHRs[1].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 681:24]
-    node _MSHR_full_and_input_match_T_8 = tail(_MSHR_full_and_input_match_T_7, 1) @[src/main/scala/bundles.scala 681:24]
-    node _MSHR_full_and_input_match_T_9 = eq(_MSHR_full_and_input_match_T_8, UInt<4>(0h8)) @[src/main/scala/bundles.scala 681:31]
+    node _MSHR_full_and_input_match_T_7 = add(MSHRs[1].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 686:24]
+    node _MSHR_full_and_input_match_T_8 = tail(_MSHR_full_and_input_match_T_7, 1) @[src/main/scala/bundles.scala 686:24]
+    node _MSHR_full_and_input_match_T_9 = eq(_MSHR_full_and_input_match_T_8, UInt<4>(0h8)) @[src/main/scala/bundles.scala 686:31]
     node _MSHR_full_and_input_match_T_10 = eq(_MSHR_full_and_input_match_T_9, UInt<1>(0h0)) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:134]
     node _MSHR_full_and_input_match_T_11 = and(_MSHR_full_and_input_match_T_6, _MSHR_full_and_input_match_T_10) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:131]
     node _MSHR_full_and_input_match_T_12 = eq(MSHRs[2].address, io.CPU_request.bits.addr) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:101]
-    node _MSHR_full_and_input_match_T_13 = add(MSHRs[2].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 681:24]
-    node _MSHR_full_and_input_match_T_14 = tail(_MSHR_full_and_input_match_T_13, 1) @[src/main/scala/bundles.scala 681:24]
-    node _MSHR_full_and_input_match_T_15 = eq(_MSHR_full_and_input_match_T_14, UInt<4>(0h8)) @[src/main/scala/bundles.scala 681:31]
+    node _MSHR_full_and_input_match_T_13 = add(MSHRs[2].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 686:24]
+    node _MSHR_full_and_input_match_T_14 = tail(_MSHR_full_and_input_match_T_13, 1) @[src/main/scala/bundles.scala 686:24]
+    node _MSHR_full_and_input_match_T_15 = eq(_MSHR_full_and_input_match_T_14, UInt<4>(0h8)) @[src/main/scala/bundles.scala 686:31]
     node _MSHR_full_and_input_match_T_16 = eq(_MSHR_full_and_input_match_T_15, UInt<1>(0h0)) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:134]
     node _MSHR_full_and_input_match_T_17 = and(_MSHR_full_and_input_match_T_12, _MSHR_full_and_input_match_T_16) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:131]
     node _MSHR_full_and_input_match_T_18 = eq(MSHRs[3].address, io.CPU_request.bits.addr) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:101]
-    node _MSHR_full_and_input_match_T_19 = add(MSHRs[3].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 681:24]
-    node _MSHR_full_and_input_match_T_20 = tail(_MSHR_full_and_input_match_T_19, 1) @[src/main/scala/bundles.scala 681:24]
-    node _MSHR_full_and_input_match_T_21 = eq(_MSHR_full_and_input_match_T_20, UInt<4>(0h8)) @[src/main/scala/bundles.scala 681:31]
+    node _MSHR_full_and_input_match_T_19 = add(MSHRs[3].front_pointer, UInt<1>(0h1)) @[src/main/scala/bundles.scala 686:24]
+    node _MSHR_full_and_input_match_T_20 = tail(_MSHR_full_and_input_match_T_19, 1) @[src/main/scala/bundles.scala 686:24]
+    node _MSHR_full_and_input_match_T_21 = eq(_MSHR_full_and_input_match_T_20, UInt<4>(0h8)) @[src/main/scala/bundles.scala 686:31]
     node _MSHR_full_and_input_match_T_22 = eq(_MSHR_full_and_input_match_T_21, UInt<1>(0h0)) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:134]
     node _MSHR_full_and_input_match_T_23 = and(_MSHR_full_and_input_match_T_18, _MSHR_full_and_input_match_T_22) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:131]
     node _MSHR_full_and_input_match_T_24 = or(_MSHR_full_and_input_match_T_5, _MSHR_full_and_input_match_T_11) @[src/main/scala/L1Cache/L1_data_cache.scala 1005:161]

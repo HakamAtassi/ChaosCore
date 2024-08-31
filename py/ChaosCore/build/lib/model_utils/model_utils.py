@@ -59,7 +59,7 @@ def compare_cache_states(state0, state1):
 #####################
 ## BASE TYPES ##
 ################
-def validate(opcode=0, rs1=0, rs2=0, rd=0, funct3=0, funct7=0):
+def validate(opcode=0, rs1=0, rs2=0, PRD=0, funct3=0, funct7=0):
     rv32i_opcodes = [
         0b0010011,
         0b0000011,
@@ -76,13 +76,13 @@ def validate(opcode=0, rs1=0, rs2=0, rd=0, funct3=0, funct7=0):
     # assert opcode in rv32i_opcodes, "Invalid opcode"
     assert rs1 <= 0b11111, f"rs1 {rs1} exceeds max value"
     assert rs2 <= 0b11111, f"rs2 {rs2} exceeds max value"
-    assert rd <= 0b11111, f"rd {rd} exceeds max value"
+    assert PRD <= 0b11111, f"PRD {PRD} exceeds max value"
     assert funct3 <= 0b111, f"funct3 {funct3} exceeds max value"
     assert funct7 <= 0b1111111, f"funct7 {funct7} exceeds max value"
 
 
-def generate_J_type(opcode, rd, imm):
-    validate(opcode=opcode, rd=rd)
+def generate_J_type(opcode, PRD, imm):
+    validate(opcode=opcode, PRD=PRD)
     assert imm < (((1 << 20) - 1) << 1), "imm exceeds max value"
     imm = imm & 0b111111111111
     imm_19_12 = (imm >> 12) & 0b1111
@@ -95,9 +95,9 @@ def generate_J_type(opcode, rd, imm):
     imm_19_12 = format(imm_19_12, "08b")
     imm_11 = format(imm_11, "01b")
     imm_10_1 = format(imm_10_1, "010b")
-    rd = format(rd, "05b")
+    PRD = format(PRD, "05b")
 
-    instruction = imm_20 + imm_10_1 + imm_11 + imm_19_12 + rd + opcode
+    instruction = imm_20 + imm_10_1 + imm_11 + imm_19_12 + PRD + opcode
     return int(instruction, 2)
 
 
@@ -123,31 +123,31 @@ def generate_B_type(opcode, rs1, rs2, imm, funct3):
     return int(instruction, 2)
 
 
-def generate_I_type(opcode, rs1, rd, imm):
-    validate(opcode=opcode, rs1=rs1, rd=rd)
+def generate_I_type(opcode, rs1, PRD, imm):
+    validate(opcode=opcode, rs1=rs1, PRD=PRD)
     assert imm < (1 << 12) and imm >= -(1 << 12), "imm exceeds max value"
     imm = imm & 0b111111111111
 
     opcode = format(opcode, "07b")
-    rd = format(rd, "05b")
+    PRD = format(PRD, "05b")
     funct3 = format(0b000, "03b")
     rs1 = format(rs1, "05b")
     imm = format(imm, "012b")
 
-    instruction = imm + rs1 + funct3 + rd + opcode
+    instruction = imm + rs1 + funct3 + PRD + opcode
     return int(instruction, 2)
 
 
-def generate_U_type(opcode, rd, imm):
-    validate(opcode=opcode, rd=rd)
+def generate_U_type(opcode, PRD, imm):
+    validate(opcode=opcode, PRD=PRD)
     assert imm < (1 << 20) and imm >= 0, "imm exceeds max value"
     imm = imm & 0b11111111111111111111
 
     opcode = format(opcode, "07b")
     imm = format(imm, "020b")
-    rd = format(rd, "05b")
+    PRD = format(PRD, "05b")
 
-    instruction = imm + rd + opcode
+    instruction = imm + PRD + opcode
     return int(instruction, 2)
 
 
@@ -168,16 +168,16 @@ def generate_S_type(opcode, rs1, rs2, imm, funct3):
     return int(instruction, 2)
 
 
-def generate_R_type(opcode, rs1, rs2, rd, funct3, funct7):
-    validate(opcode=opcode, rs1=rs1, rs2=rs2, rd=rd, funct3=funct3, funct7=funct7)
+def generate_R_type(opcode, rs1, rs2, PRD, funct3, funct7):
+    validate(opcode=opcode, rs1=rs1, rs2=rs2, PRD=PRD, funct3=funct3, funct7=funct7)
     opcode = format(opcode, "07b")
     rs1 = format(rs1, "05b")
     rs2 = format(rs2, "05b")
-    rd = format(rd, "05b")
+    PRD = format(PRD, "05b")
     funct3 = format(funct3, "03b")
     funct7 = format(funct7, "07b")
 
-    instruction = funct7 + rs2 + rs1 + funct3 + rd + opcode
+    instruction = funct7 + rs2 + rs1 + funct3 + PRD + opcode
     return int(instruction, 2)
 
 
