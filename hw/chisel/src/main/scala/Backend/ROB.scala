@@ -27,13 +27,6 @@
 * ------------------------------------------------------------------------------------ 
 */
 
-
-
-
-// FIXME: add partial commit logic
-// when you are flushing, just flush + replay.
-// Do not allow flushes and commits at the same time
-
 package ChaosCore
 
 import chisel3._
@@ -218,10 +211,12 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_entry_data.valid                 := io.ROB_packet.bits.valid_bits(i)
         ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
         ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
-        ROB_entry_data.RD                    := io.ROB_packet.bits.decoded_instruction(i).RD
         ROB_entry_data.MOB_index             := io.ROB_packet.bits.decoded_instruction(i).MOB_index
-        ROB_entry_data.RDold                 := io.ROB_packet.bits.decoded_instruction(i).RDold
+
         ROB_entry_data.RD_valid              := io.ROB_packet.bits.decoded_instruction(i).RD_valid
+        ROB_entry_data.RD                    := io.ROB_packet.bits.decoded_instruction(i).RD
+        ROB_entry_data.PRDold                := io.ROB_packet.bits.decoded_instruction(i).PRDold
+        ROB_entry_data.PRD                   := io.ROB_packet.bits.decoded_instruction(i).PRD
 
         // allocate
         ROB_entry_banks(i).io.addrA          := back_index
@@ -346,7 +341,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val partial_commit  = Wire(new partial_commit(coreParameters))
 
 
-
     for(i <- 0 until fetchWidth){   // only commit if all previous instructions are valid, complete, not a misprediction, and not an exception, or just invalid
         val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
@@ -358,9 +352,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
         partial_commit.valid(i)      := (is_completed || is_invalid) && ROB_output.row_valid && commit_row_complete.take(i+1).reduce(_ && _)    // all prev instructions must have committed
         partial_commit.MOB_index(i)  := ROB_output.ROB_entries(i).MOB_index
         partial_commit.ROB_index     := front_index
-        partial_commit.RD(i)         := ROB_output.ROB_entries(i).RD
-        partial_commit.RDold(i)      := ROB_output.ROB_entries(i).RDold
         partial_commit.RD_valid(i)   := ROB_output.ROB_entries(i).RD_valid
+        partial_commit.RD(i)         := ROB_output.ROB_entries(i).RD
+        partial_commit.PRD(i)        := ROB_output.ROB_entries(i).PRD
+        partial_commit.PRDold(i)     := ROB_output.ROB_entries(i).PRDold
 
     }
 
@@ -383,8 +378,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
     commit.fetch_PC                      := ROB_output.fetch_PC
 
     for(i <- 0 until fetchWidth){
-        commit.RDold(i)                  := ROB_output.ROB_entries(i).RDold
-        commit.RD(i)                     := ROB_output.ROB_entries(i).RD
+        commit.RD(i)                  := ROB_output.ROB_entries(i).RD
+        commit.PRD(i)                     := ROB_output.ROB_entries(i).PRD
         commit.RD_valid(i)               := ROB_output.ROB_entries(i).RD_valid
     }
 

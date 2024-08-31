@@ -32,7 +32,7 @@ module Arbiter2_backend_memory_response(
   output        io_in_0_ready,
   input         io_in_0_valid,
   input  [31:0] io_in_0_bits_addr,
-                io_in_0_bits_RD,
+                io_in_0_bits_PRD,
                 io_in_0_bits_fetch_packet_index,
   input  [5:0]  io_in_0_bits_ROB_index,
   input  [31:0] io_in_0_bits_data,
@@ -40,7 +40,7 @@ module Arbiter2_backend_memory_response(
   output        io_in_1_ready,
   input         io_in_1_valid,
   input  [31:0] io_in_1_bits_addr,
-                io_in_1_bits_RD,
+                io_in_1_bits_PRD,
                 io_in_1_bits_fetch_packet_index,
   input  [5:0]  io_in_1_bits_ROB_index,
   input  [31:0] io_in_1_bits_data,
@@ -48,7 +48,7 @@ module Arbiter2_backend_memory_response(
   input         io_out_ready,
   output        io_out_valid,
   output [31:0] io_out_bits_addr,
-                io_out_bits_RD,
+                io_out_bits_PRD,
                 io_out_bits_fetch_packet_index,
   output [5:0]  io_out_bits_ROB_index,
   output [31:0] io_out_bits_data,
@@ -59,7 +59,7 @@ module Arbiter2_backend_memory_response(
   assign io_in_1_ready = ~io_in_0_valid & io_out_ready;
   assign io_out_valid = io_in_0_valid | io_in_1_valid;
   assign io_out_bits_addr = io_in_0_valid ? io_in_0_bits_addr : io_in_1_bits_addr;
-  assign io_out_bits_RD = io_in_0_valid ? io_in_0_bits_RD : io_in_1_bits_RD;
+  assign io_out_bits_PRD = io_in_0_valid ? io_in_0_bits_PRD : io_in_1_bits_PRD;
   assign io_out_bits_fetch_packet_index =
     io_in_0_valid ? io_in_0_bits_fetch_packet_index : io_in_1_bits_fetch_packet_index;
   assign io_out_bits_ROB_index =

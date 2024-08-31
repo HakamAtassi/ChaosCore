@@ -36,8 +36,9 @@ module FU_1(
   input         io_FU_input_valid,
                 io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready,
                 io_FU_input_bits_decoded_instruction_ready_bits_RS2_ready,
-  input  [4:0]  io_FU_input_bits_decoded_instruction_RDold,
-  input  [6:0]  io_FU_input_bits_decoded_instruction_RD,
+  input  [4:0]  io_FU_input_bits_decoded_instruction_RD,
+  input  [6:0]  io_FU_input_bits_decoded_instruction_PRD,
+                io_FU_input_bits_decoded_instruction_PRDold,
   input         io_FU_input_bits_decoded_instruction_RD_valid,
   input  [6:0]  io_FU_input_bits_decoded_instruction_RS1,
   input         io_FU_input_bits_decoded_instruction_RS1_valid,
@@ -63,7 +64,7 @@ module FU_1(
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_fetch_PC,
   output        io_FU_output_valid,
-  output [6:0]  io_FU_output_bits_RD,
+  output [6:0]  io_FU_output_bits_PRD,
   output [31:0] io_FU_output_bits_RD_data,
   output        io_FU_output_bits_RD_valid,
   output [31:0] io_FU_output_bits_fetch_PC,
@@ -89,8 +90,8 @@ module FU_1(
     .reset                                                (reset),
     .io_flush                                             (io_flush),
     .io_FU_input_valid                                    (io_FU_input_valid),
-    .io_FU_input_bits_decoded_instruction_RD
-      (io_FU_input_bits_decoded_instruction_RD),
+    .io_FU_input_bits_decoded_instruction_PRD
+      (io_FU_input_bits_decoded_instruction_PRD),
     .io_FU_input_bits_decoded_instruction_RD_valid
       (io_FU_input_bits_decoded_instruction_RD_valid),
     .io_FU_input_bits_decoded_instruction_IMM
@@ -115,7 +116,7 @@ module FU_1(
     .io_FU_input_bits_RS2_data                            (io_FU_input_bits_RS2_data),
     .io_FU_input_bits_fetch_PC                            (io_FU_input_bits_fetch_PC),
     .io_FU_output_valid                                   (io_FU_output_valid),
-    .io_FU_output_bits_RD                                 (io_FU_output_bits_RD),
+    .io_FU_output_bits_PRD                                (io_FU_output_bits_PRD),
     .io_FU_output_bits_RD_data                            (io_FU_output_bits_RD_data),
     .io_FU_output_bits_RD_valid                           (io_FU_output_bits_RD_valid),
     .io_FU_output_bits_fetch_PC                           (io_FU_output_bits_fetch_PC),

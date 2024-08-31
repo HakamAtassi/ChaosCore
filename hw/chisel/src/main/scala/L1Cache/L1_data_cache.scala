@@ -289,7 +289,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	backend_MOB_index		:=  io.CPU_request.bits.MOB_index
 	backend_packet_index	:=  io.CPU_request.bits.packet_index
 	backend_ROB_index		:=  io.CPU_request.bits.ROB_index
-	backend_RD				:=  io.CPU_request.bits.RD
+	backend_RD				:=  io.CPU_request.bits.PRD
 
 
 	// FIXME: todo
@@ -875,7 +875,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	replay_MOB_index		:=	MSHRs(MSHR_front_index).front.MOB_index
 	replay_ROB_index		:=	MSHRs(MSHR_front_index).front.ROB_index
 	replay_packet_index		:=	MSHRs(MSHR_front_index).front.packet_index
-	replay_RD				:=	MSHRs(MSHR_front_index).front.RD
+	replay_RD				:=	MSHRs(MSHR_front_index).front.PRD
 
 
 
@@ -932,7 +932,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	cacheable_response_Q.io.enq.bits.data  		:= output_data
 
 	// FIXME: these cant be dont cares...
-	cacheable_response_Q.io.enq.bits.RD  		:= output_RD
+	cacheable_response_Q.io.enq.bits.PRD  		:= output_RD
 	cacheable_response_Q.io.enq.bits.ROB_index	:= output_ROB_index
 	cacheable_response_Q.io.enq.bits.fetch_packet_index	:= output_packet_index
 	cacheable_response_Q.io.enq.bits.MOB_index  := output_MOB_index
@@ -949,7 +949,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// FIXME: why top 32 bits??
 	non_cacheable_response_Q.io.enq.bits.addr  		:= non_cacheable_buffer_front.addr
 
-	non_cacheable_response_Q.io.enq.bits.RD  		:= DontCare
+	non_cacheable_response_Q.io.enq.bits.PRD  		:= DontCare
 	non_cacheable_response_Q.io.enq.bits.ROB_index	:= DontCare
 	non_cacheable_response_Q.io.enq.bits.fetch_packet_index	:= DontCare
 

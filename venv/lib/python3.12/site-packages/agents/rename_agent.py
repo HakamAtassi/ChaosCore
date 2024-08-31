@@ -140,15 +140,15 @@ class rename_agent:
                 dut_renamed_decoded_fetch_packet = self.renamed_decoded_fetch_packet_mon.values.get_nowait()
 
                 model_renamed_decoded_fetch_packet = self.model.renamed_decoded_fetch_packet_queue.pop(0)
-                #print(f"dut {dut_renamed_decoded_fetch_packet["RD"]} {dut_renamed_decoded_fetch_packet["RD_valid"]}")
-                #print(f"model {model_renamed_decoded_fetch_packet["RD"]} {model_renamed_decoded_fetch_packet["RD_valid"]}")
+                #print(f"dut {dut_renamed_decoded_fetch_packet["PRD"]} {dut_renamed_decoded_fetch_packet["RD_valid"]}")
+                #print(f"model {model_renamed_decoded_fetch_packet["PRD"]} {model_renamed_decoded_fetch_packet["RD_valid"]}")
                 #print("\n\n\n")
 
                 for i in range(4):
                     RD_valid = model_renamed_decoded_fetch_packet["RD_valid"][i]
                     RS1_valid = model_renamed_decoded_fetch_packet["RS1_valid"][i] or  dut_renamed_decoded_fetch_packet["RS1_valid"][i]
                     RS2_valid = model_renamed_decoded_fetch_packet["RS2_valid"][i] or  dut_renamed_decoded_fetch_packet["RS2_valid"][i]
-                    if(RD_valid):assert(dut_renamed_decoded_fetch_packet["RD"][i] == model_renamed_decoded_fetch_packet["RD"][i])
+                    if(RD_valid):assert(dut_renamed_decoded_fetch_packet["PRD"][i] == model_renamed_decoded_fetch_packet["PRD"][i])
                     if(RS1_valid):
                         assert(dut_renamed_decoded_fetch_packet["RS1"][i] == model_renamed_decoded_fetch_packet["RS1"][i])
                         #print(dut_renamed_decoded_fetch_packet["RS1"][i])
@@ -186,8 +186,8 @@ class rename_agent:
             #assert model_FU_output["fetch_PC"] == dut_FU_output["fetch_PC"]
 
             #valid = model_FU_output["valid"]
-            #compare_RD = model_FU_output["RD"] & valid
+            #compare_RD = model_FU_output["PRD"] & valid
             #if(compare_RD & valid):
-                #assert model_FU_output["RD"] == dut_FU_output["RD"]
+                #assert model_FU_output["PRD"] == dut_FU_output["PRD"]
                 #assert model_FU_output["RD_data"] == dut_FU_output["RD_data"]
                 #assert model_FU_output["RD_valid"] == dut_FU_output["RD_valid"]

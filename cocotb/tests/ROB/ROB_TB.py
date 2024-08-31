@@ -70,8 +70,8 @@ class ROB_TB:
                         "RS1_ready": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value,
                         "RS2_ready": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_ready_bits_RS2_ready").value
                     },
-                    "RDold": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_RDold").value,
-                    "RD": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_RD").value,
+                    "RD": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_RDold").value,
+                    "PRD": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_RD").value,
                     "RD_valid": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_RD_valid").value,
                     "RS1": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_RS1").value,
                     "RS1_valid": getattr(self.ROB, f"io_ROB_packet_bits_decoded_instruction_{i}_RS1_valid").value,
@@ -151,8 +151,8 @@ class ROB_TB:
                         "RS1_ready": random.randint(0, 1),
                         "RS2_ready": random.randint(0, 1)
                     },
-                    "RDold": random.randint(0, 31),
                     "RD": random.randint(0, 31),
+                    "PRD": random.randint(0, 31),
                     "RD_valid": random.randint(0, 1),
                     "RS1": random.randint(0, 31),
                     "RS1_valid": random.randint(0, 1),

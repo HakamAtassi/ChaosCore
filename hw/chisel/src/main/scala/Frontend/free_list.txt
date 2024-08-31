@@ -1,0 +1,199 @@
+/* ------------------------------------------------------------------------------------
+* Filename: free_list.scala
+* Author: Hakam Atassi
+* Date: May 9 2024
+* Description: A superscalar free list that can both read and write up to fetchWidth entries at a time in any order.
+* License: MIT
+*
+* Copyright (c) 2024 by Hakam Atassi
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+* 
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+* ------------------------------------------------------------------------------------ 
+*/
+
+package ChaosCore
+
+import chisel3._
+import circt.stage.ChiselStage 
+import chisel3.ltl._
+import chisel3.util._
+import java.io.{File, FileWriter}
+import java.rmi.server.UID
+
+
+
+class free_list(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+    val ptr_width = log2Ceil(physicalRegCount-1) + 1
+
+    val io = IO(new Bundle{
+        val rename_valid            = Input(Vec(fetchWidth, Bool()))                                    // Request rename valid
+        val renamed_values          = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))       // Renamed RDs
+        val renamed_valid           = Output(Vec(fetchWidth, Bool()))                                   // Renamed RDs valid
+
+        val partial_commit          =      Input(new partial_commit(coreParameters))                                         // commit mem op
+        val commit                  = Flipped(ValidIO(new commit(coreParameters)))                          // Free regs on commit
+
+        val free_list_front_pointer = Output(UInt(ptr_width.W))                  // To ROB
+
+        val can_allocate            = Output(Bool())
+    }); dontTouch(io)
+
+    val flush = io.commit.valid && io.commit.bits.is_misprediction
+
+    // Pointers
+    val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)                       // front pointer starts at 0
+    val back_pointer    = RegInit(UInt(ptr_width.W), (physicalRegCount-1).U)    // back pointer starts at N-1
+
+    val front_index     = Wire(UInt((ptr_width-1).W))
+    val back_index      = Wire(UInt((ptr_width-1).W))
+
+    // Free list
+    val free_list_buffer        = RegInit(VecInit((1 until physicalRegCount).map(_.U(physicalRegBits.W)))) //x0 not in free list
+
+    front_index := front_pointer(ptr_width-2, 0)
+    back_index  := back_pointer(ptr_width-2, 0)
+
+    dontTouch(free_list_buffer)
+
+    //////////////////
+    // POP ELEMENTS //
+    //////////////////
+
+    for(i <- 0 until fetchWidth){
+        val read_offset          = PopCount(io.rename_valid.take(i+1)) - 1.U
+        val valid = io.rename_valid(i) && !flush && io.can_allocate
+
+        dontTouch(valid)
+        io.renamed_valid(i)     := valid
+        val test = Wire(UInt((physicalRegBits-1).W))
+        test := (front_index + read_offset) % 64.U
+        when(valid){
+            io.renamed_values(i)    := free_list_buffer(test)
+            free_list_buffer(test)  := 0.U
+        }.otherwise{
+            io.renamed_values(i)    := 0.U
+        }
+    }
+
+    io.free_list_front_pointer  := front_pointer
+
+    front_pointer         := front_pointer + PopCount(io.rename_valid)
+
+ 
+    for(i <- 0 until fetchWidth){
+        when(io.renamed_valid(i) === 1.B){
+            AssertProperty(io.renamed_values(i) =/= 0.U)
+        }
+    }
+
+    ///////////////
+    // COMMIT FL //
+    ///////////////
+
+    // Pointers
+    val commit_front_pointer   = RegInit(UInt(ptr_width.W), 0.U)                       // front pointer starts at 0
+    val commit_back_pointer    = RegInit(UInt(ptr_width.W), (physicalRegCount-1).U)    // back pointer starts at N-1
+
+    val commit_front_index     = Wire(UInt((ptr_width-1).W))
+    val commit_back_index      = Wire(UInt((ptr_width-1).W))
+
+    commit_front_index := commit_front_pointer(ptr_width-2, 0)
+    commit_back_index  := commit_back_pointer(ptr_width-2, 0)
+
+    // Free list
+
+    val commit_free_list_buffer        = RegInit(VecInit((1 until physicalRegCount).map(_.U(physicalRegBits.W)))) //x0 not in free list
+    dontTouch(commit_free_list_buffer)
+
+    // on commit, remove non zero RDs
+    // add non zero PRFs
+    val commit_FL_valid_PRDold = VecInit((io.partial_commit.RD_valid zip io.partial_commit.PRDold).map {
+        case (valid, rd) => valid && (rd =/= 0.U) && io.commit.valid
+    })
+
+    val commit_FL_valid_RD = VecInit((io.partial_commit.RD_valid zip io.partial_commit.RD).map {
+        case (valid, rd) => valid && (rd =/= 0.U) && io.commit.valid
+    })
+
+
+    
+
+    when(io.commit.valid){ 
+        for(i <- 0 until fetchWidth){   
+            val offset = PopCount(commit_FL_valid_RD.take(i+1))-1.U
+            when(commit_FL_valid_RD(i)){
+                commit_free_list_buffer(commit_front_index + offset) := 0.U
+            }
+        }
+        commit_front_pointer := commit_front_pointer + PopCount(commit_FL_valid_RD)
+
+        for(i <- 0 until fetchWidth){ 
+            val offset = PopCount(commit_FL_valid_PRDold.take(i+1))-1.U
+            when(commit_FL_valid_PRDold(i)){
+                commit_free_list_buffer(commit_back_index + offset) := io.partial_commit.PRDold(i)
+                free_list_buffer(back_index + offset) := io.partial_commit.PRDold(i)
+            }
+        }
+        commit_back_pointer := commit_back_pointer + PopCount(commit_FL_valid_PRDold)
+        back_pointer := back_pointer + PopCount(commit_FL_valid_PRDold)
+    }
+
+
+    when(io.commit.valid && io.commit.bits.is_misprediction){   // misprediction
+        free_list_buffer := commit_free_list_buffer
+        for(i <- 0 until fetchWidth){
+            when(commit_FL_valid_RD(i)){
+                val offset = PopCount(commit_FL_valid_RD.take(i+1))-1.U
+                free_list_buffer(commit_front_index + offset) := 0.U
+            }
+        }
+        front_pointer := commit_front_pointer + PopCount(commit_FL_valid_RD)
+
+        for(i <- 0 until fetchWidth){
+            when(commit_FL_valid_PRDold(i)){
+                val offset = PopCount(commit_FL_valid_PRDold.take(i+1))-1.U
+                free_list_buffer(commit_back_index + offset) := io.partial_commit.PRDold(i)
+            }
+        }
+        back_pointer := commit_back_pointer + PopCount(commit_FL_valid_PRDold)
+    }
+
+
+
+    ////////////////
+    // Full/Empty //
+    ////////////////
+
+    val available_elements   = back_pointer - front_pointer
+
+    io.can_allocate   := fetchWidth.U <= available_elements
+
+    ////////////////
+    // ASSERTIONS //
+    ////////////////
+
+    dontTouch(front_index)
+    dontTouch(back_index)
+    dontTouch(available_elements)
+
+
+}
+
+

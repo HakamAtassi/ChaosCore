@@ -36,8 +36,9 @@ module Queue16_decoded_fetch_packet(
   input  [31:0] io_enq_bits_fetch_PC,
   input         io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready,
                 io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready,
-  input  [4:0]  io_enq_bits_decoded_instruction_0_RDold,
-  input  [6:0]  io_enq_bits_decoded_instruction_0_RD,
+  input  [4:0]  io_enq_bits_decoded_instruction_0_RD,
+  input  [6:0]  io_enq_bits_decoded_instruction_0_PRD,
+                io_enq_bits_decoded_instruction_0_PRDold,
   input         io_enq_bits_decoded_instruction_0_RD_valid,
   input  [6:0]  io_enq_bits_decoded_instruction_0_RS1,
   input         io_enq_bits_decoded_instruction_0_RS1_valid,
@@ -61,8 +62,9 @@ module Queue16_decoded_fetch_packet(
                 io_enq_bits_decoded_instruction_0_access_width,
   input         io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready,
                 io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready,
-  input  [4:0]  io_enq_bits_decoded_instruction_1_RDold,
-  input  [6:0]  io_enq_bits_decoded_instruction_1_RD,
+  input  [4:0]  io_enq_bits_decoded_instruction_1_RD,
+  input  [6:0]  io_enq_bits_decoded_instruction_1_PRD,
+                io_enq_bits_decoded_instruction_1_PRDold,
   input         io_enq_bits_decoded_instruction_1_RD_valid,
   input  [6:0]  io_enq_bits_decoded_instruction_1_RS1,
   input         io_enq_bits_decoded_instruction_1_RS1_valid,
@@ -86,8 +88,9 @@ module Queue16_decoded_fetch_packet(
                 io_enq_bits_decoded_instruction_1_access_width,
   input         io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready,
                 io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready,
-  input  [4:0]  io_enq_bits_decoded_instruction_2_RDold,
-  input  [6:0]  io_enq_bits_decoded_instruction_2_RD,
+  input  [4:0]  io_enq_bits_decoded_instruction_2_RD,
+  input  [6:0]  io_enq_bits_decoded_instruction_2_PRD,
+                io_enq_bits_decoded_instruction_2_PRDold,
   input         io_enq_bits_decoded_instruction_2_RD_valid,
   input  [6:0]  io_enq_bits_decoded_instruction_2_RS1,
   input         io_enq_bits_decoded_instruction_2_RS1_valid,
@@ -111,8 +114,9 @@ module Queue16_decoded_fetch_packet(
                 io_enq_bits_decoded_instruction_2_access_width,
   input         io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready,
                 io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready,
-  input  [4:0]  io_enq_bits_decoded_instruction_3_RDold,
-  input  [6:0]  io_enq_bits_decoded_instruction_3_RD,
+  input  [4:0]  io_enq_bits_decoded_instruction_3_RD,
+  input  [6:0]  io_enq_bits_decoded_instruction_3_PRD,
+                io_enq_bits_decoded_instruction_3_PRDold,
   input         io_enq_bits_decoded_instruction_3_RD_valid,
   input  [6:0]  io_enq_bits_decoded_instruction_3_RS1,
   input         io_enq_bits_decoded_instruction_3_RS1_valid,
@@ -151,8 +155,9 @@ module Queue16_decoded_fetch_packet(
   output [31:0] io_deq_bits_fetch_PC,
   output        io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready,
                 io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready,
-  output [4:0]  io_deq_bits_decoded_instruction_0_RDold,
-  output [6:0]  io_deq_bits_decoded_instruction_0_RD,
+  output [4:0]  io_deq_bits_decoded_instruction_0_RD,
+  output [6:0]  io_deq_bits_decoded_instruction_0_PRD,
+                io_deq_bits_decoded_instruction_0_PRDold,
   output        io_deq_bits_decoded_instruction_0_RD_valid,
   output [6:0]  io_deq_bits_decoded_instruction_0_RS1,
   output        io_deq_bits_decoded_instruction_0_RS1_valid,
@@ -176,8 +181,9 @@ module Queue16_decoded_fetch_packet(
                 io_deq_bits_decoded_instruction_0_access_width,
   output        io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready,
                 io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready,
-  output [4:0]  io_deq_bits_decoded_instruction_1_RDold,
-  output [6:0]  io_deq_bits_decoded_instruction_1_RD,
+  output [4:0]  io_deq_bits_decoded_instruction_1_RD,
+  output [6:0]  io_deq_bits_decoded_instruction_1_PRD,
+                io_deq_bits_decoded_instruction_1_PRDold,
   output        io_deq_bits_decoded_instruction_1_RD_valid,
   output [6:0]  io_deq_bits_decoded_instruction_1_RS1,
   output        io_deq_bits_decoded_instruction_1_RS1_valid,
@@ -201,8 +207,9 @@ module Queue16_decoded_fetch_packet(
                 io_deq_bits_decoded_instruction_1_access_width,
   output        io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready,
                 io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready,
-  output [4:0]  io_deq_bits_decoded_instruction_2_RDold,
-  output [6:0]  io_deq_bits_decoded_instruction_2_RD,
+  output [4:0]  io_deq_bits_decoded_instruction_2_RD,
+  output [6:0]  io_deq_bits_decoded_instruction_2_PRD,
+                io_deq_bits_decoded_instruction_2_PRDold,
   output        io_deq_bits_decoded_instruction_2_RD_valid,
   output [6:0]  io_deq_bits_decoded_instruction_2_RS1,
   output        io_deq_bits_decoded_instruction_2_RS1_valid,
@@ -226,8 +233,9 @@ module Queue16_decoded_fetch_packet(
                 io_deq_bits_decoded_instruction_2_access_width,
   output        io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready,
                 io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready,
-  output [4:0]  io_deq_bits_decoded_instruction_3_RDold,
-  output [6:0]  io_deq_bits_decoded_instruction_3_RD,
+  output [4:0]  io_deq_bits_decoded_instruction_3_RD,
+  output [6:0]  io_deq_bits_decoded_instruction_3_PRD,
+                io_deq_bits_decoded_instruction_3_PRDold,
   output        io_deq_bits_decoded_instruction_3_RD_valid,
   output [6:0]  io_deq_bits_decoded_instruction_3_RS1,
   output        io_deq_bits_decoded_instruction_3_RS1_valid,
@@ -264,7 +272,7 @@ module Queue16_decoded_fetch_packet(
   input         io_flush
 );
 
-  wire [454:0] _ram_ext_R0_data;
+  wire [482:0] _ram_ext_R0_data;
   reg  [3:0]   enq_ptr_value;
   reg  [3:0]   deq_ptr_value;
   reg          maybe_full;
@@ -293,7 +301,7 @@ module Queue16_decoded_fetch_packet(
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_16x455 ram_ext (
+  ram_16x483 ram_ext (
     .R0_addr (do_deq ? ((&deq_ptr_value) ? 4'h0 : deq_ptr_value + 4'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -335,8 +343,9 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_3_RS1_valid,
         io_enq_bits_decoded_instruction_3_RS1,
         io_enq_bits_decoded_instruction_3_RD_valid,
+        io_enq_bits_decoded_instruction_3_PRDold,
+        io_enq_bits_decoded_instruction_3_PRD,
         io_enq_bits_decoded_instruction_3_RD,
-        io_enq_bits_decoded_instruction_3_RDold,
         io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready,
         io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready,
         io_enq_bits_decoded_instruction_2_access_width,
@@ -360,8 +369,9 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_2_RS1_valid,
         io_enq_bits_decoded_instruction_2_RS1,
         io_enq_bits_decoded_instruction_2_RD_valid,
+        io_enq_bits_decoded_instruction_2_PRDold,
+        io_enq_bits_decoded_instruction_2_PRD,
         io_enq_bits_decoded_instruction_2_RD,
-        io_enq_bits_decoded_instruction_2_RDold,
         io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready,
         io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready,
         io_enq_bits_decoded_instruction_1_access_width,
@@ -385,8 +395,9 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_1_RS1_valid,
         io_enq_bits_decoded_instruction_1_RS1,
         io_enq_bits_decoded_instruction_1_RD_valid,
+        io_enq_bits_decoded_instruction_1_PRDold,
+        io_enq_bits_decoded_instruction_1_PRD,
         io_enq_bits_decoded_instruction_1_RD,
-        io_enq_bits_decoded_instruction_1_RDold,
         io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready,
         io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready,
         io_enq_bits_decoded_instruction_0_access_width,
@@ -410,8 +421,9 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_0_RS1_valid,
         io_enq_bits_decoded_instruction_0_RS1,
         io_enq_bits_decoded_instruction_0_RD_valid,
+        io_enq_bits_decoded_instruction_0_PRDold,
+        io_enq_bits_decoded_instruction_0_PRD,
         io_enq_bits_decoded_instruction_0_RD,
-        io_enq_bits_decoded_instruction_0_RDold,
         io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready,
         io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready,
         io_enq_bits_fetch_PC})
@@ -421,115 +433,119 @@ module Queue16_decoded_fetch_packet(
   assign io_deq_bits_fetch_PC = _ram_ext_R0_data[31:0];
   assign io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready = _ram_ext_R0_data[32];
   assign io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready = _ram_ext_R0_data[33];
-  assign io_deq_bits_decoded_instruction_0_RDold = _ram_ext_R0_data[38:34];
-  assign io_deq_bits_decoded_instruction_0_RD = _ram_ext_R0_data[45:39];
-  assign io_deq_bits_decoded_instruction_0_RD_valid = _ram_ext_R0_data[46];
-  assign io_deq_bits_decoded_instruction_0_RS1 = _ram_ext_R0_data[53:47];
-  assign io_deq_bits_decoded_instruction_0_RS1_valid = _ram_ext_R0_data[54];
-  assign io_deq_bits_decoded_instruction_0_RS2 = _ram_ext_R0_data[61:55];
-  assign io_deq_bits_decoded_instruction_0_RS2_valid = _ram_ext_R0_data[62];
-  assign io_deq_bits_decoded_instruction_0_IMM = _ram_ext_R0_data[83:63];
-  assign io_deq_bits_decoded_instruction_0_FUNCT3 = _ram_ext_R0_data[86:84];
-  assign io_deq_bits_decoded_instruction_0_packet_index = _ram_ext_R0_data[88:87];
-  assign io_deq_bits_decoded_instruction_0_ROB_index = _ram_ext_R0_data[94:89];
-  assign io_deq_bits_decoded_instruction_0_MOB_index = _ram_ext_R0_data[98:95];
-  assign io_deq_bits_decoded_instruction_0_instructionType = _ram_ext_R0_data[103:99];
-  assign io_deq_bits_decoded_instruction_0_portID = _ram_ext_R0_data[105:104];
-  assign io_deq_bits_decoded_instruction_0_RS_type = _ram_ext_R0_data[107:106];
-  assign io_deq_bits_decoded_instruction_0_needs_ALU = _ram_ext_R0_data[108];
-  assign io_deq_bits_decoded_instruction_0_needs_branch_unit = _ram_ext_R0_data[109];
-  assign io_deq_bits_decoded_instruction_0_needs_CSRs = _ram_ext_R0_data[110];
-  assign io_deq_bits_decoded_instruction_0_SUBTRACT = _ram_ext_R0_data[111];
-  assign io_deq_bits_decoded_instruction_0_MULTIPLY = _ram_ext_R0_data[112];
-  assign io_deq_bits_decoded_instruction_0_IS_IMM = _ram_ext_R0_data[113];
-  assign io_deq_bits_decoded_instruction_0_memory_type = _ram_ext_R0_data[115:114];
-  assign io_deq_bits_decoded_instruction_0_access_width = _ram_ext_R0_data[117:116];
-  assign io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready = _ram_ext_R0_data[118];
-  assign io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready = _ram_ext_R0_data[119];
-  assign io_deq_bits_decoded_instruction_1_RDold = _ram_ext_R0_data[124:120];
-  assign io_deq_bits_decoded_instruction_1_RD = _ram_ext_R0_data[131:125];
-  assign io_deq_bits_decoded_instruction_1_RD_valid = _ram_ext_R0_data[132];
-  assign io_deq_bits_decoded_instruction_1_RS1 = _ram_ext_R0_data[139:133];
-  assign io_deq_bits_decoded_instruction_1_RS1_valid = _ram_ext_R0_data[140];
-  assign io_deq_bits_decoded_instruction_1_RS2 = _ram_ext_R0_data[147:141];
-  assign io_deq_bits_decoded_instruction_1_RS2_valid = _ram_ext_R0_data[148];
-  assign io_deq_bits_decoded_instruction_1_IMM = _ram_ext_R0_data[169:149];
-  assign io_deq_bits_decoded_instruction_1_FUNCT3 = _ram_ext_R0_data[172:170];
-  assign io_deq_bits_decoded_instruction_1_packet_index = _ram_ext_R0_data[174:173];
-  assign io_deq_bits_decoded_instruction_1_ROB_index = _ram_ext_R0_data[180:175];
-  assign io_deq_bits_decoded_instruction_1_MOB_index = _ram_ext_R0_data[184:181];
-  assign io_deq_bits_decoded_instruction_1_instructionType = _ram_ext_R0_data[189:185];
-  assign io_deq_bits_decoded_instruction_1_portID = _ram_ext_R0_data[191:190];
-  assign io_deq_bits_decoded_instruction_1_RS_type = _ram_ext_R0_data[193:192];
-  assign io_deq_bits_decoded_instruction_1_needs_ALU = _ram_ext_R0_data[194];
-  assign io_deq_bits_decoded_instruction_1_needs_branch_unit = _ram_ext_R0_data[195];
-  assign io_deq_bits_decoded_instruction_1_needs_CSRs = _ram_ext_R0_data[196];
-  assign io_deq_bits_decoded_instruction_1_SUBTRACT = _ram_ext_R0_data[197];
-  assign io_deq_bits_decoded_instruction_1_MULTIPLY = _ram_ext_R0_data[198];
-  assign io_deq_bits_decoded_instruction_1_IS_IMM = _ram_ext_R0_data[199];
-  assign io_deq_bits_decoded_instruction_1_memory_type = _ram_ext_R0_data[201:200];
-  assign io_deq_bits_decoded_instruction_1_access_width = _ram_ext_R0_data[203:202];
-  assign io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready = _ram_ext_R0_data[204];
-  assign io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready = _ram_ext_R0_data[205];
-  assign io_deq_bits_decoded_instruction_2_RDold = _ram_ext_R0_data[210:206];
-  assign io_deq_bits_decoded_instruction_2_RD = _ram_ext_R0_data[217:211];
-  assign io_deq_bits_decoded_instruction_2_RD_valid = _ram_ext_R0_data[218];
-  assign io_deq_bits_decoded_instruction_2_RS1 = _ram_ext_R0_data[225:219];
-  assign io_deq_bits_decoded_instruction_2_RS1_valid = _ram_ext_R0_data[226];
-  assign io_deq_bits_decoded_instruction_2_RS2 = _ram_ext_R0_data[233:227];
-  assign io_deq_bits_decoded_instruction_2_RS2_valid = _ram_ext_R0_data[234];
-  assign io_deq_bits_decoded_instruction_2_IMM = _ram_ext_R0_data[255:235];
-  assign io_deq_bits_decoded_instruction_2_FUNCT3 = _ram_ext_R0_data[258:256];
-  assign io_deq_bits_decoded_instruction_2_packet_index = _ram_ext_R0_data[260:259];
-  assign io_deq_bits_decoded_instruction_2_ROB_index = _ram_ext_R0_data[266:261];
-  assign io_deq_bits_decoded_instruction_2_MOB_index = _ram_ext_R0_data[270:267];
-  assign io_deq_bits_decoded_instruction_2_instructionType = _ram_ext_R0_data[275:271];
-  assign io_deq_bits_decoded_instruction_2_portID = _ram_ext_R0_data[277:276];
-  assign io_deq_bits_decoded_instruction_2_RS_type = _ram_ext_R0_data[279:278];
-  assign io_deq_bits_decoded_instruction_2_needs_ALU = _ram_ext_R0_data[280];
-  assign io_deq_bits_decoded_instruction_2_needs_branch_unit = _ram_ext_R0_data[281];
-  assign io_deq_bits_decoded_instruction_2_needs_CSRs = _ram_ext_R0_data[282];
-  assign io_deq_bits_decoded_instruction_2_SUBTRACT = _ram_ext_R0_data[283];
-  assign io_deq_bits_decoded_instruction_2_MULTIPLY = _ram_ext_R0_data[284];
-  assign io_deq_bits_decoded_instruction_2_IS_IMM = _ram_ext_R0_data[285];
-  assign io_deq_bits_decoded_instruction_2_memory_type = _ram_ext_R0_data[287:286];
-  assign io_deq_bits_decoded_instruction_2_access_width = _ram_ext_R0_data[289:288];
-  assign io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready = _ram_ext_R0_data[290];
-  assign io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready = _ram_ext_R0_data[291];
-  assign io_deq_bits_decoded_instruction_3_RDold = _ram_ext_R0_data[296:292];
-  assign io_deq_bits_decoded_instruction_3_RD = _ram_ext_R0_data[303:297];
-  assign io_deq_bits_decoded_instruction_3_RD_valid = _ram_ext_R0_data[304];
-  assign io_deq_bits_decoded_instruction_3_RS1 = _ram_ext_R0_data[311:305];
-  assign io_deq_bits_decoded_instruction_3_RS1_valid = _ram_ext_R0_data[312];
-  assign io_deq_bits_decoded_instruction_3_RS2 = _ram_ext_R0_data[319:313];
-  assign io_deq_bits_decoded_instruction_3_RS2_valid = _ram_ext_R0_data[320];
-  assign io_deq_bits_decoded_instruction_3_IMM = _ram_ext_R0_data[341:321];
-  assign io_deq_bits_decoded_instruction_3_FUNCT3 = _ram_ext_R0_data[344:342];
-  assign io_deq_bits_decoded_instruction_3_packet_index = _ram_ext_R0_data[346:345];
-  assign io_deq_bits_decoded_instruction_3_ROB_index = _ram_ext_R0_data[352:347];
-  assign io_deq_bits_decoded_instruction_3_MOB_index = _ram_ext_R0_data[356:353];
-  assign io_deq_bits_decoded_instruction_3_instructionType = _ram_ext_R0_data[361:357];
-  assign io_deq_bits_decoded_instruction_3_portID = _ram_ext_R0_data[363:362];
-  assign io_deq_bits_decoded_instruction_3_RS_type = _ram_ext_R0_data[365:364];
-  assign io_deq_bits_decoded_instruction_3_needs_ALU = _ram_ext_R0_data[366];
-  assign io_deq_bits_decoded_instruction_3_needs_branch_unit = _ram_ext_R0_data[367];
-  assign io_deq_bits_decoded_instruction_3_needs_CSRs = _ram_ext_R0_data[368];
-  assign io_deq_bits_decoded_instruction_3_SUBTRACT = _ram_ext_R0_data[369];
-  assign io_deq_bits_decoded_instruction_3_MULTIPLY = _ram_ext_R0_data[370];
-  assign io_deq_bits_decoded_instruction_3_IS_IMM = _ram_ext_R0_data[371];
-  assign io_deq_bits_decoded_instruction_3_memory_type = _ram_ext_R0_data[373:372];
-  assign io_deq_bits_decoded_instruction_3_access_width = _ram_ext_R0_data[375:374];
-  assign io_deq_bits_valid_bits_0 = _ram_ext_R0_data[376];
-  assign io_deq_bits_valid_bits_1 = _ram_ext_R0_data[377];
-  assign io_deq_bits_valid_bits_2 = _ram_ext_R0_data[378];
-  assign io_deq_bits_valid_bits_3 = _ram_ext_R0_data[379];
-  assign io_deq_bits_GHR = _ram_ext_R0_data[395:380];
-  assign io_deq_bits_TOS = _ram_ext_R0_data[402:396];
-  assign io_deq_bits_NEXT = _ram_ext_R0_data[409:403];
-  assign io_deq_bits_prediction_hit = _ram_ext_R0_data[410];
-  assign io_deq_bits_prediction_target = _ram_ext_R0_data[442:411];
-  assign io_deq_bits_prediction_br_type = _ram_ext_R0_data[445:443];
-  assign io_deq_bits_prediction_T_NT = _ram_ext_R0_data[446];
-  assign io_deq_bits_free_list_front_pointer = _ram_ext_R0_data[454:447];
+  assign io_deq_bits_decoded_instruction_0_RD = _ram_ext_R0_data[38:34];
+  assign io_deq_bits_decoded_instruction_0_PRD = _ram_ext_R0_data[45:39];
+  assign io_deq_bits_decoded_instruction_0_PRDold = _ram_ext_R0_data[52:46];
+  assign io_deq_bits_decoded_instruction_0_RD_valid = _ram_ext_R0_data[53];
+  assign io_deq_bits_decoded_instruction_0_RS1 = _ram_ext_R0_data[60:54];
+  assign io_deq_bits_decoded_instruction_0_RS1_valid = _ram_ext_R0_data[61];
+  assign io_deq_bits_decoded_instruction_0_RS2 = _ram_ext_R0_data[68:62];
+  assign io_deq_bits_decoded_instruction_0_RS2_valid = _ram_ext_R0_data[69];
+  assign io_deq_bits_decoded_instruction_0_IMM = _ram_ext_R0_data[90:70];
+  assign io_deq_bits_decoded_instruction_0_FUNCT3 = _ram_ext_R0_data[93:91];
+  assign io_deq_bits_decoded_instruction_0_packet_index = _ram_ext_R0_data[95:94];
+  assign io_deq_bits_decoded_instruction_0_ROB_index = _ram_ext_R0_data[101:96];
+  assign io_deq_bits_decoded_instruction_0_MOB_index = _ram_ext_R0_data[105:102];
+  assign io_deq_bits_decoded_instruction_0_instructionType = _ram_ext_R0_data[110:106];
+  assign io_deq_bits_decoded_instruction_0_portID = _ram_ext_R0_data[112:111];
+  assign io_deq_bits_decoded_instruction_0_RS_type = _ram_ext_R0_data[114:113];
+  assign io_deq_bits_decoded_instruction_0_needs_ALU = _ram_ext_R0_data[115];
+  assign io_deq_bits_decoded_instruction_0_needs_branch_unit = _ram_ext_R0_data[116];
+  assign io_deq_bits_decoded_instruction_0_needs_CSRs = _ram_ext_R0_data[117];
+  assign io_deq_bits_decoded_instruction_0_SUBTRACT = _ram_ext_R0_data[118];
+  assign io_deq_bits_decoded_instruction_0_MULTIPLY = _ram_ext_R0_data[119];
+  assign io_deq_bits_decoded_instruction_0_IS_IMM = _ram_ext_R0_data[120];
+  assign io_deq_bits_decoded_instruction_0_memory_type = _ram_ext_R0_data[122:121];
+  assign io_deq_bits_decoded_instruction_0_access_width = _ram_ext_R0_data[124:123];
+  assign io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready = _ram_ext_R0_data[125];
+  assign io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready = _ram_ext_R0_data[126];
+  assign io_deq_bits_decoded_instruction_1_RD = _ram_ext_R0_data[131:127];
+  assign io_deq_bits_decoded_instruction_1_PRD = _ram_ext_R0_data[138:132];
+  assign io_deq_bits_decoded_instruction_1_PRDold = _ram_ext_R0_data[145:139];
+  assign io_deq_bits_decoded_instruction_1_RD_valid = _ram_ext_R0_data[146];
+  assign io_deq_bits_decoded_instruction_1_RS1 = _ram_ext_R0_data[153:147];
+  assign io_deq_bits_decoded_instruction_1_RS1_valid = _ram_ext_R0_data[154];
+  assign io_deq_bits_decoded_instruction_1_RS2 = _ram_ext_R0_data[161:155];
+  assign io_deq_bits_decoded_instruction_1_RS2_valid = _ram_ext_R0_data[162];
+  assign io_deq_bits_decoded_instruction_1_IMM = _ram_ext_R0_data[183:163];
+  assign io_deq_bits_decoded_instruction_1_FUNCT3 = _ram_ext_R0_data[186:184];
+  assign io_deq_bits_decoded_instruction_1_packet_index = _ram_ext_R0_data[188:187];
+  assign io_deq_bits_decoded_instruction_1_ROB_index = _ram_ext_R0_data[194:189];
+  assign io_deq_bits_decoded_instruction_1_MOB_index = _ram_ext_R0_data[198:195];
+  assign io_deq_bits_decoded_instruction_1_instructionType = _ram_ext_R0_data[203:199];
+  assign io_deq_bits_decoded_instruction_1_portID = _ram_ext_R0_data[205:204];
+  assign io_deq_bits_decoded_instruction_1_RS_type = _ram_ext_R0_data[207:206];
+  assign io_deq_bits_decoded_instruction_1_needs_ALU = _ram_ext_R0_data[208];
+  assign io_deq_bits_decoded_instruction_1_needs_branch_unit = _ram_ext_R0_data[209];
+  assign io_deq_bits_decoded_instruction_1_needs_CSRs = _ram_ext_R0_data[210];
+  assign io_deq_bits_decoded_instruction_1_SUBTRACT = _ram_ext_R0_data[211];
+  assign io_deq_bits_decoded_instruction_1_MULTIPLY = _ram_ext_R0_data[212];
+  assign io_deq_bits_decoded_instruction_1_IS_IMM = _ram_ext_R0_data[213];
+  assign io_deq_bits_decoded_instruction_1_memory_type = _ram_ext_R0_data[215:214];
+  assign io_deq_bits_decoded_instruction_1_access_width = _ram_ext_R0_data[217:216];
+  assign io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready = _ram_ext_R0_data[218];
+  assign io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready = _ram_ext_R0_data[219];
+  assign io_deq_bits_decoded_instruction_2_RD = _ram_ext_R0_data[224:220];
+  assign io_deq_bits_decoded_instruction_2_PRD = _ram_ext_R0_data[231:225];
+  assign io_deq_bits_decoded_instruction_2_PRDold = _ram_ext_R0_data[238:232];
+  assign io_deq_bits_decoded_instruction_2_RD_valid = _ram_ext_R0_data[239];
+  assign io_deq_bits_decoded_instruction_2_RS1 = _ram_ext_R0_data[246:240];
+  assign io_deq_bits_decoded_instruction_2_RS1_valid = _ram_ext_R0_data[247];
+  assign io_deq_bits_decoded_instruction_2_RS2 = _ram_ext_R0_data[254:248];
+  assign io_deq_bits_decoded_instruction_2_RS2_valid = _ram_ext_R0_data[255];
+  assign io_deq_bits_decoded_instruction_2_IMM = _ram_ext_R0_data[276:256];
+  assign io_deq_bits_decoded_instruction_2_FUNCT3 = _ram_ext_R0_data[279:277];
+  assign io_deq_bits_decoded_instruction_2_packet_index = _ram_ext_R0_data[281:280];
+  assign io_deq_bits_decoded_instruction_2_ROB_index = _ram_ext_R0_data[287:282];
+  assign io_deq_bits_decoded_instruction_2_MOB_index = _ram_ext_R0_data[291:288];
+  assign io_deq_bits_decoded_instruction_2_instructionType = _ram_ext_R0_data[296:292];
+  assign io_deq_bits_decoded_instruction_2_portID = _ram_ext_R0_data[298:297];
+  assign io_deq_bits_decoded_instruction_2_RS_type = _ram_ext_R0_data[300:299];
+  assign io_deq_bits_decoded_instruction_2_needs_ALU = _ram_ext_R0_data[301];
+  assign io_deq_bits_decoded_instruction_2_needs_branch_unit = _ram_ext_R0_data[302];
+  assign io_deq_bits_decoded_instruction_2_needs_CSRs = _ram_ext_R0_data[303];
+  assign io_deq_bits_decoded_instruction_2_SUBTRACT = _ram_ext_R0_data[304];
+  assign io_deq_bits_decoded_instruction_2_MULTIPLY = _ram_ext_R0_data[305];
+  assign io_deq_bits_decoded_instruction_2_IS_IMM = _ram_ext_R0_data[306];
+  assign io_deq_bits_decoded_instruction_2_memory_type = _ram_ext_R0_data[308:307];
+  assign io_deq_bits_decoded_instruction_2_access_width = _ram_ext_R0_data[310:309];
+  assign io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready = _ram_ext_R0_data[311];
+  assign io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready = _ram_ext_R0_data[312];
+  assign io_deq_bits_decoded_instruction_3_RD = _ram_ext_R0_data[317:313];
+  assign io_deq_bits_decoded_instruction_3_PRD = _ram_ext_R0_data[324:318];
+  assign io_deq_bits_decoded_instruction_3_PRDold = _ram_ext_R0_data[331:325];
+  assign io_deq_bits_decoded_instruction_3_RD_valid = _ram_ext_R0_data[332];
+  assign io_deq_bits_decoded_instruction_3_RS1 = _ram_ext_R0_data[339:333];
+  assign io_deq_bits_decoded_instruction_3_RS1_valid = _ram_ext_R0_data[340];
+  assign io_deq_bits_decoded_instruction_3_RS2 = _ram_ext_R0_data[347:341];
+  assign io_deq_bits_decoded_instruction_3_RS2_valid = _ram_ext_R0_data[348];
+  assign io_deq_bits_decoded_instruction_3_IMM = _ram_ext_R0_data[369:349];
+  assign io_deq_bits_decoded_instruction_3_FUNCT3 = _ram_ext_R0_data[372:370];
+  assign io_deq_bits_decoded_instruction_3_packet_index = _ram_ext_R0_data[374:373];
+  assign io_deq_bits_decoded_instruction_3_ROB_index = _ram_ext_R0_data[380:375];
+  assign io_deq_bits_decoded_instruction_3_MOB_index = _ram_ext_R0_data[384:381];
+  assign io_deq_bits_decoded_instruction_3_instructionType = _ram_ext_R0_data[389:385];
+  assign io_deq_bits_decoded_instruction_3_portID = _ram_ext_R0_data[391:390];
+  assign io_deq_bits_decoded_instruction_3_RS_type = _ram_ext_R0_data[393:392];
+  assign io_deq_bits_decoded_instruction_3_needs_ALU = _ram_ext_R0_data[394];
+  assign io_deq_bits_decoded_instruction_3_needs_branch_unit = _ram_ext_R0_data[395];
+  assign io_deq_bits_decoded_instruction_3_needs_CSRs = _ram_ext_R0_data[396];
+  assign io_deq_bits_decoded_instruction_3_SUBTRACT = _ram_ext_R0_data[397];
+  assign io_deq_bits_decoded_instruction_3_MULTIPLY = _ram_ext_R0_data[398];
+  assign io_deq_bits_decoded_instruction_3_IS_IMM = _ram_ext_R0_data[399];
+  assign io_deq_bits_decoded_instruction_3_memory_type = _ram_ext_R0_data[401:400];
+  assign io_deq_bits_decoded_instruction_3_access_width = _ram_ext_R0_data[403:402];
+  assign io_deq_bits_valid_bits_0 = _ram_ext_R0_data[404];
+  assign io_deq_bits_valid_bits_1 = _ram_ext_R0_data[405];
+  assign io_deq_bits_valid_bits_2 = _ram_ext_R0_data[406];
+  assign io_deq_bits_valid_bits_3 = _ram_ext_R0_data[407];
+  assign io_deq_bits_GHR = _ram_ext_R0_data[423:408];
+  assign io_deq_bits_TOS = _ram_ext_R0_data[430:424];
+  assign io_deq_bits_NEXT = _ram_ext_R0_data[437:431];
+  assign io_deq_bits_prediction_hit = _ram_ext_R0_data[438];
+  assign io_deq_bits_prediction_target = _ram_ext_R0_data[470:439];
+  assign io_deq_bits_prediction_br_type = _ram_ext_R0_data[473:471];
+  assign io_deq_bits_prediction_T_NT = _ram_ext_R0_data[474];
+  assign io_deq_bits_free_list_front_pointer = _ram_ext_R0_data[482:475];
 endmodule
 

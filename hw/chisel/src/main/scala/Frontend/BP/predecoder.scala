@@ -97,7 +97,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
         val opcode                      = instruction(6, 0)
         val RS1                         = instruction(19, 15)
         val RS2                         = instruction(24, 20)
-        val RD                          = instruction(11, 7)
+        val PRD                          = instruction(11, 7)
         val is_BTB_taken                = io.prediction.valid && io.prediction.bits.hit && io.prediction.bits.T_NT && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
 
         val (instruction_type, valid)   = InstructionType.safe(opcode(6, 2))
@@ -105,8 +105,8 @@ class predecoder(coreParameters:CoreParameters) extends Module{
         val curr_is_JAL                 = (instruction_type === InstructionType.JAL)     && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
         val curr_is_JALR                = (instruction_type === InstructionType.JALR)    && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
         val curr_is_BRANCH              = (instruction_type === InstructionType.BRANCH)  && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
-        val curr_is_RET                 = (is_JALR && (RD === 0.U) && (RS1 === 1.U)) // FIXME: this should maybe check for imm...
-        val curr_is_CALL                = (is_JALR && (RD === 1.U)) || (is_JAL && (RD === 1.U))
+        val curr_is_RET                 = (is_JALR && (PRD === 0.U) && (RS1 === 1.U)) // FIXME: this should maybe check for imm...
+        val curr_is_CALL                = (is_JALR && (PRD === 1.U)) || (is_JAL && (PRD === 1.U))
 
         val is_taken                    = ((curr_is_BRANCH && is_BTB_taken) || curr_is_JALR || curr_is_JAL)
 
@@ -187,7 +187,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     final_fetch_packet_out.valid    := input_fetch_packet_valid
     when(input_fetch_packet_valid && final_fetch_packet_out_Q.io.enq.ready){expected_next_PC := target_address}
     // FIXME: this should be a global signal...
-    when(io.commit.valid && (io.commit.bits.is_misprediction)){expected_next_PC := io.commit.bits.fetch_PC}
+    when(io.commit.valid && (io.commit.bits.is_misprediction)){expected_next_PC := io.commit.bits.expected_PC}
 
     ////////////
     // REVERT //

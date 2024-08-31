@@ -81,14 +81,14 @@ module predecoder(
   input  [6:0]  io_commit_bits_TOS,
                 io_commit_bits_NEXT,
   input  [7:0]  io_commit_bits_free_list_front_pointer,
-  input  [4:0]  io_commit_bits_RDold_0,
-                io_commit_bits_RDold_1,
-                io_commit_bits_RDold_2,
-                io_commit_bits_RDold_3,
-  input  [6:0]  io_commit_bits_RD_0,
+  input  [4:0]  io_commit_bits_RD_0,
                 io_commit_bits_RD_1,
                 io_commit_bits_RD_2,
                 io_commit_bits_RD_3,
+  input  [6:0]  io_commit_bits_PRD_0,
+                io_commit_bits_PRD_1,
+                io_commit_bits_PRD_2,
+                io_commit_bits_PRD_3,
   input         io_commit_bits_RD_valid_0,
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
@@ -291,7 +291,7 @@ module predecoder(
     end
     else begin
       if (io_commit_valid & io_commit_bits_is_misprediction)
-        expected_next_PC <= io_commit_bits_fetch_PC;
+        expected_next_PC <= io_commit_bits_expected_PC;
       else if (input_fetch_packet_valid & _final_fetch_packet_out_Q_io_enq_ready)
         expected_next_PC <= target_address;
       if (io_commit_bits_is_misprediction)

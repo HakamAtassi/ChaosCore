@@ -102,13 +102,13 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
     for (i <- 0 until RSEntries) {
         for (FU <- 0 until portCount) {
 
-            when((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS1) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid){
+            when((io.FU_outputs(FU).bits.PRD === reservation_station(i).decoded_instruction.RS1) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid){
                 when(reservation_station(i).valid){
                     reservation_station(i).decoded_instruction.ready_bits.RS1_ready := 1.B
                 }
             }
 
-            when((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS2) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid){
+            when((io.FU_outputs(FU).bits.PRD === reservation_station(i).decoded_instruction.RS2) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid){
                 when(reservation_station(i).valid){
                     reservation_station(i).decoded_instruction.ready_bits.RS2_ready := 1.B
                 }

@@ -828,6 +828,22 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|predecoder>io.commit.bits.PRD[0]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|predecoder>io.commit.bits.PRD[1]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|predecoder>io.commit.bits.PRD[2]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|predecoder>io.commit.bits.PRD[3]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|predecoder>io.commit.bits.RD[0]"
   },
   {
@@ -841,22 +857,6 @@ circuit SOC :%[[
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|predecoder>io.commit.bits.RD[3]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|predecoder>io.commit.bits.RDold[0]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|predecoder>io.commit.bits.RDold[1]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|predecoder>io.commit.bits.RDold[2]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|predecoder>io.commit.bits.RDold[3]"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -1200,6 +1200,22 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|PC_gen>io.commit.bits.PRD[0]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|PC_gen>io.commit.bits.PRD[1]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|PC_gen>io.commit.bits.PRD[2]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|PC_gen>io.commit.bits.PRD[3]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|PC_gen>io.commit.bits.RD[0]"
   },
   {
@@ -1213,22 +1229,6 @@ circuit SOC :%[[
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|PC_gen>io.commit.bits.RD[3]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|PC_gen>io.commit.bits.RDold[0]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|PC_gen>io.commit.bits.RDold[1]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|PC_gen>io.commit.bits.RDold[2]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|PC_gen>io.commit.bits.RDold[3]"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2124,11 +2124,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[0].RD"
+    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[0].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[0].RDold"
+    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[0].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2228,11 +2228,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[1].RD"
+    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[1].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[1].RDold"
+    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[1].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2332,11 +2332,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[2].RD"
+    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[2].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[2].RDold"
+    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[2].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2436,11 +2436,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[3].RD"
+    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[3].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[3].RDold"
+    "target":"~SOC|rename>io.renamed_decoded_fetch_packet.bits.decoded_instruction[3].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2528,7 +2528,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.FU_outputs[0].bits.RD"
+    "target":"~SOC|rename>io.FU_outputs[0].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2600,7 +2600,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.FU_outputs[1].bits.RD"
+    "target":"~SOC|rename>io.FU_outputs[1].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2672,7 +2672,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.FU_outputs[2].bits.RD"
+    "target":"~SOC|rename>io.FU_outputs[2].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2744,7 +2744,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.FU_outputs[3].bits.RD"
+    "target":"~SOC|rename>io.FU_outputs[3].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2876,11 +2876,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[0].RD"
+    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[0].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[0].RDold"
+    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[0].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2980,11 +2980,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[1].RD"
+    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[1].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[1].RDold"
+    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[1].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -3084,11 +3084,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[2].RD"
+    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[2].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[2].RDold"
+    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[2].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -3188,11 +3188,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[3].RD"
+    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[3].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[3].RDold"
+    "target":"~SOC|rename>io.decoded_fetch_packet.bits.decoded_instruction[3].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -3312,6 +3312,22 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|rename>io.commit.bits.PRD[0]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|rename>io.commit.bits.PRD[1]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|rename>io.commit.bits.PRD[2]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|rename>io.commit.bits.PRD[3]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|rename>io.commit.bits.RD[0]"
   },
   {
@@ -3325,22 +3341,6 @@ circuit SOC :%[[
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|rename>io.commit.bits.RD[3]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.commit.bits.RDold[0]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.commit.bits.RDold[1]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.commit.bits.RDold[2]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|rename>io.commit.bits.RDold[3]"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -3477,6 +3477,22 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|free_list>io.commit.bits.PRD[0]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|free_list>io.commit.bits.PRD[1]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|free_list>io.commit.bits.PRD[2]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|free_list>io.commit.bits.PRD[3]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|free_list>io.commit.bits.RD[0]"
   },
   {
@@ -3490,22 +3506,6 @@ circuit SOC :%[[
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|free_list>io.commit.bits.RD[3]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|free_list>io.commit.bits.RDold[0]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|free_list>io.commit.bits.RDold[1]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|free_list>io.commit.bits.RDold[2]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|free_list>io.commit.bits.RDold[3]"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -4528,11 +4528,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[0].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[0].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[0].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[0].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -4636,11 +4636,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[1].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[1].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[1].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[1].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -4744,11 +4744,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[2].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[2].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[2].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[2].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -4852,11 +4852,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[3].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[3].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[3].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[3].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -4960,11 +4960,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[4].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[4].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[4].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[4].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5068,11 +5068,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[5].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[5].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[5].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[5].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5176,11 +5176,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[6].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[6].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[6].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[6].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5284,11 +5284,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[7].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[7].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[7].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[7].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5392,11 +5392,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[8].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[8].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[8].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[8].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5500,11 +5500,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[9].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[9].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[9].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[9].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5608,11 +5608,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[10].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[10].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[10].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[10].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5716,11 +5716,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[11].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[11].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[11].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[11].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5824,11 +5824,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[12].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[12].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[12].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[12].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -5932,11 +5932,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[13].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[13].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[13].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[13].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -6040,11 +6040,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[14].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[14].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[14].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[14].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -6148,11 +6148,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[15].decoded_instruction.RD"
+    "target":"~SOC|RS>reservation_station[15].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|RS>reservation_station[15].decoded_instruction.RDold"
+    "target":"~SOC|RS>reservation_station[15].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -7643,11 +7643,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[0].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[0].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[0].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[0].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -7759,11 +7759,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[1].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[1].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[1].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[1].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -7875,11 +7875,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[2].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[2].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[2].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[2].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -7991,11 +7991,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[3].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[3].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[3].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[3].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -8107,11 +8107,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[4].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[4].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[4].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[4].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -8223,11 +8223,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[5].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[5].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[5].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[5].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -8339,11 +8339,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[6].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[6].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[6].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[6].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -8455,11 +8455,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[7].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[7].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[7].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[7].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -8571,11 +8571,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[8].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[8].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[8].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[8].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -8687,11 +8687,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[9].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[9].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[9].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[9].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -8803,11 +8803,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[10].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[10].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[10].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[10].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -8919,11 +8919,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[11].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[11].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[11].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[11].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -9035,11 +9035,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[12].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[12].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[12].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[12].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -9151,11 +9151,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[13].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[13].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[13].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[13].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -9267,11 +9267,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[14].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[14].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[14].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[14].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -9383,11 +9383,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[15].decoded_instruction.RD"
+    "target":"~SOC|MEMRS>reservation_station[15].decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>reservation_station[15].decoded_instruction.RDold"
+    "target":"~SOC|MEMRS>reservation_station[15].decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -9487,11 +9487,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>io.backend_packet[0].bits.RD"
+    "target":"~SOC|MEMRS>io.backend_packet[0].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>io.backend_packet[0].bits.RDold"
+    "target":"~SOC|MEMRS>io.backend_packet[0].bits.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -9599,11 +9599,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>io.backend_packet[1].bits.RD"
+    "target":"~SOC|MEMRS>io.backend_packet[1].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>io.backend_packet[1].bits.RDold"
+    "target":"~SOC|MEMRS>io.backend_packet[1].bits.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -9711,11 +9711,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>io.backend_packet[2].bits.RD"
+    "target":"~SOC|MEMRS>io.backend_packet[2].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>io.backend_packet[2].bits.RDold"
+    "target":"~SOC|MEMRS>io.backend_packet[2].bits.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -9823,11 +9823,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>io.backend_packet[3].bits.RD"
+    "target":"~SOC|MEMRS>io.backend_packet[3].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|MEMRS>io.backend_packet[3].bits.RDold"
+    "target":"~SOC|MEMRS>io.backend_packet[3].bits.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -10786,7 +10786,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU>io.FU_output.bits.RD"
+    "target":"~SOC|FU>io.FU_output.bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -10894,11 +10894,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU>io.FU_input.bits.decoded_instruction.RD"
+    "target":"~SOC|FU>io.FU_input.bits.decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU>io.FU_input.bits.decoded_instruction.RDold"
+    "target":"~SOC|FU>io.FU_input.bits.decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -11080,7 +11080,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU_1>io.FU_output.bits.RD"
+    "target":"~SOC|FU_1>io.FU_output.bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -11188,11 +11188,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU_1>io.FU_input.bits.decoded_instruction.RD"
+    "target":"~SOC|FU_1>io.FU_input.bits.decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU_1>io.FU_input.bits.decoded_instruction.RDold"
+    "target":"~SOC|FU_1>io.FU_input.bits.decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -11344,7 +11344,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU_2>io.FU_output.bits.RD"
+    "target":"~SOC|FU_2>io.FU_output.bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -11452,11 +11452,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU_2>io.FU_input.bits.decoded_instruction.RD"
+    "target":"~SOC|FU_2>io.FU_input.bits.decoded_instruction.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|FU_2>io.FU_input.bits.decoded_instruction.RDold"
+    "target":"~SOC|FU_2>io.FU_input.bits.decoded_instruction.RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -11983,6 +11983,22 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|ROB>io.commit.bits.PRD[0]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|ROB>io.commit.bits.PRD[1]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|ROB>io.commit.bits.PRD[2]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~SOC|ROB>io.commit.bits.PRD[3]"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|ROB>io.commit.bits.RD[0]"
   },
   {
@@ -11996,22 +12012,6 @@ circuit SOC :%[[
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
     "target":"~SOC|ROB>io.commit.bits.RD[3]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.commit.bits.RDold[0]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.commit.bits.RDold[1]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.commit.bits.RDold[2]"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.commit.bits.RDold[3]"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12103,7 +12103,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_output.ROB_entries[0].RDold"
+    "target":"~SOC|ROB>io.ROB_output.ROB_entries[0].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12111,7 +12111,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_output.ROB_entries[0].RD"
+    "target":"~SOC|ROB>io.ROB_output.ROB_entries[0].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12127,7 +12127,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_output.ROB_entries[1].RDold"
+    "target":"~SOC|ROB>io.ROB_output.ROB_entries[1].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12135,7 +12135,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_output.ROB_entries[1].RD"
+    "target":"~SOC|ROB>io.ROB_output.ROB_entries[1].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12151,7 +12151,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_output.ROB_entries[2].RDold"
+    "target":"~SOC|ROB>io.ROB_output.ROB_entries[2].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12159,7 +12159,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_output.ROB_entries[2].RD"
+    "target":"~SOC|ROB>io.ROB_output.ROB_entries[2].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12175,7 +12175,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_output.ROB_entries[3].RDold"
+    "target":"~SOC|ROB>io.ROB_output.ROB_entries[3].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12183,7 +12183,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_output.ROB_entries[3].RD"
+    "target":"~SOC|ROB>io.ROB_output.ROB_entries[3].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12295,7 +12295,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.FU_outputs[0].bits.RD"
+    "target":"~SOC|ROB>io.FU_outputs[0].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12367,7 +12367,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.FU_outputs[1].bits.RD"
+    "target":"~SOC|ROB>io.FU_outputs[1].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12439,7 +12439,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.FU_outputs[2].bits.RD"
+    "target":"~SOC|ROB>io.FU_outputs[2].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12511,7 +12511,7 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.FU_outputs[3].bits.RD"
+    "target":"~SOC|ROB>io.FU_outputs[3].bits.PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12643,11 +12643,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[0].RD"
+    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[0].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[0].RDold"
+    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[0].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12747,11 +12747,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[1].RD"
+    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[1].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[1].RDold"
+    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[1].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12851,11 +12851,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[2].RD"
+    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[2].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[2].RDold"
+    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[2].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12955,11 +12955,11 @@ circuit SOC :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[3].RD"
+    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[3].PRD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[3].RDold"
+    "target":"~SOC|ROB>io.ROB_packet.bits.decoded_instruction[3].RD"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -13197,7 +13197,7 @@ circuit SOC :%[[
   module gshare : @[src/main/scala/Frontend/BP/gshare.scala 70:7]
     input clock : Clock @[src/main/scala/Frontend/BP/gshare.scala 70:7]
     input reset : Reset @[src/main/scala/Frontend/BP/gshare.scala 70:7]
-    output io : { flip predict_GHR : UInt<16>, flip predict_PC : UInt<32>, flip predict_valid : UInt<1>, T_NT : UInt<1>, valid : UInt<1>, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BP/gshare.scala 74:16]
+    output io : { flip predict_GHR : UInt<16>, flip predict_PC : UInt<32>, flip predict_valid : UInt<1>, T_NT : UInt<1>, valid : UInt<1>, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BP/gshare.scala 74:16]
 
     wire prediction_state : UInt<2> @[src/main/scala/Frontend/BP/gshare.scala 100:43]
     wire commit_state : UInt<2> @[src/main/scala/Frontend/BP/gshare.scala 101:43]
@@ -13297,7 +13297,7 @@ circuit SOC :%[[
   module hash_BTB : @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
     input clock : Clock @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
     input reset : Reset @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
-    output io : { flip predict_PC : UInt<32>, flip predict_valid : UInt<1>, BTB_hit : UInt<1>, BTB_output : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BP/hash_BTB.scala 92:16]
+    output io : { flip predict_PC : UInt<32>, flip predict_valid : UInt<1>, BTB_hit : UInt<1>, BTB_output : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BP/hash_BTB.scala 92:16]
 
     node commit_input_tag = shr(io.commit.bits.fetch_PC, 16) @[src/main/scala/utils.scala 112:15]
     node predict_input_tag = shr(io.predict_PC, 16) @[src/main/scala/utils.scala 112:15]
@@ -13485,7 +13485,7 @@ circuit SOC :%[[
   module BP : @[src/main/scala/Frontend/BP/BP.scala 38:7]
     input clock : Clock @[src/main/scala/Frontend/BP/BP.scala 38:7]
     input reset : Reset @[src/main/scala/Frontend/BP/BP.scala 38:7]
-    output io : { flip flush : UInt<1>, flip predict : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip RAS_update : { call_addr : UInt<32>, call : UInt<1>, ret : UInt<1>}, RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, flip GHR : UInt<16>, prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}} @[src/main/scala/Frontend/BP/BP.scala 40:16]
+    output io : { flip flush : UInt<1>, flip predict : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip RAS_update : { call_addr : UInt<32>, call : UInt<1>, ret : UInt<1>}, RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, flip GHR : UInt<16>, prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}} @[src/main/scala/Frontend/BP/BP.scala 40:16]
 
     wire prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}} @[src/main/scala/Frontend/BP/BP.scala 66:26]
     inst gshare of gshare @[src/main/scala/Frontend/BP/BP.scala 71:29]
@@ -13663,7 +13663,7 @@ circuit SOC :%[[
   module predecoder : @[src/main/scala/Frontend/BP/predecoder.scala 41:7]
     input clock : Clock @[src/main/scala/Frontend/BP/predecoder.scala 41:7]
     input reset : Reset @[src/main/scala/Frontend/BP/predecoder.scala 41:7]
-    output io : { flip flush : UInt<1>, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}, flip fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, flip RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, final_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, GHR : UInt<16>, RAS_update : { call_addr : UInt<32>, call : UInt<1>, ret : UInt<1>}} @[src/main/scala/Frontend/BP/predecoder.scala 44:16]
+    output io : { flip flush : UInt<1>, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}, flip fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, flip RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, final_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, GHR : UInt<16>, RAS_update : { call_addr : UInt<32>, call : UInt<1>, ret : UInt<1>}} @[src/main/scala/Frontend/BP/predecoder.scala 44:16]
 
     wire predictions_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}} @[src/main/scala/Frontend/BP/predecoder.scala 68:39]
     wire final_fetch_packet_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}} @[src/main/scala/Frontend/BP/predecoder.scala 69:39]
@@ -13688,7 +13688,7 @@ circuit SOC :%[[
     node opcode = bits(io.fetch_packet.bits.instructions[3].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 98:54]
     node RS1 = bits(io.fetch_packet.bits.instructions[3].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 99:54]
     node RS2 = bits(io.fetch_packet.bits.instructions[3].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
-    node RD = bits(io.fetch_packet.bits.instructions[3].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
+    node PRD = bits(io.fetch_packet.bits.instructions[3].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
     node _is_BTB_taken_T = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 102:63]
     node _is_BTB_taken_T_1 = and(_is_BTB_taken_T, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 102:89]
     node _is_BTB_taken_T_2 = and(_is_BTB_taken_T_1, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 102:116]
@@ -13756,13 +13756,13 @@ circuit SOC :%[[
     node _curr_is_BRANCH_T = eq(instruction_type, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 108:61]
     node _curr_is_BRANCH_T_1 = and(_curr_is_BRANCH_T, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 108:90]
     node curr_is_BRANCH = and(_curr_is_BRANCH_T_1, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 108:128]
-    node _curr_is_RET_T = eq(RD, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 109:59]
+    node _curr_is_RET_T = eq(PRD, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 109:59]
     node _curr_is_RET_T_1 = and(is_JALR, _curr_is_RET_T) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
     node _curr_is_RET_T_2 = eq(RS1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 109:76]
     node curr_is_RET = and(_curr_is_RET_T_1, _curr_is_RET_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 109:68]
-    node _curr_is_CALL_T = eq(RD, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 110:59]
+    node _curr_is_CALL_T = eq(PRD, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 110:59]
     node _curr_is_CALL_T_1 = and(is_JALR, _curr_is_CALL_T) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
-    node _curr_is_CALL_T_2 = eq(RD, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 110:87]
+    node _curr_is_CALL_T_2 = eq(PRD, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 110:87]
     node _curr_is_CALL_T_3 = and(is_JAL, _curr_is_CALL_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 110:80]
     node curr_is_CALL = or(_curr_is_CALL_T_1, _curr_is_CALL_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 110:69]
     node _is_taken_T = and(curr_is_BRANCH, is_BTB_taken) @[src/main/scala/Frontend/BP/predecoder.scala 112:60]
@@ -14330,7 +14330,7 @@ circuit SOC :%[[
   module PC_gen : @[src/main/scala/Frontend/BP/PC_gen.scala 40:7]
     input clock : Clock @[src/main/scala/Frontend/BP/PC_gen.scala 40:7]
     input reset : Reset @[src/main/scala/Frontend/BP/PC_gen.scala 40:7]
-    output io : { flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}, flip RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, PC_next : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}} @[src/main/scala/Frontend/BP/PC_gen.scala 43:16]
+    output io : { flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}, flip RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, PC_next : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}} @[src/main/scala/Frontend/BP/PC_gen.scala 43:16]
 
     regreset PC_reg : UInt<32>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 55:41]
     regreset flush_PC_reg : UInt<32>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 56:41]
@@ -14624,7 +14624,7 @@ circuit SOC :%[[
   module instruction_fetch : @[src/main/scala/Frontend/instruction_fetch.scala 35:7]
     input clock : Clock @[src/main/scala/Frontend/instruction_fetch.scala 35:7]
     input reset : Reset @[src/main/scala/Frontend/instruction_fetch.scala 35:7]
-    output io : { flip flush : UInt<1>, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}} @[src/main/scala/Frontend/instruction_fetch.scala 40:16]
+    output io : { flip flush : UInt<1>, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}} @[src/main/scala/Frontend/instruction_fetch.scala 40:16]
 
     inst bp of BP @[src/main/scala/Frontend/instruction_fetch.scala 56:37]
     connect bp.clock, clock
@@ -14699,12 +14699,12 @@ circuit SOC :%[[
   module decoder : @[src/main/scala/Frontend/decoder.scala 40:7]
     input clock : Clock @[src/main/scala/Frontend/decoder.scala 40:7]
     input reset : Reset @[src/main/scala/Frontend/decoder.scala 40:7]
-    output io : { flip instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}}, decoded_instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}} @[src/main/scala/Frontend/decoder.scala 43:16]
+    output io : { flip instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}}, decoded_instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}} @[src/main/scala/Frontend/decoder.scala 43:16]
 
     node opcode = bits(io.instruction.bits.instruction, 6, 0) @[src/main/scala/Frontend/decoder.scala 55:34]
     node RS1 = bits(io.instruction.bits.instruction, 19, 15) @[src/main/scala/Frontend/decoder.scala 56:34]
     node RS2 = bits(io.instruction.bits.instruction, 24, 20) @[src/main/scala/Frontend/decoder.scala 57:34]
-    node RD = bits(io.instruction.bits.instruction, 11, 7) @[src/main/scala/Frontend/decoder.scala 58:34]
+    node PRD = bits(io.instruction.bits.instruction, 11, 7) @[src/main/scala/Frontend/decoder.scala 58:34]
     node IMM_opcode = bits(io.instruction.bits.instruction, 6, 0) @[src/main/scala/utils.scala 117:33]
     node _IMM_U_T = eq(IMM_opcode, UInt<5>(0h17)) @[src/main/scala/utils.scala 119:30]
     node _IMM_U_T_1 = eq(IMM_opcode, UInt<6>(0h37)) @[src/main/scala/utils.scala 119:59]
@@ -14929,8 +14929,8 @@ circuit SOC :%[[
     node _io_decoded_instruction_bits_RS2_valid_T_4 = or(_io_decoded_instruction_bits_RS2_valid_T_2, _io_decoded_instruction_bits_RS2_valid_T_3) @[src/main/scala/Frontend/decoder.scala 122:89]
     node _io_decoded_instruction_bits_RS2_valid_T_5 = and(_io_decoded_instruction_bits_RS2_valid_T_4, io.instruction.valid) @[src/main/scala/Frontend/decoder.scala 123:89]
     connect io.decoded_instruction.bits.RS2_valid, _io_decoded_instruction_bits_RS2_valid_T_5 @[src/main/scala/Frontend/decoder.scala 121:54]
-    connect io.decoded_instruction.bits.RD, RD @[src/main/scala/Frontend/decoder.scala 126:54]
-    connect io.decoded_instruction.bits.RDold, RD @[src/main/scala/Frontend/decoder.scala 127:54]
+    connect io.decoded_instruction.bits.PRD, PRD @[src/main/scala/Frontend/decoder.scala 126:54]
+    connect io.decoded_instruction.bits.RD, PRD @[src/main/scala/Frontend/decoder.scala 127:54]
     connect io.decoded_instruction.bits.RS1, RS1 @[src/main/scala/Frontend/decoder.scala 128:54]
     connect io.decoded_instruction.bits.RS2, RS2 @[src/main/scala/Frontend/decoder.scala 129:54]
     connect io.decoded_instruction.bits.IMM, IMM @[src/main/scala/Frontend/decoder.scala 130:54]
@@ -15022,12 +15022,12 @@ circuit SOC :%[[
   module decoder_1 : @[src/main/scala/Frontend/decoder.scala 40:7]
     input clock : Clock @[src/main/scala/Frontend/decoder.scala 40:7]
     input reset : Reset @[src/main/scala/Frontend/decoder.scala 40:7]
-    output io : { flip instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}}, decoded_instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}} @[src/main/scala/Frontend/decoder.scala 43:16]
+    output io : { flip instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}}, decoded_instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}} @[src/main/scala/Frontend/decoder.scala 43:16]
 
     node opcode = bits(io.instruction.bits.instruction, 6, 0) @[src/main/scala/Frontend/decoder.scala 55:34]
     node RS1 = bits(io.instruction.bits.instruction, 19, 15) @[src/main/scala/Frontend/decoder.scala 56:34]
     node RS2 = bits(io.instruction.bits.instruction, 24, 20) @[src/main/scala/Frontend/decoder.scala 57:34]
-    node RD = bits(io.instruction.bits.instruction, 11, 7) @[src/main/scala/Frontend/decoder.scala 58:34]
+    node PRD = bits(io.instruction.bits.instruction, 11, 7) @[src/main/scala/Frontend/decoder.scala 58:34]
     node IMM_opcode = bits(io.instruction.bits.instruction, 6, 0) @[src/main/scala/utils.scala 117:33]
     node _IMM_U_T = eq(IMM_opcode, UInt<5>(0h17)) @[src/main/scala/utils.scala 119:30]
     node _IMM_U_T_1 = eq(IMM_opcode, UInt<6>(0h37)) @[src/main/scala/utils.scala 119:59]
@@ -15252,8 +15252,8 @@ circuit SOC :%[[
     node _io_decoded_instruction_bits_RS2_valid_T_4 = or(_io_decoded_instruction_bits_RS2_valid_T_2, _io_decoded_instruction_bits_RS2_valid_T_3) @[src/main/scala/Frontend/decoder.scala 122:89]
     node _io_decoded_instruction_bits_RS2_valid_T_5 = and(_io_decoded_instruction_bits_RS2_valid_T_4, io.instruction.valid) @[src/main/scala/Frontend/decoder.scala 123:89]
     connect io.decoded_instruction.bits.RS2_valid, _io_decoded_instruction_bits_RS2_valid_T_5 @[src/main/scala/Frontend/decoder.scala 121:54]
-    connect io.decoded_instruction.bits.RD, RD @[src/main/scala/Frontend/decoder.scala 126:54]
-    connect io.decoded_instruction.bits.RDold, RD @[src/main/scala/Frontend/decoder.scala 127:54]
+    connect io.decoded_instruction.bits.PRD, PRD @[src/main/scala/Frontend/decoder.scala 126:54]
+    connect io.decoded_instruction.bits.RD, PRD @[src/main/scala/Frontend/decoder.scala 127:54]
     connect io.decoded_instruction.bits.RS1, RS1 @[src/main/scala/Frontend/decoder.scala 128:54]
     connect io.decoded_instruction.bits.RS2, RS2 @[src/main/scala/Frontend/decoder.scala 129:54]
     connect io.decoded_instruction.bits.IMM, IMM @[src/main/scala/Frontend/decoder.scala 130:54]
@@ -15345,12 +15345,12 @@ circuit SOC :%[[
   module decoder_2 : @[src/main/scala/Frontend/decoder.scala 40:7]
     input clock : Clock @[src/main/scala/Frontend/decoder.scala 40:7]
     input reset : Reset @[src/main/scala/Frontend/decoder.scala 40:7]
-    output io : { flip instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}}, decoded_instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}} @[src/main/scala/Frontend/decoder.scala 43:16]
+    output io : { flip instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}}, decoded_instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}} @[src/main/scala/Frontend/decoder.scala 43:16]
 
     node opcode = bits(io.instruction.bits.instruction, 6, 0) @[src/main/scala/Frontend/decoder.scala 55:34]
     node RS1 = bits(io.instruction.bits.instruction, 19, 15) @[src/main/scala/Frontend/decoder.scala 56:34]
     node RS2 = bits(io.instruction.bits.instruction, 24, 20) @[src/main/scala/Frontend/decoder.scala 57:34]
-    node RD = bits(io.instruction.bits.instruction, 11, 7) @[src/main/scala/Frontend/decoder.scala 58:34]
+    node PRD = bits(io.instruction.bits.instruction, 11, 7) @[src/main/scala/Frontend/decoder.scala 58:34]
     node IMM_opcode = bits(io.instruction.bits.instruction, 6, 0) @[src/main/scala/utils.scala 117:33]
     node _IMM_U_T = eq(IMM_opcode, UInt<5>(0h17)) @[src/main/scala/utils.scala 119:30]
     node _IMM_U_T_1 = eq(IMM_opcode, UInt<6>(0h37)) @[src/main/scala/utils.scala 119:59]
@@ -15575,8 +15575,8 @@ circuit SOC :%[[
     node _io_decoded_instruction_bits_RS2_valid_T_4 = or(_io_decoded_instruction_bits_RS2_valid_T_2, _io_decoded_instruction_bits_RS2_valid_T_3) @[src/main/scala/Frontend/decoder.scala 122:89]
     node _io_decoded_instruction_bits_RS2_valid_T_5 = and(_io_decoded_instruction_bits_RS2_valid_T_4, io.instruction.valid) @[src/main/scala/Frontend/decoder.scala 123:89]
     connect io.decoded_instruction.bits.RS2_valid, _io_decoded_instruction_bits_RS2_valid_T_5 @[src/main/scala/Frontend/decoder.scala 121:54]
-    connect io.decoded_instruction.bits.RD, RD @[src/main/scala/Frontend/decoder.scala 126:54]
-    connect io.decoded_instruction.bits.RDold, RD @[src/main/scala/Frontend/decoder.scala 127:54]
+    connect io.decoded_instruction.bits.PRD, PRD @[src/main/scala/Frontend/decoder.scala 126:54]
+    connect io.decoded_instruction.bits.RD, PRD @[src/main/scala/Frontend/decoder.scala 127:54]
     connect io.decoded_instruction.bits.RS1, RS1 @[src/main/scala/Frontend/decoder.scala 128:54]
     connect io.decoded_instruction.bits.RS2, RS2 @[src/main/scala/Frontend/decoder.scala 129:54]
     connect io.decoded_instruction.bits.IMM, IMM @[src/main/scala/Frontend/decoder.scala 130:54]
@@ -15668,12 +15668,12 @@ circuit SOC :%[[
   module decoder_3 : @[src/main/scala/Frontend/decoder.scala 40:7]
     input clock : Clock @[src/main/scala/Frontend/decoder.scala 40:7]
     input reset : Reset @[src/main/scala/Frontend/decoder.scala 40:7]
-    output io : { flip instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}}, decoded_instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}} @[src/main/scala/Frontend/decoder.scala 43:16]
+    output io : { flip instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}}, decoded_instruction : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}} @[src/main/scala/Frontend/decoder.scala 43:16]
 
     node opcode = bits(io.instruction.bits.instruction, 6, 0) @[src/main/scala/Frontend/decoder.scala 55:34]
     node RS1 = bits(io.instruction.bits.instruction, 19, 15) @[src/main/scala/Frontend/decoder.scala 56:34]
     node RS2 = bits(io.instruction.bits.instruction, 24, 20) @[src/main/scala/Frontend/decoder.scala 57:34]
-    node RD = bits(io.instruction.bits.instruction, 11, 7) @[src/main/scala/Frontend/decoder.scala 58:34]
+    node PRD = bits(io.instruction.bits.instruction, 11, 7) @[src/main/scala/Frontend/decoder.scala 58:34]
     node IMM_opcode = bits(io.instruction.bits.instruction, 6, 0) @[src/main/scala/utils.scala 117:33]
     node _IMM_U_T = eq(IMM_opcode, UInt<5>(0h17)) @[src/main/scala/utils.scala 119:30]
     node _IMM_U_T_1 = eq(IMM_opcode, UInt<6>(0h37)) @[src/main/scala/utils.scala 119:59]
@@ -15898,8 +15898,8 @@ circuit SOC :%[[
     node _io_decoded_instruction_bits_RS2_valid_T_4 = or(_io_decoded_instruction_bits_RS2_valid_T_2, _io_decoded_instruction_bits_RS2_valid_T_3) @[src/main/scala/Frontend/decoder.scala 122:89]
     node _io_decoded_instruction_bits_RS2_valid_T_5 = and(_io_decoded_instruction_bits_RS2_valid_T_4, io.instruction.valid) @[src/main/scala/Frontend/decoder.scala 123:89]
     connect io.decoded_instruction.bits.RS2_valid, _io_decoded_instruction_bits_RS2_valid_T_5 @[src/main/scala/Frontend/decoder.scala 121:54]
-    connect io.decoded_instruction.bits.RD, RD @[src/main/scala/Frontend/decoder.scala 126:54]
-    connect io.decoded_instruction.bits.RDold, RD @[src/main/scala/Frontend/decoder.scala 127:54]
+    connect io.decoded_instruction.bits.PRD, PRD @[src/main/scala/Frontend/decoder.scala 126:54]
+    connect io.decoded_instruction.bits.RD, PRD @[src/main/scala/Frontend/decoder.scala 127:54]
     connect io.decoded_instruction.bits.RS1, RS1 @[src/main/scala/Frontend/decoder.scala 128:54]
     connect io.decoded_instruction.bits.RS2, RS2 @[src/main/scala/Frontend/decoder.scala 129:54]
     connect io.decoded_instruction.bits.IMM, IMM @[src/main/scala/Frontend/decoder.scala 130:54]
@@ -15991,9 +15991,9 @@ circuit SOC :%[[
   module Queue2_decoded_fetch_packet : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, count : UInt<2>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, count : UInt<2>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    cmem ram : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>} [2] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
+    cmem ram : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>} [2] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
     regreset enq_ptr_value : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset deq_ptr_value : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
@@ -16093,9 +16093,9 @@ circuit SOC :%[[
   module fetch_packet_decoder : @[src/main/scala/Frontend/decoder.scala 211:7]
     input clock : Clock @[src/main/scala/Frontend/decoder.scala 211:7]
     input reset : Reset @[src/main/scala/Frontend/decoder.scala 211:7]
-    output io : { flip flush : UInt<1>, flip fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, flip predictions_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, predictions_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}} @[src/main/scala/Frontend/decoder.scala 213:16]
+    output io : { flip flush : UInt<1>, flip fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, flip predictions_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, predictions_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}} @[src/main/scala/Frontend/decoder.scala 213:16]
 
-    wire decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}} @[src/main/scala/Frontend/decoder.scala 227:39]
+    wire decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}} @[src/main/scala/Frontend/decoder.scala 227:39]
     wire predictions_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}} @[src/main/scala/Frontend/decoder.scala 228:39]
     inst decoders_0 of decoder @[src/main/scala/Frontend/decoder.scala 231:15]
     connect decoders_0.clock, clock
@@ -16218,9 +16218,9 @@ circuit SOC :%[[
   module Queue16_decoded_fetch_packet : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, count : UInt<5>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, count : UInt<5>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    smem ram : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>} [16] new @[src/main/scala/chisel3/util/Decoupled.scala 256:44]
+    smem ram : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>} [16] new @[src/main/scala/chisel3/util/Decoupled.scala 256:44]
     regreset enq_ptr_value : UInt<4>, clock, reset, UInt<4>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset deq_ptr_value : UInt<4>, clock, reset, UInt<4>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
@@ -16364,7 +16364,7 @@ circuit SOC :%[[
   module free_list : @[src/main/scala/Frontend/free_list.scala 41:7]
     input clock : Clock @[src/main/scala/Frontend/free_list.scala 41:7]
     input reset : Reset @[src/main/scala/Frontend/free_list.scala 41:7]
-    output io : { flip rename_valid : UInt<1>[4], renamed_values : UInt<7>[4], renamed_valid : UInt<1>[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, free_list_front_pointer : UInt<7>, can_reallocate : UInt<1>, can_allocate : UInt<1>} @[src/main/scala/Frontend/free_list.scala 45:16]
+    output io : { flip rename_valid : UInt<1>[4], renamed_values : UInt<7>[4], renamed_valid : UInt<1>[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, free_list_front_pointer : UInt<7>, can_reallocate : UInt<1>, can_allocate : UInt<1>} @[src/main/scala/Frontend/free_list.scala 45:16]
 
     node flush = and(io.commit.valid, io.commit.bits.is_misprediction) @[src/main/scala/Frontend/free_list.scala 59:33]
     regreset front_pointer : UInt<7>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/free_list.scala 62:34]
@@ -16503,19 +16503,19 @@ circuit SOC :%[[
       connect io.renamed_values[3], UInt<1>(0h0) @[src/main/scala/Frontend/free_list.scala 85:37]
     connect io.free_list_front_pointer, front_pointer @[src/main/scala/Frontend/free_list.scala 89:33]
     wire allocate_valid : UInt<1>[4] @[src/main/scala/Frontend/free_list.scala 97:33]
-    node _allocate_valid_0_T = neq(io.commit.bits.RD[0], UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 100:84]
+    node _allocate_valid_0_T = neq(io.commit.bits.PRD[0], UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 100:84]
     node _allocate_valid_0_T_1 = and(io.commit.bits.RD_valid[0], _allocate_valid_0_T) @[src/main/scala/Frontend/free_list.scala 100:59]
     node _allocate_valid_0_T_2 = and(_allocate_valid_0_T_1, io.commit.valid) @[src/main/scala/Frontend/free_list.scala 100:93]
     connect allocate_valid[0], _allocate_valid_0_T_2 @[src/main/scala/Frontend/free_list.scala 100:27]
-    node _allocate_valid_1_T = neq(io.commit.bits.RD[1], UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 100:84]
+    node _allocate_valid_1_T = neq(io.commit.bits.PRD[1], UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 100:84]
     node _allocate_valid_1_T_1 = and(io.commit.bits.RD_valid[1], _allocate_valid_1_T) @[src/main/scala/Frontend/free_list.scala 100:59]
     node _allocate_valid_1_T_2 = and(_allocate_valid_1_T_1, io.commit.valid) @[src/main/scala/Frontend/free_list.scala 100:93]
     connect allocate_valid[1], _allocate_valid_1_T_2 @[src/main/scala/Frontend/free_list.scala 100:27]
-    node _allocate_valid_2_T = neq(io.commit.bits.RD[2], UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 100:84]
+    node _allocate_valid_2_T = neq(io.commit.bits.PRD[2], UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 100:84]
     node _allocate_valid_2_T_1 = and(io.commit.bits.RD_valid[2], _allocate_valid_2_T) @[src/main/scala/Frontend/free_list.scala 100:59]
     node _allocate_valid_2_T_2 = and(_allocate_valid_2_T_1, io.commit.valid) @[src/main/scala/Frontend/free_list.scala 100:93]
     connect allocate_valid[2], _allocate_valid_2_T_2 @[src/main/scala/Frontend/free_list.scala 100:27]
-    node _allocate_valid_3_T = neq(io.commit.bits.RD[3], UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 100:84]
+    node _allocate_valid_3_T = neq(io.commit.bits.PRD[3], UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 100:84]
     node _allocate_valid_3_T_1 = and(io.commit.bits.RD_valid[3], _allocate_valid_3_T) @[src/main/scala/Frontend/free_list.scala 100:59]
     node _allocate_valid_3_T_2 = and(_allocate_valid_3_T_1, io.commit.valid) @[src/main/scala/Frontend/free_list.scala 100:93]
     connect allocate_valid[3], _allocate_valid_3_T_2 @[src/main/scala/Frontend/free_list.scala 100:27]
@@ -17610,7 +17610,7 @@ circuit SOC :%[[
   module RAT : @[src/main/scala/Frontend/rename.scala 78:7]
     input clock : Clock @[src/main/scala/Frontend/rename.scala 78:7]
     input reset : Reset @[src/main/scala/Frontend/rename.scala 78:7]
-    output io : { flip instruction_RS1 : UInt<5>[4], flip instruction_RS2 : UInt<5>[4], flip instruction_RD : UInt<5>[4], flip free_list_wr_en : UInt<1>[4], flip free_list_RD : UInt<7>[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RAT_RD : UInt<7>[4], RAT_RS1 : UInt<7>[4], RAT_RS2 : UInt<7>[4]} @[src/main/scala/Frontend/rename.scala 85:16]
+    output io : { flip instruction_RS1 : UInt<5>[4], flip instruction_RS2 : UInt<5>[4], flip instruction_RD : UInt<5>[4], flip free_list_wr_en : UInt<1>[4], flip free_list_RD : UInt<7>[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RAT_RD : UInt<7>[4], RAT_RS1 : UInt<7>[4], RAT_RS2 : UInt<7>[4]} @[src/main/scala/Frontend/rename.scala 85:16]
 
     wire _commit_RAT_WIRE : UInt<7>[32] @[src/main/scala/Frontend/rename.scala 111:42]
     connect _commit_RAT_WIRE[0], UInt<7>(0h0) @[src/main/scala/Frontend/rename.scala 111:42]
@@ -17702,16 +17702,16 @@ circuit SOC :%[[
       connect speculative_RAT[io.instruction_RD[3]], io.free_list_RD[3] @[src/main/scala/Frontend/rename.scala 129:51]
     node _T = and(io.commit.valid, io.commit.bits.RD_valid[0]) @[src/main/scala/Frontend/rename.scala 138:30]
     when _T : @[src/main/scala/Frontend/rename.scala 138:62]
-      connect speculative_RAT[io.commit.bits.RDold[0]], io.commit.bits.RD[0] @[src/main/scala/Frontend/rename.scala 139:54]
+      connect speculative_RAT[io.commit.bits.RD[0]], io.commit.bits.PRD[0] @[src/main/scala/Frontend/rename.scala 139:54]
     node _T_1 = and(io.commit.valid, io.commit.bits.RD_valid[1]) @[src/main/scala/Frontend/rename.scala 138:30]
     when _T_1 : @[src/main/scala/Frontend/rename.scala 138:62]
-      connect speculative_RAT[io.commit.bits.RDold[1]], io.commit.bits.RD[1] @[src/main/scala/Frontend/rename.scala 139:54]
+      connect speculative_RAT[io.commit.bits.RD[1]], io.commit.bits.PRD[1] @[src/main/scala/Frontend/rename.scala 139:54]
     node _T_2 = and(io.commit.valid, io.commit.bits.RD_valid[2]) @[src/main/scala/Frontend/rename.scala 138:30]
     when _T_2 : @[src/main/scala/Frontend/rename.scala 138:62]
-      connect speculative_RAT[io.commit.bits.RDold[2]], io.commit.bits.RD[2] @[src/main/scala/Frontend/rename.scala 139:54]
+      connect speculative_RAT[io.commit.bits.RD[2]], io.commit.bits.PRD[2] @[src/main/scala/Frontend/rename.scala 139:54]
     node _T_3 = and(io.commit.valid, io.commit.bits.RD_valid[3]) @[src/main/scala/Frontend/rename.scala 138:30]
     when _T_3 : @[src/main/scala/Frontend/rename.scala 138:62]
-      connect speculative_RAT[io.commit.bits.RDold[3]], io.commit.bits.RD[3] @[src/main/scala/Frontend/rename.scala 139:54]
+      connect speculative_RAT[io.commit.bits.RD[3]], io.commit.bits.PRD[3] @[src/main/scala/Frontend/rename.scala 139:54]
     node _T_4 = or(io.commit.bits.is_misprediction, io.commit.bits.exception) @[src/main/scala/Frontend/rename.scala 146:62]
     node _T_5 = and(io.commit.valid, _T_4) @[src/main/scala/Frontend/rename.scala 146:26]
     when _T_5 : @[src/main/scala/Frontend/rename.scala 146:91]
@@ -17803,9 +17803,9 @@ circuit SOC :%[[
   module Queue2_decoded_fetch_packet_1 : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, count : UInt<2>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, count : UInt<2>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    cmem ram : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>} [2] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
+    cmem ram : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>} [2] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
     regreset enq_ptr_value : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset deq_ptr_value : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
@@ -17854,12 +17854,12 @@ circuit SOC :%[[
   module rename : @[src/main/scala/Frontend/rename.scala 154:7]
     input clock : Clock @[src/main/scala/Frontend/rename.scala 154:7]
     input reset : Reset @[src/main/scala/Frontend/rename.scala 154:7]
-    output io : { flip flush : UInt<1>, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip predictions_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, predictions_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, flip decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}} @[src/main/scala/Frontend/rename.scala 167:16]
+    output io : { flip flush : UInt<1>, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip predictions_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, predictions_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, flip decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}} @[src/main/scala/Frontend/rename.scala 167:16]
 
     node _fire_T = and(io.predictions_in.ready, io.decoded_fetch_packet.ready) @[src/main/scala/Frontend/rename.scala 190:40]
     node _fire_T_1 = and(_fire_T, io.predictions_in.valid) @[src/main/scala/Frontend/rename.scala 190:73]
     node fire = and(_fire_T_1, io.decoded_fetch_packet.valid) @[src/main/scala/Frontend/rename.scala 190:100]
-    wire renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}} @[src/main/scala/Frontend/rename.scala 195:44]
+    wire renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}} @[src/main/scala/Frontend/rename.scala 195:44]
     connect renamed_decoded_fetch_packet.bits, io.decoded_fetch_packet.bits @[src/main/scala/Frontend/rename.scala 197:45]
     connect renamed_decoded_fetch_packet.valid, fire @[src/main/scala/Frontend/rename.scala 198:45]
     inst free_list of free_list @[src/main/scala/Frontend/rename.scala 203:33]
@@ -17871,19 +17871,19 @@ circuit SOC :%[[
     inst RAT of RAT @[src/main/scala/Frontend/rename.scala 205:33]
     connect RAT.clock, clock
     connect RAT.reset, reset
-    node _free_list_io_rename_valid_0_T = neq(io.decoded_fetch_packet.bits.decoded_instruction[0].RD, UInt<1>(0h0)) @[src/main/scala/Frontend/rename.scala 213:117]
+    node _free_list_io_rename_valid_0_T = neq(io.decoded_fetch_packet.bits.decoded_instruction[0].PRD, UInt<1>(0h0)) @[src/main/scala/Frontend/rename.scala 213:117]
     node _free_list_io_rename_valid_0_T_1 = and(io.decoded_fetch_packet.bits.decoded_instruction[0].RD_valid, _free_list_io_rename_valid_0_T) @[src/main/scala/Frontend/rename.scala 212:122]
     node _free_list_io_rename_valid_0_T_2 = and(_free_list_io_rename_valid_0_T_1, fire) @[src/main/scala/Frontend/rename.scala 213:126]
     connect free_list.io.rename_valid[0], _free_list_io_rename_valid_0_T_2 @[src/main/scala/Frontend/rename.scala 212:56]
-    node _free_list_io_rename_valid_1_T = neq(io.decoded_fetch_packet.bits.decoded_instruction[1].RD, UInt<1>(0h0)) @[src/main/scala/Frontend/rename.scala 213:117]
+    node _free_list_io_rename_valid_1_T = neq(io.decoded_fetch_packet.bits.decoded_instruction[1].PRD, UInt<1>(0h0)) @[src/main/scala/Frontend/rename.scala 213:117]
     node _free_list_io_rename_valid_1_T_1 = and(io.decoded_fetch_packet.bits.decoded_instruction[1].RD_valid, _free_list_io_rename_valid_1_T) @[src/main/scala/Frontend/rename.scala 212:122]
     node _free_list_io_rename_valid_1_T_2 = and(_free_list_io_rename_valid_1_T_1, fire) @[src/main/scala/Frontend/rename.scala 213:126]
     connect free_list.io.rename_valid[1], _free_list_io_rename_valid_1_T_2 @[src/main/scala/Frontend/rename.scala 212:56]
-    node _free_list_io_rename_valid_2_T = neq(io.decoded_fetch_packet.bits.decoded_instruction[2].RD, UInt<1>(0h0)) @[src/main/scala/Frontend/rename.scala 213:117]
+    node _free_list_io_rename_valid_2_T = neq(io.decoded_fetch_packet.bits.decoded_instruction[2].PRD, UInt<1>(0h0)) @[src/main/scala/Frontend/rename.scala 213:117]
     node _free_list_io_rename_valid_2_T_1 = and(io.decoded_fetch_packet.bits.decoded_instruction[2].RD_valid, _free_list_io_rename_valid_2_T) @[src/main/scala/Frontend/rename.scala 212:122]
     node _free_list_io_rename_valid_2_T_2 = and(_free_list_io_rename_valid_2_T_1, fire) @[src/main/scala/Frontend/rename.scala 213:126]
     connect free_list.io.rename_valid[2], _free_list_io_rename_valid_2_T_2 @[src/main/scala/Frontend/rename.scala 212:56]
-    node _free_list_io_rename_valid_3_T = neq(io.decoded_fetch_packet.bits.decoded_instruction[3].RD, UInt<1>(0h0)) @[src/main/scala/Frontend/rename.scala 213:117]
+    node _free_list_io_rename_valid_3_T = neq(io.decoded_fetch_packet.bits.decoded_instruction[3].PRD, UInt<1>(0h0)) @[src/main/scala/Frontend/rename.scala 213:117]
     node _free_list_io_rename_valid_3_T_1 = and(io.decoded_fetch_packet.bits.decoded_instruction[3].RD_valid, _free_list_io_rename_valid_3_T) @[src/main/scala/Frontend/rename.scala 212:122]
     node _free_list_io_rename_valid_3_T_2 = and(_free_list_io_rename_valid_3_T_1, fire) @[src/main/scala/Frontend/rename.scala 213:126]
     connect free_list.io.rename_valid[3], _free_list_io_rename_valid_3_T_2 @[src/main/scala/Frontend/rename.scala 212:56]
@@ -17891,14 +17891,14 @@ circuit SOC :%[[
     connect free_list.io.commit.bits.RD_valid[1], io.commit.bits.RD_valid[1] @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.RD_valid[2], io.commit.bits.RD_valid[2] @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.RD_valid[3], io.commit.bits.RD_valid[3] @[src/main/scala/Frontend/rename.scala 217:25]
+    connect free_list.io.commit.bits.PRD[0], io.commit.bits.PRD[0] @[src/main/scala/Frontend/rename.scala 217:25]
+    connect free_list.io.commit.bits.PRD[1], io.commit.bits.PRD[1] @[src/main/scala/Frontend/rename.scala 217:25]
+    connect free_list.io.commit.bits.PRD[2], io.commit.bits.PRD[2] @[src/main/scala/Frontend/rename.scala 217:25]
+    connect free_list.io.commit.bits.PRD[3], io.commit.bits.PRD[3] @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.RD[0], io.commit.bits.RD[0] @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.RD[1], io.commit.bits.RD[1] @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.RD[2], io.commit.bits.RD[2] @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.RD[3], io.commit.bits.RD[3] @[src/main/scala/Frontend/rename.scala 217:25]
-    connect free_list.io.commit.bits.RDold[0], io.commit.bits.RDold[0] @[src/main/scala/Frontend/rename.scala 217:25]
-    connect free_list.io.commit.bits.RDold[1], io.commit.bits.RDold[1] @[src/main/scala/Frontend/rename.scala 217:25]
-    connect free_list.io.commit.bits.RDold[2], io.commit.bits.RDold[2] @[src/main/scala/Frontend/rename.scala 217:25]
-    connect free_list.io.commit.bits.RDold[3], io.commit.bits.RDold[3] @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.free_list_front_pointer, io.commit.bits.free_list_front_pointer @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.RAT_index, io.commit.bits.RAT_index @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.NEXT, io.commit.bits.NEXT @[src/main/scala/Frontend/rename.scala 217:25]
@@ -17913,30 +17913,30 @@ circuit SOC :%[[
     connect free_list.io.commit.bits.T_NT, io.commit.bits.T_NT @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.bits.fetch_PC, io.commit.bits.fetch_PC @[src/main/scala/Frontend/rename.scala 217:25]
     connect free_list.io.commit.valid, io.commit.valid @[src/main/scala/Frontend/rename.scala 217:25]
-    connect renamed_decoded_fetch_packet.bits.decoded_instruction[0].RD, free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 219:82]
-    connect renamed_decoded_fetch_packet.bits.decoded_instruction[0].RDold, io.decoded_fetch_packet.bits.decoded_instruction[0].RDold @[src/main/scala/Frontend/rename.scala 220:82]
-    connect renamed_decoded_fetch_packet.bits.decoded_instruction[1].RD, free_list.io.renamed_values[1] @[src/main/scala/Frontend/rename.scala 219:82]
-    connect renamed_decoded_fetch_packet.bits.decoded_instruction[1].RDold, io.decoded_fetch_packet.bits.decoded_instruction[1].RDold @[src/main/scala/Frontend/rename.scala 220:82]
-    connect renamed_decoded_fetch_packet.bits.decoded_instruction[2].RD, free_list.io.renamed_values[2] @[src/main/scala/Frontend/rename.scala 219:82]
-    connect renamed_decoded_fetch_packet.bits.decoded_instruction[2].RDold, io.decoded_fetch_packet.bits.decoded_instruction[2].RDold @[src/main/scala/Frontend/rename.scala 220:82]
-    connect renamed_decoded_fetch_packet.bits.decoded_instruction[3].RD, free_list.io.renamed_values[3] @[src/main/scala/Frontend/rename.scala 219:82]
-    connect renamed_decoded_fetch_packet.bits.decoded_instruction[3].RDold, io.decoded_fetch_packet.bits.decoded_instruction[3].RDold @[src/main/scala/Frontend/rename.scala 220:82]
+    connect renamed_decoded_fetch_packet.bits.decoded_instruction[0].PRD, free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 219:82]
+    connect renamed_decoded_fetch_packet.bits.decoded_instruction[0].RD, io.decoded_fetch_packet.bits.decoded_instruction[0].RD @[src/main/scala/Frontend/rename.scala 220:82]
+    connect renamed_decoded_fetch_packet.bits.decoded_instruction[1].PRD, free_list.io.renamed_values[1] @[src/main/scala/Frontend/rename.scala 219:82]
+    connect renamed_decoded_fetch_packet.bits.decoded_instruction[1].RD, io.decoded_fetch_packet.bits.decoded_instruction[1].RD @[src/main/scala/Frontend/rename.scala 220:82]
+    connect renamed_decoded_fetch_packet.bits.decoded_instruction[2].PRD, free_list.io.renamed_values[2] @[src/main/scala/Frontend/rename.scala 219:82]
+    connect renamed_decoded_fetch_packet.bits.decoded_instruction[2].RD, io.decoded_fetch_packet.bits.decoded_instruction[2].RD @[src/main/scala/Frontend/rename.scala 220:82]
+    connect renamed_decoded_fetch_packet.bits.decoded_instruction[3].PRD, free_list.io.renamed_values[3] @[src/main/scala/Frontend/rename.scala 219:82]
+    connect renamed_decoded_fetch_packet.bits.decoded_instruction[3].RD, io.decoded_fetch_packet.bits.decoded_instruction[3].RD @[src/main/scala/Frontend/rename.scala 220:82]
     connect renamed_decoded_fetch_packet.bits.free_list_front_pointer, free_list.io.free_list_front_pointer @[src/main/scala/Frontend/rename.scala 222:82]
     node _WAW_handler_io_decoder_RD_valid_bits_0_T = and(io.decoded_fetch_packet.bits.decoded_instruction[0].RD_valid, fire) @[src/main/scala/Frontend/rename.scala 228:117]
     connect WAW_handler.io.decoder_RD_valid_bits[0], _WAW_handler_io_decoder_RD_valid_bits_0_T @[src/main/scala/Frontend/rename.scala 228:52]
-    connect WAW_handler.io.decoder_RD_values[0], io.decoded_fetch_packet.bits.decoded_instruction[0].RD @[src/main/scala/Frontend/rename.scala 229:52]
+    connect WAW_handler.io.decoder_RD_values[0], io.decoded_fetch_packet.bits.decoded_instruction[0].PRD @[src/main/scala/Frontend/rename.scala 229:52]
     connect WAW_handler.io.free_list_RD_values[0], free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 230:52]
     node _WAW_handler_io_decoder_RD_valid_bits_1_T = and(io.decoded_fetch_packet.bits.decoded_instruction[1].RD_valid, fire) @[src/main/scala/Frontend/rename.scala 228:117]
     connect WAW_handler.io.decoder_RD_valid_bits[1], _WAW_handler_io_decoder_RD_valid_bits_1_T @[src/main/scala/Frontend/rename.scala 228:52]
-    connect WAW_handler.io.decoder_RD_values[1], io.decoded_fetch_packet.bits.decoded_instruction[1].RD @[src/main/scala/Frontend/rename.scala 229:52]
+    connect WAW_handler.io.decoder_RD_values[1], io.decoded_fetch_packet.bits.decoded_instruction[1].PRD @[src/main/scala/Frontend/rename.scala 229:52]
     connect WAW_handler.io.free_list_RD_values[1], free_list.io.renamed_values[1] @[src/main/scala/Frontend/rename.scala 230:52]
     node _WAW_handler_io_decoder_RD_valid_bits_2_T = and(io.decoded_fetch_packet.bits.decoded_instruction[2].RD_valid, fire) @[src/main/scala/Frontend/rename.scala 228:117]
     connect WAW_handler.io.decoder_RD_valid_bits[2], _WAW_handler_io_decoder_RD_valid_bits_2_T @[src/main/scala/Frontend/rename.scala 228:52]
-    connect WAW_handler.io.decoder_RD_values[2], io.decoded_fetch_packet.bits.decoded_instruction[2].RD @[src/main/scala/Frontend/rename.scala 229:52]
+    connect WAW_handler.io.decoder_RD_values[2], io.decoded_fetch_packet.bits.decoded_instruction[2].PRD @[src/main/scala/Frontend/rename.scala 229:52]
     connect WAW_handler.io.free_list_RD_values[2], free_list.io.renamed_values[2] @[src/main/scala/Frontend/rename.scala 230:52]
     node _WAW_handler_io_decoder_RD_valid_bits_3_T = and(io.decoded_fetch_packet.bits.decoded_instruction[3].RD_valid, fire) @[src/main/scala/Frontend/rename.scala 228:117]
     connect WAW_handler.io.decoder_RD_valid_bits[3], _WAW_handler_io_decoder_RD_valid_bits_3_T @[src/main/scala/Frontend/rename.scala 228:52]
-    connect WAW_handler.io.decoder_RD_values[3], io.decoded_fetch_packet.bits.decoded_instruction[3].RD @[src/main/scala/Frontend/rename.scala 229:52]
+    connect WAW_handler.io.decoder_RD_values[3], io.decoded_fetch_packet.bits.decoded_instruction[3].PRD @[src/main/scala/Frontend/rename.scala 229:52]
     connect WAW_handler.io.free_list_RD_values[3], free_list.io.renamed_values[3] @[src/main/scala/Frontend/rename.scala 230:52]
     connect RAT.io.free_list_wr_en[0], WAW_handler.io.RAT_wr_en[0] @[src/main/scala/Frontend/rename.scala 238:52]
     connect RAT.io.free_list_wr_en[1], WAW_handler.io.RAT_wr_en[1] @[src/main/scala/Frontend/rename.scala 238:52]
@@ -17965,66 +17965,66 @@ circuit SOC :%[[
     connect renamed_RS2[0], RAT.io.RAT_RS2[0] @[src/main/scala/Frontend/rename.scala 255:23]
     connect renamed_RS1[1], RAT.io.RAT_RS1[1] @[src/main/scala/Frontend/rename.scala 254:23]
     connect renamed_RS2[1], RAT.io.RAT_RS2[1] @[src/main/scala/Frontend/rename.scala 255:23]
-    node _T = eq(io.decoded_fetch_packet.bits.decoded_instruction[1].RS1, io.decoded_fetch_packet.bits.decoded_instruction[0].RD) @[src/main/scala/Frontend/rename.scala 258:75]
+    node _T = eq(io.decoded_fetch_packet.bits.decoded_instruction[1].RS1, io.decoded_fetch_packet.bits.decoded_instruction[0].PRD) @[src/main/scala/Frontend/rename.scala 258:75]
     node _T_1 = and(io.decoded_fetch_packet.bits.decoded_instruction[1].RS1_valid, io.decoded_fetch_packet.bits.decoded_instruction[0].RD_valid) @[src/main/scala/Frontend/rename.scala 259:80]
     node _T_2 = and(_T, _T_1) @[src/main/scala/Frontend/rename.scala 258:135]
     when _T_2 : @[src/main/scala/Frontend/rename.scala 260:26]
       connect renamed_RS1[1], free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 261:32]
-    node _T_3 = eq(io.decoded_fetch_packet.bits.decoded_instruction[1].RS2, io.decoded_fetch_packet.bits.decoded_instruction[0].RD) @[src/main/scala/Frontend/rename.scala 264:75]
+    node _T_3 = eq(io.decoded_fetch_packet.bits.decoded_instruction[1].RS2, io.decoded_fetch_packet.bits.decoded_instruction[0].PRD) @[src/main/scala/Frontend/rename.scala 264:75]
     node _T_4 = and(io.decoded_fetch_packet.bits.decoded_instruction[1].RS2_valid, io.decoded_fetch_packet.bits.decoded_instruction[0].RD_valid) @[src/main/scala/Frontend/rename.scala 265:92]
     node _T_5 = and(_T_3, _T_4) @[src/main/scala/Frontend/rename.scala 264:135]
     when _T_5 : @[src/main/scala/Frontend/rename.scala 266:14]
       connect renamed_RS2[1], free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 267:32]
     connect renamed_RS1[2], RAT.io.RAT_RS1[2] @[src/main/scala/Frontend/rename.scala 254:23]
     connect renamed_RS2[2], RAT.io.RAT_RS2[2] @[src/main/scala/Frontend/rename.scala 255:23]
-    node _T_6 = eq(io.decoded_fetch_packet.bits.decoded_instruction[2].RS1, io.decoded_fetch_packet.bits.decoded_instruction[0].RD) @[src/main/scala/Frontend/rename.scala 258:75]
+    node _T_6 = eq(io.decoded_fetch_packet.bits.decoded_instruction[2].RS1, io.decoded_fetch_packet.bits.decoded_instruction[0].PRD) @[src/main/scala/Frontend/rename.scala 258:75]
     node _T_7 = and(io.decoded_fetch_packet.bits.decoded_instruction[2].RS1_valid, io.decoded_fetch_packet.bits.decoded_instruction[0].RD_valid) @[src/main/scala/Frontend/rename.scala 259:80]
     node _T_8 = and(_T_6, _T_7) @[src/main/scala/Frontend/rename.scala 258:135]
     when _T_8 : @[src/main/scala/Frontend/rename.scala 260:26]
       connect renamed_RS1[2], free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 261:32]
-    node _T_9 = eq(io.decoded_fetch_packet.bits.decoded_instruction[2].RS2, io.decoded_fetch_packet.bits.decoded_instruction[0].RD) @[src/main/scala/Frontend/rename.scala 264:75]
+    node _T_9 = eq(io.decoded_fetch_packet.bits.decoded_instruction[2].RS2, io.decoded_fetch_packet.bits.decoded_instruction[0].PRD) @[src/main/scala/Frontend/rename.scala 264:75]
     node _T_10 = and(io.decoded_fetch_packet.bits.decoded_instruction[2].RS2_valid, io.decoded_fetch_packet.bits.decoded_instruction[0].RD_valid) @[src/main/scala/Frontend/rename.scala 265:92]
     node _T_11 = and(_T_9, _T_10) @[src/main/scala/Frontend/rename.scala 264:135]
     when _T_11 : @[src/main/scala/Frontend/rename.scala 266:14]
       connect renamed_RS2[2], free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 267:32]
-    node _T_12 = eq(io.decoded_fetch_packet.bits.decoded_instruction[2].RS1, io.decoded_fetch_packet.bits.decoded_instruction[1].RD) @[src/main/scala/Frontend/rename.scala 258:75]
+    node _T_12 = eq(io.decoded_fetch_packet.bits.decoded_instruction[2].RS1, io.decoded_fetch_packet.bits.decoded_instruction[1].PRD) @[src/main/scala/Frontend/rename.scala 258:75]
     node _T_13 = and(io.decoded_fetch_packet.bits.decoded_instruction[2].RS1_valid, io.decoded_fetch_packet.bits.decoded_instruction[1].RD_valid) @[src/main/scala/Frontend/rename.scala 259:80]
     node _T_14 = and(_T_12, _T_13) @[src/main/scala/Frontend/rename.scala 258:135]
     when _T_14 : @[src/main/scala/Frontend/rename.scala 260:26]
       connect renamed_RS1[2], free_list.io.renamed_values[1] @[src/main/scala/Frontend/rename.scala 261:32]
-    node _T_15 = eq(io.decoded_fetch_packet.bits.decoded_instruction[2].RS2, io.decoded_fetch_packet.bits.decoded_instruction[1].RD) @[src/main/scala/Frontend/rename.scala 264:75]
+    node _T_15 = eq(io.decoded_fetch_packet.bits.decoded_instruction[2].RS2, io.decoded_fetch_packet.bits.decoded_instruction[1].PRD) @[src/main/scala/Frontend/rename.scala 264:75]
     node _T_16 = and(io.decoded_fetch_packet.bits.decoded_instruction[2].RS2_valid, io.decoded_fetch_packet.bits.decoded_instruction[1].RD_valid) @[src/main/scala/Frontend/rename.scala 265:92]
     node _T_17 = and(_T_15, _T_16) @[src/main/scala/Frontend/rename.scala 264:135]
     when _T_17 : @[src/main/scala/Frontend/rename.scala 266:14]
       connect renamed_RS2[2], free_list.io.renamed_values[1] @[src/main/scala/Frontend/rename.scala 267:32]
     connect renamed_RS1[3], RAT.io.RAT_RS1[3] @[src/main/scala/Frontend/rename.scala 254:23]
     connect renamed_RS2[3], RAT.io.RAT_RS2[3] @[src/main/scala/Frontend/rename.scala 255:23]
-    node _T_18 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1, io.decoded_fetch_packet.bits.decoded_instruction[0].RD) @[src/main/scala/Frontend/rename.scala 258:75]
+    node _T_18 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1, io.decoded_fetch_packet.bits.decoded_instruction[0].PRD) @[src/main/scala/Frontend/rename.scala 258:75]
     node _T_19 = and(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1_valid, io.decoded_fetch_packet.bits.decoded_instruction[0].RD_valid) @[src/main/scala/Frontend/rename.scala 259:80]
     node _T_20 = and(_T_18, _T_19) @[src/main/scala/Frontend/rename.scala 258:135]
     when _T_20 : @[src/main/scala/Frontend/rename.scala 260:26]
       connect renamed_RS1[3], free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 261:32]
-    node _T_21 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2, io.decoded_fetch_packet.bits.decoded_instruction[0].RD) @[src/main/scala/Frontend/rename.scala 264:75]
+    node _T_21 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2, io.decoded_fetch_packet.bits.decoded_instruction[0].PRD) @[src/main/scala/Frontend/rename.scala 264:75]
     node _T_22 = and(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2_valid, io.decoded_fetch_packet.bits.decoded_instruction[0].RD_valid) @[src/main/scala/Frontend/rename.scala 265:92]
     node _T_23 = and(_T_21, _T_22) @[src/main/scala/Frontend/rename.scala 264:135]
     when _T_23 : @[src/main/scala/Frontend/rename.scala 266:14]
       connect renamed_RS2[3], free_list.io.renamed_values[0] @[src/main/scala/Frontend/rename.scala 267:32]
-    node _T_24 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1, io.decoded_fetch_packet.bits.decoded_instruction[1].RD) @[src/main/scala/Frontend/rename.scala 258:75]
+    node _T_24 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1, io.decoded_fetch_packet.bits.decoded_instruction[1].PRD) @[src/main/scala/Frontend/rename.scala 258:75]
     node _T_25 = and(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1_valid, io.decoded_fetch_packet.bits.decoded_instruction[1].RD_valid) @[src/main/scala/Frontend/rename.scala 259:80]
     node _T_26 = and(_T_24, _T_25) @[src/main/scala/Frontend/rename.scala 258:135]
     when _T_26 : @[src/main/scala/Frontend/rename.scala 260:26]
       connect renamed_RS1[3], free_list.io.renamed_values[1] @[src/main/scala/Frontend/rename.scala 261:32]
-    node _T_27 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2, io.decoded_fetch_packet.bits.decoded_instruction[1].RD) @[src/main/scala/Frontend/rename.scala 264:75]
+    node _T_27 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2, io.decoded_fetch_packet.bits.decoded_instruction[1].PRD) @[src/main/scala/Frontend/rename.scala 264:75]
     node _T_28 = and(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2_valid, io.decoded_fetch_packet.bits.decoded_instruction[1].RD_valid) @[src/main/scala/Frontend/rename.scala 265:92]
     node _T_29 = and(_T_27, _T_28) @[src/main/scala/Frontend/rename.scala 264:135]
     when _T_29 : @[src/main/scala/Frontend/rename.scala 266:14]
       connect renamed_RS2[3], free_list.io.renamed_values[1] @[src/main/scala/Frontend/rename.scala 267:32]
-    node _T_30 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1, io.decoded_fetch_packet.bits.decoded_instruction[2].RD) @[src/main/scala/Frontend/rename.scala 258:75]
+    node _T_30 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1, io.decoded_fetch_packet.bits.decoded_instruction[2].PRD) @[src/main/scala/Frontend/rename.scala 258:75]
     node _T_31 = and(io.decoded_fetch_packet.bits.decoded_instruction[3].RS1_valid, io.decoded_fetch_packet.bits.decoded_instruction[2].RD_valid) @[src/main/scala/Frontend/rename.scala 259:80]
     node _T_32 = and(_T_30, _T_31) @[src/main/scala/Frontend/rename.scala 258:135]
     when _T_32 : @[src/main/scala/Frontend/rename.scala 260:26]
       connect renamed_RS1[3], free_list.io.renamed_values[2] @[src/main/scala/Frontend/rename.scala 261:32]
-    node _T_33 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2, io.decoded_fetch_packet.bits.decoded_instruction[2].RD) @[src/main/scala/Frontend/rename.scala 264:75]
+    node _T_33 = eq(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2, io.decoded_fetch_packet.bits.decoded_instruction[2].PRD) @[src/main/scala/Frontend/rename.scala 264:75]
     node _T_34 = and(io.decoded_fetch_packet.bits.decoded_instruction[3].RS2_valid, io.decoded_fetch_packet.bits.decoded_instruction[2].RD_valid) @[src/main/scala/Frontend/rename.scala 265:92]
     node _T_35 = and(_T_33, _T_34) @[src/main/scala/Frontend/rename.scala 264:135]
     when _T_35 : @[src/main/scala/Frontend/rename.scala 266:14]
@@ -18172,28 +18172,28 @@ circuit SOC :%[[
     connect comb_ready_bits[64], ready_memory[64] @[src/main/scala/Frontend/rename.scala 293:28]
     node RD_valid = and(io.FU_outputs[0].valid, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Frontend/rename.scala 299:50]
     when RD_valid : @[src/main/scala/Frontend/rename.scala 301:23]
-      connect comb_ready_bits[io.FU_outputs[0].bits.RD], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 302:37]
+      connect comb_ready_bits[io.FU_outputs[0].bits.PRD], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 302:37]
     node RD_valid_1 = and(io.FU_outputs[1].valid, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Frontend/rename.scala 299:50]
     when RD_valid_1 : @[src/main/scala/Frontend/rename.scala 301:23]
-      connect comb_ready_bits[io.FU_outputs[1].bits.RD], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 302:37]
+      connect comb_ready_bits[io.FU_outputs[1].bits.PRD], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 302:37]
     node RD_valid_2 = and(io.FU_outputs[2].valid, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Frontend/rename.scala 299:50]
     when RD_valid_2 : @[src/main/scala/Frontend/rename.scala 301:23]
-      connect comb_ready_bits[io.FU_outputs[2].bits.RD], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 302:37]
+      connect comb_ready_bits[io.FU_outputs[2].bits.PRD], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 302:37]
     node RD_valid_3 = and(io.FU_outputs[3].valid, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Frontend/rename.scala 299:50]
     when RD_valid_3 : @[src/main/scala/Frontend/rename.scala 301:23]
-      connect comb_ready_bits[io.FU_outputs[3].bits.RD], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 302:37]
+      connect comb_ready_bits[io.FU_outputs[3].bits.PRD], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 302:37]
     node _T_36 = and(io.renamed_decoded_fetch_packet.bits.decoded_instruction[0].RD_valid, io.renamed_decoded_fetch_packet.valid) @[src/main/scala/Frontend/rename.scala 311:23]
     when _T_36 : @[src/main/scala/Frontend/rename.scala 311:64]
-      connect comb_ready_bits[io.renamed_decoded_fetch_packet.bits.decoded_instruction[0].RD], UInt<1>(0h0) @[src/main/scala/Frontend/rename.scala 312:37]
+      connect comb_ready_bits[io.renamed_decoded_fetch_packet.bits.decoded_instruction[0].PRD], UInt<1>(0h0) @[src/main/scala/Frontend/rename.scala 312:37]
     node _T_37 = and(io.renamed_decoded_fetch_packet.bits.decoded_instruction[1].RD_valid, io.renamed_decoded_fetch_packet.valid) @[src/main/scala/Frontend/rename.scala 311:23]
     when _T_37 : @[src/main/scala/Frontend/rename.scala 311:64]
-      connect comb_ready_bits[io.renamed_decoded_fetch_packet.bits.decoded_instruction[1].RD], UInt<1>(0h0) @[src/main/scala/Frontend/rename.scala 312:37]
+      connect comb_ready_bits[io.renamed_decoded_fetch_packet.bits.decoded_instruction[1].PRD], UInt<1>(0h0) @[src/main/scala/Frontend/rename.scala 312:37]
     node _T_38 = and(io.renamed_decoded_fetch_packet.bits.decoded_instruction[2].RD_valid, io.renamed_decoded_fetch_packet.valid) @[src/main/scala/Frontend/rename.scala 311:23]
     when _T_38 : @[src/main/scala/Frontend/rename.scala 311:64]
-      connect comb_ready_bits[io.renamed_decoded_fetch_packet.bits.decoded_instruction[2].RD], UInt<1>(0h0) @[src/main/scala/Frontend/rename.scala 312:37]
+      connect comb_ready_bits[io.renamed_decoded_fetch_packet.bits.decoded_instruction[2].PRD], UInt<1>(0h0) @[src/main/scala/Frontend/rename.scala 312:37]
     node _T_39 = and(io.renamed_decoded_fetch_packet.bits.decoded_instruction[3].RD_valid, io.renamed_decoded_fetch_packet.valid) @[src/main/scala/Frontend/rename.scala 311:23]
     when _T_39 : @[src/main/scala/Frontend/rename.scala 311:64]
-      connect comb_ready_bits[io.renamed_decoded_fetch_packet.bits.decoded_instruction[3].RD], UInt<1>(0h0) @[src/main/scala/Frontend/rename.scala 312:37]
+      connect comb_ready_bits[io.renamed_decoded_fetch_packet.bits.decoded_instruction[3].PRD], UInt<1>(0h0) @[src/main/scala/Frontend/rename.scala 312:37]
     connect comb_ready_bits[0], UInt<1>(0h1) @[src/main/scala/Frontend/rename.scala 319:24]
     connect ready_memory[1], comb_ready_bits[1] @[src/main/scala/Frontend/rename.scala 323:25]
     connect ready_memory[2], comb_ready_bits[2] @[src/main/scala/Frontend/rename.scala 323:25]
@@ -18306,7 +18306,7 @@ circuit SOC :%[[
   module frontend : @[src/main/scala/Frontend/frontend.scala 36:7]
     input clock : Clock @[src/main/scala/Frontend/frontend.scala 36:7]
     input reset : Reset @[src/main/scala/Frontend/frontend.scala 36:7]
-    output io : { flip flush : UInt<1>, memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], revert : { valid : UInt<1>, bits : { PC : UInt<32>}}} @[src/main/scala/Frontend/frontend.scala 45:16]
+    output io : { flip flush : UInt<1>, memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], revert : { valid : UInt<1>, bits : { PC : UInt<32>}}} @[src/main/scala/Frontend/frontend.scala 45:16]
 
     inst instruction_fetch of instruction_fetch @[src/main/scala/Frontend/frontend.scala 74:37]
     connect instruction_fetch.clock, clock
@@ -18363,9 +18363,9 @@ circuit SOC :%[[
   module RS : @[src/main/scala/Backend/RS.scala 43:7]
     input clock : Clock @[src/main/scala/Backend/RS.scala 43:7]
     input reset : Reset @[src/main/scala/Backend/RS.scala 43:7]
-    output io : { flip flush : UInt<1>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RF_inputs : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[3]} @[src/main/scala/Backend/RS.scala 49:16]
+    output io : { flip flush : UInt<1>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], flip FU_outputs : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RF_inputs : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[3]} @[src/main/scala/Backend/RS.scala 49:16]
 
-    wire _reservation_station_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18389,11 +18389,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_1 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_1 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_1.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_1.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_1.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18417,11 +18417,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_1.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_1.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_1.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_1.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_1.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_1.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_1.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_1.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_1.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_2 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_2 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_2.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_2.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_2.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18445,11 +18445,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_2.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_2.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_2.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_2.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_2.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_2.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_2.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_2.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_2.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_3 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_3 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_3.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_3.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_3.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18473,11 +18473,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_3.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_3.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_3.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_3.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_3.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_3.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_3.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_3.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_3.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_4 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_4 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_4.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_4.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_4.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18501,11 +18501,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_4.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_4.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_4.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_4.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_4.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_4.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_4.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_4.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_4.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_5 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_5 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_5.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_5.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_5.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18529,11 +18529,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_5.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_5.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_5.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_5.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_5.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_5.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_5.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_5.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_5.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_6 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_6 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_6.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_6.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_6.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18557,11 +18557,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_6.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_6.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_6.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_6.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_6.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_6.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_6.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_6.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_6.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_7 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_7 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_7.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_7.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_7.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18585,11 +18585,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_7.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_7.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_7.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_7.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_7.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_7.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_7.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_7.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_7.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_8 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_8 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_8.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_8.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_8.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18613,11 +18613,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_8.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_8.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_8.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_8.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_8.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_8.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_8.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_8.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_8.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_9 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_9 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_9.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_9.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_9.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18641,11 +18641,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_9.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_9.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_9.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_9.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_9.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_9.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_9.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_9.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_9.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_10 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_10 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_10.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_10.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_10.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18669,11 +18669,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_10.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_10.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_10.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_10.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_10.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_10.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_10.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_10.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_10.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_11 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_11 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_11.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_11.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_11.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18697,11 +18697,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_11.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_11.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_11.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_11.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_11.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_11.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_11.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_11.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_11.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_12 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_12 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_12.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_12.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_12.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18725,11 +18725,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_12.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_12.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_12.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_12.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_12.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_12.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_12.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_12.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_12.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_13 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_13 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_13.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_13.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_13.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18753,11 +18753,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_13.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_13.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_13.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_13.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_13.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_13.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_13.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_13.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_13.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_14 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_14 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_14.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_14.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_14.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18781,11 +18781,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_14.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_14.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_14.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_14.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_14.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_14.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_14.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_14.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_14.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_15 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
+    wire _reservation_station_WIRE_15 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_15.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_15.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_15.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -18809,11 +18809,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_15.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_15.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_15.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_15.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    connect _reservation_station_WIRE_15.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_15.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
+    connect _reservation_station_WIRE_15.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_15.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE_15.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
-    wire _reservation_station_WIRE_16 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>}[16] @[src/main/scala/Backend/RS.scala 77:46]
+    wire _reservation_station_WIRE_16 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>}[16] @[src/main/scala/Backend/RS.scala 77:46]
     connect _reservation_station_WIRE_16[0], _reservation_station_WIRE @[src/main/scala/Backend/RS.scala 77:46]
     connect _reservation_station_WIRE_16[1], _reservation_station_WIRE_1 @[src/main/scala/Backend/RS.scala 77:46]
     connect _reservation_station_WIRE_16[2], _reservation_station_WIRE_2 @[src/main/scala/Backend/RS.scala 77:46]
@@ -18830,7 +18830,7 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_16[13], _reservation_station_WIRE_13 @[src/main/scala/Backend/RS.scala 77:46]
     connect _reservation_station_WIRE_16[14], _reservation_station_WIRE_14 @[src/main/scala/Backend/RS.scala 77:46]
     connect _reservation_station_WIRE_16[15], _reservation_station_WIRE_15 @[src/main/scala/Backend/RS.scala 77:46]
-    regreset reservation_station : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>}[16], clock, reset, _reservation_station_WIRE_16 @[src/main/scala/Backend/RS.scala 77:38]
+    regreset reservation_station : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>}[16], clock, reset, _reservation_station_WIRE_16 @[src/main/scala/Backend/RS.scala 77:38]
     node validUInt_lo_lo_lo = cat(reservation_station[1].valid, reservation_station[0].valid) @[src/main/scala/Backend/RS.scala 83:24]
     node validUInt_lo_lo_hi = cat(reservation_station[3].valid, reservation_station[2].valid) @[src/main/scala/Backend/RS.scala 83:24]
     node validUInt_lo_lo = cat(validUInt_lo_lo_hi, validUInt_lo_lo_lo) @[src/main/scala/Backend/RS.scala 83:24]
@@ -19066,545 +19066,545 @@ circuit SOC :%[[
       connect reservation_station[allocateIndexBinary_3].valid, UInt<1>(0h1) @[src/main/scala/Backend/RS.scala 92:62]
     wire RS1_match : UInt<1>[16] @[src/main/scala/Backend/RS.scala 104:25]
     wire RS2_match : UInt<1>[16] @[src/main/scala/Backend/RS.scala 105:25]
-    node _T = eq(io.FU_outputs[0].bits.RD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T = eq(io.FU_outputs[0].bits.PRD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_1 = and(_T, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_2 = and(_T_1, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_3 = or(UInt<1>(0h0), _T_2) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_4 = eq(io.FU_outputs[1].bits.RD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_4 = eq(io.FU_outputs[1].bits.PRD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_5 = and(_T_4, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_6 = and(_T_5, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_7 = or(_T_3, _T_6) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_8 = eq(io.FU_outputs[2].bits.RD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_8 = eq(io.FU_outputs[2].bits.PRD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_9 = and(_T_8, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_10 = and(_T_9, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_11 = or(_T_7, _T_10) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_12 = eq(io.FU_outputs[3].bits.RD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_12 = eq(io.FU_outputs[3].bits.PRD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_13 = and(_T_12, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_14 = and(_T_13, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_15 = or(_T_11, _T_14) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_16 = eq(io.FU_outputs[0].bits.RD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_16 = eq(io.FU_outputs[0].bits.PRD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_17 = and(_T_16, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_18 = and(_T_17, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_19 = or(UInt<1>(0h0), _T_18) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_20 = eq(io.FU_outputs[1].bits.RD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_20 = eq(io.FU_outputs[1].bits.PRD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_21 = and(_T_20, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_22 = and(_T_21, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_23 = or(_T_19, _T_22) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_24 = eq(io.FU_outputs[2].bits.RD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_24 = eq(io.FU_outputs[2].bits.PRD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_25 = and(_T_24, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_26 = and(_T_25, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_27 = or(_T_23, _T_26) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_28 = eq(io.FU_outputs[3].bits.RD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_28 = eq(io.FU_outputs[3].bits.PRD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_29 = and(_T_28, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_30 = and(_T_29, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_31 = or(_T_27, _T_30) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[0], _T_15 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[0], _T_31 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_32 = eq(io.FU_outputs[0].bits.RD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_32 = eq(io.FU_outputs[0].bits.PRD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_33 = and(_T_32, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_34 = and(_T_33, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_35 = or(UInt<1>(0h0), _T_34) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_36 = eq(io.FU_outputs[1].bits.RD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_36 = eq(io.FU_outputs[1].bits.PRD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_37 = and(_T_36, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_38 = and(_T_37, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_39 = or(_T_35, _T_38) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_40 = eq(io.FU_outputs[2].bits.RD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_40 = eq(io.FU_outputs[2].bits.PRD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_41 = and(_T_40, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_42 = and(_T_41, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_43 = or(_T_39, _T_42) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_44 = eq(io.FU_outputs[3].bits.RD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_44 = eq(io.FU_outputs[3].bits.PRD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_45 = and(_T_44, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_46 = and(_T_45, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_47 = or(_T_43, _T_46) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_48 = eq(io.FU_outputs[0].bits.RD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_48 = eq(io.FU_outputs[0].bits.PRD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_49 = and(_T_48, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_50 = and(_T_49, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_51 = or(UInt<1>(0h0), _T_50) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_52 = eq(io.FU_outputs[1].bits.RD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_52 = eq(io.FU_outputs[1].bits.PRD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_53 = and(_T_52, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_54 = and(_T_53, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_55 = or(_T_51, _T_54) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_56 = eq(io.FU_outputs[2].bits.RD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_56 = eq(io.FU_outputs[2].bits.PRD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_57 = and(_T_56, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_58 = and(_T_57, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_59 = or(_T_55, _T_58) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_60 = eq(io.FU_outputs[3].bits.RD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_60 = eq(io.FU_outputs[3].bits.PRD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_61 = and(_T_60, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_62 = and(_T_61, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_63 = or(_T_59, _T_62) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[1], _T_47 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[1], _T_63 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_64 = eq(io.FU_outputs[0].bits.RD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_64 = eq(io.FU_outputs[0].bits.PRD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_65 = and(_T_64, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_66 = and(_T_65, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_67 = or(UInt<1>(0h0), _T_66) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_68 = eq(io.FU_outputs[1].bits.RD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_68 = eq(io.FU_outputs[1].bits.PRD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_69 = and(_T_68, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_70 = and(_T_69, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_71 = or(_T_67, _T_70) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_72 = eq(io.FU_outputs[2].bits.RD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_72 = eq(io.FU_outputs[2].bits.PRD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_73 = and(_T_72, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_74 = and(_T_73, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_75 = or(_T_71, _T_74) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_76 = eq(io.FU_outputs[3].bits.RD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_76 = eq(io.FU_outputs[3].bits.PRD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_77 = and(_T_76, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_78 = and(_T_77, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_79 = or(_T_75, _T_78) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_80 = eq(io.FU_outputs[0].bits.RD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_80 = eq(io.FU_outputs[0].bits.PRD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_81 = and(_T_80, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_82 = and(_T_81, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_83 = or(UInt<1>(0h0), _T_82) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_84 = eq(io.FU_outputs[1].bits.RD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_84 = eq(io.FU_outputs[1].bits.PRD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_85 = and(_T_84, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_86 = and(_T_85, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_87 = or(_T_83, _T_86) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_88 = eq(io.FU_outputs[2].bits.RD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_88 = eq(io.FU_outputs[2].bits.PRD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_89 = and(_T_88, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_90 = and(_T_89, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_91 = or(_T_87, _T_90) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_92 = eq(io.FU_outputs[3].bits.RD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_92 = eq(io.FU_outputs[3].bits.PRD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_93 = and(_T_92, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_94 = and(_T_93, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_95 = or(_T_91, _T_94) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[2], _T_79 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[2], _T_95 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_96 = eq(io.FU_outputs[0].bits.RD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_96 = eq(io.FU_outputs[0].bits.PRD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_97 = and(_T_96, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_98 = and(_T_97, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_99 = or(UInt<1>(0h0), _T_98) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_100 = eq(io.FU_outputs[1].bits.RD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_100 = eq(io.FU_outputs[1].bits.PRD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_101 = and(_T_100, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_102 = and(_T_101, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_103 = or(_T_99, _T_102) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_104 = eq(io.FU_outputs[2].bits.RD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_104 = eq(io.FU_outputs[2].bits.PRD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_105 = and(_T_104, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_106 = and(_T_105, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_107 = or(_T_103, _T_106) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_108 = eq(io.FU_outputs[3].bits.RD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_108 = eq(io.FU_outputs[3].bits.PRD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_109 = and(_T_108, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_110 = and(_T_109, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_111 = or(_T_107, _T_110) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_112 = eq(io.FU_outputs[0].bits.RD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_112 = eq(io.FU_outputs[0].bits.PRD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_113 = and(_T_112, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_114 = and(_T_113, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_115 = or(UInt<1>(0h0), _T_114) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_116 = eq(io.FU_outputs[1].bits.RD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_116 = eq(io.FU_outputs[1].bits.PRD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_117 = and(_T_116, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_118 = and(_T_117, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_119 = or(_T_115, _T_118) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_120 = eq(io.FU_outputs[2].bits.RD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_120 = eq(io.FU_outputs[2].bits.PRD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_121 = and(_T_120, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_122 = and(_T_121, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_123 = or(_T_119, _T_122) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_124 = eq(io.FU_outputs[3].bits.RD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_124 = eq(io.FU_outputs[3].bits.PRD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_125 = and(_T_124, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_126 = and(_T_125, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_127 = or(_T_123, _T_126) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[3], _T_111 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[3], _T_127 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_128 = eq(io.FU_outputs[0].bits.RD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_128 = eq(io.FU_outputs[0].bits.PRD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_129 = and(_T_128, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_130 = and(_T_129, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_131 = or(UInt<1>(0h0), _T_130) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_132 = eq(io.FU_outputs[1].bits.RD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_132 = eq(io.FU_outputs[1].bits.PRD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_133 = and(_T_132, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_134 = and(_T_133, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_135 = or(_T_131, _T_134) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_136 = eq(io.FU_outputs[2].bits.RD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_136 = eq(io.FU_outputs[2].bits.PRD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_137 = and(_T_136, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_138 = and(_T_137, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_139 = or(_T_135, _T_138) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_140 = eq(io.FU_outputs[3].bits.RD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_140 = eq(io.FU_outputs[3].bits.PRD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_141 = and(_T_140, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_142 = and(_T_141, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_143 = or(_T_139, _T_142) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_144 = eq(io.FU_outputs[0].bits.RD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_144 = eq(io.FU_outputs[0].bits.PRD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_145 = and(_T_144, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_146 = and(_T_145, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_147 = or(UInt<1>(0h0), _T_146) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_148 = eq(io.FU_outputs[1].bits.RD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_148 = eq(io.FU_outputs[1].bits.PRD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_149 = and(_T_148, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_150 = and(_T_149, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_151 = or(_T_147, _T_150) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_152 = eq(io.FU_outputs[2].bits.RD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_152 = eq(io.FU_outputs[2].bits.PRD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_153 = and(_T_152, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_154 = and(_T_153, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_155 = or(_T_151, _T_154) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_156 = eq(io.FU_outputs[3].bits.RD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_156 = eq(io.FU_outputs[3].bits.PRD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_157 = and(_T_156, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_158 = and(_T_157, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_159 = or(_T_155, _T_158) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[4], _T_143 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[4], _T_159 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_160 = eq(io.FU_outputs[0].bits.RD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_160 = eq(io.FU_outputs[0].bits.PRD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_161 = and(_T_160, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_162 = and(_T_161, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_163 = or(UInt<1>(0h0), _T_162) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_164 = eq(io.FU_outputs[1].bits.RD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_164 = eq(io.FU_outputs[1].bits.PRD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_165 = and(_T_164, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_166 = and(_T_165, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_167 = or(_T_163, _T_166) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_168 = eq(io.FU_outputs[2].bits.RD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_168 = eq(io.FU_outputs[2].bits.PRD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_169 = and(_T_168, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_170 = and(_T_169, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_171 = or(_T_167, _T_170) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_172 = eq(io.FU_outputs[3].bits.RD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_172 = eq(io.FU_outputs[3].bits.PRD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_173 = and(_T_172, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_174 = and(_T_173, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_175 = or(_T_171, _T_174) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_176 = eq(io.FU_outputs[0].bits.RD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_176 = eq(io.FU_outputs[0].bits.PRD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_177 = and(_T_176, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_178 = and(_T_177, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_179 = or(UInt<1>(0h0), _T_178) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_180 = eq(io.FU_outputs[1].bits.RD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_180 = eq(io.FU_outputs[1].bits.PRD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_181 = and(_T_180, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_182 = and(_T_181, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_183 = or(_T_179, _T_182) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_184 = eq(io.FU_outputs[2].bits.RD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_184 = eq(io.FU_outputs[2].bits.PRD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_185 = and(_T_184, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_186 = and(_T_185, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_187 = or(_T_183, _T_186) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_188 = eq(io.FU_outputs[3].bits.RD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_188 = eq(io.FU_outputs[3].bits.PRD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_189 = and(_T_188, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_190 = and(_T_189, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_191 = or(_T_187, _T_190) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[5], _T_175 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[5], _T_191 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_192 = eq(io.FU_outputs[0].bits.RD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_192 = eq(io.FU_outputs[0].bits.PRD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_193 = and(_T_192, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_194 = and(_T_193, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_195 = or(UInt<1>(0h0), _T_194) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_196 = eq(io.FU_outputs[1].bits.RD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_196 = eq(io.FU_outputs[1].bits.PRD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_197 = and(_T_196, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_198 = and(_T_197, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_199 = or(_T_195, _T_198) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_200 = eq(io.FU_outputs[2].bits.RD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_200 = eq(io.FU_outputs[2].bits.PRD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_201 = and(_T_200, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_202 = and(_T_201, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_203 = or(_T_199, _T_202) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_204 = eq(io.FU_outputs[3].bits.RD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_204 = eq(io.FU_outputs[3].bits.PRD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_205 = and(_T_204, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_206 = and(_T_205, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_207 = or(_T_203, _T_206) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_208 = eq(io.FU_outputs[0].bits.RD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_208 = eq(io.FU_outputs[0].bits.PRD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_209 = and(_T_208, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_210 = and(_T_209, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_211 = or(UInt<1>(0h0), _T_210) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_212 = eq(io.FU_outputs[1].bits.RD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_212 = eq(io.FU_outputs[1].bits.PRD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_213 = and(_T_212, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_214 = and(_T_213, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_215 = or(_T_211, _T_214) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_216 = eq(io.FU_outputs[2].bits.RD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_216 = eq(io.FU_outputs[2].bits.PRD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_217 = and(_T_216, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_218 = and(_T_217, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_219 = or(_T_215, _T_218) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_220 = eq(io.FU_outputs[3].bits.RD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_220 = eq(io.FU_outputs[3].bits.PRD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_221 = and(_T_220, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_222 = and(_T_221, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_223 = or(_T_219, _T_222) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[6], _T_207 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[6], _T_223 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_224 = eq(io.FU_outputs[0].bits.RD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_224 = eq(io.FU_outputs[0].bits.PRD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_225 = and(_T_224, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_226 = and(_T_225, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_227 = or(UInt<1>(0h0), _T_226) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_228 = eq(io.FU_outputs[1].bits.RD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_228 = eq(io.FU_outputs[1].bits.PRD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_229 = and(_T_228, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_230 = and(_T_229, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_231 = or(_T_227, _T_230) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_232 = eq(io.FU_outputs[2].bits.RD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_232 = eq(io.FU_outputs[2].bits.PRD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_233 = and(_T_232, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_234 = and(_T_233, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_235 = or(_T_231, _T_234) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_236 = eq(io.FU_outputs[3].bits.RD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_236 = eq(io.FU_outputs[3].bits.PRD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_237 = and(_T_236, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_238 = and(_T_237, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_239 = or(_T_235, _T_238) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_240 = eq(io.FU_outputs[0].bits.RD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_240 = eq(io.FU_outputs[0].bits.PRD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_241 = and(_T_240, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_242 = and(_T_241, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_243 = or(UInt<1>(0h0), _T_242) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_244 = eq(io.FU_outputs[1].bits.RD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_244 = eq(io.FU_outputs[1].bits.PRD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_245 = and(_T_244, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_246 = and(_T_245, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_247 = or(_T_243, _T_246) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_248 = eq(io.FU_outputs[2].bits.RD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_248 = eq(io.FU_outputs[2].bits.PRD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_249 = and(_T_248, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_250 = and(_T_249, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_251 = or(_T_247, _T_250) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_252 = eq(io.FU_outputs[3].bits.RD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_252 = eq(io.FU_outputs[3].bits.PRD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_253 = and(_T_252, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_254 = and(_T_253, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_255 = or(_T_251, _T_254) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[7], _T_239 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[7], _T_255 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_256 = eq(io.FU_outputs[0].bits.RD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_256 = eq(io.FU_outputs[0].bits.PRD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_257 = and(_T_256, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_258 = and(_T_257, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_259 = or(UInt<1>(0h0), _T_258) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_260 = eq(io.FU_outputs[1].bits.RD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_260 = eq(io.FU_outputs[1].bits.PRD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_261 = and(_T_260, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_262 = and(_T_261, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_263 = or(_T_259, _T_262) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_264 = eq(io.FU_outputs[2].bits.RD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_264 = eq(io.FU_outputs[2].bits.PRD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_265 = and(_T_264, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_266 = and(_T_265, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_267 = or(_T_263, _T_266) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_268 = eq(io.FU_outputs[3].bits.RD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_268 = eq(io.FU_outputs[3].bits.PRD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_269 = and(_T_268, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_270 = and(_T_269, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_271 = or(_T_267, _T_270) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_272 = eq(io.FU_outputs[0].bits.RD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_272 = eq(io.FU_outputs[0].bits.PRD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_273 = and(_T_272, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_274 = and(_T_273, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_275 = or(UInt<1>(0h0), _T_274) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_276 = eq(io.FU_outputs[1].bits.RD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_276 = eq(io.FU_outputs[1].bits.PRD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_277 = and(_T_276, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_278 = and(_T_277, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_279 = or(_T_275, _T_278) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_280 = eq(io.FU_outputs[2].bits.RD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_280 = eq(io.FU_outputs[2].bits.PRD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_281 = and(_T_280, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_282 = and(_T_281, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_283 = or(_T_279, _T_282) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_284 = eq(io.FU_outputs[3].bits.RD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_284 = eq(io.FU_outputs[3].bits.PRD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_285 = and(_T_284, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_286 = and(_T_285, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_287 = or(_T_283, _T_286) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[8], _T_271 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[8], _T_287 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_288 = eq(io.FU_outputs[0].bits.RD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_288 = eq(io.FU_outputs[0].bits.PRD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_289 = and(_T_288, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_290 = and(_T_289, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_291 = or(UInt<1>(0h0), _T_290) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_292 = eq(io.FU_outputs[1].bits.RD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_292 = eq(io.FU_outputs[1].bits.PRD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_293 = and(_T_292, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_294 = and(_T_293, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_295 = or(_T_291, _T_294) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_296 = eq(io.FU_outputs[2].bits.RD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_296 = eq(io.FU_outputs[2].bits.PRD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_297 = and(_T_296, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_298 = and(_T_297, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_299 = or(_T_295, _T_298) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_300 = eq(io.FU_outputs[3].bits.RD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_300 = eq(io.FU_outputs[3].bits.PRD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_301 = and(_T_300, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_302 = and(_T_301, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_303 = or(_T_299, _T_302) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_304 = eq(io.FU_outputs[0].bits.RD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_304 = eq(io.FU_outputs[0].bits.PRD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_305 = and(_T_304, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_306 = and(_T_305, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_307 = or(UInt<1>(0h0), _T_306) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_308 = eq(io.FU_outputs[1].bits.RD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_308 = eq(io.FU_outputs[1].bits.PRD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_309 = and(_T_308, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_310 = and(_T_309, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_311 = or(_T_307, _T_310) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_312 = eq(io.FU_outputs[2].bits.RD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_312 = eq(io.FU_outputs[2].bits.PRD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_313 = and(_T_312, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_314 = and(_T_313, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_315 = or(_T_311, _T_314) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_316 = eq(io.FU_outputs[3].bits.RD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_316 = eq(io.FU_outputs[3].bits.PRD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_317 = and(_T_316, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_318 = and(_T_317, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_319 = or(_T_315, _T_318) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[9], _T_303 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[9], _T_319 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_320 = eq(io.FU_outputs[0].bits.RD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_320 = eq(io.FU_outputs[0].bits.PRD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_321 = and(_T_320, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_322 = and(_T_321, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_323 = or(UInt<1>(0h0), _T_322) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_324 = eq(io.FU_outputs[1].bits.RD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_324 = eq(io.FU_outputs[1].bits.PRD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_325 = and(_T_324, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_326 = and(_T_325, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_327 = or(_T_323, _T_326) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_328 = eq(io.FU_outputs[2].bits.RD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_328 = eq(io.FU_outputs[2].bits.PRD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_329 = and(_T_328, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_330 = and(_T_329, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_331 = or(_T_327, _T_330) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_332 = eq(io.FU_outputs[3].bits.RD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_332 = eq(io.FU_outputs[3].bits.PRD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_333 = and(_T_332, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_334 = and(_T_333, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_335 = or(_T_331, _T_334) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_336 = eq(io.FU_outputs[0].bits.RD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_336 = eq(io.FU_outputs[0].bits.PRD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_337 = and(_T_336, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_338 = and(_T_337, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_339 = or(UInt<1>(0h0), _T_338) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_340 = eq(io.FU_outputs[1].bits.RD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_340 = eq(io.FU_outputs[1].bits.PRD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_341 = and(_T_340, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_342 = and(_T_341, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_343 = or(_T_339, _T_342) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_344 = eq(io.FU_outputs[2].bits.RD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_344 = eq(io.FU_outputs[2].bits.PRD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_345 = and(_T_344, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_346 = and(_T_345, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_347 = or(_T_343, _T_346) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_348 = eq(io.FU_outputs[3].bits.RD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_348 = eq(io.FU_outputs[3].bits.PRD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_349 = and(_T_348, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_350 = and(_T_349, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_351 = or(_T_347, _T_350) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[10], _T_335 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[10], _T_351 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_352 = eq(io.FU_outputs[0].bits.RD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_352 = eq(io.FU_outputs[0].bits.PRD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_353 = and(_T_352, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_354 = and(_T_353, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_355 = or(UInt<1>(0h0), _T_354) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_356 = eq(io.FU_outputs[1].bits.RD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_356 = eq(io.FU_outputs[1].bits.PRD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_357 = and(_T_356, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_358 = and(_T_357, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_359 = or(_T_355, _T_358) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_360 = eq(io.FU_outputs[2].bits.RD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_360 = eq(io.FU_outputs[2].bits.PRD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_361 = and(_T_360, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_362 = and(_T_361, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_363 = or(_T_359, _T_362) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_364 = eq(io.FU_outputs[3].bits.RD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_364 = eq(io.FU_outputs[3].bits.PRD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_365 = and(_T_364, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_366 = and(_T_365, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_367 = or(_T_363, _T_366) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_368 = eq(io.FU_outputs[0].bits.RD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_368 = eq(io.FU_outputs[0].bits.PRD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_369 = and(_T_368, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_370 = and(_T_369, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_371 = or(UInt<1>(0h0), _T_370) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_372 = eq(io.FU_outputs[1].bits.RD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_372 = eq(io.FU_outputs[1].bits.PRD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_373 = and(_T_372, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_374 = and(_T_373, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_375 = or(_T_371, _T_374) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_376 = eq(io.FU_outputs[2].bits.RD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_376 = eq(io.FU_outputs[2].bits.PRD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_377 = and(_T_376, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_378 = and(_T_377, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_379 = or(_T_375, _T_378) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_380 = eq(io.FU_outputs[3].bits.RD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_380 = eq(io.FU_outputs[3].bits.PRD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_381 = and(_T_380, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_382 = and(_T_381, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_383 = or(_T_379, _T_382) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[11], _T_367 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[11], _T_383 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_384 = eq(io.FU_outputs[0].bits.RD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_384 = eq(io.FU_outputs[0].bits.PRD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_385 = and(_T_384, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_386 = and(_T_385, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_387 = or(UInt<1>(0h0), _T_386) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_388 = eq(io.FU_outputs[1].bits.RD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_388 = eq(io.FU_outputs[1].bits.PRD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_389 = and(_T_388, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_390 = and(_T_389, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_391 = or(_T_387, _T_390) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_392 = eq(io.FU_outputs[2].bits.RD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_392 = eq(io.FU_outputs[2].bits.PRD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_393 = and(_T_392, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_394 = and(_T_393, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_395 = or(_T_391, _T_394) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_396 = eq(io.FU_outputs[3].bits.RD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_396 = eq(io.FU_outputs[3].bits.PRD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_397 = and(_T_396, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_398 = and(_T_397, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_399 = or(_T_395, _T_398) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_400 = eq(io.FU_outputs[0].bits.RD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_400 = eq(io.FU_outputs[0].bits.PRD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_401 = and(_T_400, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_402 = and(_T_401, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_403 = or(UInt<1>(0h0), _T_402) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_404 = eq(io.FU_outputs[1].bits.RD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_404 = eq(io.FU_outputs[1].bits.PRD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_405 = and(_T_404, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_406 = and(_T_405, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_407 = or(_T_403, _T_406) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_408 = eq(io.FU_outputs[2].bits.RD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_408 = eq(io.FU_outputs[2].bits.PRD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_409 = and(_T_408, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_410 = and(_T_409, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_411 = or(_T_407, _T_410) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_412 = eq(io.FU_outputs[3].bits.RD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_412 = eq(io.FU_outputs[3].bits.PRD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_413 = and(_T_412, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_414 = and(_T_413, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_415 = or(_T_411, _T_414) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[12], _T_399 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[12], _T_415 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_416 = eq(io.FU_outputs[0].bits.RD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_416 = eq(io.FU_outputs[0].bits.PRD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_417 = and(_T_416, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_418 = and(_T_417, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_419 = or(UInt<1>(0h0), _T_418) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_420 = eq(io.FU_outputs[1].bits.RD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_420 = eq(io.FU_outputs[1].bits.PRD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_421 = and(_T_420, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_422 = and(_T_421, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_423 = or(_T_419, _T_422) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_424 = eq(io.FU_outputs[2].bits.RD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_424 = eq(io.FU_outputs[2].bits.PRD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_425 = and(_T_424, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_426 = and(_T_425, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_427 = or(_T_423, _T_426) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_428 = eq(io.FU_outputs[3].bits.RD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_428 = eq(io.FU_outputs[3].bits.PRD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_429 = and(_T_428, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_430 = and(_T_429, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_431 = or(_T_427, _T_430) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_432 = eq(io.FU_outputs[0].bits.RD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_432 = eq(io.FU_outputs[0].bits.PRD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_433 = and(_T_432, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_434 = and(_T_433, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_435 = or(UInt<1>(0h0), _T_434) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_436 = eq(io.FU_outputs[1].bits.RD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_436 = eq(io.FU_outputs[1].bits.PRD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_437 = and(_T_436, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_438 = and(_T_437, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_439 = or(_T_435, _T_438) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_440 = eq(io.FU_outputs[2].bits.RD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_440 = eq(io.FU_outputs[2].bits.PRD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_441 = and(_T_440, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_442 = and(_T_441, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_443 = or(_T_439, _T_442) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_444 = eq(io.FU_outputs[3].bits.RD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_444 = eq(io.FU_outputs[3].bits.PRD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_445 = and(_T_444, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_446 = and(_T_445, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_447 = or(_T_443, _T_446) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[13], _T_431 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[13], _T_447 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_448 = eq(io.FU_outputs[0].bits.RD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_448 = eq(io.FU_outputs[0].bits.PRD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_449 = and(_T_448, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_450 = and(_T_449, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_451 = or(UInt<1>(0h0), _T_450) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_452 = eq(io.FU_outputs[1].bits.RD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_452 = eq(io.FU_outputs[1].bits.PRD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_453 = and(_T_452, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_454 = and(_T_453, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_455 = or(_T_451, _T_454) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_456 = eq(io.FU_outputs[2].bits.RD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_456 = eq(io.FU_outputs[2].bits.PRD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_457 = and(_T_456, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_458 = and(_T_457, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_459 = or(_T_455, _T_458) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_460 = eq(io.FU_outputs[3].bits.RD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_460 = eq(io.FU_outputs[3].bits.PRD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_461 = and(_T_460, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_462 = and(_T_461, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_463 = or(_T_459, _T_462) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_464 = eq(io.FU_outputs[0].bits.RD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_464 = eq(io.FU_outputs[0].bits.PRD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_465 = and(_T_464, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_466 = and(_T_465, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_467 = or(UInt<1>(0h0), _T_466) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_468 = eq(io.FU_outputs[1].bits.RD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_468 = eq(io.FU_outputs[1].bits.PRD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_469 = and(_T_468, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_470 = and(_T_469, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_471 = or(_T_467, _T_470) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_472 = eq(io.FU_outputs[2].bits.RD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_472 = eq(io.FU_outputs[2].bits.PRD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_473 = and(_T_472, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_474 = and(_T_473, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_475 = or(_T_471, _T_474) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_476 = eq(io.FU_outputs[3].bits.RD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_476 = eq(io.FU_outputs[3].bits.PRD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_477 = and(_T_476, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_478 = and(_T_477, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_479 = or(_T_475, _T_478) @[src/main/scala/Backend/RS.scala 115:37]
     connect RS1_match[14], _T_463 @[src/main/scala/Backend/RS.scala 118:22]
     connect RS2_match[14], _T_479 @[src/main/scala/Backend/RS.scala 119:22]
-    node _T_480 = eq(io.FU_outputs[0].bits.RD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_480 = eq(io.FU_outputs[0].bits.PRD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_481 = and(_T_480, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_482 = and(_T_481, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_483 = or(UInt<1>(0h0), _T_482) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_484 = eq(io.FU_outputs[1].bits.RD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_484 = eq(io.FU_outputs[1].bits.PRD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_485 = and(_T_484, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_486 = and(_T_485, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_487 = or(_T_483, _T_486) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_488 = eq(io.FU_outputs[2].bits.RD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_488 = eq(io.FU_outputs[2].bits.PRD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_489 = and(_T_488, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_490 = and(_T_489, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_491 = or(_T_487, _T_490) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_492 = eq(io.FU_outputs[3].bits.RD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
+    node _T_492 = eq(io.FU_outputs[3].bits.PRD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Backend/RS.scala 112:68]
     node _T_493 = and(_T_492, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 112:120]
     node _T_494 = and(_T_493, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 112:155]
     node _T_495 = or(_T_491, _T_494) @[src/main/scala/Backend/RS.scala 112:37]
-    node _T_496 = eq(io.FU_outputs[0].bits.RD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_496 = eq(io.FU_outputs[0].bits.PRD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_497 = and(_T_496, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_498 = and(_T_497, io.FU_outputs[0].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_499 = or(UInt<1>(0h0), _T_498) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_500 = eq(io.FU_outputs[1].bits.RD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_500 = eq(io.FU_outputs[1].bits.PRD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_501 = and(_T_500, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_502 = and(_T_501, io.FU_outputs[1].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_503 = or(_T_499, _T_502) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_504 = eq(io.FU_outputs[2].bits.RD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_504 = eq(io.FU_outputs[2].bits.PRD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_505 = and(_T_504, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_506 = and(_T_505, io.FU_outputs[2].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_507 = or(_T_503, _T_506) @[src/main/scala/Backend/RS.scala 115:37]
-    node _T_508 = eq(io.FU_outputs[3].bits.RD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
+    node _T_508 = eq(io.FU_outputs[3].bits.PRD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Backend/RS.scala 115:68]
     node _T_509 = and(_T_508, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Backend/RS.scala 115:120]
     node _T_510 = and(_T_509, io.FU_outputs[3].valid) @[src/main/scala/Backend/RS.scala 115:155]
     node _T_511 = or(_T_507, _T_510) @[src/main/scala/Backend/RS.scala 115:37]
@@ -19884,7 +19884,7 @@ circuit SOC :%[[
     node _schedulable_instructions_15_T_7 = and(_schedulable_instructions_15_T_6, reservation_station[15].valid) @[src/main/scala/Backend/RS.scala 157:180]
     connect schedulable_instructions[15], _schedulable_instructions_15_T_7 @[src/main/scala/Backend/RS.scala 156:37]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_0_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_0_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_0_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_0_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_0_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -19908,13 +19908,13 @@ circuit SOC :%[[
       connect _reservation_station_0_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_0_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_0_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_0_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_0_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_0_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_0_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_0_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_0_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[0], _reservation_station_0_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_1_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_1_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_1_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_1_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_1_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -19938,13 +19938,13 @@ circuit SOC :%[[
       connect _reservation_station_1_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_1_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_1_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_1_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_1_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_1_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_1_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_1_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_1_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[1], _reservation_station_1_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_2_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_2_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_2_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_2_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_2_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -19968,13 +19968,13 @@ circuit SOC :%[[
       connect _reservation_station_2_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_2_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_2_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_2_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_2_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_2_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_2_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_2_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_2_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[2], _reservation_station_2_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_3_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_3_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_3_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_3_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_3_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -19998,13 +19998,13 @@ circuit SOC :%[[
       connect _reservation_station_3_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_3_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_3_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_3_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_3_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_3_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_3_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_3_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_3_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[3], _reservation_station_3_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_4_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_4_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_4_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_4_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_4_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20028,13 +20028,13 @@ circuit SOC :%[[
       connect _reservation_station_4_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_4_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_4_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_4_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_4_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_4_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_4_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_4_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_4_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[4], _reservation_station_4_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_5_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_5_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_5_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_5_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_5_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20058,13 +20058,13 @@ circuit SOC :%[[
       connect _reservation_station_5_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_5_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_5_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_5_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_5_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_5_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_5_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_5_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_5_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[5], _reservation_station_5_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_6_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_6_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_6_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_6_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_6_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20088,13 +20088,13 @@ circuit SOC :%[[
       connect _reservation_station_6_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_6_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_6_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_6_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_6_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_6_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_6_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_6_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_6_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[6], _reservation_station_6_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_7_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_7_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_7_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_7_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_7_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20118,13 +20118,13 @@ circuit SOC :%[[
       connect _reservation_station_7_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_7_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_7_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_7_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_7_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_7_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_7_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_7_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_7_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[7], _reservation_station_7_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_8_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_8_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_8_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_8_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_8_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20148,13 +20148,13 @@ circuit SOC :%[[
       connect _reservation_station_8_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_8_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_8_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_8_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_8_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_8_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_8_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_8_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_8_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[8], _reservation_station_8_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_9_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_9_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_9_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_9_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_9_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20178,13 +20178,13 @@ circuit SOC :%[[
       connect _reservation_station_9_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_9_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_9_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_9_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_9_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_9_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_9_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_9_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_9_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[9], _reservation_station_9_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_10_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_10_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_10_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_10_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_10_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20208,13 +20208,13 @@ circuit SOC :%[[
       connect _reservation_station_10_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_10_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_10_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_10_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_10_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_10_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_10_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_10_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_10_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[10], _reservation_station_10_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_11_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_11_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_11_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_11_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_11_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20238,13 +20238,13 @@ circuit SOC :%[[
       connect _reservation_station_11_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_11_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_11_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_11_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_11_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_11_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_11_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_11_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_11_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[11], _reservation_station_11_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_12_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_12_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_12_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_12_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_12_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20268,13 +20268,13 @@ circuit SOC :%[[
       connect _reservation_station_12_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_12_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_12_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_12_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_12_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_12_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_12_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_12_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_12_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[12], _reservation_station_12_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_13_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_13_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_13_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_13_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_13_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20298,13 +20298,13 @@ circuit SOC :%[[
       connect _reservation_station_13_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_13_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_13_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_13_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_13_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_13_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_13_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_13_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_13_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[13], _reservation_station_13_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_14_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_14_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_14_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_14_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_14_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20328,13 +20328,13 @@ circuit SOC :%[[
       connect _reservation_station_14_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_14_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_14_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_14_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_14_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_14_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_14_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_14_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_14_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[14], _reservation_station_14_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     when io.flush : @[src/main/scala/Backend/RS.scala 166:23]
-      wire _reservation_station_15_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
+      wire _reservation_station_15_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_15_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_15_WIRE.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_15_WIRE.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
@@ -20358,13 +20358,13 @@ circuit SOC :%[[
       connect _reservation_station_15_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_15_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_15_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_15_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
-      connect _reservation_station_15_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_15_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
+      connect _reservation_station_15_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_15_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect _reservation_station_15_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 167:51]
       connect reservation_station[15], _reservation_station_15_WIRE @[src/main/scala/Backend/RS.scala 167:36]
     connect io.RF_inputs[0].valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 181:31]
-    wire _io_RF_inputs_0_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Backend/RS.scala 182:45]
+    wire _io_RF_inputs_0_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_0_bits_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_0_bits_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_0_bits_WIRE.IS_IMM, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
@@ -20387,13 +20387,13 @@ circuit SOC :%[[
     connect _io_RF_inputs_0_bits_WIRE.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_0_bits_WIRE.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_0_bits_WIRE.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
-    connect _io_RF_inputs_0_bits_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
-    connect _io_RF_inputs_0_bits_WIRE.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
+    connect _io_RF_inputs_0_bits_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
+    connect _io_RF_inputs_0_bits_WIRE.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_0_bits_WIRE.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_0_bits_WIRE.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect io.RF_inputs[0].bits, _io_RF_inputs_0_bits_WIRE @[src/main/scala/Backend/RS.scala 182:30]
     connect io.RF_inputs[1].valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 181:31]
-    wire _io_RF_inputs_1_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Backend/RS.scala 182:45]
+    wire _io_RF_inputs_1_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_1_bits_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_1_bits_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_1_bits_WIRE.IS_IMM, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
@@ -20416,13 +20416,13 @@ circuit SOC :%[[
     connect _io_RF_inputs_1_bits_WIRE.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_1_bits_WIRE.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_1_bits_WIRE.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
-    connect _io_RF_inputs_1_bits_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
-    connect _io_RF_inputs_1_bits_WIRE.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
+    connect _io_RF_inputs_1_bits_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
+    connect _io_RF_inputs_1_bits_WIRE.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_1_bits_WIRE.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_1_bits_WIRE.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect io.RF_inputs[1].bits, _io_RF_inputs_1_bits_WIRE @[src/main/scala/Backend/RS.scala 182:30]
     connect io.RF_inputs[2].valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 181:31]
-    wire _io_RF_inputs_2_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Backend/RS.scala 182:45]
+    wire _io_RF_inputs_2_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_2_bits_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_2_bits_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_2_bits_WIRE.IS_IMM, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
@@ -20445,8 +20445,8 @@ circuit SOC :%[[
     connect _io_RF_inputs_2_bits_WIRE.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_2_bits_WIRE.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_2_bits_WIRE.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
-    connect _io_RF_inputs_2_bits_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
-    connect _io_RF_inputs_2_bits_WIRE.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
+    connect _io_RF_inputs_2_bits_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
+    connect _io_RF_inputs_2_bits_WIRE.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_2_bits_WIRE.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect _io_RF_inputs_2_bits_WIRE.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 182:45]
     connect io.RF_inputs[2].bits, _io_RF_inputs_2_bits_WIRE @[src/main/scala/Backend/RS.scala 182:30]
@@ -20709,7 +20709,7 @@ circuit SOC :%[[
     node _T_672 = and(schedulable_instructions[port0_RS_index], port0_valid) @[src/main/scala/Backend/RS.scala 246:51]
     when _T_672 : @[src/main/scala/Backend/RS.scala 246:66]
       connect reservation_station[port0_RS_index].valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 247:51]
-      wire _reservation_station_WIRE_17 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 248:60]
+      wire _reservation_station_WIRE_17 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 248:60]
       connect _reservation_station_WIRE_17.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
       connect _reservation_station_WIRE_17.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
       connect _reservation_station_WIRE_17.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
@@ -20733,15 +20733,15 @@ circuit SOC :%[[
       connect _reservation_station_WIRE_17.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
       connect _reservation_station_WIRE_17.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
       connect _reservation_station_WIRE_17.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
-      connect _reservation_station_WIRE_17.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
-      connect _reservation_station_WIRE_17.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
+      connect _reservation_station_WIRE_17.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
+      connect _reservation_station_WIRE_17.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
       connect _reservation_station_WIRE_17.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
       connect _reservation_station_WIRE_17.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 248:60]
       connect reservation_station[port0_RS_index], _reservation_station_WIRE_17 @[src/main/scala/Backend/RS.scala 248:45]
     node _T_673 = and(schedulable_instructions[port1_RS_index], port1_valid) @[src/main/scala/Backend/RS.scala 251:51]
     when _T_673 : @[src/main/scala/Backend/RS.scala 251:66]
       connect reservation_station[port1_RS_index].valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 252:51]
-      wire _reservation_station_WIRE_18 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 253:60]
+      wire _reservation_station_WIRE_18 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 253:60]
       connect _reservation_station_WIRE_18.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
       connect _reservation_station_WIRE_18.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
       connect _reservation_station_WIRE_18.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
@@ -20765,15 +20765,15 @@ circuit SOC :%[[
       connect _reservation_station_WIRE_18.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
       connect _reservation_station_WIRE_18.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
       connect _reservation_station_WIRE_18.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
-      connect _reservation_station_WIRE_18.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
-      connect _reservation_station_WIRE_18.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
+      connect _reservation_station_WIRE_18.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
+      connect _reservation_station_WIRE_18.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
       connect _reservation_station_WIRE_18.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
       connect _reservation_station_WIRE_18.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 253:60]
       connect reservation_station[port1_RS_index], _reservation_station_WIRE_18 @[src/main/scala/Backend/RS.scala 253:45]
     node _T_674 = and(schedulable_instructions[port2_RS_index], port2_valid) @[src/main/scala/Backend/RS.scala 256:51]
     when _T_674 : @[src/main/scala/Backend/RS.scala 256:66]
       connect reservation_station[port2_RS_index].valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 257:51]
-      wire _reservation_station_WIRE_19 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 258:60]
+      wire _reservation_station_WIRE_19 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 258:60]
       connect _reservation_station_WIRE_19.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
       connect _reservation_station_WIRE_19.decoded_instruction.access_width, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
       connect _reservation_station_WIRE_19.decoded_instruction.memory_type, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
@@ -20797,8 +20797,8 @@ circuit SOC :%[[
       connect _reservation_station_WIRE_19.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
       connect _reservation_station_WIRE_19.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
       connect _reservation_station_WIRE_19.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
-      connect _reservation_station_WIRE_19.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
-      connect _reservation_station_WIRE_19.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
+      connect _reservation_station_WIRE_19.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
+      connect _reservation_station_WIRE_19.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
       connect _reservation_station_WIRE_19.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
       connect _reservation_station_WIRE_19.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 258:60]
       connect reservation_station[port2_RS_index], _reservation_station_WIRE_19 @[src/main/scala/Backend/RS.scala 258:45]
@@ -20885,9 +20885,9 @@ circuit SOC :%[[
   module MEMRS : @[src/main/scala/Memory/MEMRS.scala 40:7]
     input clock : Clock @[src/main/scala/Memory/MEMRS.scala 40:7]
     input reset : Reset @[src/main/scala/Memory/MEMRS.scala 40:7]
-    output io : { flip flush : UInt<1>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], flip fetch_PC : UInt<32>, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RF_inputs : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4]} @[src/main/scala/Memory/MEMRS.scala 47:16]
+    output io : { flip flush : UInt<1>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], flip fetch_PC : UInt<32>, flip FU_outputs : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RF_inputs : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4]} @[src/main/scala/Memory/MEMRS.scala 47:16]
 
-    wire _reservation_station_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -20913,11 +20913,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_1 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_1 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_1.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_1.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_1.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -20943,11 +20943,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_1.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_1.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_1.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_1.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_1.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_1.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_1.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_1.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_1.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_2 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_2 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_2.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_2.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_2.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -20973,11 +20973,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_2.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_2.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_2.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_2.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_2.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_2.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_2.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_2.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_2.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_3 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_3 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_3.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_3.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_3.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21003,11 +21003,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_3.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_3.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_3.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_3.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_3.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_3.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_3.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_3.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_3.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_4 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_4 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_4.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_4.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_4.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21033,11 +21033,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_4.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_4.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_4.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_4.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_4.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_4.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_4.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_4.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_4.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_5 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_5 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_5.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_5.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_5.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21063,11 +21063,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_5.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_5.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_5.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_5.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_5.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_5.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_5.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_5.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_5.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_6 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_6 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_6.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_6.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_6.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21093,11 +21093,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_6.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_6.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_6.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_6.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_6.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_6.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_6.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_6.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_6.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_7 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_7 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_7.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_7.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_7.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21123,11 +21123,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_7.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_7.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_7.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_7.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_7.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_7.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_7.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_7.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_7.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_8 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_8 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_8.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_8.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_8.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21153,11 +21153,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_8.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_8.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_8.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_8.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_8.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_8.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_8.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_8.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_8.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_9 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_9 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_9.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_9.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_9.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21183,11 +21183,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_9.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_9.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_9.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_9.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_9.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_9.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_9.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_9.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_9.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_10 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_10 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_10.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_10.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_10.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21213,11 +21213,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_10.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_10.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_10.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_10.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_10.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_10.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_10.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_10.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_10.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_11 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_11 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_11.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_11.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_11.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21243,11 +21243,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_11.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_11.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_11.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_11.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_11.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_11.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_11.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_11.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_11.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_12 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_12 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_12.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_12.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_12.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21273,11 +21273,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_12.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_12.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_12.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_12.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_12.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_12.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_12.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_12.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_12.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_13 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_13 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_13.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_13.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_13.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21303,11 +21303,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_13.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_13.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_13.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_13.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_13.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_13.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_13.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_13.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_13.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_14 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_14 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_14.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_14.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_14.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21333,11 +21333,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_14.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_14.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_14.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_14.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_14.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_14.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_14.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_14.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_14.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_15 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
+    wire _reservation_station_WIRE_15 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_15.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_15.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_15.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -21363,11 +21363,11 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_15.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_15.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_15.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_15.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    connect _reservation_station_WIRE_15.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_15.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
+    connect _reservation_station_WIRE_15.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_15.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE_15.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
-    wire _reservation_station_WIRE_16 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>}[16] @[src/main/scala/Memory/MEMRS.scala 68:46]
+    wire _reservation_station_WIRE_16 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>}[16] @[src/main/scala/Memory/MEMRS.scala 68:46]
     connect _reservation_station_WIRE_16[0], _reservation_station_WIRE @[src/main/scala/Memory/MEMRS.scala 68:46]
     connect _reservation_station_WIRE_16[1], _reservation_station_WIRE_1 @[src/main/scala/Memory/MEMRS.scala 68:46]
     connect _reservation_station_WIRE_16[2], _reservation_station_WIRE_2 @[src/main/scala/Memory/MEMRS.scala 68:46]
@@ -21384,7 +21384,7 @@ circuit SOC :%[[
     connect _reservation_station_WIRE_16[13], _reservation_station_WIRE_13 @[src/main/scala/Memory/MEMRS.scala 68:46]
     connect _reservation_station_WIRE_16[14], _reservation_station_WIRE_14 @[src/main/scala/Memory/MEMRS.scala 68:46]
     connect _reservation_station_WIRE_16[15], _reservation_station_WIRE_15 @[src/main/scala/Memory/MEMRS.scala 68:46]
-    regreset reservation_station : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>}[16], clock, reset, _reservation_station_WIRE_16 @[src/main/scala/Memory/MEMRS.scala 68:38]
+    regreset reservation_station : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>}[16], clock, reset, _reservation_station_WIRE_16 @[src/main/scala/Memory/MEMRS.scala 68:38]
     regreset front_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 72:34]
     regreset back_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 73:34]
     node front_index = bits(front_pointer, 3, 0) @[src/main/scala/Memory/MEMRS.scala 75:40]
@@ -21477,545 +21477,545 @@ circuit SOC :%[[
     connect back_pointer, _back_pointer_T_7 @[src/main/scala/Memory/MEMRS.scala 104:18]
     wire RS1_match : UInt<1>[16] @[src/main/scala/Memory/MEMRS.scala 111:25]
     wire RS2_match : UInt<1>[16] @[src/main/scala/Memory/MEMRS.scala 112:25]
-    node _T_28 = eq(io.FU_outputs[0].bits.RD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_28 = eq(io.FU_outputs[0].bits.PRD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_29 = and(_T_28, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_30 = and(_T_29, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_31 = or(UInt<1>(0h0), _T_30) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_32 = eq(io.FU_outputs[1].bits.RD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_32 = eq(io.FU_outputs[1].bits.PRD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_33 = and(_T_32, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_34 = and(_T_33, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_35 = or(_T_31, _T_34) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_36 = eq(io.FU_outputs[2].bits.RD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_36 = eq(io.FU_outputs[2].bits.PRD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_37 = and(_T_36, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_38 = and(_T_37, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_39 = or(_T_35, _T_38) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_40 = eq(io.FU_outputs[3].bits.RD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_40 = eq(io.FU_outputs[3].bits.PRD, reservation_station[0].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_41 = and(_T_40, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_42 = and(_T_41, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_43 = or(_T_39, _T_42) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_44 = eq(io.FU_outputs[0].bits.RD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_44 = eq(io.FU_outputs[0].bits.PRD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_45 = and(_T_44, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_46 = and(_T_45, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_47 = or(UInt<1>(0h0), _T_46) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_48 = eq(io.FU_outputs[1].bits.RD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_48 = eq(io.FU_outputs[1].bits.PRD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_49 = and(_T_48, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_50 = and(_T_49, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_51 = or(_T_47, _T_50) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_52 = eq(io.FU_outputs[2].bits.RD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_52 = eq(io.FU_outputs[2].bits.PRD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_53 = and(_T_52, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_54 = and(_T_53, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_55 = or(_T_51, _T_54) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_56 = eq(io.FU_outputs[3].bits.RD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_56 = eq(io.FU_outputs[3].bits.PRD, reservation_station[0].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_57 = and(_T_56, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_58 = and(_T_57, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_59 = or(_T_55, _T_58) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[0], _T_43 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[0], _T_59 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_60 = eq(io.FU_outputs[0].bits.RD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_60 = eq(io.FU_outputs[0].bits.PRD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_61 = and(_T_60, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_62 = and(_T_61, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_63 = or(UInt<1>(0h0), _T_62) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_64 = eq(io.FU_outputs[1].bits.RD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_64 = eq(io.FU_outputs[1].bits.PRD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_65 = and(_T_64, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_66 = and(_T_65, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_67 = or(_T_63, _T_66) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_68 = eq(io.FU_outputs[2].bits.RD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_68 = eq(io.FU_outputs[2].bits.PRD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_69 = and(_T_68, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_70 = and(_T_69, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_71 = or(_T_67, _T_70) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_72 = eq(io.FU_outputs[3].bits.RD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_72 = eq(io.FU_outputs[3].bits.PRD, reservation_station[1].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_73 = and(_T_72, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_74 = and(_T_73, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_75 = or(_T_71, _T_74) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_76 = eq(io.FU_outputs[0].bits.RD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_76 = eq(io.FU_outputs[0].bits.PRD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_77 = and(_T_76, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_78 = and(_T_77, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_79 = or(UInt<1>(0h0), _T_78) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_80 = eq(io.FU_outputs[1].bits.RD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_80 = eq(io.FU_outputs[1].bits.PRD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_81 = and(_T_80, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_82 = and(_T_81, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_83 = or(_T_79, _T_82) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_84 = eq(io.FU_outputs[2].bits.RD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_84 = eq(io.FU_outputs[2].bits.PRD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_85 = and(_T_84, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_86 = and(_T_85, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_87 = or(_T_83, _T_86) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_88 = eq(io.FU_outputs[3].bits.RD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_88 = eq(io.FU_outputs[3].bits.PRD, reservation_station[1].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_89 = and(_T_88, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_90 = and(_T_89, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_91 = or(_T_87, _T_90) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[1], _T_75 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[1], _T_91 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_92 = eq(io.FU_outputs[0].bits.RD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_92 = eq(io.FU_outputs[0].bits.PRD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_93 = and(_T_92, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_94 = and(_T_93, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_95 = or(UInt<1>(0h0), _T_94) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_96 = eq(io.FU_outputs[1].bits.RD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_96 = eq(io.FU_outputs[1].bits.PRD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_97 = and(_T_96, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_98 = and(_T_97, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_99 = or(_T_95, _T_98) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_100 = eq(io.FU_outputs[2].bits.RD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_100 = eq(io.FU_outputs[2].bits.PRD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_101 = and(_T_100, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_102 = and(_T_101, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_103 = or(_T_99, _T_102) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_104 = eq(io.FU_outputs[3].bits.RD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_104 = eq(io.FU_outputs[3].bits.PRD, reservation_station[2].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_105 = and(_T_104, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_106 = and(_T_105, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_107 = or(_T_103, _T_106) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_108 = eq(io.FU_outputs[0].bits.RD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_108 = eq(io.FU_outputs[0].bits.PRD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_109 = and(_T_108, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_110 = and(_T_109, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_111 = or(UInt<1>(0h0), _T_110) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_112 = eq(io.FU_outputs[1].bits.RD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_112 = eq(io.FU_outputs[1].bits.PRD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_113 = and(_T_112, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_114 = and(_T_113, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_115 = or(_T_111, _T_114) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_116 = eq(io.FU_outputs[2].bits.RD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_116 = eq(io.FU_outputs[2].bits.PRD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_117 = and(_T_116, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_118 = and(_T_117, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_119 = or(_T_115, _T_118) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_120 = eq(io.FU_outputs[3].bits.RD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_120 = eq(io.FU_outputs[3].bits.PRD, reservation_station[2].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_121 = and(_T_120, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_122 = and(_T_121, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_123 = or(_T_119, _T_122) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[2], _T_107 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[2], _T_123 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_124 = eq(io.FU_outputs[0].bits.RD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_124 = eq(io.FU_outputs[0].bits.PRD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_125 = and(_T_124, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_126 = and(_T_125, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_127 = or(UInt<1>(0h0), _T_126) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_128 = eq(io.FU_outputs[1].bits.RD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_128 = eq(io.FU_outputs[1].bits.PRD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_129 = and(_T_128, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_130 = and(_T_129, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_131 = or(_T_127, _T_130) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_132 = eq(io.FU_outputs[2].bits.RD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_132 = eq(io.FU_outputs[2].bits.PRD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_133 = and(_T_132, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_134 = and(_T_133, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_135 = or(_T_131, _T_134) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_136 = eq(io.FU_outputs[3].bits.RD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_136 = eq(io.FU_outputs[3].bits.PRD, reservation_station[3].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_137 = and(_T_136, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_138 = and(_T_137, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_139 = or(_T_135, _T_138) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_140 = eq(io.FU_outputs[0].bits.RD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_140 = eq(io.FU_outputs[0].bits.PRD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_141 = and(_T_140, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_142 = and(_T_141, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_143 = or(UInt<1>(0h0), _T_142) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_144 = eq(io.FU_outputs[1].bits.RD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_144 = eq(io.FU_outputs[1].bits.PRD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_145 = and(_T_144, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_146 = and(_T_145, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_147 = or(_T_143, _T_146) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_148 = eq(io.FU_outputs[2].bits.RD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_148 = eq(io.FU_outputs[2].bits.PRD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_149 = and(_T_148, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_150 = and(_T_149, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_151 = or(_T_147, _T_150) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_152 = eq(io.FU_outputs[3].bits.RD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_152 = eq(io.FU_outputs[3].bits.PRD, reservation_station[3].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_153 = and(_T_152, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_154 = and(_T_153, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_155 = or(_T_151, _T_154) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[3], _T_139 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[3], _T_155 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_156 = eq(io.FU_outputs[0].bits.RD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_156 = eq(io.FU_outputs[0].bits.PRD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_157 = and(_T_156, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_158 = and(_T_157, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_159 = or(UInt<1>(0h0), _T_158) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_160 = eq(io.FU_outputs[1].bits.RD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_160 = eq(io.FU_outputs[1].bits.PRD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_161 = and(_T_160, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_162 = and(_T_161, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_163 = or(_T_159, _T_162) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_164 = eq(io.FU_outputs[2].bits.RD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_164 = eq(io.FU_outputs[2].bits.PRD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_165 = and(_T_164, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_166 = and(_T_165, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_167 = or(_T_163, _T_166) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_168 = eq(io.FU_outputs[3].bits.RD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_168 = eq(io.FU_outputs[3].bits.PRD, reservation_station[4].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_169 = and(_T_168, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_170 = and(_T_169, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_171 = or(_T_167, _T_170) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_172 = eq(io.FU_outputs[0].bits.RD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_172 = eq(io.FU_outputs[0].bits.PRD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_173 = and(_T_172, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_174 = and(_T_173, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_175 = or(UInt<1>(0h0), _T_174) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_176 = eq(io.FU_outputs[1].bits.RD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_176 = eq(io.FU_outputs[1].bits.PRD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_177 = and(_T_176, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_178 = and(_T_177, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_179 = or(_T_175, _T_178) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_180 = eq(io.FU_outputs[2].bits.RD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_180 = eq(io.FU_outputs[2].bits.PRD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_181 = and(_T_180, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_182 = and(_T_181, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_183 = or(_T_179, _T_182) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_184 = eq(io.FU_outputs[3].bits.RD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_184 = eq(io.FU_outputs[3].bits.PRD, reservation_station[4].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_185 = and(_T_184, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_186 = and(_T_185, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_187 = or(_T_183, _T_186) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[4], _T_171 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[4], _T_187 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_188 = eq(io.FU_outputs[0].bits.RD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_188 = eq(io.FU_outputs[0].bits.PRD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_189 = and(_T_188, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_190 = and(_T_189, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_191 = or(UInt<1>(0h0), _T_190) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_192 = eq(io.FU_outputs[1].bits.RD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_192 = eq(io.FU_outputs[1].bits.PRD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_193 = and(_T_192, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_194 = and(_T_193, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_195 = or(_T_191, _T_194) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_196 = eq(io.FU_outputs[2].bits.RD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_196 = eq(io.FU_outputs[2].bits.PRD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_197 = and(_T_196, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_198 = and(_T_197, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_199 = or(_T_195, _T_198) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_200 = eq(io.FU_outputs[3].bits.RD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_200 = eq(io.FU_outputs[3].bits.PRD, reservation_station[5].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_201 = and(_T_200, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_202 = and(_T_201, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_203 = or(_T_199, _T_202) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_204 = eq(io.FU_outputs[0].bits.RD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_204 = eq(io.FU_outputs[0].bits.PRD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_205 = and(_T_204, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_206 = and(_T_205, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_207 = or(UInt<1>(0h0), _T_206) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_208 = eq(io.FU_outputs[1].bits.RD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_208 = eq(io.FU_outputs[1].bits.PRD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_209 = and(_T_208, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_210 = and(_T_209, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_211 = or(_T_207, _T_210) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_212 = eq(io.FU_outputs[2].bits.RD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_212 = eq(io.FU_outputs[2].bits.PRD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_213 = and(_T_212, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_214 = and(_T_213, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_215 = or(_T_211, _T_214) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_216 = eq(io.FU_outputs[3].bits.RD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_216 = eq(io.FU_outputs[3].bits.PRD, reservation_station[5].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_217 = and(_T_216, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_218 = and(_T_217, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_219 = or(_T_215, _T_218) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[5], _T_203 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[5], _T_219 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_220 = eq(io.FU_outputs[0].bits.RD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_220 = eq(io.FU_outputs[0].bits.PRD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_221 = and(_T_220, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_222 = and(_T_221, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_223 = or(UInt<1>(0h0), _T_222) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_224 = eq(io.FU_outputs[1].bits.RD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_224 = eq(io.FU_outputs[1].bits.PRD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_225 = and(_T_224, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_226 = and(_T_225, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_227 = or(_T_223, _T_226) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_228 = eq(io.FU_outputs[2].bits.RD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_228 = eq(io.FU_outputs[2].bits.PRD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_229 = and(_T_228, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_230 = and(_T_229, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_231 = or(_T_227, _T_230) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_232 = eq(io.FU_outputs[3].bits.RD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_232 = eq(io.FU_outputs[3].bits.PRD, reservation_station[6].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_233 = and(_T_232, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_234 = and(_T_233, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_235 = or(_T_231, _T_234) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_236 = eq(io.FU_outputs[0].bits.RD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_236 = eq(io.FU_outputs[0].bits.PRD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_237 = and(_T_236, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_238 = and(_T_237, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_239 = or(UInt<1>(0h0), _T_238) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_240 = eq(io.FU_outputs[1].bits.RD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_240 = eq(io.FU_outputs[1].bits.PRD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_241 = and(_T_240, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_242 = and(_T_241, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_243 = or(_T_239, _T_242) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_244 = eq(io.FU_outputs[2].bits.RD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_244 = eq(io.FU_outputs[2].bits.PRD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_245 = and(_T_244, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_246 = and(_T_245, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_247 = or(_T_243, _T_246) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_248 = eq(io.FU_outputs[3].bits.RD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_248 = eq(io.FU_outputs[3].bits.PRD, reservation_station[6].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_249 = and(_T_248, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_250 = and(_T_249, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_251 = or(_T_247, _T_250) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[6], _T_235 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[6], _T_251 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_252 = eq(io.FU_outputs[0].bits.RD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_252 = eq(io.FU_outputs[0].bits.PRD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_253 = and(_T_252, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_254 = and(_T_253, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_255 = or(UInt<1>(0h0), _T_254) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_256 = eq(io.FU_outputs[1].bits.RD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_256 = eq(io.FU_outputs[1].bits.PRD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_257 = and(_T_256, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_258 = and(_T_257, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_259 = or(_T_255, _T_258) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_260 = eq(io.FU_outputs[2].bits.RD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_260 = eq(io.FU_outputs[2].bits.PRD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_261 = and(_T_260, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_262 = and(_T_261, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_263 = or(_T_259, _T_262) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_264 = eq(io.FU_outputs[3].bits.RD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_264 = eq(io.FU_outputs[3].bits.PRD, reservation_station[7].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_265 = and(_T_264, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_266 = and(_T_265, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_267 = or(_T_263, _T_266) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_268 = eq(io.FU_outputs[0].bits.RD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_268 = eq(io.FU_outputs[0].bits.PRD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_269 = and(_T_268, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_270 = and(_T_269, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_271 = or(UInt<1>(0h0), _T_270) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_272 = eq(io.FU_outputs[1].bits.RD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_272 = eq(io.FU_outputs[1].bits.PRD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_273 = and(_T_272, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_274 = and(_T_273, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_275 = or(_T_271, _T_274) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_276 = eq(io.FU_outputs[2].bits.RD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_276 = eq(io.FU_outputs[2].bits.PRD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_277 = and(_T_276, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_278 = and(_T_277, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_279 = or(_T_275, _T_278) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_280 = eq(io.FU_outputs[3].bits.RD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_280 = eq(io.FU_outputs[3].bits.PRD, reservation_station[7].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_281 = and(_T_280, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_282 = and(_T_281, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_283 = or(_T_279, _T_282) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[7], _T_267 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[7], _T_283 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_284 = eq(io.FU_outputs[0].bits.RD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_284 = eq(io.FU_outputs[0].bits.PRD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_285 = and(_T_284, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_286 = and(_T_285, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_287 = or(UInt<1>(0h0), _T_286) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_288 = eq(io.FU_outputs[1].bits.RD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_288 = eq(io.FU_outputs[1].bits.PRD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_289 = and(_T_288, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_290 = and(_T_289, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_291 = or(_T_287, _T_290) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_292 = eq(io.FU_outputs[2].bits.RD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_292 = eq(io.FU_outputs[2].bits.PRD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_293 = and(_T_292, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_294 = and(_T_293, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_295 = or(_T_291, _T_294) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_296 = eq(io.FU_outputs[3].bits.RD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_296 = eq(io.FU_outputs[3].bits.PRD, reservation_station[8].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_297 = and(_T_296, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_298 = and(_T_297, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_299 = or(_T_295, _T_298) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_300 = eq(io.FU_outputs[0].bits.RD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_300 = eq(io.FU_outputs[0].bits.PRD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_301 = and(_T_300, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_302 = and(_T_301, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_303 = or(UInt<1>(0h0), _T_302) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_304 = eq(io.FU_outputs[1].bits.RD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_304 = eq(io.FU_outputs[1].bits.PRD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_305 = and(_T_304, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_306 = and(_T_305, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_307 = or(_T_303, _T_306) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_308 = eq(io.FU_outputs[2].bits.RD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_308 = eq(io.FU_outputs[2].bits.PRD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_309 = and(_T_308, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_310 = and(_T_309, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_311 = or(_T_307, _T_310) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_312 = eq(io.FU_outputs[3].bits.RD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_312 = eq(io.FU_outputs[3].bits.PRD, reservation_station[8].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_313 = and(_T_312, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_314 = and(_T_313, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_315 = or(_T_311, _T_314) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[8], _T_299 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[8], _T_315 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_316 = eq(io.FU_outputs[0].bits.RD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_316 = eq(io.FU_outputs[0].bits.PRD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_317 = and(_T_316, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_318 = and(_T_317, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_319 = or(UInt<1>(0h0), _T_318) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_320 = eq(io.FU_outputs[1].bits.RD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_320 = eq(io.FU_outputs[1].bits.PRD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_321 = and(_T_320, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_322 = and(_T_321, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_323 = or(_T_319, _T_322) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_324 = eq(io.FU_outputs[2].bits.RD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_324 = eq(io.FU_outputs[2].bits.PRD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_325 = and(_T_324, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_326 = and(_T_325, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_327 = or(_T_323, _T_326) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_328 = eq(io.FU_outputs[3].bits.RD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_328 = eq(io.FU_outputs[3].bits.PRD, reservation_station[9].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_329 = and(_T_328, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_330 = and(_T_329, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_331 = or(_T_327, _T_330) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_332 = eq(io.FU_outputs[0].bits.RD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_332 = eq(io.FU_outputs[0].bits.PRD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_333 = and(_T_332, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_334 = and(_T_333, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_335 = or(UInt<1>(0h0), _T_334) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_336 = eq(io.FU_outputs[1].bits.RD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_336 = eq(io.FU_outputs[1].bits.PRD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_337 = and(_T_336, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_338 = and(_T_337, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_339 = or(_T_335, _T_338) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_340 = eq(io.FU_outputs[2].bits.RD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_340 = eq(io.FU_outputs[2].bits.PRD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_341 = and(_T_340, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_342 = and(_T_341, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_343 = or(_T_339, _T_342) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_344 = eq(io.FU_outputs[3].bits.RD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_344 = eq(io.FU_outputs[3].bits.PRD, reservation_station[9].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_345 = and(_T_344, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_346 = and(_T_345, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_347 = or(_T_343, _T_346) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[9], _T_331 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[9], _T_347 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_348 = eq(io.FU_outputs[0].bits.RD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_348 = eq(io.FU_outputs[0].bits.PRD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_349 = and(_T_348, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_350 = and(_T_349, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_351 = or(UInt<1>(0h0), _T_350) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_352 = eq(io.FU_outputs[1].bits.RD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_352 = eq(io.FU_outputs[1].bits.PRD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_353 = and(_T_352, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_354 = and(_T_353, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_355 = or(_T_351, _T_354) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_356 = eq(io.FU_outputs[2].bits.RD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_356 = eq(io.FU_outputs[2].bits.PRD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_357 = and(_T_356, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_358 = and(_T_357, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_359 = or(_T_355, _T_358) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_360 = eq(io.FU_outputs[3].bits.RD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_360 = eq(io.FU_outputs[3].bits.PRD, reservation_station[10].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_361 = and(_T_360, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_362 = and(_T_361, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_363 = or(_T_359, _T_362) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_364 = eq(io.FU_outputs[0].bits.RD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_364 = eq(io.FU_outputs[0].bits.PRD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_365 = and(_T_364, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_366 = and(_T_365, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_367 = or(UInt<1>(0h0), _T_366) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_368 = eq(io.FU_outputs[1].bits.RD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_368 = eq(io.FU_outputs[1].bits.PRD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_369 = and(_T_368, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_370 = and(_T_369, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_371 = or(_T_367, _T_370) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_372 = eq(io.FU_outputs[2].bits.RD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_372 = eq(io.FU_outputs[2].bits.PRD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_373 = and(_T_372, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_374 = and(_T_373, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_375 = or(_T_371, _T_374) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_376 = eq(io.FU_outputs[3].bits.RD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_376 = eq(io.FU_outputs[3].bits.PRD, reservation_station[10].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_377 = and(_T_376, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_378 = and(_T_377, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_379 = or(_T_375, _T_378) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[10], _T_363 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[10], _T_379 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_380 = eq(io.FU_outputs[0].bits.RD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_380 = eq(io.FU_outputs[0].bits.PRD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_381 = and(_T_380, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_382 = and(_T_381, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_383 = or(UInt<1>(0h0), _T_382) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_384 = eq(io.FU_outputs[1].bits.RD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_384 = eq(io.FU_outputs[1].bits.PRD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_385 = and(_T_384, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_386 = and(_T_385, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_387 = or(_T_383, _T_386) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_388 = eq(io.FU_outputs[2].bits.RD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_388 = eq(io.FU_outputs[2].bits.PRD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_389 = and(_T_388, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_390 = and(_T_389, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_391 = or(_T_387, _T_390) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_392 = eq(io.FU_outputs[3].bits.RD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_392 = eq(io.FU_outputs[3].bits.PRD, reservation_station[11].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_393 = and(_T_392, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_394 = and(_T_393, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_395 = or(_T_391, _T_394) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_396 = eq(io.FU_outputs[0].bits.RD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_396 = eq(io.FU_outputs[0].bits.PRD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_397 = and(_T_396, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_398 = and(_T_397, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_399 = or(UInt<1>(0h0), _T_398) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_400 = eq(io.FU_outputs[1].bits.RD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_400 = eq(io.FU_outputs[1].bits.PRD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_401 = and(_T_400, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_402 = and(_T_401, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_403 = or(_T_399, _T_402) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_404 = eq(io.FU_outputs[2].bits.RD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_404 = eq(io.FU_outputs[2].bits.PRD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_405 = and(_T_404, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_406 = and(_T_405, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_407 = or(_T_403, _T_406) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_408 = eq(io.FU_outputs[3].bits.RD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_408 = eq(io.FU_outputs[3].bits.PRD, reservation_station[11].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_409 = and(_T_408, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_410 = and(_T_409, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_411 = or(_T_407, _T_410) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[11], _T_395 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[11], _T_411 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_412 = eq(io.FU_outputs[0].bits.RD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_412 = eq(io.FU_outputs[0].bits.PRD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_413 = and(_T_412, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_414 = and(_T_413, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_415 = or(UInt<1>(0h0), _T_414) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_416 = eq(io.FU_outputs[1].bits.RD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_416 = eq(io.FU_outputs[1].bits.PRD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_417 = and(_T_416, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_418 = and(_T_417, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_419 = or(_T_415, _T_418) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_420 = eq(io.FU_outputs[2].bits.RD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_420 = eq(io.FU_outputs[2].bits.PRD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_421 = and(_T_420, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_422 = and(_T_421, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_423 = or(_T_419, _T_422) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_424 = eq(io.FU_outputs[3].bits.RD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_424 = eq(io.FU_outputs[3].bits.PRD, reservation_station[12].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_425 = and(_T_424, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_426 = and(_T_425, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_427 = or(_T_423, _T_426) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_428 = eq(io.FU_outputs[0].bits.RD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_428 = eq(io.FU_outputs[0].bits.PRD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_429 = and(_T_428, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_430 = and(_T_429, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_431 = or(UInt<1>(0h0), _T_430) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_432 = eq(io.FU_outputs[1].bits.RD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_432 = eq(io.FU_outputs[1].bits.PRD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_433 = and(_T_432, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_434 = and(_T_433, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_435 = or(_T_431, _T_434) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_436 = eq(io.FU_outputs[2].bits.RD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_436 = eq(io.FU_outputs[2].bits.PRD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_437 = and(_T_436, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_438 = and(_T_437, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_439 = or(_T_435, _T_438) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_440 = eq(io.FU_outputs[3].bits.RD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_440 = eq(io.FU_outputs[3].bits.PRD, reservation_station[12].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_441 = and(_T_440, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_442 = and(_T_441, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_443 = or(_T_439, _T_442) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[12], _T_427 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[12], _T_443 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_444 = eq(io.FU_outputs[0].bits.RD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_444 = eq(io.FU_outputs[0].bits.PRD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_445 = and(_T_444, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_446 = and(_T_445, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_447 = or(UInt<1>(0h0), _T_446) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_448 = eq(io.FU_outputs[1].bits.RD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_448 = eq(io.FU_outputs[1].bits.PRD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_449 = and(_T_448, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_450 = and(_T_449, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_451 = or(_T_447, _T_450) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_452 = eq(io.FU_outputs[2].bits.RD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_452 = eq(io.FU_outputs[2].bits.PRD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_453 = and(_T_452, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_454 = and(_T_453, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_455 = or(_T_451, _T_454) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_456 = eq(io.FU_outputs[3].bits.RD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_456 = eq(io.FU_outputs[3].bits.PRD, reservation_station[13].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_457 = and(_T_456, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_458 = and(_T_457, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_459 = or(_T_455, _T_458) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_460 = eq(io.FU_outputs[0].bits.RD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_460 = eq(io.FU_outputs[0].bits.PRD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_461 = and(_T_460, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_462 = and(_T_461, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_463 = or(UInt<1>(0h0), _T_462) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_464 = eq(io.FU_outputs[1].bits.RD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_464 = eq(io.FU_outputs[1].bits.PRD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_465 = and(_T_464, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_466 = and(_T_465, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_467 = or(_T_463, _T_466) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_468 = eq(io.FU_outputs[2].bits.RD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_468 = eq(io.FU_outputs[2].bits.PRD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_469 = and(_T_468, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_470 = and(_T_469, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_471 = or(_T_467, _T_470) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_472 = eq(io.FU_outputs[3].bits.RD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_472 = eq(io.FU_outputs[3].bits.PRD, reservation_station[13].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_473 = and(_T_472, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_474 = and(_T_473, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_475 = or(_T_471, _T_474) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[13], _T_459 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[13], _T_475 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_476 = eq(io.FU_outputs[0].bits.RD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_476 = eq(io.FU_outputs[0].bits.PRD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_477 = and(_T_476, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_478 = and(_T_477, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_479 = or(UInt<1>(0h0), _T_478) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_480 = eq(io.FU_outputs[1].bits.RD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_480 = eq(io.FU_outputs[1].bits.PRD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_481 = and(_T_480, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_482 = and(_T_481, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_483 = or(_T_479, _T_482) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_484 = eq(io.FU_outputs[2].bits.RD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_484 = eq(io.FU_outputs[2].bits.PRD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_485 = and(_T_484, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_486 = and(_T_485, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_487 = or(_T_483, _T_486) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_488 = eq(io.FU_outputs[3].bits.RD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_488 = eq(io.FU_outputs[3].bits.PRD, reservation_station[14].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_489 = and(_T_488, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_490 = and(_T_489, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_491 = or(_T_487, _T_490) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_492 = eq(io.FU_outputs[0].bits.RD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_492 = eq(io.FU_outputs[0].bits.PRD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_493 = and(_T_492, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_494 = and(_T_493, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_495 = or(UInt<1>(0h0), _T_494) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_496 = eq(io.FU_outputs[1].bits.RD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_496 = eq(io.FU_outputs[1].bits.PRD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_497 = and(_T_496, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_498 = and(_T_497, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_499 = or(_T_495, _T_498) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_500 = eq(io.FU_outputs[2].bits.RD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_500 = eq(io.FU_outputs[2].bits.PRD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_501 = and(_T_500, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_502 = and(_T_501, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_503 = or(_T_499, _T_502) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_504 = eq(io.FU_outputs[3].bits.RD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_504 = eq(io.FU_outputs[3].bits.PRD, reservation_station[14].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_505 = and(_T_504, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_506 = and(_T_505, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_507 = or(_T_503, _T_506) @[src/main/scala/Memory/MEMRS.scala 122:37]
     connect RS1_match[14], _T_491 @[src/main/scala/Memory/MEMRS.scala 125:22]
     connect RS2_match[14], _T_507 @[src/main/scala/Memory/MEMRS.scala 126:22]
-    node _T_508 = eq(io.FU_outputs[0].bits.RD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_508 = eq(io.FU_outputs[0].bits.PRD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_509 = and(_T_508, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_510 = and(_T_509, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_511 = or(UInt<1>(0h0), _T_510) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_512 = eq(io.FU_outputs[1].bits.RD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_512 = eq(io.FU_outputs[1].bits.PRD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_513 = and(_T_512, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_514 = and(_T_513, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_515 = or(_T_511, _T_514) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_516 = eq(io.FU_outputs[2].bits.RD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_516 = eq(io.FU_outputs[2].bits.PRD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_517 = and(_T_516, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_518 = and(_T_517, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_519 = or(_T_515, _T_518) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_520 = eq(io.FU_outputs[3].bits.RD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
+    node _T_520 = eq(io.FU_outputs[3].bits.PRD, reservation_station[15].decoded_instruction.RS1) @[src/main/scala/Memory/MEMRS.scala 119:68]
     node _T_521 = and(_T_520, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 119:120]
     node _T_522 = and(_T_521, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 119:147]
     node _T_523 = or(_T_519, _T_522) @[src/main/scala/Memory/MEMRS.scala 119:37]
-    node _T_524 = eq(io.FU_outputs[0].bits.RD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_524 = eq(io.FU_outputs[0].bits.PRD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_525 = and(_T_524, io.FU_outputs[0].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_526 = and(_T_525, io.FU_outputs[0].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_527 = or(UInt<1>(0h0), _T_526) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_528 = eq(io.FU_outputs[1].bits.RD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_528 = eq(io.FU_outputs[1].bits.PRD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_529 = and(_T_528, io.FU_outputs[1].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_530 = and(_T_529, io.FU_outputs[1].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_531 = or(_T_527, _T_530) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_532 = eq(io.FU_outputs[2].bits.RD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_532 = eq(io.FU_outputs[2].bits.PRD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_533 = and(_T_532, io.FU_outputs[2].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_534 = and(_T_533, io.FU_outputs[2].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_535 = or(_T_531, _T_534) @[src/main/scala/Memory/MEMRS.scala 122:37]
-    node _T_536 = eq(io.FU_outputs[3].bits.RD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
+    node _T_536 = eq(io.FU_outputs[3].bits.PRD, reservation_station[15].decoded_instruction.RS2) @[src/main/scala/Memory/MEMRS.scala 122:68]
     node _T_537 = and(_T_536, io.FU_outputs[3].valid) @[src/main/scala/Memory/MEMRS.scala 122:121]
     node _T_538 = and(_T_537, io.FU_outputs[3].bits.RD_valid) @[src/main/scala/Memory/MEMRS.scala 122:148]
     node _T_539 = or(_T_535, _T_538) @[src/main/scala/Memory/MEMRS.scala 122:37]
@@ -22160,7 +22160,7 @@ circuit SOC :%[[
     node _front_pointer_T_1 = tail(_front_pointer_T, 1) @[src/main/scala/Memory/MEMRS.scala 156:36]
     connect front_pointer, _front_pointer_T_1 @[src/main/scala/Memory/MEMRS.scala 156:19]
     when good_to_go : @[src/main/scala/Memory/MEMRS.scala 159:21]
-      wire _reservation_station_WIRE_17 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 160:57]
+      wire _reservation_station_WIRE_17 : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 160:57]
       connect _reservation_station_WIRE_17.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
       connect _reservation_station_WIRE_17.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
       connect _reservation_station_WIRE_17.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
@@ -22186,12 +22186,12 @@ circuit SOC :%[[
       connect _reservation_station_WIRE_17.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
       connect _reservation_station_WIRE_17.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
       connect _reservation_station_WIRE_17.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
-      connect _reservation_station_WIRE_17.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
-      connect _reservation_station_WIRE_17.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
+      connect _reservation_station_WIRE_17.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
+      connect _reservation_station_WIRE_17.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
       connect _reservation_station_WIRE_17.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
       connect _reservation_station_WIRE_17.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 160:57]
       connect reservation_station[front_index], _reservation_station_WIRE_17 @[src/main/scala/Memory/MEMRS.scala 160:42]
-    wire _io_RF_inputs_0_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Memory/MEMRS.scala 167:44]
+    wire _io_RF_inputs_0_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Memory/MEMRS.scala 167:44]
     connect _io_RF_inputs_0_bits_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
     connect _io_RF_inputs_0_bits_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
     connect _io_RF_inputs_0_bits_WIRE.IS_IMM, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
@@ -22214,13 +22214,13 @@ circuit SOC :%[[
     connect _io_RF_inputs_0_bits_WIRE.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
     connect _io_RF_inputs_0_bits_WIRE.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
     connect _io_RF_inputs_0_bits_WIRE.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
-    connect _io_RF_inputs_0_bits_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
-    connect _io_RF_inputs_0_bits_WIRE.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
+    connect _io_RF_inputs_0_bits_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
+    connect _io_RF_inputs_0_bits_WIRE.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
     connect _io_RF_inputs_0_bits_WIRE.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
     connect _io_RF_inputs_0_bits_WIRE.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 167:44]
     connect io.RF_inputs[0].bits, _io_RF_inputs_0_bits_WIRE @[src/main/scala/Memory/MEMRS.scala 167:29]
     connect io.RF_inputs[0].valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 168:29]
-    wire _io_RF_inputs_1_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Memory/MEMRS.scala 170:44]
+    wire _io_RF_inputs_1_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Memory/MEMRS.scala 170:44]
     connect _io_RF_inputs_1_bits_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
     connect _io_RF_inputs_1_bits_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
     connect _io_RF_inputs_1_bits_WIRE.IS_IMM, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
@@ -22243,13 +22243,13 @@ circuit SOC :%[[
     connect _io_RF_inputs_1_bits_WIRE.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
     connect _io_RF_inputs_1_bits_WIRE.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
     connect _io_RF_inputs_1_bits_WIRE.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
-    connect _io_RF_inputs_1_bits_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
-    connect _io_RF_inputs_1_bits_WIRE.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
+    connect _io_RF_inputs_1_bits_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
+    connect _io_RF_inputs_1_bits_WIRE.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
     connect _io_RF_inputs_1_bits_WIRE.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
     connect _io_RF_inputs_1_bits_WIRE.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 170:44]
     connect io.RF_inputs[1].bits, _io_RF_inputs_1_bits_WIRE @[src/main/scala/Memory/MEMRS.scala 170:29]
     connect io.RF_inputs[1].valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 171:29]
-    wire _io_RF_inputs_2_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Memory/MEMRS.scala 173:44]
+    wire _io_RF_inputs_2_bits_WIRE : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>} @[src/main/scala/Memory/MEMRS.scala 173:44]
     connect _io_RF_inputs_2_bits_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
     connect _io_RF_inputs_2_bits_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
     connect _io_RF_inputs_2_bits_WIRE.IS_IMM, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
@@ -22272,8 +22272,8 @@ circuit SOC :%[[
     connect _io_RF_inputs_2_bits_WIRE.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
     connect _io_RF_inputs_2_bits_WIRE.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
     connect _io_RF_inputs_2_bits_WIRE.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
-    connect _io_RF_inputs_2_bits_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
-    connect _io_RF_inputs_2_bits_WIRE.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
+    connect _io_RF_inputs_2_bits_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
+    connect _io_RF_inputs_2_bits_WIRE.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
     connect _io_RF_inputs_2_bits_WIRE.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
     connect _io_RF_inputs_2_bits_WIRE.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 173:44]
     connect io.RF_inputs[2].bits, _io_RF_inputs_2_bits_WIRE @[src/main/scala/Memory/MEMRS.scala 173:29]
@@ -22353,7 +22353,7 @@ circuit SOC :%[[
     node _T_604 = eq(reservation_station[0].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_605 = and(io.flush, _T_604) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_605 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_0_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_0_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_0_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_0_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_0_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22379,15 +22379,15 @@ circuit SOC :%[[
       connect _reservation_station_0_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_0_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_0_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_0_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_0_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_0_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_0_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_0_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_0_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[0], _reservation_station_0_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_606 = eq(reservation_station[1].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_607 = and(io.flush, _T_606) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_607 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_1_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_1_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_1_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_1_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_1_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22413,15 +22413,15 @@ circuit SOC :%[[
       connect _reservation_station_1_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_1_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_1_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_1_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_1_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_1_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_1_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_1_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_1_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[1], _reservation_station_1_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_608 = eq(reservation_station[2].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_609 = and(io.flush, _T_608) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_609 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_2_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_2_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_2_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_2_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_2_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22447,15 +22447,15 @@ circuit SOC :%[[
       connect _reservation_station_2_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_2_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_2_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_2_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_2_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_2_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_2_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_2_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_2_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[2], _reservation_station_2_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_610 = eq(reservation_station[3].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_611 = and(io.flush, _T_610) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_611 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_3_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_3_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_3_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_3_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_3_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22481,15 +22481,15 @@ circuit SOC :%[[
       connect _reservation_station_3_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_3_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_3_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_3_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_3_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_3_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_3_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_3_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_3_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[3], _reservation_station_3_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_612 = eq(reservation_station[4].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_613 = and(io.flush, _T_612) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_613 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_4_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_4_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_4_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_4_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_4_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22515,15 +22515,15 @@ circuit SOC :%[[
       connect _reservation_station_4_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_4_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_4_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_4_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_4_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_4_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_4_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_4_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_4_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[4], _reservation_station_4_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_614 = eq(reservation_station[5].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_615 = and(io.flush, _T_614) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_615 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_5_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_5_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_5_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_5_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_5_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22549,15 +22549,15 @@ circuit SOC :%[[
       connect _reservation_station_5_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_5_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_5_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_5_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_5_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_5_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_5_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_5_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_5_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[5], _reservation_station_5_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_616 = eq(reservation_station[6].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_617 = and(io.flush, _T_616) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_617 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_6_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_6_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_6_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_6_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_6_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22583,15 +22583,15 @@ circuit SOC :%[[
       connect _reservation_station_6_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_6_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_6_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_6_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_6_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_6_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_6_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_6_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_6_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[6], _reservation_station_6_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_618 = eq(reservation_station[7].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_619 = and(io.flush, _T_618) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_619 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_7_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_7_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_7_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_7_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_7_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22617,15 +22617,15 @@ circuit SOC :%[[
       connect _reservation_station_7_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_7_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_7_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_7_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_7_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_7_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_7_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_7_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_7_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[7], _reservation_station_7_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_620 = eq(reservation_station[8].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_621 = and(io.flush, _T_620) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_621 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_8_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_8_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_8_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_8_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_8_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22651,15 +22651,15 @@ circuit SOC :%[[
       connect _reservation_station_8_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_8_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_8_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_8_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_8_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_8_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_8_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_8_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_8_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[8], _reservation_station_8_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_622 = eq(reservation_station[9].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_623 = and(io.flush, _T_622) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_623 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_9_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_9_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_9_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_9_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_9_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22685,15 +22685,15 @@ circuit SOC :%[[
       connect _reservation_station_9_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_9_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_9_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_9_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_9_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_9_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_9_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_9_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_9_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[9], _reservation_station_9_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_624 = eq(reservation_station[10].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_625 = and(io.flush, _T_624) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_625 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_10_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_10_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_10_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_10_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_10_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22719,15 +22719,15 @@ circuit SOC :%[[
       connect _reservation_station_10_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_10_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_10_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_10_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_10_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_10_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_10_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_10_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_10_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[10], _reservation_station_10_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_626 = eq(reservation_station[11].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_627 = and(io.flush, _T_626) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_627 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_11_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_11_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_11_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_11_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_11_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22753,15 +22753,15 @@ circuit SOC :%[[
       connect _reservation_station_11_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_11_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_11_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_11_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_11_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_11_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_11_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_11_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_11_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[11], _reservation_station_11_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_628 = eq(reservation_station[12].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_629 = and(io.flush, _T_628) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_629 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_12_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_12_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_12_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_12_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_12_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22787,15 +22787,15 @@ circuit SOC :%[[
       connect _reservation_station_12_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_12_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_12_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_12_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_12_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_12_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_12_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_12_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_12_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[12], _reservation_station_12_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_630 = eq(reservation_station[13].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_631 = and(io.flush, _T_630) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_631 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_13_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_13_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_13_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_13_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_13_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22821,15 +22821,15 @@ circuit SOC :%[[
       connect _reservation_station_13_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_13_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_13_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_13_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_13_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_13_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_13_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_13_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_13_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[13], _reservation_station_13_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_632 = eq(reservation_station[14].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_633 = and(io.flush, _T_632) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_633 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_14_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_14_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_14_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_14_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_14_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22855,15 +22855,15 @@ circuit SOC :%[[
       connect _reservation_station_14_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_14_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_14_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_14_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_14_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_14_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_14_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_14_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_14_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[14], _reservation_station_14_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
     node _T_634 = eq(reservation_station[15].decoded_instruction.ROB_index, io.commit.bits.ROB_index) @[src/main/scala/Memory/MEMRS.scala 193:80]
     node _T_635 = and(io.flush, _T_634) @[src/main/scala/Memory/MEMRS.scala 193:23]
     when _T_635 : @[src/main/scala/Memory/MEMRS.scala 193:110]
-      wire _reservation_station_15_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
+      wire _reservation_station_15_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_15_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_15_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_15_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
@@ -22889,8 +22889,8 @@ circuit SOC :%[[
       connect _reservation_station_15_WIRE.decoded_instruction.RS1_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_15_WIRE.decoded_instruction.RS1, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_15_WIRE.decoded_instruction.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_15_WIRE.decoded_instruction.RD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
-      connect _reservation_station_15_WIRE.decoded_instruction.RDold, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_15_WIRE.decoded_instruction.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
+      connect _reservation_station_15_WIRE.decoded_instruction.RD, UInt<5>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_15_WIRE.decoded_instruction.ready_bits.RS2_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect _reservation_station_15_WIRE.decoded_instruction.ready_bits.RS1_ready, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 194:51]
       connect reservation_station[15], _reservation_station_15_WIRE @[src/main/scala/Memory/MEMRS.scala 194:36]
@@ -22902,9 +22902,9 @@ circuit SOC :%[[
   module Queue4_FU_output : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, count : UInt<3>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, count : UInt<3>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    cmem ram : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>} [4] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
+    cmem ram : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>} [4] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
     regreset enq_ptr_value : UInt<2>, clock, reset, UInt<2>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset deq_ptr_value : UInt<2>, clock, reset, UInt<2>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
@@ -22953,9 +22953,9 @@ circuit SOC :%[[
   module Queue4_FU_output_1 : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, count : UInt<3>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, count : UInt<3>, flip flush : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    cmem ram : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>} [4] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
+    cmem ram : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>} [4] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
     regreset enq_ptr_value : UInt<2>, clock, reset, UInt<2>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset deq_ptr_value : UInt<2>, clock, reset, UInt<2>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:40]
     regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
@@ -23004,7 +23004,7 @@ circuit SOC :%[[
   module Arbiter2_FU_output : @[src/main/scala/chisel3/util/Arbiter.scala 133:7]
     input clock : Clock @[src/main/scala/chisel3/util/Arbiter.scala 133:7]
     input reset : Reset @[src/main/scala/chisel3/util/Arbiter.scala 133:7]
-    output io : { flip in : { flip ready : UInt<1>, valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[2], out : { flip ready : UInt<1>, valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, chosen : UInt<1>} @[src/main/scala/chisel3/util/Arbiter.scala 140:14]
+    output io : { flip in : { flip ready : UInt<1>, valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[2], out : { flip ready : UInt<1>, valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, chosen : UInt<1>} @[src/main/scala/chisel3/util/Arbiter.scala 140:14]
 
     connect io.chosen, UInt<1>(0h1) @[src/main/scala/chisel3/util/Arbiter.scala 142:13]
     connect io.out.bits, io.in[1].bits @[src/main/scala/chisel3/util/Arbiter.scala 143:15]
@@ -23023,221 +23023,221 @@ circuit SOC :%[[
   module MOB : @[src/main/scala/Memory/MOB.scala 78:7]
     input clock : Clock @[src/main/scala/Memory/MOB.scala 78:7]
     input reset : Reset @[src/main/scala/Memory/MOB.scala 78:7]
-    output io : { flip flush : UInt<1>, flip reserve : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], reserved_pointers : { valid : UInt<1>, bits : UInt<4>}[4], flip fetch_PC : UInt<32>, flip AGU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, MOB_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}} @[src/main/scala/Memory/MOB.scala 85:16]
+    output io : { flip flush : UInt<1>, flip reserve : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], reserved_pointers : { valid : UInt<1>, bits : UInt<4>}[4], flip fetch_PC : UInt<32>, flip AGU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, MOB_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}} @[src/main/scala/Memory/MOB.scala 85:16]
 
     regreset front_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 113:34]
     regreset back_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 114:34]
     node front_index = bits(front_pointer, 3, 0) @[src/main/scala/Memory/MOB.scala 116:40]
     node back_index = bits(back_pointer, 3, 0) @[src/main/scala/Memory/MOB.scala 117:39]
-    wire _MOB_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_1 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_1 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_1.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_1.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_1.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_2 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_2 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_2.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_2.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_2.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_3 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_3 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_3.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_3.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_3.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_4 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_4 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_4.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_4.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_4.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_5 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_5 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_5.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_5.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_5.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_6 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_6 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_6.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_6.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_6.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_7 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_7 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_7.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_7.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_7.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_8 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_8 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_8.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_8.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_8.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_9 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_9 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_9.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_9.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_9.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_10 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_10 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_10.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_10.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_10.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_11 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_11 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_11.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_11.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_11.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_12 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_12 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_12.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_12.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_12.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_13 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_13 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_13.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_13.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_13.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_14 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_14 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_14.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_14.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_14.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_15 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
+    wire _MOB_WIRE_15 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    connect _MOB_WIRE_15.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
+    connect _MOB_WIRE_15.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
     connect _MOB_WIRE_15.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 119:64]
-    wire _MOB_WIRE_16 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>}[16] @[src/main/scala/Memory/MOB.scala 119:30]
+    wire _MOB_WIRE_16 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>}[16] @[src/main/scala/Memory/MOB.scala 119:30]
     connect _MOB_WIRE_16[0], _MOB_WIRE @[src/main/scala/Memory/MOB.scala 119:30]
     connect _MOB_WIRE_16[1], _MOB_WIRE_1 @[src/main/scala/Memory/MOB.scala 119:30]
     connect _MOB_WIRE_16[2], _MOB_WIRE_2 @[src/main/scala/Memory/MOB.scala 119:30]
@@ -23254,7 +23254,7 @@ circuit SOC :%[[
     connect _MOB_WIRE_16[13], _MOB_WIRE_13 @[src/main/scala/Memory/MOB.scala 119:30]
     connect _MOB_WIRE_16[14], _MOB_WIRE_14 @[src/main/scala/Memory/MOB.scala 119:30]
     connect _MOB_WIRE_16[15], _MOB_WIRE_15 @[src/main/scala/Memory/MOB.scala 119:30]
-    regreset MOB : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>}[16], clock, reset, _MOB_WIRE_16 @[src/main/scala/Memory/MOB.scala 119:22]
+    regreset MOB : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>}[16], clock, reset, _MOB_WIRE_16 @[src/main/scala/Memory/MOB.scala 119:22]
     wire age_vector : UInt<4>[16] @[src/main/scala/Memory/MOB.scala 124:35]
     wire age_valid_vector : UInt<4>[16] @[src/main/scala/Memory/MOB.scala 125:35]
     node _age_vector_0_T = add(front_index, UInt<5>(0h10)) @[src/main/scala/Memory/MOB.scala 131:45]
@@ -23399,7 +23399,7 @@ circuit SOC :%[[
       connect MOB[_T_7].memory_type, io.reserve[0].bits.memory_type @[src/main/scala/Memory/MOB.scala 154:65]
       node _T_8 = add(back_index, index_offset) @[src/main/scala/Memory/MOB.scala 155:28]
       node _T_9 = tail(_T_8, 1) @[src/main/scala/Memory/MOB.scala 155:28]
-      connect MOB[_T_9].RD, io.reserve[0].bits.RD @[src/main/scala/Memory/MOB.scala 155:65]
+      connect MOB[_T_9].PRD, io.reserve[0].bits.PRD @[src/main/scala/Memory/MOB.scala 155:65]
       node _T_10 = add(back_index, index_offset) @[src/main/scala/Memory/MOB.scala 156:28]
       node _T_11 = tail(_T_10, 1) @[src/main/scala/Memory/MOB.scala 156:28]
       connect MOB[_T_11].ROB_index, io.reserve[0].bits.ROB_index @[src/main/scala/Memory/MOB.scala 156:65]
@@ -23422,7 +23422,7 @@ circuit SOC :%[[
       connect MOB[_T_15].memory_type, io.reserve[1].bits.memory_type @[src/main/scala/Memory/MOB.scala 154:65]
       node _T_16 = add(back_index, index_offset_1) @[src/main/scala/Memory/MOB.scala 155:28]
       node _T_17 = tail(_T_16, 1) @[src/main/scala/Memory/MOB.scala 155:28]
-      connect MOB[_T_17].RD, io.reserve[1].bits.RD @[src/main/scala/Memory/MOB.scala 155:65]
+      connect MOB[_T_17].PRD, io.reserve[1].bits.PRD @[src/main/scala/Memory/MOB.scala 155:65]
       node _T_18 = add(back_index, index_offset_1) @[src/main/scala/Memory/MOB.scala 156:28]
       node _T_19 = tail(_T_18, 1) @[src/main/scala/Memory/MOB.scala 156:28]
       connect MOB[_T_19].ROB_index, io.reserve[1].bits.ROB_index @[src/main/scala/Memory/MOB.scala 156:65]
@@ -23447,7 +23447,7 @@ circuit SOC :%[[
       connect MOB[_T_23].memory_type, io.reserve[2].bits.memory_type @[src/main/scala/Memory/MOB.scala 154:65]
       node _T_24 = add(back_index, index_offset_2) @[src/main/scala/Memory/MOB.scala 155:28]
       node _T_25 = tail(_T_24, 1) @[src/main/scala/Memory/MOB.scala 155:28]
-      connect MOB[_T_25].RD, io.reserve[2].bits.RD @[src/main/scala/Memory/MOB.scala 155:65]
+      connect MOB[_T_25].PRD, io.reserve[2].bits.PRD @[src/main/scala/Memory/MOB.scala 155:65]
       node _T_26 = add(back_index, index_offset_2) @[src/main/scala/Memory/MOB.scala 156:28]
       node _T_27 = tail(_T_26, 1) @[src/main/scala/Memory/MOB.scala 156:28]
       connect MOB[_T_27].ROB_index, io.reserve[2].bits.ROB_index @[src/main/scala/Memory/MOB.scala 156:65]
@@ -23474,7 +23474,7 @@ circuit SOC :%[[
       connect MOB[_T_31].memory_type, io.reserve[3].bits.memory_type @[src/main/scala/Memory/MOB.scala 154:65]
       node _T_32 = add(back_index, index_offset_3) @[src/main/scala/Memory/MOB.scala 155:28]
       node _T_33 = tail(_T_32, 1) @[src/main/scala/Memory/MOB.scala 155:28]
-      connect MOB[_T_33].RD, io.reserve[3].bits.RD @[src/main/scala/Memory/MOB.scala 155:65]
+      connect MOB[_T_33].PRD, io.reserve[3].bits.PRD @[src/main/scala/Memory/MOB.scala 155:65]
       node _T_34 = add(back_index, index_offset_3) @[src/main/scala/Memory/MOB.scala 156:28]
       node _T_35 = tail(_T_34, 1) @[src/main/scala/Memory/MOB.scala 156:28]
       connect MOB[_T_35].ROB_index, io.reserve[3].bits.ROB_index @[src/main/scala/Memory/MOB.scala 156:65]
@@ -24337,14 +24337,14 @@ circuit SOC :%[[
     node _T_506 = and(_T_505, MOB[front_index].completed) @[src/main/scala/Memory/MOB.scala 267:34]
     node _T_507 = and(_T_506, MOB[front_index].committed) @[src/main/scala/Memory/MOB.scala 267:49]
     when _T_507 : @[src/main/scala/Memory/MOB.scala 267:65]
-      wire _MOB_WIRE_17 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 268:41]
+      wire _MOB_WIRE_17 : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
-      connect _MOB_WIRE_17.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
+      connect _MOB_WIRE_17.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
       connect _MOB_WIRE_17.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 268:41]
@@ -24357,224 +24357,224 @@ circuit SOC :%[[
     node _T_508 = or(io.commit.bits.is_misprediction, io.commit.bits.exception) @[src/main/scala/Memory/MOB.scala 275:62]
     node _T_509 = and(io.commit.valid, _T_508) @[src/main/scala/Memory/MOB.scala 275:26]
     when _T_509 : @[src/main/scala/Memory/MOB.scala 275:91]
-      wire _MOB_0_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_0_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_0_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_0_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_0_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[0], _MOB_0_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_1_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_1_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_1_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_1_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_1_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[1], _MOB_1_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_2_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_2_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_2_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_2_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_2_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[2], _MOB_2_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_3_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_3_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_3_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_3_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_3_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[3], _MOB_3_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_4_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_4_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_4_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_4_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_4_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[4], _MOB_4_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_5_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_5_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_5_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_5_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_5_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[5], _MOB_5_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_6_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_6_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_6_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_6_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_6_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[6], _MOB_6_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_7_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_7_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_7_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_7_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_7_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[7], _MOB_7_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_8_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_8_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_8_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_8_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_8_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[8], _MOB_8_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_9_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_9_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_9_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_9_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_9_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[9], _MOB_9_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_10_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_10_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_10_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_10_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_10_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[10], _MOB_10_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_11_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_11_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_11_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_11_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_11_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[11], _MOB_11_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_12_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_12_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_12_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_12_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_12_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[12], _MOB_12_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_13_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_13_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_13_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_13_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_13_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[13], _MOB_13_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_14_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_14_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_14_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_14_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_14_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect MOB[14], _MOB_14_WIRE @[src/main/scala/Memory/MOB.scala 277:20]
-      wire _MOB_15_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, RD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
+      wire _MOB_15_WIRE : { valid : UInt<1>, memory_type : UInt<2>, ROB_index : UInt<6>, address : UInt<32>, access_width : UInt<2>, PRD : UInt<7>, data : UInt<32>, data_valid : UInt<1>, pending : UInt<1>, completed : UInt<1>, committed : UInt<1>, exception : UInt<1>} @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.committed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.completed, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.pending, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.data_valid, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.data, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
-      connect _MOB_15_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
+      connect _MOB_15_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
       connect _MOB_15_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/MOB.scala 277:35]
@@ -24846,7 +24846,7 @@ circuit SOC :%[[
     invalidate FU_output_store_Q.io.enq.bits.fetch_PC @[src/main/scala/Memory/MOB.scala 307:50]
     invalidate FU_output_store_Q.io.enq.bits.RD_valid @[src/main/scala/Memory/MOB.scala 307:50]
     invalidate FU_output_store_Q.io.enq.bits.RD_data @[src/main/scala/Memory/MOB.scala 307:50]
-    invalidate FU_output_store_Q.io.enq.bits.RD @[src/main/scala/Memory/MOB.scala 307:50]
+    invalidate FU_output_store_Q.io.enq.bits.PRD @[src/main/scala/Memory/MOB.scala 307:50]
     connect FU_output_store_Q.io.enq.bits.exception, MOB[possible_FU_store_index].exception @[src/main/scala/Memory/MOB.scala 308:50]
     connect FU_output_store_Q.io.enq.bits.ROB_index, MOB[possible_FU_store_index].ROB_index @[src/main/scala/Memory/MOB.scala 309:50]
     node _FU_output_store_Q_io_flush_T = or(io.commit.bits.is_misprediction, io.commit.bits.exception) @[src/main/scala/Memory/MOB.scala 310:91]
@@ -27072,10 +27072,10 @@ circuit SOC :%[[
     invalidate FU_output_load_Q.io.enq.bits.fetch_PC @[src/main/scala/Memory/MOB.scala 359:49]
     invalidate FU_output_load_Q.io.enq.bits.RD_valid @[src/main/scala/Memory/MOB.scala 359:49]
     invalidate FU_output_load_Q.io.enq.bits.RD_data @[src/main/scala/Memory/MOB.scala 359:49]
-    invalidate FU_output_load_Q.io.enq.bits.RD @[src/main/scala/Memory/MOB.scala 359:49]
+    invalidate FU_output_load_Q.io.enq.bits.PRD @[src/main/scala/Memory/MOB.scala 359:49]
     connect FU_output_load_Q.io.enq.bits.exception, MOB[possible_FU_load_index].exception @[src/main/scala/Memory/MOB.scala 360:49]
     connect FU_output_load_Q.io.enq.bits.ROB_index, MOB[possible_FU_load_index].ROB_index @[src/main/scala/Memory/MOB.scala 361:49]
-    connect FU_output_load_Q.io.enq.bits.RD, MOB[possible_FU_load_index].RD @[src/main/scala/Memory/MOB.scala 362:49]
+    connect FU_output_load_Q.io.enq.bits.PRD, MOB[possible_FU_load_index].PRD @[src/main/scala/Memory/MOB.scala 362:49]
     node FU_output_load_Q_io_enq_bits_RD_data_lo = cat(wr_bytes[0][1], wr_bytes[0][0]) @[src/main/scala/Memory/MOB.scala 363:61]
     node FU_output_load_Q_io_enq_bits_RD_data_hi = cat(wr_bytes[0][3], wr_bytes[0][2]) @[src/main/scala/Memory/MOB.scala 363:61]
     node _FU_output_load_Q_io_enq_bits_RD_data_T = cat(FU_output_load_Q_io_enq_bits_RD_data_hi, FU_output_load_Q_io_enq_bits_RD_data_lo) @[src/main/scala/Memory/MOB.scala 363:61]
@@ -27171,10 +27171,10 @@ circuit SOC :%[[
     invalidate io.MOB_output.bits.fetch_PC @[src/main/scala/Memory/MOB.scala 388:37]
     invalidate io.MOB_output.bits.RD_valid @[src/main/scala/Memory/MOB.scala 388:37]
     invalidate io.MOB_output.bits.RD_data @[src/main/scala/Memory/MOB.scala 388:37]
-    invalidate io.MOB_output.bits.RD @[src/main/scala/Memory/MOB.scala 388:37]
+    invalidate io.MOB_output.bits.PRD @[src/main/scala/Memory/MOB.scala 388:37]
     invalidate io.MOB_output.valid @[src/main/scala/Memory/MOB.scala 388:37]
     connect io.MOB_output.valid, FU_output_arbiter.io.out.valid @[src/main/scala/Memory/MOB.scala 389:37]
-    connect io.MOB_output.bits.RD, FU_output_arbiter.io.out.bits.RD @[src/main/scala/Memory/MOB.scala 391:37]
+    connect io.MOB_output.bits.PRD, FU_output_arbiter.io.out.bits.PRD @[src/main/scala/Memory/MOB.scala 391:37]
     connect io.MOB_output.bits.RD_valid, FU_output_arbiter.io.out.bits.RD_valid @[src/main/scala/Memory/MOB.scala 392:37]
     connect io.MOB_output.bits.RD_data, FU_output_arbiter.io.out.bits.RD_data @[src/main/scala/Memory/MOB.scala 393:37]
     node availalbe_MOB_entries_lo_lo_lo = cat(MOB[14].valid, MOB[15].valid) @[src/main/scala/Memory/MOB.scala 399:46]
@@ -27326,7 +27326,7 @@ circuit SOC :%[[
   module ALU : @[src/main/scala/Backend/FU.scala 38:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 38:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 38:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 42:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 42:16]
 
     node _instruction_PC_T = mul(io.FU_input.bits.decoded_instruction.packet_index, UInt<3>(0h4)) @[src/main/scala/Backend/FU.scala 59:112]
     node _instruction_PC_T_1 = add(io.FU_input.bits.fetch_PC, _instruction_PC_T) @[src/main/scala/Backend/FU.scala 59:59]
@@ -27563,8 +27563,8 @@ circuit SOC :%[[
     connect io_FU_output_bits_fetch_packet_index_REG, io.FU_input.bits.decoded_instruction.packet_index @[src/main/scala/Backend/FU.scala 216:55]
     connect io.FU_output.bits.fetch_packet_index, io_FU_output_bits_fetch_packet_index_REG @[src/main/scala/Backend/FU.scala 216:45]
     reg io_FU_output_bits_RD_REG : UInt, clock @[src/main/scala/Backend/FU.scala 219:46]
-    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.RD @[src/main/scala/Backend/FU.scala 219:46]
-    connect io.FU_output.bits.RD, io_FU_output_bits_RD_REG @[src/main/scala/Backend/FU.scala 219:34]
+    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.PRD @[src/main/scala/Backend/FU.scala 219:46]
+    connect io.FU_output.bits.PRD, io_FU_output_bits_RD_REG @[src/main/scala/Backend/FU.scala 219:34]
     reg io_FU_output_bits_RD_valid_REG : UInt<1>, clock @[src/main/scala/Backend/FU.scala 220:46]
     connect io_FU_output_bits_RD_valid_REG, io.FU_input.bits.decoded_instruction.RD_valid @[src/main/scala/Backend/FU.scala 220:46]
     connect io.FU_output.bits.RD_valid, io_FU_output_bits_RD_valid_REG @[src/main/scala/Backend/FU.scala 220:34]
@@ -27594,7 +27594,7 @@ circuit SOC :%[[
   module branch_unit : @[src/main/scala/Backend/FU.scala 243:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 243:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 243:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 246:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 246:16]
 
     wire IMM : UInt<32> @[src/main/scala/Backend/FU.scala 260:29]
     wire instruction_PC : UInt<32> @[src/main/scala/Backend/FU.scala 262:36]
@@ -27754,8 +27754,8 @@ circuit SOC :%[[
     connect io_FU_output_bits_target_address_REG, target_address @[src/main/scala/Backend/FU.scala 359:56]
     connect io.FU_output.bits.target_address, io_FU_output_bits_target_address_REG @[src/main/scala/Backend/FU.scala 359:41]
     reg io_FU_output_bits_RD_REG : UInt, clock @[src/main/scala/Backend/FU.scala 362:56]
-    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.RD @[src/main/scala/Backend/FU.scala 362:56]
-    connect io.FU_output.bits.RD, io_FU_output_bits_RD_REG @[src/main/scala/Backend/FU.scala 362:41]
+    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.PRD @[src/main/scala/Backend/FU.scala 362:56]
+    connect io.FU_output.bits.PRD, io_FU_output_bits_RD_REG @[src/main/scala/Backend/FU.scala 362:41]
     reg io_FU_output_bits_RD_valid_REG : UInt<1>, clock @[src/main/scala/Backend/FU.scala 363:56]
     connect io_FU_output_bits_RD_valid_REG, io.FU_input.bits.decoded_instruction.RD_valid @[src/main/scala/Backend/FU.scala 363:56]
     connect io.FU_output.bits.RD_valid, io_FU_output_bits_RD_valid_REG @[src/main/scala/Backend/FU.scala 363:41]
@@ -27789,7 +27789,7 @@ circuit SOC :%[[
   module FU : @[src/main/scala/Backend/FU.scala 386:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 386:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 386:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 393:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 393:16]
 
     node is_ALU = and(io.FU_input.bits.decoded_instruction.needs_ALU, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 408:66]
     node is_CTRL = and(io.FU_input.bits.decoded_instruction.needs_branch_unit, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 409:74]
@@ -27819,7 +27819,7 @@ circuit SOC :%[[
     invalidate io.FU_output.bits.fetch_PC @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.bits.RD_valid @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.bits.RD_data @[src/main/scala/Backend/FU.scala 426:18]
-    invalidate io.FU_output.bits.RD @[src/main/scala/Backend/FU.scala 426:18]
+    invalidate io.FU_output.bits.PRD @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.valid @[src/main/scala/Backend/FU.scala 426:18]
     reg REG : UInt<1>, clock @[src/main/scala/Backend/FU.scala 430:21]
     connect REG, is_ALU @[src/main/scala/Backend/FU.scala 430:21]
@@ -27837,7 +27837,7 @@ circuit SOC :%[[
   module ALU_1 : @[src/main/scala/Backend/FU.scala 38:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 38:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 38:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 42:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 42:16]
 
     node _instruction_PC_T = mul(io.FU_input.bits.decoded_instruction.packet_index, UInt<3>(0h4)) @[src/main/scala/Backend/FU.scala 59:112]
     node _instruction_PC_T_1 = add(io.FU_input.bits.fetch_PC, _instruction_PC_T) @[src/main/scala/Backend/FU.scala 59:59]
@@ -28074,8 +28074,8 @@ circuit SOC :%[[
     connect io_FU_output_bits_fetch_packet_index_REG, io.FU_input.bits.decoded_instruction.packet_index @[src/main/scala/Backend/FU.scala 216:55]
     connect io.FU_output.bits.fetch_packet_index, io_FU_output_bits_fetch_packet_index_REG @[src/main/scala/Backend/FU.scala 216:45]
     reg io_FU_output_bits_RD_REG : UInt, clock @[src/main/scala/Backend/FU.scala 219:46]
-    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.RD @[src/main/scala/Backend/FU.scala 219:46]
-    connect io.FU_output.bits.RD, io_FU_output_bits_RD_REG @[src/main/scala/Backend/FU.scala 219:34]
+    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.PRD @[src/main/scala/Backend/FU.scala 219:46]
+    connect io.FU_output.bits.PRD, io_FU_output_bits_RD_REG @[src/main/scala/Backend/FU.scala 219:34]
     reg io_FU_output_bits_RD_valid_REG : UInt<1>, clock @[src/main/scala/Backend/FU.scala 220:46]
     connect io_FU_output_bits_RD_valid_REG, io.FU_input.bits.decoded_instruction.RD_valid @[src/main/scala/Backend/FU.scala 220:46]
     connect io.FU_output.bits.RD_valid, io_FU_output_bits_RD_valid_REG @[src/main/scala/Backend/FU.scala 220:34]
@@ -28105,7 +28105,7 @@ circuit SOC :%[[
   module FU_1 : @[src/main/scala/Backend/FU.scala 386:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 386:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 386:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 393:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 393:16]
 
     node is_ALU = and(io.FU_input.bits.decoded_instruction.needs_ALU, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 408:66]
     node is_CTRL = and(io.FU_input.bits.decoded_instruction.needs_branch_unit, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 409:74]
@@ -28130,7 +28130,7 @@ circuit SOC :%[[
     invalidate io.FU_output.bits.fetch_PC @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.bits.RD_valid @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.bits.RD_data @[src/main/scala/Backend/FU.scala 426:18]
-    invalidate io.FU_output.bits.RD @[src/main/scala/Backend/FU.scala 426:18]
+    invalidate io.FU_output.bits.PRD @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.valid @[src/main/scala/Backend/FU.scala 426:18]
     reg REG : UInt<1>, clock @[src/main/scala/Backend/FU.scala 430:21]
     connect REG, is_ALU @[src/main/scala/Backend/FU.scala 430:21]
@@ -28144,7 +28144,7 @@ circuit SOC :%[[
   module ALU_2 : @[src/main/scala/Backend/FU.scala 38:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 38:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 38:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 42:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 42:16]
 
     node _instruction_PC_T = mul(io.FU_input.bits.decoded_instruction.packet_index, UInt<3>(0h4)) @[src/main/scala/Backend/FU.scala 59:112]
     node _instruction_PC_T_1 = add(io.FU_input.bits.fetch_PC, _instruction_PC_T) @[src/main/scala/Backend/FU.scala 59:59]
@@ -28381,8 +28381,8 @@ circuit SOC :%[[
     connect io_FU_output_bits_fetch_packet_index_REG, io.FU_input.bits.decoded_instruction.packet_index @[src/main/scala/Backend/FU.scala 216:55]
     connect io.FU_output.bits.fetch_packet_index, io_FU_output_bits_fetch_packet_index_REG @[src/main/scala/Backend/FU.scala 216:45]
     reg io_FU_output_bits_RD_REG : UInt, clock @[src/main/scala/Backend/FU.scala 219:46]
-    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.RD @[src/main/scala/Backend/FU.scala 219:46]
-    connect io.FU_output.bits.RD, io_FU_output_bits_RD_REG @[src/main/scala/Backend/FU.scala 219:34]
+    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.PRD @[src/main/scala/Backend/FU.scala 219:46]
+    connect io.FU_output.bits.PRD, io_FU_output_bits_RD_REG @[src/main/scala/Backend/FU.scala 219:34]
     reg io_FU_output_bits_RD_valid_REG : UInt<1>, clock @[src/main/scala/Backend/FU.scala 220:46]
     connect io_FU_output_bits_RD_valid_REG, io.FU_input.bits.decoded_instruction.RD_valid @[src/main/scala/Backend/FU.scala 220:46]
     connect io.FU_output.bits.RD_valid, io_FU_output_bits_RD_valid_REG @[src/main/scala/Backend/FU.scala 220:34]
@@ -28412,7 +28412,7 @@ circuit SOC :%[[
   module FU_2 : @[src/main/scala/Backend/FU.scala 386:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 386:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 386:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 393:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Backend/FU.scala 393:16]
 
     node is_ALU = and(io.FU_input.bits.decoded_instruction.needs_ALU, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 408:66]
     node is_CTRL = and(io.FU_input.bits.decoded_instruction.needs_branch_unit, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 409:74]
@@ -28437,7 +28437,7 @@ circuit SOC :%[[
     invalidate io.FU_output.bits.fetch_PC @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.bits.RD_valid @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.bits.RD_data @[src/main/scala/Backend/FU.scala 426:18]
-    invalidate io.FU_output.bits.RD @[src/main/scala/Backend/FU.scala 426:18]
+    invalidate io.FU_output.bits.PRD @[src/main/scala/Backend/FU.scala 426:18]
     invalidate io.FU_output.valid @[src/main/scala/Backend/FU.scala 426:18]
     reg REG : UInt<1>, clock @[src/main/scala/Backend/FU.scala 430:21]
     connect REG, is_ALU @[src/main/scala/Backend/FU.scala 430:21]
@@ -28451,9 +28451,9 @@ circuit SOC :%[[
   module AGU : @[src/main/scala/Memory/AGU.scala 39:7]
     input clock : Clock @[src/main/scala/Memory/AGU.scala 39:7]
     input reset : Reset @[src/main/scala/Memory/AGU.scala 39:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Memory/AGU.scala 41:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}} @[src/main/scala/Memory/AGU.scala 41:16]
 
-    wire _io_FU_output_bits_WIRE : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>} @[src/main/scala/Memory/AGU.scala 52:38]
+    wire _io_FU_output_bits_WIRE : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>} @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.exception, UInt<1>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.fetch_packet_index, UInt<2>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.FTQ_index, UInt<4>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
@@ -28470,7 +28470,7 @@ circuit SOC :%[[
     connect _io_FU_output_bits_WIRE.fetch_PC, UInt<32>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.RD_valid, UInt<1>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.RD_data, UInt<32>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
-    connect _io_FU_output_bits_WIRE.RD, UInt<7>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
+    connect _io_FU_output_bits_WIRE.PRD, UInt<7>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect io.FU_output.bits, _io_FU_output_bits_WIRE @[src/main/scala/Memory/AGU.scala 52:23]
     wire _imm : SInt<32> @[src/main/scala/Memory/AGU.scala 59:40]
     wire imm : UInt<32> @[src/main/scala/Memory/AGU.scala 60:40]
@@ -28533,8 +28533,8 @@ circuit SOC :%[[
     connect io_FU_output_valid_REG, _io_FU_output_valid_T_1 @[src/main/scala/Memory/AGU.scala 106:47]
     connect io.FU_output.valid, io_FU_output_valid_REG @[src/main/scala/Memory/AGU.scala 106:37]
     reg io_FU_output_bits_RD_REG : UInt, clock @[src/main/scala/Memory/AGU.scala 107:47]
-    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.RD @[src/main/scala/Memory/AGU.scala 107:47]
-    connect io.FU_output.bits.RD, io_FU_output_bits_RD_REG @[src/main/scala/Memory/AGU.scala 107:37]
+    connect io_FU_output_bits_RD_REG, io.FU_input.bits.decoded_instruction.PRD @[src/main/scala/Memory/AGU.scala 107:47]
+    connect io.FU_output.bits.PRD, io_FU_output_bits_RD_REG @[src/main/scala/Memory/AGU.scala 107:37]
     reg io_FU_output_bits_is_unsigned_REG : UInt<1>, clock @[src/main/scala/Memory/AGU.scala 108:47]
     connect io_FU_output_bits_is_unsigned_REG, unsigned @[src/main/scala/Memory/AGU.scala 108:47]
     connect io.FU_output.bits.is_unsigned, io_FU_output_bits_is_unsigned_REG @[src/main/scala/Memory/AGU.scala 108:37]
@@ -28624,7 +28624,7 @@ circuit SOC :%[[
   module backend : @[src/main/scala/Backend/backend.scala 47:7]
     input clock : Clock @[src/main/scala/Backend/backend.scala 47:7]
     input reset : Reset @[src/main/scala/Backend/backend.scala 47:7]
-    output io : { flip flush : UInt<1>, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, PC_file_exec_addr : UInt<6>, flip PC_file_exec_data : UInt<32>, flip fetch_PC : UInt<32>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, MEMRS_ready : UInt<1>[4], INTRS_ready : UInt<1>[4], MOB_ready : UInt<1>[4], FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4]} @[src/main/scala/Backend/backend.scala 51:16]
+    output io : { flip flush : UInt<1>, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, PC_file_exec_addr : UInt<6>, flip PC_file_exec_data : UInt<32>, flip fetch_PC : UInt<32>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, MEMRS_ready : UInt<1>[4], INTRS_ready : UInt<1>[4], MOB_ready : UInt<1>[4], FU_outputs : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4]} @[src/main/scala/Backend/backend.scala 51:16]
 
     inst INT_RS of RS @[src/main/scala/Backend/backend.scala 83:27]
     connect INT_RS.clock, clock
@@ -28658,8 +28658,8 @@ circuit SOC :%[[
     connect INT_RS.io.backend_packet[0].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[0].RS1_valid @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[0].bits.RS1, io.backend_packet.bits.decoded_instruction[0].RS1 @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[0].bits.RD_valid, io.backend_packet.bits.decoded_instruction[0].RD_valid @[src/main/scala/Backend/backend.scala 98:46]
+    connect INT_RS.io.backend_packet[0].bits.PRD, io.backend_packet.bits.decoded_instruction[0].PRD @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[0].bits.RD, io.backend_packet.bits.decoded_instruction[0].RD @[src/main/scala/Backend/backend.scala 98:46]
-    connect INT_RS.io.backend_packet[0].bits.RDold, io.backend_packet.bits.decoded_instruction[0].RDold @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[0].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[0].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[0].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[0].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 98:46]
     node _INT_RS_io_backend_packet_0_valid_T = eq(io.backend_packet.bits.decoded_instruction[0].RS_type, UInt<1>(0h0)) @[src/main/scala/Backend/backend.scala 99:104]
@@ -28688,8 +28688,8 @@ circuit SOC :%[[
     connect INT_RS.io.backend_packet[1].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[1].RS1_valid @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[1].bits.RS1, io.backend_packet.bits.decoded_instruction[1].RS1 @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[1].bits.RD_valid, io.backend_packet.bits.decoded_instruction[1].RD_valid @[src/main/scala/Backend/backend.scala 98:46]
+    connect INT_RS.io.backend_packet[1].bits.PRD, io.backend_packet.bits.decoded_instruction[1].PRD @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[1].bits.RD, io.backend_packet.bits.decoded_instruction[1].RD @[src/main/scala/Backend/backend.scala 98:46]
-    connect INT_RS.io.backend_packet[1].bits.RDold, io.backend_packet.bits.decoded_instruction[1].RDold @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[1].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[1].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[1].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[1].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 98:46]
     node _INT_RS_io_backend_packet_1_valid_T = eq(io.backend_packet.bits.decoded_instruction[1].RS_type, UInt<1>(0h0)) @[src/main/scala/Backend/backend.scala 99:104]
@@ -28718,8 +28718,8 @@ circuit SOC :%[[
     connect INT_RS.io.backend_packet[2].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[2].RS1_valid @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[2].bits.RS1, io.backend_packet.bits.decoded_instruction[2].RS1 @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[2].bits.RD_valid, io.backend_packet.bits.decoded_instruction[2].RD_valid @[src/main/scala/Backend/backend.scala 98:46]
+    connect INT_RS.io.backend_packet[2].bits.PRD, io.backend_packet.bits.decoded_instruction[2].PRD @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[2].bits.RD, io.backend_packet.bits.decoded_instruction[2].RD @[src/main/scala/Backend/backend.scala 98:46]
-    connect INT_RS.io.backend_packet[2].bits.RDold, io.backend_packet.bits.decoded_instruction[2].RDold @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[2].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[2].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[2].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[2].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 98:46]
     node _INT_RS_io_backend_packet_2_valid_T = eq(io.backend_packet.bits.decoded_instruction[2].RS_type, UInt<1>(0h0)) @[src/main/scala/Backend/backend.scala 99:104]
@@ -28748,8 +28748,8 @@ circuit SOC :%[[
     connect INT_RS.io.backend_packet[3].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[3].RS1_valid @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[3].bits.RS1, io.backend_packet.bits.decoded_instruction[3].RS1 @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[3].bits.RD_valid, io.backend_packet.bits.decoded_instruction[3].RD_valid @[src/main/scala/Backend/backend.scala 98:46]
+    connect INT_RS.io.backend_packet[3].bits.PRD, io.backend_packet.bits.decoded_instruction[3].PRD @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[3].bits.RD, io.backend_packet.bits.decoded_instruction[3].RD @[src/main/scala/Backend/backend.scala 98:46]
-    connect INT_RS.io.backend_packet[3].bits.RDold, io.backend_packet.bits.decoded_instruction[3].RDold @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[3].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[3].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 98:46]
     connect INT_RS.io.backend_packet[3].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[3].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 98:46]
     node _INT_RS_io_backend_packet_3_valid_T = eq(io.backend_packet.bits.decoded_instruction[3].RS_type, UInt<1>(0h0)) @[src/main/scala/Backend/backend.scala 99:104]
@@ -28779,8 +28779,8 @@ circuit SOC :%[[
     connect MEM_RS.io.backend_packet[0].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[0].RS1_valid @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[0].bits.RS1, io.backend_packet.bits.decoded_instruction[0].RS1 @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[0].bits.RD_valid, io.backend_packet.bits.decoded_instruction[0].RD_valid @[src/main/scala/Backend/backend.scala 107:46]
+    connect MEM_RS.io.backend_packet[0].bits.PRD, io.backend_packet.bits.decoded_instruction[0].PRD @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[0].bits.RD, io.backend_packet.bits.decoded_instruction[0].RD @[src/main/scala/Backend/backend.scala 107:46]
-    connect MEM_RS.io.backend_packet[0].bits.RDold, io.backend_packet.bits.decoded_instruction[0].RDold @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[0].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[0].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[0].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[0].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 107:46]
     node _MEM_RS_io_backend_packet_0_valid_T = eq(io.backend_packet.bits.decoded_instruction[0].RS_type, UInt<1>(0h1)) @[src/main/scala/Backend/backend.scala 108:104]
@@ -28810,8 +28810,8 @@ circuit SOC :%[[
     connect MEM_RS.io.backend_packet[1].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[1].RS1_valid @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[1].bits.RS1, io.backend_packet.bits.decoded_instruction[1].RS1 @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[1].bits.RD_valid, io.backend_packet.bits.decoded_instruction[1].RD_valid @[src/main/scala/Backend/backend.scala 107:46]
+    connect MEM_RS.io.backend_packet[1].bits.PRD, io.backend_packet.bits.decoded_instruction[1].PRD @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[1].bits.RD, io.backend_packet.bits.decoded_instruction[1].RD @[src/main/scala/Backend/backend.scala 107:46]
-    connect MEM_RS.io.backend_packet[1].bits.RDold, io.backend_packet.bits.decoded_instruction[1].RDold @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[1].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[1].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[1].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[1].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 107:46]
     node _MEM_RS_io_backend_packet_1_valid_T = eq(io.backend_packet.bits.decoded_instruction[1].RS_type, UInt<1>(0h1)) @[src/main/scala/Backend/backend.scala 108:104]
@@ -28841,8 +28841,8 @@ circuit SOC :%[[
     connect MEM_RS.io.backend_packet[2].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[2].RS1_valid @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[2].bits.RS1, io.backend_packet.bits.decoded_instruction[2].RS1 @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[2].bits.RD_valid, io.backend_packet.bits.decoded_instruction[2].RD_valid @[src/main/scala/Backend/backend.scala 107:46]
+    connect MEM_RS.io.backend_packet[2].bits.PRD, io.backend_packet.bits.decoded_instruction[2].PRD @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[2].bits.RD, io.backend_packet.bits.decoded_instruction[2].RD @[src/main/scala/Backend/backend.scala 107:46]
-    connect MEM_RS.io.backend_packet[2].bits.RDold, io.backend_packet.bits.decoded_instruction[2].RDold @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[2].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[2].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[2].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[2].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 107:46]
     node _MEM_RS_io_backend_packet_2_valid_T = eq(io.backend_packet.bits.decoded_instruction[2].RS_type, UInt<1>(0h1)) @[src/main/scala/Backend/backend.scala 108:104]
@@ -28872,8 +28872,8 @@ circuit SOC :%[[
     connect MEM_RS.io.backend_packet[3].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[3].RS1_valid @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[3].bits.RS1, io.backend_packet.bits.decoded_instruction[3].RS1 @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[3].bits.RD_valid, io.backend_packet.bits.decoded_instruction[3].RD_valid @[src/main/scala/Backend/backend.scala 107:46]
+    connect MEM_RS.io.backend_packet[3].bits.PRD, io.backend_packet.bits.decoded_instruction[3].PRD @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[3].bits.RD, io.backend_packet.bits.decoded_instruction[3].RD @[src/main/scala/Backend/backend.scala 107:46]
-    connect MEM_RS.io.backend_packet[3].bits.RDold, io.backend_packet.bits.decoded_instruction[3].RDold @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[3].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[3].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 107:46]
     connect MEM_RS.io.backend_packet[3].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[3].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 107:46]
     node _MEM_RS_io_backend_packet_3_valid_T = eq(io.backend_packet.bits.decoded_instruction[3].RS_type, UInt<1>(0h1)) @[src/main/scala/Backend/backend.scala 108:104]
@@ -28904,8 +28904,8 @@ circuit SOC :%[[
     connect MOB.io.reserve[0].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[0].RS1_valid @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[0].bits.RS1, io.backend_packet.bits.decoded_instruction[0].RS1 @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[0].bits.RD_valid, io.backend_packet.bits.decoded_instruction[0].RD_valid @[src/main/scala/Backend/backend.scala 115:36]
+    connect MOB.io.reserve[0].bits.PRD, io.backend_packet.bits.decoded_instruction[0].PRD @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[0].bits.RD, io.backend_packet.bits.decoded_instruction[0].RD @[src/main/scala/Backend/backend.scala 115:36]
-    connect MOB.io.reserve[0].bits.RDold, io.backend_packet.bits.decoded_instruction[0].RDold @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[0].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[0].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[0].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[0].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 115:36]
     node _MOB_io_reserve_0_valid_T = eq(io.backend_packet.bits.decoded_instruction[0].RS_type, UInt<1>(0h1)) @[src/main/scala/Backend/backend.scala 116:94]
@@ -28935,8 +28935,8 @@ circuit SOC :%[[
     connect MOB.io.reserve[1].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[1].RS1_valid @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[1].bits.RS1, io.backend_packet.bits.decoded_instruction[1].RS1 @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[1].bits.RD_valid, io.backend_packet.bits.decoded_instruction[1].RD_valid @[src/main/scala/Backend/backend.scala 115:36]
+    connect MOB.io.reserve[1].bits.PRD, io.backend_packet.bits.decoded_instruction[1].PRD @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[1].bits.RD, io.backend_packet.bits.decoded_instruction[1].RD @[src/main/scala/Backend/backend.scala 115:36]
-    connect MOB.io.reserve[1].bits.RDold, io.backend_packet.bits.decoded_instruction[1].RDold @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[1].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[1].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[1].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[1].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 115:36]
     node _MOB_io_reserve_1_valid_T = eq(io.backend_packet.bits.decoded_instruction[1].RS_type, UInt<1>(0h1)) @[src/main/scala/Backend/backend.scala 116:94]
@@ -28966,8 +28966,8 @@ circuit SOC :%[[
     connect MOB.io.reserve[2].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[2].RS1_valid @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[2].bits.RS1, io.backend_packet.bits.decoded_instruction[2].RS1 @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[2].bits.RD_valid, io.backend_packet.bits.decoded_instruction[2].RD_valid @[src/main/scala/Backend/backend.scala 115:36]
+    connect MOB.io.reserve[2].bits.PRD, io.backend_packet.bits.decoded_instruction[2].PRD @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[2].bits.RD, io.backend_packet.bits.decoded_instruction[2].RD @[src/main/scala/Backend/backend.scala 115:36]
-    connect MOB.io.reserve[2].bits.RDold, io.backend_packet.bits.decoded_instruction[2].RDold @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[2].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[2].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[2].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[2].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 115:36]
     node _MOB_io_reserve_2_valid_T = eq(io.backend_packet.bits.decoded_instruction[2].RS_type, UInt<1>(0h1)) @[src/main/scala/Backend/backend.scala 116:94]
@@ -28997,8 +28997,8 @@ circuit SOC :%[[
     connect MOB.io.reserve[3].bits.RS1_valid, io.backend_packet.bits.decoded_instruction[3].RS1_valid @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[3].bits.RS1, io.backend_packet.bits.decoded_instruction[3].RS1 @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[3].bits.RD_valid, io.backend_packet.bits.decoded_instruction[3].RD_valid @[src/main/scala/Backend/backend.scala 115:36]
+    connect MOB.io.reserve[3].bits.PRD, io.backend_packet.bits.decoded_instruction[3].PRD @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[3].bits.RD, io.backend_packet.bits.decoded_instruction[3].RD @[src/main/scala/Backend/backend.scala 115:36]
-    connect MOB.io.reserve[3].bits.RDold, io.backend_packet.bits.decoded_instruction[3].RDold @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[3].bits.ready_bits.RS2_ready, io.backend_packet.bits.decoded_instruction[3].ready_bits.RS2_ready @[src/main/scala/Backend/backend.scala 115:36]
     connect MOB.io.reserve[3].bits.ready_bits.RS1_ready, io.backend_packet.bits.decoded_instruction[3].ready_bits.RS1_ready @[src/main/scala/Backend/backend.scala 115:36]
     node _MOB_io_reserve_3_valid_T = eq(io.backend_packet.bits.decoded_instruction[3].RS_type, UInt<1>(0h1)) @[src/main/scala/Backend/backend.scala 116:94]
@@ -29021,7 +29021,7 @@ circuit SOC :%[[
     inst INT_PRF of sim_nReadmWrite @[src/main/scala/Backend/backend.scala 133:25]
     connect INT_PRF.clock, clock
     connect INT_PRF.reset, reset
-    wire read_decoded_instructions : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}[4] @[src/main/scala/Backend/backend.scala 137:45]
+    wire read_decoded_instructions : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}[4] @[src/main/scala/Backend/backend.scala 137:45]
     connect INT_PRF.io.raddr_0, INT_RS.io.RF_inputs[0].bits.RS1 @[src/main/scala/Backend/backend.scala 140:25]
     connect INT_PRF.io.raddr_1, INT_RS.io.RF_inputs[0].bits.RS2 @[src/main/scala/Backend/backend.scala 141:25]
     connect INT_PRF.io.raddr_2, INT_RS.io.RF_inputs[1].bits.RS1 @[src/main/scala/Backend/backend.scala 142:25]
@@ -29043,16 +29043,16 @@ circuit SOC :%[[
     connect read_decoded_instructions[3].RS1_data, INT_PRF.io.rdata_6 @[src/main/scala/Backend/backend.scala 165:43]
     connect read_decoded_instructions[3].RS2_data, INT_PRF.io.rdata_7 @[src/main/scala/Backend/backend.scala 166:43]
     connect read_decoded_instructions[3].fetch_PC, UInt<1>(0h0) @[src/main/scala/Backend/backend.scala 167:43]
-    reg read_decoded_instructions_0_decoded_instruction_REG : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, clock @[src/main/scala/Backend/backend.scala 172:64]
+    reg read_decoded_instructions_0_decoded_instruction_REG : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, clock @[src/main/scala/Backend/backend.scala 172:64]
     connect read_decoded_instructions_0_decoded_instruction_REG, INT_RS.io.RF_inputs[0].bits @[src/main/scala/Backend/backend.scala 172:64]
     connect read_decoded_instructions[0].decoded_instruction, read_decoded_instructions_0_decoded_instruction_REG @[src/main/scala/Backend/backend.scala 172:54]
-    reg read_decoded_instructions_1_decoded_instruction_REG : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, clock @[src/main/scala/Backend/backend.scala 173:64]
+    reg read_decoded_instructions_1_decoded_instruction_REG : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, clock @[src/main/scala/Backend/backend.scala 173:64]
     connect read_decoded_instructions_1_decoded_instruction_REG, INT_RS.io.RF_inputs[1].bits @[src/main/scala/Backend/backend.scala 173:64]
     connect read_decoded_instructions[1].decoded_instruction, read_decoded_instructions_1_decoded_instruction_REG @[src/main/scala/Backend/backend.scala 173:54]
-    reg read_decoded_instructions_2_decoded_instruction_REG : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, clock @[src/main/scala/Backend/backend.scala 174:64]
+    reg read_decoded_instructions_2_decoded_instruction_REG : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, clock @[src/main/scala/Backend/backend.scala 174:64]
     connect read_decoded_instructions_2_decoded_instruction_REG, INT_RS.io.RF_inputs[2].bits @[src/main/scala/Backend/backend.scala 174:64]
     connect read_decoded_instructions[2].decoded_instruction, read_decoded_instructions_2_decoded_instruction_REG @[src/main/scala/Backend/backend.scala 174:54]
-    reg read_decoded_instructions_3_decoded_instruction_REG : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, clock @[src/main/scala/Backend/backend.scala 175:64]
+    reg read_decoded_instructions_3_decoded_instruction_REG : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, clock @[src/main/scala/Backend/backend.scala 175:64]
     connect read_decoded_instructions_3_decoded_instruction_REG, MEM_RS.io.RF_inputs[3].bits @[src/main/scala/Backend/backend.scala 175:64]
     connect read_decoded_instructions[3].decoded_instruction, read_decoded_instructions_3_decoded_instruction_REG @[src/main/scala/Backend/backend.scala 175:54]
     inst FU0 of FU @[src/main/scala/Backend/backend.scala 186:21]
@@ -29092,10 +29092,10 @@ circuit SOC :%[[
     connect MEM_RS.io.RF_inputs[3].ready, FU3.io.FU_input.ready @[src/main/scala/Backend/backend.scala 216:40]
     connect MOB.io.AGU_output, FU3.io.FU_output @[src/main/scala/Backend/backend.scala 223:23]
     connect MOB.io.flush, io.flush @[src/main/scala/Backend/backend.scala 224:18]
-    connect INT_PRF.io.waddr_0, FU0.io.FU_output.bits.RD @[src/main/scala/Backend/backend.scala 232:25]
-    connect INT_PRF.io.waddr_1, FU1.io.FU_output.bits.RD @[src/main/scala/Backend/backend.scala 233:25]
-    connect INT_PRF.io.waddr_2, FU2.io.FU_output.bits.RD @[src/main/scala/Backend/backend.scala 234:25]
-    connect INT_PRF.io.waddr_3, MOB.io.MOB_output.bits.RD @[src/main/scala/Backend/backend.scala 235:25]
+    connect INT_PRF.io.waddr_0, FU0.io.FU_output.bits.PRD @[src/main/scala/Backend/backend.scala 232:25]
+    connect INT_PRF.io.waddr_1, FU1.io.FU_output.bits.PRD @[src/main/scala/Backend/backend.scala 233:25]
+    connect INT_PRF.io.waddr_2, FU2.io.FU_output.bits.PRD @[src/main/scala/Backend/backend.scala 234:25]
+    connect INT_PRF.io.waddr_3, MOB.io.MOB_output.bits.PRD @[src/main/scala/Backend/backend.scala 235:25]
     node _INT_PRF_io_wen_0_T = and(FU0.io.FU_output.valid, FU0.io.FU_output.bits.RD_valid) @[src/main/scala/Backend/backend.scala 237:54]
     connect INT_PRF.io.wen_0, _INT_PRF_io_wen_0_T @[src/main/scala/Backend/backend.scala 237:25]
     node _INT_PRF_io_wen_1_T = and(FU1.io.FU_output.valid, FU1.io.FU_output.bits.RD_valid) @[src/main/scala/Backend/backend.scala 238:54]
@@ -29124,14 +29124,14 @@ circuit SOC :%[[
     connect INT_RS.io.commit.bits.RD_valid[1], io.commit.bits.RD_valid[1] @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.RD_valid[2], io.commit.bits.RD_valid[2] @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.RD_valid[3], io.commit.bits.RD_valid[3] @[src/main/scala/Backend/backend.scala 271:22]
+    connect INT_RS.io.commit.bits.PRD[0], io.commit.bits.PRD[0] @[src/main/scala/Backend/backend.scala 271:22]
+    connect INT_RS.io.commit.bits.PRD[1], io.commit.bits.PRD[1] @[src/main/scala/Backend/backend.scala 271:22]
+    connect INT_RS.io.commit.bits.PRD[2], io.commit.bits.PRD[2] @[src/main/scala/Backend/backend.scala 271:22]
+    connect INT_RS.io.commit.bits.PRD[3], io.commit.bits.PRD[3] @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.RD[0], io.commit.bits.RD[0] @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.RD[1], io.commit.bits.RD[1] @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.RD[2], io.commit.bits.RD[2] @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.RD[3], io.commit.bits.RD[3] @[src/main/scala/Backend/backend.scala 271:22]
-    connect INT_RS.io.commit.bits.RDold[0], io.commit.bits.RDold[0] @[src/main/scala/Backend/backend.scala 271:22]
-    connect INT_RS.io.commit.bits.RDold[1], io.commit.bits.RDold[1] @[src/main/scala/Backend/backend.scala 271:22]
-    connect INT_RS.io.commit.bits.RDold[2], io.commit.bits.RDold[2] @[src/main/scala/Backend/backend.scala 271:22]
-    connect INT_RS.io.commit.bits.RDold[3], io.commit.bits.RDold[3] @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.free_list_front_pointer, io.commit.bits.free_list_front_pointer @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.RAT_index, io.commit.bits.RAT_index @[src/main/scala/Backend/backend.scala 271:22]
     connect INT_RS.io.commit.bits.NEXT, io.commit.bits.NEXT @[src/main/scala/Backend/backend.scala 271:22]
@@ -29150,14 +29150,14 @@ circuit SOC :%[[
     connect MEM_RS.io.commit.bits.RD_valid[1], io.commit.bits.RD_valid[1] @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.RD_valid[2], io.commit.bits.RD_valid[2] @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.RD_valid[3], io.commit.bits.RD_valid[3] @[src/main/scala/Backend/backend.scala 272:22]
+    connect MEM_RS.io.commit.bits.PRD[0], io.commit.bits.PRD[0] @[src/main/scala/Backend/backend.scala 272:22]
+    connect MEM_RS.io.commit.bits.PRD[1], io.commit.bits.PRD[1] @[src/main/scala/Backend/backend.scala 272:22]
+    connect MEM_RS.io.commit.bits.PRD[2], io.commit.bits.PRD[2] @[src/main/scala/Backend/backend.scala 272:22]
+    connect MEM_RS.io.commit.bits.PRD[3], io.commit.bits.PRD[3] @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.RD[0], io.commit.bits.RD[0] @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.RD[1], io.commit.bits.RD[1] @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.RD[2], io.commit.bits.RD[2] @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.RD[3], io.commit.bits.RD[3] @[src/main/scala/Backend/backend.scala 272:22]
-    connect MEM_RS.io.commit.bits.RDold[0], io.commit.bits.RDold[0] @[src/main/scala/Backend/backend.scala 272:22]
-    connect MEM_RS.io.commit.bits.RDold[1], io.commit.bits.RDold[1] @[src/main/scala/Backend/backend.scala 272:22]
-    connect MEM_RS.io.commit.bits.RDold[2], io.commit.bits.RDold[2] @[src/main/scala/Backend/backend.scala 272:22]
-    connect MEM_RS.io.commit.bits.RDold[3], io.commit.bits.RDold[3] @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.free_list_front_pointer, io.commit.bits.free_list_front_pointer @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.RAT_index, io.commit.bits.RAT_index @[src/main/scala/Backend/backend.scala 272:22]
     connect MEM_RS.io.commit.bits.NEXT, io.commit.bits.NEXT @[src/main/scala/Backend/backend.scala 272:22]
@@ -29187,7 +29187,7 @@ circuit SOC :%[[
   module FTQ : @[src/main/scala/Frontend/FTQ.scala 44:7]
     input clock : Clock @[src/main/scala/Frontend/FTQ.scala 44:7]
     input reset : Reset @[src/main/scala/Frontend/FTQ.scala 44:7]
-    output io : { flip flush : UInt<1>, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], flip predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, FTQ : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}, FTQ_index : UInt<4>} @[src/main/scala/Frontend/FTQ.scala 48:16]
+    output io : { flip flush : UInt<1>, flip FU_outputs : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], flip predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, FTQ : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}, FTQ_index : UInt<4>} @[src/main/scala/Frontend/FTQ.scala 48:16]
 
     regreset front_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/FTQ.scala 69:34]
     regreset back_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/FTQ.scala 70:34]
@@ -29845,9 +29845,9 @@ circuit SOC :%[[
   module ROB_entry_mem : @[src/main/scala/memories/memories.scala 295:7]
     input clock : Clock @[src/main/scala/memories/memories.scala 295:7]
     input reset : Reset @[src/main/scala/memories/memories.scala 295:7]
-    output io : { flip addrA : UInt<6>, flip writeDataA : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}, flip writeEnableA : UInt<1>, flip addrB : UInt<6>, readDataB : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}} @[src/main/scala/memories/memories.scala 296:14]
+    output io : { flip addrA : UInt<6>, flip writeDataA : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}, flip writeEnableA : UInt<1>, flip addrB : UInt<6>, readDataB : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}} @[src/main/scala/memories/memories.scala 296:14]
 
-    smem mem : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>} [64] @[src/main/scala/memories/memories.scala 310:24]
+    smem mem : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>} [64] @[src/main/scala/memories/memories.scala 310:24]
     when io.writeEnableA : @[src/main/scala/memories/memories.scala 313:25]
       write mport MPORT = mem[io.addrA], clock @[src/main/scala/memories/memories.scala 314:14]
       connect MPORT, io.writeDataA @[src/main/scala/memories/memories.scala 314:14]
@@ -29861,9 +29861,9 @@ circuit SOC :%[[
   module ROB_entry_mem_1 : @[src/main/scala/memories/memories.scala 295:7]
     input clock : Clock @[src/main/scala/memories/memories.scala 295:7]
     input reset : Reset @[src/main/scala/memories/memories.scala 295:7]
-    output io : { flip addrA : UInt<6>, flip writeDataA : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}, flip writeEnableA : UInt<1>, flip addrB : UInt<6>, readDataB : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}} @[src/main/scala/memories/memories.scala 296:14]
+    output io : { flip addrA : UInt<6>, flip writeDataA : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}, flip writeEnableA : UInt<1>, flip addrB : UInt<6>, readDataB : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}} @[src/main/scala/memories/memories.scala 296:14]
 
-    smem mem : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>} [64] @[src/main/scala/memories/memories.scala 310:24]
+    smem mem : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>} [64] @[src/main/scala/memories/memories.scala 310:24]
     when io.writeEnableA : @[src/main/scala/memories/memories.scala 313:25]
       write mport MPORT = mem[io.addrA], clock @[src/main/scala/memories/memories.scala 314:14]
       connect MPORT, io.writeDataA @[src/main/scala/memories/memories.scala 314:14]
@@ -29877,9 +29877,9 @@ circuit SOC :%[[
   module ROB_entry_mem_2 : @[src/main/scala/memories/memories.scala 295:7]
     input clock : Clock @[src/main/scala/memories/memories.scala 295:7]
     input reset : Reset @[src/main/scala/memories/memories.scala 295:7]
-    output io : { flip addrA : UInt<6>, flip writeDataA : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}, flip writeEnableA : UInt<1>, flip addrB : UInt<6>, readDataB : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}} @[src/main/scala/memories/memories.scala 296:14]
+    output io : { flip addrA : UInt<6>, flip writeDataA : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}, flip writeEnableA : UInt<1>, flip addrB : UInt<6>, readDataB : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}} @[src/main/scala/memories/memories.scala 296:14]
 
-    smem mem : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>} [64] @[src/main/scala/memories/memories.scala 310:24]
+    smem mem : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>} [64] @[src/main/scala/memories/memories.scala 310:24]
     when io.writeEnableA : @[src/main/scala/memories/memories.scala 313:25]
       write mport MPORT = mem[io.addrA], clock @[src/main/scala/memories/memories.scala 314:14]
       connect MPORT, io.writeDataA @[src/main/scala/memories/memories.scala 314:14]
@@ -29893,9 +29893,9 @@ circuit SOC :%[[
   module ROB_entry_mem_3 : @[src/main/scala/memories/memories.scala 295:7]
     input clock : Clock @[src/main/scala/memories/memories.scala 295:7]
     input reset : Reset @[src/main/scala/memories/memories.scala 295:7]
-    output io : { flip addrA : UInt<6>, flip writeDataA : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}, flip writeEnableA : UInt<1>, flip addrB : UInt<6>, readDataB : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}} @[src/main/scala/memories/memories.scala 296:14]
+    output io : { flip addrA : UInt<6>, flip writeDataA : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}, flip writeEnableA : UInt<1>, flip addrB : UInt<6>, readDataB : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}} @[src/main/scala/memories/memories.scala 296:14]
 
-    smem mem : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>} [64] @[src/main/scala/memories/memories.scala 310:24]
+    smem mem : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>} [64] @[src/main/scala/memories/memories.scala 310:24]
     when io.writeEnableA : @[src/main/scala/memories/memories.scala 313:25]
       write mport MPORT = mem[io.addrA], clock @[src/main/scala/memories/memories.scala 314:14]
       connect MPORT, io.writeDataA @[src/main/scala/memories/memories.scala 314:14]
@@ -29909,7 +29909,7 @@ circuit SOC :%[[
   module ROB : @[src/main/scala/Backend/ROB.scala 42:7]
     input clock : Clock @[src/main/scala/Backend/ROB.scala 42:7]
     input reset : Reset @[src/main/scala/Backend/ROB.scala 42:7]
-    output io : { flip flush : UInt<1>, flip ROB_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RDold : UInt<5>, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], ROB_output : { row_valid : UInt<1>, fetch_PC : UInt<32>, RAT_index : UInt<4>, ROB_index : UInt<6>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, free_list_front_pointer : UInt<8>, ROB_entries : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}[4], complete : UInt<1>[4], exception : UInt<1>[4]}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, ROB_index : UInt<6>, flip PC_file_exec_addr : UInt<6>, PC_file_exec_data : UInt<32>} @[src/main/scala/Backend/ROB.scala 46:16]
+    output io : { flip flush : UInt<1>, flip ROB_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<5>, PRD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { PRD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>, exception : UInt<1>}}[4], ROB_output : { row_valid : UInt<1>, fetch_PC : UInt<32>, RAT_index : UInt<4>, ROB_index : UInt<6>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, free_list_front_pointer : UInt<8>, ROB_entries : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}[4], complete : UInt<1>[4], exception : UInt<1>[4]}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, ROB_index : UInt<6>, flip PC_file_exec_addr : UInt<6>, PC_file_exec_data : UInt<32>} @[src/main/scala/Backend/ROB.scala 46:16]
 
     regreset front_pointer : UInt<7>, clock, reset, UInt<1>(0h0) @[src/main/scala/Backend/ROB.scala 76:32]
     regreset back_pointer : UInt<7>, clock, reset, UInt<1>(0h0) @[src/main/scala/Backend/ROB.scala 77:32]
@@ -30278,65 +30278,65 @@ circuit SOC :%[[
     inst ROB_entry_banks_3 of ROB_entry_mem_3 @[src/main/scala/Backend/ROB.scala 220:15]
     connect ROB_entry_banks_3.clock, clock
     connect ROB_entry_banks_3.reset, reset
-    wire ROB_entry_data : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>} @[src/main/scala/Backend/ROB.scala 224:34]
+    wire ROB_entry_data : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>} @[src/main/scala/Backend/ROB.scala 224:34]
     connect ROB_entry_data.valid, io.ROB_packet.bits.valid_bits[0] @[src/main/scala/Backend/ROB.scala 225:46]
     connect ROB_entry_data.is_branch, io.ROB_packet.bits.decoded_instruction[0].needs_branch_unit @[src/main/scala/Backend/ROB.scala 226:46]
     connect ROB_entry_data.memory_type, io.ROB_packet.bits.decoded_instruction[0].memory_type @[src/main/scala/Backend/ROB.scala 227:46]
-    connect ROB_entry_data.RD, io.ROB_packet.bits.decoded_instruction[0].RD @[src/main/scala/Backend/ROB.scala 228:46]
-    connect ROB_entry_data.RDold, io.ROB_packet.bits.decoded_instruction[0].RDold @[src/main/scala/Backend/ROB.scala 229:46]
+    connect ROB_entry_data.PRD, io.ROB_packet.bits.decoded_instruction[0].PRD @[src/main/scala/Backend/ROB.scala 228:46]
+    connect ROB_entry_data.RD, io.ROB_packet.bits.decoded_instruction[0].RD @[src/main/scala/Backend/ROB.scala 229:46]
     connect ROB_entry_data.RD_valid, io.ROB_packet.bits.decoded_instruction[0].RD_valid @[src/main/scala/Backend/ROB.scala 230:46]
     connect ROB_entry_banks_0.io.addrA, back_index @[src/main/scala/Backend/ROB.scala 233:46]
-    connect ROB_entry_banks_0.io.writeDataA.RDold, ROB_entry_data.RDold @[src/main/scala/Backend/ROB.scala 234:46]
-    connect ROB_entry_banks_0.io.writeDataA.RD_valid, ROB_entry_data.RD_valid @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_0.io.writeDataA.RD, ROB_entry_data.RD @[src/main/scala/Backend/ROB.scala 234:46]
+    connect ROB_entry_banks_0.io.writeDataA.RD_valid, ROB_entry_data.RD_valid @[src/main/scala/Backend/ROB.scala 234:46]
+    connect ROB_entry_banks_0.io.writeDataA.PRD, ROB_entry_data.PRD @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_0.io.writeDataA.memory_type, ROB_entry_data.memory_type @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_0.io.writeDataA.is_branch, ROB_entry_data.is_branch @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_0.io.writeDataA.valid, ROB_entry_data.valid @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_0.io.writeEnableA, allocate @[src/main/scala/Backend/ROB.scala 235:46]
     connect ROB_entry_banks_0.io.addrB, front_index @[src/main/scala/Backend/ROB.scala 238:46]
-    wire ROB_entry_data_1 : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>} @[src/main/scala/Backend/ROB.scala 224:34]
+    wire ROB_entry_data_1 : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>} @[src/main/scala/Backend/ROB.scala 224:34]
     connect ROB_entry_data_1.valid, io.ROB_packet.bits.valid_bits[1] @[src/main/scala/Backend/ROB.scala 225:46]
     connect ROB_entry_data_1.is_branch, io.ROB_packet.bits.decoded_instruction[1].needs_branch_unit @[src/main/scala/Backend/ROB.scala 226:46]
     connect ROB_entry_data_1.memory_type, io.ROB_packet.bits.decoded_instruction[1].memory_type @[src/main/scala/Backend/ROB.scala 227:46]
-    connect ROB_entry_data_1.RD, io.ROB_packet.bits.decoded_instruction[1].RD @[src/main/scala/Backend/ROB.scala 228:46]
-    connect ROB_entry_data_1.RDold, io.ROB_packet.bits.decoded_instruction[1].RDold @[src/main/scala/Backend/ROB.scala 229:46]
+    connect ROB_entry_data_1.PRD, io.ROB_packet.bits.decoded_instruction[1].PRD @[src/main/scala/Backend/ROB.scala 228:46]
+    connect ROB_entry_data_1.RD, io.ROB_packet.bits.decoded_instruction[1].RD @[src/main/scala/Backend/ROB.scala 229:46]
     connect ROB_entry_data_1.RD_valid, io.ROB_packet.bits.decoded_instruction[1].RD_valid @[src/main/scala/Backend/ROB.scala 230:46]
     connect ROB_entry_banks_1.io.addrA, back_index @[src/main/scala/Backend/ROB.scala 233:46]
-    connect ROB_entry_banks_1.io.writeDataA.RDold, ROB_entry_data_1.RDold @[src/main/scala/Backend/ROB.scala 234:46]
-    connect ROB_entry_banks_1.io.writeDataA.RD_valid, ROB_entry_data_1.RD_valid @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_1.io.writeDataA.RD, ROB_entry_data_1.RD @[src/main/scala/Backend/ROB.scala 234:46]
+    connect ROB_entry_banks_1.io.writeDataA.RD_valid, ROB_entry_data_1.RD_valid @[src/main/scala/Backend/ROB.scala 234:46]
+    connect ROB_entry_banks_1.io.writeDataA.PRD, ROB_entry_data_1.PRD @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_1.io.writeDataA.memory_type, ROB_entry_data_1.memory_type @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_1.io.writeDataA.is_branch, ROB_entry_data_1.is_branch @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_1.io.writeDataA.valid, ROB_entry_data_1.valid @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_1.io.writeEnableA, allocate @[src/main/scala/Backend/ROB.scala 235:46]
     connect ROB_entry_banks_1.io.addrB, front_index @[src/main/scala/Backend/ROB.scala 238:46]
-    wire ROB_entry_data_2 : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>} @[src/main/scala/Backend/ROB.scala 224:34]
+    wire ROB_entry_data_2 : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>} @[src/main/scala/Backend/ROB.scala 224:34]
     connect ROB_entry_data_2.valid, io.ROB_packet.bits.valid_bits[2] @[src/main/scala/Backend/ROB.scala 225:46]
     connect ROB_entry_data_2.is_branch, io.ROB_packet.bits.decoded_instruction[2].needs_branch_unit @[src/main/scala/Backend/ROB.scala 226:46]
     connect ROB_entry_data_2.memory_type, io.ROB_packet.bits.decoded_instruction[2].memory_type @[src/main/scala/Backend/ROB.scala 227:46]
-    connect ROB_entry_data_2.RD, io.ROB_packet.bits.decoded_instruction[2].RD @[src/main/scala/Backend/ROB.scala 228:46]
-    connect ROB_entry_data_2.RDold, io.ROB_packet.bits.decoded_instruction[2].RDold @[src/main/scala/Backend/ROB.scala 229:46]
+    connect ROB_entry_data_2.PRD, io.ROB_packet.bits.decoded_instruction[2].PRD @[src/main/scala/Backend/ROB.scala 228:46]
+    connect ROB_entry_data_2.RD, io.ROB_packet.bits.decoded_instruction[2].RD @[src/main/scala/Backend/ROB.scala 229:46]
     connect ROB_entry_data_2.RD_valid, io.ROB_packet.bits.decoded_instruction[2].RD_valid @[src/main/scala/Backend/ROB.scala 230:46]
     connect ROB_entry_banks_2.io.addrA, back_index @[src/main/scala/Backend/ROB.scala 233:46]
-    connect ROB_entry_banks_2.io.writeDataA.RDold, ROB_entry_data_2.RDold @[src/main/scala/Backend/ROB.scala 234:46]
-    connect ROB_entry_banks_2.io.writeDataA.RD_valid, ROB_entry_data_2.RD_valid @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_2.io.writeDataA.RD, ROB_entry_data_2.RD @[src/main/scala/Backend/ROB.scala 234:46]
+    connect ROB_entry_banks_2.io.writeDataA.RD_valid, ROB_entry_data_2.RD_valid @[src/main/scala/Backend/ROB.scala 234:46]
+    connect ROB_entry_banks_2.io.writeDataA.PRD, ROB_entry_data_2.PRD @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_2.io.writeDataA.memory_type, ROB_entry_data_2.memory_type @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_2.io.writeDataA.is_branch, ROB_entry_data_2.is_branch @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_2.io.writeDataA.valid, ROB_entry_data_2.valid @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_2.io.writeEnableA, allocate @[src/main/scala/Backend/ROB.scala 235:46]
     connect ROB_entry_banks_2.io.addrB, front_index @[src/main/scala/Backend/ROB.scala 238:46]
-    wire ROB_entry_data_3 : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>} @[src/main/scala/Backend/ROB.scala 224:34]
+    wire ROB_entry_data_3 : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>} @[src/main/scala/Backend/ROB.scala 224:34]
     connect ROB_entry_data_3.valid, io.ROB_packet.bits.valid_bits[3] @[src/main/scala/Backend/ROB.scala 225:46]
     connect ROB_entry_data_3.is_branch, io.ROB_packet.bits.decoded_instruction[3].needs_branch_unit @[src/main/scala/Backend/ROB.scala 226:46]
     connect ROB_entry_data_3.memory_type, io.ROB_packet.bits.decoded_instruction[3].memory_type @[src/main/scala/Backend/ROB.scala 227:46]
-    connect ROB_entry_data_3.RD, io.ROB_packet.bits.decoded_instruction[3].RD @[src/main/scala/Backend/ROB.scala 228:46]
-    connect ROB_entry_data_3.RDold, io.ROB_packet.bits.decoded_instruction[3].RDold @[src/main/scala/Backend/ROB.scala 229:46]
+    connect ROB_entry_data_3.PRD, io.ROB_packet.bits.decoded_instruction[3].PRD @[src/main/scala/Backend/ROB.scala 228:46]
+    connect ROB_entry_data_3.RD, io.ROB_packet.bits.decoded_instruction[3].RD @[src/main/scala/Backend/ROB.scala 229:46]
     connect ROB_entry_data_3.RD_valid, io.ROB_packet.bits.decoded_instruction[3].RD_valid @[src/main/scala/Backend/ROB.scala 230:46]
     connect ROB_entry_banks_3.io.addrA, back_index @[src/main/scala/Backend/ROB.scala 233:46]
-    connect ROB_entry_banks_3.io.writeDataA.RDold, ROB_entry_data_3.RDold @[src/main/scala/Backend/ROB.scala 234:46]
-    connect ROB_entry_banks_3.io.writeDataA.RD_valid, ROB_entry_data_3.RD_valid @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_3.io.writeDataA.RD, ROB_entry_data_3.RD @[src/main/scala/Backend/ROB.scala 234:46]
+    connect ROB_entry_banks_3.io.writeDataA.RD_valid, ROB_entry_data_3.RD_valid @[src/main/scala/Backend/ROB.scala 234:46]
+    connect ROB_entry_banks_3.io.writeDataA.PRD, ROB_entry_data_3.PRD @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_3.io.writeDataA.memory_type, ROB_entry_data_3.memory_type @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_3.io.writeDataA.is_branch, ROB_entry_data_3.is_branch @[src/main/scala/Backend/ROB.scala 234:46]
     connect ROB_entry_banks_3.io.writeDataA.valid, ROB_entry_data_3.valid @[src/main/scala/Backend/ROB.scala 234:46]
@@ -30402,7 +30402,7 @@ circuit SOC :%[[
   module BRU : @[src/main/scala/Frontend/BRU.scala 38:7]
     input clock : Clock @[src/main/scala/Frontend/BRU.scala 38:7]
     input reset : Reset @[src/main/scala/Frontend/BRU.scala 38:7]
-    output io : { flip FTQ : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}, flip ROB_output : { row_valid : UInt<1>, fetch_PC : UInt<32>, RAT_index : UInt<4>, ROB_index : UInt<6>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, free_list_front_pointer : UInt<8>, ROB_entries : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>, RDold : UInt<5>}[4], complete : UInt<1>[4], exception : UInt<1>[4]}, commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BRU.scala 41:16]
+    output io : { flip FTQ : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, dominant_index : UInt<2>, resolved_PC : UInt<32>}, flip ROB_output : { row_valid : UInt<1>, fetch_PC : UInt<32>, RAT_index : UInt<4>, ROB_index : UInt<6>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, free_list_front_pointer : UInt<8>, ROB_entries : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, PRD : UInt<7>, RD_valid : UInt<1>, RD : UInt<5>}[4], complete : UInt<1>[4], exception : UInt<1>[4]}, commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BRU.scala 41:16]
 
     wire commit_valid : UInt<1> @[src/main/scala/Frontend/BRU.scala 53:35]
     wire commit_row_complete : UInt<1>[4] @[src/main/scala/Frontend/BRU.scala 54:35]
@@ -30446,17 +30446,17 @@ circuit SOC :%[[
     node _io_commit_bits_exception_T_1 = or(_io_commit_bits_exception_T, io.ROB_output.exception[2]) @[src/main/scala/Frontend/BRU.scala 76:86]
     node _io_commit_bits_exception_T_2 = or(_io_commit_bits_exception_T_1, io.ROB_output.exception[3]) @[src/main/scala/Frontend/BRU.scala 76:86]
     connect io.commit.bits.exception, _io_commit_bits_exception_T_2 @[src/main/scala/Frontend/BRU.scala 76:50]
-    connect io.commit.bits.RDold[0], io.ROB_output.ROB_entries[0].RDold @[src/main/scala/Frontend/BRU.scala 79:50]
-    connect io.commit.bits.RD[0], io.ROB_output.ROB_entries[0].RD @[src/main/scala/Frontend/BRU.scala 80:50]
+    connect io.commit.bits.RD[0], io.ROB_output.ROB_entries[0].RD @[src/main/scala/Frontend/BRU.scala 79:50]
+    connect io.commit.bits.PRD[0], io.ROB_output.ROB_entries[0].PRD @[src/main/scala/Frontend/BRU.scala 80:50]
     connect io.commit.bits.RD_valid[0], io.ROB_output.ROB_entries[0].RD_valid @[src/main/scala/Frontend/BRU.scala 81:50]
-    connect io.commit.bits.RDold[1], io.ROB_output.ROB_entries[1].RDold @[src/main/scala/Frontend/BRU.scala 79:50]
-    connect io.commit.bits.RD[1], io.ROB_output.ROB_entries[1].RD @[src/main/scala/Frontend/BRU.scala 80:50]
+    connect io.commit.bits.RD[1], io.ROB_output.ROB_entries[1].RD @[src/main/scala/Frontend/BRU.scala 79:50]
+    connect io.commit.bits.PRD[1], io.ROB_output.ROB_entries[1].PRD @[src/main/scala/Frontend/BRU.scala 80:50]
     connect io.commit.bits.RD_valid[1], io.ROB_output.ROB_entries[1].RD_valid @[src/main/scala/Frontend/BRU.scala 81:50]
-    connect io.commit.bits.RDold[2], io.ROB_output.ROB_entries[2].RDold @[src/main/scala/Frontend/BRU.scala 79:50]
-    connect io.commit.bits.RD[2], io.ROB_output.ROB_entries[2].RD @[src/main/scala/Frontend/BRU.scala 80:50]
+    connect io.commit.bits.RD[2], io.ROB_output.ROB_entries[2].RD @[src/main/scala/Frontend/BRU.scala 79:50]
+    connect io.commit.bits.PRD[2], io.ROB_output.ROB_entries[2].PRD @[src/main/scala/Frontend/BRU.scala 80:50]
     connect io.commit.bits.RD_valid[2], io.ROB_output.ROB_entries[2].RD_valid @[src/main/scala/Frontend/BRU.scala 81:50]
-    connect io.commit.bits.RDold[3], io.ROB_output.ROB_entries[3].RDold @[src/main/scala/Frontend/BRU.scala 79:50]
-    connect io.commit.bits.RD[3], io.ROB_output.ROB_entries[3].RD @[src/main/scala/Frontend/BRU.scala 80:50]
+    connect io.commit.bits.RD[3], io.ROB_output.ROB_entries[3].RD @[src/main/scala/Frontend/BRU.scala 79:50]
+    connect io.commit.bits.PRD[3], io.ROB_output.ROB_entries[3].PRD @[src/main/scala/Frontend/BRU.scala 80:50]
     connect io.commit.bits.RD_valid[3], io.ROB_output.ROB_entries[3].RD_valid @[src/main/scala/Frontend/BRU.scala 81:50]
     wire branch_commit : UInt<1> @[src/main/scala/Frontend/BRU.scala 84:29]
     connect io.commit.valid, commit_valid @[src/main/scala/Frontend/BRU.scala 86:21]
@@ -30483,7 +30483,7 @@ circuit SOC :%[[
   module ChaosCore : @[src/main/scala/Core/ChaosCore.scala 39:7]
     input clock : Clock @[src/main/scala/Core/ChaosCore.scala 39:7]
     input reset : Reset @[src/main/scala/Core/ChaosCore.scala 39:7]
-    output io : { commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flush : UInt<1>, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip frontend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, frontend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}} @[src/main/scala/Core/ChaosCore.scala 43:16]
+    output io : { commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<5>[4], PRD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flush : UInt<1>, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip frontend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, frontend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}} @[src/main/scala/Core/ChaosCore.scala 43:16]
 
     inst frontend of frontend @[src/main/scala/Core/ChaosCore.scala 76:29]
     connect frontend.clock, clock

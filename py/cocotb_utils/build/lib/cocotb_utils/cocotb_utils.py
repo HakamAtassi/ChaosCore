@@ -152,7 +152,7 @@ def compare_decoded_fetch_packet(model_decoded_fetch_packet, dut_decoded_fetch_p
         compare_RD = model_decoded_fetch_packet["RD_valid"][i]
         if(compare_RD):
             assert model_decoded_fetch_packet["RD_valid"][i]       == dut_decoded_fetch_packet["RD_valid"][i]
-            assert model_decoded_fetch_packet["RD"][i]             == dut_decoded_fetch_packet["RD"][i]
+            assert model_decoded_fetch_packet["PRD"][i]             == dut_decoded_fetch_packet["PRD"][i]
 
         compare_imm = model_decoded_fetch_packet["IS_IMM"][i]
         if(compare_imm):

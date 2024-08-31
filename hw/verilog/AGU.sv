@@ -33,7 +33,7 @@ module AGU(
                 reset,
                 io_flush,
                 io_FU_input_valid,
-  input  [6:0]  io_FU_input_bits_decoded_instruction_RD,
+  input  [6:0]  io_FU_input_bits_decoded_instruction_PRD,
   input  [20:0] io_FU_input_bits_decoded_instruction_IMM,
   input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
   input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,
@@ -44,7 +44,7 @@ module AGU(
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
   output        io_FU_output_valid,
-  output [6:0]  io_FU_output_bits_RD,
+  output [6:0]  io_FU_output_bits_PRD,
   output [31:0] io_FU_output_bits_address,
   output [1:0]  io_FU_output_bits_memory_type,
                 io_FU_output_bits_access_width,
@@ -60,7 +60,7 @@ module AGU(
   wire        _LH_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1;
   wire        _LW_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2;
   reg         io_FU_output_valid_REG;
-  reg  [6:0]  io_FU_output_bits_RD_REG;
+  reg  [6:0]  io_FU_output_bits_PRD_REG;
   reg         io_FU_output_bits_is_unsigned_REG;
   reg  [31:0] io_FU_output_bits_address_REG;
   reg  [31:0] io_FU_output_bits_wr_data_REG;
@@ -92,7 +92,7 @@ module AGU(
     if (reset)
       hasBeenResetReg <= 1'h1;
     io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;
-    io_FU_output_bits_RD_REG <= io_FU_input_bits_decoded_instruction_RD;
+    io_FU_output_bits_PRD_REG <= io_FU_input_bits_decoded_instruction_PRD;
     io_FU_output_bits_is_unsigned_REG <=
       is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4 & io_FU_input_valid
       | is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5 & io_FU_input_valid;
@@ -117,7 +117,7 @@ module AGU(
       io_FU_input_bits_decoded_instruction_access_width;
   end // always @(posedge)
   assign io_FU_output_valid = io_FU_output_valid_REG;
-  assign io_FU_output_bits_RD = io_FU_output_bits_RD_REG;
+  assign io_FU_output_bits_PRD = io_FU_output_bits_PRD_REG;
   assign io_FU_output_bits_address = io_FU_output_bits_address_REG;
   assign io_FU_output_bits_memory_type = io_FU_output_bits_memory_type_REG;
   assign io_FU_output_bits_access_width = io_FU_output_bits_access_width_REG;

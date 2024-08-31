@@ -34,8 +34,7 @@ module decoder(
                 io_instruction_valid,
   input  [31:0] io_instruction_bits_instruction,
   input  [3:0]  io_instruction_bits_packet_index,
-  output [4:0]  io_decoded_instruction_bits_RDold,
-  output [6:0]  io_decoded_instruction_bits_RD,
+  output [4:0]  io_decoded_instruction_bits_RD,
   output        io_decoded_instruction_bits_RD_valid,
   output [6:0]  io_decoded_instruction_bits_RS1,
   output        io_decoded_instruction_bits_RS1_valid,
@@ -109,8 +108,7 @@ module decoder(
       next_ALU_port_2 <= next_ALU_port_0;
     end
   end // always @(posedge)
-  assign io_decoded_instruction_bits_RDold = io_instruction_bits_instruction[11:7];
-  assign io_decoded_instruction_bits_RD = {2'h0, io_instruction_bits_instruction[11:7]};
+  assign io_decoded_instruction_bits_RD = io_instruction_bits_instruction[11:7];
   assign io_decoded_instruction_bits_RD_valid =
     (_is_INT_T | _is_INT_T_1 | _is_MEM_T | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
      | _is_INT_T_11 | _io_decoded_instruction_bits_RD_valid_T_13) & io_instruction_valid;

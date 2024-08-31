@@ -72,18 +72,22 @@ module frontend(
                 io_partial_commit_MOB_index_1,
                 io_partial_commit_MOB_index_2,
                 io_partial_commit_MOB_index_3,
-  input  [4:0]  io_partial_commit_RD_0,
-                io_partial_commit_RD_1,
-                io_partial_commit_RD_2,
-                io_partial_commit_RD_3,
+  input  [4:0]  io_partial_commit_PRD_0,
+                io_partial_commit_PRD_1,
+                io_partial_commit_PRD_2,
+                io_partial_commit_PRD_3,
+                io_partial_commit_PRDold_0,
+                io_partial_commit_PRDold_1,
+                io_partial_commit_PRDold_2,
+                io_partial_commit_PRDold_3,
   input         io_partial_commit_RD_valid_0,
                 io_partial_commit_RD_valid_1,
                 io_partial_commit_RD_valid_2,
                 io_partial_commit_RD_valid_3,
-  input  [6:0]  io_partial_commit_RDold_0,
-                io_partial_commit_RDold_1,
-                io_partial_commit_RDold_2,
-                io_partial_commit_RDold_3,
+  input  [6:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
@@ -96,14 +100,14 @@ module frontend(
   input  [6:0]  io_commit_bits_TOS,
                 io_commit_bits_NEXT,
   input  [7:0]  io_commit_bits_free_list_front_pointer,
-  input  [4:0]  io_commit_bits_RDold_0,
-                io_commit_bits_RDold_1,
-                io_commit_bits_RDold_2,
-                io_commit_bits_RDold_3,
-  input  [6:0]  io_commit_bits_RD_0,
+  input  [4:0]  io_commit_bits_RD_0,
                 io_commit_bits_RD_1,
                 io_commit_bits_RD_2,
                 io_commit_bits_RD_3,
+  input  [6:0]  io_commit_bits_PRD_0,
+                io_commit_bits_PRD_1,
+                io_commit_bits_PRD_2,
+                io_commit_bits_PRD_3,
   input         io_commit_bits_RD_valid_0,
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
@@ -113,8 +117,9 @@ module frontend(
   output [31:0] io_renamed_decoded_fetch_packet_bits_fetch_PC,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready,
-  output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold,
-  output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD,
+  output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD,
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid,
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid,
@@ -138,8 +143,9 @@ module frontend(
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,
-  output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold,
-  output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD,
+  output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD,
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid,
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid,
@@ -163,8 +169,9 @@ module frontend(
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,
-  output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold,
-  output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD,
+  output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD,
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid,
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid,
@@ -188,8 +195,9 @@ module frontend(
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,
-  output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold,
-  output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD,
+  output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD,
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid,
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid,
@@ -224,7 +232,7 @@ module frontend(
   output        io_renamed_decoded_fetch_packet_bits_prediction_T_NT,
   output [7:0]  io_renamed_decoded_fetch_packet_bits_free_list_front_pointer,
   input         io_FU_outputs_0_valid,
-  input  [6:0]  io_FU_outputs_0_bits_RD,
+  input  [6:0]  io_FU_outputs_0_bits_PRD,
   input  [31:0] io_FU_outputs_0_bits_RD_data,
   input         io_FU_outputs_0_bits_RD_valid,
   input  [31:0] io_FU_outputs_0_bits_fetch_PC,
@@ -240,7 +248,7 @@ module frontend(
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,
   input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
   input         io_FU_outputs_1_valid,
-  input  [6:0]  io_FU_outputs_1_bits_RD,
+  input  [6:0]  io_FU_outputs_1_bits_PRD,
   input  [31:0] io_FU_outputs_1_bits_RD_data,
   input         io_FU_outputs_1_bits_RD_valid,
   input  [31:0] io_FU_outputs_1_bits_fetch_PC,
@@ -256,7 +264,7 @@ module frontend(
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,
   input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
   input         io_FU_outputs_2_valid,
-  input  [6:0]  io_FU_outputs_2_bits_RD,
+  input  [6:0]  io_FU_outputs_2_bits_PRD,
   input  [31:0] io_FU_outputs_2_bits_RD_data,
   input         io_FU_outputs_2_bits_RD_valid,
   input  [31:0] io_FU_outputs_2_bits_fetch_PC,
@@ -272,7 +280,7 @@ module frontend(
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,
   input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
   input         io_FU_outputs_3_valid,
-  input  [6:0]  io_FU_outputs_3_bits_RD,
+  input  [6:0]  io_FU_outputs_3_bits_PRD,
   input  [31:0] io_FU_outputs_3_bits_RD_data,
   input         io_FU_outputs_3_bits_RD_valid,
   input  [31:0] io_FU_outputs_3_bits_fetch_PC,
@@ -297,8 +305,9 @@ module frontend(
   wire [31:0] _instruction_queue_io_deq_bits_fetch_PC;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready;
-  wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_RDold;
-  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_RD;
+  wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_RD;
+  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_PRD;
+  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_PRDold;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_0_RD_valid;
   wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_RS1;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_0_RS1_valid;
@@ -322,8 +331,9 @@ module frontend(
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_0_access_width;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready;
-  wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_RDold;
-  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_RD;
+  wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_RD;
+  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_PRD;
+  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_PRDold;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_1_RD_valid;
   wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_RS1;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_1_RS1_valid;
@@ -347,8 +357,9 @@ module frontend(
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_1_access_width;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready;
-  wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_RDold;
-  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_RD;
+  wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_RD;
+  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_PRD;
+  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_PRDold;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_2_RD_valid;
   wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_RS1;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_2_RS1_valid;
@@ -372,8 +383,9 @@ module frontend(
   wire [1:0]  _instruction_queue_io_deq_bits_decoded_instruction_2_access_width;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready;
-  wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_RDold;
-  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_RD;
+  wire [4:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_RD;
+  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_PRD;
+  wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_PRDold;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_3_RD_valid;
   wire [6:0]  _instruction_queue_io_deq_bits_decoded_instruction_3_RS1;
   wire        _instruction_queue_io_deq_bits_decoded_instruction_3_RS1_valid;
@@ -414,8 +426,9 @@ module frontend(
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready;
-  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RDold;
-  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
+  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
+  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_PRD;
+  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_PRDold;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;
   wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RS1;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid;
@@ -443,8 +456,9 @@ module frontend(
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready;
-  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RDold;
-  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
+  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
+  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_PRD;
+  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_PRDold;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;
   wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RS1;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid;
@@ -472,8 +486,9 @@ module frontend(
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready;
-  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RDold;
-  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
+  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
+  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_PRD;
+  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_PRDold;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;
   wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;
@@ -501,8 +516,9 @@ module frontend(
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready;
-  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RDold;
-  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD;
+  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD;
+  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_PRD;
+  wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_PRDold;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid;
   wire [6:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;
@@ -578,14 +594,14 @@ module frontend(
     .io_commit_bits_NEXT                                 (io_commit_bits_NEXT),
     .io_commit_bits_free_list_front_pointer
       (io_commit_bits_free_list_front_pointer),
-    .io_commit_bits_RDold_0                              (io_commit_bits_RDold_0),
-    .io_commit_bits_RDold_1                              (io_commit_bits_RDold_1),
-    .io_commit_bits_RDold_2                              (io_commit_bits_RDold_2),
-    .io_commit_bits_RDold_3                              (io_commit_bits_RDold_3),
     .io_commit_bits_RD_0                                 (io_commit_bits_RD_0),
     .io_commit_bits_RD_1                                 (io_commit_bits_RD_1),
     .io_commit_bits_RD_2                                 (io_commit_bits_RD_2),
     .io_commit_bits_RD_3                                 (io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0                                (io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1                                (io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2                                (io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3                                (io_commit_bits_PRD_3),
     .io_commit_bits_RD_valid_0                           (io_commit_bits_RD_valid_0),
     .io_commit_bits_RD_valid_1                           (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2                           (io_commit_bits_RD_valid_2),
@@ -747,10 +763,12 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),
-    .io_decoded_fetch_packet_bits_decoded_instruction_0_RDold
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_PRD
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_PRD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_PRDold
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_PRDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RS1
@@ -797,10 +815,12 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),
-    .io_decoded_fetch_packet_bits_decoded_instruction_1_RDold
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_PRD
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_PRD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_PRDold
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_PRDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RS1
@@ -847,10 +867,12 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),
-    .io_decoded_fetch_packet_bits_decoded_instruction_2_RDold
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_PRD
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_PRD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_PRDold
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_PRDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RS1
@@ -897,10 +919,12 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),
-    .io_decoded_fetch_packet_bits_decoded_instruction_3_RDold
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_PRD
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_PRD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_PRDold
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_PRDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RS1
@@ -981,10 +1005,12 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),
     .io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),
-    .io_enq_bits_decoded_instruction_0_RDold
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RDold),
     .io_enq_bits_decoded_instruction_0_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD),
+    .io_enq_bits_decoded_instruction_0_PRD
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_PRD),
+    .io_enq_bits_decoded_instruction_0_PRDold
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_PRDold),
     .io_enq_bits_decoded_instruction_0_RD_valid
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
     .io_enq_bits_decoded_instruction_0_RS1
@@ -1031,10 +1057,12 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),
-    .io_enq_bits_decoded_instruction_1_RDold
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RDold),
     .io_enq_bits_decoded_instruction_1_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD),
+    .io_enq_bits_decoded_instruction_1_PRD
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_PRD),
+    .io_enq_bits_decoded_instruction_1_PRDold
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_PRDold),
     .io_enq_bits_decoded_instruction_1_RD_valid
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
     .io_enq_bits_decoded_instruction_1_RS1
@@ -1081,10 +1109,12 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),
-    .io_enq_bits_decoded_instruction_2_RDold
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RDold),
     .io_enq_bits_decoded_instruction_2_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD),
+    .io_enq_bits_decoded_instruction_2_PRD
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_PRD),
+    .io_enq_bits_decoded_instruction_2_PRDold
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_PRDold),
     .io_enq_bits_decoded_instruction_2_RD_valid
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
     .io_enq_bits_decoded_instruction_2_RS1
@@ -1131,10 +1161,12 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),
-    .io_enq_bits_decoded_instruction_3_RDold
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RDold),
     .io_enq_bits_decoded_instruction_3_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD),
+    .io_enq_bits_decoded_instruction_3_PRD
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_PRD),
+    .io_enq_bits_decoded_instruction_3_PRDold
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_PRDold),
     .io_enq_bits_decoded_instruction_3_RD_valid
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
     .io_enq_bits_decoded_instruction_3_RS1
@@ -1211,10 +1243,12 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready),
     .io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready),
-    .io_deq_bits_decoded_instruction_0_RDold
-      (_instruction_queue_io_deq_bits_decoded_instruction_0_RDold),
     .io_deq_bits_decoded_instruction_0_RD
       (_instruction_queue_io_deq_bits_decoded_instruction_0_RD),
+    .io_deq_bits_decoded_instruction_0_PRD
+      (_instruction_queue_io_deq_bits_decoded_instruction_0_PRD),
+    .io_deq_bits_decoded_instruction_0_PRDold
+      (_instruction_queue_io_deq_bits_decoded_instruction_0_PRDold),
     .io_deq_bits_decoded_instruction_0_RD_valid
       (_instruction_queue_io_deq_bits_decoded_instruction_0_RD_valid),
     .io_deq_bits_decoded_instruction_0_RS1
@@ -1261,10 +1295,12 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready),
-    .io_deq_bits_decoded_instruction_1_RDold
-      (_instruction_queue_io_deq_bits_decoded_instruction_1_RDold),
     .io_deq_bits_decoded_instruction_1_RD
       (_instruction_queue_io_deq_bits_decoded_instruction_1_RD),
+    .io_deq_bits_decoded_instruction_1_PRD
+      (_instruction_queue_io_deq_bits_decoded_instruction_1_PRD),
+    .io_deq_bits_decoded_instruction_1_PRDold
+      (_instruction_queue_io_deq_bits_decoded_instruction_1_PRDold),
     .io_deq_bits_decoded_instruction_1_RD_valid
       (_instruction_queue_io_deq_bits_decoded_instruction_1_RD_valid),
     .io_deq_bits_decoded_instruction_1_RS1
@@ -1311,10 +1347,12 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready),
-    .io_deq_bits_decoded_instruction_2_RDold
-      (_instruction_queue_io_deq_bits_decoded_instruction_2_RDold),
     .io_deq_bits_decoded_instruction_2_RD
       (_instruction_queue_io_deq_bits_decoded_instruction_2_RD),
+    .io_deq_bits_decoded_instruction_2_PRD
+      (_instruction_queue_io_deq_bits_decoded_instruction_2_PRD),
+    .io_deq_bits_decoded_instruction_2_PRDold
+      (_instruction_queue_io_deq_bits_decoded_instruction_2_PRDold),
     .io_deq_bits_decoded_instruction_2_RD_valid
       (_instruction_queue_io_deq_bits_decoded_instruction_2_RD_valid),
     .io_deq_bits_decoded_instruction_2_RS1
@@ -1361,10 +1399,12 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready),
-    .io_deq_bits_decoded_instruction_3_RDold
-      (_instruction_queue_io_deq_bits_decoded_instruction_3_RDold),
     .io_deq_bits_decoded_instruction_3_RD
       (_instruction_queue_io_deq_bits_decoded_instruction_3_RD),
+    .io_deq_bits_decoded_instruction_3_PRD
+      (_instruction_queue_io_deq_bits_decoded_instruction_3_PRD),
+    .io_deq_bits_decoded_instruction_3_PRDold
+      (_instruction_queue_io_deq_bits_decoded_instruction_3_PRDold),
     .io_deq_bits_decoded_instruction_3_RD_valid
       (_instruction_queue_io_deq_bits_decoded_instruction_3_RD_valid),
     .io_deq_bits_decoded_instruction_3_RS1
@@ -1464,14 +1504,6 @@ module frontend(
       (io_commit_bits_NEXT),
     .io_commit_bits_free_list_front_pointer
       (io_commit_bits_free_list_front_pointer),
-    .io_commit_bits_RDold_0
-      (io_commit_bits_RDold_0),
-    .io_commit_bits_RDold_1
-      (io_commit_bits_RDold_1),
-    .io_commit_bits_RDold_2
-      (io_commit_bits_RDold_2),
-    .io_commit_bits_RDold_3
-      (io_commit_bits_RDold_3),
     .io_commit_bits_RD_0
       (io_commit_bits_RD_0),
     .io_commit_bits_RD_1
@@ -1480,6 +1512,14 @@ module frontend(
       (io_commit_bits_RD_2),
     .io_commit_bits_RD_3
       (io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0
+      (io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1
+      (io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2
+      (io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3
+      (io_commit_bits_PRD_3),
     .io_commit_bits_RD_valid_0
       (io_commit_bits_RD_valid_0),
     .io_commit_bits_RD_valid_1
@@ -1506,14 +1546,22 @@ module frontend(
       (io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (io_partial_commit_MOB_index_3),
-    .io_partial_commit_RD_0
-      (io_partial_commit_RD_0),
-    .io_partial_commit_RD_1
-      (io_partial_commit_RD_1),
-    .io_partial_commit_RD_2
-      (io_partial_commit_RD_2),
-    .io_partial_commit_RD_3
-      (io_partial_commit_RD_3),
+    .io_partial_commit_PRD_0
+      (io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1
+      (io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2
+      (io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3
+      (io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (io_partial_commit_PRDold_3),
     .io_partial_commit_RD_valid_0
       (io_partial_commit_RD_valid_0),
     .io_partial_commit_RD_valid_1
@@ -1522,14 +1570,14 @@ module frontend(
       (io_partial_commit_RD_valid_2),
     .io_partial_commit_RD_valid_3
       (io_partial_commit_RD_valid_3),
-    .io_partial_commit_RDold_0
-      (io_partial_commit_RDold_0),
-    .io_partial_commit_RDold_1
-      (io_partial_commit_RDold_1),
-    .io_partial_commit_RDold_2
-      (io_partial_commit_RDold_2),
-    .io_partial_commit_RDold_3
-      (io_partial_commit_RDold_3),
+    .io_partial_commit_RD_0
+      (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (io_partial_commit_RD_3),
     .io_decoded_fetch_packet_ready
       (_rename_io_decoded_fetch_packet_ready),
     .io_decoded_fetch_packet_valid
@@ -1540,10 +1588,12 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready),
-    .io_decoded_fetch_packet_bits_decoded_instruction_0_RDold
-      (_instruction_queue_io_deq_bits_decoded_instruction_0_RDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RD
       (_instruction_queue_io_deq_bits_decoded_instruction_0_RD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_PRD
+      (_instruction_queue_io_deq_bits_decoded_instruction_0_PRD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_PRDold
+      (_instruction_queue_io_deq_bits_decoded_instruction_0_PRDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
       (_instruction_queue_io_deq_bits_decoded_instruction_0_RD_valid),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RS1
@@ -1590,10 +1640,12 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready),
-    .io_decoded_fetch_packet_bits_decoded_instruction_1_RDold
-      (_instruction_queue_io_deq_bits_decoded_instruction_1_RDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RD
       (_instruction_queue_io_deq_bits_decoded_instruction_1_RD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_PRD
+      (_instruction_queue_io_deq_bits_decoded_instruction_1_PRD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_PRDold
+      (_instruction_queue_io_deq_bits_decoded_instruction_1_PRDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
       (_instruction_queue_io_deq_bits_decoded_instruction_1_RD_valid),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RS1
@@ -1640,10 +1692,12 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready),
-    .io_decoded_fetch_packet_bits_decoded_instruction_2_RDold
-      (_instruction_queue_io_deq_bits_decoded_instruction_2_RDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RD
       (_instruction_queue_io_deq_bits_decoded_instruction_2_RD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_PRD
+      (_instruction_queue_io_deq_bits_decoded_instruction_2_PRD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_PRDold
+      (_instruction_queue_io_deq_bits_decoded_instruction_2_PRDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
       (_instruction_queue_io_deq_bits_decoded_instruction_2_RD_valid),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RS1
@@ -1690,10 +1744,12 @@ module frontend(
       (_instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
       (_instruction_queue_io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready),
-    .io_decoded_fetch_packet_bits_decoded_instruction_3_RDold
-      (_instruction_queue_io_deq_bits_decoded_instruction_3_RDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RD
       (_instruction_queue_io_deq_bits_decoded_instruction_3_RD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_PRD
+      (_instruction_queue_io_deq_bits_decoded_instruction_3_PRD),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_PRDold
+      (_instruction_queue_io_deq_bits_decoded_instruction_3_PRDold),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
       (_instruction_queue_io_deq_bits_decoded_instruction_3_RD_valid),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RS1
@@ -1762,8 +1818,8 @@ module frontend(
       (_instruction_queue_io_deq_bits_free_list_front_pointer),
     .io_FU_outputs_0_valid
       (io_FU_outputs_0_valid),
-    .io_FU_outputs_0_bits_RD
-      (io_FU_outputs_0_bits_RD),
+    .io_FU_outputs_0_bits_PRD
+      (io_FU_outputs_0_bits_PRD),
     .io_FU_outputs_0_bits_RD_data
       (io_FU_outputs_0_bits_RD_data),
     .io_FU_outputs_0_bits_RD_valid
@@ -1794,8 +1850,8 @@ module frontend(
       (io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_1_valid
       (io_FU_outputs_1_valid),
-    .io_FU_outputs_1_bits_RD
-      (io_FU_outputs_1_bits_RD),
+    .io_FU_outputs_1_bits_PRD
+      (io_FU_outputs_1_bits_PRD),
     .io_FU_outputs_1_bits_RD_data
       (io_FU_outputs_1_bits_RD_data),
     .io_FU_outputs_1_bits_RD_valid
@@ -1826,8 +1882,8 @@ module frontend(
       (io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_2_valid
       (io_FU_outputs_2_valid),
-    .io_FU_outputs_2_bits_RD
-      (io_FU_outputs_2_bits_RD),
+    .io_FU_outputs_2_bits_PRD
+      (io_FU_outputs_2_bits_PRD),
     .io_FU_outputs_2_bits_RD_data
       (io_FU_outputs_2_bits_RD_data),
     .io_FU_outputs_2_bits_RD_valid
@@ -1858,8 +1914,8 @@ module frontend(
       (io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_3_valid
       (io_FU_outputs_3_valid),
-    .io_FU_outputs_3_bits_RD
-      (io_FU_outputs_3_bits_RD),
+    .io_FU_outputs_3_bits_PRD
+      (io_FU_outputs_3_bits_PRD),
     .io_FU_outputs_3_bits_RD_data
       (io_FU_outputs_3_bits_RD_data),
     .io_FU_outputs_3_bits_RD_valid
@@ -1898,10 +1954,12 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1
@@ -1948,10 +2006,12 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1
@@ -1998,10 +2058,12 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1
@@ -2048,10 +2110,12 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1

@@ -32,7 +32,7 @@ module branch_unit(
   input         clock,
                 io_flush,
                 io_FU_input_valid,
-  input  [6:0]  io_FU_input_bits_decoded_instruction_RD,
+  input  [6:0]  io_FU_input_bits_decoded_instruction_PRD,
   input         io_FU_input_bits_decoded_instruction_RD_valid,
   input  [20:0] io_FU_input_bits_decoded_instruction_IMM,
   input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
@@ -44,7 +44,7 @@ module branch_unit(
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_fetch_PC,
   output        io_FU_output_valid,
-  output [6:0]  io_FU_output_bits_RD,
+  output [6:0]  io_FU_output_bits_PRD,
   output [31:0] io_FU_output_bits_RD_data,
   output        io_FU_output_bits_RD_valid,
   output [31:0] io_FU_output_bits_fetch_PC,
@@ -61,7 +61,7 @@ module branch_unit(
   reg        io_FU_output_bits_branch_valid_REG;
   reg        io_FU_output_bits_branch_taken_REG;
   reg [31:0] io_FU_output_bits_target_address_REG;
-  reg [6:0]  io_FU_output_bits_RD_REG;
+  reg [6:0]  io_FU_output_bits_PRD_REG;
   reg        io_FU_output_bits_RD_valid_REG;
   reg [31:0] io_FU_output_bits_RD_data_REG;
   reg [5:0]  io_FU_output_bits_ROB_index_REG;
@@ -125,7 +125,7 @@ module branch_unit(
                                       + {{20{io_FU_input_bits_decoded_instruction_IMM[11]}},
                                          io_FU_input_bits_decoded_instruction_IMM[11:0]}
                                     : io_FU_input_bits_fetch_PC + 32'h10;
-    io_FU_output_bits_RD_REG <= io_FU_input_bits_decoded_instruction_RD;
+    io_FU_output_bits_PRD_REG <= io_FU_input_bits_decoded_instruction_PRD;
     io_FU_output_bits_RD_valid_REG <= io_FU_input_bits_decoded_instruction_RD_valid;
     io_FU_output_bits_RD_data_REG <= _instruction_PC_T_1 + 32'h4;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
@@ -133,7 +133,7 @@ module branch_unit(
     io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;
   end // always @(posedge)
   assign io_FU_output_valid = io_FU_output_valid_REG;
-  assign io_FU_output_bits_RD = io_FU_output_bits_RD_REG;
+  assign io_FU_output_bits_PRD = io_FU_output_bits_PRD_REG;
   assign io_FU_output_bits_RD_data = io_FU_output_bits_RD_data_REG;
   assign io_FU_output_bits_RD_valid = io_FU_output_bits_RD_valid_REG;
   assign io_FU_output_bits_fetch_PC = io_FU_output_bits_fetch_PC_REG;

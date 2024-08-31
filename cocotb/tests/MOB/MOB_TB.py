@@ -80,8 +80,8 @@ class MOB_TB:
                 "bits": {
                     "ready_bits_RS1_ready": 0,
                     "ready_bits_RS2_ready": 0,
-                    "RDold": 0,
                     "RD": 0,
+                    "PRD": 0,
                     "RD_valid": 0,
                     "RS1": 0,
                     "RS1_valid": 0,
@@ -113,7 +113,7 @@ class MOB_TB:
         self.MOB.write_AGU_output({
         "valid": 0,
         "bits": {
-            "RD": 0,
+            "PRD": 0,
             "RD_data": 0,
             "RD_valid": 0,
             "fetch_PC": 0,

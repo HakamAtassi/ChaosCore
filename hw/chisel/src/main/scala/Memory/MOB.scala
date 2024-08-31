@@ -178,7 +178,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
             MOB(back_index + index_offset).MOB_STATE            :=  MOB_STATES.VALID
             MOB(back_index + index_offset).memory_type          :=  io.reserve(i).bits.memory_type
             MOB(back_index + index_offset).access_width         :=  io.reserve(i).bits.access_width
-            MOB(back_index + index_offset).RD                   :=  io.reserve(i).bits.RD
+            MOB(back_index + index_offset).PRD                   :=  io.reserve(i).bits.PRD
             MOB(back_index + index_offset).ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB(back_index + index_offset).fetch_packet_index   :=  io.reserve(i).bits.packet_index
 
@@ -418,7 +418,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
         io.MOB_output.bits.ROB_index            := MOB(CDB_write_index).ROB_index // this should not do anything
         io.MOB_output.bits.MOB_index            := CDB_write_index
         io.MOB_output.bits.address              := MOB(CDB_write_index).address
-        io.MOB_output.bits.RD                   := MOB(CDB_write_index).RD
+        io.MOB_output.bits.PRD                   := MOB(CDB_write_index).PRD
         io.MOB_output.bits.fetch_packet_index   := MOB(CDB_write_index).fetch_packet_index
         
         when(MOB(CDB_write_index).access_width === access_width_t.W){

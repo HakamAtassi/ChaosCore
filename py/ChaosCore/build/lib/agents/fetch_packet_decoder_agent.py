@@ -110,7 +110,7 @@ class fetch_packet_decoder_agent:
             #logger.debug(f"asserted decoder @ {sim_time}")
             assert model_decoded_fetch_packet["valid"]                  == dut_decoded_fetch_packet["valid"]
             assert model_decoded_fetch_packet["fetch_PC"]               == dut_decoded_fetch_packet["fetch_PC"]
-            assert model_decoded_fetch_packet["RD"]                     == dut_decoded_fetch_packet["RD"]
+            assert model_decoded_fetch_packet["PRD"]                     == dut_decoded_fetch_packet["PRD"]
             assert model_decoded_fetch_packet["RS1"]                    == dut_decoded_fetch_packet["RS1"]
             assert model_decoded_fetch_packet["RS1_valid"]              == dut_decoded_fetch_packet["RS1_valid"]
             assert model_decoded_fetch_packet["RS2"]                    == dut_decoded_fetch_packet["RS2"]

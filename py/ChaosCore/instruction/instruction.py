@@ -355,7 +355,7 @@ class instruction:
         self.is_BRANCH  = 0
 
 
-        self.RD                 =  0 
+        self.PRD                 =  0 
         self.RD_valid           =  0 
         self.RS1                =  0 
         self.RS1_valid          =  0 
@@ -386,7 +386,7 @@ class instruction:
         self.is_BRANCH  = self.get_is_BRANCH()
 
         # CONSTRUCT
-        self.RD                 = self.get_RD()
+        self.PRD                 = self.get_RD()
         self.RD_valid           = self.get_RD_valid()
         self.RS1                = self.get_RS1()
         self.RS1_valid          = self.get_RS1_valid()
@@ -524,19 +524,19 @@ class instruction:
 
     def get_is_CALL(self):
         is_JALR = self.get_is_JALR()
-        if(is_JALR and self.RD == 1): 
+        if(is_JALR and self.PRD == 1): 
             return True
 
     def get_is_RET(self):
         is_JALR = self.get_is_JALR()
-        if(is_JALR and self.RD == 0 and self.RS1 == 1 and self.get_IMM() == 0):
+        if(is_JALR and self.PRD == 0 and self.RS1 == 1 and self.get_IMM() == 0):
             return True
 
 def encode_instruction(
                 instruction_name:str, 
                 rs1:int = None, 
                 rs2:int = None, 
-                rd:int = None, 
+                PRD:int = None, 
                 imm:int = None
                 ):
     opcode = INSTR_DICT[instruction_name]["opcode"]
@@ -546,17 +546,17 @@ def encode_instruction(
     
     instruction = opcode
     if type == "R":
-        if rs1 == None or rs2 == None or rd == None: 
+        if rs1 == None or rs2 == None or PRD == None: 
             raise ValueError("Missing arguments for R type")
-        instruction |= (rd & 0x1f) << 7
+        instruction |= (PRD & 0x1f) << 7
         instruction |= (funct3 & 0x7) << 12
         instruction |= (rs1 & 0x1f) << 15
         instruction |= (rs2 & 0x1f) << 20
         instruction |= (funct7 & 0x7f) << 25
     elif type == "I":
-        if rs1 == None or imm == None or rd == None: 
+        if rs1 == None or imm == None or PRD == None: 
             raise ValueError("Missing arguments for I type")
-        instruction |= (rd & 0x1f) << 7
+        instruction |= (PRD & 0x1f) << 7
         instruction |= (funct3 & 0x7) << 12
         instruction |= (rs1 & 0x1f) << 15
         
@@ -582,15 +582,15 @@ def encode_instruction(
         instruction |= (imm & 0x7e0) << 20
         instruction |= (imm & 0x1000) << 19
     elif type == "U":
-        if rd == None or imm == None: 
+        if PRD == None or imm == None: 
             raise ValueError("Missing arguments for U type")
-        instruction |= (rd & 0x1f) << 7
+        instruction |= (PRD & 0x1f) << 7
         
         instruction |= (imm & 0xfffff000) 
     elif type == "J":
-        if rd == None or imm == None: 
+        if PRD == None or imm == None: 
             raise ValueError("Missing arguments for J type")
-        instruction |= (rd & 0x1f) << 7
+        instruction |= (PRD & 0x1f) << 7
         
         instruction |= (imm & 0xff000)
         instruction |= (imm & 0x800) << 9

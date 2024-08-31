@@ -55,7 +55,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val opcode      = instruction(6, 0)
     val RS1         = instruction(19, 15)
     val RS2         = instruction(24, 20)
-    val RD          = instruction(11, 7)
+    val PRD          = instruction(11, 7)
     val IMM         = getImm(instruction)
 
     val FUNCT3      = instruction(14, 12)
@@ -122,9 +122,9 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                                                         instructionType === STORE       || 
                                                         instructionType === BRANCH)     && 
                                                         io.instruction.valid
-
-    io.decoded_instruction.bits.RD                   := RD
-    io.decoded_instruction.bits.RDold                := RD
+    io.decoded_instruction.bits.RD                   := PRD
+    io.decoded_instruction.bits.PRDold               := DontCare
+    io.decoded_instruction.bits.PRD                  := DontCare
     io.decoded_instruction.bits.RS1                  := RS1
     io.decoded_instruction.bits.RS2                  := RS2
     io.decoded_instruction.bits.IMM                  := IMM

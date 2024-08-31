@@ -244,10 +244,10 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     // Write to INT PRF
-    INT_PRF.io.waddr_0  :=    FU0.io.FU_output.bits.RD
-    INT_PRF.io.waddr_1  :=    FU1.io.FU_output.bits.RD
-    INT_PRF.io.waddr_2  :=    FU2.io.FU_output.bits.RD
-    INT_PRF.io.waddr_3  :=    MOB.io.MOB_output.bits.RD
+    INT_PRF.io.waddr_0  :=    FU0.io.FU_output.bits.PRD
+    INT_PRF.io.waddr_1  :=    FU1.io.FU_output.bits.PRD
+    INT_PRF.io.waddr_2  :=    FU2.io.FU_output.bits.PRD
+    INT_PRF.io.waddr_3  :=    MOB.io.MOB_output.bits.PRD
 
     INT_PRF.io.wen_0    :=    FU0.io.FU_output.valid && FU0.io.FU_output.bits.RD_valid
     INT_PRF.io.wen_1    :=    FU1.io.FU_output.valid && FU1.io.FU_output.bits.RD_valid
