@@ -151,7 +151,6 @@ module ChaosCore_tile(
   wire        _instruction_cache_io_CPU_response_bits_prediction_hit;
   wire [31:0] _instruction_cache_io_CPU_response_bits_prediction_target;
   wire [2:0]  _instruction_cache_io_CPU_response_bits_prediction_br_type;
-  wire [15:0] _instruction_cache_io_CPU_response_bits_prediction_GHR;
   wire        _instruction_cache_io_CPU_response_bits_prediction_T_NT;
   wire [15:0] _instruction_cache_io_CPU_response_bits_GHR;
   wire [6:0]  _instruction_cache_io_CPU_response_bits_NEXT;
@@ -256,8 +255,6 @@ module ChaosCore_tile(
       (_instruction_cache_io_CPU_response_bits_prediction_target),
     .io_frontend_memory_response_bits_prediction_br_type
       (_instruction_cache_io_CPU_response_bits_prediction_br_type),
-    .io_frontend_memory_response_bits_prediction_GHR
-      (_instruction_cache_io_CPU_response_bits_prediction_GHR),
     .io_frontend_memory_response_bits_prediction_T_NT
       (_instruction_cache_io_CPU_response_bits_prediction_T_NT),
     .io_frontend_memory_response_bits_GHR
@@ -448,8 +445,6 @@ module ChaosCore_tile(
       (_instruction_cache_io_CPU_response_bits_prediction_target),
     .io_CPU_response_bits_prediction_br_type
       (_instruction_cache_io_CPU_response_bits_prediction_br_type),
-    .io_CPU_response_bits_prediction_GHR
-      (_instruction_cache_io_CPU_response_bits_prediction_GHR),
     .io_CPU_response_bits_prediction_T_NT
       (_instruction_cache_io_CPU_response_bits_prediction_T_NT),
     .io_CPU_response_bits_GHR

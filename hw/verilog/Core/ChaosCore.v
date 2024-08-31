@@ -163,13 +163,13 @@ module hash_BTB_mem(
   output        io_data_out_BTB_valid,
   output [17:0] io_data_out_BTB_tag,
   output [31:0] io_data_out_BTB_target,
-  output [2:0]  io_data_out_BTBbr_type_t,
+  output [2:0]  io_data_out_BTB_br_type,
   output [1:0]  io_data_out_BTB_fetch_packet_index,
   input  [11:0] io_wr_addr,
   input         io_wr_en,
   input  [17:0] io_data_in_BTB_tag,
   input  [31:0] io_data_in_BTB_target,
-  input  [2:0]  io_data_in_BTBbr_type_t,
+  input  [2:0]  io_data_in_BTB_br_type,
   input  [1:0]  io_data_in_BTB_fetch_packet_index
 );
 
@@ -178,7 +178,7 @@ module hash_BTB_mem(
   reg         din_buff_BTB_valid;
   reg  [17:0] din_buff_BTB_tag;
   reg  [31:0] din_buff_BTB_target;
-  reg  [2:0]  din_buff_BTBbr_type_t;
+  reg  [2:0]  din_buff_BTB_br_type;
   reg  [1:0]  din_buff_BTB_fetch_packet_index;
   always @(posedge clock) begin
     if (reset) begin
@@ -186,7 +186,7 @@ module hash_BTB_mem(
       din_buff_BTB_valid <= 1'h0;
       din_buff_BTB_tag <= 18'h0;
       din_buff_BTB_target <= 32'h0;
-      din_buff_BTBbr_type_t <= 3'h0;
+      din_buff_BTB_br_type <= 3'h0;
       din_buff_BTB_fetch_packet_index <= 2'h0;
     end
     else begin
@@ -194,7 +194,7 @@ module hash_BTB_mem(
       din_buff_BTB_valid <= 1'h1;
       din_buff_BTB_tag <= io_data_in_BTB_tag;
       din_buff_BTB_target <= io_data_in_BTB_target;
-      din_buff_BTBbr_type_t <= io_data_in_BTBbr_type_t;
+      din_buff_BTB_br_type <= io_data_in_BTB_br_type;
       din_buff_BTB_fetch_packet_index <= io_data_in_BTB_fetch_packet_index;
     end
   end // always @(posedge)
@@ -208,7 +208,7 @@ module hash_BTB_mem(
     .W0_clk  (clock),
     .W0_data
       ({io_data_in_BTB_fetch_packet_index,
-        io_data_in_BTBbr_type_t,
+        io_data_in_BTB_br_type,
         io_data_in_BTB_target,
         io_data_in_BTB_tag,
         1'h1})
@@ -217,8 +217,8 @@ module hash_BTB_mem(
   assign io_data_out_BTB_tag = hazard_reg ? din_buff_BTB_tag : _mem_ext_R0_data[18:1];
   assign io_data_out_BTB_target =
     hazard_reg ? din_buff_BTB_target : _mem_ext_R0_data[50:19];
-  assign io_data_out_BTBbr_type_t =
-    hazard_reg ? din_buff_BTBbr_type_t : _mem_ext_R0_data[53:51];
+  assign io_data_out_BTB_br_type =
+    hazard_reg ? din_buff_BTB_br_type : _mem_ext_R0_data[53:51];
   assign io_data_out_BTB_fetch_packet_index =
     hazard_reg ? din_buff_BTB_fetch_packet_index : _mem_ext_R0_data[55:54];
 endmodule
@@ -229,7 +229,7 @@ module hash_BTB(
   input  [31:0] io_predict_PC,
   output        io_BTB_hit,
   output [31:0] io_BTB_output_BTB_target,
-  output [2:0]  io_BTB_output_BTBbr_type_t,
+  output [2:0]  io_BTB_output_BTB_br_type,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input  [2:0]  io_commit_bits_br_type,
@@ -253,13 +253,13 @@ module hash_BTB(
     .io_data_out_BTB_valid              (_BTB_memory_io_data_out_BTB_valid),
     .io_data_out_BTB_tag                (_BTB_memory_io_data_out_BTB_tag),
     .io_data_out_BTB_target             (io_BTB_output_BTB_target),
-    .io_data_out_BTBbr_type_t           (io_BTB_output_BTBbr_type_t),
+    .io_data_out_BTB_br_type           (io_BTB_output_BTB_br_type),
     .io_data_out_BTB_fetch_packet_index (_BTB_memory_io_data_out_BTB_fetch_packet_index),
     .io_wr_addr                         (io_commit_bits_fetch_PC[15:4]),
     .io_wr_en                           (io_commit_valid),
     .io_data_in_BTB_tag                 ({2'h0, io_commit_bits_fetch_PC[31:16]}),
     .io_data_in_BTB_target              (io_commit_bits_expected_PC),
-    .io_data_in_BTBbr_type_t            (io_commit_bits_br_type),
+    .io_data_in_BTB_br_type            (io_commit_bits_br_type),
     .io_data_in_BTB_fetch_packet_index  (io_commit_bits_fetch_packet_index)
   );
   assign io_BTB_hit =
@@ -460,7 +460,7 @@ module BP(
 
   wire        _BTB_io_BTB_hit;
   wire [31:0] _BTB_io_BTB_output_BTB_target;
-  wire [2:0]  _BTB_io_BTB_output_BTBbr_type_t;
+  wire [2:0]  _BTB_io_BTB_output_BTB_br_type;
   wire        _gshare_io_T_NT;
   reg         prediction_valid_REG;
   always @(posedge clock)
@@ -481,7 +481,7 @@ module BP(
     .io_predict_PC                     (io_predict_bits_addr),
     .io_BTB_hit                        (_BTB_io_BTB_hit),
     .io_BTB_output_BTB_target          (_BTB_io_BTB_output_BTB_target),
-    .io_BTB_output_BTBbr_type_t        (_BTB_io_BTB_output_BTBbr_type_t),
+    .io_BTB_output_BTB_br_type        (_BTB_io_BTB_output_BTB_br_type),
     .io_commit_valid                   (io_commit_bits_T_NT & io_commit_valid),
     .io_commit_bits_fetch_PC           (io_commit_bits_fetch_PC),
     .io_commit_bits_br_type            (io_commit_bits_br_type),
@@ -507,7 +507,7 @@ module BP(
     .io_enq_valid        (prediction_valid_REG),
     .io_enq_bits_hit     (_BTB_io_BTB_hit),
     .io_enq_bits_target  (_BTB_io_BTB_output_BTB_target),
-    .io_enq_bits_br_type (_BTB_io_BTB_output_BTBbr_type_t),
+    .io_enq_bits_br_type (_BTB_io_BTB_output_BTB_br_type),
     .io_enq_bits_GHR     (io_GHR),
     .io_enq_bits_T_NT    (_gshare_io_T_NT),
     .io_deq_ready        (io_prediction_ready),

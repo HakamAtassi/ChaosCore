@@ -51,6 +51,7 @@ class frontend(coreParameters:CoreParameters) extends Module{
         val memory_response                 =   Flipped(Decoupled(new fetch_packet(coreParameters)))
         
         // COMMIT // 
+        val partial_commit                  =   Input(new partial_commit(coreParameters))                                         // commit mem op
         val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
 
         // INSTRUCTION OUT //
@@ -79,6 +80,8 @@ class frontend(coreParameters:CoreParameters) extends Module{
 
 
     io.revert <> instruction_fetch.io.revert
+
+    rename.io.partial_commit <> io.partial_commit
 
 
     ///////////////////////

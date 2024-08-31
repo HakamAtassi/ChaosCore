@@ -145,7 +145,6 @@ module ROB(
   input         io_ROB_packet_bits_prediction_hit,
   input  [31:0] io_ROB_packet_bits_prediction_target,
   input  [2:0]  io_ROB_packet_bits_prediction_br_type,
-  input  [15:0] io_ROB_packet_bits_prediction_GHR,
   input         io_ROB_packet_bits_prediction_T_NT,
   input  [7:0]  io_ROB_packet_bits_free_list_front_pointer,
   input         io_FU_outputs_0_valid,
@@ -236,59 +235,43 @@ module ROB(
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
-                io_partial_commit_ROB_index_0_valid,
-  output [5:0]  io_partial_commit_ROB_index_0_bits,
-  output        io_partial_commit_ROB_index_1_valid,
-  output [5:0]  io_partial_commit_ROB_index_1_bits,
-  output        io_partial_commit_ROB_index_2_valid,
-  output [5:0]  io_partial_commit_ROB_index_2_bits,
-  output        io_partial_commit_ROB_index_3_valid,
-  output [5:0]  io_partial_commit_ROB_index_3_bits,
-  output        io_partial_commit_MOB_index_0_valid,
-  output [3:0]  io_partial_commit_MOB_index_0_bits,
-  output        io_partial_commit_MOB_index_1_valid,
-  output [3:0]  io_partial_commit_MOB_index_1_bits,
-  output        io_partial_commit_MOB_index_2_valid,
-  output [3:0]  io_partial_commit_MOB_index_2_bits,
-  output        io_partial_commit_MOB_index_3_valid,
-  output [3:0]  io_partial_commit_MOB_index_3_bits,
+                io_partial_commit_valid_0,
+                io_partial_commit_valid_1,
+                io_partial_commit_valid_2,
+                io_partial_commit_valid_3,
+  output [5:0]  io_partial_commit_ROB_index,
+  output [3:0]  io_partial_commit_MOB_index_0,
+                io_partial_commit_MOB_index_1,
+                io_partial_commit_MOB_index_2,
+                io_partial_commit_MOB_index_3,
+  output [4:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
+  output        io_partial_commit_RD_valid_0,
+                io_partial_commit_RD_valid_1,
+                io_partial_commit_RD_valid_2,
+                io_partial_commit_RD_valid_3,
+  output [6:0]  io_partial_commit_RDold_0,
+                io_partial_commit_RDold_1,
+                io_partial_commit_RDold_2,
+                io_partial_commit_RDold_3,
   output [5:0]  io_ROB_index,
   input  [5:0]  io_PC_file_exec_addr,
   output [31:0] io_PC_file_exec_data
 );
 
-  wire [4:0]       ROB_output_ROB_entries_3_RDold;
-  wire             ROB_output_ROB_entries_3_RD_valid;
-  wire [6:0]       ROB_output_ROB_entries_3_RD;
-  wire [3:0]       ROB_output_ROB_entries_3_MOB_index;
   wire [1:0]       ROB_output_ROB_entries_3_memory_type;
-  wire [4:0]       ROB_output_ROB_entries_2_RDold;
-  wire             ROB_output_ROB_entries_2_RD_valid;
-  wire [6:0]       ROB_output_ROB_entries_2_RD;
-  wire [3:0]       ROB_output_ROB_entries_2_MOB_index;
   wire [1:0]       ROB_output_ROB_entries_2_memory_type;
-  wire [4:0]       ROB_output_ROB_entries_1_RDold;
-  wire             ROB_output_ROB_entries_1_RD_valid;
-  wire [6:0]       ROB_output_ROB_entries_1_RD;
-  wire [3:0]       ROB_output_ROB_entries_1_MOB_index;
   wire [1:0]       ROB_output_ROB_entries_1_memory_type;
-  wire [4:0]       ROB_output_ROB_entries_0_RDold;
-  wire             ROB_output_ROB_entries_0_RD_valid;
-  wire [6:0]       ROB_output_ROB_entries_0_RD;
-  wire [3:0]       ROB_output_ROB_entries_0_MOB_index;
   wire [1:0]       ROB_output_ROB_entries_0_memory_type;
-  wire [7:0]       ROB_output_free_list_front_pointer;
-  wire [6:0]       ROB_output_TOS;
-  wire [6:0]       ROB_output_NEXT;
-  wire [15:0]      ROB_output_GHR;
   wire             full;
-  wire             io_commit_bits_is_misprediction_0;
   wire             commit_valid;
-  wire [52:0]      _fetch_resolved_banks_3_ext_R0_data;
-  wire [52:0]      _fetch_resolved_banks_2_ext_R0_data;
-  wire [52:0]      _fetch_resolved_banks_1_ext_R0_data;
-  wire [52:0]      _fetch_resolved_banks_0_ext_R0_data;
-  wire [52:0]      _fetch_prediction_bank_ext_R0_data;
+  wire [36:0]      _fetch_resolved_banks_3_ext_R0_data;
+  wire [36:0]      _fetch_resolved_banks_2_ext_R0_data;
+  wire [36:0]      _fetch_resolved_banks_1_ext_R0_data;
+  wire [36:0]      _fetch_resolved_banks_0_ext_R0_data;
+  wire [36:0]      _fetch_prediction_bank_ext_R0_data;
   wire             _ROB_entry_banks_3_io_readDataB_is_branch;
   wire             _ROB_entry_banks_2_io_readDataB_is_branch;
   wire             _ROB_entry_banks_1_io_readDataB_is_branch;
@@ -375,10 +358,9 @@ module ROB(
   wire             commit_prediction_hit = _fetch_prediction_bank_ext_R0_data[0];
   wire [31:0]      commit_prediction_target = _fetch_prediction_bank_ext_R0_data[32:1];
   wire [2:0]       commit_prediction_br_type = _fetch_prediction_bank_ext_R0_data[35:33];
-  wire [15:0]      commit_prediction_GHR = _fetch_prediction_bank_ext_R0_data[51:36];
-  wire             commit_prediction_T_NT = _fetch_prediction_bank_ext_R0_data[52];
-  wire [52:0]      _GEN =
-    {io_FU_outputs_0_bits_branch_taken, 19'h0, io_FU_outputs_0_bits_target_address, 1'h0};
+  wire             commit_prediction_T_NT = _fetch_prediction_bank_ext_R0_data[36];
+  wire [36:0]      _GEN =
+    {io_FU_outputs_0_bits_branch_taken, 3'h0, io_FU_outputs_0_bits_target_address, 1'h0};
   wire             fetch_resolved_banks_0_MPORT_1_en =
     io_FU_outputs_0_valid & _ROB_WB_banks_0_io_writeEnableB_T
     & io_FU_outputs_0_bits_branch_valid;
@@ -392,10 +374,8 @@ module ROB(
     _GEN_0 ? commit_resolved_0_REG_target : _fetch_resolved_banks_0_ext_R0_data[32:1];
   wire [2:0]       commit_resolved_0_br_type =
     _GEN_0 ? 3'h0 : _fetch_resolved_banks_0_ext_R0_data[35:33];
-  wire [15:0]      commit_resolved_0_GHR =
-    _GEN_0 ? 16'h0 : _fetch_resolved_banks_0_ext_R0_data[51:36];
   wire             commit_resolved_0_T_NT =
-    _GEN_0 ? commit_resolved_0_REG_T_NT : _fetch_resolved_banks_0_ext_R0_data[52];
+    _GEN_0 ? commit_resolved_0_REG_T_NT : _fetch_resolved_banks_0_ext_R0_data[36];
   wire             fetch_resolved_banks_1_MPORT_2_en =
     io_FU_outputs_0_valid & _ROB_WB_banks_1_io_writeEnableB_T
     & io_FU_outputs_0_bits_branch_valid;
@@ -409,10 +389,8 @@ module ROB(
     _GEN_1 ? commit_resolved_1_REG_target : _fetch_resolved_banks_1_ext_R0_data[32:1];
   wire [2:0]       commit_resolved_1_br_type =
     _GEN_1 ? 3'h0 : _fetch_resolved_banks_1_ext_R0_data[35:33];
-  wire [15:0]      commit_resolved_1_GHR =
-    _GEN_1 ? 16'h0 : _fetch_resolved_banks_1_ext_R0_data[51:36];
   wire             commit_resolved_1_T_NT =
-    _GEN_1 ? commit_resolved_1_REG_T_NT : _fetch_resolved_banks_1_ext_R0_data[52];
+    _GEN_1 ? commit_resolved_1_REG_T_NT : _fetch_resolved_banks_1_ext_R0_data[36];
   wire             fetch_resolved_banks_2_MPORT_3_en =
     io_FU_outputs_0_valid & _ROB_WB_banks_2_io_writeEnableB_T
     & io_FU_outputs_0_bits_branch_valid;
@@ -426,10 +404,8 @@ module ROB(
     _GEN_2 ? commit_resolved_2_REG_target : _fetch_resolved_banks_2_ext_R0_data[32:1];
   wire [2:0]       commit_resolved_2_br_type =
     _GEN_2 ? 3'h0 : _fetch_resolved_banks_2_ext_R0_data[35:33];
-  wire [15:0]      commit_resolved_2_GHR =
-    _GEN_2 ? 16'h0 : _fetch_resolved_banks_2_ext_R0_data[51:36];
   wire             commit_resolved_2_T_NT =
-    _GEN_2 ? commit_resolved_2_REG_T_NT : _fetch_resolved_banks_2_ext_R0_data[52];
+    _GEN_2 ? commit_resolved_2_REG_T_NT : _fetch_resolved_banks_2_ext_R0_data[36];
   wire             fetch_resolved_banks_3_MPORT_4_en =
     io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)
     & io_FU_outputs_0_bits_branch_valid;
@@ -443,10 +419,8 @@ module ROB(
     _GEN_3 ? commit_resolved_3_REG_target : _fetch_resolved_banks_3_ext_R0_data[32:1];
   wire [2:0]       commit_resolved_3_br_type =
     _GEN_3 ? 3'h0 : _fetch_resolved_banks_3_ext_R0_data[35:33];
-  wire [15:0]      commit_resolved_3_GHR =
-    _GEN_3 ? 16'h0 : _fetch_resolved_banks_3_ext_R0_data[51:36];
   wire             commit_resolved_3_T_NT =
-    _GEN_3 ? commit_resolved_3_REG_T_NT : _fetch_resolved_banks_3_ext_R0_data[52];
+    _GEN_3 ? commit_resolved_3_REG_T_NT : _fetch_resolved_banks_3_ext_R0_data[36];
   wire [63:0]      _GEN_4 =
     {{row_valid_mem_63},
      {row_valid_mem_62},
@@ -515,35 +489,34 @@ module ROB(
   wire             ROB_output_row_valid = _GEN_4[ROB_output_ROB_index];
   wire             ROB_output_ROB_entries_0_valid;
   wire             ROB_output_complete_0;
-  wire             _commit_row_complete_0_T =
+  wire             _partial_commit_valid_0_T =
     ROB_output_complete_0 & ROB_output_ROB_entries_0_valid
     | ~ROB_output_ROB_entries_0_valid;
   wire             ROB_output_ROB_entries_1_valid;
   wire             ROB_output_complete_1;
   wire             commit_row_complete_0 =
-    _commit_row_complete_0_T & ROB_output_row_valid;
-  wire             _commit_row_complete_1_T =
+    _partial_commit_valid_0_T & ROB_output_row_valid;
+  wire             _partial_commit_valid_1_T =
     ROB_output_complete_1 & ROB_output_ROB_entries_1_valid
     | ~ROB_output_ROB_entries_1_valid;
+  wire             commit_row_complete_1 =
+    _partial_commit_valid_1_T & ROB_output_row_valid;
+  wire             _commit_valid_T = commit_row_complete_0 & commit_row_complete_1;
   wire             ROB_output_ROB_entries_2_valid;
   wire             ROB_output_complete_2;
-  wire             commit_row_complete_1 =
-    _commit_row_complete_1_T & ROB_output_row_valid;
-  wire             _commit_row_complete_2_T =
+  wire             _partial_commit_valid_2_T =
     ROB_output_complete_2 & ROB_output_ROB_entries_2_valid
     | ~ROB_output_ROB_entries_2_valid;
   wire             ROB_output_ROB_entries_3_valid;
   wire             ROB_output_complete_3;
   wire             commit_row_complete_2 =
-    _commit_row_complete_2_T & ROB_output_row_valid;
-  wire             _commit_row_complete_3_T =
+    _partial_commit_valid_2_T & ROB_output_row_valid;
+  wire             _partial_commit_valid_3_T =
     ROB_output_complete_3 & ROB_output_ROB_entries_3_valid
     | ~ROB_output_ROB_entries_3_valid;
   wire             commit_row_complete_3 =
-    _commit_row_complete_3_T & ROB_output_row_valid;
-  assign commit_valid =
-    commit_row_complete_0 & commit_row_complete_1 & commit_row_complete_2
-    & commit_row_complete_3;
+    _partial_commit_valid_3_T & ROB_output_row_valid;
+  assign commit_valid = _commit_valid_T & commit_row_complete_2 & commit_row_complete_3;
   wire             has_taken_branch_vec_1 =
     ROB_output_ROB_entries_1_valid & ROB_output_complete_1 & commit_resolved_1_T_NT
     & _ROB_entry_banks_1_io_readDataB_is_branch;
@@ -565,23 +538,89 @@ module ROB(
      {commit_resolved_2_target},
      {commit_resolved_1_target},
      {commit_resolved_0_target}};
-  wire [3:0][2:0]  _GEN_6 =
-    {{commit_resolved_3_br_type},
-     {commit_resolved_2_br_type},
-     {commit_resolved_1_br_type},
-     {commit_resolved_0_br_type}};
-  wire [3:0]       _GEN_7 =
-    {{commit_resolved_3_T_NT},
-     {commit_resolved_2_T_NT},
-     {commit_resolved_1_T_NT},
-     {commit_resolved_0_T_NT}};
   wire [31:0]      expected_PC =
     has_taken_branch ? _GEN_5[earliest_taken_index] : ROB_output_fetch_PC + 32'h10;
-  assign io_commit_bits_is_misprediction_0 =
-    expected_PC != commit_prediction_target & commit_valid;
+  reg  [31:0]      io_commit_bits_REG_fetch_PC;
+  reg              io_commit_bits_REG_T_NT;
+  reg  [5:0]       io_commit_bits_REG_ROB_index;
+  reg  [2:0]       io_commit_bits_REG_br_type;
+  reg  [1:0]       io_commit_bits_REG_fetch_packet_index;
+  reg              io_commit_bits_REG_is_misprediction;
+  reg  [31:0]      io_commit_bits_REG_expected_PC;
+  reg  [15:0]      io_commit_bits_REG_GHR;
+  reg  [6:0]       io_commit_bits_REG_TOS;
+  reg  [6:0]       io_commit_bits_REG_NEXT;
+  reg  [7:0]       io_commit_bits_REG_free_list_front_pointer;
+  reg  [4:0]       io_commit_bits_REG_RDold_0;
+  reg  [4:0]       io_commit_bits_REG_RDold_1;
+  reg  [4:0]       io_commit_bits_REG_RDold_2;
+  reg  [4:0]       io_commit_bits_REG_RDold_3;
+  reg  [6:0]       io_commit_bits_REG_RD_0;
+  reg  [6:0]       io_commit_bits_REG_RD_1;
+  reg  [6:0]       io_commit_bits_REG_RD_2;
+  reg  [6:0]       io_commit_bits_REG_RD_3;
+  reg              io_commit_bits_REG_RD_valid_0;
+  reg              io_commit_bits_REG_RD_valid_1;
+  reg              io_commit_bits_REG_RD_valid_2;
+  reg              io_commit_bits_REG_RD_valid_3;
+  reg              io_commit_valid_REG;
+  reg              io_partial_commit_REG_valid_0;
+  reg              io_partial_commit_REG_valid_1;
+  reg              io_partial_commit_REG_valid_2;
+  reg              io_partial_commit_REG_valid_3;
+  reg  [5:0]       io_partial_commit_REG_ROB_index;
+  reg  [3:0]       io_partial_commit_REG_MOB_index_0;
+  reg  [3:0]       io_partial_commit_REG_MOB_index_1;
+  reg  [3:0]       io_partial_commit_REG_MOB_index_2;
+  reg  [3:0]       io_partial_commit_REG_MOB_index_3;
+  reg  [4:0]       io_partial_commit_REG_RD_0;
+  reg  [4:0]       io_partial_commit_REG_RD_1;
+  reg  [4:0]       io_partial_commit_REG_RD_2;
+  reg  [4:0]       io_partial_commit_REG_RD_3;
+  reg              io_partial_commit_REG_RD_valid_0;
+  reg              io_partial_commit_REG_RD_valid_1;
+  reg              io_partial_commit_REG_RD_valid_2;
+  reg              io_partial_commit_REG_RD_valid_3;
+  reg  [6:0]       io_partial_commit_REG_RDold_0;
+  reg  [6:0]       io_partial_commit_REG_RDold_1;
+  reg  [6:0]       io_partial_commit_REG_RDold_2;
+  reg  [6:0]       io_partial_commit_REG_RDold_3;
   assign full = ROB_output_ROB_index == back_pointer[5:0] & front_pointer != back_pointer;
+  wire [15:0]      ROB_output_GHR;
+  wire [6:0]       ROB_output_NEXT;
+  wire [6:0]       ROB_output_TOS;
+  wire [7:0]       ROB_output_free_list_front_pointer;
+  wire [3:0]       ROB_output_ROB_entries_0_MOB_index;
+  wire [6:0]       ROB_output_ROB_entries_0_RD;
+  wire             ROB_output_ROB_entries_0_RD_valid;
+  wire [4:0]       ROB_output_ROB_entries_0_RDold;
+  wire [3:0]       ROB_output_ROB_entries_1_MOB_index;
+  wire [6:0]       ROB_output_ROB_entries_1_RD;
+  wire             ROB_output_ROB_entries_1_RD_valid;
+  wire [4:0]       ROB_output_ROB_entries_1_RDold;
+  wire [3:0]       ROB_output_ROB_entries_2_MOB_index;
+  wire [6:0]       ROB_output_ROB_entries_2_RD;
+  wire             ROB_output_ROB_entries_2_RD_valid;
+  wire [4:0]       ROB_output_ROB_entries_2_RDold;
+  wire [3:0]       ROB_output_ROB_entries_3_MOB_index;
+  wire [6:0]       ROB_output_ROB_entries_3_RD;
+  wire             ROB_output_ROB_entries_3_RD_valid;
+  wire [4:0]       ROB_output_ROB_entries_3_RDold;
   always @(posedge clock) begin
-    automatic logic _GEN_8 = io_FU_outputs_0_bits_ROB_index == ROB_output_ROB_index;
+    automatic logic            _GEN_6 =
+      io_FU_outputs_0_bits_ROB_index == ROB_output_ROB_index;
+    automatic logic            commit_is_misprediction;
+    automatic logic [3:0]      _GEN_7 =
+      {{commit_resolved_3_T_NT},
+       {commit_resolved_2_T_NT},
+       {commit_resolved_1_T_NT},
+       {commit_resolved_0_T_NT}};
+    automatic logic [3:0][2:0] _GEN_8 =
+      {{commit_resolved_3_br_type},
+       {commit_resolved_2_br_type},
+       {commit_resolved_1_br_type},
+       {commit_resolved_0_br_type}};
+    commit_is_misprediction = expected_PC != commit_prediction_target & commit_valid;
     if (reset) begin
       front_pointer <= 7'h0;
       back_pointer <= 7'h0;
@@ -843,7 +882,8 @@ module ROB(
       automatic logic _GEN_134 = commit_valid & ROB_output_ROB_index == 6'h3D;
       automatic logic _GEN_135 = commit_valid & ROB_output_ROB_index == 6'h3E;
       automatic logic _GEN_136 = commit_valid & (&ROB_output_ROB_index);
-      automatic logic _GEN_137 = commit_valid & io_commit_bits_is_misprediction_0;
+      automatic logic _GEN_137;
+      _GEN_137 = commit_valid & commit_is_misprediction;
       if (_GEN_137) begin
         front_pointer <= 7'h0;
         back_pointer <= 7'h0;
@@ -1173,18 +1213,72 @@ module ROB(
              ? ~((&ROB_output_ROB_index) | io_flush | _GEN_136) & _GEN_72
              : ~(io_flush | _GEN_136) & _GEN_72);
     end
-    REG <= _GEN_8 & _ROB_WB_banks_0_io_writeEnableB_T;
+    REG <= _GEN_6 & _ROB_WB_banks_0_io_writeEnableB_T;
     commit_resolved_0_REG_target <= io_FU_outputs_0_bits_target_address;
     commit_resolved_0_REG_T_NT <= io_FU_outputs_0_bits_branch_taken;
-    REG_1 <= _GEN_8 & _ROB_WB_banks_1_io_writeEnableB_T;
+    REG_1 <= _GEN_6 & _ROB_WB_banks_1_io_writeEnableB_T;
     commit_resolved_1_REG_target <= io_FU_outputs_0_bits_target_address;
     commit_resolved_1_REG_T_NT <= io_FU_outputs_0_bits_branch_taken;
-    REG_2 <= _GEN_8 & _ROB_WB_banks_2_io_writeEnableB_T;
+    REG_2 <= _GEN_6 & _ROB_WB_banks_2_io_writeEnableB_T;
     commit_resolved_2_REG_target <= io_FU_outputs_0_bits_target_address;
     commit_resolved_2_REG_T_NT <= io_FU_outputs_0_bits_branch_taken;
-    REG_3 <= _GEN_8 & (&io_FU_outputs_0_bits_fetch_packet_index);
+    REG_3 <= _GEN_6 & (&io_FU_outputs_0_bits_fetch_packet_index);
     commit_resolved_3_REG_target <= io_FU_outputs_0_bits_target_address;
     commit_resolved_3_REG_T_NT <= io_FU_outputs_0_bits_branch_taken;
+    io_commit_bits_REG_fetch_PC <= ROB_output_fetch_PC;
+    io_commit_bits_REG_T_NT <= commit_is_misprediction & _GEN_7[earliest_taken_index];
+    io_commit_bits_REG_ROB_index <= ROB_output_ROB_index;
+    io_commit_bits_REG_br_type <=
+      commit_is_misprediction ? _GEN_8[earliest_taken_index] : 3'h0;
+    io_commit_bits_REG_fetch_packet_index <=
+      commit_is_misprediction ? earliest_taken_index : 2'h0;
+    io_commit_bits_REG_is_misprediction <= commit_is_misprediction;
+    io_commit_bits_REG_expected_PC <=
+      commit_is_misprediction ? _GEN_5[earliest_taken_index] : expected_PC;
+    io_commit_bits_REG_GHR <= ROB_output_GHR;
+    io_commit_bits_REG_TOS <= ROB_output_TOS;
+    io_commit_bits_REG_NEXT <= ROB_output_NEXT;
+    io_commit_bits_REG_free_list_front_pointer <= ROB_output_free_list_front_pointer;
+    io_commit_bits_REG_RDold_0 <= ROB_output_ROB_entries_0_RDold;
+    io_commit_bits_REG_RDold_1 <= ROB_output_ROB_entries_1_RDold;
+    io_commit_bits_REG_RDold_2 <= ROB_output_ROB_entries_2_RDold;
+    io_commit_bits_REG_RDold_3 <= ROB_output_ROB_entries_3_RDold;
+    io_commit_bits_REG_RD_0 <= ROB_output_ROB_entries_0_RD;
+    io_commit_bits_REG_RD_1 <= ROB_output_ROB_entries_1_RD;
+    io_commit_bits_REG_RD_2 <= ROB_output_ROB_entries_2_RD;
+    io_commit_bits_REG_RD_3 <= ROB_output_ROB_entries_3_RD;
+    io_commit_bits_REG_RD_valid_0 <= ROB_output_ROB_entries_0_RD_valid;
+    io_commit_bits_REG_RD_valid_1 <= ROB_output_ROB_entries_1_RD_valid;
+    io_commit_bits_REG_RD_valid_2 <= ROB_output_ROB_entries_2_RD_valid;
+    io_commit_bits_REG_RD_valid_3 <= ROB_output_ROB_entries_3_RD_valid;
+    io_commit_valid_REG <= commit_valid;
+    io_partial_commit_REG_valid_0 <=
+      _partial_commit_valid_0_T & ROB_output_row_valid & commit_row_complete_0;
+    io_partial_commit_REG_valid_1 <=
+      _partial_commit_valid_1_T & ROB_output_row_valid & _commit_valid_T;
+    io_partial_commit_REG_valid_2 <=
+      _partial_commit_valid_2_T & ROB_output_row_valid & _commit_valid_T
+      & commit_row_complete_2;
+    io_partial_commit_REG_valid_3 <=
+      _partial_commit_valid_3_T & ROB_output_row_valid & _commit_valid_T
+      & commit_row_complete_2 & commit_row_complete_3;
+    io_partial_commit_REG_ROB_index <= ROB_output_ROB_index;
+    io_partial_commit_REG_MOB_index_0 <= ROB_output_ROB_entries_0_MOB_index;
+    io_partial_commit_REG_MOB_index_1 <= ROB_output_ROB_entries_1_MOB_index;
+    io_partial_commit_REG_MOB_index_2 <= ROB_output_ROB_entries_2_MOB_index;
+    io_partial_commit_REG_MOB_index_3 <= ROB_output_ROB_entries_3_MOB_index;
+    io_partial_commit_REG_RD_0 <= ROB_output_ROB_entries_0_RD[4:0];
+    io_partial_commit_REG_RD_1 <= ROB_output_ROB_entries_1_RD[4:0];
+    io_partial_commit_REG_RD_2 <= ROB_output_ROB_entries_2_RD[4:0];
+    io_partial_commit_REG_RD_3 <= ROB_output_ROB_entries_3_RD[4:0];
+    io_partial_commit_REG_RD_valid_0 <= ROB_output_ROB_entries_0_RD_valid;
+    io_partial_commit_REG_RD_valid_1 <= ROB_output_ROB_entries_1_RD_valid;
+    io_partial_commit_REG_RD_valid_2 <= ROB_output_ROB_entries_2_RD_valid;
+    io_partial_commit_REG_RD_valid_3 <= ROB_output_ROB_entries_3_RD_valid;
+    io_partial_commit_REG_RDold_0 <= {2'h0, ROB_output_ROB_entries_0_RDold};
+    io_partial_commit_REG_RDold_1 <= {2'h0, ROB_output_ROB_entries_1_RDold};
+    io_partial_commit_REG_RDold_2 <= {2'h0, ROB_output_ROB_entries_2_RDold};
+    io_partial_commit_REG_RDold_3 <= {2'h0, ROB_output_ROB_entries_3_RDold};
   end // always @(posedge)
   ROB_shared_mem shared_mem (
     .clock                                 (clock),
@@ -1389,7 +1483,7 @@ module ROB(
   );
   wire             ROB_output_ROB_entries_3_is_branch;
   assign ROB_output_ROB_entries_3_is_branch = _ROB_entry_banks_3_io_readDataB_is_branch;
-  fetch_64x53 fetch_prediction_bank_ext (
+  fetch_64x37 fetch_prediction_bank_ext (
     .R0_addr (_commit_resolved_3_T),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -1399,12 +1493,11 @@ module ROB(
     .W0_clk  (clock),
     .W0_data
       ({io_ROB_packet_bits_prediction_T_NT,
-        io_ROB_packet_bits_prediction_GHR,
         io_ROB_packet_bits_prediction_br_type,
         io_ROB_packet_bits_prediction_target,
         io_ROB_packet_bits_prediction_hit})
   );
-  fetch_64x53 fetch_resolved_banks_0_ext (
+  fetch_64x37 fetch_resolved_banks_0_ext (
     .R0_addr (_commit_resolved_3_T),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -1414,7 +1507,7 @@ module ROB(
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
-  fetch_64x53 fetch_resolved_banks_1_ext (
+  fetch_64x37 fetch_resolved_banks_1_ext (
     .R0_addr (_commit_resolved_3_T),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -1424,7 +1517,7 @@ module ROB(
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
-  fetch_64x53 fetch_resolved_banks_2_ext (
+  fetch_64x37 fetch_resolved_banks_2_ext (
     .R0_addr (_commit_resolved_3_T),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -1434,7 +1527,7 @@ module ROB(
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
-  fetch_64x53 fetch_resolved_banks_3_ext (
+  fetch_64x37 fetch_resolved_banks_3_ext (
     .R0_addr (_commit_resolved_3_T),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -1445,58 +1538,52 @@ module ROB(
     .W0_data (_GEN)
   );
   assign io_ROB_packet_ready = ~full;
-  assign io_commit_valid = commit_valid;
-  assign io_commit_bits_fetch_PC = ROB_output_fetch_PC;
-  assign io_commit_bits_T_NT =
-    io_commit_bits_is_misprediction_0 & _GEN_7[earliest_taken_index];
-  assign io_commit_bits_ROB_index = ROB_output_ROB_index;
-  assign io_commit_bits_br_type =
-    io_commit_bits_is_misprediction_0 ? _GEN_6[earliest_taken_index] : 3'h0;
-  assign io_commit_bits_fetch_packet_index =
-    io_commit_bits_is_misprediction_0 ? earliest_taken_index : 2'h0;
-  assign io_commit_bits_is_misprediction = io_commit_bits_is_misprediction_0;
-  assign io_commit_bits_expected_PC =
-    io_commit_bits_is_misprediction_0 ? _GEN_5[earliest_taken_index] : expected_PC;
-  assign io_commit_bits_GHR = ROB_output_GHR;
-  assign io_commit_bits_TOS = ROB_output_TOS;
-  assign io_commit_bits_NEXT = ROB_output_NEXT;
-  assign io_commit_bits_free_list_front_pointer = ROB_output_free_list_front_pointer;
-  assign io_commit_bits_RDold_0 = ROB_output_ROB_entries_0_RDold;
-  assign io_commit_bits_RDold_1 = ROB_output_ROB_entries_1_RDold;
-  assign io_commit_bits_RDold_2 = ROB_output_ROB_entries_2_RDold;
-  assign io_commit_bits_RDold_3 = ROB_output_ROB_entries_3_RDold;
-  assign io_commit_bits_RD_0 = ROB_output_ROB_entries_0_RD;
-  assign io_commit_bits_RD_1 = ROB_output_ROB_entries_1_RD;
-  assign io_commit_bits_RD_2 = ROB_output_ROB_entries_2_RD;
-  assign io_commit_bits_RD_3 = ROB_output_ROB_entries_3_RD;
-  assign io_commit_bits_RD_valid_0 = ROB_output_ROB_entries_0_RD_valid;
-  assign io_commit_bits_RD_valid_1 = ROB_output_ROB_entries_1_RD_valid;
-  assign io_commit_bits_RD_valid_2 = ROB_output_ROB_entries_2_RD_valid;
-  assign io_commit_bits_RD_valid_3 = ROB_output_ROB_entries_3_RD_valid;
-  assign io_partial_commit_ROB_index_0_valid =
-    _commit_row_complete_0_T & ROB_output_row_valid & ~io_commit_bits_is_misprediction_0;
-  assign io_partial_commit_ROB_index_0_bits = ROB_output_ROB_index;
-  assign io_partial_commit_ROB_index_1_valid =
-    _commit_row_complete_1_T & ROB_output_row_valid & ~io_commit_bits_is_misprediction_0;
-  assign io_partial_commit_ROB_index_1_bits = ROB_output_ROB_index;
-  assign io_partial_commit_ROB_index_2_valid =
-    _commit_row_complete_2_T & ROB_output_row_valid & ~io_commit_bits_is_misprediction_0;
-  assign io_partial_commit_ROB_index_2_bits = ROB_output_ROB_index;
-  assign io_partial_commit_ROB_index_3_valid =
-    _commit_row_complete_3_T & ROB_output_row_valid & ~io_commit_bits_is_misprediction_0;
-  assign io_partial_commit_ROB_index_3_bits = ROB_output_ROB_index;
-  assign io_partial_commit_MOB_index_0_valid =
-    _commit_row_complete_0_T & ROB_output_row_valid & ~io_commit_bits_is_misprediction_0;
-  assign io_partial_commit_MOB_index_0_bits = ROB_output_ROB_entries_0_MOB_index;
-  assign io_partial_commit_MOB_index_1_valid =
-    _commit_row_complete_1_T & ROB_output_row_valid & ~io_commit_bits_is_misprediction_0;
-  assign io_partial_commit_MOB_index_1_bits = ROB_output_ROB_entries_1_MOB_index;
-  assign io_partial_commit_MOB_index_2_valid =
-    _commit_row_complete_2_T & ROB_output_row_valid & ~io_commit_bits_is_misprediction_0;
-  assign io_partial_commit_MOB_index_2_bits = ROB_output_ROB_entries_2_MOB_index;
-  assign io_partial_commit_MOB_index_3_valid =
-    _commit_row_complete_3_T & ROB_output_row_valid & ~io_commit_bits_is_misprediction_0;
-  assign io_partial_commit_MOB_index_3_bits = ROB_output_ROB_entries_3_MOB_index;
+  assign io_commit_valid = io_commit_valid_REG;
+  assign io_commit_bits_fetch_PC = io_commit_bits_REG_fetch_PC;
+  assign io_commit_bits_T_NT = io_commit_bits_REG_T_NT;
+  assign io_commit_bits_ROB_index = io_commit_bits_REG_ROB_index;
+  assign io_commit_bits_br_type = io_commit_bits_REG_br_type;
+  assign io_commit_bits_fetch_packet_index = io_commit_bits_REG_fetch_packet_index;
+  assign io_commit_bits_is_misprediction = io_commit_bits_REG_is_misprediction;
+  assign io_commit_bits_expected_PC = io_commit_bits_REG_expected_PC;
+  assign io_commit_bits_GHR = io_commit_bits_REG_GHR;
+  assign io_commit_bits_TOS = io_commit_bits_REG_TOS;
+  assign io_commit_bits_NEXT = io_commit_bits_REG_NEXT;
+  assign io_commit_bits_free_list_front_pointer =
+    io_commit_bits_REG_free_list_front_pointer;
+  assign io_commit_bits_RDold_0 = io_commit_bits_REG_RDold_0;
+  assign io_commit_bits_RDold_1 = io_commit_bits_REG_RDold_1;
+  assign io_commit_bits_RDold_2 = io_commit_bits_REG_RDold_2;
+  assign io_commit_bits_RDold_3 = io_commit_bits_REG_RDold_3;
+  assign io_commit_bits_RD_0 = io_commit_bits_REG_RD_0;
+  assign io_commit_bits_RD_1 = io_commit_bits_REG_RD_1;
+  assign io_commit_bits_RD_2 = io_commit_bits_REG_RD_2;
+  assign io_commit_bits_RD_3 = io_commit_bits_REG_RD_3;
+  assign io_commit_bits_RD_valid_0 = io_commit_bits_REG_RD_valid_0;
+  assign io_commit_bits_RD_valid_1 = io_commit_bits_REG_RD_valid_1;
+  assign io_commit_bits_RD_valid_2 = io_commit_bits_REG_RD_valid_2;
+  assign io_commit_bits_RD_valid_3 = io_commit_bits_REG_RD_valid_3;
+  assign io_partial_commit_valid_0 = io_partial_commit_REG_valid_0;
+  assign io_partial_commit_valid_1 = io_partial_commit_REG_valid_1;
+  assign io_partial_commit_valid_2 = io_partial_commit_REG_valid_2;
+  assign io_partial_commit_valid_3 = io_partial_commit_REG_valid_3;
+  assign io_partial_commit_ROB_index = io_partial_commit_REG_ROB_index;
+  assign io_partial_commit_MOB_index_0 = io_partial_commit_REG_MOB_index_0;
+  assign io_partial_commit_MOB_index_1 = io_partial_commit_REG_MOB_index_1;
+  assign io_partial_commit_MOB_index_2 = io_partial_commit_REG_MOB_index_2;
+  assign io_partial_commit_MOB_index_3 = io_partial_commit_REG_MOB_index_3;
+  assign io_partial_commit_RD_0 = io_partial_commit_REG_RD_0;
+  assign io_partial_commit_RD_1 = io_partial_commit_REG_RD_1;
+  assign io_partial_commit_RD_2 = io_partial_commit_REG_RD_2;
+  assign io_partial_commit_RD_3 = io_partial_commit_REG_RD_3;
+  assign io_partial_commit_RD_valid_0 = io_partial_commit_REG_RD_valid_0;
+  assign io_partial_commit_RD_valid_1 = io_partial_commit_REG_RD_valid_1;
+  assign io_partial_commit_RD_valid_2 = io_partial_commit_REG_RD_valid_2;
+  assign io_partial_commit_RD_valid_3 = io_partial_commit_REG_RD_valid_3;
+  assign io_partial_commit_RDold_0 = io_partial_commit_REG_RDold_0;
+  assign io_partial_commit_RDold_1 = io_partial_commit_REG_RDold_1;
+  assign io_partial_commit_RDold_2 = io_partial_commit_REG_RDold_2;
+  assign io_partial_commit_RDold_3 = io_partial_commit_REG_RDold_3;
   assign io_ROB_index = back_pointer[5:0];
 endmodule
 

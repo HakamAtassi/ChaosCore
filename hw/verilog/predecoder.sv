@@ -39,7 +39,6 @@ module predecoder(
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
   input  [2:0]  io_prediction_bits_br_type,
-  input  [15:0] io_prediction_bits_GHR,
   input         io_prediction_bits_T_NT,
   output        io_fetch_packet_ready,
   input         io_fetch_packet_valid,
@@ -63,7 +62,6 @@ module predecoder(
   input         io_fetch_packet_bits_prediction_hit,
   input  [31:0] io_fetch_packet_bits_prediction_target,
   input  [2:0]  io_fetch_packet_bits_prediction_br_type,
-  input  [15:0] io_fetch_packet_bits_prediction_GHR,
   input         io_fetch_packet_bits_prediction_T_NT,
   input  [15:0] io_fetch_packet_bits_GHR,
   input  [6:0]  io_fetch_packet_bits_NEXT,
@@ -117,7 +115,6 @@ module predecoder(
   output        io_final_fetch_packet_bits_prediction_hit,
   output [31:0] io_final_fetch_packet_bits_prediction_target,
   output [2:0]  io_final_fetch_packet_bits_prediction_br_type,
-  output [15:0] io_final_fetch_packet_bits_prediction_GHR,
   output        io_final_fetch_packet_bits_prediction_T_NT,
   output [15:0] io_final_fetch_packet_bits_GHR,
   output [6:0]  io_final_fetch_packet_bits_NEXT,
@@ -350,7 +347,6 @@ module predecoder(
       (is_BRANCH
          ? 3'h1
          : is_RET ? 3'h4 : is_CALL ? 3'h5 : is_JALR ? 3'h3 : {1'h0, is_JAL, 1'h0}),
-    .io_enq_bits_prediction_GHR              (GHR),
     .io_enq_bits_prediction_T_NT             (T_NT_0 | T_NT_1 | T_NT_2 | is_taken),
     .io_enq_bits_GHR                         (GHR),
     .io_enq_bits_NEXT                        (io_RAS_read_NEXT),
@@ -391,7 +387,6 @@ module predecoder(
       (io_final_fetch_packet_bits_prediction_target),
     .io_deq_bits_prediction_br_type
       (io_final_fetch_packet_bits_prediction_br_type),
-    .io_deq_bits_prediction_GHR              (io_final_fetch_packet_bits_prediction_GHR),
     .io_deq_bits_prediction_T_NT             (io_final_fetch_packet_bits_prediction_T_NT),
     .io_deq_bits_GHR                         (io_final_fetch_packet_bits_GHR),
     .io_deq_bits_NEXT                        (io_final_fetch_packet_bits_NEXT),

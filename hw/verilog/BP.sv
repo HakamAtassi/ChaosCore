@@ -57,13 +57,12 @@ module BP(
                 io_prediction_bits_hit,
   output [31:0] io_prediction_bits_target,
   output [2:0]  io_prediction_bits_br_type,
-  output [15:0] io_prediction_bits_GHR,
   output        io_prediction_bits_T_NT
 );
 
   wire        _BTB_io_BTB_hit;
   wire [31:0] _BTB_io_BTB_output_BTB_target;
-  wire [2:0]  _BTB_io_BTB_output_BTBbr_type_t;
+  wire [2:0]  _BTB_io_BTB_output_BTB_br_type;
   wire        _gshare_io_T_NT;
   reg         prediction_valid_REG;
   always @(posedge clock)
@@ -84,7 +83,7 @@ module BP(
     .io_predict_PC                     (io_predict_bits_addr),
     .io_BTB_hit                        (_BTB_io_BTB_hit),
     .io_BTB_output_BTB_target          (_BTB_io_BTB_output_BTB_target),
-    .io_BTB_output_BTBbr_type_t        (_BTB_io_BTB_output_BTBbr_type_t),
+    .io_BTB_output_BTB_br_type         (_BTB_io_BTB_output_BTB_br_type),
     .io_commit_valid                   (io_commit_bits_T_NT & io_commit_valid),
     .io_commit_bits_fetch_PC           (io_commit_bits_fetch_PC),
     .io_commit_bits_br_type            (io_commit_bits_br_type),
@@ -110,15 +109,13 @@ module BP(
     .io_enq_valid        (prediction_valid_REG),
     .io_enq_bits_hit     (_BTB_io_BTB_hit),
     .io_enq_bits_target  (_BTB_io_BTB_output_BTB_target),
-    .io_enq_bits_br_type (_BTB_io_BTB_output_BTBbr_type_t),
-    .io_enq_bits_GHR     (io_GHR),
+    .io_enq_bits_br_type (_BTB_io_BTB_output_BTB_br_type),
     .io_enq_bits_T_NT    (_gshare_io_T_NT),
     .io_deq_ready        (io_prediction_ready),
     .io_deq_valid        (io_prediction_valid),
     .io_deq_bits_hit     (io_prediction_bits_hit),
     .io_deq_bits_target  (io_prediction_bits_target),
     .io_deq_bits_br_type (io_prediction_bits_br_type),
-    .io_deq_bits_GHR     (io_prediction_bits_GHR),
     .io_deq_bits_T_NT    (io_prediction_bits_T_NT),
     .io_flush            (io_flush)
   );

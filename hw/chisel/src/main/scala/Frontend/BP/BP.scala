@@ -153,7 +153,7 @@ class BP(coreParameters:CoreParameters) extends Module{
     // A replated mispredicted packet are correct...
 
     prediction.bits.target    := BTB.io.BTB_output.BTB_target
-    prediction.bits.br_type   := BTB.io.BTB_output.BTBbr_type_t
+    prediction.bits.br_type   := BTB.io.BTB_output.BTB_br_type
     prediction.bits.hit       := BTB.io.BTB_hit
     prediction.bits.T_NT      := gshare.io.T_NT
 

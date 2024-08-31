@@ -102,7 +102,6 @@ module L1_instruction_cache(
   output        io_CPU_response_bits_prediction_hit,
   output [31:0] io_CPU_response_bits_prediction_target,
   output [2:0]  io_CPU_response_bits_prediction_br_type,
-  output [15:0] io_CPU_response_bits_prediction_GHR,
   output        io_CPU_response_bits_prediction_T_NT,
   output [15:0] io_CPU_response_bits_GHR,
   output [6:0]  io_CPU_response_bits_NEXT,
@@ -458,7 +457,7 @@ module L1_instruction_cache(
     .io_instruction_index  (fetch_PC_buf_addr[3:2]),
     .io_instruction_output (_validator_io_instruction_output)
   );
-  Queue1_fetch_packet CPU_response_skid_buffer (
+  Queue2_fetch_packet CPU_response_skid_buffer (
     .clock                                   (clock),
     .reset                                   (reset),
     .io_enq_ready                            (_CPU_response_skid_buffer_io_enq_ready),
@@ -474,12 +473,26 @@ module L1_instruction_cache(
       (_validator_io_instruction_output[0] & CPU_response_valid),
     .io_enq_bits_instructions_0_instruction
       (_GEN_22[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
+    .io_enq_bits_instructions_0_packet_index (4'h0),
+    .io_enq_bits_instructions_0_ROB_index    (6'h0),
     .io_enq_bits_instructions_1_instruction
       (_GEN_22[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
+    .io_enq_bits_instructions_1_packet_index (4'h1),
+    .io_enq_bits_instructions_1_ROB_index    (6'h0),
     .io_enq_bits_instructions_2_instruction
       (_GEN_22[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
+    .io_enq_bits_instructions_2_packet_index (4'h2),
+    .io_enq_bits_instructions_2_ROB_index    (6'h0),
     .io_enq_bits_instructions_3_instruction
       (_GEN_22[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
+    .io_enq_bits_instructions_3_packet_index (4'h3),
+    .io_enq_bits_instructions_3_ROB_index    (6'h0),
+    .io_enq_bits_prediction_target           (32'h0),
+    .io_enq_bits_prediction_br_type          (3'h0),
+    .io_enq_bits_prediction_T_NT             (1'h0),
+    .io_enq_bits_GHR                         (16'h0),
+    .io_enq_bits_NEXT                        (7'h0),
+    .io_enq_bits_TOS                         (7'h0),
     .io_deq_ready                            (io_CPU_response_ready),
     .io_deq_valid                            (io_CPU_response_valid),
     .io_deq_bits_fetch_PC                    (io_CPU_response_bits_fetch_PC),
@@ -514,7 +527,6 @@ module L1_instruction_cache(
     .io_deq_bits_prediction_hit              (io_CPU_response_bits_prediction_hit),
     .io_deq_bits_prediction_target           (io_CPU_response_bits_prediction_target),
     .io_deq_bits_prediction_br_type          (io_CPU_response_bits_prediction_br_type),
-    .io_deq_bits_prediction_GHR              (io_CPU_response_bits_prediction_GHR),
     .io_deq_bits_prediction_T_NT             (io_CPU_response_bits_prediction_T_NT),
     .io_deq_bits_GHR                         (io_CPU_response_bits_GHR),
     .io_deq_bits_NEXT                        (io_CPU_response_bits_NEXT),

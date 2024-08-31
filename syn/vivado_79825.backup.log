@@ -999,12 +999,12 @@ INFO: [Synth 8-7067] Removed DRAM instance ROB/i_8/i_0/fetch_resolved_banks_3_ex
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (\frontend/instruction_fetch /\bp/gshare/PHT_io_writeEnableC_REG_reg )
 INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/RAS/RAS_memory/din_buff_reg[0]' (FDR) to 'frontend/instruction_fetch/bp/RAS/RAS_memory/din_buff_reg[1]'
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (\frontend/instruction_fetch /\PC_gen/PC_reg_reg[0] )
-INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/RAS/RAS_memory/din_buff_reg[1]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[2]'
-INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_tag_reg[16]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[2]'
-INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_tag_reg[17]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[2]'
-INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[2]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[1]'
-INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[1]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[0]'
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (\frontend/instruction_fetch /\bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[0] )
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/RAS/RAS_memory/din_buff_reg[1]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[2]'
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_tag_reg[16]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[2]'
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_tag_reg[17]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[2]'
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[2]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[1]'
+INFO: [Synth 8-3886] merging instance 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[1]' (FDR) to 'frontend/instruction_fetch/bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[0]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\frontend/instruction_fetch /\bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[0] )
 INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_56_64 from module extram__27 due to constant propagation
 INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_42_55 from module extram__27 due to constant propagation
 INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_42_55 from module extram__27 due to constant propagation

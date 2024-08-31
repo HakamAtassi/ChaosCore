@@ -78,7 +78,6 @@ module instruction_fetch(
   input         io_memory_response_bits_prediction_hit,
   input  [31:0] io_memory_response_bits_prediction_target,
   input  [2:0]  io_memory_response_bits_prediction_br_type,
-  input  [15:0] io_memory_response_bits_prediction_GHR,
   input         io_memory_response_bits_prediction_T_NT,
   input  [15:0] io_memory_response_bits_GHR,
   input  [6:0]  io_memory_response_bits_NEXT,
@@ -106,7 +105,6 @@ module instruction_fetch(
   output        io_fetch_packet_bits_prediction_hit,
   output [31:0] io_fetch_packet_bits_prediction_target,
   output [2:0]  io_fetch_packet_bits_prediction_br_type,
-  output [15:0] io_fetch_packet_bits_prediction_GHR,
   output        io_fetch_packet_bits_prediction_T_NT,
   output [15:0] io_fetch_packet_bits_GHR,
   output [6:0]  io_fetch_packet_bits_NEXT,
@@ -120,7 +118,6 @@ module instruction_fetch(
   wire        _BTB_Q_io_deq_bits_hit;
   wire [31:0] _BTB_Q_io_deq_bits_target;
   wire [2:0]  _BTB_Q_io_deq_bits_br_type;
-  wire [15:0] _BTB_Q_io_deq_bits_GHR;
   wire        _BTB_Q_io_deq_bits_T_NT;
   wire        _PC_Q_io_enq_ready;
   wire        _instruction_Q_io_deq_valid;
@@ -144,7 +141,6 @@ module instruction_fetch(
   wire        _instruction_Q_io_deq_bits_prediction_hit;
   wire [31:0] _instruction_Q_io_deq_bits_prediction_target;
   wire [2:0]  _instruction_Q_io_deq_bits_prediction_br_type;
-  wire [15:0] _instruction_Q_io_deq_bits_prediction_GHR;
   wire        _instruction_Q_io_deq_bits_prediction_T_NT;
   wire [15:0] _instruction_Q_io_deq_bits_GHR;
   wire [6:0]  _instruction_Q_io_deq_bits_NEXT;
@@ -169,7 +165,6 @@ module instruction_fetch(
   wire        _bp_io_prediction_bits_hit;
   wire [31:0] _bp_io_prediction_bits_target;
   wire [2:0]  _bp_io_prediction_bits_br_type;
-  wire [15:0] _bp_io_prediction_bits_GHR;
   wire        _bp_io_prediction_bits_T_NT;
   wire        _bp_io_flush_T = io_flush | _predecoder_io_revert_valid;
   BP bp (
@@ -201,7 +196,6 @@ module instruction_fetch(
     .io_prediction_bits_hit            (_bp_io_prediction_bits_hit),
     .io_prediction_bits_target         (_bp_io_prediction_bits_target),
     .io_prediction_bits_br_type        (_bp_io_prediction_bits_br_type),
-    .io_prediction_bits_GHR            (_bp_io_prediction_bits_GHR),
     .io_prediction_bits_T_NT           (_bp_io_prediction_bits_T_NT)
   );
   predecoder predecoder (
@@ -217,7 +211,6 @@ module instruction_fetch(
     .io_prediction_bits_hit                                 (_BTB_Q_io_deq_bits_hit),
     .io_prediction_bits_target                              (_BTB_Q_io_deq_bits_target),
     .io_prediction_bits_br_type                             (_BTB_Q_io_deq_bits_br_type),
-    .io_prediction_bits_GHR                                 (_BTB_Q_io_deq_bits_GHR),
     .io_prediction_bits_T_NT                                (_BTB_Q_io_deq_bits_T_NT),
     .io_fetch_packet_ready
       (_predecoder_io_fetch_packet_ready),
@@ -262,8 +255,6 @@ module instruction_fetch(
       (_instruction_Q_io_deq_bits_prediction_target),
     .io_fetch_packet_bits_prediction_br_type
       (_instruction_Q_io_deq_bits_prediction_br_type),
-    .io_fetch_packet_bits_prediction_GHR
-      (_instruction_Q_io_deq_bits_prediction_GHR),
     .io_fetch_packet_bits_prediction_T_NT
       (_instruction_Q_io_deq_bits_prediction_T_NT),
     .io_fetch_packet_bits_GHR
@@ -340,8 +331,6 @@ module instruction_fetch(
       (io_fetch_packet_bits_prediction_target),
     .io_final_fetch_packet_bits_prediction_br_type
       (io_fetch_packet_bits_prediction_br_type),
-    .io_final_fetch_packet_bits_prediction_GHR
-      (io_fetch_packet_bits_prediction_GHR),
     .io_final_fetch_packet_bits_prediction_T_NT
       (io_fetch_packet_bits_prediction_T_NT),
     .io_final_fetch_packet_bits_GHR                         (io_fetch_packet_bits_GHR),
@@ -389,7 +378,6 @@ module instruction_fetch(
     .io_prediction_bits_hit                 (_bp_io_prediction_bits_hit),
     .io_prediction_bits_target              (_bp_io_prediction_bits_target),
     .io_prediction_bits_br_type             (_bp_io_prediction_bits_br_type),
-    .io_prediction_bits_GHR                 (_bp_io_prediction_bits_GHR),
     .io_prediction_bits_T_NT                (_bp_io_prediction_bits_T_NT),
     .io_RAS_read_NEXT                       (_bp_io_RAS_read_NEXT),
     .io_RAS_read_TOS                        (_bp_io_RAS_read_TOS),
@@ -437,7 +425,6 @@ module instruction_fetch(
     .io_enq_bits_prediction_hit              (io_memory_response_bits_prediction_hit),
     .io_enq_bits_prediction_target           (io_memory_response_bits_prediction_target),
     .io_enq_bits_prediction_br_type          (io_memory_response_bits_prediction_br_type),
-    .io_enq_bits_prediction_GHR              (io_memory_response_bits_prediction_GHR),
     .io_enq_bits_prediction_T_NT             (io_memory_response_bits_prediction_T_NT),
     .io_enq_bits_GHR                         (io_memory_response_bits_GHR),
     .io_enq_bits_NEXT                        (io_memory_response_bits_NEXT),
@@ -478,7 +465,6 @@ module instruction_fetch(
       (_instruction_Q_io_deq_bits_prediction_target),
     .io_deq_bits_prediction_br_type
       (_instruction_Q_io_deq_bits_prediction_br_type),
-    .io_deq_bits_prediction_GHR              (_instruction_Q_io_deq_bits_prediction_GHR),
     .io_deq_bits_prediction_T_NT             (_instruction_Q_io_deq_bits_prediction_T_NT),
     .io_deq_bits_GHR                         (_instruction_Q_io_deq_bits_GHR),
     .io_deq_bits_NEXT                        (_instruction_Q_io_deq_bits_NEXT),
@@ -508,7 +494,6 @@ module instruction_fetch(
     .io_enq_bits_hit     (_bp_io_prediction_bits_hit),
     .io_enq_bits_target  (_bp_io_prediction_bits_target),
     .io_enq_bits_br_type (_bp_io_prediction_bits_br_type),
-    .io_enq_bits_GHR     (_bp_io_prediction_bits_GHR),
     .io_enq_bits_T_NT    (_bp_io_prediction_bits_T_NT),
     .io_deq_ready
       (_predecoder_io_prediction_ready & _predecoder_io_fetch_packet_ready
@@ -517,7 +502,6 @@ module instruction_fetch(
     .io_deq_bits_hit     (_BTB_Q_io_deq_bits_hit),
     .io_deq_bits_target  (_BTB_Q_io_deq_bits_target),
     .io_deq_bits_br_type (_BTB_Q_io_deq_bits_br_type),
-    .io_deq_bits_GHR     (_BTB_Q_io_deq_bits_GHR),
     .io_deq_bits_T_NT    (_BTB_Q_io_deq_bits_T_NT),
     .io_flush            (_bp_io_flush_T)
   );

@@ -88,7 +88,7 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
 
     // FLUSHING MUX //
     when(io.commit.valid && (io.commit.bits.is_misprediction)){
-        flush_PC_mux := io.commit.bits.fetch_PC
+        flush_PC_mux := io.commit.bits.expected_PC
     }.elsewhen(io.revert.valid){
         flush_PC_mux := io.revert.bits.PC
     }.otherwise(flush_PC_mux := 0.U)    // TODO: exception

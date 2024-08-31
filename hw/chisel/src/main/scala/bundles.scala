@@ -113,7 +113,7 @@ class BTB_entry(coreParameters:CoreParameters) extends Bundle{
     val BTB_tag                     = UInt(BTB_tag_size.W)
     val BTB_target                  = UInt(32.W)   // FIXME: this can be slightly smaller
 
-    val BTBbr_type_t                 = br_type_t()
+    val BTB_br_type                 = br_type_t()
     val BTB_fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 }
 

@@ -205,22 +205,27 @@ module simple_MOB(
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
-                io_partial_commit_ROB_index_0_valid,
-  input  [5:0]  io_partial_commit_ROB_index_0_bits,
-  input         io_partial_commit_ROB_index_1_valid,
-  input  [5:0]  io_partial_commit_ROB_index_1_bits,
-  input         io_partial_commit_ROB_index_2_valid,
-  input  [5:0]  io_partial_commit_ROB_index_2_bits,
-  input         io_partial_commit_ROB_index_3_valid,
-  input  [5:0]  io_partial_commit_ROB_index_3_bits,
-  input         io_partial_commit_MOB_index_0_valid,
-  input  [3:0]  io_partial_commit_MOB_index_0_bits,
-  input         io_partial_commit_MOB_index_1_valid,
-  input  [3:0]  io_partial_commit_MOB_index_1_bits,
-  input         io_partial_commit_MOB_index_2_valid,
-  input  [3:0]  io_partial_commit_MOB_index_2_bits,
-  input         io_partial_commit_MOB_index_3_valid,
-  input  [3:0]  io_partial_commit_MOB_index_3_bits,
+                io_partial_commit_valid_0,
+                io_partial_commit_valid_1,
+                io_partial_commit_valid_2,
+                io_partial_commit_valid_3,
+  input  [5:0]  io_partial_commit_ROB_index,
+  input  [3:0]  io_partial_commit_MOB_index_0,
+                io_partial_commit_MOB_index_1,
+                io_partial_commit_MOB_index_2,
+                io_partial_commit_MOB_index_3,
+  input  [4:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
+  input         io_partial_commit_RD_valid_0,
+                io_partial_commit_RD_valid_1,
+                io_partial_commit_RD_valid_2,
+                io_partial_commit_RD_valid_3,
+  input  [6:0]  io_partial_commit_RDold_0,
+                io_partial_commit_RDold_1,
+                io_partial_commit_RDold_2,
+                io_partial_commit_RDold_3,
   input         io_backend_memory_request_ready,
   output        io_backend_memory_request_valid,
   output [31:0] io_backend_memory_request_bits_addr,
@@ -1021,25 +1026,25 @@ module simple_MOB(
       automatic logic _GEN_218;
       automatic logic _GEN_219;
       automatic logic _GEN_220 =
-        io_partial_commit_MOB_index_0_valid & _GEN_3[io_partial_commit_MOB_index_0_bits];
-      automatic logic _GEN_221 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h0;
-      automatic logic _GEN_222 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h1;
-      automatic logic _GEN_223 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h2;
-      automatic logic _GEN_224 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h3;
-      automatic logic _GEN_225 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h4;
-      automatic logic _GEN_226 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h5;
-      automatic logic _GEN_227 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h6;
-      automatic logic _GEN_228 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h7;
-      automatic logic _GEN_229 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h8;
-      automatic logic _GEN_230 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'h9;
-      automatic logic _GEN_231 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'hA;
-      automatic logic _GEN_232 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'hB;
-      automatic logic _GEN_233 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'hC;
-      automatic logic _GEN_234 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'hD;
-      automatic logic _GEN_235 = _GEN_220 & io_partial_commit_MOB_index_0_bits == 4'hE;
-      automatic logic _GEN_236 = _GEN_220 & (&io_partial_commit_MOB_index_0_bits);
+        io_partial_commit_valid_0 & _GEN_3[io_partial_commit_MOB_index_0];
+      automatic logic _GEN_221 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h0;
+      automatic logic _GEN_222 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h1;
+      automatic logic _GEN_223 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h2;
+      automatic logic _GEN_224 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h3;
+      automatic logic _GEN_225 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h4;
+      automatic logic _GEN_226 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h5;
+      automatic logic _GEN_227 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h6;
+      automatic logic _GEN_228 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h7;
+      automatic logic _GEN_229 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h8;
+      automatic logic _GEN_230 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'h9;
+      automatic logic _GEN_231 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'hA;
+      automatic logic _GEN_232 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'hB;
+      automatic logic _GEN_233 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'hC;
+      automatic logic _GEN_234 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'hD;
+      automatic logic _GEN_235 = _GEN_220 & io_partial_commit_MOB_index_0 == 4'hE;
+      automatic logic _GEN_236 = _GEN_220 & (&io_partial_commit_MOB_index_0);
       automatic logic _GEN_237 =
-        io_partial_commit_MOB_index_1_valid & _GEN_3[io_partial_commit_MOB_index_1_bits];
+        io_partial_commit_valid_1 & _GEN_3[io_partial_commit_MOB_index_1];
       automatic logic _GEN_238;
       automatic logic _GEN_239;
       automatic logic _GEN_240;
@@ -1057,25 +1062,25 @@ module simple_MOB(
       automatic logic _GEN_252;
       automatic logic _GEN_253;
       automatic logic _GEN_254 =
-        io_partial_commit_MOB_index_2_valid & _GEN_3[io_partial_commit_MOB_index_2_bits];
-      automatic logic _GEN_255 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h0;
-      automatic logic _GEN_256 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h1;
-      automatic logic _GEN_257 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h2;
-      automatic logic _GEN_258 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h3;
-      automatic logic _GEN_259 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h4;
-      automatic logic _GEN_260 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h5;
-      automatic logic _GEN_261 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h6;
-      automatic logic _GEN_262 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h7;
-      automatic logic _GEN_263 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h8;
-      automatic logic _GEN_264 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'h9;
-      automatic logic _GEN_265 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'hA;
-      automatic logic _GEN_266 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'hB;
-      automatic logic _GEN_267 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'hC;
-      automatic logic _GEN_268 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'hD;
-      automatic logic _GEN_269 = _GEN_254 & io_partial_commit_MOB_index_2_bits == 4'hE;
-      automatic logic _GEN_270 = _GEN_254 & (&io_partial_commit_MOB_index_2_bits);
+        io_partial_commit_valid_2 & _GEN_3[io_partial_commit_MOB_index_2];
+      automatic logic _GEN_255 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h0;
+      automatic logic _GEN_256 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h1;
+      automatic logic _GEN_257 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h2;
+      automatic logic _GEN_258 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h3;
+      automatic logic _GEN_259 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h4;
+      automatic logic _GEN_260 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h5;
+      automatic logic _GEN_261 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h6;
+      automatic logic _GEN_262 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h7;
+      automatic logic _GEN_263 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h8;
+      automatic logic _GEN_264 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'h9;
+      automatic logic _GEN_265 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'hA;
+      automatic logic _GEN_266 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'hB;
+      automatic logic _GEN_267 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'hC;
+      automatic logic _GEN_268 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'hD;
+      automatic logic _GEN_269 = _GEN_254 & io_partial_commit_MOB_index_2 == 4'hE;
+      automatic logic _GEN_270 = _GEN_254 & (&io_partial_commit_MOB_index_2);
       automatic logic _GEN_271 =
-        io_partial_commit_MOB_index_3_valid & _GEN_3[io_partial_commit_MOB_index_3_bits];
+        io_partial_commit_valid_3 & _GEN_3[io_partial_commit_MOB_index_3];
       automatic logic _GEN_272;
       automatic logic _GEN_273;
       automatic logic _GEN_274;
@@ -1319,131 +1324,131 @@ module simple_MOB(
       _GEN_219 = _GEN_203 | (written_vec_3 ? ~_GEN_185 & _GEN_108 : ~_GEN_124 & _GEN_108);
       _GEN_238 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h0 | _GEN_221 | _GEN_128
+          ? io_partial_commit_MOB_index_1 == 4'h0 | _GEN_221 | _GEN_128
           : _GEN_221 | _GEN_128;
       _GEN_239 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h1 | _GEN_222 | _GEN_132
+          ? io_partial_commit_MOB_index_1 == 4'h1 | _GEN_222 | _GEN_132
           : _GEN_222 | _GEN_132;
       _GEN_240 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h2 | _GEN_223 | _GEN_136
+          ? io_partial_commit_MOB_index_1 == 4'h2 | _GEN_223 | _GEN_136
           : _GEN_223 | _GEN_136;
       _GEN_241 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h3 | _GEN_224 | _GEN_140
+          ? io_partial_commit_MOB_index_1 == 4'h3 | _GEN_224 | _GEN_140
           : _GEN_224 | _GEN_140;
       _GEN_242 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h4 | _GEN_225 | _GEN_144
+          ? io_partial_commit_MOB_index_1 == 4'h4 | _GEN_225 | _GEN_144
           : _GEN_225 | _GEN_144;
       _GEN_243 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h5 | _GEN_226 | _GEN_148
+          ? io_partial_commit_MOB_index_1 == 4'h5 | _GEN_226 | _GEN_148
           : _GEN_226 | _GEN_148;
       _GEN_244 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h6 | _GEN_227 | _GEN_152
+          ? io_partial_commit_MOB_index_1 == 4'h6 | _GEN_227 | _GEN_152
           : _GEN_227 | _GEN_152;
       _GEN_245 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h7 | _GEN_228 | _GEN_156
+          ? io_partial_commit_MOB_index_1 == 4'h7 | _GEN_228 | _GEN_156
           : _GEN_228 | _GEN_156;
       _GEN_246 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h8 | _GEN_229 | _GEN_160
+          ? io_partial_commit_MOB_index_1 == 4'h8 | _GEN_229 | _GEN_160
           : _GEN_229 | _GEN_160;
       _GEN_247 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'h9 | _GEN_230 | _GEN_164
+          ? io_partial_commit_MOB_index_1 == 4'h9 | _GEN_230 | _GEN_164
           : _GEN_230 | _GEN_164;
       _GEN_248 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'hA | _GEN_231 | _GEN_168
+          ? io_partial_commit_MOB_index_1 == 4'hA | _GEN_231 | _GEN_168
           : _GEN_231 | _GEN_168;
       _GEN_249 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'hB | _GEN_232 | _GEN_172
+          ? io_partial_commit_MOB_index_1 == 4'hB | _GEN_232 | _GEN_172
           : _GEN_232 | _GEN_172;
       _GEN_250 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'hC | _GEN_233 | _GEN_176
+          ? io_partial_commit_MOB_index_1 == 4'hC | _GEN_233 | _GEN_176
           : _GEN_233 | _GEN_176;
       _GEN_251 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'hD | _GEN_234 | _GEN_180
+          ? io_partial_commit_MOB_index_1 == 4'hD | _GEN_234 | _GEN_180
           : _GEN_234 | _GEN_180;
       _GEN_252 =
         _GEN_237
-          ? io_partial_commit_MOB_index_1_bits == 4'hE | _GEN_235 | _GEN_184
+          ? io_partial_commit_MOB_index_1 == 4'hE | _GEN_235 | _GEN_184
           : _GEN_235 | _GEN_184;
       _GEN_253 =
         _GEN_237
-          ? (&io_partial_commit_MOB_index_1_bits) | _GEN_236 | _GEN_187
+          ? (&io_partial_commit_MOB_index_1) | _GEN_236 | _GEN_187
           : _GEN_236 | _GEN_187;
       _GEN_272 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h0 | _GEN_255 | _GEN_238
+          ? io_partial_commit_MOB_index_3 == 4'h0 | _GEN_255 | _GEN_238
           : _GEN_255 | _GEN_238;
       _GEN_273 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h1 | _GEN_256 | _GEN_239
+          ? io_partial_commit_MOB_index_3 == 4'h1 | _GEN_256 | _GEN_239
           : _GEN_256 | _GEN_239;
       _GEN_274 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h2 | _GEN_257 | _GEN_240
+          ? io_partial_commit_MOB_index_3 == 4'h2 | _GEN_257 | _GEN_240
           : _GEN_257 | _GEN_240;
       _GEN_275 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h3 | _GEN_258 | _GEN_241
+          ? io_partial_commit_MOB_index_3 == 4'h3 | _GEN_258 | _GEN_241
           : _GEN_258 | _GEN_241;
       _GEN_276 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h4 | _GEN_259 | _GEN_242
+          ? io_partial_commit_MOB_index_3 == 4'h4 | _GEN_259 | _GEN_242
           : _GEN_259 | _GEN_242;
       _GEN_277 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h5 | _GEN_260 | _GEN_243
+          ? io_partial_commit_MOB_index_3 == 4'h5 | _GEN_260 | _GEN_243
           : _GEN_260 | _GEN_243;
       _GEN_278 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h6 | _GEN_261 | _GEN_244
+          ? io_partial_commit_MOB_index_3 == 4'h6 | _GEN_261 | _GEN_244
           : _GEN_261 | _GEN_244;
       _GEN_279 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h7 | _GEN_262 | _GEN_245
+          ? io_partial_commit_MOB_index_3 == 4'h7 | _GEN_262 | _GEN_245
           : _GEN_262 | _GEN_245;
       _GEN_280 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h8 | _GEN_263 | _GEN_246
+          ? io_partial_commit_MOB_index_3 == 4'h8 | _GEN_263 | _GEN_246
           : _GEN_263 | _GEN_246;
       _GEN_281 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'h9 | _GEN_264 | _GEN_247
+          ? io_partial_commit_MOB_index_3 == 4'h9 | _GEN_264 | _GEN_247
           : _GEN_264 | _GEN_247;
       _GEN_282 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'hA | _GEN_265 | _GEN_248
+          ? io_partial_commit_MOB_index_3 == 4'hA | _GEN_265 | _GEN_248
           : _GEN_265 | _GEN_248;
       _GEN_283 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'hB | _GEN_266 | _GEN_249
+          ? io_partial_commit_MOB_index_3 == 4'hB | _GEN_266 | _GEN_249
           : _GEN_266 | _GEN_249;
       _GEN_284 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'hC | _GEN_267 | _GEN_250
+          ? io_partial_commit_MOB_index_3 == 4'hC | _GEN_267 | _GEN_250
           : _GEN_267 | _GEN_250;
       _GEN_285 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'hD | _GEN_268 | _GEN_251
+          ? io_partial_commit_MOB_index_3 == 4'hD | _GEN_268 | _GEN_251
           : _GEN_268 | _GEN_251;
       _GEN_286 =
         _GEN_271
-          ? io_partial_commit_MOB_index_3_bits == 4'hE | _GEN_269 | _GEN_252
+          ? io_partial_commit_MOB_index_3 == 4'hE | _GEN_269 | _GEN_252
           : _GEN_269 | _GEN_252;
       _GEN_287 =
         _GEN_271
-          ? (&io_partial_commit_MOB_index_3_bits) | _GEN_270 | _GEN_253
+          ? (&io_partial_commit_MOB_index_3) | _GEN_270 | _GEN_253
           : _GEN_270 | _GEN_253;
       _GEN_289 = front_pointer[3:0] == 4'h0;
       _GEN_290 = front_pointer[3:0] == 4'h1;
