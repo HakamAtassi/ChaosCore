@@ -63,13 +63,13 @@ module hash_BTB_mem(	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
   output        io_data_out_BTB_valid,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
   output [17:0] io_data_out_BTB_tag,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
   output [31:0] io_data_out_BTB_target,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
-  output [2:0]  io_data_out_BTBbr_type_t,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
+  output [2:0]  io_data_out_BTB_br_type,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
   output [1:0]  io_data_out_BTB_fetch_packet_index,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
   input  [11:0] io_wr_addr,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
   input         io_wr_en,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
   input  [17:0] io_data_in_BTB_tag,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
   input  [31:0] io_data_in_BTB_target,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
-  input  [2:0]  io_data_in_BTBbr_type_t,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
+  input  [2:0]  io_data_in_BTB_br_type,	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
   input  [1:0]  io_data_in_BTB_fetch_packet_index	// src/main/scala/Frontend/BP/hash_BTB.scala:42:14
 );
 
@@ -78,7 +78,7 @@ module hash_BTB_mem(	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
   reg         din_buff_BTB_valid;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
   reg  [17:0] din_buff_BTB_tag;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
   reg  [31:0] din_buff_BTB_target;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
-  reg  [2:0]  din_buff_BTBbr_type_t;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
+  reg  [2:0]  din_buff_BTB_br_type;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
   reg  [1:0]  din_buff_BTB_fetch_packet_index;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
   always @(posedge clock) begin	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
     if (reset) begin	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
@@ -86,7 +86,7 @@ module hash_BTB_mem(	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
       din_buff_BTB_valid <= 1'h0;	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :63:25
       din_buff_BTB_tag <= 18'h0;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
       din_buff_BTB_target <= 32'h0;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
-      din_buff_BTBbr_type_t <= 3'h0;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:{25,43}
+      din_buff_BTB_br_type <= 3'h0;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:{25,43}
       din_buff_BTB_fetch_packet_index <= 2'h0;	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :63:25
     end
     else begin	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
@@ -94,7 +94,7 @@ module hash_BTB_mem(	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
       din_buff_BTB_valid <= 1'h1;	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :63:25
       din_buff_BTB_tag <= io_data_in_BTB_tag;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
       din_buff_BTB_target <= io_data_in_BTB_target;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
-      din_buff_BTBbr_type_t <= io_data_in_BTBbr_type_t;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
+      din_buff_BTB_br_type <= io_data_in_BTB_br_type;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
       din_buff_BTB_fetch_packet_index <= io_data_in_BTB_fetch_packet_index;	// src/main/scala/Frontend/BP/hash_BTB.scala:63:25
     end
   end // always @(posedge)
@@ -115,7 +115,7 @@ module hash_BTB_mem(	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
         din_buff_BTB_valid = _RANDOM[1'h0][1];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :62:27, :63:25
         din_buff_BTB_tag = _RANDOM[1'h0][19:2];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :62:27, :63:25
         din_buff_BTB_target = {_RANDOM[1'h0][31:20], _RANDOM[1'h1][19:0]};	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :62:27, :63:25
-        din_buff_BTBbr_type_t = _RANDOM[1'h1][22:20];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :63:25
+        din_buff_BTB_br_type = _RANDOM[1'h1][22:20];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :63:25
         din_buff_BTB_fetch_packet_index = _RANDOM[1'h1][24:23];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :63:25
       `endif // RANDOMIZE_REG_INIT
     end // initial
@@ -133,7 +133,7 @@ module hash_BTB_mem(	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
     .W0_clk  (clock),
     .W0_data
       ({io_data_in_BTB_fetch_packet_index,
-        io_data_in_BTBbr_type_t,
+        io_data_in_BTB_br_type,
         io_data_in_BTB_target,
         io_data_in_BTB_tag,
         1'h1})	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :55:24
@@ -142,8 +142,8 @@ module hash_BTB_mem(	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7
   assign io_data_out_BTB_tag = hazard_reg ? din_buff_BTB_tag : _mem_ext_R0_data[18:1];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :55:24, :62:27, :63:25, :83:23
   assign io_data_out_BTB_target =
     hazard_reg ? din_buff_BTB_target : _mem_ext_R0_data[50:19];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :55:24, :62:27, :63:25, :83:23
-  assign io_data_out_BTBbr_type_t =
-    hazard_reg ? din_buff_BTBbr_type_t : _mem_ext_R0_data[53:51];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :55:24, :62:27, :63:25, :83:23
+  assign io_data_out_BTB_br_type =
+    hazard_reg ? din_buff_BTB_br_type : _mem_ext_R0_data[53:51];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :55:24, :62:27, :63:25, :83:23
   assign io_data_out_BTB_fetch_packet_index =
     hazard_reg ? din_buff_BTB_fetch_packet_index : _mem_ext_R0_data[55:54];	// src/main/scala/Frontend/BP/hash_BTB.scala:41:7, :55:24, :62:27, :63:25, :83:23
 endmodule

@@ -35,13 +35,13 @@ module hash_BTB_mem(
   output        io_data_out_BTB_valid,
   output [17:0] io_data_out_BTB_tag,
   output [31:0] io_data_out_BTB_target,
-  output [2:0]  io_data_out_BTBbr_type_t,
+  output [2:0]  io_data_out_BTB_br_type,
   output [1:0]  io_data_out_BTB_fetch_packet_index,
   input  [11:0] io_wr_addr,
   input         io_wr_en,
   input  [17:0] io_data_in_BTB_tag,
   input  [31:0] io_data_in_BTB_target,
-  input  [2:0]  io_data_in_BTBbr_type_t,
+  input  [2:0]  io_data_in_BTB_br_type,
   input  [1:0]  io_data_in_BTB_fetch_packet_index
 );
 
@@ -50,7 +50,7 @@ module hash_BTB_mem(
   reg         din_buff_BTB_valid;
   reg  [17:0] din_buff_BTB_tag;
   reg  [31:0] din_buff_BTB_target;
-  reg  [2:0]  din_buff_BTBbr_type_t;
+  reg  [2:0]  din_buff_BTB_br_type;
   reg  [1:0]  din_buff_BTB_fetch_packet_index;
   always @(posedge clock) begin
     if (reset) begin
@@ -58,7 +58,7 @@ module hash_BTB_mem(
       din_buff_BTB_valid <= 1'h0;
       din_buff_BTB_tag <= 18'h0;
       din_buff_BTB_target <= 32'h0;
-      din_buff_BTBbr_type_t <= 3'h0;
+      din_buff_BTB_br_type <= 3'h0;
       din_buff_BTB_fetch_packet_index <= 2'h0;
     end
     else begin
@@ -66,7 +66,7 @@ module hash_BTB_mem(
       din_buff_BTB_valid <= 1'h1;
       din_buff_BTB_tag <= io_data_in_BTB_tag;
       din_buff_BTB_target <= io_data_in_BTB_target;
-      din_buff_BTBbr_type_t <= io_data_in_BTBbr_type_t;
+      din_buff_BTB_br_type <= io_data_in_BTB_br_type;
       din_buff_BTB_fetch_packet_index <= io_data_in_BTB_fetch_packet_index;
     end
   end // always @(posedge)
@@ -80,7 +80,7 @@ module hash_BTB_mem(
     .W0_clk  (clock),
     .W0_data
       ({io_data_in_BTB_fetch_packet_index,
-        io_data_in_BTBbr_type_t,
+        io_data_in_BTB_br_type,
         io_data_in_BTB_target,
         io_data_in_BTB_tag,
         1'h1})
@@ -89,8 +89,8 @@ module hash_BTB_mem(
   assign io_data_out_BTB_tag = hazard_reg ? din_buff_BTB_tag : _mem_ext_R0_data[18:1];
   assign io_data_out_BTB_target =
     hazard_reg ? din_buff_BTB_target : _mem_ext_R0_data[50:19];
-  assign io_data_out_BTBbr_type_t =
-    hazard_reg ? din_buff_BTBbr_type_t : _mem_ext_R0_data[53:51];
+  assign io_data_out_BTB_br_type =
+    hazard_reg ? din_buff_BTB_br_type : _mem_ext_R0_data[53:51];
   assign io_data_out_BTB_fetch_packet_index =
     hazard_reg ? din_buff_BTB_fetch_packet_index : _mem_ext_R0_data[55:54];
 endmodule

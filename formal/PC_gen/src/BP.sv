@@ -35,7 +35,7 @@ module BP(	// src/main/scala/Frontend/BP/BP.scala:38:7
   wire        _BTB_io_BTB_hit;	// src/main/scala/Frontend/BP/BP.scala:72:29
   wire        _BTB_io_BTB_output_BTB_valid;	// src/main/scala/Frontend/BP/BP.scala:72:29
   wire [31:0] _BTB_io_BTB_output_BTB_target;	// src/main/scala/Frontend/BP/BP.scala:72:29
-  wire [2:0]  _BTB_io_BTB_output_BTBbr_type_t;	// src/main/scala/Frontend/BP/BP.scala:72:29
+  wire [2:0]  _BTB_io_BTB_output_BTB_br_type;	// src/main/scala/Frontend/BP/BP.scala:72:29
   wire        _gshare_io_T_NT;	// src/main/scala/Frontend/BP/BP.scala:71:29
   wire        _gshare_io_valid;	// src/main/scala/Frontend/BP/BP.scala:71:29
   gshare gshare (	// src/main/scala/Frontend/BP/BP.scala:71:29
@@ -58,7 +58,7 @@ module BP(	// src/main/scala/Frontend/BP/BP.scala:38:7
     .io_BTB_hit                        (_BTB_io_BTB_hit),
     .io_BTB_output_BTB_valid           (_BTB_io_BTB_output_BTB_valid),
     .io_BTB_output_BTB_target          (_BTB_io_BTB_output_BTB_target),
-    .io_BTB_output_BTBbr_type_t        (_BTB_io_BTB_output_BTBbr_type_t),
+    .io_BTB_output_BTB_br_type        (_BTB_io_BTB_output_BTB_br_type),
     .io_commit_valid                   (io_commit_bits_T_NT & io_commit_valid),	// src/main/scala/Frontend/BP/BP.scala:102:39
     .io_commit_bits_fetch_PC           (io_commit_bits_fetch_PC),
     .io_commit_bits_br_type            (io_commit_bits_br_type),
@@ -84,7 +84,7 @@ module BP(	// src/main/scala/Frontend/BP/BP.scala:38:7
     .io_enq_valid        (_BTB_io_BTB_output_BTB_valid & _gshare_io_valid),	// src/main/scala/Frontend/BP/BP.scala:71:29, :72:29, :163:60
     .io_enq_bits_hit     (_BTB_io_BTB_hit),	// src/main/scala/Frontend/BP/BP.scala:72:29
     .io_enq_bits_target  (_BTB_io_BTB_output_BTB_target),	// src/main/scala/Frontend/BP/BP.scala:72:29
-    .io_enq_bits_br_type (_BTB_io_BTB_output_BTBbr_type_t),	// src/main/scala/Frontend/BP/BP.scala:72:29
+    .io_enq_bits_br_type (_BTB_io_BTB_output_BTB_br_type),	// src/main/scala/Frontend/BP/BP.scala:72:29
     .io_enq_bits_GHR     (io_GHR),
     .io_enq_bits_T_NT    (_gshare_io_T_NT),	// src/main/scala/Frontend/BP/BP.scala:71:29
     .io_deq_ready        (io_prediction_ready),

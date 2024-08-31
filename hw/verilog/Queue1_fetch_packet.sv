@@ -64,7 +64,6 @@ module Queue1_fetch_packet(
   output        io_deq_bits_prediction_hit,
   output [31:0] io_deq_bits_prediction_target,
   output [2:0]  io_deq_bits_prediction_br_type,
-  output [15:0] io_deq_bits_prediction_GHR,
   output        io_deq_bits_prediction_T_NT,
   output [15:0] io_deq_bits_GHR,
   output [6:0]  io_deq_bits_NEXT,
@@ -72,14 +71,14 @@ module Queue1_fetch_packet(
   input         io_flush
 );
 
-  reg  [286:0] ram;
+  reg  [270:0] ram;
   reg          full;
   wire         io_deq_valid_0 = io_enq_valid | full;
   wire         do_enq = ~(~full & io_deq_ready) & ~full & io_enq_valid;
   always @(posedge clock) begin
     if (do_enq)
       ram <=
-        {93'h3,
+        {77'h3,
          io_enq_bits_instructions_3_instruction,
          10'h2,
          io_enq_bits_instructions_2_instruction,
@@ -124,10 +123,9 @@ module Queue1_fetch_packet(
   assign io_deq_bits_prediction_hit = full & ram[204];
   assign io_deq_bits_prediction_target = full ? ram[236:205] : 32'h0;
   assign io_deq_bits_prediction_br_type = full ? ram[239:237] : 3'h0;
-  assign io_deq_bits_prediction_GHR = full ? ram[255:240] : 16'h0;
-  assign io_deq_bits_prediction_T_NT = full & ram[256];
-  assign io_deq_bits_GHR = full ? ram[272:257] : 16'h0;
-  assign io_deq_bits_NEXT = full ? ram[279:273] : 7'h0;
-  assign io_deq_bits_TOS = full ? ram[286:280] : 7'h0;
+  assign io_deq_bits_prediction_T_NT = full & ram[240];
+  assign io_deq_bits_GHR = full ? ram[256:241] : 16'h0;
+  assign io_deq_bits_NEXT = full ? ram[263:257] : 7'h0;
+  assign io_deq_bits_TOS = full ? ram[270:264] : 7'h0;
 endmodule
 

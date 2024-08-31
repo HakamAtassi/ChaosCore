@@ -1051,7 +1051,7 @@ INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instan
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (\frontend/rename /free_list/\free_list_buffer_1_reg[0] )
 INFO: [Synth 8-3333] propagating constant 1 across sequential element (\frontend/rename /free_list/\free_list_buffer_0_reg[0] )
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (\frontend/instruction_fetch /\PC_gen/PC_reg_reg[0] )
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (\frontend/instruction_fetch /\bp/BTB/BTB_memory/din_buff_BTBbr_type_t_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\frontend/instruction_fetch /\bp/BTB/BTB_memory/din_buff_BTB_br_type_reg[0] )
 INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_56_64 from module extram__27 due to constant propagation
 INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_42_55 from module extram__27 due to constant propagation
 INFO: [Synth 8-7067] Removed DRAM instance frontend/instruction_fetch/i_5/i_0/PC_Q/ram_ext/Memory_reg_0_15_42_55 from module extram__27 due to constant propagation

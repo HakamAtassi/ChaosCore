@@ -56,6 +56,27 @@ module rename(
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
+                io_partial_commit_valid_0,
+                io_partial_commit_valid_1,
+                io_partial_commit_valid_2,
+                io_partial_commit_valid_3,
+  input  [5:0]  io_partial_commit_ROB_index,
+  input  [3:0]  io_partial_commit_MOB_index_0,
+                io_partial_commit_MOB_index_1,
+                io_partial_commit_MOB_index_2,
+                io_partial_commit_MOB_index_3,
+  input  [4:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
+  input         io_partial_commit_RD_valid_0,
+                io_partial_commit_RD_valid_1,
+                io_partial_commit_RD_valid_2,
+                io_partial_commit_RD_valid_3,
+  input  [6:0]  io_partial_commit_RDold_0,
+                io_partial_commit_RDold_1,
+                io_partial_commit_RDold_2,
+                io_partial_commit_RDold_3,
   output        io_decoded_fetch_packet_ready,
   input         io_decoded_fetch_packet_valid,
   input  [31:0] io_decoded_fetch_packet_bits_fetch_PC,
@@ -169,7 +190,6 @@ module rename(
   input         io_decoded_fetch_packet_bits_prediction_hit,
   input  [31:0] io_decoded_fetch_packet_bits_prediction_target,
   input  [2:0]  io_decoded_fetch_packet_bits_prediction_br_type,
-  input  [15:0] io_decoded_fetch_packet_bits_prediction_GHR,
   input         io_decoded_fetch_packet_bits_prediction_T_NT,
   input  [7:0]  io_decoded_fetch_packet_bits_free_list_front_pointer,
   input         io_FU_outputs_0_valid,
@@ -349,7 +369,6 @@ module rename(
   output        io_renamed_decoded_fetch_packet_bits_prediction_hit,
   output [31:0] io_renamed_decoded_fetch_packet_bits_prediction_target,
   output [2:0]  io_renamed_decoded_fetch_packet_bits_prediction_br_type,
-  output [15:0] io_renamed_decoded_fetch_packet_bits_prediction_GHR,
   output        io_renamed_decoded_fetch_packet_bits_prediction_T_NT,
   output [7:0]  io_renamed_decoded_fetch_packet_bits_free_list_front_pointer
 );
@@ -2343,71 +2362,72 @@ module rename(
       ready_memory_64 <= 1'h0;
     end
     else begin
-      ready_memory_0 <= comb_ready_bits_0;
-      ready_memory_1 <= comb_ready_bits_1;
-      ready_memory_2 <= comb_ready_bits_2;
-      ready_memory_3 <= comb_ready_bits_3;
-      ready_memory_4 <= comb_ready_bits_4;
-      ready_memory_5 <= comb_ready_bits_5;
-      ready_memory_6 <= comb_ready_bits_6;
-      ready_memory_7 <= comb_ready_bits_7;
-      ready_memory_8 <= comb_ready_bits_8;
-      ready_memory_9 <= comb_ready_bits_9;
-      ready_memory_10 <= comb_ready_bits_10;
-      ready_memory_11 <= comb_ready_bits_11;
-      ready_memory_12 <= comb_ready_bits_12;
-      ready_memory_13 <= comb_ready_bits_13;
-      ready_memory_14 <= comb_ready_bits_14;
-      ready_memory_15 <= comb_ready_bits_15;
-      ready_memory_16 <= comb_ready_bits_16;
-      ready_memory_17 <= comb_ready_bits_17;
-      ready_memory_18 <= comb_ready_bits_18;
-      ready_memory_19 <= comb_ready_bits_19;
-      ready_memory_20 <= comb_ready_bits_20;
-      ready_memory_21 <= comb_ready_bits_21;
-      ready_memory_22 <= comb_ready_bits_22;
-      ready_memory_23 <= comb_ready_bits_23;
-      ready_memory_24 <= comb_ready_bits_24;
-      ready_memory_25 <= comb_ready_bits_25;
-      ready_memory_26 <= comb_ready_bits_26;
-      ready_memory_27 <= comb_ready_bits_27;
-      ready_memory_28 <= comb_ready_bits_28;
-      ready_memory_29 <= comb_ready_bits_29;
-      ready_memory_30 <= comb_ready_bits_30;
-      ready_memory_31 <= comb_ready_bits_31;
-      ready_memory_32 <= comb_ready_bits_32;
-      ready_memory_33 <= comb_ready_bits_33;
-      ready_memory_34 <= comb_ready_bits_34;
-      ready_memory_35 <= comb_ready_bits_35;
-      ready_memory_36 <= comb_ready_bits_36;
-      ready_memory_37 <= comb_ready_bits_37;
-      ready_memory_38 <= comb_ready_bits_38;
-      ready_memory_39 <= comb_ready_bits_39;
-      ready_memory_40 <= comb_ready_bits_40;
-      ready_memory_41 <= comb_ready_bits_41;
-      ready_memory_42 <= comb_ready_bits_42;
-      ready_memory_43 <= comb_ready_bits_43;
-      ready_memory_44 <= comb_ready_bits_44;
-      ready_memory_45 <= comb_ready_bits_45;
-      ready_memory_46 <= comb_ready_bits_46;
-      ready_memory_47 <= comb_ready_bits_47;
-      ready_memory_48 <= comb_ready_bits_48;
-      ready_memory_49 <= comb_ready_bits_49;
-      ready_memory_50 <= comb_ready_bits_50;
-      ready_memory_51 <= comb_ready_bits_51;
-      ready_memory_52 <= comb_ready_bits_52;
-      ready_memory_53 <= comb_ready_bits_53;
-      ready_memory_54 <= comb_ready_bits_54;
-      ready_memory_55 <= comb_ready_bits_55;
-      ready_memory_56 <= comb_ready_bits_56;
-      ready_memory_57 <= comb_ready_bits_57;
-      ready_memory_58 <= comb_ready_bits_58;
-      ready_memory_59 <= comb_ready_bits_59;
-      ready_memory_60 <= comb_ready_bits_60;
-      ready_memory_61 <= comb_ready_bits_61;
-      ready_memory_62 <= comb_ready_bits_62;
-      ready_memory_63 <= comb_ready_bits_63;
-      ready_memory_64 <= comb_ready_bits_64;
+      automatic logic _GEN_452 = io_commit_valid & io_commit_bits_is_misprediction;
+      ready_memory_0 <= _GEN_452 | comb_ready_bits_0;
+      ready_memory_1 <= _GEN_452 | comb_ready_bits_1;
+      ready_memory_2 <= _GEN_452 | comb_ready_bits_2;
+      ready_memory_3 <= _GEN_452 | comb_ready_bits_3;
+      ready_memory_4 <= _GEN_452 | comb_ready_bits_4;
+      ready_memory_5 <= _GEN_452 | comb_ready_bits_5;
+      ready_memory_6 <= _GEN_452 | comb_ready_bits_6;
+      ready_memory_7 <= _GEN_452 | comb_ready_bits_7;
+      ready_memory_8 <= _GEN_452 | comb_ready_bits_8;
+      ready_memory_9 <= _GEN_452 | comb_ready_bits_9;
+      ready_memory_10 <= _GEN_452 | comb_ready_bits_10;
+      ready_memory_11 <= _GEN_452 | comb_ready_bits_11;
+      ready_memory_12 <= _GEN_452 | comb_ready_bits_12;
+      ready_memory_13 <= _GEN_452 | comb_ready_bits_13;
+      ready_memory_14 <= _GEN_452 | comb_ready_bits_14;
+      ready_memory_15 <= _GEN_452 | comb_ready_bits_15;
+      ready_memory_16 <= _GEN_452 | comb_ready_bits_16;
+      ready_memory_17 <= _GEN_452 | comb_ready_bits_17;
+      ready_memory_18 <= _GEN_452 | comb_ready_bits_18;
+      ready_memory_19 <= _GEN_452 | comb_ready_bits_19;
+      ready_memory_20 <= _GEN_452 | comb_ready_bits_20;
+      ready_memory_21 <= _GEN_452 | comb_ready_bits_21;
+      ready_memory_22 <= _GEN_452 | comb_ready_bits_22;
+      ready_memory_23 <= _GEN_452 | comb_ready_bits_23;
+      ready_memory_24 <= _GEN_452 | comb_ready_bits_24;
+      ready_memory_25 <= _GEN_452 | comb_ready_bits_25;
+      ready_memory_26 <= _GEN_452 | comb_ready_bits_26;
+      ready_memory_27 <= _GEN_452 | comb_ready_bits_27;
+      ready_memory_28 <= _GEN_452 | comb_ready_bits_28;
+      ready_memory_29 <= _GEN_452 | comb_ready_bits_29;
+      ready_memory_30 <= _GEN_452 | comb_ready_bits_30;
+      ready_memory_31 <= _GEN_452 | comb_ready_bits_31;
+      ready_memory_32 <= _GEN_452 | comb_ready_bits_32;
+      ready_memory_33 <= _GEN_452 | comb_ready_bits_33;
+      ready_memory_34 <= _GEN_452 | comb_ready_bits_34;
+      ready_memory_35 <= _GEN_452 | comb_ready_bits_35;
+      ready_memory_36 <= _GEN_452 | comb_ready_bits_36;
+      ready_memory_37 <= _GEN_452 | comb_ready_bits_37;
+      ready_memory_38 <= _GEN_452 | comb_ready_bits_38;
+      ready_memory_39 <= _GEN_452 | comb_ready_bits_39;
+      ready_memory_40 <= _GEN_452 | comb_ready_bits_40;
+      ready_memory_41 <= _GEN_452 | comb_ready_bits_41;
+      ready_memory_42 <= _GEN_452 | comb_ready_bits_42;
+      ready_memory_43 <= _GEN_452 | comb_ready_bits_43;
+      ready_memory_44 <= _GEN_452 | comb_ready_bits_44;
+      ready_memory_45 <= _GEN_452 | comb_ready_bits_45;
+      ready_memory_46 <= _GEN_452 | comb_ready_bits_46;
+      ready_memory_47 <= _GEN_452 | comb_ready_bits_47;
+      ready_memory_48 <= _GEN_452 | comb_ready_bits_48;
+      ready_memory_49 <= _GEN_452 | comb_ready_bits_49;
+      ready_memory_50 <= _GEN_452 | comb_ready_bits_50;
+      ready_memory_51 <= _GEN_452 | comb_ready_bits_51;
+      ready_memory_52 <= _GEN_452 | comb_ready_bits_52;
+      ready_memory_53 <= _GEN_452 | comb_ready_bits_53;
+      ready_memory_54 <= _GEN_452 | comb_ready_bits_54;
+      ready_memory_55 <= _GEN_452 | comb_ready_bits_55;
+      ready_memory_56 <= _GEN_452 | comb_ready_bits_56;
+      ready_memory_57 <= _GEN_452 | comb_ready_bits_57;
+      ready_memory_58 <= _GEN_452 | comb_ready_bits_58;
+      ready_memory_59 <= _GEN_452 | comb_ready_bits_59;
+      ready_memory_60 <= _GEN_452 | comb_ready_bits_60;
+      ready_memory_61 <= _GEN_452 | comb_ready_bits_61;
+      ready_memory_62 <= _GEN_452 | comb_ready_bits_62;
+      ready_memory_63 <= _GEN_452 | comb_ready_bits_63;
+      ready_memory_64 <= _GEN_452 | comb_ready_bits_64;
     end
     io_decoded_fetch_packet_ready_REG <=
       _free_list_io_can_allocate & io_renamed_decoded_fetch_packet_ready;
@@ -2528,6 +2548,10 @@ module rename(
     .io_free_list_RD_1               (_WAW_handler_io_FL_RD_values_1),
     .io_free_list_RD_2               (_WAW_handler_io_FL_RD_values_2),
     .io_free_list_RD_3               (_WAW_handler_io_FL_RD_values_3),
+    .io_partial_commit_valid_0       (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1       (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2       (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3       (io_partial_commit_valid_3),
     .io_commit_valid                 (io_commit_valid),
     .io_commit_bits_is_misprediction (io_commit_bits_is_misprediction),
     .io_commit_bits_RDold_0          (io_commit_bits_RDold_0),
@@ -2823,8 +2847,6 @@ module rename(
       (io_decoded_fetch_packet_bits_prediction_target),
     .io_enq_bits_prediction_br_type
       (io_decoded_fetch_packet_bits_prediction_br_type),
-    .io_enq_bits_prediction_GHR
-      (io_decoded_fetch_packet_bits_prediction_GHR),
     .io_enq_bits_prediction_T_NT
       (io_decoded_fetch_packet_bits_prediction_T_NT),
     .io_enq_bits_free_list_front_pointer
@@ -3047,8 +3069,6 @@ module rename(
       (io_renamed_decoded_fetch_packet_bits_prediction_target),
     .io_deq_bits_prediction_br_type
       (io_renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_deq_bits_prediction_GHR
-      (io_renamed_decoded_fetch_packet_bits_prediction_GHR),
     .io_deq_bits_prediction_T_NT
       (io_renamed_decoded_fetch_packet_bits_prediction_T_NT),
     .io_deq_bits_free_list_front_pointer

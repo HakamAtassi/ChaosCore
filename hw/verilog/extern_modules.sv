@@ -28,7 +28,5 @@
   `endif // STOP_COND
 `endif // not def STOP_COND_
 
-// external module nReadmWrite
-
 // external module axi_interconnect_wrap_2x2
 

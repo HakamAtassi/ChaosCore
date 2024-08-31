@@ -23,7 +23,7 @@ interface BTB_entry;
     logic[1-1:0] BTB_valid;
     logic[BTB_tag_size-1:0] BTB_tag;
     logic[32-1:0] BTB_target;
-    br_type_t BTBbr_type_t;
+    br_type_t BTB_br_type;
     logic[$clog2(fetchWidth)-1:0] BTB_fetch_packet_index;
 endinterface;
 

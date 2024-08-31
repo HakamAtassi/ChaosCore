@@ -36,20 +36,18 @@ module Queue16_prediction(
                 io_enq_bits_hit,
   input  [31:0] io_enq_bits_target,
   input  [2:0]  io_enq_bits_br_type,
-  input  [15:0] io_enq_bits_GHR,
   input         io_enq_bits_T_NT,
                 io_deq_ready,
   output        io_deq_valid,
                 io_deq_bits_hit,
   output [31:0] io_deq_bits_target,
   output [2:0]  io_deq_bits_br_type,
-  output [15:0] io_deq_bits_GHR,
   output        io_deq_bits_T_NT,
   input         io_flush
 );
 
   wire        do_deq;
-  wire [52:0] _ram_ext_R0_data;
+  wire [36:0] _ram_ext_R0_data;
   reg  [3:0]  enq_ptr_value;
   reg  [3:0]  deq_ptr_value;
   reg         maybe_full;
@@ -79,7 +77,7 @@ module Queue16_prediction(
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_16x53 ram_ext (
+  ram_16x37 ram_ext (
     .R0_addr (do_deq ? ((&deq_ptr_value) ? 4'h0 : deq_ptr_value + 4'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -88,18 +86,13 @@ module Queue16_prediction(
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
-      ({io_enq_bits_T_NT,
-        io_enq_bits_GHR,
-        io_enq_bits_br_type,
-        io_enq_bits_target,
-        io_enq_bits_hit})
+      ({io_enq_bits_T_NT, io_enq_bits_br_type, io_enq_bits_target, io_enq_bits_hit})
   );
   assign io_enq_ready = ~full;
   assign io_deq_valid = io_deq_valid_0;
   assign io_deq_bits_hit = empty ? io_enq_bits_hit : _ram_ext_R0_data[0];
   assign io_deq_bits_target = empty ? io_enq_bits_target : _ram_ext_R0_data[32:1];
   assign io_deq_bits_br_type = empty ? io_enq_bits_br_type : _ram_ext_R0_data[35:33];
-  assign io_deq_bits_GHR = empty ? io_enq_bits_GHR : _ram_ext_R0_data[51:36];
-  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[52];
+  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[36];
 endmodule
 

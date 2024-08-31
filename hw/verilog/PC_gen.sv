@@ -62,7 +62,6 @@ module PC_gen(
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
   input  [2:0]  io_prediction_bits_br_type,
-  input  [15:0] io_prediction_bits_GHR,
   input         io_prediction_bits_T_NT,
   input  [6:0]  io_RAS_read_NEXT,
                 io_RAS_read_TOS,
@@ -96,7 +95,7 @@ module PC_gen(
         PC_reg <= PC_mux + {26'h0, 6'h10 - {2'h0, PC_mux[3:0]}};
       flush_PC_reg <=
         is_misprediction
-          ? io_commit_bits_fetch_PC
+          ? io_commit_bits_expected_PC
           : io_revert_valid ? io_revert_bits_PC : 32'h0;
     end
     REG <= flushing_event;

@@ -59,11 +59,31 @@ module frontend(
   input         io_memory_response_bits_prediction_hit,
   input  [31:0] io_memory_response_bits_prediction_target,
   input  [2:0]  io_memory_response_bits_prediction_br_type,
-  input  [15:0] io_memory_response_bits_prediction_GHR,
   input         io_memory_response_bits_prediction_T_NT,
   input  [15:0] io_memory_response_bits_GHR,
   input  [6:0]  io_memory_response_bits_NEXT,
                 io_memory_response_bits_TOS,
+  input         io_partial_commit_valid_0,
+                io_partial_commit_valid_1,
+                io_partial_commit_valid_2,
+                io_partial_commit_valid_3,
+  input  [5:0]  io_partial_commit_ROB_index,
+  input  [3:0]  io_partial_commit_MOB_index_0,
+                io_partial_commit_MOB_index_1,
+                io_partial_commit_MOB_index_2,
+                io_partial_commit_MOB_index_3,
+  input  [4:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
+  input         io_partial_commit_RD_valid_0,
+                io_partial_commit_RD_valid_1,
+                io_partial_commit_RD_valid_2,
+                io_partial_commit_RD_valid_3,
+  input  [6:0]  io_partial_commit_RDold_0,
+                io_partial_commit_RDold_1,
+                io_partial_commit_RDold_2,
+                io_partial_commit_RDold_3,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
@@ -201,7 +221,6 @@ module frontend(
   output        io_renamed_decoded_fetch_packet_bits_prediction_hit,
   output [31:0] io_renamed_decoded_fetch_packet_bits_prediction_target,
   output [2:0]  io_renamed_decoded_fetch_packet_bits_prediction_br_type,
-  output [15:0] io_renamed_decoded_fetch_packet_bits_prediction_GHR,
   output        io_renamed_decoded_fetch_packet_bits_prediction_T_NT,
   output [7:0]  io_renamed_decoded_fetch_packet_bits_free_list_front_pointer,
   input         io_FU_outputs_0_valid,
@@ -386,7 +405,6 @@ module frontend(
   wire        _instruction_queue_io_deq_bits_prediction_hit;
   wire [31:0] _instruction_queue_io_deq_bits_prediction_target;
   wire [2:0]  _instruction_queue_io_deq_bits_prediction_br_type;
-  wire [15:0] _instruction_queue_io_deq_bits_prediction_GHR;
   wire        _instruction_queue_io_deq_bits_prediction_T_NT;
   wire [7:0]  _instruction_queue_io_deq_bits_free_list_front_pointer;
   wire        _decoders_io_fetch_packet_ready;
@@ -518,7 +536,6 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_prediction_hit;
   wire [31:0] _decoders_io_decoded_fetch_packet_bits_prediction_target;
   wire [2:0]  _decoders_io_decoded_fetch_packet_bits_prediction_br_type;
-  wire [15:0] _decoders_io_decoded_fetch_packet_bits_prediction_GHR;
   wire        _decoders_io_decoded_fetch_packet_bits_prediction_T_NT;
   wire [7:0]  _decoders_io_decoded_fetch_packet_bits_free_list_front_pointer;
   wire        _instruction_fetch_io_fetch_packet_valid;
@@ -538,7 +555,6 @@ module frontend(
   wire        _instruction_fetch_io_fetch_packet_bits_prediction_hit;
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_prediction_target;
   wire [2:0]  _instruction_fetch_io_fetch_packet_bits_prediction_br_type;
-  wire [15:0] _instruction_fetch_io_fetch_packet_bits_prediction_GHR;
   wire        _instruction_fetch_io_fetch_packet_bits_prediction_T_NT;
   wire [15:0] _instruction_fetch_io_fetch_packet_bits_GHR;
   wire [6:0]  _instruction_fetch_io_fetch_packet_bits_NEXT;
@@ -616,8 +632,6 @@ module frontend(
       (io_memory_response_bits_prediction_target),
     .io_memory_response_bits_prediction_br_type
       (io_memory_response_bits_prediction_br_type),
-    .io_memory_response_bits_prediction_GHR
-      (io_memory_response_bits_prediction_GHR),
     .io_memory_response_bits_prediction_T_NT
       (io_memory_response_bits_prediction_T_NT),
     .io_memory_response_bits_GHR                         (io_memory_response_bits_GHR),
@@ -664,8 +678,6 @@ module frontend(
       (_instruction_fetch_io_fetch_packet_bits_prediction_target),
     .io_fetch_packet_bits_prediction_br_type
       (_instruction_fetch_io_fetch_packet_bits_prediction_br_type),
-    .io_fetch_packet_bits_prediction_GHR
-      (_instruction_fetch_io_fetch_packet_bits_prediction_GHR),
     .io_fetch_packet_bits_prediction_T_NT
       (_instruction_fetch_io_fetch_packet_bits_prediction_T_NT),
     .io_fetch_packet_bits_GHR
@@ -717,8 +729,6 @@ module frontend(
       (_instruction_fetch_io_fetch_packet_bits_prediction_target),
     .io_fetch_packet_bits_prediction_br_type
       (_instruction_fetch_io_fetch_packet_bits_prediction_br_type),
-    .io_fetch_packet_bits_prediction_GHR
-      (_instruction_fetch_io_fetch_packet_bits_prediction_GHR),
     .io_fetch_packet_bits_prediction_T_NT
       (_instruction_fetch_io_fetch_packet_bits_prediction_T_NT),
     .io_fetch_packet_bits_GHR
@@ -953,8 +963,6 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_prediction_target),
     .io_decoded_fetch_packet_bits_prediction_br_type
       (_decoders_io_decoded_fetch_packet_bits_prediction_br_type),
-    .io_decoded_fetch_packet_bits_prediction_GHR
-      (_decoders_io_decoded_fetch_packet_bits_prediction_GHR),
     .io_decoded_fetch_packet_bits_prediction_T_NT
       (_decoders_io_decoded_fetch_packet_bits_prediction_T_NT),
     .io_decoded_fetch_packet_bits_free_list_front_pointer
@@ -1189,8 +1197,6 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_prediction_target),
     .io_enq_bits_prediction_br_type
       (_decoders_io_decoded_fetch_packet_bits_prediction_br_type),
-    .io_enq_bits_prediction_GHR
-      (_decoders_io_decoded_fetch_packet_bits_prediction_GHR),
     .io_enq_bits_prediction_T_NT
       (_decoders_io_decoded_fetch_packet_bits_prediction_T_NT),
     .io_enq_bits_free_list_front_pointer
@@ -1421,8 +1427,6 @@ module frontend(
       (_instruction_queue_io_deq_bits_prediction_target),
     .io_deq_bits_prediction_br_type
       (_instruction_queue_io_deq_bits_prediction_br_type),
-    .io_deq_bits_prediction_GHR
-      (_instruction_queue_io_deq_bits_prediction_GHR),
     .io_deq_bits_prediction_T_NT
       (_instruction_queue_io_deq_bits_prediction_T_NT),
     .io_deq_bits_free_list_front_pointer
@@ -1484,6 +1488,48 @@ module frontend(
       (io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3
       (io_commit_bits_RD_valid_3),
+    .io_partial_commit_valid_0
+      (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (io_partial_commit_MOB_index_3),
+    .io_partial_commit_RD_0
+      (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (io_partial_commit_RD_valid_3),
+    .io_partial_commit_RDold_0
+      (io_partial_commit_RDold_0),
+    .io_partial_commit_RDold_1
+      (io_partial_commit_RDold_1),
+    .io_partial_commit_RDold_2
+      (io_partial_commit_RDold_2),
+    .io_partial_commit_RDold_3
+      (io_partial_commit_RDold_3),
     .io_decoded_fetch_packet_ready
       (_rename_io_decoded_fetch_packet_ready),
     .io_decoded_fetch_packet_valid
@@ -1710,8 +1756,6 @@ module frontend(
       (_instruction_queue_io_deq_bits_prediction_target),
     .io_decoded_fetch_packet_bits_prediction_br_type
       (_instruction_queue_io_deq_bits_prediction_br_type),
-    .io_decoded_fetch_packet_bits_prediction_GHR
-      (_instruction_queue_io_deq_bits_prediction_GHR),
     .io_decoded_fetch_packet_bits_prediction_T_NT
       (_instruction_queue_io_deq_bits_prediction_T_NT),
     .io_decoded_fetch_packet_bits_free_list_front_pointer
@@ -2070,8 +2114,6 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_prediction_target),
     .io_renamed_decoded_fetch_packet_bits_prediction_br_type
       (io_renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_renamed_decoded_fetch_packet_bits_prediction_GHR
-      (io_renamed_decoded_fetch_packet_bits_prediction_GHR),
     .io_renamed_decoded_fetch_packet_bits_prediction_T_NT
       (io_renamed_decoded_fetch_packet_bits_prediction_T_NT),
     .io_renamed_decoded_fetch_packet_bits_free_list_front_pointer

@@ -50,7 +50,6 @@ module fetch_packet_decoder(
   input         io_fetch_packet_bits_prediction_hit,
   input  [31:0] io_fetch_packet_bits_prediction_target,
   input  [2:0]  io_fetch_packet_bits_prediction_br_type,
-  input  [15:0] io_fetch_packet_bits_prediction_GHR,
   input         io_fetch_packet_bits_prediction_T_NT,
   input  [15:0] io_fetch_packet_bits_GHR,
   input  [6:0]  io_fetch_packet_bits_NEXT,
@@ -168,7 +167,6 @@ module fetch_packet_decoder(
   output        io_decoded_fetch_packet_bits_prediction_hit,
   output [31:0] io_decoded_fetch_packet_bits_prediction_target,
   output [2:0]  io_decoded_fetch_packet_bits_prediction_br_type,
-  output [15:0] io_decoded_fetch_packet_bits_prediction_GHR,
   output        io_decoded_fetch_packet_bits_prediction_T_NT,
   output [7:0]  io_decoded_fetch_packet_bits_free_list_front_pointer
 );
@@ -660,8 +658,6 @@ module fetch_packet_decoder(
       (io_fetch_packet_bits_prediction_target),
     .io_enq_bits_prediction_br_type
       (io_fetch_packet_bits_prediction_br_type),
-    .io_enq_bits_prediction_GHR
-      (io_fetch_packet_bits_prediction_GHR),
     .io_enq_bits_prediction_T_NT
       (io_fetch_packet_bits_prediction_T_NT),
     .io_enq_bits_free_list_front_pointer                    (8'h0),
@@ -891,8 +887,6 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_prediction_target),
     .io_deq_bits_prediction_br_type
       (io_decoded_fetch_packet_bits_prediction_br_type),
-    .io_deq_bits_prediction_GHR
-      (io_decoded_fetch_packet_bits_prediction_GHR),
     .io_deq_bits_prediction_T_NT
       (io_decoded_fetch_packet_bits_prediction_T_NT),
     .io_deq_bits_free_list_front_pointer

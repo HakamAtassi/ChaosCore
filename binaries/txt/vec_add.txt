@@ -1,0 +1,128 @@
+
+elf/vec_add.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	00004137          	lui	x2,0x4
+   4:	00000297          	auipc	x5,0x0
+   8:	09828293          	addi	x5,x5,152 # 9c <main>
+   c:	00028067          	jr	x5
+
+00000010 <putchar>:
+  10:	fd010113          	addi	x2,x2,-48 # 3fd0 <main+0x3f34>
+  14:	02812623          	sw	x8,44(x2)
+  18:	03010413          	addi	x8,x2,48
+  1c:	fca42e23          	sw	x10,-36(x8)
+  20:	800007b7          	lui	x15,0x80000
+  24:	fef42623          	sw	x15,-20(x8)
+  28:	fdc42703          	lw	x14,-36(x8)
+  2c:	fec42783          	lw	x15,-20(x8)
+  30:	00e7a023          	sw	x14,0(x15) # 80000000 <main+0x7fffff64>
+  34:	00000013          	nop
+  38:	02c12403          	lw	x8,44(x2)
+  3c:	03010113          	addi	x2,x2,48
+  40:	00008067          	ret
+
+00000044 <printf>:
+  44:	fe010113          	addi	x2,x2,-32
+  48:	00112e23          	sw	x1,28(x2)
+  4c:	00812c23          	sw	x8,24(x2)
+  50:	02010413          	addi	x8,x2,32
+  54:	fea42623          	sw	x10,-20(x8)
+  58:	0200006f          	j	78 <printf+0x34>
+  5c:	fec42783          	lw	x15,-20(x8)
+  60:	0007c783          	lbu	x15,0(x15)
+  64:	00078513          	mv	x10,x15
+  68:	fa9ff0ef          	jal	10 <putchar>
+  6c:	fec42783          	lw	x15,-20(x8)
+  70:	00178793          	addi	x15,x15,1
+  74:	fef42623          	sw	x15,-20(x8)
+  78:	fec42783          	lw	x15,-20(x8)
+  7c:	0007c783          	lbu	x15,0(x15)
+  80:	fc079ee3          	bnez	x15,5c <printf+0x18>
+  84:	00000013          	nop
+  88:	00000013          	nop
+  8c:	01c12083          	lw	x1,28(x2)
+  90:	01812403          	lw	x8,24(x2)
+  94:	02010113          	addi	x2,x2,32
+  98:	00008067          	ret
+
+0000009c <main>:
+  9c:	fb010113          	addi	x2,x2,-80
+  a0:	04112623          	sw	x1,76(x2)
+  a4:	04812423          	sw	x8,72(x2)
+  a8:	05010413          	addi	x8,x2,80
+  ac:	1cc00793          	li	x15,460
+  b0:	0007a583          	lw	x11,0(x15)
+  b4:	0047a603          	lw	x12,4(x15)
+  b8:	0087a683          	lw	x13,8(x15)
+  bc:	00c7a703          	lw	x14,12(x15)
+  c0:	0107a783          	lw	x15,16(x15)
+  c4:	fcb42c23          	sw	x11,-40(x8)
+  c8:	fcc42e23          	sw	x12,-36(x8)
+  cc:	fed42023          	sw	x13,-32(x8)
+  d0:	fee42223          	sw	x14,-28(x8)
+  d4:	fef42423          	sw	x15,-24(x8)
+  d8:	1e000793          	li	x15,480
+  dc:	0007a583          	lw	x11,0(x15)
+  e0:	0047a603          	lw	x12,4(x15)
+  e4:	0087a683          	lw	x13,8(x15)
+  e8:	00c7a703          	lw	x14,12(x15)
+  ec:	0107a783          	lw	x15,16(x15)
+  f0:	fcb42223          	sw	x11,-60(x8)
+  f4:	fcc42423          	sw	x12,-56(x8)
+  f8:	fcd42623          	sw	x13,-52(x8)
+  fc:	fce42823          	sw	x14,-48(x8)
+ 100:	fcf42a23          	sw	x15,-44(x8)
+ 104:	fa042823          	sw	x0,-80(x8)
+ 108:	fa042a23          	sw	x0,-76(x8)
+ 10c:	fa042c23          	sw	x0,-72(x8)
+ 110:	fa042e23          	sw	x0,-68(x8)
+ 114:	fc042023          	sw	x0,-64(x8)
+ 118:	fe042623          	sw	x0,-20(x8)
+ 11c:	0500006f          	j	16c <main+0xd0>
+ 120:	fec42783          	lw	x15,-20(x8)
+ 124:	00279793          	slli	x15,x15,0x2
+ 128:	ff078793          	addi	x15,x15,-16
+ 12c:	008787b3          	add	x15,x15,x8
+ 130:	fe87a703          	lw	x14,-24(x15)
+ 134:	fec42783          	lw	x15,-20(x8)
+ 138:	00279793          	slli	x15,x15,0x2
+ 13c:	ff078793          	addi	x15,x15,-16
+ 140:	008787b3          	add	x15,x15,x8
+ 144:	fd47a783          	lw	x15,-44(x15)
+ 148:	00f70733          	add	x14,x14,x15
+ 14c:	fec42783          	lw	x15,-20(x8)
+ 150:	00279793          	slli	x15,x15,0x2
+ 154:	ff078793          	addi	x15,x15,-16
+ 158:	008787b3          	add	x15,x15,x8
+ 15c:	fce7a023          	sw	x14,-64(x15)
+ 160:	fec42783          	lw	x15,-20(x8)
+ 164:	00178793          	addi	x15,x15,1
+ 168:	fef42623          	sw	x15,-20(x8)
+ 16c:	fec42703          	lw	x14,-20(x8)
+ 170:	00400793          	li	x15,4
+ 174:	fae7d6e3          	bge	x15,x14,120 <main+0x84>
+ 178:	fb042783          	lw	x15,-80(x8)
+ 17c:	03078793          	addi	x15,x15,48
+ 180:	00078513          	mv	x10,x15
+ 184:	e8dff0ef          	jal	10 <putchar>
+ 188:	fb442783          	lw	x15,-76(x8)
+ 18c:	03078793          	addi	x15,x15,48
+ 190:	00078513          	mv	x10,x15
+ 194:	e7dff0ef          	jal	10 <putchar>
+ 198:	fb842783          	lw	x15,-72(x8)
+ 19c:	03078793          	addi	x15,x15,48
+ 1a0:	00078513          	mv	x10,x15
+ 1a4:	e6dff0ef          	jal	10 <putchar>
+ 1a8:	fbc42783          	lw	x15,-68(x8)
+ 1ac:	03078793          	addi	x15,x15,48
+ 1b0:	00078513          	mv	x10,x15
+ 1b4:	e5dff0ef          	jal	10 <putchar>
+ 1b8:	fc042783          	lw	x15,-64(x8)
+ 1bc:	03078793          	addi	x15,x15,48
+ 1c0:	00078513          	mv	x10,x15
+ 1c4:	e4dff0ef          	jal	10 <putchar>
+ 1c8:	0000006f          	j	1c8 <main+0x12c>

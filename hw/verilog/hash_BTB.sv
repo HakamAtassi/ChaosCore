@@ -34,7 +34,7 @@ module hash_BTB(
   input  [31:0] io_predict_PC,
   output        io_BTB_hit,
   output [31:0] io_BTB_output_BTB_target,
-  output [2:0]  io_BTB_output_BTBbr_type_t,
+  output [2:0]  io_BTB_output_BTB_br_type,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input  [2:0]  io_commit_bits_br_type,
@@ -58,13 +58,13 @@ module hash_BTB(
     .io_data_out_BTB_valid              (_BTB_memory_io_data_out_BTB_valid),
     .io_data_out_BTB_tag                (_BTB_memory_io_data_out_BTB_tag),
     .io_data_out_BTB_target             (io_BTB_output_BTB_target),
-    .io_data_out_BTBbr_type_t           (io_BTB_output_BTBbr_type_t),
+    .io_data_out_BTB_br_type            (io_BTB_output_BTB_br_type),
     .io_data_out_BTB_fetch_packet_index (_BTB_memory_io_data_out_BTB_fetch_packet_index),
     .io_wr_addr                         (io_commit_bits_fetch_PC[15:4]),
     .io_wr_en                           (io_commit_valid),
     .io_data_in_BTB_tag                 ({2'h0, io_commit_bits_fetch_PC[31:16]}),
     .io_data_in_BTB_target              (io_commit_bits_expected_PC),
-    .io_data_in_BTBbr_type_t            (io_commit_bits_br_type),
+    .io_data_in_BTB_br_type             (io_commit_bits_br_type),
     .io_data_in_BTB_fetch_packet_index  (io_commit_bits_fetch_packet_index)
   );
   assign io_BTB_hit =

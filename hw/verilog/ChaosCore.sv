@@ -85,7 +85,6 @@ module ChaosCore(
   input         io_frontend_memory_response_bits_prediction_hit,
   input  [31:0] io_frontend_memory_response_bits_prediction_target,
   input  [2:0]  io_frontend_memory_response_bits_prediction_br_type,
-  input  [15:0] io_frontend_memory_response_bits_prediction_GHR,
   input         io_frontend_memory_response_bits_prediction_T_NT,
   input  [15:0] io_frontend_memory_response_bits_GHR,
   input  [6:0]  io_frontend_memory_response_bits_NEXT,
@@ -135,22 +134,27 @@ module ChaosCore(
   wire        _ROB_io_commit_bits_RD_valid_1;
   wire        _ROB_io_commit_bits_RD_valid_2;
   wire        _ROB_io_commit_bits_RD_valid_3;
-  wire        _ROB_io_partial_commit_ROB_index_0_valid;
-  wire [5:0]  _ROB_io_partial_commit_ROB_index_0_bits;
-  wire        _ROB_io_partial_commit_ROB_index_1_valid;
-  wire [5:0]  _ROB_io_partial_commit_ROB_index_1_bits;
-  wire        _ROB_io_partial_commit_ROB_index_2_valid;
-  wire [5:0]  _ROB_io_partial_commit_ROB_index_2_bits;
-  wire        _ROB_io_partial_commit_ROB_index_3_valid;
-  wire [5:0]  _ROB_io_partial_commit_ROB_index_3_bits;
-  wire        _ROB_io_partial_commit_MOB_index_0_valid;
-  wire [3:0]  _ROB_io_partial_commit_MOB_index_0_bits;
-  wire        _ROB_io_partial_commit_MOB_index_1_valid;
-  wire [3:0]  _ROB_io_partial_commit_MOB_index_1_bits;
-  wire        _ROB_io_partial_commit_MOB_index_2_valid;
-  wire [3:0]  _ROB_io_partial_commit_MOB_index_2_bits;
-  wire        _ROB_io_partial_commit_MOB_index_3_valid;
-  wire [3:0]  _ROB_io_partial_commit_MOB_index_3_bits;
+  wire        _ROB_io_partial_commit_valid_0;
+  wire        _ROB_io_partial_commit_valid_1;
+  wire        _ROB_io_partial_commit_valid_2;
+  wire        _ROB_io_partial_commit_valid_3;
+  wire [5:0]  _ROB_io_partial_commit_ROB_index;
+  wire [3:0]  _ROB_io_partial_commit_MOB_index_0;
+  wire [3:0]  _ROB_io_partial_commit_MOB_index_1;
+  wire [3:0]  _ROB_io_partial_commit_MOB_index_2;
+  wire [3:0]  _ROB_io_partial_commit_MOB_index_3;
+  wire [4:0]  _ROB_io_partial_commit_RD_0;
+  wire [4:0]  _ROB_io_partial_commit_RD_1;
+  wire [4:0]  _ROB_io_partial_commit_RD_2;
+  wire [4:0]  _ROB_io_partial_commit_RD_3;
+  wire        _ROB_io_partial_commit_RD_valid_0;
+  wire        _ROB_io_partial_commit_RD_valid_1;
+  wire        _ROB_io_partial_commit_RD_valid_2;
+  wire        _ROB_io_partial_commit_RD_valid_3;
+  wire [6:0]  _ROB_io_partial_commit_RDold_0;
+  wire [6:0]  _ROB_io_partial_commit_RDold_1;
+  wire [6:0]  _ROB_io_partial_commit_RDold_2;
+  wire [6:0]  _ROB_io_partial_commit_RDold_3;
   wire [5:0]  _ROB_io_ROB_index;
   wire [31:0] _ROB_io_PC_file_exec_data;
   wire [3:0]  _backend_io_reserved_pointers_0_bits;
@@ -422,7 +426,6 @@ module ChaosCore(
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_prediction_hit;
   wire [31:0] _frontend_io_renamed_decoded_fetch_packet_bits_prediction_target;
   wire [2:0]  _frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_type;
-  wire [15:0] _frontend_io_renamed_decoded_fetch_packet_bits_prediction_GHR;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_prediction_T_NT;
   wire [7:0]  _frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer;
   wire        flush = _ROB_io_commit_valid & _ROB_io_commit_bits_is_misprediction;
@@ -491,8 +494,6 @@ module ChaosCore(
       (io_frontend_memory_response_bits_prediction_target),
     .io_memory_response_bits_prediction_br_type
       (io_frontend_memory_response_bits_prediction_br_type),
-    .io_memory_response_bits_prediction_GHR
-      (io_frontend_memory_response_bits_prediction_GHR),
     .io_memory_response_bits_prediction_T_NT
       (io_frontend_memory_response_bits_prediction_T_NT),
     .io_memory_response_bits_GHR
@@ -501,6 +502,48 @@ module ChaosCore(
       (io_frontend_memory_response_bits_NEXT),
     .io_memory_response_bits_TOS
       (io_frontend_memory_response_bits_TOS),
+    .io_partial_commit_valid_0
+      (_ROB_io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (_ROB_io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (_ROB_io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (_ROB_io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (_ROB_io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (_ROB_io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (_ROB_io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (_ROB_io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (_ROB_io_partial_commit_MOB_index_3),
+    .io_partial_commit_RD_0
+      (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (_ROB_io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (_ROB_io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (_ROB_io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (_ROB_io_partial_commit_RD_valid_3),
+    .io_partial_commit_RDold_0
+      (_ROB_io_partial_commit_RDold_0),
+    .io_partial_commit_RDold_1
+      (_ROB_io_partial_commit_RDold_1),
+    .io_partial_commit_RDold_2
+      (_ROB_io_partial_commit_RDold_2),
+    .io_partial_commit_RDold_3
+      (_ROB_io_partial_commit_RDold_3),
     .io_commit_valid
       (_ROB_io_commit_valid),
     .io_commit_bits_fetch_PC
@@ -775,8 +818,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_target),
     .io_renamed_decoded_fetch_packet_bits_prediction_br_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_renamed_decoded_fetch_packet_bits_prediction_GHR
-      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_GHR),
     .io_renamed_decoded_fetch_packet_bits_prediction_T_NT
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_T_NT),
     .io_renamed_decoded_fetch_packet_bits_free_list_front_pointer
@@ -991,38 +1032,36 @@ module ChaosCore(
     .io_commit_bits_RD_valid_1                          (_ROB_io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2                          (_ROB_io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3                          (_ROB_io_commit_bits_RD_valid_3),
-    .io_partial_commit_ROB_index_0_valid
-      (_ROB_io_partial_commit_ROB_index_0_valid),
-    .io_partial_commit_ROB_index_0_bits
-      (_ROB_io_partial_commit_ROB_index_0_bits),
-    .io_partial_commit_ROB_index_1_valid
-      (_ROB_io_partial_commit_ROB_index_1_valid),
-    .io_partial_commit_ROB_index_1_bits
-      (_ROB_io_partial_commit_ROB_index_1_bits),
-    .io_partial_commit_ROB_index_2_valid
-      (_ROB_io_partial_commit_ROB_index_2_valid),
-    .io_partial_commit_ROB_index_2_bits
-      (_ROB_io_partial_commit_ROB_index_2_bits),
-    .io_partial_commit_ROB_index_3_valid
-      (_ROB_io_partial_commit_ROB_index_3_valid),
-    .io_partial_commit_ROB_index_3_bits
-      (_ROB_io_partial_commit_ROB_index_3_bits),
-    .io_partial_commit_MOB_index_0_valid
-      (_ROB_io_partial_commit_MOB_index_0_valid),
-    .io_partial_commit_MOB_index_0_bits
-      (_ROB_io_partial_commit_MOB_index_0_bits),
-    .io_partial_commit_MOB_index_1_valid
-      (_ROB_io_partial_commit_MOB_index_1_valid),
-    .io_partial_commit_MOB_index_1_bits
-      (_ROB_io_partial_commit_MOB_index_1_bits),
-    .io_partial_commit_MOB_index_2_valid
-      (_ROB_io_partial_commit_MOB_index_2_valid),
-    .io_partial_commit_MOB_index_2_bits
-      (_ROB_io_partial_commit_MOB_index_2_bits),
-    .io_partial_commit_MOB_index_3_valid
-      (_ROB_io_partial_commit_MOB_index_3_valid),
-    .io_partial_commit_MOB_index_3_bits
-      (_ROB_io_partial_commit_MOB_index_3_bits),
+    .io_partial_commit_valid_0                          (_ROB_io_partial_commit_valid_0),
+    .io_partial_commit_valid_1                          (_ROB_io_partial_commit_valid_1),
+    .io_partial_commit_valid_2                          (_ROB_io_partial_commit_valid_2),
+    .io_partial_commit_valid_3                          (_ROB_io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (_ROB_io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (_ROB_io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (_ROB_io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (_ROB_io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (_ROB_io_partial_commit_MOB_index_3),
+    .io_partial_commit_RD_0                             (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                             (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                             (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                             (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (_ROB_io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (_ROB_io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (_ROB_io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (_ROB_io_partial_commit_RD_valid_3),
+    .io_partial_commit_RDold_0                          (_ROB_io_partial_commit_RDold_0),
+    .io_partial_commit_RDold_1                          (_ROB_io_partial_commit_RDold_1),
+    .io_partial_commit_RDold_2                          (_ROB_io_partial_commit_RDold_2),
+    .io_partial_commit_RDold_3                          (_ROB_io_partial_commit_RDold_3),
     .io_PC_file_exec_addr                               (_backend_io_PC_file_exec_addr),
     .io_PC_file_exec_data                               (_ROB_io_PC_file_exec_data),
     .io_fetch_PC
@@ -1632,8 +1671,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_target),
     .io_ROB_packet_bits_prediction_br_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_ROB_packet_bits_prediction_GHR
-      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_GHR),
     .io_ROB_packet_bits_prediction_T_NT
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_T_NT),
     .io_ROB_packet_bits_free_list_front_pointer
@@ -1813,38 +1850,48 @@ module ChaosCore(
       (_ROB_io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3
       (_ROB_io_commit_bits_RD_valid_3),
-    .io_partial_commit_ROB_index_0_valid
-      (_ROB_io_partial_commit_ROB_index_0_valid),
-    .io_partial_commit_ROB_index_0_bits
-      (_ROB_io_partial_commit_ROB_index_0_bits),
-    .io_partial_commit_ROB_index_1_valid
-      (_ROB_io_partial_commit_ROB_index_1_valid),
-    .io_partial_commit_ROB_index_1_bits
-      (_ROB_io_partial_commit_ROB_index_1_bits),
-    .io_partial_commit_ROB_index_2_valid
-      (_ROB_io_partial_commit_ROB_index_2_valid),
-    .io_partial_commit_ROB_index_2_bits
-      (_ROB_io_partial_commit_ROB_index_2_bits),
-    .io_partial_commit_ROB_index_3_valid
-      (_ROB_io_partial_commit_ROB_index_3_valid),
-    .io_partial_commit_ROB_index_3_bits
-      (_ROB_io_partial_commit_ROB_index_3_bits),
-    .io_partial_commit_MOB_index_0_valid
-      (_ROB_io_partial_commit_MOB_index_0_valid),
-    .io_partial_commit_MOB_index_0_bits
-      (_ROB_io_partial_commit_MOB_index_0_bits),
-    .io_partial_commit_MOB_index_1_valid
-      (_ROB_io_partial_commit_MOB_index_1_valid),
-    .io_partial_commit_MOB_index_1_bits
-      (_ROB_io_partial_commit_MOB_index_1_bits),
-    .io_partial_commit_MOB_index_2_valid
-      (_ROB_io_partial_commit_MOB_index_2_valid),
-    .io_partial_commit_MOB_index_2_bits
-      (_ROB_io_partial_commit_MOB_index_2_bits),
-    .io_partial_commit_MOB_index_3_valid
-      (_ROB_io_partial_commit_MOB_index_3_valid),
-    .io_partial_commit_MOB_index_3_bits
-      (_ROB_io_partial_commit_MOB_index_3_bits),
+    .io_partial_commit_valid_0
+      (_ROB_io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (_ROB_io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (_ROB_io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (_ROB_io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (_ROB_io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (_ROB_io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (_ROB_io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (_ROB_io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (_ROB_io_partial_commit_MOB_index_3),
+    .io_partial_commit_RD_0
+      (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (_ROB_io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (_ROB_io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (_ROB_io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (_ROB_io_partial_commit_RD_valid_3),
+    .io_partial_commit_RDold_0
+      (_ROB_io_partial_commit_RDold_0),
+    .io_partial_commit_RDold_1
+      (_ROB_io_partial_commit_RDold_1),
+    .io_partial_commit_RDold_2
+      (_ROB_io_partial_commit_RDold_2),
+    .io_partial_commit_RDold_3
+      (_ROB_io_partial_commit_RDold_3),
     .io_ROB_index                                                  (_ROB_io_ROB_index),
     .io_PC_file_exec_addr
       (_backend_io_PC_file_exec_addr),

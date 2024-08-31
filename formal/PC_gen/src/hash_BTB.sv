@@ -51,7 +51,7 @@ module hash_BTB(	// src/main/scala/Frontend/BP/hash_BTB.scala:88:7
   output        io_BTB_hit,	// src/main/scala/Frontend/BP/hash_BTB.scala:92:16
                 io_BTB_output_BTB_valid,	// src/main/scala/Frontend/BP/hash_BTB.scala:92:16
   output [31:0] io_BTB_output_BTB_target,	// src/main/scala/Frontend/BP/hash_BTB.scala:92:16
-  output [2:0]  io_BTB_output_BTBbr_type_t,	// src/main/scala/Frontend/BP/hash_BTB.scala:92:16
+  output [2:0]  io_BTB_output_BTB_br_type,	// src/main/scala/Frontend/BP/hash_BTB.scala:92:16
   input         io_commit_valid,	// src/main/scala/Frontend/BP/hash_BTB.scala:92:16
   input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/BP/hash_BTB.scala:92:16
   input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Frontend/BP/hash_BTB.scala:92:16
@@ -97,13 +97,13 @@ module hash_BTB(	// src/main/scala/Frontend/BP/hash_BTB.scala:88:7
     .io_data_out_BTB_valid              (_BTB_memory_io_data_out_BTB_valid),
     .io_data_out_BTB_tag                (_BTB_memory_io_data_out_BTB_tag),
     .io_data_out_BTB_target             (io_BTB_output_BTB_target),
-    .io_data_out_BTBbr_type_t           (io_BTB_output_BTBbr_type_t),
+    .io_data_out_BTB_br_type           (io_BTB_output_BTB_br_type),
     .io_data_out_BTB_fetch_packet_index (_BTB_memory_io_data_out_BTB_fetch_packet_index),
     .io_wr_addr                         (io_commit_bits_fetch_PC[15:4]),	// src/main/scala/Frontend/BP/hash_BTB.scala:116:60, :120:29
     .io_wr_en                           (io_commit_valid),
     .io_data_in_BTB_tag                 ({2'h0, io_commit_bits_fetch_PC[31:16]}),	// src/main/scala/Frontend/BP/hash_BTB.scala:128:49, src/main/scala/utils.scala:112:15
     .io_data_in_BTB_target              (io_commit_bits_expected_PC),
-    .io_data_in_BTBbr_type_t            (io_commit_bits_br_type),
+    .io_data_in_BTB_br_type            (io_commit_bits_br_type),
     .io_data_in_BTB_fetch_packet_index  (io_commit_bits_fetch_packet_index)
   );	// src/main/scala/Frontend/BP/hash_BTB.scala:113:28
   assign io_BTB_hit =

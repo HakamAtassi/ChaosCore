@@ -82,22 +82,27 @@ module backend(
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
-                io_partial_commit_ROB_index_0_valid,
-  input  [5:0]  io_partial_commit_ROB_index_0_bits,
-  input         io_partial_commit_ROB_index_1_valid,
-  input  [5:0]  io_partial_commit_ROB_index_1_bits,
-  input         io_partial_commit_ROB_index_2_valid,
-  input  [5:0]  io_partial_commit_ROB_index_2_bits,
-  input         io_partial_commit_ROB_index_3_valid,
-  input  [5:0]  io_partial_commit_ROB_index_3_bits,
-  input         io_partial_commit_MOB_index_0_valid,
-  input  [3:0]  io_partial_commit_MOB_index_0_bits,
-  input         io_partial_commit_MOB_index_1_valid,
-  input  [3:0]  io_partial_commit_MOB_index_1_bits,
-  input         io_partial_commit_MOB_index_2_valid,
-  input  [3:0]  io_partial_commit_MOB_index_2_bits,
-  input         io_partial_commit_MOB_index_3_valid,
-  input  [3:0]  io_partial_commit_MOB_index_3_bits,
+                io_partial_commit_valid_0,
+                io_partial_commit_valid_1,
+                io_partial_commit_valid_2,
+                io_partial_commit_valid_3,
+  input  [5:0]  io_partial_commit_ROB_index,
+  input  [3:0]  io_partial_commit_MOB_index_0,
+                io_partial_commit_MOB_index_1,
+                io_partial_commit_MOB_index_2,
+                io_partial_commit_MOB_index_3,
+  input  [4:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
+  input         io_partial_commit_RD_valid_0,
+                io_partial_commit_RD_valid_1,
+                io_partial_commit_RD_valid_2,
+                io_partial_commit_RD_valid_3,
+  input  [6:0]  io_partial_commit_RDold_0,
+                io_partial_commit_RDold_1,
+                io_partial_commit_RDold_2,
+                io_partial_commit_RDold_3,
   output [5:0]  io_PC_file_exec_addr,
   input  [31:0] io_PC_file_exec_data,
                 io_fetch_PC,
@@ -352,14 +357,14 @@ module backend(
   wire [3:0]  _FU0_io_FU_output_bits_MOB_index;
   wire [5:0]  _FU0_io_FU_output_bits_ROB_index;
   wire [1:0]  _FU0_io_FU_output_bits_fetch_packet_index;
-  wire [31:0] _INT_PRF_rdata_0;
-  wire [31:0] _INT_PRF_rdata_1;
-  wire [31:0] _INT_PRF_rdata_2;
-  wire [31:0] _INT_PRF_rdata_3;
-  wire [31:0] _INT_PRF_rdata_4;
-  wire [31:0] _INT_PRF_rdata_5;
-  wire [31:0] _INT_PRF_rdata_6;
-  wire [31:0] _INT_PRF_rdata_7;
+  wire [31:0] _INT_PRF_io_rdata_0;
+  wire [31:0] _INT_PRF_io_rdata_1;
+  wire [31:0] _INT_PRF_io_rdata_2;
+  wire [31:0] _INT_PRF_io_rdata_3;
+  wire [31:0] _INT_PRF_io_rdata_4;
+  wire [31:0] _INT_PRF_io_rdata_5;
+  wire [31:0] _INT_PRF_io_rdata_6;
+  wire [31:0] _INT_PRF_io_rdata_7;
   wire        _MOB_io_reserve_0_ready;
   wire        _MOB_io_reserve_1_ready;
   wire        _MOB_io_reserve_2_ready;
@@ -1655,38 +1660,27 @@ module backend(
     .io_commit_bits_RD_valid_1                          (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2                          (io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3                          (io_commit_bits_RD_valid_3),
-    .io_partial_commit_ROB_index_0_valid
-      (io_partial_commit_ROB_index_0_valid),
-    .io_partial_commit_ROB_index_0_bits
-      (io_partial_commit_ROB_index_0_bits),
-    .io_partial_commit_ROB_index_1_valid
-      (io_partial_commit_ROB_index_1_valid),
-    .io_partial_commit_ROB_index_1_bits
-      (io_partial_commit_ROB_index_1_bits),
-    .io_partial_commit_ROB_index_2_valid
-      (io_partial_commit_ROB_index_2_valid),
-    .io_partial_commit_ROB_index_2_bits
-      (io_partial_commit_ROB_index_2_bits),
-    .io_partial_commit_ROB_index_3_valid
-      (io_partial_commit_ROB_index_3_valid),
-    .io_partial_commit_ROB_index_3_bits
-      (io_partial_commit_ROB_index_3_bits),
-    .io_partial_commit_MOB_index_0_valid
-      (io_partial_commit_MOB_index_0_valid),
-    .io_partial_commit_MOB_index_0_bits
-      (io_partial_commit_MOB_index_0_bits),
-    .io_partial_commit_MOB_index_1_valid
-      (io_partial_commit_MOB_index_1_valid),
-    .io_partial_commit_MOB_index_1_bits
-      (io_partial_commit_MOB_index_1_bits),
-    .io_partial_commit_MOB_index_2_valid
-      (io_partial_commit_MOB_index_2_valid),
-    .io_partial_commit_MOB_index_2_bits
-      (io_partial_commit_MOB_index_2_bits),
-    .io_partial_commit_MOB_index_3_valid
-      (io_partial_commit_MOB_index_3_valid),
-    .io_partial_commit_MOB_index_3_bits
-      (io_partial_commit_MOB_index_3_bits),
+    .io_partial_commit_valid_0                          (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1                          (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2                          (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3                          (io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index                        (io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0                      (io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1                      (io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2                      (io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3                      (io_partial_commit_MOB_index_3),
+    .io_partial_commit_RD_0                             (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                             (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                             (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                             (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0                       (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1                       (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2                       (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3                       (io_partial_commit_RD_valid_3),
+    .io_partial_commit_RDold_0                          (io_partial_commit_RDold_0),
+    .io_partial_commit_RDold_1                          (io_partial_commit_RDold_1),
+    .io_partial_commit_RDold_2                          (io_partial_commit_RDold_2),
+    .io_partial_commit_RDold_3                          (io_partial_commit_RDold_3),
     .io_backend_memory_request_ready                    (io_backend_memory_request_ready),
     .io_backend_memory_request_valid                    (io_backend_memory_request_valid),
     .io_backend_memory_request_bits_addr
@@ -1722,37 +1716,36 @@ module backend(
     .io_backend_memory_response_bits_MOB_index
       (io_backend_memory_response_bits_MOB_index)
   );
-  nReadmWrite INT_PRF (
-    .clock   (clock),
-    .reset   (reset),
-    .raddr_0 (_INT_RS_io_RF_inputs_0_bits_RS1),
-    .raddr_1 (_INT_RS_io_RF_inputs_0_bits_RS2),
-    .raddr_2 (_INT_RS_io_RF_inputs_1_bits_RS1),
-    .raddr_3 (_INT_RS_io_RF_inputs_1_bits_RS2),
-    .raddr_4 (_INT_RS_io_RF_inputs_2_bits_RS1),
-    .raddr_5 (_INT_RS_io_RF_inputs_2_bits_RS2),
-    .raddr_6 (_MEM_RS_io_RF_inputs_0_bits_RS1),
-    .raddr_7 (_MEM_RS_io_RF_inputs_0_bits_RS2),
-    .rdata_0 (_INT_PRF_rdata_0),
-    .rdata_1 (_INT_PRF_rdata_1),
-    .rdata_2 (_INT_PRF_rdata_2),
-    .rdata_3 (_INT_PRF_rdata_3),
-    .rdata_4 (_INT_PRF_rdata_4),
-    .rdata_5 (_INT_PRF_rdata_5),
-    .rdata_6 (_INT_PRF_rdata_6),
-    .rdata_7 (_INT_PRF_rdata_7),
-    .waddr_0 (_FU0_io_FU_output_bits_RD),
-    .waddr_1 (_FU1_io_FU_output_bits_RD),
-    .waddr_2 (_FU2_io_FU_output_bits_RD),
-    .waddr_3 (_MOB_io_MOB_output_bits_RD),
-    .wen_0   (_FU0_io_FU_output_valid & _FU0_io_FU_output_bits_RD_valid),
-    .wen_1   (_FU1_io_FU_output_valid & _FU1_io_FU_output_bits_RD_valid),
-    .wen_2   (_FU2_io_FU_output_valid & _FU2_io_FU_output_bits_RD_valid),
-    .wen_3   (_MOB_io_MOB_output_valid & _MOB_io_MOB_output_bits_RD_valid),
-    .wdata_0 (_FU0_io_FU_output_bits_RD_data),
-    .wdata_1 (_FU1_io_FU_output_bits_RD_data),
-    .wdata_2 (_FU2_io_FU_output_bits_RD_data),
-    .wdata_3 (_MOB_io_MOB_output_bits_RD_data)
+  sim_nReadmWrite INT_PRF (
+    .clock      (clock),
+    .io_raddr_0 (_INT_RS_io_RF_inputs_0_bits_RS1),
+    .io_raddr_1 (_INT_RS_io_RF_inputs_0_bits_RS2),
+    .io_raddr_2 (_INT_RS_io_RF_inputs_1_bits_RS1),
+    .io_raddr_3 (_INT_RS_io_RF_inputs_1_bits_RS2),
+    .io_raddr_4 (_INT_RS_io_RF_inputs_2_bits_RS1),
+    .io_raddr_5 (_INT_RS_io_RF_inputs_2_bits_RS2),
+    .io_raddr_6 (_MEM_RS_io_RF_inputs_0_bits_RS1),
+    .io_raddr_7 (_MEM_RS_io_RF_inputs_0_bits_RS2),
+    .io_rdata_0 (_INT_PRF_io_rdata_0),
+    .io_rdata_1 (_INT_PRF_io_rdata_1),
+    .io_rdata_2 (_INT_PRF_io_rdata_2),
+    .io_rdata_3 (_INT_PRF_io_rdata_3),
+    .io_rdata_4 (_INT_PRF_io_rdata_4),
+    .io_rdata_5 (_INT_PRF_io_rdata_5),
+    .io_rdata_6 (_INT_PRF_io_rdata_6),
+    .io_rdata_7 (_INT_PRF_io_rdata_7),
+    .io_waddr_0 (_FU0_io_FU_output_bits_RD),
+    .io_waddr_1 (_FU1_io_FU_output_bits_RD),
+    .io_waddr_2 (_FU2_io_FU_output_bits_RD),
+    .io_waddr_3 (_MOB_io_MOB_output_bits_RD),
+    .io_wen_0   (_FU0_io_FU_output_valid & _FU0_io_FU_output_bits_RD_valid),
+    .io_wen_1   (_FU1_io_FU_output_valid & _FU1_io_FU_output_bits_RD_valid),
+    .io_wen_2   (_FU2_io_FU_output_valid & _FU2_io_FU_output_bits_RD_valid),
+    .io_wen_3   (_MOB_io_MOB_output_valid & _MOB_io_MOB_output_bits_RD_valid),
+    .io_wdata_0 (_FU0_io_FU_output_bits_RD_data),
+    .io_wdata_1 (_FU1_io_FU_output_bits_RD_data),
+    .io_wdata_2 (_FU2_io_FU_output_bits_RD_data),
+    .io_wdata_3 (_MOB_io_MOB_output_bits_RD_data)
   );
   FU FU0 (
     .clock                                                     (clock),
@@ -1811,8 +1804,8 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_memory_type),
     .io_FU_input_bits_decoded_instruction_access_width
       (read_decoded_instructions_0_decoded_instruction_REG_access_width),
-    .io_FU_input_bits_RS1_data                                 (_INT_PRF_rdata_0),
-    .io_FU_input_bits_RS2_data                                 (_INT_PRF_rdata_1),
+    .io_FU_input_bits_RS1_data                                 (_INT_PRF_io_rdata_0),
+    .io_FU_input_bits_RS2_data                                 (_INT_PRF_io_rdata_1),
     .io_FU_input_bits_fetch_PC                                 (io_PC_file_exec_data),
     .io_FU_output_valid                                        (_FU0_io_FU_output_valid),
     .io_FU_output_bits_RD
@@ -1903,8 +1896,8 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_memory_type),
     .io_FU_input_bits_decoded_instruction_access_width
       (read_decoded_instructions_1_decoded_instruction_REG_access_width),
-    .io_FU_input_bits_RS1_data                                 (_INT_PRF_rdata_2),
-    .io_FU_input_bits_RS2_data                                 (_INT_PRF_rdata_3),
+    .io_FU_input_bits_RS1_data                                 (_INT_PRF_io_rdata_2),
+    .io_FU_input_bits_RS2_data                                 (_INT_PRF_io_rdata_3),
     .io_FU_input_bits_fetch_PC                                 (32'h0),
     .io_FU_output_valid                                        (_FU1_io_FU_output_valid),
     .io_FU_output_bits_RD
@@ -1995,8 +1988,8 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_memory_type),
     .io_FU_input_bits_decoded_instruction_access_width
       (read_decoded_instructions_2_decoded_instruction_REG_access_width),
-    .io_FU_input_bits_RS1_data                                 (_INT_PRF_rdata_4),
-    .io_FU_input_bits_RS2_data                                 (_INT_PRF_rdata_5),
+    .io_FU_input_bits_RS1_data                                 (_INT_PRF_io_rdata_4),
+    .io_FU_input_bits_RS2_data                                 (_INT_PRF_io_rdata_5),
     .io_FU_input_bits_fetch_PC                                 (32'h0),
     .io_FU_output_valid                                        (_FU2_io_FU_output_valid),
     .io_FU_output_bits_RD
@@ -2051,8 +2044,8 @@ module backend(
       (read_decoded_instructions_3_decoded_instruction_REG_memory_type),
     .io_FU_input_bits_decoded_instruction_access_width
       (read_decoded_instructions_3_decoded_instruction_REG_access_width),
-    .io_FU_input_bits_RS1_data                         (_INT_PRF_rdata_6),
-    .io_FU_input_bits_RS2_data                         (_INT_PRF_rdata_7),
+    .io_FU_input_bits_RS1_data                         (_INT_PRF_io_rdata_6),
+    .io_FU_input_bits_RS2_data                         (_INT_PRF_io_rdata_7),
     .io_FU_output_valid                                (_AGU_io_FU_output_valid),
     .io_FU_output_bits_RD                              (_AGU_io_FU_output_bits_RD),
     .io_FU_output_bits_address                         (_AGU_io_FU_output_bits_address),

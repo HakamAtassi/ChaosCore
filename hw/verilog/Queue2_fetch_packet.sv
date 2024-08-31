@@ -52,7 +52,6 @@ module Queue2_fetch_packet(
   input  [5:0]  io_enq_bits_instructions_3_ROB_index,
   input  [31:0] io_enq_bits_prediction_target,
   input  [2:0]  io_enq_bits_prediction_br_type,
-  input  [15:0] io_enq_bits_prediction_GHR,
   input         io_enq_bits_prediction_T_NT,
   input  [15:0] io_enq_bits_GHR,
   input  [6:0]  io_enq_bits_NEXT,
@@ -79,7 +78,6 @@ module Queue2_fetch_packet(
   output        io_deq_bits_prediction_hit,
   output [31:0] io_deq_bits_prediction_target,
   output [2:0]  io_deq_bits_prediction_br_type,
-  output [15:0] io_deq_bits_prediction_GHR,
   output        io_deq_bits_prediction_T_NT,
   output [15:0] io_deq_bits_GHR,
   output [6:0]  io_deq_bits_NEXT,
@@ -87,7 +85,7 @@ module Queue2_fetch_packet(
   input         io_flush
 );
 
-  wire [286:0] _ram_ext_R0_data;
+  wire [270:0] _ram_ext_R0_data;
   reg          wrap;
   reg          wrap_1;
   reg          maybe_full;
@@ -108,7 +106,7 @@ module Queue2_fetch_packet(
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_2x287 ram_ext (
+  ram_2x271 ram_ext (
     .R0_addr (wrap_1),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -121,7 +119,6 @@ module Queue2_fetch_packet(
         io_enq_bits_NEXT,
         io_enq_bits_GHR,
         io_enq_bits_prediction_T_NT,
-        io_enq_bits_prediction_GHR,
         io_enq_bits_prediction_br_type,
         io_enq_bits_prediction_target,
         1'h0,
@@ -165,10 +162,9 @@ module Queue2_fetch_packet(
   assign io_deq_bits_prediction_hit = _ram_ext_R0_data[204];
   assign io_deq_bits_prediction_target = _ram_ext_R0_data[236:205];
   assign io_deq_bits_prediction_br_type = _ram_ext_R0_data[239:237];
-  assign io_deq_bits_prediction_GHR = _ram_ext_R0_data[255:240];
-  assign io_deq_bits_prediction_T_NT = _ram_ext_R0_data[256];
-  assign io_deq_bits_GHR = _ram_ext_R0_data[272:257];
-  assign io_deq_bits_NEXT = _ram_ext_R0_data[279:273];
-  assign io_deq_bits_TOS = _ram_ext_R0_data[286:280];
+  assign io_deq_bits_prediction_T_NT = _ram_ext_R0_data[240];
+  assign io_deq_bits_GHR = _ram_ext_R0_data[256:241];
+  assign io_deq_bits_NEXT = _ram_ext_R0_data[263:257];
+  assign io_deq_bits_TOS = _ram_ext_R0_data[270:264];
 endmodule
 

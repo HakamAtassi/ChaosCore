@@ -113,6 +113,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // FRONTEND <> ROB //
     /////////////////////
     frontend.io.commit <> ROB.io.commit
+    frontend.io.partial_commit <> ROB.io.partial_commit
 
     /////////////////////////
     // FRONTEND <> BACKEND //

@@ -772,57 +772,57 @@ circuit ChaosCore :%[[
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB.io.BTB_output.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB.io.BTB_output.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.io.data_in.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem.io.data_in.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.io.data_out.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem.io.data_out.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem._din_buff_WIRE.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem._din_buff_WIRE.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.din_buff.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem.din_buff.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.data_out.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem.data_out.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem._data_out_WIRE.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem._data_out_WIRE.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.MPORT.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem.MPORT.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.data_out_MPORT.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem.data_out_MPORT.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem._io_data_out_T.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB_mem._io_data_out_T.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB.commit_BTB_entry.BTBbr_type_t",
+    "target":"ChaosCore.hash_BTB.commit_BTB_entry.BTB_br_type",
     "enumTypeName":"ChaosCore.br_type_t"
   },
   {
@@ -15382,30 +15382,30 @@ circuit ChaosCore :%[[
   module hash_BTB_mem : @[src/main/scala/Frontend/BP/hash_BTB.scala 41:7]
     input clock : Clock @[src/main/scala/Frontend/BP/hash_BTB.scala 41:7]
     input reset : Reset @[src/main/scala/Frontend/BP/hash_BTB.scala 41:7]
-    output io : { flip enable : UInt<1>, flip rd_addr : UInt<12>, data_out : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip wr_addr : UInt<12>, flip wr_en : UInt<1>, flip data_in : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>}} @[src/main/scala/Frontend/BP/hash_BTB.scala 42:14]
+    output io : { flip enable : UInt<1>, flip rd_addr : UInt<12>, data_out : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip wr_addr : UInt<12>, flip wr_en : UInt<1>, flip data_in : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}} @[src/main/scala/Frontend/BP/hash_BTB.scala 42:14]
 
-    smem mem : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} [4096] @[src/main/scala/Frontend/BP/hash_BTB.scala 55:24]
+    smem mem : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} [4096] @[src/main/scala/Frontend/BP/hash_BTB.scala 55:24]
     invalidate io.data_out.BTB_fetch_packet_index @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
-    invalidate io.data_out.BTBbr_type_t @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
+    invalidate io.data_out.BTB_br_type @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
     invalidate io.data_out.BTB_target @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
     invalidate io.data_out.BTB_tag @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
     invalidate io.data_out.BTB_valid @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
     regreset hazard_reg : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 62:27]
-    wire _din_buff_WIRE : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
+    wire _din_buff_WIRE : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
     connect _din_buff_WIRE.BTB_fetch_packet_index, UInt<2>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
-    connect _din_buff_WIRE.BTBbr_type_t, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
+    connect _din_buff_WIRE.BTB_br_type, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
     connect _din_buff_WIRE.BTB_target, UInt<32>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
     connect _din_buff_WIRE.BTB_tag, UInt<18>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
     connect _din_buff_WIRE.BTB_valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
-    regreset din_buff : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>}, clock, reset, _din_buff_WIRE @[src/main/scala/Frontend/BP/hash_BTB.scala 63:25]
+    regreset din_buff : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}, clock, reset, _din_buff_WIRE @[src/main/scala/Frontend/BP/hash_BTB.scala 63:25]
     node _hazard_reg_T = eq(io.rd_addr, io.wr_addr) @[src/main/scala/Frontend/BP/hash_BTB.scala 65:29]
     node _hazard_reg_T_1 = and(_hazard_reg_T, io.wr_en) @[src/main/scala/Frontend/BP/hash_BTB.scala 65:45]
     connect hazard_reg, _hazard_reg_T_1 @[src/main/scala/Frontend/BP/hash_BTB.scala 65:14]
     connect din_buff, io.data_in @[src/main/scala/Frontend/BP/hash_BTB.scala 66:12]
-    wire data_out : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 72:22]
-    wire _data_out_WIRE : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
+    wire data_out : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 72:22]
+    wire _data_out_WIRE : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
     connect _data_out_WIRE.BTB_fetch_packet_index, UInt<2>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
-    connect _data_out_WIRE.BTBbr_type_t, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
+    connect _data_out_WIRE.BTB_br_type, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
     connect _data_out_WIRE.BTB_target, UInt<32>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
     connect _data_out_WIRE.BTB_tag, UInt<18>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
     connect _data_out_WIRE.BTB_valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
@@ -15426,7 +15426,7 @@ circuit ChaosCore :%[[
   module hash_BTB : @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
     input clock : Clock @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
     input reset : Reset @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
-    output io : { flip predict_PC : UInt<32>, flip predict_valid : UInt<1>, BTB_hit : UInt<1>, BTB_output : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BP/hash_BTB.scala 92:16]
+    output io : { flip predict_PC : UInt<32>, flip predict_valid : UInt<1>, BTB_hit : UInt<1>, BTB_output : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BP/hash_BTB.scala 92:16]
 
     node commit_input_tag = shr(io.commit.bits.fetch_PC, 16) @[src/main/scala/utils.scala 112:15]
     node predict_input_tag = shr(io.predict_PC, 16) @[src/main/scala/utils.scala 112:15]
@@ -15439,14 +15439,14 @@ circuit ChaosCore :%[[
     connect BTB_memory.io.rd_addr, prediction_BTB_address @[src/main/scala/Frontend/BP/hash_BTB.scala 119:29]
     connect BTB_memory.io.wr_addr, commit_BTB_address @[src/main/scala/Frontend/BP/hash_BTB.scala 120:29]
     connect BTB_memory.io.wr_en, io.commit.valid @[src/main/scala/Frontend/BP/hash_BTB.scala 121:29]
-    wire commit_BTB_entry : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 124:32]
+    wire commit_BTB_entry : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 124:32]
     connect commit_BTB_entry.BTB_valid, UInt<1>(0h1) @[src/main/scala/Frontend/BP/hash_BTB.scala 127:49]
     connect commit_BTB_entry.BTB_tag, commit_input_tag @[src/main/scala/Frontend/BP/hash_BTB.scala 128:49]
     connect commit_BTB_entry.BTB_target, io.commit.bits.expected_PC @[src/main/scala/Frontend/BP/hash_BTB.scala 129:49]
-    connect commit_BTB_entry.BTBbr_type_t, io.commit.bits.br_type @[src/main/scala/Frontend/BP/hash_BTB.scala 130:50]
+    connect commit_BTB_entry.BTB_br_type, io.commit.bits.br_type @[src/main/scala/Frontend/BP/hash_BTB.scala 130:50]
     connect commit_BTB_entry.BTB_fetch_packet_index, io.commit.bits.fetch_packet_index @[src/main/scala/Frontend/BP/hash_BTB.scala 131:49]
     connect BTB_memory.io.data_in.BTB_fetch_packet_index, commit_BTB_entry.BTB_fetch_packet_index @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
-    connect BTB_memory.io.data_in.BTBbr_type_t, commit_BTB_entry.BTBbr_type_t @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
+    connect BTB_memory.io.data_in.BTB_br_type, commit_BTB_entry.BTB_br_type @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
     connect BTB_memory.io.data_in.BTB_target, commit_BTB_entry.BTB_target @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
     connect BTB_memory.io.data_in.BTB_tag, commit_BTB_entry.BTB_tag @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
     connect BTB_memory.io.data_in.BTB_valid, commit_BTB_entry.BTB_valid @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
@@ -15666,7 +15666,7 @@ circuit ChaosCore :%[[
     connect io.RAS_read.NEXT, RAS.io.NEXT @[src/main/scala/Frontend/BP/BP.scala 148:26]
     connect io.RAS_read.TOS, RAS.io.TOS @[src/main/scala/Frontend/BP/BP.scala 149:26]
     connect prediction.bits.target, BTB.io.BTB_output.BTB_target @[src/main/scala/Frontend/BP/BP.scala 154:31]
-    connect prediction.bits.br_type, BTB.io.BTB_output.BTBbr_type_t @[src/main/scala/Frontend/BP/BP.scala 155:31]
+    connect prediction.bits.br_type, BTB.io.BTB_output.BTB_br_type @[src/main/scala/Frontend/BP/BP.scala 155:31]
     connect prediction.bits.hit, BTB.io.BTB_hit @[src/main/scala/Frontend/BP/BP.scala 156:31]
     connect prediction.bits.GHR, io.GHR @[src/main/scala/Frontend/BP/BP.scala 157:31]
     connect prediction.bits.T_NT, gshare.io.T_NT @[src/main/scala/Frontend/BP/BP.scala 158:31]

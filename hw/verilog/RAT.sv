@@ -51,7 +51,11 @@ module RAT(
                io_free_list_RD_1,
                io_free_list_RD_2,
                io_free_list_RD_3,
-  input        io_commit_valid,
+  input        io_partial_commit_valid_0,
+               io_partial_commit_valid_1,
+               io_partial_commit_valid_2,
+               io_partial_commit_valid_3,
+               io_commit_valid,
                io_commit_bits_is_misprediction,
   input  [4:0] io_commit_bits_RDold_0,
                io_commit_bits_RDold_1,
@@ -240,271 +244,273 @@ module RAT(
       speculative_RAT_31 <= 7'h0;
     end
     else begin
-      automatic logic _GEN_0 = io_commit_valid & io_commit_bits_is_misprediction;
-      automatic logic _GEN_1;
+      automatic logic _GEN_0;
+      automatic logic _GEN_1 = io_partial_commit_valid_0 & io_partial_commit_valid_1;
       automatic logic _GEN_2;
-      automatic logic _GEN_3;
-      automatic logic _GEN_4 = io_commit_valid & io_commit_bits_RD_valid_3 & ~_GEN_0;
-      _GEN_1 = io_commit_valid & io_commit_bits_RD_valid_0 & ~_GEN_0;
-      _GEN_2 = io_commit_valid & io_commit_bits_RD_valid_1 & ~_GEN_0;
-      _GEN_3 = io_commit_valid & io_commit_bits_RD_valid_2 & ~_GEN_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h0)
+      automatic logic _GEN_3 = _GEN_1 & io_partial_commit_valid_2;
+      automatic logic _GEN_4;
+      automatic logic _GEN_5 =
+        _GEN_3 & io_partial_commit_valid_3 & io_commit_bits_RD_valid_3;
+      _GEN_0 = io_partial_commit_valid_0 & io_commit_bits_RD_valid_0;
+      _GEN_2 = _GEN_1 & io_commit_bits_RD_valid_1;
+      _GEN_4 = _GEN_3 & io_commit_bits_RD_valid_2;
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h0)
         commit_RAT_0 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h0)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h0)
         commit_RAT_0 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h0)
         commit_RAT_0 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h0)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h0)
         commit_RAT_0 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h1)
         commit_RAT_1 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h1)
         commit_RAT_1 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1)
         commit_RAT_1 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1)
         commit_RAT_1 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h2)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h2)
         commit_RAT_2 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h2)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h2)
         commit_RAT_2 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h2)
         commit_RAT_2 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h2)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h2)
         commit_RAT_2 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h3)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h3)
         commit_RAT_3 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h3)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h3)
         commit_RAT_3 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h3)
         commit_RAT_3 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h3)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h3)
         commit_RAT_3 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h4)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h4)
         commit_RAT_4 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h4)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h4)
         commit_RAT_4 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h4)
         commit_RAT_4 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h4)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h4)
         commit_RAT_4 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h5)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h5)
         commit_RAT_5 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h5)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h5)
         commit_RAT_5 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h5)
         commit_RAT_5 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h5)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h5)
         commit_RAT_5 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h6)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h6)
         commit_RAT_6 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h6)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h6)
         commit_RAT_6 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h6)
         commit_RAT_6 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h6)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h6)
         commit_RAT_6 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h7)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h7)
         commit_RAT_7 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h7)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h7)
         commit_RAT_7 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h7)
         commit_RAT_7 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h7)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h7)
         commit_RAT_7 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h8)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h8)
         commit_RAT_8 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h8)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h8)
         commit_RAT_8 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h8)
         commit_RAT_8 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h8)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h8)
         commit_RAT_8 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h9)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h9)
         commit_RAT_9 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h9)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h9)
         commit_RAT_9 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h9)
         commit_RAT_9 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h9)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h9)
         commit_RAT_9 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hA)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'hA)
         commit_RAT_10 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hA)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'hA)
         commit_RAT_10 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hA)
         commit_RAT_10 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hA)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hA)
         commit_RAT_10 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hB)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'hB)
         commit_RAT_11 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hB)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'hB)
         commit_RAT_11 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hB)
         commit_RAT_11 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hB)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hB)
         commit_RAT_11 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hC)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'hC)
         commit_RAT_12 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hC)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'hC)
         commit_RAT_12 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hC)
         commit_RAT_12 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hC)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hC)
         commit_RAT_12 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hD)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'hD)
         commit_RAT_13 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hD)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'hD)
         commit_RAT_13 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hD)
         commit_RAT_13 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hD)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hD)
         commit_RAT_13 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hE)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'hE)
         commit_RAT_14 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hE)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'hE)
         commit_RAT_14 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hE)
         commit_RAT_14 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hE)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hE)
         commit_RAT_14 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hF)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'hF)
         commit_RAT_15 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hF)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'hF)
         commit_RAT_15 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hF)
         commit_RAT_15 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hF)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hF)
         commit_RAT_15 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h10)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h10)
         commit_RAT_16 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h10)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h10)
         commit_RAT_16 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h10)
         commit_RAT_16 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h10)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h10)
         commit_RAT_16 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h11)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h11)
         commit_RAT_17 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h11)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h11)
         commit_RAT_17 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h11)
         commit_RAT_17 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h11)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h11)
         commit_RAT_17 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h12)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h12)
         commit_RAT_18 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h12)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h12)
         commit_RAT_18 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h12)
         commit_RAT_18 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h12)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h12)
         commit_RAT_18 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h13)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h13)
         commit_RAT_19 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h13)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h13)
         commit_RAT_19 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h13)
         commit_RAT_19 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h13)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h13)
         commit_RAT_19 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h14)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h14)
         commit_RAT_20 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h14)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h14)
         commit_RAT_20 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h14)
         commit_RAT_20 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h14)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h14)
         commit_RAT_20 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h15)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h15)
         commit_RAT_21 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h15)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h15)
         commit_RAT_21 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h15)
         commit_RAT_21 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h15)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h15)
         commit_RAT_21 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h16)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h16)
         commit_RAT_22 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h16)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h16)
         commit_RAT_22 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h16)
         commit_RAT_22 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h16)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h16)
         commit_RAT_22 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h17)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h17)
         commit_RAT_23 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h17)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h17)
         commit_RAT_23 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h17)
         commit_RAT_23 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h17)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h17)
         commit_RAT_23 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h18)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h18)
         commit_RAT_24 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h18)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h18)
         commit_RAT_24 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h18)
         commit_RAT_24 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h18)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h18)
         commit_RAT_24 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h19)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h19)
         commit_RAT_25 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h19)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h19)
         commit_RAT_25 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h19)
         commit_RAT_25 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h19)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h19)
         commit_RAT_25 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1A)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h1A)
         commit_RAT_26 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1A)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h1A)
         commit_RAT_26 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1A)
         commit_RAT_26 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1A)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1A)
         commit_RAT_26 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1B)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h1B)
         commit_RAT_27 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1B)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h1B)
         commit_RAT_27 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1B)
         commit_RAT_27 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1B)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1B)
         commit_RAT_27 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1C)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h1C)
         commit_RAT_28 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1C)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h1C)
         commit_RAT_28 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1C)
         commit_RAT_28 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1C)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1C)
         commit_RAT_28 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1D)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h1D)
         commit_RAT_29 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1D)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h1D)
         commit_RAT_29 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1D)
         commit_RAT_29 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1D)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1D)
         commit_RAT_29 <= io_commit_bits_RD_0;
-      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1E)
+      if (_GEN_5 & io_commit_bits_RDold_3 == 5'h1E)
         commit_RAT_30 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1E)
+      else if (_GEN_4 & io_commit_bits_RDold_2 == 5'h1E)
         commit_RAT_30 <= io_commit_bits_RD_2;
       else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1E)
         commit_RAT_30 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1E)
+      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1E)
         commit_RAT_30 <= io_commit_bits_RD_0;
-      if (_GEN_4 & (&io_commit_bits_RDold_3))
+      if (_GEN_5 & (&io_commit_bits_RDold_3))
         commit_RAT_31 <= io_commit_bits_RD_3;
-      else if (_GEN_3 & (&io_commit_bits_RDold_2))
+      else if (_GEN_4 & (&io_commit_bits_RDold_2))
         commit_RAT_31 <= io_commit_bits_RD_2;
       else if (_GEN_2 & (&io_commit_bits_RDold_1))
         commit_RAT_31 <= io_commit_bits_RD_1;
-      else if (_GEN_1 & (&io_commit_bits_RDold_0))
+      else if (_GEN_0 & (&io_commit_bits_RDold_0))
         commit_RAT_31 <= io_commit_bits_RD_0;
-      if (_GEN_0) begin
+      if (io_commit_valid & io_commit_bits_is_misprediction) begin
         speculative_RAT_0 <= commit_RAT_0;
         speculative_RAT_1 <= commit_RAT_1;
         speculative_RAT_2 <= commit_RAT_2;
