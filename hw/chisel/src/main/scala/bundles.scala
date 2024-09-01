@@ -149,10 +149,10 @@ class partial_commit(coreParameters:CoreParameters) extends Bundle{
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
     val MOB_index               = Vec(fetchWidth, UInt(log2Ceil(MOBEntries).W))
 
-    val PRD                     = Vec(fetchWidth, UInt(architecturalRegBits.W))
-    val PRDold                  = Vec(fetchWidth, UInt(architecturalRegBits.W))
+    val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
-    val RD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
+    val PRD                     = Vec(fetchWidth, UInt(physicalRegBits.W))
+    val PRDold                  = Vec(fetchWidth, UInt(physicalRegBits.W))
 }
 
 //class exception(coreParameters:CoreParameters) extends Bundle{

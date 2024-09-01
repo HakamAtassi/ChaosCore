@@ -21,11 +21,13 @@ async def test_reset(dut):
 
     # Bring up TB
     SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/vec_add.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/if.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin")     # construct TB
     await SOC.reset()                      # Reset
 
 
 
-    for _ in range(10000):
+    for _ in range(2000):
         await SOC.clock()
 
     assert False

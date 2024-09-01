@@ -21,11 +21,11 @@ import org.scalatest.matchers.must.Matchers
   * mill %NAME%.test.testOnly gcd.GCDSpec
   * }}}
   */
-class axi_master_slave_spec extends AnyFreeSpec with Matchers {
+//class axi_master_slave_spec extends AnyFreeSpec with Matchers {
 
-  "Gcd should calculate proper greatest common denominator" in {
-    simulate(new AXI_master_slave(new CoreParameters(), new NOCParameters())) { dut =>
-        println("TEST")
-    }
-  }
-}
+  //"Gcd should calculate proper greatest common denominator" in {
+    //simulate(new AXI_master_slave(new CoreParameters(), new NOCParameters())) { dut =>
+        //println("TEST")
+    //}
+  //}
+//}

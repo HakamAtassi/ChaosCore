@@ -54,7 +54,7 @@ Disassembly of section .text:
   a0:	00112e23          	sw	x1,28(x2)
   a4:	00812c23          	sw	x8,24(x2)
   a8:	02010413          	addi	x8,x2,32
-  ac:	00200793          	li	x15,2
+  ac:	00100793          	li	x15,1
   b0:	fef42623          	sw	x15,-20(x8)
   b4:	fec42703          	lw	x14,-20(x8)
   b8:	00200793          	li	x15,2

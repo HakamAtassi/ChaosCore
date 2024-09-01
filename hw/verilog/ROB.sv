@@ -248,7 +248,15 @@ module ROB(
                 io_partial_commit_MOB_index_1,
                 io_partial_commit_MOB_index_2,
                 io_partial_commit_MOB_index_3,
-  output [4:0]  io_partial_commit_PRD_0,
+  output [4:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
+  output        io_partial_commit_RD_valid_0,
+                io_partial_commit_RD_valid_1,
+                io_partial_commit_RD_valid_2,
+                io_partial_commit_RD_valid_3,
+  output [6:0]  io_partial_commit_PRD_0,
                 io_partial_commit_PRD_1,
                 io_partial_commit_PRD_2,
                 io_partial_commit_PRD_3,
@@ -256,14 +264,6 @@ module ROB(
                 io_partial_commit_PRDold_1,
                 io_partial_commit_PRDold_2,
                 io_partial_commit_PRDold_3,
-  output        io_partial_commit_RD_valid_0,
-                io_partial_commit_RD_valid_1,
-                io_partial_commit_RD_valid_2,
-                io_partial_commit_RD_valid_3,
-  output [6:0]  io_partial_commit_RD_0,
-                io_partial_commit_RD_1,
-                io_partial_commit_RD_2,
-                io_partial_commit_RD_3,
   output [5:0]  io_ROB_index,
   input  [5:0]  io_PC_file_exec_addr,
   output [31:0] io_PC_file_exec_data
@@ -581,22 +581,22 @@ module ROB(
   reg  [3:0]       io_partial_commit_REG_MOB_index_1;
   reg  [3:0]       io_partial_commit_REG_MOB_index_2;
   reg  [3:0]       io_partial_commit_REG_MOB_index_3;
-  reg  [4:0]       io_partial_commit_REG_PRD_0;
-  reg  [4:0]       io_partial_commit_REG_PRD_1;
-  reg  [4:0]       io_partial_commit_REG_PRD_2;
-  reg  [4:0]       io_partial_commit_REG_PRD_3;
-  reg  [4:0]       io_partial_commit_REG_PRDold_0;
-  reg  [4:0]       io_partial_commit_REG_PRDold_1;
-  reg  [4:0]       io_partial_commit_REG_PRDold_2;
-  reg  [4:0]       io_partial_commit_REG_PRDold_3;
+  reg  [4:0]       io_partial_commit_REG_RD_0;
+  reg  [4:0]       io_partial_commit_REG_RD_1;
+  reg  [4:0]       io_partial_commit_REG_RD_2;
+  reg  [4:0]       io_partial_commit_REG_RD_3;
   reg              io_partial_commit_REG_RD_valid_0;
   reg              io_partial_commit_REG_RD_valid_1;
   reg              io_partial_commit_REG_RD_valid_2;
   reg              io_partial_commit_REG_RD_valid_3;
-  reg  [6:0]       io_partial_commit_REG_RD_0;
-  reg  [6:0]       io_partial_commit_REG_RD_1;
-  reg  [6:0]       io_partial_commit_REG_RD_2;
-  reg  [6:0]       io_partial_commit_REG_RD_3;
+  reg  [6:0]       io_partial_commit_REG_PRD_0;
+  reg  [6:0]       io_partial_commit_REG_PRD_1;
+  reg  [6:0]       io_partial_commit_REG_PRD_2;
+  reg  [6:0]       io_partial_commit_REG_PRD_3;
+  reg  [6:0]       io_partial_commit_REG_PRDold_0;
+  reg  [6:0]       io_partial_commit_REG_PRDold_1;
+  reg  [6:0]       io_partial_commit_REG_PRDold_2;
+  reg  [6:0]       io_partial_commit_REG_PRDold_3;
   assign full = ROB_output_ROB_index == back_pointer[5:0] & front_pointer != back_pointer;
   wire [15:0]      ROB_output_GHR;
   wire [6:0]       ROB_output_NEXT;
@@ -1283,22 +1283,22 @@ module ROB(
     io_partial_commit_REG_MOB_index_1 <= ROB_output_ROB_entries_1_MOB_index;
     io_partial_commit_REG_MOB_index_2 <= ROB_output_ROB_entries_2_MOB_index;
     io_partial_commit_REG_MOB_index_3 <= ROB_output_ROB_entries_3_MOB_index;
-    io_partial_commit_REG_PRD_0 <= ROB_output_ROB_entries_0_PRD[4:0];
-    io_partial_commit_REG_PRD_1 <= ROB_output_ROB_entries_1_PRD[4:0];
-    io_partial_commit_REG_PRD_2 <= ROB_output_ROB_entries_2_PRD[4:0];
-    io_partial_commit_REG_PRD_3 <= ROB_output_ROB_entries_3_PRD[4:0];
-    io_partial_commit_REG_PRDold_0 <= ROB_output_ROB_entries_0_PRDold;
-    io_partial_commit_REG_PRDold_1 <= ROB_output_ROB_entries_1_PRDold;
-    io_partial_commit_REG_PRDold_2 <= ROB_output_ROB_entries_2_PRDold;
-    io_partial_commit_REG_PRDold_3 <= ROB_output_ROB_entries_3_PRDold;
+    io_partial_commit_REG_RD_0 <= ROB_output_ROB_entries_0_RD;
+    io_partial_commit_REG_RD_1 <= ROB_output_ROB_entries_1_RD;
+    io_partial_commit_REG_RD_2 <= ROB_output_ROB_entries_2_RD;
+    io_partial_commit_REG_RD_3 <= ROB_output_ROB_entries_3_RD;
     io_partial_commit_REG_RD_valid_0 <= ROB_output_ROB_entries_0_RD_valid;
     io_partial_commit_REG_RD_valid_1 <= ROB_output_ROB_entries_1_RD_valid;
     io_partial_commit_REG_RD_valid_2 <= ROB_output_ROB_entries_2_RD_valid;
     io_partial_commit_REG_RD_valid_3 <= ROB_output_ROB_entries_3_RD_valid;
-    io_partial_commit_REG_RD_0 <= {2'h0, ROB_output_ROB_entries_0_RD};
-    io_partial_commit_REG_RD_1 <= {2'h0, ROB_output_ROB_entries_1_RD};
-    io_partial_commit_REG_RD_2 <= {2'h0, ROB_output_ROB_entries_2_RD};
-    io_partial_commit_REG_RD_3 <= {2'h0, ROB_output_ROB_entries_3_RD};
+    io_partial_commit_REG_PRD_0 <= ROB_output_ROB_entries_0_PRD;
+    io_partial_commit_REG_PRD_1 <= ROB_output_ROB_entries_1_PRD;
+    io_partial_commit_REG_PRD_2 <= ROB_output_ROB_entries_2_PRD;
+    io_partial_commit_REG_PRD_3 <= ROB_output_ROB_entries_3_PRD;
+    io_partial_commit_REG_PRDold_0 <= {2'h0, ROB_output_ROB_entries_0_PRDold};
+    io_partial_commit_REG_PRDold_1 <= {2'h0, ROB_output_ROB_entries_1_PRDold};
+    io_partial_commit_REG_PRDold_2 <= {2'h0, ROB_output_ROB_entries_2_PRDold};
+    io_partial_commit_REG_PRDold_3 <= {2'h0, ROB_output_ROB_entries_3_PRDold};
   end // always @(posedge)
   ROB_shared_mem shared_mem (
     .clock                                 (clock),
@@ -1600,6 +1600,14 @@ module ROB(
   assign io_partial_commit_MOB_index_1 = io_partial_commit_REG_MOB_index_1;
   assign io_partial_commit_MOB_index_2 = io_partial_commit_REG_MOB_index_2;
   assign io_partial_commit_MOB_index_3 = io_partial_commit_REG_MOB_index_3;
+  assign io_partial_commit_RD_0 = io_partial_commit_REG_RD_0;
+  assign io_partial_commit_RD_1 = io_partial_commit_REG_RD_1;
+  assign io_partial_commit_RD_2 = io_partial_commit_REG_RD_2;
+  assign io_partial_commit_RD_3 = io_partial_commit_REG_RD_3;
+  assign io_partial_commit_RD_valid_0 = io_partial_commit_REG_RD_valid_0;
+  assign io_partial_commit_RD_valid_1 = io_partial_commit_REG_RD_valid_1;
+  assign io_partial_commit_RD_valid_2 = io_partial_commit_REG_RD_valid_2;
+  assign io_partial_commit_RD_valid_3 = io_partial_commit_REG_RD_valid_3;
   assign io_partial_commit_PRD_0 = io_partial_commit_REG_PRD_0;
   assign io_partial_commit_PRD_1 = io_partial_commit_REG_PRD_1;
   assign io_partial_commit_PRD_2 = io_partial_commit_REG_PRD_2;
@@ -1608,14 +1616,6 @@ module ROB(
   assign io_partial_commit_PRDold_1 = io_partial_commit_REG_PRDold_1;
   assign io_partial_commit_PRDold_2 = io_partial_commit_REG_PRDold_2;
   assign io_partial_commit_PRDold_3 = io_partial_commit_REG_PRDold_3;
-  assign io_partial_commit_RD_valid_0 = io_partial_commit_REG_RD_valid_0;
-  assign io_partial_commit_RD_valid_1 = io_partial_commit_REG_RD_valid_1;
-  assign io_partial_commit_RD_valid_2 = io_partial_commit_REG_RD_valid_2;
-  assign io_partial_commit_RD_valid_3 = io_partial_commit_REG_RD_valid_3;
-  assign io_partial_commit_RD_0 = io_partial_commit_REG_RD_0;
-  assign io_partial_commit_RD_1 = io_partial_commit_REG_RD_1;
-  assign io_partial_commit_RD_2 = io_partial_commit_REG_RD_2;
-  assign io_partial_commit_RD_3 = io_partial_commit_REG_RD_3;
   assign io_ROB_index = back_pointer[5:0];
 endmodule
 

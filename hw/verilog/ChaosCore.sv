@@ -143,22 +143,22 @@ module ChaosCore(
   wire [3:0]  _ROB_io_partial_commit_MOB_index_1;
   wire [3:0]  _ROB_io_partial_commit_MOB_index_2;
   wire [3:0]  _ROB_io_partial_commit_MOB_index_3;
-  wire [4:0]  _ROB_io_partial_commit_PRD_0;
-  wire [4:0]  _ROB_io_partial_commit_PRD_1;
-  wire [4:0]  _ROB_io_partial_commit_PRD_2;
-  wire [4:0]  _ROB_io_partial_commit_PRD_3;
-  wire [4:0]  _ROB_io_partial_commit_PRDold_0;
-  wire [4:0]  _ROB_io_partial_commit_PRDold_1;
-  wire [4:0]  _ROB_io_partial_commit_PRDold_2;
-  wire [4:0]  _ROB_io_partial_commit_PRDold_3;
+  wire [4:0]  _ROB_io_partial_commit_RD_0;
+  wire [4:0]  _ROB_io_partial_commit_RD_1;
+  wire [4:0]  _ROB_io_partial_commit_RD_2;
+  wire [4:0]  _ROB_io_partial_commit_RD_3;
   wire        _ROB_io_partial_commit_RD_valid_0;
   wire        _ROB_io_partial_commit_RD_valid_1;
   wire        _ROB_io_partial_commit_RD_valid_2;
   wire        _ROB_io_partial_commit_RD_valid_3;
-  wire [6:0]  _ROB_io_partial_commit_RD_0;
-  wire [6:0]  _ROB_io_partial_commit_RD_1;
-  wire [6:0]  _ROB_io_partial_commit_RD_2;
-  wire [6:0]  _ROB_io_partial_commit_RD_3;
+  wire [6:0]  _ROB_io_partial_commit_PRD_0;
+  wire [6:0]  _ROB_io_partial_commit_PRD_1;
+  wire [6:0]  _ROB_io_partial_commit_PRD_2;
+  wire [6:0]  _ROB_io_partial_commit_PRD_3;
+  wire [6:0]  _ROB_io_partial_commit_PRDold_0;
+  wire [6:0]  _ROB_io_partial_commit_PRDold_1;
+  wire [6:0]  _ROB_io_partial_commit_PRDold_2;
+  wire [6:0]  _ROB_io_partial_commit_PRDold_3;
   wire [5:0]  _ROB_io_ROB_index;
   wire [31:0] _ROB_io_PC_file_exec_data;
   wire [3:0]  _backend_io_reserved_pointers_0_bits;
@@ -528,6 +528,22 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
+    .io_partial_commit_RD_0
+      (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (_ROB_io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (_ROB_io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (_ROB_io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (_ROB_io_partial_commit_RD_valid_3),
     .io_partial_commit_PRD_0
       (_ROB_io_partial_commit_PRD_0),
     .io_partial_commit_PRD_1
@@ -544,22 +560,6 @@ module ChaosCore(
       (_ROB_io_partial_commit_PRDold_2),
     .io_partial_commit_PRDold_3
       (_ROB_io_partial_commit_PRDold_3),
-    .io_partial_commit_RD_valid_0
-      (_ROB_io_partial_commit_RD_valid_0),
-    .io_partial_commit_RD_valid_1
-      (_ROB_io_partial_commit_RD_valid_1),
-    .io_partial_commit_RD_valid_2
-      (_ROB_io_partial_commit_RD_valid_2),
-    .io_partial_commit_RD_valid_3
-      (_ROB_io_partial_commit_RD_valid_3),
-    .io_partial_commit_RD_0
-      (_ROB_io_partial_commit_RD_0),
-    .io_partial_commit_RD_1
-      (_ROB_io_partial_commit_RD_1),
-    .io_partial_commit_RD_2
-      (_ROB_io_partial_commit_RD_2),
-    .io_partial_commit_RD_3
-      (_ROB_io_partial_commit_RD_3),
     .io_commit_valid
       (_ROB_io_commit_valid),
     .io_commit_bits_fetch_PC
@@ -1070,14 +1070,10 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
-    .io_partial_commit_PRD_0                            (_ROB_io_partial_commit_PRD_0),
-    .io_partial_commit_PRD_1                            (_ROB_io_partial_commit_PRD_1),
-    .io_partial_commit_PRD_2                            (_ROB_io_partial_commit_PRD_2),
-    .io_partial_commit_PRD_3                            (_ROB_io_partial_commit_PRD_3),
-    .io_partial_commit_PRDold_0                         (_ROB_io_partial_commit_PRDold_0),
-    .io_partial_commit_PRDold_1                         (_ROB_io_partial_commit_PRDold_1),
-    .io_partial_commit_PRDold_2                         (_ROB_io_partial_commit_PRDold_2),
-    .io_partial_commit_PRDold_3                         (_ROB_io_partial_commit_PRDold_3),
+    .io_partial_commit_RD_0                             (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                             (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                             (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                             (_ROB_io_partial_commit_RD_3),
     .io_partial_commit_RD_valid_0
       (_ROB_io_partial_commit_RD_valid_0),
     .io_partial_commit_RD_valid_1
@@ -1086,10 +1082,14 @@ module ChaosCore(
       (_ROB_io_partial_commit_RD_valid_2),
     .io_partial_commit_RD_valid_3
       (_ROB_io_partial_commit_RD_valid_3),
-    .io_partial_commit_RD_0                             (_ROB_io_partial_commit_RD_0),
-    .io_partial_commit_RD_1                             (_ROB_io_partial_commit_RD_1),
-    .io_partial_commit_RD_2                             (_ROB_io_partial_commit_RD_2),
-    .io_partial_commit_RD_3                             (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_PRD_0                            (_ROB_io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1                            (_ROB_io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2                            (_ROB_io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3                            (_ROB_io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0                         (_ROB_io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1                         (_ROB_io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2                         (_ROB_io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3                         (_ROB_io_partial_commit_PRDold_3),
     .io_PC_file_exec_addr                               (_backend_io_PC_file_exec_addr),
     .io_PC_file_exec_data                               (_ROB_io_PC_file_exec_data),
     .io_fetch_PC
@@ -1912,6 +1912,22 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
+    .io_partial_commit_RD_0
+      (_ROB_io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (_ROB_io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (_ROB_io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (_ROB_io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (_ROB_io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (_ROB_io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (_ROB_io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (_ROB_io_partial_commit_RD_valid_3),
     .io_partial_commit_PRD_0
       (_ROB_io_partial_commit_PRD_0),
     .io_partial_commit_PRD_1
@@ -1928,22 +1944,6 @@ module ChaosCore(
       (_ROB_io_partial_commit_PRDold_2),
     .io_partial_commit_PRDold_3
       (_ROB_io_partial_commit_PRDold_3),
-    .io_partial_commit_RD_valid_0
-      (_ROB_io_partial_commit_RD_valid_0),
-    .io_partial_commit_RD_valid_1
-      (_ROB_io_partial_commit_RD_valid_1),
-    .io_partial_commit_RD_valid_2
-      (_ROB_io_partial_commit_RD_valid_2),
-    .io_partial_commit_RD_valid_3
-      (_ROB_io_partial_commit_RD_valid_3),
-    .io_partial_commit_RD_0
-      (_ROB_io_partial_commit_RD_0),
-    .io_partial_commit_RD_1
-      (_ROB_io_partial_commit_RD_1),
-    .io_partial_commit_RD_2
-      (_ROB_io_partial_commit_RD_2),
-    .io_partial_commit_RD_3
-      (_ROB_io_partial_commit_RD_3),
     .io_ROB_index                                                  (_ROB_io_ROB_index),
     .io_PC_file_exec_addr
       (_backend_io_PC_file_exec_addr),

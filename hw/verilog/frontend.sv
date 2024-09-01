@@ -72,7 +72,15 @@ module frontend(
                 io_partial_commit_MOB_index_1,
                 io_partial_commit_MOB_index_2,
                 io_partial_commit_MOB_index_3,
-  input  [4:0]  io_partial_commit_PRD_0,
+  input  [4:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
+  input         io_partial_commit_RD_valid_0,
+                io_partial_commit_RD_valid_1,
+                io_partial_commit_RD_valid_2,
+                io_partial_commit_RD_valid_3,
+  input  [6:0]  io_partial_commit_PRD_0,
                 io_partial_commit_PRD_1,
                 io_partial_commit_PRD_2,
                 io_partial_commit_PRD_3,
@@ -80,14 +88,6 @@ module frontend(
                 io_partial_commit_PRDold_1,
                 io_partial_commit_PRDold_2,
                 io_partial_commit_PRDold_3,
-  input         io_partial_commit_RD_valid_0,
-                io_partial_commit_RD_valid_1,
-                io_partial_commit_RD_valid_2,
-                io_partial_commit_RD_valid_3,
-  input  [6:0]  io_partial_commit_RD_0,
-                io_partial_commit_RD_1,
-                io_partial_commit_RD_2,
-                io_partial_commit_RD_3,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
@@ -1546,6 +1546,22 @@ module frontend(
       (io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (io_partial_commit_MOB_index_3),
+    .io_partial_commit_RD_0
+      (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1
+      (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2
+      (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3
+      (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (io_partial_commit_RD_valid_3),
     .io_partial_commit_PRD_0
       (io_partial_commit_PRD_0),
     .io_partial_commit_PRD_1
@@ -1562,22 +1578,6 @@ module frontend(
       (io_partial_commit_PRDold_2),
     .io_partial_commit_PRDold_3
       (io_partial_commit_PRDold_3),
-    .io_partial_commit_RD_valid_0
-      (io_partial_commit_RD_valid_0),
-    .io_partial_commit_RD_valid_1
-      (io_partial_commit_RD_valid_1),
-    .io_partial_commit_RD_valid_2
-      (io_partial_commit_RD_valid_2),
-    .io_partial_commit_RD_valid_3
-      (io_partial_commit_RD_valid_3),
-    .io_partial_commit_RD_0
-      (io_partial_commit_RD_0),
-    .io_partial_commit_RD_1
-      (io_partial_commit_RD_1),
-    .io_partial_commit_RD_2
-      (io_partial_commit_RD_2),
-    .io_partial_commit_RD_3
-      (io_partial_commit_RD_3),
     .io_decoded_fetch_packet_ready
       (_rename_io_decoded_fetch_packet_ready),
     .io_decoded_fetch_packet_valid

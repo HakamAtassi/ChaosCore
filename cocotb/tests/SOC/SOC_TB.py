@@ -7,6 +7,8 @@ from cocotb.triggers import RisingEdge, ReadOnly
 import random
 
 
+from monitors.rename_mon import *
+
 class SOC_TB:
     def __init__(self, dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin"):
         # Top level Module #
@@ -29,6 +31,13 @@ class SOC_TB:
         # Optionally, dump a portion of memory to verify
         self.axi_ram.hexdump(0x0000, min(len(binary_data), 1024), prefix="RAM")  # Dump up to 1KB or file size
 
+
+
+        # INIT MONITORS #
+        self.rename_monitor = rename_mon(self.dut.ChaosCore_tile.ChaosCore.frontend.rename)
+
+        
+
     #################
     # RESET & CLOCK #
     #################
@@ -44,5 +53,13 @@ class SOC_TB:
 
 
     async def clock(self):
+        #try:
+        #self.rename_monitor.monitor()
         await RisingEdge(self.dut.clock)
+#        except(AssertionError):
+            #await RisingEdge(self.dut.clock)
+            #await RisingEdge(self.dut.clock)
+            #await RisingEdge(self.dut.clock)
+            #assert False
+
 
