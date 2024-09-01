@@ -4,7 +4,7 @@ int main()
 {
     //printf("HELLO, WORLD!");
 
-    int x = 2;
+    int x = 1;
     if(x == 2){
         putchar('1');
     }

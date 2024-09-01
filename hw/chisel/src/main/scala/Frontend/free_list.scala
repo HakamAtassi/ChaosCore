@@ -83,10 +83,12 @@ class free_list(coreParameters:CoreParameters) extends Module{
 
     io.free_list_front_pointer  := 0.U
 
+    //FIXME: does the order of these matter?
     when(io.commit.valid){  // add to freelist
         for(i <- 0 until fetchWidth){
             when(io.partial_commit.RD_valid(i) && io.partial_commit.PRDold(i) =/= 0.U){    // dont add x0
-                val commit_PRDold = io.partial_commit.PRDold(i) - 1.U
+                val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
+                commit_PRDold := (io.partial_commit.PRDold(i) - 1.U) % (physicalRegCount-1).U
                 free_list_buffer(commit_PRDold) := 1.B
                 commit_free_list_buffer(commit_PRDold) := 1.B
             }
@@ -96,7 +98,8 @@ class free_list(coreParameters:CoreParameters) extends Module{
     when(io.commit.valid){  // remove to freelist (commit)
         for(i <- 0 until fetchWidth){
             when(io.partial_commit.RD_valid(i) && io.partial_commit.PRD(i) =/= 0.U){
-                val commit_PRD = io.partial_commit.PRD(i) - 1.U
+                val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
+                commit_PRD := (io.partial_commit.PRD(i) - 1.U) % (physicalRegCount-1).U
                 commit_free_list_buffer(commit_PRD) := 0.B
             }
         }
@@ -107,34 +110,39 @@ class free_list(coreParameters:CoreParameters) extends Module{
     // MISPREDICTION //
     ///////////////////
 
+    //FIXME: does the order of these matter?
     when(io.commit.valid && io.commit.bits.is_misprediction){
+        free_list_buffer := commit_free_list_buffer
         for(i <- 0 until fetchWidth){
             when(io.partial_commit.RD_valid(i)){
-                val commit_PRD = io.partial_commit.PRD(i) - 1.U
-                free_list_buffer(commit_PRD) := 1.B
+                val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
+                commit_PRD := io.partial_commit.PRD(i) - 1.U
+                free_list_buffer(commit_PRD) := 0.B
             }
         }
         for(i <- 0 until fetchWidth){
             when(io.partial_commit.RD_valid(i)){
-                val commit_PRDold = io.partial_commit.PRDold(i) - 1.U
+                val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
+                commit_PRDold := io.partial_commit.PRDold(i) - 1.U
                 free_list_buffer(commit_PRDold) := 1.B
             }
         }
-        free_list_buffer := commit_free_list_buffer
     }
 
 
     ////////////////
     // Full/Empty //
     ////////////////
+    val available_entries = PopCount(free_list_buffer)
 
-    io.can_allocate   := PopCount(free_list_buffer) >= (fetchWidth).U   // +1 because x0 is always ready
+    io.can_allocate   := available_entries >= (fetchWidth).U   // +1 because x0 is always ready
 
     ////////////////
     // ASSERTIONS //
     ////////////////
 
     dontTouch(free_list_buffer)
+    dontTouch(available_entries)
     dontTouch(commit_free_list_buffer)
 
 }

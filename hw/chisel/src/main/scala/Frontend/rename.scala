@@ -198,8 +198,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     // HELPER WIRES //
     //////////////////
     
-    // FIXME: broke
-    val fire = (io.decoded_fetch_packet.fire)
+    val fire = (io.decoded_fetch_packet.fire) && !(io.commit.valid && io.commit.bits.is_misprediction)
 
     ////////////////////
     // OUTPUT BUNDLES //
@@ -311,27 +310,23 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     comb_ready_bits := ready_memory
 
-    // Set ready bit from FU
+
+
+
     for(i <- 0 until fetchWidth){   // FIXME: this should be port width...
         val set_RD      = io.FU_outputs(i).bits.PRD
         val RD_valid    = io.FU_outputs(i).valid && io.FU_outputs(i).bits.RD_valid
 
-        when(RD_valid){
+        when(RD_valid){ // set ready bits
             comb_ready_bits(set_RD) := 1.B
+            ready_memory(set_RD) := 1.B
         }
+
     }
 
-    // Reset ready bit
-    for(i <- 0 until fetchWidth){
-        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD 
-        val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid 
 
-        //renamed_decoded_fetch_packet.bits.decoded_instruction(i).instruction_ID             := DontCare
 
-        when(RD_valid && io.renamed_decoded_fetch_packet.valid){    // is this fine?
-            comb_ready_bits(set_RD) := 0.B
-        }
-    }
+
 
 
     free_list.io.partial_commit                    <> io.partial_commit
@@ -340,9 +335,10 @@ class rename(coreParameters:CoreParameters) extends Module{
     // x0 always ready
     comb_ready_bits(0) := 1.U
     
-
     // Update ready register
-    ready_memory := comb_ready_bits
+    when(io.renamed_decoded_fetch_packet.fire){
+        ready_memory := comb_ready_bits
+    }
 
     when(io.commit.valid && io.commit.bits.is_misprediction){
         ready_memory := Seq.fill(physicalRegCount)(1.B)
@@ -366,12 +362,56 @@ class rename(coreParameters:CoreParameters) extends Module{
     renamed_decoded_fetch_packet_Q.io.deq                   <> io.renamed_decoded_fetch_packet
     renamed_decoded_fetch_packet_Q.io.flush.get             := io.flush
 
-    for(i <- 0 until fetchWidth){   // assign ready output
+
+
+    // Reset ready bit
+    for(i <- 0 until fetchWidth){
+        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD 
+        val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid 
+
         val initialReady = Wire(new sources_ready)
         initialReady.RS1_ready := comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1)
         initialReady.RS2_ready := comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2)
+
+        for(j <- 0 until i){
+            val prev_RD_valid   = io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).RD_valid
+            val prev_PRD         = io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).PRD
+            val RS1        = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1
+            val RS2        = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2
+            when(prev_RD_valid && (prev_PRD === RS1)){
+                initialReady.RS1_ready := 0.U 
+            }.elsewhen(prev_RD_valid && (prev_PRD === RS2)){
+                initialReady.RS2_ready := 0.U 
+            }
+        }
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits := initialReady
     }
 
+    for(i <- 0 until fetchWidth){
+        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD 
+        val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid 
+
+        when(RD_valid && io.renamed_decoded_fetch_packet.fire){    // is this fine?
+            ready_memory(set_RD) := 0.B
+        }
+    }
+
+
+
+    // in order:
+    // update RDs based on fetch packet (unready) when output is accepted
+    // 
+
+
     io.decoded_fetch_packet.ready                           := RegNext(outputs_ready)
 }
+
+
+
+/*
+
+Problem:
+When a later instruction in a fetch packet writes to a renamed register an earlier instruction is searching up the memory of, 
+the comb memory will indicate that the first instruction's RS1/RS2 is indicated as not ready when infact it should be as it has not yet been written1/RS2 is indicated as not ready when infact it should be as it has not yet been written.
+
+*/
