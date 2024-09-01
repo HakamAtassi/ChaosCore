@@ -116,6 +116,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
     //| Read to commit          |//
     //|-------------------------|//
 
+    dontTouch(front_index)
+
     val shared_mem      = Module(new ROB_shared_mem(coreParameters, depth=ROBEntries))
     val shared_mem_input = Wire(new ROB_shared(coreParameters))
 
@@ -145,6 +147,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
     //| Write on complete            |//
     //| Read to commit               |//
     //|------------------------------|//
+
+    // Problem:
+    // if an instruction here is marked as complete
+    // then the pipeline is flushed, it will never commit, which means that bit will never be reset...
 
     val ROB_WB_banks: Seq[ROB_WB_mem] = Seq.tabulate(fetchWidth) { w =>
         Module(new ROB_WB_mem(coreParameters, depth=ROBEntries))
@@ -192,8 +198,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
         // commit (connect all ports)
         ROB_WB_banks(i).io.addrG         := front_index + commit_valid
-
+    
+        ROB_WB_banks(i).io.flush   := io.commit.valid && io.commit.bits.is_misprediction
     }
+
 
     //|----------------------------|//
     //| INSTR MEM                  |//
@@ -378,8 +386,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
     commit.fetch_PC                      := ROB_output.fetch_PC
 
     for(i <- 0 until fetchWidth){
-        commit.RD(i)                  := ROB_output.ROB_entries(i).RD
-        commit.PRD(i)                     := ROB_output.ROB_entries(i).PRD
+        commit.RD(i)                     := ROB_output.ROB_entries(i).RD
+        commit.PRD(i)                    := ROB_output.ROB_entries(i).PRD
         commit.RD_valid(i)               := ROB_output.ROB_entries(i).RD_valid
     }
 
@@ -426,7 +434,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // READY //
     ///////////
 
-    val full = (front_pointer(pointer_width-2, 0) === back_pointer(pointer_width-2, 0)) && (front_pointer =/= back_pointer)
+    val full = PopCount(row_valid_mem) === ROBEntries.U
+    //val full = (front_pointer(pointer_width-2, 0) === back_pointer(pointer_width-2, 0)) && (front_pointer =/= back_pointer)
 
     io.ROB_packet.ready := !full
 

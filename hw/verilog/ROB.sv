@@ -273,8 +273,11 @@ module ROB(
   wire [1:0]       ROB_output_ROB_entries_2_memory_type;
   wire [1:0]       ROB_output_ROB_entries_1_memory_type;
   wire [1:0]       ROB_output_ROB_entries_0_memory_type;
-  wire             full;
+  wire             io_ROB_packet_ready_0;
+  reg              io_commit_valid_REG;
+  reg              io_commit_bits_REG_is_misprediction;
   wire             commit_valid;
+  wire [5:0]       front_index;
   wire [36:0]      _fetch_resolved_banks_3_ext_R0_data;
   wire [36:0]      _fetch_resolved_banks_2_ext_R0_data;
   wire [36:0]      _fetch_resolved_banks_1_ext_R0_data;
@@ -290,7 +293,8 @@ module ROB(
   wire             ROB_WB_data_3_busy = 1'h0;
   reg  [6:0]       front_pointer;
   reg  [6:0]       back_pointer;
-  wire             allocate = ~full & io_ROB_packet_valid;
+  wire [5:0]       ROB_output_ROB_index = front_index;
+  wire             allocate = io_ROB_packet_ready_0 & io_ROB_packet_valid;
   reg              row_valid_mem_0;
   reg              row_valid_mem_1;
   reg              row_valid_mem_2;
@@ -355,10 +359,12 @@ module ROB(
   reg              row_valid_mem_61;
   reg              row_valid_mem_62;
   reg              row_valid_mem_63;
-  wire [5:0]       ROB_output_ROB_index = front_pointer[5:0];
-  wire [5:0]       _commit_resolved_3_T = ROB_output_ROB_index + {5'h0, commit_valid};
+  assign front_index = front_pointer[5:0];
+  wire [5:0]       _commit_resolved_3_T = front_index + {5'h0, commit_valid};
   wire             _ROB_WB_banks_0_io_writeEnableB_T =
     io_FU_outputs_0_bits_fetch_packet_index == 2'h0;
+  wire             _ROB_WB_banks_3_io_flush_T =
+    io_commit_valid_REG & io_commit_bits_REG_is_misprediction;
   wire             _ROB_WB_banks_1_io_writeEnableB_T =
     io_FU_outputs_0_bits_fetch_packet_index == 2'h1;
   wire             _ROB_WB_banks_2_io_writeEnableB_T =
@@ -494,7 +500,7 @@ module ROB(
      {row_valid_mem_2},
      {row_valid_mem_1},
      {row_valid_mem_0}};
-  wire             ROB_output_row_valid = _GEN_4[ROB_output_ROB_index];
+  wire             ROB_output_row_valid = _GEN_4[front_index];
   wire             ROB_output_ROB_entries_0_valid;
   wire             ROB_output_complete_0;
   wire             _partial_commit_valid_0_T =
@@ -553,7 +559,6 @@ module ROB(
   reg  [5:0]       io_commit_bits_REG_ROB_index;
   reg  [2:0]       io_commit_bits_REG_br_type;
   reg  [1:0]       io_commit_bits_REG_fetch_packet_index;
-  reg              io_commit_bits_REG_is_misprediction;
   reg  [31:0]      io_commit_bits_REG_expected_PC;
   reg  [15:0]      io_commit_bits_REG_GHR;
   reg  [6:0]       io_commit_bits_REG_TOS;
@@ -571,7 +576,6 @@ module ROB(
   reg              io_commit_bits_REG_RD_valid_1;
   reg              io_commit_bits_REG_RD_valid_2;
   reg              io_commit_bits_REG_RD_valid_3;
-  reg              io_commit_valid_REG;
   reg              io_partial_commit_REG_valid_0;
   reg              io_partial_commit_REG_valid_1;
   reg              io_partial_commit_REG_valid_2;
@@ -597,7 +601,71 @@ module ROB(
   reg  [6:0]       io_partial_commit_REG_PRDold_1;
   reg  [6:0]       io_partial_commit_REG_PRDold_2;
   reg  [6:0]       io_partial_commit_REG_PRDold_3;
-  assign full = ROB_output_ROB_index == back_pointer[5:0] & front_pointer != back_pointer;
+  assign io_ROB_packet_ready_0 =
+    {1'h0,
+     {1'h0,
+      {1'h0,
+       {1'h0,
+        {1'h0, {1'h0, row_valid_mem_0} + {1'h0, row_valid_mem_1}}
+          + {1'h0, {1'h0, row_valid_mem_2} + {1'h0, row_valid_mem_3}}}
+         + {1'h0,
+            {1'h0, {1'h0, row_valid_mem_4} + {1'h0, row_valid_mem_5}}
+              + {1'h0, {1'h0, row_valid_mem_6} + {1'h0, row_valid_mem_7}}}}
+        + {1'h0,
+           {1'h0,
+            {1'h0, {1'h0, row_valid_mem_8} + {1'h0, row_valid_mem_9}}
+              + {1'h0, {1'h0, row_valid_mem_10} + {1'h0, row_valid_mem_11}}}
+             + {1'h0,
+                {1'h0, {1'h0, row_valid_mem_12} + {1'h0, row_valid_mem_13}}
+                  + {1'h0, {1'h0, row_valid_mem_14} + {1'h0, row_valid_mem_15}}}}}
+       + {1'h0,
+          {1'h0,
+           {1'h0,
+            {1'h0, {1'h0, row_valid_mem_16} + {1'h0, row_valid_mem_17}}
+              + {1'h0, {1'h0, row_valid_mem_18} + {1'h0, row_valid_mem_19}}}
+             + {1'h0,
+                {1'h0, {1'h0, row_valid_mem_20} + {1'h0, row_valid_mem_21}}
+                  + {1'h0, {1'h0, row_valid_mem_22} + {1'h0, row_valid_mem_23}}}}
+            + {1'h0,
+               {1'h0,
+                {1'h0, {1'h0, row_valid_mem_24} + {1'h0, row_valid_mem_25}}
+                  + {1'h0, {1'h0, row_valid_mem_26} + {1'h0, row_valid_mem_27}}}
+                 + {1'h0,
+                    {1'h0, {1'h0, row_valid_mem_28} + {1'h0, row_valid_mem_29}}
+                      + {1'h0, {1'h0, row_valid_mem_30} + {1'h0, row_valid_mem_31}}}}}}
+    + {1'h0,
+       {1'h0,
+        {1'h0,
+         {1'h0,
+          {1'h0, {1'h0, row_valid_mem_32} + {1'h0, row_valid_mem_33}}
+            + {1'h0, {1'h0, row_valid_mem_34} + {1'h0, row_valid_mem_35}}}
+           + {1'h0,
+              {1'h0, {1'h0, row_valid_mem_36} + {1'h0, row_valid_mem_37}}
+                + {1'h0, {1'h0, row_valid_mem_38} + {1'h0, row_valid_mem_39}}}}
+          + {1'h0,
+             {1'h0,
+              {1'h0, {1'h0, row_valid_mem_40} + {1'h0, row_valid_mem_41}}
+                + {1'h0, {1'h0, row_valid_mem_42} + {1'h0, row_valid_mem_43}}}
+               + {1'h0,
+                  {1'h0, {1'h0, row_valid_mem_44} + {1'h0, row_valid_mem_45}}
+                    + {1'h0, {1'h0, row_valid_mem_46} + {1'h0, row_valid_mem_47}}}}}
+         + {1'h0,
+            {1'h0,
+             {1'h0,
+              {1'h0, {1'h0, row_valid_mem_48} + {1'h0, row_valid_mem_49}}
+                + {1'h0, {1'h0, row_valid_mem_50} + {1'h0, row_valid_mem_51}}}
+               + {1'h0,
+                  {1'h0, {1'h0, row_valid_mem_52} + {1'h0, row_valid_mem_53}}
+                    + {1'h0, {1'h0, row_valid_mem_54} + {1'h0, row_valid_mem_55}}}}
+              + {1'h0,
+                 {1'h0,
+                  {1'h0, {1'h0, row_valid_mem_56} + {1'h0, row_valid_mem_57}}
+                    + {1'h0, {1'h0, row_valid_mem_58} + {1'h0, row_valid_mem_59}}}
+                   + {1'h0,
+                      {1'h0, {1'h0, row_valid_mem_60} + {1'h0, row_valid_mem_61}}
+                        + {1'h0,
+                           {1'h0, row_valid_mem_62}
+                             + {1'h0, row_valid_mem_63}}}}}} != 7'h40;
   wire [15:0]      ROB_output_GHR;
   wire [6:0]       ROB_output_NEXT;
   wire [6:0]       ROB_output_TOS;
@@ -623,8 +691,7 @@ module ROB(
   wire [4:0]       ROB_output_ROB_entries_3_PRDold;
   wire [6:0]       ROB_output_ROB_entries_3_PRD;
   always @(posedge clock) begin
-    automatic logic            _GEN_6 =
-      io_FU_outputs_0_bits_ROB_index == ROB_output_ROB_index;
+    automatic logic            _GEN_6 = io_FU_outputs_0_bits_ROB_index == front_index;
     automatic logic            commit_is_misprediction;
     automatic logic [3:0]      _GEN_7 =
       {{commit_resolved_3_T_NT},
@@ -834,70 +901,70 @@ module ROB(
         io_ROB_packet_valid & back_pointer[5:0] == 6'h3E | row_valid_mem_62;
       automatic logic _GEN_72 =
         io_ROB_packet_valid & (&(back_pointer[5:0])) | row_valid_mem_63;
-      automatic logic _GEN_73 = commit_valid & ROB_output_ROB_index == 6'h0;
-      automatic logic _GEN_74 = commit_valid & ROB_output_ROB_index == 6'h1;
-      automatic logic _GEN_75 = commit_valid & ROB_output_ROB_index == 6'h2;
-      automatic logic _GEN_76 = commit_valid & ROB_output_ROB_index == 6'h3;
-      automatic logic _GEN_77 = commit_valid & ROB_output_ROB_index == 6'h4;
-      automatic logic _GEN_78 = commit_valid & ROB_output_ROB_index == 6'h5;
-      automatic logic _GEN_79 = commit_valid & ROB_output_ROB_index == 6'h6;
-      automatic logic _GEN_80 = commit_valid & ROB_output_ROB_index == 6'h7;
-      automatic logic _GEN_81 = commit_valid & ROB_output_ROB_index == 6'h8;
-      automatic logic _GEN_82 = commit_valid & ROB_output_ROB_index == 6'h9;
-      automatic logic _GEN_83 = commit_valid & ROB_output_ROB_index == 6'hA;
-      automatic logic _GEN_84 = commit_valid & ROB_output_ROB_index == 6'hB;
-      automatic logic _GEN_85 = commit_valid & ROB_output_ROB_index == 6'hC;
-      automatic logic _GEN_86 = commit_valid & ROB_output_ROB_index == 6'hD;
-      automatic logic _GEN_87 = commit_valid & ROB_output_ROB_index == 6'hE;
-      automatic logic _GEN_88 = commit_valid & ROB_output_ROB_index == 6'hF;
-      automatic logic _GEN_89 = commit_valid & ROB_output_ROB_index == 6'h10;
-      automatic logic _GEN_90 = commit_valid & ROB_output_ROB_index == 6'h11;
-      automatic logic _GEN_91 = commit_valid & ROB_output_ROB_index == 6'h12;
-      automatic logic _GEN_92 = commit_valid & ROB_output_ROB_index == 6'h13;
-      automatic logic _GEN_93 = commit_valid & ROB_output_ROB_index == 6'h14;
-      automatic logic _GEN_94 = commit_valid & ROB_output_ROB_index == 6'h15;
-      automatic logic _GEN_95 = commit_valid & ROB_output_ROB_index == 6'h16;
-      automatic logic _GEN_96 = commit_valid & ROB_output_ROB_index == 6'h17;
-      automatic logic _GEN_97 = commit_valid & ROB_output_ROB_index == 6'h18;
-      automatic logic _GEN_98 = commit_valid & ROB_output_ROB_index == 6'h19;
-      automatic logic _GEN_99 = commit_valid & ROB_output_ROB_index == 6'h1A;
-      automatic logic _GEN_100 = commit_valid & ROB_output_ROB_index == 6'h1B;
-      automatic logic _GEN_101 = commit_valid & ROB_output_ROB_index == 6'h1C;
-      automatic logic _GEN_102 = commit_valid & ROB_output_ROB_index == 6'h1D;
-      automatic logic _GEN_103 = commit_valid & ROB_output_ROB_index == 6'h1E;
-      automatic logic _GEN_104 = commit_valid & ROB_output_ROB_index == 6'h1F;
-      automatic logic _GEN_105 = commit_valid & ROB_output_ROB_index == 6'h20;
-      automatic logic _GEN_106 = commit_valid & ROB_output_ROB_index == 6'h21;
-      automatic logic _GEN_107 = commit_valid & ROB_output_ROB_index == 6'h22;
-      automatic logic _GEN_108 = commit_valid & ROB_output_ROB_index == 6'h23;
-      automatic logic _GEN_109 = commit_valid & ROB_output_ROB_index == 6'h24;
-      automatic logic _GEN_110 = commit_valid & ROB_output_ROB_index == 6'h25;
-      automatic logic _GEN_111 = commit_valid & ROB_output_ROB_index == 6'h26;
-      automatic logic _GEN_112 = commit_valid & ROB_output_ROB_index == 6'h27;
-      automatic logic _GEN_113 = commit_valid & ROB_output_ROB_index == 6'h28;
-      automatic logic _GEN_114 = commit_valid & ROB_output_ROB_index == 6'h29;
-      automatic logic _GEN_115 = commit_valid & ROB_output_ROB_index == 6'h2A;
-      automatic logic _GEN_116 = commit_valid & ROB_output_ROB_index == 6'h2B;
-      automatic logic _GEN_117 = commit_valid & ROB_output_ROB_index == 6'h2C;
-      automatic logic _GEN_118 = commit_valid & ROB_output_ROB_index == 6'h2D;
-      automatic logic _GEN_119 = commit_valid & ROB_output_ROB_index == 6'h2E;
-      automatic logic _GEN_120 = commit_valid & ROB_output_ROB_index == 6'h2F;
-      automatic logic _GEN_121 = commit_valid & ROB_output_ROB_index == 6'h30;
-      automatic logic _GEN_122 = commit_valid & ROB_output_ROB_index == 6'h31;
-      automatic logic _GEN_123 = commit_valid & ROB_output_ROB_index == 6'h32;
-      automatic logic _GEN_124 = commit_valid & ROB_output_ROB_index == 6'h33;
-      automatic logic _GEN_125 = commit_valid & ROB_output_ROB_index == 6'h34;
-      automatic logic _GEN_126 = commit_valid & ROB_output_ROB_index == 6'h35;
-      automatic logic _GEN_127 = commit_valid & ROB_output_ROB_index == 6'h36;
-      automatic logic _GEN_128 = commit_valid & ROB_output_ROB_index == 6'h37;
-      automatic logic _GEN_129 = commit_valid & ROB_output_ROB_index == 6'h38;
-      automatic logic _GEN_130 = commit_valid & ROB_output_ROB_index == 6'h39;
-      automatic logic _GEN_131 = commit_valid & ROB_output_ROB_index == 6'h3A;
-      automatic logic _GEN_132 = commit_valid & ROB_output_ROB_index == 6'h3B;
-      automatic logic _GEN_133 = commit_valid & ROB_output_ROB_index == 6'h3C;
-      automatic logic _GEN_134 = commit_valid & ROB_output_ROB_index == 6'h3D;
-      automatic logic _GEN_135 = commit_valid & ROB_output_ROB_index == 6'h3E;
-      automatic logic _GEN_136 = commit_valid & (&ROB_output_ROB_index);
+      automatic logic _GEN_73 = commit_valid & front_index == 6'h0;
+      automatic logic _GEN_74 = commit_valid & front_index == 6'h1;
+      automatic logic _GEN_75 = commit_valid & front_index == 6'h2;
+      automatic logic _GEN_76 = commit_valid & front_index == 6'h3;
+      automatic logic _GEN_77 = commit_valid & front_index == 6'h4;
+      automatic logic _GEN_78 = commit_valid & front_index == 6'h5;
+      automatic logic _GEN_79 = commit_valid & front_index == 6'h6;
+      automatic logic _GEN_80 = commit_valid & front_index == 6'h7;
+      automatic logic _GEN_81 = commit_valid & front_index == 6'h8;
+      automatic logic _GEN_82 = commit_valid & front_index == 6'h9;
+      automatic logic _GEN_83 = commit_valid & front_index == 6'hA;
+      automatic logic _GEN_84 = commit_valid & front_index == 6'hB;
+      automatic logic _GEN_85 = commit_valid & front_index == 6'hC;
+      automatic logic _GEN_86 = commit_valid & front_index == 6'hD;
+      automatic logic _GEN_87 = commit_valid & front_index == 6'hE;
+      automatic logic _GEN_88 = commit_valid & front_index == 6'hF;
+      automatic logic _GEN_89 = commit_valid & front_index == 6'h10;
+      automatic logic _GEN_90 = commit_valid & front_index == 6'h11;
+      automatic logic _GEN_91 = commit_valid & front_index == 6'h12;
+      automatic logic _GEN_92 = commit_valid & front_index == 6'h13;
+      automatic logic _GEN_93 = commit_valid & front_index == 6'h14;
+      automatic logic _GEN_94 = commit_valid & front_index == 6'h15;
+      automatic logic _GEN_95 = commit_valid & front_index == 6'h16;
+      automatic logic _GEN_96 = commit_valid & front_index == 6'h17;
+      automatic logic _GEN_97 = commit_valid & front_index == 6'h18;
+      automatic logic _GEN_98 = commit_valid & front_index == 6'h19;
+      automatic logic _GEN_99 = commit_valid & front_index == 6'h1A;
+      automatic logic _GEN_100 = commit_valid & front_index == 6'h1B;
+      automatic logic _GEN_101 = commit_valid & front_index == 6'h1C;
+      automatic logic _GEN_102 = commit_valid & front_index == 6'h1D;
+      automatic logic _GEN_103 = commit_valid & front_index == 6'h1E;
+      automatic logic _GEN_104 = commit_valid & front_index == 6'h1F;
+      automatic logic _GEN_105 = commit_valid & front_index == 6'h20;
+      automatic logic _GEN_106 = commit_valid & front_index == 6'h21;
+      automatic logic _GEN_107 = commit_valid & front_index == 6'h22;
+      automatic logic _GEN_108 = commit_valid & front_index == 6'h23;
+      automatic logic _GEN_109 = commit_valid & front_index == 6'h24;
+      automatic logic _GEN_110 = commit_valid & front_index == 6'h25;
+      automatic logic _GEN_111 = commit_valid & front_index == 6'h26;
+      automatic logic _GEN_112 = commit_valid & front_index == 6'h27;
+      automatic logic _GEN_113 = commit_valid & front_index == 6'h28;
+      automatic logic _GEN_114 = commit_valid & front_index == 6'h29;
+      automatic logic _GEN_115 = commit_valid & front_index == 6'h2A;
+      automatic logic _GEN_116 = commit_valid & front_index == 6'h2B;
+      automatic logic _GEN_117 = commit_valid & front_index == 6'h2C;
+      automatic logic _GEN_118 = commit_valid & front_index == 6'h2D;
+      automatic logic _GEN_119 = commit_valid & front_index == 6'h2E;
+      automatic logic _GEN_120 = commit_valid & front_index == 6'h2F;
+      automatic logic _GEN_121 = commit_valid & front_index == 6'h30;
+      automatic logic _GEN_122 = commit_valid & front_index == 6'h31;
+      automatic logic _GEN_123 = commit_valid & front_index == 6'h32;
+      automatic logic _GEN_124 = commit_valid & front_index == 6'h33;
+      automatic logic _GEN_125 = commit_valid & front_index == 6'h34;
+      automatic logic _GEN_126 = commit_valid & front_index == 6'h35;
+      automatic logic _GEN_127 = commit_valid & front_index == 6'h36;
+      automatic logic _GEN_128 = commit_valid & front_index == 6'h37;
+      automatic logic _GEN_129 = commit_valid & front_index == 6'h38;
+      automatic logic _GEN_130 = commit_valid & front_index == 6'h39;
+      automatic logic _GEN_131 = commit_valid & front_index == 6'h3A;
+      automatic logic _GEN_132 = commit_valid & front_index == 6'h3B;
+      automatic logic _GEN_133 = commit_valid & front_index == 6'h3C;
+      automatic logic _GEN_134 = commit_valid & front_index == 6'h3D;
+      automatic logic _GEN_135 = commit_valid & front_index == 6'h3E;
+      automatic logic _GEN_136 = commit_valid & (&front_index);
       automatic logic _GEN_137;
       _GEN_137 = commit_valid & commit_is_misprediction;
       if (_GEN_137) begin
@@ -1278,7 +1345,7 @@ module ROB(
     io_partial_commit_REG_valid_3 <=
       _partial_commit_valid_3_T & ROB_output_row_valid & _commit_valid_T
       & commit_row_complete_2 & commit_row_complete_3;
-    io_partial_commit_REG_ROB_index <= ROB_output_ROB_index;
+    io_partial_commit_REG_ROB_index <= front_index;
     io_partial_commit_REG_MOB_index_0 <= ROB_output_ROB_entries_0_MOB_index;
     io_partial_commit_REG_MOB_index_1 <= ROB_output_ROB_entries_1_MOB_index;
     io_partial_commit_REG_MOB_index_2 <= ROB_output_ROB_entries_2_MOB_index;
@@ -1320,7 +1387,8 @@ module ROB(
   );
   ROB_WB_mem ROB_WB_banks_0 (
     .clock              (clock),
-    .io_addrA           (ROB_output_ROB_index),
+    .reset              (reset),
+    .io_addrA           (front_index),
     .io_writeDataA_busy (ROB_WB_data_busy),
     .io_writeEnableA    (commit_valid),
     .io_addrB           (io_FU_outputs_0_bits_ROB_index),
@@ -1339,11 +1407,13 @@ module ROB(
     .io_writeEnableE
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),
     .io_addrG           (_commit_resolved_3_T),
-    .io_readDataG_busy  (ROB_output_complete_0)
+    .io_readDataG_busy  (ROB_output_complete_0),
+    .io_flush           (_ROB_WB_banks_3_io_flush_T)
   );
   ROB_WB_mem ROB_WB_banks_1 (
     .clock              (clock),
-    .io_addrA           (ROB_output_ROB_index),
+    .reset              (reset),
+    .io_addrA           (front_index),
     .io_writeDataA_busy (ROB_WB_data_1_busy),
     .io_writeEnableA    (commit_valid),
     .io_addrB           (io_FU_outputs_0_bits_ROB_index),
@@ -1362,11 +1432,13 @@ module ROB(
     .io_writeEnableE
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),
     .io_addrG           (_commit_resolved_3_T),
-    .io_readDataG_busy  (ROB_output_complete_1)
+    .io_readDataG_busy  (ROB_output_complete_1),
+    .io_flush           (_ROB_WB_banks_3_io_flush_T)
   );
   ROB_WB_mem ROB_WB_banks_2 (
     .clock              (clock),
-    .io_addrA           (ROB_output_ROB_index),
+    .reset              (reset),
+    .io_addrA           (front_index),
     .io_writeDataA_busy (ROB_WB_data_2_busy),
     .io_writeEnableA    (commit_valid),
     .io_addrB           (io_FU_outputs_0_bits_ROB_index),
@@ -1385,11 +1457,13 @@ module ROB(
     .io_writeEnableE
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),
     .io_addrG           (_commit_resolved_3_T),
-    .io_readDataG_busy  (ROB_output_complete_2)
+    .io_readDataG_busy  (ROB_output_complete_2),
+    .io_flush           (_ROB_WB_banks_3_io_flush_T)
   );
   ROB_WB_mem ROB_WB_banks_3 (
     .clock              (clock),
-    .io_addrA           (ROB_output_ROB_index),
+    .reset              (reset),
+    .io_addrA           (front_index),
     .io_writeDataA_busy (ROB_WB_data_3_busy),
     .io_writeEnableA    (commit_valid),
     .io_addrB           (io_FU_outputs_0_bits_ROB_index),
@@ -1409,7 +1483,8 @@ module ROB(
     .io_writeEnableE
       (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),
     .io_addrG           (_commit_resolved_3_T),
-    .io_readDataG_busy  (ROB_output_complete_3)
+    .io_readDataG_busy  (ROB_output_complete_3),
+    .io_flush           (_ROB_WB_banks_3_io_flush_T)
   );
   ROB_entry_mem ROB_entry_banks_0 (
     .clock                     (clock),
@@ -1565,7 +1640,7 @@ module ROB(
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
-  assign io_ROB_packet_ready = ~full;
+  assign io_ROB_packet_ready = io_ROB_packet_ready_0;
   assign io_commit_valid = io_commit_valid_REG;
   assign io_commit_bits_fetch_PC = io_commit_bits_REG_fetch_PC;
   assign io_commit_bits_T_NT = io_commit_bits_REG_T_NT;

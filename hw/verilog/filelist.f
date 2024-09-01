@@ -44,7 +44,6 @@ AGU.sv
 backend.sv
 mem_64x70.sv
 ROB_shared_mem.sv
-mem_busy_64x1.sv
 ROB_WB_mem.sv
 mem_64x26.sv
 ROB_entry_mem.sv

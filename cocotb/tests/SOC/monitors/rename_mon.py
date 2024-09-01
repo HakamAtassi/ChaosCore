@@ -19,8 +19,14 @@ class rename_mon:
 
         # property helpers
         self.PRD_available = [True]*65 # true means the RPD is allocated, false means its not. 
-
         self.commit_PRD_available = [True]*65 # true means the RPD is allocated, false means its not. 
+
+
+        self.ready      = [0]*65 
+        self.RAT        = [0]*65 
+        self.commit_RAT = [0]*65 
+
+
 
     def read_rename_request(self):
         return {
@@ -210,13 +216,7 @@ class rename_mon:
         #########
 
 
-
-
-
-
-        # update model FUs (set ready as needed)
-        # update model commit (free old PRFs)
-
+        # model free list
         if(int(self.read_commit()["valid"])):
             for i in range(4):
                 if(self.read_partial_commit()["commit_valid"] and self.read_partial_commit()["RD_valid"]):
@@ -254,6 +254,11 @@ class rename_mon:
         #if(self.dut_rename_response_queue[0]["valid"] and self.dut_rename_response_queue["bits"]["decoded_instruction"]["RD_valid"]):
             #PRD = self.dut_rename_response_queue[0]["valid"]["PRD"]
             #self.PRD_available[PRD] = False
+
+
+        # model RAT
+        # monitor what input RDs get mapped to on the output
+
 
 
 
