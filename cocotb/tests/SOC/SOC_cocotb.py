@@ -20,8 +20,8 @@ async def test_reset(dut):
     await cocotb.start(generateClock(dut))
 
     # Bring up TB
-    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/vec_add.bin")     # construct TB
-    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/if.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/vec_add.bin")     # construct TB
+    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/if.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin")     # construct TB
 
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/beq.bin")     # construct TB

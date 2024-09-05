@@ -148,6 +148,7 @@ class partial_commit(coreParameters:CoreParameters) extends Bundle{
     val valid                   = Vec(fetchWidth, Bool())
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
     val MOB_index               = Vec(fetchWidth, UInt(log2Ceil(MOBEntries).W))
+    val MOB_valid               = Vec(fetchWidth, Bool())   // only valid on loads and stores
 
     val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())

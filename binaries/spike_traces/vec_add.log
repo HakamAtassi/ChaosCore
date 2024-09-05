@@ -53,6 +53,7 @@ core   0: 0x8000006c (0xfc010113) addi    sp, sp, -64
 core   0: 3 0x8000006c (0xfc010113) x2  0x80003fc0
 core   0: 0x80000070 (0x01810693) addi    a3, sp, 24
 core   0: 3 0x80000070 (0x01810693) x13 0x80003fd8
+
 core   0: 0x80000074 (0x00a12c23) sw      a0, 24(sp)
 core   0: 3 0x80000074 (0x00a12c23) mem 0x80003fd8 0x00000001
 core   0: 0x80000078 (0x02c12023) sw      a2, 32(sp)
@@ -104,8 +105,9 @@ core   0: 0x800000c8 (0x00468693) addi    a3, a3, 4
 core   0: 3 0x800000c8 (0x00468693) x13 0x80003fdc
 core   0: 0x800000cc (0x00b70733) add     a4, a4, a1
 core   0: 3 0x800000cc (0x00b70733) x14 0x00000002
+
 core   0: 0x800000d0 (0x00e62023) sw      a4, 0(a2)
-core   0: 3 0x800000d0 (0x00e62023) mem 0x80003fec 0x00000002
+core   0: 3 0x800000d0 (0x00e62023) mem 0x80003fec 0x00000002       ; missing?
 core   0: 0x800000d4 (0x00460613) addi    a2, a2, 4
 core   0: 3 0x800000d4 (0x00460613) x12 0x80003ff0
 core   0: 0x800000d8 (0xfea792e3) bne     a5, a0, pc - 28       ; 0x80003fc8 ?  0x80003fd8
@@ -194,15 +196,20 @@ core   0: 3 0x800000e4 (0x03070713) x14 0x00000032
 core   0: 0x800000e8 (0x00e7a023) sw      a4, 0(a5)
 core   0: 3 0x800000e8 (0x00e7a023) mem 0x00080000 0x00000032
 core   0: 0x800000ec (0x03012703) lw      a4, 48(sp)
-core   0: 3 0x800000ec (0x03012703) x14 0x00000004 mem 0x80003ff0
+core   0: 3 0x800000ec (0x03012703) x14 0x00000004 mem 0x80003ff0   ; last instruction that works 
+
 core   0: 0x800000f0 (0x03070713) addi    a4, a4, 48
 core   0: 3 0x800000f0 (0x03070713) x14 0x00000034
 core   0: 0x800000f4 (0x00e7a023) sw      a4, 0(a5)
 core   0: 3 0x800000f4 (0x00e7a023) mem 0x00080000 0x00000034
 core   0: 0x800000f8 (0x03412703) lw      a4, 52(sp)
 core   0: 3 0x800000f8 (0x03412703) x14 0x00000006 mem 0x80003ff4
+
 core   0: 0x800000fc (0x03070713) addi    a4, a4, 48
 core   0: 3 0x800000fc (0x03070713) x14 0x00000036
+
+
+
 core   0: 0x80000100 (0x00e7a023) sw      a4, 0(a5)
 core   0: 3 0x80000100 (0x00e7a023) mem 0x00080000 0x00000036
 core   0: 0x80000104 (0x03812703) lw      a4, 56(sp)

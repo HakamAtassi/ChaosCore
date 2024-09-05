@@ -1,7 +1,9 @@
-cocotb=1.8.1
+cocotb==1.8.1
 cocotb_utils
 numpy
 cocotbext-axi
 py/ChaosCore
 py/cocotb_utils
+jinja2
+numpy
 
