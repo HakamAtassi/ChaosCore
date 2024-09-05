@@ -13,7 +13,7 @@ import random
 
 
 class L1_data_cache_TB:
-    def __init__(self, dut, memory_capacity=512*(2**20)):
+    def __init__(self, dut, memory_capacity=512*(2**10)):
         # Top level Module #
         self.L1_data_cache = data_cache_dut(dut)
 

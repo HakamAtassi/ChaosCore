@@ -4,9 +4,9 @@ elf/beq.elf:     file format elf32-littleriscv
 
 Disassembly of section .text:
 
-00000000 <__start>:
-   0:	00000013          	nop
-   4:	00000013          	nop
-   8:	00000013          	nop
-   c:	00000013          	nop
-  10:	fe0008e3          	beqz	x0,0 <__start>
+80000000 <__start>:
+80000000:	00000013          	nop
+80000004:	00000013          	nop
+80000008:	00000013          	nop
+8000000c:	00000013          	nop
+80000010:	fe0008e3          	beqz	x0,80000000 <__start>

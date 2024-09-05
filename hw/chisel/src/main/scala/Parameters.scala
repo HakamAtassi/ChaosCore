@@ -46,7 +46,7 @@ case class CoreParameters(
     GHRWidth: Int = 16,
     RASEntries: Int = 128,
     BTBEntries: Int = 4096,
-    startPC: UInt = "h00000000".U,
+    startPC: UInt = "h80000000".U,
     FTQEntries:Int  = 16,
 
     ROBEntries: Int = 64,    // FIXME: 128 causes area scaling problems in the RAT

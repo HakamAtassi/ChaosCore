@@ -111,7 +111,15 @@ object get_decomposed_dcache_address{
   }
 }
 
+object get_is_cacheable{
+	def apply(nocParameters:NOCParameters, address:UInt):Bool = {
+		import nocParameters._
+		
+		val cacheable = address >= "h80000000".U	// FIXME: make this a param
+		cacheable
+	}
 
+}
 
 object DATA_CACHE_STATES extends ChiselEnum {
 	val ACTIVE, STALL, ALLOCATE, REPLAY = Value // FIXME: 
@@ -244,7 +252,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	active_valid				:=	DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY || (io.CPU_request.fire)
 	active_address				:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_address,		backend_address)
-	active_cacheable			:=	((active_address & "h80000000".U) === 0.U) && active_valid
+	//active_cacheable			:=	((active_address & "h80000000".U) === 0.U) && active_valid
+	active_cacheable			:=	(get_is_cacheable(nocParameters, active_address)) && active_valid
 	active_set					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_set, 			backend_set)
 	active_tag					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_tag, 			backend_tag)
 	active_memory_type			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_memory_type, 	backend_memory_type)
@@ -257,6 +266,11 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.fire) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
 	valid_miss			:= !tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.fire) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
+
+	dontTouch(valid_hit)
+	dontTouch(valid_miss)
+	dontTouch(active_cacheable)
+	dontTouch(active_non_cacheable)
 
 	valid_write_hit		:=	valid_hit && RegNext(active_memory_type === memory_type_t.STORE)
 	valid_write_miss	:=	valid_miss && RegNext(active_memory_type=== memory_type_t.STORE)
@@ -307,10 +321,13 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 
 	// Requests are non cacheable if MSB is set
-	active_non_cacheable				:= ((io.CPU_request.bits.addr & "h80000000".U) =/= 0.U)	&& active_valid
+	//active_non_cacheable				:= ((io.CPU_request.bits.addr & "h80000000".U) =/= 0.U)	&& active_valid
+	active_non_cacheable				:= !active_cacheable && active_valid
+
 	active_non_cacheable_read			:= active_memory_type === memory_type_t.LOAD  && active_non_cacheable
 	active_non_cacheable_write			:= (active_memory_type === memory_type_t.STORE) && active_non_cacheable
-	active_cacheable_write_read			:= ((io.CPU_request.bits.addr & "h80000000".U) === 0.U) && active_valid
+	//active_cacheable_write_read			:= ((io.CPU_request.bits.addr & "h80000000".U) === 0.U) && active_valid
+	active_cacheable_write_read			:= (get_is_cacheable(nocParameters, io.CPU_request.bits.addr))&& active_valid
 
 	////////////
 	// QUEUES //
@@ -982,8 +999,14 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// input is non-cacheable and non-cacheable request queue has an entry available
 	// input is cacheable and cacheable request queue has an entry available
 
-	val input_cacheable = ((io.CPU_request.bits.addr & "h80000000".U) === 0.U)
-	val input_non_cacheable = ((io.CPU_request.bits.addr & "h80000000".U) =/= 0.U)
+	//val input_cacheable = ((io.CPU_request.bits.addr & "h80000000".U) === 0.U)
+	//val input_non_cacheable = ((io.CPU_request.bits.addr & "h80000000".U) =/= 0.U)
+
+	val input_cacheable = get_is_cacheable(nocParameters, io.CPU_request.bits.addr)
+	val input_non_cacheable = !get_is_cacheable(nocParameters, io.CPU_request.bits.addr)
+
+
+
 
 
 	// MSHR resource conds

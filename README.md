@@ -23,8 +23,9 @@ tests do not have any particular structure. ```UVM``` tests contain more rigorou
 
 # Requirements 
 1) Verilator 5.024
-2) Cocotb
-3) pytest + pytest-html + pytest-sugar (optional)
+2) Cocotb 1.8.1
+3) riscv gcc 
+3) Spike
 
 
 # Strong Suggestions
@@ -71,12 +72,20 @@ TODO
 # Installing RISCV GNU:
 
 Run the following commands (6+ GB download. takes ~10-20 minutes):
+(I dont think you actually need a recursive clone)
 
 ```
 sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
 
-git clone https://github.com/riscv-collab/riscv-gnu-toolchain --recurse-submodules
+#git clone https://github.com/riscv-collab/riscv-gnu-toolchain --recurse-submodules
+git clone https://github.com/riscv-collab/riscv-gnu-toolchain
 cd riscv-gnu-toolchain
 ./configure --prefix=/opt/riscv --with-arch=rv32gc_zicsr_zifencei --with-abi=ilp32  # build the "complete" RISC-V RV32 config with privilages
 sudo make -j12
 ```
+
+
+# TODO: spike
+
+make sure that when running spike, you set the base _start address to 0x8000_0000
+this means also updating the core to have the dram be 0x8000_0000+

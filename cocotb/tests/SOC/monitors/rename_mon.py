@@ -9,10 +9,12 @@ class rename_mon:
     def __init__(self, dut):
         self.rename = dut
 
-        self.dut_rename_request_queue  = []
-        self.dut_rename_response_queue = []
+        self.rename_rename_request_queue  = []
+        self.rename_rename_response_queue = []
 
         self.model_rename_response_queue = []
+
+        self.rename_commit_queue = []
 
 
 
@@ -22,7 +24,8 @@ class rename_mon:
         self.commit_PRD_available = [True]*65 # true means the RPD is allocated, false means its not. 
 
 
-        self.ready      = [0]*65 
+        self.ready      = [1]*65 
+
         self.RAT        = [0]*65 
         self.commit_RAT = [0]*65 
 
@@ -90,13 +93,13 @@ class rename_mon:
                 "free_list_front_pointer": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_free_list_front_pointer").value,
                 "valid_bits": [getattr(self.rename,f"io_renamed_decoded_fetch_packet_bits_valid_bits_{i}").value for i in range(4)],
                 "decoded_instruction":[{
-                    "RS1_Ready": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value,
-                    "RS2_Ready": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS2_ready").value,
+                    "RS1_ready": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value,
+                    "RS2_ready": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS2_ready").value,
                     "RD": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD").value,
                     "PRD": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_PRD").value,
                     "PRDold": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_PRDold").value,
                     "RD_valid": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD_valid").value,
-                    "RS1_": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1").value,
+                    "RS1": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1").value,
                     "RS1_valid": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1_valid").value,
                     "RS2": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2").value,
                     "RS2_valid": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2_valid").value,
@@ -124,23 +127,23 @@ class rename_mon:
     def read_FUs(self):
         return [
             {
-                "valid" : getattr(self.dut, f"io_FU_outputs_{i}_valid"),
+                "valid" : getattr(self.rename, f"io_FU_outputs_{i}_valid"),
                 "bits": {
-                    "PRD": getattr(self.dut, f"io_FU_outputs_{i}_bits_PRD").value, 
-                    "RD_data": getattr(self.dut, f"io_FU_outputs_{i}_bits_RD_data").value, 
-                    "RD_valid": getattr(self.dut, f"io_FU_outputs_{i}_bits_RD_valid").value, 
-                    "fetch_PC": getattr(self.dut, f"io_FU_outputs_{i}_bits_fetch_PC").value, 
-                    "branch_taken": getattr(self.dut, f"io_FU_outputs_{i}_bits_branch_taken").value, 
-                    "target_address": getattr(self.dut, f"io_FU_outputs_{i}_bits_target_address").value, 
-                    "valid": getattr(self.dut, f"io_FU_outputs_{i}_bits_branch_valid").value, 
-                    "address": getattr(self.dut, f"io_FU_outputs_{i}_bits_address").value, 
-                    "memory_type": getattr(self.dut, f"io_FU_outputs_{i}_bits_memory_type").value, 
-                    "access_width": getattr(self.dut, f"io_FU_outputs_{i}_bits_access_width").value, 
-                    "is_unsigned": getattr(self.dut, f"io_FU_outputs_{i}_bits_is_unsigned").value, 
-                    "wr_data": getattr(self.dut, f"io_FU_outputs_{i}_bits_wr_data").value, 
-                    "MOB_index": getattr(self.dut, f"io_FU_outputs_{i}_bits_MOB_index").value, 
-                    "ROB_index": getattr(self.dut, f"io_FU_outputs_{i}_bits_ROB_index").value, 
-                    "packet_index": getattr(self.dut, f"io_FU_outputs_{i}_bits_fetch_packet_index").value
+                    "PRD": getattr(self.rename, f"io_FU_outputs_{i}_bits_PRD").value, 
+                    "RD_data": getattr(self.rename, f"io_FU_outputs_{i}_bits_RD_data").value, 
+                    "RD_valid": getattr(self.rename, f"io_FU_outputs_{i}_bits_RD_valid").value, 
+                    "fetch_PC": getattr(self.rename, f"io_FU_outputs_{i}_bits_fetch_PC").value, 
+                    "branch_taken": getattr(self.rename, f"io_FU_outputs_{i}_bits_branch_taken").value, 
+                    "target_address": getattr(self.rename, f"io_FU_outputs_{i}_bits_target_address").value, 
+                    "valid": getattr(self.rename, f"io_FU_outputs_{i}_bits_branch_valid").value, 
+                    "address": getattr(self.rename, f"io_FU_outputs_{i}_bits_address").value, 
+                    "memory_type": getattr(self.rename, f"io_FU_outputs_{i}_bits_memory_type").value, 
+                    "access_width": getattr(self.rename, f"io_FU_outputs_{i}_bits_access_width").value, 
+                    "is_unsigned": getattr(self.rename, f"io_FU_outputs_{i}_bits_is_unsigned").value, 
+                    "wr_data": getattr(self.rename, f"io_FU_outputs_{i}_bits_wr_data").value, 
+                    "MOB_index": getattr(self.rename, f"io_FU_outputs_{i}_bits_MOB_index").value, 
+                    "ROB_index": getattr(self.rename, f"io_FU_outputs_{i}_bits_ROB_index").value, 
+                    "packet_index": getattr(self.rename, f"io_FU_outputs_{i}_bits_fetch_packet_index").value
                 }
             } for i in range(4)
         ]
@@ -189,26 +192,32 @@ class rename_mon:
         ###################
 
         # monitor FUs
-        #if(self.read_rename_request()["valid"] and self.read_rename_request()["ready"]):
-            #self.dut_rename_request_queue.append(self.read_rename_request())
+        for i in range(4):
+            if(self.read_FUs()[i]["valid"]):
+                PRD = self.read_FUs()[i]["bits"]["PRD"]
+                PRD_valid = self.read_FUs()[i]["bits"]["RD_valid"]
+                
+                if(PRD_valid):
+                    self.ready[PRD] = 1
+                    #self.rename_rename_request_queue.append(self.read_rename_request())
 
 
         # monitor commit
-        #if(self.read_rename_request()["valid"] and self.read_rename_request()["ready"]):
-            #self.dut_rename_request_queue.append(self.read_rename_request())
+        if(self.read_commit()["valid"] ):
+            self.rename_commit_queue.append(self.read_commit())
 
 
         # monitor rename request
         if(int(self.read_rename_request()["valid"]) and int(self.read_rename_request()["ready"])):
             #print(f"monitored  @ {cocotb.utils.get_sim_time("ns")}")
             #print(int(self.read_rename_request()["valid"]))
-            self.dut_rename_request_queue.append(self.read_rename_request())
+            self.rename_rename_request_queue.append(self.read_rename_request())
             #print(f"{int(self.read_rename_request()["bits"]["fetch_PC"])}")
 
         # monitor rename response
         if(int(self.read_rename_response()["valid"]) and int(self.read_rename_response()["ready"])):
             #print(f"monitored  @ {cocotb.utils.get_sim_time("ns")}")
-            self.dut_rename_response_queue.append(self.read_rename_response())
+            self.rename_rename_response_queue.append(self.read_rename_response())
 
 
         #########
@@ -236,23 +245,54 @@ class rename_mon:
 
             if(self.read_commit()["bits"]["is_misprediction"]):
                 self.PRD_available = copy.deepcopy(self.commit_PRD_available)
+                self.ready = [1]*65
 
         # Assert that accepted output PRDs are infact available
         for i in range(4):
-            rename_response = self.dut_rename_response_queue[0] if len(self.dut_rename_response_queue) else None
+            rename_response = self.rename_rename_response_queue[0] if len(self.rename_rename_response_queue) else None
             if(rename_response and rename_response["valid"] and rename_response["bits"]["decoded_instruction"][i]["RD_valid"]):
-                PRD = self.dut_rename_response_queue[0]["bits"]["decoded_instruction"][i]["PRD"]
+
+
+
+                PRD = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["PRD"])
+                RS1 = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1"])
+                RS2 = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2"])
+
+                RS1_ready = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1_ready"])
+                RS2_ready = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2_ready"])
+
+                RS1_valid = self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1_valid"]
+                RS2_valid = self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2_valid"]
+
+                # SET PRD as NOT READY
+
+
+                expected_RS1_ready = self.ready[RS1]
+                expected_RS2_ready = self.ready[RS2]
+
+
+                if(RS1_valid):
+                    assert expected_RS1_ready == RS1_ready, f"RS1 {RS1} busy incorrect"
+
+                if(RS2_valid):
+                    assert expected_RS2_ready == RS2_ready, f"RS2 {RS2} busy incorrect"
+
+                self.ready[PRD] = 0
+                self.ready[0] = 1
+
+                # SET PRD as UNAVAILABLE & check if available
                 if(PRD != 0):
                     assert self.PRD_available[PRD], f"{PRD} allocated but was actually not ready"
                     self.PRD_available[PRD] = False
+
 
         self.commit_PRD_available[0] = True
         self.PRD_available[0] = True
 
             
             
-        #if(self.dut_rename_response_queue[0]["valid"] and self.dut_rename_response_queue["bits"]["decoded_instruction"]["RD_valid"]):
-            #PRD = self.dut_rename_response_queue[0]["valid"]["PRD"]
+        #if(self.rename_rename_response_queue[0]["valid"] and self.rename_rename_response_queue["bits"]["decoded_instruction"]["RD_valid"]):
+            #PRD = self.rename_rename_response_queue[0]["valid"]["PRD"]
             #self.PRD_available[PRD] = False
 
 
@@ -265,11 +305,11 @@ class rename_mon:
         ############
         # CHECKERS #
         ############
-        if(self.dut_rename_request_queue):
+        if(self.rename_rename_request_queue):
             self.model_rename_response_queue.append(self.scoreboard())
 
         
-        if(self.dut_rename_response_queue and self.model_rename_response_queue):
+        if(self.rename_rename_response_queue and self.model_rename_response_queue):
             # compare responses 
             pass
 
@@ -278,9 +318,9 @@ class rename_mon:
         # when a valid PRD is accepted, if cant occur again on PRD until its committed as a PRDold
 
         try:
-            self.dut_rename_request_queue.pop()
+            self.rename_rename_request_queue.pop()
         except(IndexError): pass
-        try: self.dut_rename_response_queue.pop()
+        try: self.rename_rename_response_queue.pop()
         except(IndexError): pass
 
 

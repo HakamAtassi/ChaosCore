@@ -1,7 +1,7 @@
 
 void putchar(int ASCII)
 {
-    volatile unsigned int* ptr = (unsigned int*)0x80000000;
+    volatile unsigned int* ptr = (unsigned int*)0x80000;
     *ptr = ASCII;
 }
 
