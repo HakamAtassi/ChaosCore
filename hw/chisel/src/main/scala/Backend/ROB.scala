@@ -78,6 +78,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val allocate = Wire(Bool())
     val commit_valid        = Wire(Bool())
 
+
+    val misprediction_vec       = Wire(Vec(fetchWidth, Bool())) // FIXME: do the same for exceptions
+    misprediction_vec           := Seq.fill(fetchWidth)(0.B)
+
     allocate := io.ROB_packet.fire
 
 
@@ -95,6 +99,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     val row_valid_mem        =   RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
     val row_valid       =   row_valid_mem(front_pointer(pointer_width-2, 0))
+
 
     when(io.ROB_packet.valid){  // Allocate
         row_valid_mem(back_pointer(pointer_width-2, 0)) := 1.B
@@ -339,6 +344,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
     ////////////////////
     // PARTIAL COMMIT //
     ////////////////////
+
+
+    val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
+    val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
+    val earliest_taken_index    = Mux1H(has_taken_branch_vec.zipWithIndex.map {case (taken, idx) => taken -> idx.U})
+    val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + 0x10.U) // FIXME: make this a param
+
     // the commit signal for this module is resposible for committing an entire fetch packet at once. 
     // this is convinent for things like the front end that updates structures at the granuality of complete fetch packets. 
     // The load store queue, however, requires a more granular approach to committing, as without it, a store instruction for exmaple may block the entire load store queue
@@ -355,10 +367,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val is_load         = ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && ROB_output.ROB_entries(i).valid
         val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
 
+        val prev_mispred = (i.U > earliest_taken_index) && commit.is_misprediction && commit_valid    // There is a prev misprediction
+
         commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
 
-        partial_commit.valid(i)      := (is_completed || is_invalid) && ROB_output.row_valid && commit_row_complete.take(i+1).reduce(_ && _)    // all prev instructions must have committed
+        partial_commit.valid(i)      := (is_completed || is_invalid) && ROB_output.row_valid && commit_row_complete.take(i+1).reduce(_ && _) && !prev_mispred
         partial_commit.MOB_index(i)  := ROB_output.ROB_entries(i).MOB_index
+        partial_commit.MOB_valid(i)  := is_load || is_store
         partial_commit.ROB_index     := front_index
         partial_commit.RD_valid(i)   := ROB_output.ROB_entries(i).RD_valid
         partial_commit.RD(i)         := ROB_output.ROB_entries(i).RD
@@ -373,10 +388,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // COMMIT //
     ////////////
 
-    val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
-    val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
-    val earliest_taken_index    = Mux1H(has_taken_branch_vec.zipWithIndex.map {case (taken, idx) => taken -> idx.U})
-    val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + 0x10.U)
+
+
 
     commit.GHR                           := ROB_output.GHR
     commit.TOS                           := ROB_output.TOS
