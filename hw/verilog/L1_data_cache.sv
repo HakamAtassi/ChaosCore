@@ -266,6 +266,7 @@ module L1_data_cache(
   wire             active_valid = (&DATA_CACHE_STATE) | _valid_miss_T_4;
   wire [31:0]      active_address =
     (&DATA_CACHE_STATE) ? replay_address : io_CPU_request_bits_addr;
+  wire             active_cacheable = active_address[31] & active_valid;
   wire [5:0]       active_set = (&DATA_CACHE_STATE) ? replay_set : backend_set;
   wire [20:0]      active_tag = {16'h0, (&DATA_CACHE_STATE) ? replay_tag : backend_tag};
   wire [1:0]       active_memory_type =
@@ -295,13 +296,13 @@ module L1_data_cache(
   reg  [31:0]      miss_address_REG;
   assign backend_set = io_CPU_request_bits_addr[10:5];
   assign backend_tag = io_CPU_request_bits_addr[15:11];
-  wire             active_non_cacheable = io_CPU_request_bits_addr[31] & active_valid;
+  wire             active_non_cacheable = ~active_cacheable & active_valid;
   wire             active_non_cacheable_read =
     _active_non_cacheable_read_T & active_non_cacheable;
   wire             active_non_cacheable_write =
     _data_memories_wr_en_31_T_13 & active_non_cacheable;
-  wire             active_cacheable_write_read =
-    ~(io_CPU_request_bits_addr[31]) & active_valid;
+  wire             input_cacheable = io_CPU_request_bits_addr[31];
+  wire             active_cacheable_write_read = input_cacheable & active_valid;
   wire [4:0]       byte_offset = active_address[4:0];
   wire [4:0]       word_offset = byte_offset / 5'h4;
   wire [4:0]       half_word_offset = byte_offset / 5'h2;
@@ -3495,14 +3496,13 @@ module L1_data_cache(
   wire             axi_response_valid;
   assign cacheable_AXI_response_valid =
     axi_response_valid & _final_response_buffer_io_deq_bits_ID == 8'h0;
-  wire             input_cacheable = ~(io_CPU_request_bits_addr[31]);
   wire             MSHR_full_next =
     MSHR_front_pointer_next != MSHR_back_pointer_next
     & MSHR_front_index_next == MSHR_back_index_next;
   wire             input_cacheable_and_Q_available =
     input_cacheable & _cacheable_request_Q_io_enq_ready;
   wire             input_non_cacheable_and_Q_available =
-    io_CPU_request_bits_addr[31] & _non_cacheable_request_Q_io_enq_ready;
+    ~input_cacheable & _non_cacheable_request_Q_io_enq_ready;
   wire [63:0]      _GEN_259 =
     {{inflight_write_miss_next_63_0},
      {inflight_write_miss_next_62_0},
@@ -3786,7 +3786,6 @@ module L1_data_cache(
     automatic logic         _GEN_267;
     automatic logic         _GEN_268;
     automatic logic         _GEN_269;
-    automatic logic         active_cacheable = ~(active_address[31]) & active_valid;
     automatic logic [1:0]   active_access_width =
       (&DATA_CACHE_STATE)
         ? _GEN_252[_GEN_170[MSHR_front_index]]

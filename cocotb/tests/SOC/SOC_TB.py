@@ -6,8 +6,8 @@ from cocotbext.axi import AxiBus, AxiRam
 from cocotb.triggers import RisingEdge, ReadOnly
 import random
 
-
 from monitors.rename_mon import *
+
 
 class SOC_TB:
     def __init__(self, dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin"):
@@ -53,13 +53,13 @@ class SOC_TB:
 
 
     async def clock(self):
-        #try:
-        #self.rename_monitor.monitor()
-        await RisingEdge(self.dut.clock)
-#        except(AssertionError):
+        try:
+            self.rename_monitor.monitor()
+            await RisingEdge(self.dut.clock)
+        except(AssertionError):
+            await RisingEdge(self.dut.clock)
             #await RisingEdge(self.dut.clock)
             #await RisingEdge(self.dut.clock)
-            #await RisingEdge(self.dut.clock)
-            #assert False
+            assert False
 
 

@@ -130,6 +130,20 @@ class free_list(coreParameters:CoreParameters) extends Module{
     }
 
 
+
+    ///////////////
+    // Free List //
+    ///////////////
+
+
+
+
+
+
+
+
+
+
     ////////////////
     // Full/Empty //
     ////////////////
