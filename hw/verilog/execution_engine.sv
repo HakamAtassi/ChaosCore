@@ -93,6 +93,7 @@ module execution_engine(
                 io_FU_input_1_bits_decoded_instruction_access_width,
   input  [31:0] io_FU_input_1_bits_RS1_data,
                 io_FU_input_1_bits_RS2_data,
+                io_FU_input_1_bits_fetch_PC,
   output        io_FU_input_2_ready,
   input         io_FU_input_2_valid,
                 io_FU_input_2_bits_decoded_instruction_ready_bits_RS1_ready,
@@ -123,7 +124,7 @@ module execution_engine(
                 io_FU_input_2_bits_decoded_instruction_access_width,
   input  [31:0] io_FU_input_2_bits_RS1_data,
                 io_FU_input_2_bits_RS2_data,
-  output        io_FU_input_3_ready,
+                io_FU_input_2_bits_fetch_PC,
   input         io_FU_input_3_valid,
                 io_FU_input_3_bits_decoded_instruction_ready_bits_RS1_ready,
                 io_FU_input_3_bits_decoded_instruction_ready_bits_RS2_ready,
@@ -153,6 +154,7 @@ module execution_engine(
                 io_FU_input_3_bits_decoded_instruction_access_width,
   input  [31:0] io_FU_input_3_bits_RS1_data,
                 io_FU_input_3_bits_RS2_data,
+                io_FU_input_3_bits_fetch_PC,
   output        io_FU_output_0_valid,
   output [6:0]  io_FU_output_0_bits_PRD,
   output [31:0] io_FU_output_0_bits_RD_data,
@@ -376,7 +378,8 @@ module execution_engine(
       (io_FU_input_1_bits_RS1_data),
     .io_FU_input_bits_RS2_data
       (io_FU_input_1_bits_RS2_data),
-    .io_FU_input_bits_fetch_PC                                 (32'h0),
+    .io_FU_input_bits_fetch_PC
+      (io_FU_input_1_bits_fetch_PC),
     .io_FU_output_valid                                        (io_FU_output_1_valid),
     .io_FU_output_bits_PRD                                     (io_FU_output_1_bits_PRD),
     .io_FU_output_bits_RD_data
@@ -470,7 +473,8 @@ module execution_engine(
       (io_FU_input_2_bits_RS1_data),
     .io_FU_input_bits_RS2_data
       (io_FU_input_2_bits_RS2_data),
-    .io_FU_input_bits_fetch_PC                                 (32'h0),
+    .io_FU_input_bits_fetch_PC
+      (io_FU_input_2_bits_fetch_PC),
     .io_FU_output_valid                                        (io_FU_output_2_valid),
     .io_FU_output_bits_PRD                                     (io_FU_output_2_bits_PRD),
     .io_FU_output_bits_RD_data
@@ -506,7 +510,7 @@ module execution_engine(
     .clock                                                     (clock),
     .reset                                                     (reset),
     .io_flush                                                  (io_flush),
-    .io_FU_input_ready                                         (io_FU_input_3_ready),
+    .io_FU_input_ready                                         (/* unused */),
     .io_FU_input_valid                                         (io_FU_input_3_valid),
     .io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready
       (io_FU_input_3_bits_decoded_instruction_ready_bits_RS1_ready),
@@ -564,7 +568,8 @@ module execution_engine(
       (io_FU_input_3_bits_RS1_data),
     .io_FU_input_bits_RS2_data
       (io_FU_input_3_bits_RS2_data),
-    .io_FU_input_bits_fetch_PC                                 (32'h0),
+    .io_FU_input_bits_fetch_PC
+      (io_FU_input_3_bits_fetch_PC),
     .io_FU_output_valid                                        (io_FU_output_3_valid),
     .io_FU_output_bits_PRD                                     (io_FU_output_3_bits_PRD),
     .io_FU_output_bits_RD_data

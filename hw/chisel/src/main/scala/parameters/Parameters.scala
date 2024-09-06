@@ -81,6 +81,14 @@ case class CoreParameters(
     MEMportCount:Int = 1,
     FPUportCount:Int = 0,  // not used if not "F"
 
+
+
+    /////////
+    // MOB //
+    /////////
+    MOBWBPortCount:Int = 1, // The number of ports the MOB has to write back to the PRF
+
+
     instruction_queue_depth:Int = 8,
 
     speculative:Boolean = true,   // this does nothing yet
@@ -105,20 +113,40 @@ case class CoreParameters(
     // Add requirement that there can only be 1 AGU, and that there are no mults or divs currently. 
     
 ){
-    // DO NOT TOUCH coreParameters //
+
+
+    ///////////////////////////////////
+    // DO NOT TOUCH THESE PARAMETERS //
+    ///////////////////////////////////
+
     val physicalRegBits: Int      = log2Ceil(physicalRegCount)      // N regs but x0 does not exist as a physical reg
     val architecturalRegBits: Int = log2Ceil(architecturalRegCount)
     val RATCheckpointBits:Int     = log2Ceil(RATCheckpointCount)
 
 
-
-    // DATA CACHE
+    ////////////////
+    // DATA CACHE //
+    ////////////////
     val L1_DataCacheTagBits:Int = 32 - log2Ceil(L1_DataCacheSets) - log2Ceil(L1_cacheLineSizeBytes)
-    //L1_DataCacheSets: Int = 64,
-    //L1_cacheLineSizeBytes: Int = 32,
 
 
-    // INSTRUCTION CACHE
+    ////////
+    // FU //
+    ////////
+
+    val portCount:Int = FUParamSeq.length   // total number of ports from the reservation stations to the functional units
+
+    val INTRSPortCount: Int = FUParamSeq.count(_.is_INTFU)
+    val MEMRSPortCount: Int = FUParamSeq.count(_.is_MEMFU)
+
+    val WBPortCount: Int = INTRSPortCount + MOBWBPortCount
+
+
+    //val FURSPortCount:Int = // total number of FUs that connect to the INTRS  // TODO:
+
+    val portedFUParamSeq = generateFUPorts(FUParamSeq)
+
+
 
 }
 

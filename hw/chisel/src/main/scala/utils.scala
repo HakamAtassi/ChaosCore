@@ -357,3 +357,37 @@ object sign_extend {
     temp.asUInt
   }
 }
+
+object generateFUPorts {
+  def apply(FUParamSeq: Seq[FUParams]): Seq[FUParams] = {
+
+    var INTRS_port_count = 0
+    var MEMRS_port_count = 0
+
+    // Use map to create a new sequence with updated port information
+    FUParamSeq.zipWithIndex.map { case (fu, i) =>
+      val RS1_RS2_indices: Seq[Int] = Seq(i * 2, i * 2 + 1)
+      val PRF_RD = i
+
+      var RS_port = 0
+
+      // Update RS_port based on whether the FU is an INTFU or MEMFU
+      if (fu.is_INTFU) {
+        RS_port = INTRS_port_count
+        INTRS_port_count += 1
+      }
+
+      if (fu.is_MEMFU) {
+        RS_port = MEMRS_port_count
+        MEMRS_port_count += 1
+      }
+
+      // Return a new FUParams instance with updated values
+      fu.copy(
+        INTRS_MEMRS_port = RS_port,
+        RS1_RS2_indices = RS1_RS2_indices,
+        PRFRD = PRF_RD
+      )
+    }
+  }
+}

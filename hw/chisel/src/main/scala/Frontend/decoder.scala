@@ -173,6 +173,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     // ALU instructions can be scheduled to any of the ALU ports. 
     // The port it is scheduled to is random. 
 
+    // FIXME: this whole section needs to be replaced with an actual scheduler based on the FU port types...
     val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
 
     when(needs_ALU){
@@ -187,7 +188,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     }.elsewhen(needs_divider){
         io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_memory){
-        io.decoded_instruction.bits.portID := 3.U
+        io.decoded_instruction.bits.portID := 0.U
     }.otherwise{
         io.decoded_instruction.bits.portID := 0.U
     }
