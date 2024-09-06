@@ -72,7 +72,7 @@ case class NOCParameters(
     // ADDRESS PARAMETERS 
     
     // DRAM parameters
-    DRAM_BASE_ADDR:Int = 0x80000000,
+    DRAM_BASE_ADDR:BigInt = BigInt("80000000", 16), 
     DRAM_ADDR_WIDTH:Int = 24,
     DRAM_CONNECT_READ:Int = 0x3,
     DRAM_CONNECT_WRITE:Int = 0x3,

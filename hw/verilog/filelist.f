@@ -41,6 +41,8 @@ branch_unit.sv
 FU.sv
 FU_1.sv
 AGU.sv
+FU_3.sv
+execution_engine.sv
 backend.sv
 mem_64x70.sv
 ROB_shared_mem.sv
