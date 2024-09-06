@@ -18,6 +18,7 @@ int main()
         z[i] = x[i]+y[i];
     }
 
+
     putchar(z[0]+'0');
     putchar(z[1]+'0');
     putchar(z[2]+'0');

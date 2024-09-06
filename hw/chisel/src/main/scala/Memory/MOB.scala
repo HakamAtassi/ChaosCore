@@ -178,7 +178,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
             MOB(back_index + index_offset).MOB_STATE            :=  MOB_STATES.VALID
             MOB(back_index + index_offset).memory_type          :=  io.reserve(i).bits.memory_type
             MOB(back_index + index_offset).access_width         :=  io.reserve(i).bits.access_width
-            MOB(back_index + index_offset).PRD                   :=  io.reserve(i).bits.PRD
+            MOB(back_index + index_offset).PRD                  :=  io.reserve(i).bits.PRD
             MOB(back_index + index_offset).ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB(back_index + index_offset).fetch_packet_index   :=  io.reserve(i).bits.packet_index
 

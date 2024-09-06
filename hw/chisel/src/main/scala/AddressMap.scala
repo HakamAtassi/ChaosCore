@@ -38,9 +38,11 @@ import java.rmi.server.UID
 
 
 case class AddressMap(
-  DRAM_low:UInt               = "h0".U, 
-  DRAM_high:UInt              = "h3_FFFF".U, 
-  debug_printer_address: UInt = "h8000_0000".U,
+  DRAM_low:UInt               = "h8000_0000".U, 
+  DRAM_high:UInt              = "h8FFF_FFFF".U, 
+
+
+  debug_printer_address: UInt = "h8_0000".U,
 
 )
 

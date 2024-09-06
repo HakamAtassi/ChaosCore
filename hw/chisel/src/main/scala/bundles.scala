@@ -148,6 +148,7 @@ class partial_commit(coreParameters:CoreParameters) extends Bundle{
     val valid                   = Vec(fetchWidth, Bool())
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
     val MOB_index               = Vec(fetchWidth, UInt(log2Ceil(MOBEntries).W))
+    val MOB_valid               = Vec(fetchWidth, Bool())   // only valid on loads and stores
 
     val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
@@ -293,42 +294,42 @@ class read_decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 object InstructionType extends ChiselEnum {
     // Based on table 24.1 on RV spec
 
-        // ROW 0
-        //              (inst[6:5], inst[4:2])
-        val LOAD        = Value("b00000".U)
-        val LOAD_FP     = Value("b00001".U)
-        val CUSTOM_0    = Value("b00010".U)
-        val MISC_MEM    = Value("b00011".U)
-        val OP_IMM      = Value("b00100".U)   // RV32 I type
-        val AUIPC       = Value("b00101".U)
-        val OP_IMM_32   = Value("b00110".U)
+    // ROW 0
+    //              (inst[6:5], inst[4:2])
+    val LOAD        = Value("b00000".U)
+    val LOAD_FP     = Value("b00001".U)
+    val CUSTOM_0    = Value("b00010".U)
+    val MISC_MEM    = Value("b00011".U)
+    val OP_IMM      = Value("b00100".U)   // RV32 I type
+    val AUIPC       = Value("b00101".U)
+    val OP_IMM_32   = Value("b00110".U)
 
-        // ROW 1
-        val STORE       = Value("b01000".U)
-        val STORE_FP    = Value("b01001".U)
-        val CUSTOM_1    = Value("b01010".U)
-        val AMO         = Value("b01011".U)
-        val OP          = Value("b01100".U)   // RV32 R type
-        val LUI         = Value("b01101".U)
-        val OP_32       = Value("b01110".U)   // RV64 R type
+    // ROW 1
+    val STORE       = Value("b01000".U)
+    val STORE_FP    = Value("b01001".U)
+    val CUSTOM_1    = Value("b01010".U)
+    val AMO         = Value("b01011".U)
+    val OP          = Value("b01100".U)   // RV32 R type
+    val LUI         = Value("b01101".U)
+    val OP_32       = Value("b01110".U)   // RV64 R type
 
-        // ROW 2
-        val MADD        = Value("b10000".U)
-        val MSUB        = Value("b10001".U)
-        val NMSUB       = Value("b10010".U)
-        val NMADD       = Value("b10011".U)
-        val OP_FP       = Value("b10100".U)
-        // RESERVED
-        val CUSTOM_2    = Value("b10110".U)
+    // ROW 2
+    val MADD        = Value("b10000".U)
+    val MSUB        = Value("b10001".U)
+    val NMSUB       = Value("b10010".U)
+    val NMADD       = Value("b10011".U)
+    val OP_FP       = Value("b10100".U)
+    // RESERVED
+    val CUSTOM_2    = Value("b10110".U)
 
-        // ROW 3
-        val BRANCH      = Value("b11000".U)
-        val JALR        = Value("b11001".U)
-        // RESERVED
-        val JAL         = Value("b11011".U)
-        val SYSTEM      = Value("b11100".U)
-        // RESERVED
-        val CUSTOM_3    = Value("b11110".U)
+    // ROW 3
+    val BRANCH      = Value("b11000".U)
+    val JALR        = Value("b11001".U)
+    // RESERVED
+    val JAL         = Value("b11011".U)
+    val SYSTEM      = Value("b11100".U)
+    // RESERVED
+    val CUSTOM_3    = Value("b11110".U)
 }
 
 

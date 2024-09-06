@@ -1,0 +1,13 @@
+# running in free_list/src/
+read -formal rename.sv
+read -formal free_list.sv
+read -formal WAW_handler.sv
+read -formal RAT.sv
+read -formal Queue2_decoded_fetch_packet.sv
+read -formal ram_2x483.sv
+prep -top free_list
+
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il
