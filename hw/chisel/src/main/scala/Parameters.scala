@@ -59,19 +59,19 @@ case class CoreParameters(
     RSEntries: Int = 16, // How many entires per reservation station (these are very expensive)
 
 
+    L1_cacheLineSizeBytes: Int = 32,
+
     // Instruction Cache params
     L1_instructionCacheWays: Int = 2,
     L1_instructionCacheSets: Int = 64,
-    L1_instructionCacheBlockSizeBytes: Int = 32,
 
     // Data Cache params
     L1_DataCacheWays: Int = 4,
     L1_DataCacheSets: Int = 64,
-    L1_DataCacheBlockSizeBytes: Int = 32,
 
-    L1_MSHREntries: Int = 4,    // number of MSHR rows (unique miss addresses)
-    L1_NonCacheableBufferEntries: Int = 4,    // number of MSHR rows (unique miss addresses)
-    L1_MSHRWidth: Int = 8,      // width of MSHR rows (misses per address)
+    L1_MSHREntries: Int = 4,                    // number of MSHR rows (unique miss addresses)
+    L1_NonCacheableBufferEntries: Int = 4,      // number of MSHR rows (unique miss addresses)
+    L1_MSHRWidth: Int = 8,                      // width of MSHR rows (misses per address)
 
     // Execution params
     ALUportCount:Int = 3,
@@ -104,9 +104,9 @@ case class CoreParameters(
 
 
     // DATA CACHE
-    val L1_DataCacheTagBits:Int = 32 - log2Ceil(L1_DataCacheSets) - log2Ceil(L1_DataCacheBlockSizeBytes)
+    val L1_DataCacheTagBits:Int = 32 - log2Ceil(L1_DataCacheSets) - log2Ceil(L1_cacheLineSizeBytes)
     //L1_DataCacheSets: Int = 64,
-    //L1_DataCacheBlockSizeBytes: Int = 32,
+    //L1_cacheLineSizeBytes: Int = 32,
 
 
     // INSTRUCTION CACHE

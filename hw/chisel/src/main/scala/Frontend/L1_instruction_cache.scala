@@ -74,7 +74,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val ways = L1_instructionCacheWays
     val sets = L1_instructionCacheSets
 
-    val blockSizeBytes = L1_instructionCacheBlockSizeBytes
+    val blockSizeBytes = L1_cacheLineSizeBytes
 
     val depth                       = sets
     val byteOffsetBits              = log2Ceil(blockSizeBytes)                                          // Bits needed to each byte in a cache line
@@ -159,7 +159,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     //RegInit(Bool(), 0.B)
 
 
-	val axi_response = Wire(UInt((L1_instructionCacheBlockSizeBytes*8).W))
+	val axi_response = Wire(UInt((L1_cacheLineSizeBytes*8).W))
 	val axi_response_valid = Wire(Bool())
 
     axi_response := 0.U
@@ -167,14 +167,13 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     val already_requested = RegInit(Bool(), 0.B)
 
-    //dontTouch(io.DRAM_response)
 
     switch(cache_state){
 
         is(cacheState.Active){  // Wait for request
 
             when(miss===1.B && io.kill === 0.U){           // Buffer current request, stall cache, go to wait state
-		        val read_accepted = AXI_read_request(request_addr, 0.U, L1_instructionCacheBlockSizeBytes.U)
+		        val read_accepted = AXI_read_request(request_addr, 0.U, L1_cacheLineSizeBytes.U)
                 when(read_accepted){
                     cache_state              := cacheState.Allocate
                 }.otherwise{
@@ -188,7 +187,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
         }
 
         is(cacheState.Request){
-            val read_accepted = AXI_read_request(request_addr, 0.U, L1_instructionCacheBlockSizeBytes.U)
+            val read_accepted = AXI_read_request(request_addr, 0.U, L1_cacheLineSizeBytes.U)
             when(read_accepted){
                 cache_state              := cacheState.Allocate
             }
