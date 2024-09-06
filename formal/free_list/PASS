@@ -1,0 +1,4 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:13 (13)
+Elapsed process time [H:MM:SS (secs)]: 0:00:15 (15)
+engine_0 (smtbmc) returned pass
+engine_0 did not produce any traces

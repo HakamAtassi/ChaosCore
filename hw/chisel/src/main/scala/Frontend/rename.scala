@@ -132,6 +132,12 @@ class RAT(coreParameters:CoreParameters) extends Module{
         }
     }
 
+    when(io.commit.valid && (io.commit.bits.is_misprediction)){
+        for(i <- 0 until architecturalRegCount){
+            speculative_RAT(i) := commit_RAT(i)
+        }
+    }
+
     ////////////////
     // COMMIT RAT //
     ////////////////
@@ -156,11 +162,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     }
 
 
-    when(io.commit.valid && (io.commit.bits.is_misprediction)){
-        for(i <- 0 until architecturalRegCount){
-            speculative_RAT(i) := commit_RAT(i)
-        }
-    }
+
 
 }
 
@@ -193,6 +195,28 @@ class rename(coreParameters:CoreParameters) extends Module{
         // Instruction output (renamed)
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
     }); dontTouch(io)
+
+
+    val accepted_decoded_packet = Reg(new decoded_fetch_packet(coreParameters))
+
+    when(io.decoded_fetch_packet.fire){
+        accepted_decoded_packet := io.decoded_fetch_packet.bits
+    }
+
+//    when(io.renamed_decoded_fetch_packet.fire){
+        //for(i <- 0 until fetchWidth){
+            //val instruction_fetch_PC = accepted_decoded_packet.fetch_PC + i.U*4.U
+            //val oldRS1  =   accepted_decoded_packet.decoded_instruction(i).RS1
+            //val oldRS2  =   accepted_decoded_packet.decoded_instruction(i).RS2
+            //val oldRD   =   accepted_decoded_packet.decoded_instruction(i).RD
+
+            //val RS1  =   io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1
+            //val RS2  =   io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2
+            //val RD   =   io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD
+            //printf("fetchPC (%x) renamed %x <= %x , %x | to %x <= %x, %x\n", instruction_fetch_PC, oldRD, oldRS1, oldRS2, RD, RS1, RS2)
+        //}
+        //printf("\n")
+    //}
 
     //////////////////
     // HELPER WIRES //
@@ -378,9 +402,9 @@ class rename(coreParameters:CoreParameters) extends Module{
             val prev_PRD         = io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).PRD
             val RS1        = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1
             val RS2        = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2
-            when(prev_RD_valid && (prev_PRD === RS1)){
+            when(prev_RD_valid && (prev_PRD === RS1) && RS1 =/= 0x0.U){
                 initialReady.RS1_ready := 0.U 
-            }.elsewhen(prev_RD_valid && (prev_PRD === RS2)){
+            }.elsewhen(prev_RD_valid && (prev_PRD === RS2 && RS2 =/= 0x0.U)){
                 initialReady.RS2_ready := 0.U 
             }
         }
@@ -395,6 +419,9 @@ class rename(coreParameters:CoreParameters) extends Module{
             ready_memory(set_RD) := 0.B
         }
     }
+
+    ready_memory(0) := 1.B
+    comb_ready_bits(0) := 1.B
 
 
 

@@ -20,8 +20,8 @@ configs = {
     "testcase": None,                                         # This is populated by import_tests.py
     "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND", "-Wno-PINMISSING", "-Wno-SYMRSVDWORD"],
     # ONLY ENABLE DURING DEBUG
-    #"waves": 1,                                         # Add waves (1/2)
-    #"extra_args": ["--trace-fst", "--trace-structs"]    # Add waves (2/2)
+    "waves": 1,                                         # Add waves (1/2)
+    "extra_args": ["--trace-fst", "--trace-structs"]    # Add waves (2/2)
     # Waves are in sim_build/dump.fst
 }
 

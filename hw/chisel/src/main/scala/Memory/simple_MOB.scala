@@ -121,7 +121,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
             MOB_entry.MOB_STATE            :=  MOB_STATES.VALID
             MOB_entry.memory_type          :=  io.reserve(i).bits.memory_type
             MOB_entry.access_width         :=  io.reserve(i).bits.access_width
-            MOB_entry.PRD                   :=  io.reserve(i).bits.PRD
+            MOB_entry.PRD                  :=  io.reserve(i).bits.PRD
             MOB_entry.ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB_entry.fetch_packet_index   :=  io.reserve(i).bits.packet_index
 
@@ -155,23 +155,44 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // COMMIT UPDATE //
     ///////////////////
 
+    val comb_committed = Wire(Vec(MOBEntries, Bool()))
+    comb_committed := MOB.map(MOB_entry => MOB_entry.committed)
+
     for(i <- 0 until fetchWidth){
-        // update commit
-        when(io.partial_commit.valid(i) && MOB(io.partial_commit.MOB_index(i)).valid){
-            MOB(io.partial_commit.MOB_index(i)).committed := 1.B
+        when(io.partial_commit.valid(i) && MOB(io.partial_commit.MOB_index(i)).valid && io.partial_commit.MOB_valid(i)){
+            comb_committed(io.partial_commit.MOB_index(i)) := 1.B
         }
+    }
+
+    for(i <- 0 until MOBEntries){
+        MOB(i).committed := comb_committed(i)
     }
 
     ///////////
     // FLUSH //
     ///////////
+    val flushed_entries = PopCount(comb_committed.zip(MOB).map { case (committed, mobEntry) => !committed && mobEntry.valid })
+
+
+    dontTouch(flushed_entries)
+
     when(io.flush){
         for(i <- 0 until MOBEntries){
-            MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
+            val clear = !comb_committed(i) && MOB(i).valid
+            when(clear){
+                MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
+            }
         }
-        front_pointer := 0.U
-        back_pointer := 0.U
+        back_pointer := back_pointer - flushed_entries  // walk back back pointer a few elements
     }
+
+
+    dontTouch(front_index)
+    dontTouch(back_index)
+
+
+
+
 
     ///////////
     // CACHE //
@@ -188,11 +209,11 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.backend_memory_request.bits.addr         := MOB_front.address
     io.backend_memory_request.bits.memory_type  := MOB_front.memory_type
     io.backend_memory_request.bits.access_width := MOB_front.access_width
-    io.backend_memory_request.bits.PRD := MOB_front.PRD
-    io.backend_memory_request.bits.ROB_index := MOB_front.ROB_index
+    io.backend_memory_request.bits.PRD          := MOB_front.PRD
+    io.backend_memory_request.bits.ROB_index    := MOB_front.ROB_index
     io.backend_memory_request.bits.MOB_index    := front_index
-    io.backend_memory_request.bits.data    := MOB_front.data
-    io.backend_memory_request.bits.packet_index    := MOB_front.fetch_packet_index
+    io.backend_memory_request.bits.data         := MOB_front.data
+    io.backend_memory_request.bits.packet_index := MOB_front.fetch_packet_index
     
     when(io.backend_memory_request.fire){
         MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))

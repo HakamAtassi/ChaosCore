@@ -1,0 +1,907 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite -- YosysHQ Edition [202409031137]     |
+ |  Copyright (C) 2012 - 2024 YosysHQ GmbH                                    |
+ |  For support, please contact support@yosyshq.com                           |
+ \----------------------------------------------------------------------------/
+ Yosys 0.45 (git sha1 9ed031ddd, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)
+
+-- Executing script file `../model/design.ys' --
+
+1. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Aug24_SW_Release, released at Thu Aug 29 13:14:57 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'rename.sv'
+
+2. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Aug24_SW_Release, released at Thu Aug 29 13:14:57 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'free_list.sv'
+
+3. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Aug24_SW_Release, released at Thu Aug 29 13:14:57 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'WAW_handler.sv'
+
+4. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Aug24_SW_Release, released at Thu Aug 29 13:14:57 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'RAT.sv'
+
+5. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Aug24_SW_Release, released at Thu Aug 29 13:14:57 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'Queue2_decoded_fetch_packet.sv'
+
+6. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Aug24_SW_Release, released at Thu Aug 29 13:14:57 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'ram_2x483.sv'
+
+7. Executing PREP pass.
+
+7.1. Executing HIERARCHY pass (managing design hierarchy).
+Statically elaborating the Verific parse tree.
+Elaborating all modules in library 'work'
+VERIFIC-INFO [VERI-1018] free_list.sv:31: compiling module 'free_list'
+Running rewriter 'initial-assertions'.
+Clearing rewriter list.
+VERIFIC-INFO [VERI-1018] free_list.sv:31: compiling module 'free_list'
+Importing module free_list.
+
+7.1.1. Analyzing design hierarchy..
+Top module:  \free_list
+
+7.1.2. Analyzing design hierarchy..
+Top module:  \free_list
+Removed 0 unused modules.
+
+7.2. Executing PROC pass (convert processes to netlists).
+
+7.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+7.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+7.2.4. Executing PROC_INIT pass (extract init attributes).
+
+7.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+7.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+7.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+7.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+7.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+7.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module free_list.
+<suppressed ~21 debug messages>
+
+7.3. Executing FUTURE pass.
+
+7.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module free_list.
+
+7.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \free_list..
+Removed 4350 unused cells and 5657 unused wires.
+<suppressed ~7150 debug messages>
+
+7.6. Executing CHECK pass (checking for obvious problems).
+Checking module free_list...
+Found and reported 0 problems.
+
+7.7. Executing OPT pass (performing simple optimizations).
+
+7.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module free_list.
+
+7.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\free_list'.
+Removed a total of 0 cells.
+
+7.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \free_list..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~648 debug messages>
+
+7.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \free_list.
+Performed a total of 0 changes.
+
+7.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\free_list'.
+<suppressed ~192 debug messages>
+Removed a total of 64 cells.
+
+7.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \free_list..
+Removed 0 unused cells and 64 unused wires.
+<suppressed ~1 debug messages>
+
+7.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module free_list.
+
+7.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \free_list..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~648 debug messages>
+
+7.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \free_list.
+Performed a total of 0 changes.
+
+7.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\free_list'.
+Removed a total of 0 cells.
+
+7.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \free_list..
+
+7.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module free_list.
+
+7.7.14. Finished OPT passes. (There is nothing left to do.)
+
+7.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 63 bits (of 64) from port A of cell free_list.$verific$shift_left_69$free_list.sv:356$11107 ($shl).
+Removed top 1 bits (of 64) from port Y of cell free_list.$verific$shift_left_69$free_list.sv:356$11107 ($shl).
+Removed top 63 bits (of 64) from port A of cell free_list.$verific$shift_left_200$free_list.sv:537$11238 ($shl).
+Removed top 1 bits (of 64) from port Y of cell free_list.$verific$shift_left_200$free_list.sv:537$11238 ($shl).
+Removed top 63 bits (of 64) from port A of cell free_list.$verific$shift_left_457$free_list.sv:778$11432 ($shl).
+Removed top 1 bits (of 64) from port Y of cell free_list.$verific$shift_left_457$free_list.sv:778$11432 ($shl).
+Removed top 6 bits (of 7) from port B of cell free_list.$verific$sub_847$free_list.sv:1211$11631 ($sub).
+Removed top 1 bits (of 7) from port Y of cell free_list.$verific$sub_847$free_list.sv:1211$11631 ($sub).
+Removed top 1 bits (of 7) from port A of cell free_list.$verific$sub_847$free_list.sv:1211$11631 ($sub).
+Removed top 6 bits (of 7) from port B of cell free_list.$verific$sub_848$free_list.sv:1278$11633 ($sub).
+Removed top 1 bits (of 7) from port Y of cell free_list.$verific$sub_848$free_list.sv:1278$11633 ($sub).
+Removed top 1 bits (of 7) from port A of cell free_list.$verific$sub_848$free_list.sv:1278$11633 ($sub).
+Removed top 6 bits (of 7) from port B of cell free_list.$verific$sub_851$free_list.sv:1346$11637 ($sub).
+Removed top 1 bits (of 7) from port Y of cell free_list.$verific$sub_851$free_list.sv:1346$11637 ($sub).
+Removed top 1 bits (of 7) from port A of cell free_list.$verific$sub_851$free_list.sv:1346$11637 ($sub).
+Removed top 6 bits (of 7) from port B of cell free_list.$verific$sub_852$free_list.sv:1413$11639 ($sub).
+Removed top 1 bits (of 7) from port Y of cell free_list.$verific$sub_852$free_list.sv:1413$11639 ($sub).
+Removed top 1 bits (of 7) from port A of cell free_list.$verific$sub_852$free_list.sv:1413$11639 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_856$free_list.sv:1479$11644 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_859$free_list.sv:1480$11647 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_862$free_list.sv:1481$11650 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_865$free_list.sv:1482$11653 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_868$free_list.sv:1483$11656 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_871$free_list.sv:1484$11659 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_874$free_list.sv:1485$11662 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_877$free_list.sv:1486$11665 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_880$free_list.sv:1487$11668 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_883$free_list.sv:1488$11671 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_886$free_list.sv:1489$11674 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_889$free_list.sv:1490$11677 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_892$free_list.sv:1491$11680 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_895$free_list.sv:1492$11683 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_898$free_list.sv:1493$11686 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_901$free_list.sv:1494$11689 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_904$free_list.sv:1495$11692 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_907$free_list.sv:1496$11695 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_910$free_list.sv:1497$11698 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_913$free_list.sv:1498$11701 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_916$free_list.sv:1499$11704 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_919$free_list.sv:1500$11707 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_922$free_list.sv:1501$11710 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_925$free_list.sv:1502$11713 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_928$free_list.sv:1503$11716 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_931$free_list.sv:1504$11719 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_934$free_list.sv:1505$11722 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_937$free_list.sv:1506$11725 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_940$free_list.sv:1507$11728 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_943$free_list.sv:1508$11731 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_946$free_list.sv:1509$11734 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_1051$free_list.sv:1544$11839 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1054$free_list.sv:1545$11842 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1057$free_list.sv:1546$11845 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1060$free_list.sv:1547$11848 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1063$free_list.sv:1548$11851 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1066$free_list.sv:1549$11854 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1069$free_list.sv:1550$11857 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1072$free_list.sv:1551$11860 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1075$free_list.sv:1552$11863 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1078$free_list.sv:1553$11866 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1081$free_list.sv:1554$11869 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1084$free_list.sv:1555$11872 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1087$free_list.sv:1556$11875 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1090$free_list.sv:1557$11878 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1093$free_list.sv:1558$11881 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1096$free_list.sv:1559$11884 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1099$free_list.sv:1560$11887 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1102$free_list.sv:1561$11890 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1105$free_list.sv:1562$11893 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1108$free_list.sv:1563$11896 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1111$free_list.sv:1564$11899 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1114$free_list.sv:1565$11902 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1117$free_list.sv:1566$11905 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1120$free_list.sv:1567$11908 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1123$free_list.sv:1568$11911 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1126$free_list.sv:1569$11914 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1129$free_list.sv:1570$11917 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1132$free_list.sv:1571$11920 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1135$free_list.sv:1572$11923 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1138$free_list.sv:1573$11926 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1141$free_list.sv:1574$11929 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_1243$free_list.sv:1608$12031 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1246$free_list.sv:1609$12034 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1249$free_list.sv:1610$12037 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1252$free_list.sv:1611$12040 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1255$free_list.sv:1612$12043 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1258$free_list.sv:1613$12046 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1261$free_list.sv:1614$12049 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1264$free_list.sv:1615$12052 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1267$free_list.sv:1616$12055 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1270$free_list.sv:1617$12058 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1273$free_list.sv:1618$12061 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1276$free_list.sv:1619$12064 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1279$free_list.sv:1620$12067 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1282$free_list.sv:1621$12070 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1285$free_list.sv:1622$12073 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1288$free_list.sv:1623$12076 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1291$free_list.sv:1624$12079 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1294$free_list.sv:1625$12082 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1297$free_list.sv:1626$12085 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1300$free_list.sv:1627$12088 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1303$free_list.sv:1628$12091 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1306$free_list.sv:1629$12094 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1309$free_list.sv:1630$12097 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1312$free_list.sv:1631$12100 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1315$free_list.sv:1632$12103 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1318$free_list.sv:1633$12106 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1321$free_list.sv:1634$12109 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1324$free_list.sv:1635$12112 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1327$free_list.sv:1636$12115 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1330$free_list.sv:1637$12118 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1333$free_list.sv:1638$12121 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_1438$free_list.sv:1673$12226 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1441$free_list.sv:1674$12229 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1444$free_list.sv:1675$12232 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1447$free_list.sv:1676$12235 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1450$free_list.sv:1677$12238 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1453$free_list.sv:1678$12241 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1456$free_list.sv:1679$12244 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1459$free_list.sv:1680$12247 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1462$free_list.sv:1681$12250 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1465$free_list.sv:1682$12253 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1468$free_list.sv:1683$12256 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1471$free_list.sv:1684$12259 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1474$free_list.sv:1685$12262 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1477$free_list.sv:1686$12265 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1480$free_list.sv:1687$12268 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1483$free_list.sv:1688$12271 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1486$free_list.sv:1689$12274 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1489$free_list.sv:1690$12277 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1492$free_list.sv:1691$12280 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1495$free_list.sv:1692$12283 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1498$free_list.sv:1693$12286 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1501$free_list.sv:1694$12289 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1504$free_list.sv:1695$12292 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1507$free_list.sv:1696$12295 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1510$free_list.sv:1697$12298 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1513$free_list.sv:1698$12301 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1516$free_list.sv:1699$12304 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1519$free_list.sv:1700$12307 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1522$free_list.sv:1701$12310 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1525$free_list.sv:1702$12313 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1528$free_list.sv:1703$12316 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$sub_1627$free_list.sv:1737$12415 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_1630$free_list.sv:1741$12418 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1632$free_list.sv:1743$12420 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1634$free_list.sv:1745$12422 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1636$free_list.sv:1747$12424 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1638$free_list.sv:1749$12426 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1640$free_list.sv:1751$12428 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1642$free_list.sv:1753$12430 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1644$free_list.sv:1755$12432 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1646$free_list.sv:1757$12434 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1648$free_list.sv:1759$12436 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1650$free_list.sv:1761$12438 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1652$free_list.sv:1763$12440 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1654$free_list.sv:1765$12442 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1656$free_list.sv:1767$12444 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1658$free_list.sv:1769$12446 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1660$free_list.sv:1771$12448 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1662$free_list.sv:1773$12450 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1664$free_list.sv:1775$12452 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1666$free_list.sv:1777$12454 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1668$free_list.sv:1779$12456 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1670$free_list.sv:1781$12458 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1672$free_list.sv:1783$12460 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1674$free_list.sv:1785$12462 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1676$free_list.sv:1787$12464 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1678$free_list.sv:1789$12466 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1680$free_list.sv:1791$12468 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1682$free_list.sv:1793$12470 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1684$free_list.sv:1795$12472 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1686$free_list.sv:1797$12474 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1688$free_list.sv:1799$12476 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1690$free_list.sv:1801$12478 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$sub_1756$free_list.sv:1866$12544 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_1759$free_list.sv:1868$12547 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1761$free_list.sv:1869$12549 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1763$free_list.sv:1870$12551 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1765$free_list.sv:1871$12553 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1767$free_list.sv:1872$12555 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1769$free_list.sv:1873$12557 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1771$free_list.sv:1874$12559 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1773$free_list.sv:1875$12561 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1775$free_list.sv:1876$12563 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1777$free_list.sv:1877$12565 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1779$free_list.sv:1878$12567 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1781$free_list.sv:1879$12569 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1783$free_list.sv:1880$12571 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1785$free_list.sv:1881$12573 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1787$free_list.sv:1882$12575 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1789$free_list.sv:1883$12577 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1791$free_list.sv:1884$12579 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1793$free_list.sv:1885$12581 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1795$free_list.sv:1886$12583 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1797$free_list.sv:1887$12585 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1799$free_list.sv:1888$12587 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1801$free_list.sv:1889$12589 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1803$free_list.sv:1890$12591 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1805$free_list.sv:1891$12593 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1807$free_list.sv:1892$12595 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1809$free_list.sv:1893$12597 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1811$free_list.sv:1894$12599 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1813$free_list.sv:1895$12601 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1815$free_list.sv:1896$12603 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1817$free_list.sv:1897$12605 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1819$free_list.sv:1898$12607 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$sub_1885$free_list.sv:1931$12673 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_1888$free_list.sv:1935$12676 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1890$free_list.sv:1937$12678 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_1892$free_list.sv:1939$12680 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1894$free_list.sv:1941$12682 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1896$free_list.sv:1943$12684 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1898$free_list.sv:1945$12686 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_1900$free_list.sv:1947$12688 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1902$free_list.sv:1949$12690 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1904$free_list.sv:1951$12692 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1906$free_list.sv:1953$12694 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1908$free_list.sv:1955$12696 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1910$free_list.sv:1957$12698 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1912$free_list.sv:1959$12700 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1914$free_list.sv:1961$12702 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_1916$free_list.sv:1963$12704 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1918$free_list.sv:1965$12706 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1920$free_list.sv:1967$12708 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1922$free_list.sv:1969$12710 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1924$free_list.sv:1971$12712 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1926$free_list.sv:1973$12714 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1928$free_list.sv:1975$12716 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1930$free_list.sv:1977$12718 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1932$free_list.sv:1979$12720 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1934$free_list.sv:1981$12722 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1936$free_list.sv:1983$12724 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1938$free_list.sv:1985$12726 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1940$free_list.sv:1987$12728 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1942$free_list.sv:1989$12730 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1944$free_list.sv:1991$12732 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1946$free_list.sv:1993$12734 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_1948$free_list.sv:1995$12736 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$sub_2014$free_list.sv:2060$12802 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_2017$free_list.sv:2062$12805 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2019$free_list.sv:2063$12807 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2021$free_list.sv:2064$12809 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2023$free_list.sv:2065$12811 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2025$free_list.sv:2066$12813 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2027$free_list.sv:2067$12815 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2029$free_list.sv:2068$12817 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2031$free_list.sv:2069$12819 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2033$free_list.sv:2070$12821 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2035$free_list.sv:2071$12823 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2037$free_list.sv:2072$12825 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2039$free_list.sv:2073$12827 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2041$free_list.sv:2074$12829 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2043$free_list.sv:2075$12831 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2045$free_list.sv:2076$12833 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2047$free_list.sv:2077$12835 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2049$free_list.sv:2078$12837 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2051$free_list.sv:2079$12839 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2053$free_list.sv:2080$12841 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2055$free_list.sv:2081$12843 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2057$free_list.sv:2082$12845 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2059$free_list.sv:2083$12847 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2061$free_list.sv:2084$12849 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2063$free_list.sv:2085$12851 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2065$free_list.sv:2086$12853 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2067$free_list.sv:2087$12855 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2069$free_list.sv:2088$12857 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2071$free_list.sv:2089$12859 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2073$free_list.sv:2090$12861 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2075$free_list.sv:2091$12863 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2077$free_list.sv:2092$12865 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$sub_2143$free_list.sv:2126$12931 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_2146$free_list.sv:2130$12934 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2148$free_list.sv:2132$12936 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2150$free_list.sv:2134$12938 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2152$free_list.sv:2136$12940 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2154$free_list.sv:2138$12942 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2156$free_list.sv:2140$12944 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2158$free_list.sv:2142$12946 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2160$free_list.sv:2144$12948 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2162$free_list.sv:2146$12950 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2164$free_list.sv:2148$12952 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2166$free_list.sv:2150$12954 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2168$free_list.sv:2152$12956 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2170$free_list.sv:2154$12958 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2172$free_list.sv:2156$12960 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2174$free_list.sv:2158$12962 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2176$free_list.sv:2160$12964 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2178$free_list.sv:2162$12966 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2180$free_list.sv:2164$12968 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2182$free_list.sv:2166$12970 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2184$free_list.sv:2168$12972 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2186$free_list.sv:2170$12974 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2188$free_list.sv:2172$12976 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2190$free_list.sv:2174$12978 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2192$free_list.sv:2176$12980 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2194$free_list.sv:2178$12982 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2196$free_list.sv:2180$12984 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2198$free_list.sv:2182$12986 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2200$free_list.sv:2184$12988 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2202$free_list.sv:2186$12990 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2204$free_list.sv:2188$12992 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2206$free_list.sv:2190$12994 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$sub_2272$free_list.sv:2256$13060 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_2275$free_list.sv:2258$13063 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2277$free_list.sv:2259$13065 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2279$free_list.sv:2260$13067 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2281$free_list.sv:2261$13069 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2283$free_list.sv:2262$13071 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2285$free_list.sv:2263$13073 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2287$free_list.sv:2264$13075 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2289$free_list.sv:2265$13077 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2291$free_list.sv:2266$13079 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2293$free_list.sv:2267$13081 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2295$free_list.sv:2268$13083 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2297$free_list.sv:2269$13085 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2299$free_list.sv:2270$13087 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2301$free_list.sv:2271$13089 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2303$free_list.sv:2272$13091 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2305$free_list.sv:2273$13093 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2307$free_list.sv:2274$13095 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2309$free_list.sv:2275$13097 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2311$free_list.sv:2276$13099 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2313$free_list.sv:2277$13101 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2315$free_list.sv:2278$13103 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2317$free_list.sv:2279$13105 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2319$free_list.sv:2280$13107 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2321$free_list.sv:2281$13109 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2323$free_list.sv:2282$13111 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2325$free_list.sv:2283$13113 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2327$free_list.sv:2284$13115 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2329$free_list.sv:2285$13117 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2331$free_list.sv:2286$13119 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2333$free_list.sv:2287$13121 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2335$free_list.sv:2288$13123 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$sub_2401$free_list.sv:2322$13189 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_2404$free_list.sv:2326$13192 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2406$free_list.sv:2328$13194 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2408$free_list.sv:2330$13196 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2410$free_list.sv:2332$13198 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2412$free_list.sv:2334$13200 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2414$free_list.sv:2336$13202 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2416$free_list.sv:2338$13204 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2418$free_list.sv:2340$13206 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2420$free_list.sv:2342$13208 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2422$free_list.sv:2344$13210 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2424$free_list.sv:2346$13212 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2426$free_list.sv:2348$13214 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2428$free_list.sv:2350$13216 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2430$free_list.sv:2352$13218 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2432$free_list.sv:2354$13220 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2434$free_list.sv:2356$13222 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2436$free_list.sv:2358$13224 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2438$free_list.sv:2360$13226 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2440$free_list.sv:2362$13228 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2442$free_list.sv:2364$13230 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2444$free_list.sv:2366$13232 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2446$free_list.sv:2368$13234 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2448$free_list.sv:2370$13236 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2450$free_list.sv:2372$13238 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2452$free_list.sv:2374$13240 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2454$free_list.sv:2376$13242 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2456$free_list.sv:2378$13244 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2458$free_list.sv:2380$13246 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2460$free_list.sv:2382$13248 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2462$free_list.sv:2384$13250 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2464$free_list.sv:2386$13252 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$sub_2530$free_list.sv:2452$13318 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_2555$free_list.sv:2465$13343 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2579$free_list.sv:2475$13367 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_2603$free_list.sv:2485$13391 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2627$free_list.sv:2495$13415 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2651$free_list.sv:2505$13439 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2675$free_list.sv:2515$13463 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_2699$free_list.sv:2525$13487 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2723$free_list.sv:2535$13511 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2747$free_list.sv:2545$13535 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2771$free_list.sv:2555$13559 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2795$free_list.sv:2565$13583 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2819$free_list.sv:2575$13607 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2843$free_list.sv:2585$13631 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2867$free_list.sv:2595$13655 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_2891$free_list.sv:2605$13679 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2915$free_list.sv:2615$13703 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2939$free_list.sv:2625$13727 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2963$free_list.sv:2635$13751 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_2987$free_list.sv:2645$13775 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3011$free_list.sv:2655$13799 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3035$free_list.sv:2665$13823 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3059$free_list.sv:2675$13847 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3083$free_list.sv:2685$13871 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3107$free_list.sv:2695$13895 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3131$free_list.sv:2705$13919 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3155$free_list.sv:2715$13943 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3179$free_list.sv:2725$13967 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3203$free_list.sv:2735$13991 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3227$free_list.sv:2745$14015 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3251$free_list.sv:2755$14039 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_3275$free_list.sv:2765$14063 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_4069$free_list.sv:3096$14857 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_4071$free_list.sv:3097$14859 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_4073$free_list.sv:3098$14861 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4075$free_list.sv:3099$14863 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4077$free_list.sv:3100$14865 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4079$free_list.sv:3101$14867 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4081$free_list.sv:3102$14869 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4083$free_list.sv:3103$14871 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4085$free_list.sv:3104$14873 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4087$free_list.sv:3105$14875 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4089$free_list.sv:3106$14877 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4091$free_list.sv:3107$14879 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4093$free_list.sv:3108$14881 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4095$free_list.sv:3109$14883 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4097$free_list.sv:3110$14885 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4099$free_list.sv:3111$14887 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4101$free_list.sv:3112$14889 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4103$free_list.sv:3113$14891 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4105$free_list.sv:3114$14893 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4107$free_list.sv:3115$14895 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4109$free_list.sv:3116$14897 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4111$free_list.sv:3117$14899 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4113$free_list.sv:3118$14901 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4115$free_list.sv:3119$14903 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4117$free_list.sv:3120$14905 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4119$free_list.sv:3121$14907 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4121$free_list.sv:3122$14909 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4123$free_list.sv:3123$14911 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4125$free_list.sv:3124$14913 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4127$free_list.sv:3125$14915 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4129$free_list.sv:3126$14917 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_4202$free_list.sv:3165$14990 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_4209$free_list.sv:3169$14997 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_4216$free_list.sv:3173$15004 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4223$free_list.sv:3177$15011 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4230$free_list.sv:3181$15018 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4237$free_list.sv:3185$15025 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4244$free_list.sv:3189$15032 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4251$free_list.sv:3193$15039 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4258$free_list.sv:3197$15046 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4265$free_list.sv:3201$15053 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4272$free_list.sv:3205$15060 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4279$free_list.sv:3209$15067 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4286$free_list.sv:3213$15074 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4293$free_list.sv:3217$15081 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4300$free_list.sv:3221$15088 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4307$free_list.sv:3225$15095 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4314$free_list.sv:3229$15102 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4321$free_list.sv:3233$15109 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4328$free_list.sv:3237$15116 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4335$free_list.sv:3241$15123 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4342$free_list.sv:3245$15130 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4349$free_list.sv:3249$15137 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4356$free_list.sv:3253$15144 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4363$free_list.sv:3257$15151 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4370$free_list.sv:3261$15158 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4377$free_list.sv:3265$15165 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4384$free_list.sv:3269$15172 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4391$free_list.sv:3273$15179 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4398$free_list.sv:3277$15186 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4405$free_list.sv:3281$15193 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4412$free_list.sv:3285$15200 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_4645$free_list.sv:3417$15433 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_4647$free_list.sv:3419$15435 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_4649$free_list.sv:3421$15437 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4651$free_list.sv:3423$15439 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4653$free_list.sv:3425$15441 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4655$free_list.sv:3427$15443 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4657$free_list.sv:3429$15445 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4659$free_list.sv:3431$15447 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4661$free_list.sv:3433$15449 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4663$free_list.sv:3435$15451 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4665$free_list.sv:3437$15453 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4667$free_list.sv:3439$15455 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4669$free_list.sv:3441$15457 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4671$free_list.sv:3443$15459 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_4673$free_list.sv:3445$15461 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4675$free_list.sv:3447$15463 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4677$free_list.sv:3449$15465 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4679$free_list.sv:3451$15467 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4681$free_list.sv:3453$15469 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4683$free_list.sv:3455$15471 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4685$free_list.sv:3457$15473 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4687$free_list.sv:3459$15475 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4689$free_list.sv:3461$15477 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4691$free_list.sv:3463$15479 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4693$free_list.sv:3465$15481 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4695$free_list.sv:3467$15483 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4697$free_list.sv:3469$15485 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4699$free_list.sv:3471$15487 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4701$free_list.sv:3473$15489 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4703$free_list.sv:3475$15491 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_4705$free_list.sv:3477$15493 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_4968$free_list.sv:3672$15756 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_4973$free_list.sv:3673$15761 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_4978$free_list.sv:3674$15766 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4983$free_list.sv:3675$15771 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4988$free_list.sv:3676$15776 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4993$free_list.sv:3677$15781 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_4998$free_list.sv:3678$15786 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_5003$free_list.sv:3679$15791 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_5008$free_list.sv:3680$15796 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_5013$free_list.sv:3681$15801 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_5018$free_list.sv:3682$15806 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_5023$free_list.sv:3683$15811 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_5028$free_list.sv:3684$15816 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_5033$free_list.sv:3685$15821 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_5038$free_list.sv:3686$15826 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5043$free_list.sv:3687$15831 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5048$free_list.sv:3688$15836 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5053$free_list.sv:3689$15841 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5058$free_list.sv:3690$15846 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5063$free_list.sv:3691$15851 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5068$free_list.sv:3692$15856 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5073$free_list.sv:3693$15861 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5078$free_list.sv:3694$15866 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5083$free_list.sv:3695$15871 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5088$free_list.sv:3696$15876 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5093$free_list.sv:3697$15881 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5098$free_list.sv:3698$15886 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5103$free_list.sv:3699$15891 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5108$free_list.sv:3700$15896 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5113$free_list.sv:3701$15901 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_5118$free_list.sv:3702$15906 ($eq).
+Removed top 6 bits (of 7) from port B of cell free_list.$verific$sub_7341$free_list.sv:4389$18129 ($sub).
+Removed top 1 bits (of 7) from port Y of cell free_list.$verific$sub_7341$free_list.sv:4389$18129 ($sub).
+Removed top 1 bits (of 7) from port A of cell free_list.$verific$sub_7341$free_list.sv:4389$18129 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_7344$free_list.sv:4391$18133 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_7346$free_list.sv:4392$18135 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_7348$free_list.sv:4393$18137 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_7350$free_list.sv:4394$18139 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_7352$free_list.sv:4395$18141 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_7354$free_list.sv:4396$18143 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_7356$free_list.sv:4397$18145 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_7358$free_list.sv:4398$18147 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_7360$free_list.sv:4399$18149 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_7362$free_list.sv:4400$18151 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_7364$free_list.sv:4401$18153 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_7366$free_list.sv:4402$18155 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_7368$free_list.sv:4403$18157 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_7370$free_list.sv:4404$18159 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_7372$free_list.sv:4405$18161 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7374$free_list.sv:4406$18163 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7376$free_list.sv:4407$18165 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7378$free_list.sv:4408$18167 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7380$free_list.sv:4409$18169 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7382$free_list.sv:4410$18171 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7384$free_list.sv:4411$18173 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7386$free_list.sv:4412$18175 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7388$free_list.sv:4413$18177 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7390$free_list.sv:4414$18179 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7392$free_list.sv:4415$18181 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7394$free_list.sv:4416$18183 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7396$free_list.sv:4417$18185 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7398$free_list.sv:4418$18187 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7400$free_list.sv:4419$18189 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7402$free_list.sv:4420$18191 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_7404$free_list.sv:4421$18193 ($eq).
+Removed top 6 bits (of 7) from port B of cell free_list.$verific$sub_7472$free_list.sv:4456$18261 ($sub).
+Removed top 1 bits (of 7) from port Y of cell free_list.$verific$sub_7472$free_list.sv:4456$18261 ($sub).
+Removed top 1 bits (of 7) from port A of cell free_list.$verific$sub_7472$free_list.sv:4456$18261 ($sub).
+Removed top 6 bits (of 7) from port B of cell free_list.$verific$sub_7475$free_list.sv:4523$18265 ($sub).
+Removed top 1 bits (of 7) from port Y of cell free_list.$verific$sub_7475$free_list.sv:4523$18265 ($sub).
+Removed top 1 bits (of 7) from port A of cell free_list.$verific$sub_7475$free_list.sv:4523$18265 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_7996$free_list.sv:4914$18787 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_8004$free_list.sv:4918$18795 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_8012$free_list.sv:4922$18803 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8020$free_list.sv:4926$18811 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8028$free_list.sv:4930$18819 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8036$free_list.sv:4934$18827 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8044$free_list.sv:4938$18835 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8052$free_list.sv:4942$18843 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8060$free_list.sv:4946$18851 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8068$free_list.sv:4950$18859 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8076$free_list.sv:4954$18867 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8084$free_list.sv:4958$18875 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8092$free_list.sv:4962$18883 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8100$free_list.sv:4966$18891 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8108$free_list.sv:4970$18899 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8116$free_list.sv:4974$18907 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8124$free_list.sv:4978$18915 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8132$free_list.sv:4982$18923 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8140$free_list.sv:4986$18931 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8148$free_list.sv:4990$18939 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8156$free_list.sv:4994$18947 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8164$free_list.sv:4998$18955 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8172$free_list.sv:5002$18963 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8180$free_list.sv:5006$18971 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8188$free_list.sv:5010$18979 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8196$free_list.sv:5014$18987 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8204$free_list.sv:5018$18995 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8212$free_list.sv:5022$19003 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8220$free_list.sv:5026$19011 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8228$free_list.sv:5030$19019 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8236$free_list.sv:5034$19027 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_8503$free_list.sv:5165$19294 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_8506$free_list.sv:5166$19297 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_8509$free_list.sv:5167$19300 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8512$free_list.sv:5168$19303 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8515$free_list.sv:5169$19306 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8518$free_list.sv:5170$19309 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8521$free_list.sv:5171$19312 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8524$free_list.sv:5172$19315 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8527$free_list.sv:5173$19318 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8530$free_list.sv:5174$19321 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8533$free_list.sv:5175$19324 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8536$free_list.sv:5176$19327 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8539$free_list.sv:5177$19330 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8542$free_list.sv:5178$19333 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8545$free_list.sv:5179$19336 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8548$free_list.sv:5180$19339 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8551$free_list.sv:5181$19342 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8554$free_list.sv:5182$19345 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8557$free_list.sv:5183$19348 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8560$free_list.sv:5184$19351 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8563$free_list.sv:5185$19354 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8566$free_list.sv:5186$19357 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8569$free_list.sv:5187$19360 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8572$free_list.sv:5188$19363 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8575$free_list.sv:5189$19366 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8578$free_list.sv:5190$19369 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8581$free_list.sv:5191$19372 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8584$free_list.sv:5192$19375 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8587$free_list.sv:5193$19378 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8590$free_list.sv:5194$19381 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8593$free_list.sv:5195$19384 ($eq).
+Removed top 6 bits (of 7) from port B of cell free_list.$verific$sub_8694$free_list.sv:5230$19485 ($sub).
+Removed top 1 bits (of 7) from port Y of cell free_list.$verific$sub_8694$free_list.sv:5230$19485 ($sub).
+Removed top 1 bits (of 7) from port A of cell free_list.$verific$sub_8694$free_list.sv:5230$19485 ($sub).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$equal_8700$free_list.sv:5234$19492 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_8705$free_list.sv:5236$19497 ($eq).
+Removed top 4 bits (of 6) from port B of cell free_list.$verific$equal_8710$free_list.sv:5238$19502 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8715$free_list.sv:5240$19507 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8720$free_list.sv:5242$19512 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8725$free_list.sv:5244$19517 ($eq).
+Removed top 3 bits (of 6) from port B of cell free_list.$verific$equal_8730$free_list.sv:5246$19522 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8735$free_list.sv:5248$19527 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8740$free_list.sv:5250$19532 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8745$free_list.sv:5252$19537 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8750$free_list.sv:5254$19542 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8755$free_list.sv:5256$19547 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8760$free_list.sv:5258$19552 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8765$free_list.sv:5260$19557 ($eq).
+Removed top 2 bits (of 6) from port B of cell free_list.$verific$equal_8770$free_list.sv:5262$19562 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8775$free_list.sv:5264$19567 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8780$free_list.sv:5266$19572 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8785$free_list.sv:5268$19577 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8790$free_list.sv:5270$19582 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8795$free_list.sv:5272$19587 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8800$free_list.sv:5274$19592 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8805$free_list.sv:5276$19597 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8810$free_list.sv:5278$19602 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8815$free_list.sv:5280$19607 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8820$free_list.sv:5282$19612 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8825$free_list.sv:5284$19617 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8830$free_list.sv:5286$19622 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8835$free_list.sv:5288$19627 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8840$free_list.sv:5290$19632 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8845$free_list.sv:5292$19637 ($eq).
+Removed top 1 bits (of 6) from port B of cell free_list.$verific$equal_8850$free_list.sv:5294$19642 ($eq).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$add_12909$free_list.sv:5429$23701 ($add).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$add_12912$free_list.sv:5430$23704 ($add).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$add_12915$free_list.sv:5431$23707 ($add).
+Removed top 5 bits (of 6) from port B of cell free_list.$verific$add_12918$free_list.sv:5432$23710 ($add).
+Removed top 1 bits (of 7) from wire free_list.$verific$n11101$11008.
+Removed top 1 bits (of 7) from wire free_list.$verific$n3109$10985.
+Removed top 1 bits (of 7) from wire free_list.$verific$n3117$10986.
+Removed top 1 bits (of 7) from wire free_list.$verific$n3127$10987.
+Removed top 1 bits (of 7) from wire free_list.$verific$n3135$10988.
+Removed top 1 bits (of 7) from wire free_list.$verific$n9727$11005.
+Removed top 1 bits (of 7) from wire free_list.$verific$n9865$11006.
+Removed top 1 bits (of 64) from wire free_list._selectedPRDs_T_1.
+Removed top 1 bits (of 64) from wire free_list._selectedPRDs_T_4.
+Removed top 1 bits (of 64) from wire free_list._selectedPRDs_T_7.
+Removed top 5 bits (of 6) from wire free_list.selectedPRDs_2.
+
+7.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \free_list..
+Removed 0 unused cells and 18 unused wires.
+<suppressed ~1 debug messages>
+
+7.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+7.11. Executing OPT pass (performing simple optimizations).
+
+7.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module free_list.
+
+7.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\free_list'.
+<suppressed ~1560 debug messages>
+Removed a total of 520 cells.
+
+7.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \free_list..
+Removed 0 unused cells and 520 unused wires.
+<suppressed ~1 debug messages>
+
+7.11.4. Finished fast OPT passes.
+
+7.12. Printing statistics.
+
+=== free_list ===
+
+   Number of wires:               6561
+   Number of wire bits:           8349
+   Number of public wires:         269
+   Number of public wire bits:     921
+   Number of ports:                 65
+   Number of port bits:            320
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               6441
+     $add                           67
+     $and                         1614
+     $dff                          128
+     $eq                           744
+     $logic_not                     12
+     $mux                         1276
+     $not                          776
+     $or                          1792
+     $reduce_and                    12
+     $reduce_or                      9
+     $shl                            3
+     $sub                            8
+
+7.13. Executing CHECK pass (checking for obvious problems).
+Checking module free_list...
+Found and reported 0 problems.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1. Analyzing design hierarchy..
+Top module:  \free_list
+
+8.2. Analyzing design hierarchy..
+Top module:  \free_list
+Removed 0 unused modules.
+
+9. Executing jny backend.
+
+10. Executing RTLIL backend.
+Output filename: ../model/design.il
+
+End of script. Logfile hash: 79225e36c3, CPU: user 1.04s system 0.02s, MEM: 78.93 MB peak
+Yosys 0.45 (git sha1 9ed031ddd, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)
+Time spent: 34% 2x hierarchy (0 sec), 17% 5x opt_clean (0 sec), ...
