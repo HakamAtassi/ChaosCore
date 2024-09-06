@@ -85,17 +85,14 @@ class backend(coreParameters:CoreParameters) extends Module{
     // RESERVATION STATIONS //
     //////////////////////////
 
-    val INT_RS   =  Module(new RS(coreParameters))
-    val MEM_RS   =  Module(new RS(coreParameters, "MEMRS"))
+    val INT_RS   =  Module(new RS(coreParameters, INTRSPortCount))
+    val MEM_RS   =  Module(new RS(coreParameters, MEMRSPortCount))
 
 
     /////////
     // MOB //
     /////////
     val MOB   =  Module(new simple_MOB(coreParameters))
-
-
-
 
     ///////////////////////////
     // SCHEDULE INSTRUCTIONS //
@@ -106,7 +103,6 @@ class backend(coreParameters:CoreParameters) extends Module{
     for (i <- 0 until fetchWidth){
         io.backend_packet(i).ready        := backend_can_allocate
     }
-
 
     // INT RS //
     for (i <- 0 until fetchWidth){
@@ -138,163 +134,110 @@ class backend(coreParameters:CoreParameters) extends Module{
     ///////////////////////////
 
     //val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;    // Connect blackbox
-    val INT_PRF = Module(new sim_nReadmWrite)
+    val INT_PRF = Module(new sim_nReadmWrite(coreParameters))
 
 
-    // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports
     val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))
-
-
-    // FIXME: this assignment should be based on some central config.
-    // Unforetunately, the PRF is generated externally and included as a black box, which makes it tricky to parameterize effectively.
-    // See how the LVT mem can be generated more effectively
-    INT_PRF.io.raddr_0   :=    INT_RS.io.RF_inputs(0).bits.RS1   // INT RS PORT 0
-    INT_PRF.io.raddr_1   :=    INT_RS.io.RF_inputs(0).bits.RS2   // INT RS PORT 0
-    INT_PRF.io.raddr_2   :=    INT_RS.io.RF_inputs(1).bits.RS1   // INT RS PORT 1
-    INT_PRF.io.raddr_3   :=    INT_RS.io.RF_inputs(1).bits.RS2   // INT RS PORT 1
-    INT_PRF.io.raddr_4   :=    INT_RS.io.RF_inputs(2).bits.RS1   // INT RS PORT 2
-    INT_PRF.io.raddr_5   :=    INT_RS.io.RF_inputs(2).bits.RS2   // INT RS PORT 2
-
-    INT_PRF.io.raddr_6   :=    MEM_RS.io.RF_inputs(0).bits.RS1   // MEM RS PORT 0
-    INT_PRF.io.raddr_7   :=    MEM_RS.io.RF_inputs(0).bits.RS2   // MEM RS PORT 0
-
-    io.PC_file_exec_addr := INT_RS.io.RF_inputs(0).bits.ROB_index
-
-
-
-    // update read out data
-    read_decoded_instructions(0).RS1_data := INT_PRF.io.rdata_0
-    read_decoded_instructions(0).RS2_data := INT_PRF.io.rdata_1
-    read_decoded_instructions(0).fetch_PC := io.PC_file_exec_data   // branch unit
-
-    read_decoded_instructions(1).RS1_data := INT_PRF.io.rdata_2
-    read_decoded_instructions(1).RS2_data := INT_PRF.io.rdata_3
-    read_decoded_instructions(1).fetch_PC := 0.U
-
-    read_decoded_instructions(2).RS1_data := INT_PRF.io.rdata_4
-    read_decoded_instructions(2).RS2_data := INT_PRF.io.rdata_5
-    read_decoded_instructions(2).fetch_PC := 0.U
-
-    read_decoded_instructions(3).RS1_data := INT_PRF.io.rdata_6
-    read_decoded_instructions(3).RS2_data := INT_PRF.io.rdata_7
-    read_decoded_instructions(3).fetch_PC := 0.U
-
-
-    // Convert decoded_instructions to read_decoded_instructions
-    // FIXME: these assignments should be based on some central config file (which ports do what?)
-    read_decoded_instructions(0).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(0).bits)
-    read_decoded_instructions(1).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(1).bits)
-    read_decoded_instructions(2).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(2).bits)
-    read_decoded_instructions(3).decoded_instruction <> RegNext(MEM_RS.io.RF_inputs(0).bits)
-
-    ////////////////////
-    // PC REG FILE ?? //
-    ////////////////////
 
 
     ///////////////////////
     // EXECUTION ENGINES //
     ///////////////////////
 
-    //val FU0 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=true))
-    //val FU1 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
-    //val FU2 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
-    //val AGU = Module(new AGU(coreParameters))
+    //MEM_RS.io.RF_inputs(0).ready       := 0.B   //FIXME: parameterize this
 
     val execution_engine = Module(new execution_engine(coreParameters))
 
+    portedFUParamSeq.map(println)
 
-    // Connect FUs
+    for(i <- 0 until portCount){
+        val RS_port     = portedFUParamSeq(i).INTRS_MEMRS_port
+        val RS1_index   = portedFUParamSeq(i).RS1_RS2_indices(0)
+        val RS2_index   = portedFUParamSeq(i).RS1_RS2_indices(1)
+        val PRFRD       = portedFUParamSeq(i).PRFRD
 
-    // Connect ALU, Branch unit, etc... to main RS
-    execution_engine.io.FU_input(0).bits            <> read_decoded_instructions(0)
-    execution_engine.io.FU_input(0).valid           := RegNext(INT_RS.io.RF_inputs(0).valid)
+        if(portedFUParamSeq(i).is_INTFU){
+            // RS <> PRF //
+            INT_PRF.io.raddr(RS1_index)     := INT_RS.io.RF_inputs(RS_port).bits.RS1
+            INT_PRF.io.raddr(RS2_index)     := INT_RS.io.RF_inputs(RS_port).bits.RS2
 
-    execution_engine.io.FU_input(1).bits            <> read_decoded_instructions(1)
-    execution_engine.io.FU_input(1).valid           := RegNext(INT_RS.io.RF_inputs(1).valid)
+            // PRF <> instr //
+            read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(RS1_index)
+            read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(RS2_index)
+            read_decoded_instructions(i).fetch_PC := io.PC_file_exec_data   // branch unit  FIXME: this needs to be extended to have multiple fetch_PC ports in the ROB
 
-    execution_engine.io.FU_input(2).bits            <> read_decoded_instructions(2)
-    execution_engine.io.FU_input(2).valid           := RegNext(INT_RS.io.RF_inputs(2).valid)
+            // FWD instruction //
+            read_decoded_instructions(i).decoded_instruction := RegNext(INT_RS.io.RF_inputs(RS_port).bits)
+            
+            // RS ready <> FU ready //
+            INT_RS.io.RF_inputs(RS_port).ready        := execution_engine.io.FU_input(i).ready
 
-    // Connect AGU to MEMRS
-    execution_engine.io.FU_input(3).bits            <> read_decoded_instructions(3)
-    execution_engine.io.FU_input(3).valid           := RegNext(MEM_RS.io.RF_inputs(0).valid)
-
-
-    // This connects the actual ALU ready bits to the RS
-    // FIXME: should be parameterized or at least a loop
-    // MEMRS only has 1 output port...
-
-    // INT RS ready assignemnt
-    INT_RS.io.RF_inputs(0).ready        := execution_engine.io.FU_input(0).ready
-    INT_RS.io.RF_inputs(1).ready        := execution_engine.io.FU_input(1).ready
-    INT_RS.io.RF_inputs(2).ready        := execution_engine.io.FU_input(2).ready
-
-    // MEM RS ready assignemnt
-    MEM_RS.io.RF_inputs(0).ready       := execution_engine.io.FU_input(3).ready
-    MEM_RS.io.RF_inputs(1).ready       := 0.B
-    MEM_RS.io.RF_inputs(2).ready       := 0.B
+            // FU data <> PRF //
+            INT_PRF.io.waddr(PRFRD)  :=    execution_engine.io.FU_output(i).bits.PRD
+            INT_PRF.io.wen(PRFRD)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid
+            INT_PRF.io.wdata(PRFRD)  :=    execution_engine.io.FU_output(i).bits.RD_data
 
 
+            // RS <> RD complete/ready //
+            INT_RS.io.FU_outputs(i) := execution_engine.io.FU_output(i)
+            MEM_RS.io.FU_outputs(i) := execution_engine.io.FU_output(i)
+
+            execution_engine.io.FU_input(i).valid           := RegNext(INT_RS.io.RF_inputs(RS_port).valid)
+
+        }
+        else if(portedFUParamSeq(i).is_MEMFU){
+            // RS <> PRF //
+            INT_PRF.io.raddr(RS1_index)     :=    MEM_RS.io.RF_inputs(RS_port).bits.RS1   // MEM RS PORT 0
+            INT_PRF.io.raddr(RS2_index)     :=    MEM_RS.io.RF_inputs(RS_port).bits.RS2   // MEM RS PORT 0
+
+            // PRF <> instr //
+            read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(RS1_index)
+            read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(RS2_index)
+            read_decoded_instructions(i).fetch_PC := io.PC_file_exec_data   // branch unit
+
+            // FWD instruction //
+            read_decoded_instructions(i).decoded_instruction <> RegNext(MEM_RS.io.RF_inputs(RS_port).bits)
+
+            // MEMRS ready <> FU ready //
+            MEM_RS.io.RF_inputs(RS_port).ready    := execution_engine.io.FU_input(RS_port).ready
+
+            // AGU_output <> MOB //
+            MOB.io.AGU_output <> execution_engine.io.FU_output(3)  // FIXME add param number of AGU inputs to MOB
+
+            // MOB <> PRF //
+            INT_PRF.io.waddr(PRFRD)  :=    MOB.io.MOB_output.bits.PRD
+            INT_PRF.io.wen(PRFRD)    :=    MOB.io.MOB_output.valid && MOB.io.MOB_output.bits.RD_valid
+            INT_PRF.io.wdata(PRFRD)  :=    MOB.io.MOB_output.bits.RD_data 
+
+            // RS <> RD complete/ready //
+            INT_RS.io.FU_outputs(i) := MOB.io.MOB_output
+            MEM_RS.io.FU_outputs(i) := MOB.io.MOB_output
+
+            execution_engine.io.FU_input(i).valid           := RegNext(MEM_RS.io.RF_inputs(RS_port).valid)
+        }
+
+        execution_engine.io.FU_input(i).bits            <> read_decoded_instructions(i)
+
+        io.FU_outputs(i) <> execution_engine.io.FU_output(i)
+        //io.FU_outputs(3) <> MOB.io.MOB_output
+    }
+
+
+
+    MOB.io.commit <> io.commit
+    MOB.io.partial_commit <> io.partial_commit
+    for (i <- 0 until fetchWidth){
+        MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
+        MOB.io.reserve(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM) && io.backend_packet(i).valid
+    }
+    
+    io.PC_file_exec_addr := INT_RS.io.RF_inputs(0).bits.ROB_index
 
     ////////////////
     // AGU <> MOB //
     ////////////////
-    MOB.io.AGU_output <> execution_engine.io.FU_output(3)
-    MOB.io.flush <> io.flush
     MOB.io.fetch_PC <> io.fetch_PC
-
-    ////////////////////////////
-    // REGISTER FILES (WRITE) //
-    ////////////////////////////
-
-
-    // Write to INT PRF
-    INT_PRF.io.waddr_0  :=    execution_engine.io.FU_output(0).bits.PRD
-    INT_PRF.io.waddr_1  :=    execution_engine.io.FU_output(1).bits.PRD
-    INT_PRF.io.waddr_2  :=    execution_engine.io.FU_output(2).bits.PRD
-    INT_PRF.io.waddr_3  :=    MOB.io.MOB_output.bits.PRD
-
-    INT_PRF.io.wen_0    :=    execution_engine.io.FU_output(0).valid && execution_engine.io.FU_output(0).bits.RD_valid
-    INT_PRF.io.wen_1    :=    execution_engine.io.FU_output(1).valid && execution_engine.io.FU_output(1).bits.RD_valid
-    INT_PRF.io.wen_2    :=    execution_engine.io.FU_output(2).valid && execution_engine.io.FU_output(2).bits.RD_valid
-    INT_PRF.io.wen_3    :=    MOB.io.MOB_output.valid && MOB.io.MOB_output.bits.RD_valid
-
-    INT_PRF.io.wdata_0  :=    execution_engine.io.FU_output(0).bits.RD_data
-    INT_PRF.io.wdata_1  :=    execution_engine.io.FU_output(1).bits.RD_data
-    INT_PRF.io.wdata_2  :=    execution_engine.io.FU_output(2).bits.RD_data
-    INT_PRF.io.wdata_3  :=    MOB.io.MOB_output.bits.RD_data
-
-    ////////////////////////
-    // FU TO RS BROADCAST //
-    ////////////////////////
-
-    INT_RS.io.FU_outputs(0) <> execution_engine.io.FU_output(0)
-    INT_RS.io.FU_outputs(1) <> execution_engine.io.FU_output(1)
-    INT_RS.io.FU_outputs(2) <> execution_engine.io.FU_output(2)
-    INT_RS.io.FU_outputs(3) <> MOB.io.MOB_output
-
-    MEM_RS.io.FU_outputs(0) <> execution_engine.io.FU_output(0)
-    MEM_RS.io.FU_outputs(1) <> execution_engine.io.FU_output(1)
-    MEM_RS.io.FU_outputs(2) <> execution_engine.io.FU_output(2)
-    MEM_RS.io.FU_outputs(3) <> MOB.io.MOB_output
-
-    //////////////////////
-    // FU TO ROB UPDATE //
-    //////////////////////
-
-    io.FU_outputs(0) <> execution_engine.io.FU_output(0)
-    io.FU_outputs(1) <> execution_engine.io.FU_output(1)
-    io.FU_outputs(2) <> execution_engine.io.FU_output(2)
-    io.FU_outputs(3) <> execution_engine.io.FU_output(3)    // this updates the ROB
-
     io.MOB_output   <> MOB.io.MOB_output   // this updates reg status etc...
-
-
-    ///////////////////
-    // MEM_RS TO MEM //
-    ///////////////////
-
 
     ///////////
     // FLUSH //
@@ -302,14 +245,13 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     INT_RS.io.flush <> io.flush
     MEM_RS.io.flush <> io.flush
+    MOB.io.flush    <> io.flush
 
-    execution_engine.io.flush    <> io.flush
+    execution_engine.io.flush       <>  io.flush
 
-    io.reserved_pointers <> MOB.io.reserved_pointers
+    io.reserved_pointers            <>  MOB.io.reserved_pointers
     
     io.backend_memory_request       <>  MOB.io.backend_memory_request
     io.backend_memory_response      <>  MOB.io.backend_memory_response
-
-
 
 }

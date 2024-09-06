@@ -39,10 +39,30 @@ case class FUParams(
     supportsMult: Boolean = false,
     supportsDiv: Boolean = false,
     supportsBranch: Boolean = false,
-    supportsAddressGeneration: Boolean = false
+    supportsAddressGeneration: Boolean = false,
+
+    INTRS_MEMRS_port:Int=0,             // RS index
+    RS1_RS2_indices:Seq[Int]=Seq(0, 0),      // RS1 RS2 index
+    PRFRD:Int=0                         // PRD writeback index
 ) {
+
+    val is_INTFU:Boolean = supportsInt || supportsMult || supportsDiv || supportsBranch
+    val is_MEMFU:Boolean = supportsAddressGeneration
+
     require(
         supportsInt || supportsMult || supportsDiv || supportsBranch || supportsAddressGeneration,
-        "At least one of the functional unit supports must be true."
+        "At least one of the functional unit supports must be true.")
+
+    require(
+        !(supportsAddressGeneration && (supportsMult || supportsDiv || supportsBranch)),
+        "FU cannot be an AGU and something else. Ie, AGUs are mutually exclusive from all other FU types"
     )
+
+
+    require(
+        !(is_INTFU && is_MEMFU), "FU cannot be INTFU and MEMFU at the same time. Please either disable all INT functionality or disable address generation for this FU."
+        )
+
+
+
 }

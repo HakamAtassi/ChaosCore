@@ -82,74 +82,32 @@ class nReadmWrite extends BlackBox with HasBlackBoxResource {
 
 // a simulation version of the nReadmWrite memory 
 // because LVT memories are hard to read during debug
-class sim_nReadmWrite extends Module {
+class sim_nReadmWrite(coreParameters:CoreParameters) extends Module {
+  import coreParameters._
+
   val io = IO(new Bundle {
 
-    val raddr_0 = Input(UInt(7.W))
-    val raddr_1 = Input(UInt(7.W))
-    val raddr_2 = Input(UInt(7.W))
-    val raddr_3 = Input(UInt(7.W))
-    val raddr_4 = Input(UInt(7.W))
-    val raddr_5 = Input(UInt(7.W))
-    val raddr_6 = Input(UInt(7.W))
-    val raddr_7 = Input(UInt(7.W))
-    val rdata_0 = Output(UInt(32.W))
-    val rdata_1 = Output(UInt(32.W))
-    val rdata_2 = Output(UInt(32.W))
-    val rdata_3 = Output(UInt(32.W))
-    val rdata_4 = Output(UInt(32.W))
-    val rdata_5 = Output(UInt(32.W))
-    val rdata_6 = Output(UInt(32.W))
-    val rdata_7 = Output(UInt(32.W))
-    val waddr_0 = Input(UInt(7.W))
-    val waddr_1 = Input(UInt(7.W))
-    val waddr_2 = Input(UInt(7.W))
-    val waddr_3 = Input(UInt(7.W))
-    val wen_0 = Input(Bool())
-    val wen_1 = Input(Bool())
-    val wen_2 = Input(Bool())
-    val wen_3 = Input(Bool())
-    val wdata_0 = Input(UInt(32.W))
-    val wdata_1 = Input(UInt(32.W))
-    val wdata_2 = Input(UInt(32.W))
-    val wdata_3 = Input(UInt(32.W))
+    val raddr = Input(Vec(portCount*2, UInt(physicalRegBits.W)))
+    val rdata = Output(Vec(portCount*2, UInt(32.W)))
+
+    val waddr = Input(Vec(portCount, UInt(physicalRegBits.W)))
+    val wen   = Input(Vec(portCount, Bool()))
+    val wdata = Input(Vec(portCount, UInt(32.W)))
   })
 
-
-  val mem = SyncReadMem(65, UInt(32.W))
+  val mem = SyncReadMem(physicalRegCount, UInt(32.W))
 
   // Write ports
-  when(io.wen_0){
-    val data = Mux(io.waddr_0 === 0.U, 0.U, io.wdata_0)
-    mem.write(io.waddr_0, data)
-  }
-
-  when(io.wen_1){
-    val data = Mux(io.waddr_1 === 0.U, 0.U, io.wdata_1)
-    mem.write(io.waddr_1, data)
-  }
-
-  when(io.wen_2){
-    val data = Mux(io.waddr_2 === 0.U, 0.U, io.wdata_2)
-    mem.write(io.waddr_2, data)
-  }
-
-  when(io.wen_3){
-    val data = Mux(io.waddr_3 === 0.U, 0.U, io.wdata_3)
-    mem.write(io.waddr_3, data)
+  for(i <- 0 until portCount){
+    when(io.wen(i)){
+      val data = Mux(io.waddr(i) === 0.U, 0.U, io.wdata(i))
+      mem.write(io.waddr(i), data)
+    }
   }
 
 
   // Read ports
-  io.rdata_0 := mem.read(io.raddr_0)
-  io.rdata_1 := mem.read(io.raddr_1)
-  io.rdata_2 := mem.read(io.raddr_2)
-  io.rdata_3 := mem.read(io.raddr_3)
-  io.rdata_4 := mem.read(io.raddr_4)
-  io.rdata_5 := mem.read(io.raddr_5)
-  io.rdata_6 := mem.read(io.raddr_6)
-  io.rdata_7 := mem.read(io.raddr_7)
-
-
-
+  for(i <- 0 until portCount*2){
+    io.rdata(i) := mem.read(io.raddr(i))
+  }
 }
