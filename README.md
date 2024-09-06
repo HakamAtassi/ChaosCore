@@ -84,6 +84,15 @@ cd riscv-gnu-toolchain
 sudo make -j12
 ```
 
+then add 
+
+```
+export PATH="$PATH:/opt/riscv/bin"
+```
+to your .bashrc
+
+
+
 
 # TODO: spike
 

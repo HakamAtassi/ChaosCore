@@ -349,7 +349,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
     val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
     val earliest_taken_index    = Mux1H(has_taken_branch_vec.zipWithIndex.map {case (taken, idx) => taken -> idx.U})
-    val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + 0x10.U) // FIXME: make this a param
+    val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + (fetchWidth*4).U)
 
     // the commit signal for this module is resposible for committing an entire fetch packet at once. 
     // this is convinent for things like the front end that updates structures at the granuality of complete fetch packets. 

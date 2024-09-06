@@ -37,12 +37,6 @@ import chisel3.util._
 import getPortCount._
 
 
-//FIXME: 
-// Update this module that that it has partial ordering
-// Meaning that loads cannot execute if there are previous unresolved stores
-// when an entry is found to have no oustanding previous stores, use it to look up the MOB, forward the data, and request the load. 
-
-
 class simple_MOB(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     val portCount       = getPortCount(coreParameters)

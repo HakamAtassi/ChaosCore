@@ -94,9 +94,9 @@ object get_decomposed_dcache_address{
 	import coreParameters._
 
 	val set_bits                    = log2Ceil(L1_DataCacheSets)
-	val tag_bits                    = 32 - log2Ceil(L1_DataCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+	val tag_bits                    = 32 - log2Ceil(L1_cacheLineSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
 
-	val masked_addr = address(log2Ceil(L1_DataCacheBlockSizeBytes)-1, 0)
+	val masked_addr = address(log2Ceil(L1_cacheLineSizeBytes)-1, 0)
 
 
 	val decomposed_dcache_address = new data_cache_address_packet(
@@ -114,15 +114,15 @@ object get_decomposed_dcache_address{
 object get_is_cacheable{
 	def apply(nocParameters:NOCParameters, address:UInt):Bool = {
 		import nocParameters._
-		
-		val cacheable = address >= "h80000000".U	// FIXME: make this a param
+    	val DRAM_addr = BigInt(s"$DRAM_ADDR_WIDTH", 16).U
+		val cacheable = address >= DRAM_addr
 		cacheable
 	}
 
 }
 
 object DATA_CACHE_STATES extends ChiselEnum {
-	val ACTIVE, STALL, ALLOCATE, REPLAY = Value // FIXME: 
+	val ACTIVE, STALL, ALLOCATE, REPLAY = Value
 }
 
 class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCParameters) extends Module with AXICacheNode{
@@ -168,7 +168,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val miss_MOB_index				= Wire(UInt(log2Ceil(MOBEntries).W))
 
 	// The data required for performing a writeback when 
-	val writeback_data				= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
+	val writeback_data				= Wire(UInt((L1_cacheLineSizeBytes*8).W))
 	val writeback_tag				= Wire(UInt(L1_DataCacheTagBits.W))
 	val writeback_address			= Wire(UInt(32.W))
 	val writeback_dirty				= Wire(Bool())
@@ -220,7 +220,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val allocate_tag				= Wire(UInt(log2Ceil(L1_DataCacheTagBits).W))
 	val allocate_way				= Wire(UInt(log2Ceil(L1_DataCacheWays).W))
 
-	val allocate_cache_line			= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
+	val allocate_cache_line			= Wire(UInt((L1_cacheLineSizeBytes*8).W))
 
 	val MSHR_replay_done			= Wire(Bool())
 
@@ -233,7 +233,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val output_packet_index			= Wire(UInt(log2Ceil(fetchWidth).W))
 	val output_RD					= Wire(UInt(physicalRegBits.W))
 
-	val data_way 					= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
+	val data_way 					= Wire(UInt((L1_cacheLineSizeBytes*8).W))
 
 	val evict_way 					= Wire(UInt(log2Ceil(L1_DataCacheWays).W))
 
@@ -313,7 +313,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// REQUEST QUEUE //
 	///////////////////
 
-    val blockSizeBytes = L1_instructionCacheBlockSizeBytes
+    val blockSizeBytes = L1_cacheLineSizeBytes
     val byteOffsetBits = log2Ceil(blockSizeBytes)                                          // Bits needed to each byte in a cache line
     val dram_addr_mask = ((1.U << 32.U) - (1.U << byteOffsetBits))
 
@@ -349,9 +349,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	///////////////////
 	// Array of N memories, each 1 byte wide and sets*ways long (Bmem).
 
-	val data_memories 				= Seq.fill(L1_DataCacheBlockSizeBytes)(Module(new ReadWriteSmem(depth=L1_DataCacheSets*L1_DataCacheWays, width=8)))
-	val data_memories_wr_en 		= Wire(Vec(L1_DataCacheBlockSizeBytes, Bool()))
-	val data_memories_data_in 		= Wire(Vec(L1_DataCacheBlockSizeBytes, UInt(8.W)))
+	val data_memories 				= Seq.fill(L1_cacheLineSizeBytes)(Module(new ReadWriteSmem(depth=L1_DataCacheSets*L1_DataCacheWays, width=8)))
+	val data_memories_wr_en 		= Wire(Vec(L1_cacheLineSizeBytes, Bool()))
+	val data_memories_data_in 		= Wire(Vec(L1_cacheLineSizeBytes, UInt(8.W)))
 
 
 	//val word_offset_match 		= Wire(Bool())
@@ -365,7 +365,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 
 	// Assign data_memory_wr_en
-	for(i <- 0 until L1_DataCacheBlockSizeBytes){
+	for(i <- 0 until L1_cacheLineSizeBytes){
 
 		data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(
 			(word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)	||
@@ -385,19 +385,19 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	dontTouch(allocate_cache_line)
 
 	when(RegNext(active_access_width === access_width_t.W)){
-		for(i <- 0 until L1_DataCacheBlockSizeBytes){
+		for(i <- 0 until L1_cacheLineSizeBytes){
 			data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%4)*8)(7,0))) 
 		}
 	}.elsewhen(RegNext(active_access_width === access_width_t.HW)){
-		for(i <- 0 until L1_DataCacheBlockSizeBytes){
+		for(i <- 0 until L1_cacheLineSizeBytes){
 			data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%2)*8)(7,0))) 
 		}
 	}.elsewhen(RegNext(active_access_width === access_width_t.B)){
-		for(i <- 0 until L1_DataCacheBlockSizeBytes){
+		for(i <- 0 until L1_cacheLineSizeBytes){
 			data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%1)*8)(7,0))) 
 		}
 	}.otherwise{
-		for(i <- 0 until L1_DataCacheBlockSizeBytes){
+		for(i <- 0 until L1_cacheLineSizeBytes){
 			data_memories_data_in(i) 	:= 0.U
 		}
 	}
@@ -603,7 +603,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	writeback_dirty 	:= dirty_memory(RegNext(active_set))(evict_way) && valid_miss
 	writeback_tag 		:= VecInit(tag_memories.map(_.io.data_out))(evict_way)
-	writeback_address 	:= Cat(writeback_tag, writeback_set, 0.U((log2Ceil(L1_DataCacheBlockSizeBytes)).W))
+	writeback_address 	:= Cat(writeback_tag, writeback_set, 0.U((log2Ceil(L1_cacheLineSizeBytes)).W))
 
 	dontTouch(writeback_tag)
 	dontTouch(writeback_data)
@@ -755,7 +755,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	class AXI_request_Q_entry extends Bundle{
 		val write_valid		=	Bool()
 		val write_address	=	UInt(32.W)
-		val write_data		=	UInt((L1_DataCacheBlockSizeBytes*8).W)
+		val write_data		=	UInt((L1_cacheLineSizeBytes*8).W)
 		val write_ID		=	UInt(ID_WIDTH.W)
 		val write_bytes		=	UInt(log2Ceil(128).W)	// Max number of bytes per transfer is 128
 
@@ -779,13 +779,13 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	cacheable_request_Q.io.enq.bits.write_address	:=	RegNext(writeback_address)
 	cacheable_request_Q.io.enq.bits.write_data		:=	writeback_data
 	cacheable_request_Q.io.enq.bits.write_ID		:=	RegNext(0.U)
-	cacheable_request_Q.io.enq.bits.write_bytes		:=	RegNext(L1_DataCacheBlockSizeBytes.U)
+	cacheable_request_Q.io.enq.bits.write_bytes		:=	RegNext(L1_cacheLineSizeBytes.U)
 
 	// Read missing line
 	cacheable_request_Q.io.enq.bits.read_valid		:=	RegNext(RegNext(active_cacheable_write_read))
 	cacheable_request_Q.io.enq.bits.read_address	:=	RegNext(RegNext(active_address) & dram_addr_mask)
 	cacheable_request_Q.io.enq.bits.read_ID			:=	RegNext(0.U)
-	cacheable_request_Q.io.enq.bits.read_bytes		:=	RegNext(L1_DataCacheBlockSizeBytes.U)
+	cacheable_request_Q.io.enq.bits.read_bytes		:=	RegNext(L1_cacheLineSizeBytes.U)
 
 
 	// Buffer non-cacheable requests //

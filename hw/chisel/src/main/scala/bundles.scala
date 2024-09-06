@@ -68,10 +68,10 @@ class instruction_cache_data_line(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
     val set_bits:Int                        = log2Ceil(L1_instructionCacheSets)
-    val byte_offset_bits:Int                = log2Ceil(L1_instructionCacheBlockSizeBytes)
+    val byte_offset_bits:Int                = log2Ceil(L1_cacheLineSizeBytes)
 
     val tag_bits:Int                        = 32 - set_bits - byte_offset_bits
-    val data_bits:Int                       = L1_instructionCacheBlockSizeBytes*8
+    val data_bits:Int                       = L1_cacheLineSizeBytes*8
 
     val valid   = Bool()
     val tag     = UInt(tag_bits.W)
@@ -83,9 +83,9 @@ class instruction_cache_address_packet(coreParameters: CoreParameters) extends B
     import coreParameters._
 
     val set_bits:Int                    = log2Ceil(L1_instructionCacheSets)
-    val tag_bits:Int                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
-    val instruction_offset_bits:Int     = log2Ceil(L1_instructionCacheBlockSizeBytes/4)
-    val fetch_packet_bits:Int           = log2Ceil(L1_instructionCacheBlockSizeBytes/4/fetchWidth)
+    val tag_bits:Int                    = 32 - log2Ceil(L1_cacheLineSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+    val instruction_offset_bits:Int     = log2Ceil(L1_cacheLineSizeBytes/4)
+    val fetch_packet_bits:Int           = log2Ceil(L1_cacheLineSizeBytes/4/fetchWidth)
 
     val tag                     = UInt(tag_bits.W)
     val set                     = UInt(set_bits.W)
@@ -117,7 +117,6 @@ class BTB_entry(coreParameters:CoreParameters) extends Bundle{
     val BTB_fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 }
 
-// FIXME: needs a vector of valid bits, indicating which entries in the fetch packet are being comitted
 class commit(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
@@ -155,10 +154,6 @@ class partial_commit(coreParameters:CoreParameters) extends Bundle{
     val PRD                     = Vec(fetchWidth, UInt(physicalRegBits.W))
     val PRDold                  = Vec(fetchWidth, UInt(physicalRegBits.W))
 }
-
-//class exception(coreParameters:CoreParameters) extends Bundle{
-//}
-
 
 class RAS_update extends Bundle{    // Request call or ret
     val call_addr = UInt(32.W)
@@ -433,25 +428,17 @@ class sources_ready extends Bundle{
     val RS2_ready    =   Bool()
 }
 
-// FIXME:  This is messed up 
 class RS_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
     val decoded_instruction = new decoded_instruction(coreParameters)
-
-    //val ready_bits          =   new sources_ready()
-
     val valid               =  Bool()  // Is whole RS entry valid
 }
 
 class MEMRS_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val decoded_instruction =  new decoded_instruction(coreParameters)
-
-    //val ready_bits          =  new sources_ready()
-
     val fetch_PC            =  UInt(32.W)
-    //val committed            =  Bool()  // Has this instruction committed
     val valid               =  Bool()  // Is whole RS entry valid
 }
 
@@ -507,26 +494,15 @@ class DRAM_request(coreParameters:CoreParameters) extends Bundle{   // FIXME: ch
     val wr_en   = Bool()
 }
 
-class DRAM_response(coreParameters:CoreParameters) extends Bundle{
-    val data = UInt(256.W)  // Must be same size as cache line
-}
-
 
 // FIXME:
 // There should be a standard memory request bus
 // And a seperate dram repsonse bus
-//
-
 class frontend_memory_request(coreParameters:CoreParameters) extends Bundle{
     val addr    = UInt(32.W)
     val wr_data = UInt(32.W)
     val wr_en   = Bool()
 }
-
-class frontend_memory_response(coreParameters:CoreParameters) extends Bundle{
-    val data = UInt(32.W)
-}
-
 
 class backend_memory_request(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
@@ -553,8 +529,6 @@ class backend_memory_response(coreParameters:CoreParameters) extends Bundle{
     //val access_width    = access_width_t()              // B/HW/W
     val MOB_index       = UInt(log2Ceil(MOBEntries).W)
 }
-
-
 
 
 // LDQ //
@@ -666,11 +640,6 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
 
 
     val valid                   =   Bool()
-
-    //def queue(miss_request:backend_memory_request): Unit = {
-        //miss_requests(back_pointer) := Wire(miss_request)//DontCare  // FIXME: actually write data...
-        //back_pointer := back_pointer + 1.U
-    //}
 
     def dequeue: Unit = {
         miss_requests(front_pointer) := 0.U.asTypeOf(new backend_memory_request(coreParameters))

@@ -204,9 +204,9 @@ object get_decomposed_icache_address{
       import coreParameters._
 
       val set_bits                    = log2Ceil(L1_instructionCacheSets)
-      val tag_bits                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+      val tag_bits                    = 32 - log2Ceil(L1_cacheLineSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
       val instruction_offset_bits     = log2Ceil(fetchWidth)
-      val fetch_packet_bits           = log2Ceil(L1_instructionCacheBlockSizeBytes/4/fetchWidth)
+      val fetch_packet_bits           = log2Ceil(L1_cacheLineSizeBytes/4/fetchWidth)
 
       val decomposed_icache_address = Wire(new instruction_cache_address_packet(coreParameters))
 
