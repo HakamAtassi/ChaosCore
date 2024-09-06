@@ -358,7 +358,7 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.target_address    :=      RegNext(target_address)
 
     // Actual Outputs
-    io.FU_output.bits.PRD                :=      RegNext(io.FU_input.bits.decoded_instruction.PRD)
+    io.FU_output.bits.PRD               :=      RegNext(io.FU_input.bits.decoded_instruction.PRD)
     io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     io.FU_output.bits.RD_data           :=      RegNext(instruction_PC + 4.U)
     io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
@@ -373,20 +373,17 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     io.FU_output.bits.wr_data             :=   DontCare
 
 
-    io.FU_output.valid                  :=      RegNext(io.FU_input.valid && !io.flush)
+    io.FU_output.valid                  :=      RegNext(io.FU_input.valid && (BRANCH || JAL || JALR) && !io.flush)
 
 }
 
+//class mult
 
+//class div
 
-// Top Level FU
-class FU(coreParameters:CoreParameters,
-         has_ALU:Boolean,
-         has_branch_unit: Boolean 
-         //MUL:Bool    
-) extends Module{
-    import coreParameters._
+class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     import InstructionType._
+    import FUParam._
     val io = IO(new Bundle{
         // FLUSH
         val flush         =   Input(Bool())
@@ -396,48 +393,55 @@ class FU(coreParameters:CoreParameters,
         
         // Output
         val FU_output     =   ValidIO(new FU_output(coreParameters))
-    })
-    dontTouch(io)
-    // All functional have a latency of 1 cycle (for now)
-    // FIXME: Add Mul/Div + bypassing
-    // Also make sure to inner modules dont write to CDB at the same time
-
-    val is_ALU  = io.FU_input.bits.decoded_instruction.needs_ALU && io.FU_input.valid
-    val is_CTRL = io.FU_input.bits.decoded_instruction.needs_branch_unit && io.FU_input.valid
+    }); dontTouch(io)
 
 
+    val ALU             = if (supportsInt)                  Some(Module(new ALU(coreParameters))) else None
+    val branch_unit     = if (supportsBranch)               Some(Module(new branch_unit(coreParameters))) else None
+    val AGU             = if (supportsAddressGeneration)    Some(Module(new AGU(coreParameters))) else None
 
-    val ALU = if (has_ALU) Some(Module(new ALU(coreParameters))) else None
-    val branch_unit = if (has_branch_unit) Some(Module(new branch_unit(coreParameters))) else None
 
-    ALU.foreach { alu =>
-        alu.io.FU_input <> io.FU_input
-        alu.io.flush    <> io.flush
-    }
+    //ALU.get.io.FU_input         := DontCare
+    //branch_unit.get.io.FU_input := DontCare
+    //AGU.get.io.FU_input         := DontCare
 
-    branch_unit.foreach { bu =>
-        bu.io.FU_input <> io.FU_input
-        bu.io.flush    <> io.flush
-    }
+    // assign inputs
+    ALU.foreach         {ALU => ALU.io.FU_input                     <> io.FU_input }
+    branch_unit.foreach {branch_unit => branch_unit.io.FU_input     <> io.FU_input }
+    AGU.foreach         { AGU => AGU.io.FU_input                    <> io.FU_input }
 
+
+    // route outputs
     io.FU_output := DontCare
 
 
+
     if(ALU.isDefined){
-        when(RegNext(is_ALU)) {
-            io.FU_output := ALU.get.io.FU_output
+        when(ALU.get.io.FU_output.valid){
+            io.FU_output <> ALU.get.io.FU_output
         }
     }
-
 
     if(branch_unit.isDefined){
-        when(RegNext(is_CTRL)) {
-            io.FU_output := branch_unit.get.io.FU_output
+        when(branch_unit.get.io.FU_output.valid){
+            io.FU_output <> branch_unit.get.io.FU_output
         }
     }
 
-    // DEBUG SIGNALS //
-    val monitor_output = Wire(Bool())
-    monitor_output := RegNext(io.FU_input.valid)
-    dontTouch(monitor_output)
+    if(AGU.isDefined){
+        when(AGU.get.io.FU_output.valid){
+            io.FU_output <> AGU.get.io.FU_output
+        }
+    }
+
+
+
+    //////////////////
+    // ASSIGN FLUSH //
+    //////////////////
+    if(ALU.isDefined){ALU.get.io.flush      <> io.flush}
+    if(branch_unit.isDefined){branch_unit.get.io.flush <> io.flush}
+    if(AGU.isDefined){AGU.get.io.flush         <> io.flush}
+
 }
+

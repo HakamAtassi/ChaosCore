@@ -35,6 +35,9 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
+
+
+
 case class CoreParameters(
 
 
@@ -86,15 +89,21 @@ case class CoreParameters(
     //MOBForceInOrder:Boolean = true,  // can loads execute if not all previous (load+store) addresses have been resolved?
 
 
+    /////////////////////////////
+    // EXECUTION ENGINE PARAMS //
+    /////////////////////////////
 
-    // SOC PARAMETERS
+    // Add as many FUs as desired. 
+    FUParamSeq: Seq[FUParams] = Seq(
+        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=true, supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsAddressGeneration=false),
+        FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsAddressGeneration=true),
+    )
 
-
-
-
-
-
-
+    // TODO: 
+    // Add requirement that there can only be 1 AGU, and that there are no mults or divs currently. 
+    
 ){
     // DO NOT TOUCH coreParameters //
     val physicalRegBits: Int      = log2Ceil(physicalRegCount)      // N regs but x0 does not exist as a physical reg

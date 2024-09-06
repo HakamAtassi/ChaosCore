@@ -114,12 +114,21 @@ object get_decomposed_dcache_address{
 object get_is_cacheable{
 	def apply(nocParameters:NOCParameters, address:UInt):Bool = {
 		import nocParameters._
-    	val DRAM_addr = BigInt(s"$DRAM_ADDR_WIDTH", 16).U
-		val cacheable = address >= DRAM_addr
+   		//val DRAM_addr = BigInt(DRAM_BASE_ADDR, 16).U	// DRAM_BASE_ADDR = 0x8000_0000
+		val cacheable = address >= DRAM_BASE_ADDR.U
 		cacheable
 	}
 
 }
+
+//object get_is_cacheable{
+	//def apply(nocParameters:NOCParameters, address:UInt):Bool = {
+		//import nocParameters._
+		
+		//val cacheable = address >= "h80000000".U	// FIXME: make this a param
+		//cacheable
+	//}
+//}
 
 object DATA_CACHE_STATES extends ChiselEnum {
 	val ACTIVE, STALL, ALLOCATE, REPLAY = Value

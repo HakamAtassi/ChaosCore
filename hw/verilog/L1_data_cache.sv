@@ -266,7 +266,7 @@ module L1_data_cache(
   wire             active_valid = (&DATA_CACHE_STATE) | _valid_miss_T_4;
   wire [31:0]      active_address =
     (&DATA_CACHE_STATE) ? replay_address : io_CPU_request_bits_addr;
-  wire             active_cacheable = active_address > 32'h23 & active_valid;
+  wire             active_cacheable = active_address[31] & active_valid;
   wire [5:0]       active_set = (&DATA_CACHE_STATE) ? replay_set : backend_set;
   wire [20:0]      active_tag = {16'h0, (&DATA_CACHE_STATE) ? replay_tag : backend_tag};
   wire [1:0]       active_memory_type =
@@ -301,7 +301,7 @@ module L1_data_cache(
     _active_non_cacheable_read_T & active_non_cacheable;
   wire             active_non_cacheable_write =
     _data_memories_wr_en_31_T_13 & active_non_cacheable;
-  wire             input_cacheable = io_CPU_request_bits_addr > 32'h23;
+  wire             input_cacheable = io_CPU_request_bits_addr[31];
   wire             active_cacheable_write_read = input_cacheable & active_valid;
   wire [4:0]       byte_offset = active_address[4:0];
   wire [4:0]       word_offset = byte_offset / 5'h4;

@@ -53,14 +53,14 @@ class backend(coreParameters:CoreParameters) extends Module{
         val flush                       =   Input(Bool())
 
         // pointers to MOB entries for updating later
-        val reserved_pointers           =      Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry
+        val reserved_pointers           =   Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry
 
         val backend_memory_response     =   Flipped(Decoupled(new backend_memory_response(coreParameters))) // From MEM
         val backend_memory_request      =   Decoupled(new backend_memory_request(coreParameters))     // To MEM
 
         // REDIRECTS // 
-        val commit                      =    Flipped(ValidIO(new commit(coreParameters)))
-        val partial_commit              =    Flipped(new partial_commit(coreParameters))
+        val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
+        val partial_commit              =   Flipped(new partial_commit(coreParameters))
 
         // PC_file access (for branch unit)
         val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))
@@ -71,7 +71,7 @@ class backend(coreParameters:CoreParameters) extends Module{
         val backend_packet              =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
 
-        val MOB_output              =      ValidIO(new FU_output(coreParameters))                                               // broadcast load data
+        val MOB_output                  =   ValidIO(new FU_output(coreParameters))                                               // broadcast load data
 
 
         // UPDATE //
@@ -144,10 +144,10 @@ class backend(coreParameters:CoreParameters) extends Module{
     // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports
     val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))
 
-    
-    // FIXME: the assignemnt of these should be based on some central config
-    // FIXME: RS should have a parameterizable number of output ports
 
+    // FIXME: this assignment should be based on some central config.
+    // Unforetunately, the PRF is generated externally and included as a black box, which makes it tricky to parameterize effectively.
+    // See how the LVT mem can be generated more effectively
     INT_PRF.io.raddr_0   :=    INT_RS.io.RF_inputs(0).bits.RS1   // INT RS PORT 0
     INT_PRF.io.raddr_1   :=    INT_RS.io.RF_inputs(0).bits.RS2   // INT RS PORT 0
     INT_PRF.io.raddr_2   :=    INT_RS.io.RF_inputs(1).bits.RS1   // INT RS PORT 1
@@ -159,6 +159,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     INT_PRF.io.raddr_7   :=    MEM_RS.io.RF_inputs(0).bits.RS2   // MEM RS PORT 0
 
     io.PC_file_exec_addr := INT_RS.io.RF_inputs(0).bits.ROB_index
+
 
 
     // update read out data
@@ -195,24 +196,29 @@ class backend(coreParameters:CoreParameters) extends Module{
     // EXECUTION ENGINES //
     ///////////////////////
 
-    val FU0 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=true))
-    val FU1 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
-    val FU2 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
-    val AGU = Module(new AGU(coreParameters))
+    //val FU0 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=true))
+    //val FU1 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
+    //val FU2 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
+    //val AGU = Module(new AGU(coreParameters))
+
+    val execution_engine = Module(new execution_engine(coreParameters))
 
 
     // Connect FUs
-    FU0.io.FU_input.bits            <> read_decoded_instructions(0)
-    FU0.io.FU_input.valid           := RegNext(INT_RS.io.RF_inputs(0).valid)
 
-    FU1.io.FU_input.bits            <> read_decoded_instructions(1)
-    FU1.io.FU_input.valid           := RegNext(INT_RS.io.RF_inputs(1).valid)
+    // Connect ALU, Branch unit, etc... to main RS
+    execution_engine.io.FU_input(0).bits            <> read_decoded_instructions(0)
+    execution_engine.io.FU_input(0).valid           := RegNext(INT_RS.io.RF_inputs(0).valid)
 
-    FU2.io.FU_input.bits            <> read_decoded_instructions(2)
-    FU2.io.FU_input.valid           := RegNext(INT_RS.io.RF_inputs(2).valid)
+    execution_engine.io.FU_input(1).bits            <> read_decoded_instructions(1)
+    execution_engine.io.FU_input(1).valid           := RegNext(INT_RS.io.RF_inputs(1).valid)
 
-    AGU.io.FU_input.bits            <> read_decoded_instructions(3)
-    AGU.io.FU_input.valid           := RegNext(MEM_RS.io.RF_inputs(0).valid)
+    execution_engine.io.FU_input(2).bits            <> read_decoded_instructions(2)
+    execution_engine.io.FU_input(2).valid           := RegNext(INT_RS.io.RF_inputs(2).valid)
+
+    // Connect AGU to MEMRS
+    execution_engine.io.FU_input(3).bits            <> read_decoded_instructions(3)
+    execution_engine.io.FU_input(3).valid           := RegNext(MEM_RS.io.RF_inputs(0).valid)
 
 
     // This connects the actual ALU ready bits to the RS
@@ -220,12 +226,12 @@ class backend(coreParameters:CoreParameters) extends Module{
     // MEMRS only has 1 output port...
 
     // INT RS ready assignemnt
-    INT_RS.io.RF_inputs(0).ready        := FU0.io.FU_input.ready
-    INT_RS.io.RF_inputs(1).ready        := FU1.io.FU_input.ready
-    INT_RS.io.RF_inputs(2).ready        := FU2.io.FU_input.ready
+    INT_RS.io.RF_inputs(0).ready        := execution_engine.io.FU_input(0).ready
+    INT_RS.io.RF_inputs(1).ready        := execution_engine.io.FU_input(1).ready
+    INT_RS.io.RF_inputs(2).ready        := execution_engine.io.FU_input(2).ready
 
     // MEM RS ready assignemnt
-    MEM_RS.io.RF_inputs(0).ready       := AGU.io.FU_input.ready
+    MEM_RS.io.RF_inputs(0).ready       := execution_engine.io.FU_input(3).ready
     MEM_RS.io.RF_inputs(1).ready       := 0.B
     MEM_RS.io.RF_inputs(2).ready       := 0.B
 
@@ -234,7 +240,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     ////////////////
     // AGU <> MOB //
     ////////////////
-    MOB.io.AGU_output <> AGU.io.FU_output
+    MOB.io.AGU_output <> execution_engine.io.FU_output(3)
     MOB.io.flush <> io.flush
     MOB.io.fetch_PC <> io.fetch_PC
 
@@ -244,43 +250,43 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     // Write to INT PRF
-    INT_PRF.io.waddr_0  :=    FU0.io.FU_output.bits.PRD
-    INT_PRF.io.waddr_1  :=    FU1.io.FU_output.bits.PRD
-    INT_PRF.io.waddr_2  :=    FU2.io.FU_output.bits.PRD
+    INT_PRF.io.waddr_0  :=    execution_engine.io.FU_output(0).bits.PRD
+    INT_PRF.io.waddr_1  :=    execution_engine.io.FU_output(1).bits.PRD
+    INT_PRF.io.waddr_2  :=    execution_engine.io.FU_output(2).bits.PRD
     INT_PRF.io.waddr_3  :=    MOB.io.MOB_output.bits.PRD
 
-    INT_PRF.io.wen_0    :=    FU0.io.FU_output.valid && FU0.io.FU_output.bits.RD_valid
-    INT_PRF.io.wen_1    :=    FU1.io.FU_output.valid && FU1.io.FU_output.bits.RD_valid
-    INT_PRF.io.wen_2    :=    FU2.io.FU_output.valid && FU2.io.FU_output.bits.RD_valid
+    INT_PRF.io.wen_0    :=    execution_engine.io.FU_output(0).valid && execution_engine.io.FU_output(0).bits.RD_valid
+    INT_PRF.io.wen_1    :=    execution_engine.io.FU_output(1).valid && execution_engine.io.FU_output(1).bits.RD_valid
+    INT_PRF.io.wen_2    :=    execution_engine.io.FU_output(2).valid && execution_engine.io.FU_output(2).bits.RD_valid
     INT_PRF.io.wen_3    :=    MOB.io.MOB_output.valid && MOB.io.MOB_output.bits.RD_valid
 
-    INT_PRF.io.wdata_0  :=    FU0.io.FU_output.bits.RD_data
-    INT_PRF.io.wdata_1  :=    FU1.io.FU_output.bits.RD_data
-    INT_PRF.io.wdata_2  :=    FU2.io.FU_output.bits.RD_data
+    INT_PRF.io.wdata_0  :=    execution_engine.io.FU_output(0).bits.RD_data
+    INT_PRF.io.wdata_1  :=    execution_engine.io.FU_output(1).bits.RD_data
+    INT_PRF.io.wdata_2  :=    execution_engine.io.FU_output(2).bits.RD_data
     INT_PRF.io.wdata_3  :=    MOB.io.MOB_output.bits.RD_data
 
     ////////////////////////
     // FU TO RS BROADCAST //
     ////////////////////////
 
-    INT_RS.io.FU_outputs(0) <> FU0.io.FU_output
-    INT_RS.io.FU_outputs(1) <> FU1.io.FU_output
-    INT_RS.io.FU_outputs(2) <> FU2.io.FU_output
+    INT_RS.io.FU_outputs(0) <> execution_engine.io.FU_output(0)
+    INT_RS.io.FU_outputs(1) <> execution_engine.io.FU_output(1)
+    INT_RS.io.FU_outputs(2) <> execution_engine.io.FU_output(2)
     INT_RS.io.FU_outputs(3) <> MOB.io.MOB_output
 
-    MEM_RS.io.FU_outputs(0) <> FU0.io.FU_output
-    MEM_RS.io.FU_outputs(1) <> FU1.io.FU_output
-    MEM_RS.io.FU_outputs(2) <> FU2.io.FU_output
+    MEM_RS.io.FU_outputs(0) <> execution_engine.io.FU_output(0)
+    MEM_RS.io.FU_outputs(1) <> execution_engine.io.FU_output(1)
+    MEM_RS.io.FU_outputs(2) <> execution_engine.io.FU_output(2)
     MEM_RS.io.FU_outputs(3) <> MOB.io.MOB_output
 
     //////////////////////
     // FU TO ROB UPDATE //
     //////////////////////
 
-    io.FU_outputs(0) <> FU0.io.FU_output
-    io.FU_outputs(1) <> FU1.io.FU_output
-    io.FU_outputs(2) <> FU2.io.FU_output
-    io.FU_outputs(3) <> AGU.io.FU_output    // this updates the ROB
+    io.FU_outputs(0) <> execution_engine.io.FU_output(0)
+    io.FU_outputs(1) <> execution_engine.io.FU_output(1)
+    io.FU_outputs(2) <> execution_engine.io.FU_output(2)
+    io.FU_outputs(3) <> execution_engine.io.FU_output(3)    // this updates the ROB
 
     io.MOB_output   <> MOB.io.MOB_output   // this updates reg status etc...
 
@@ -297,10 +303,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     INT_RS.io.flush <> io.flush
     MEM_RS.io.flush <> io.flush
 
-    FU0.io.flush    <> io.flush
-    FU1.io.flush    <> io.flush
-    FU2.io.flush    <> io.flush
-    AGU.io.flush    <> io.flush
+    execution_engine.io.flush    <> io.flush
 
     io.reserved_pointers <> MOB.io.reserved_pointers
     
