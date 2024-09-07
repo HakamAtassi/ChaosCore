@@ -555,7 +555,7 @@ module ROB(
     _partial_commit_valid_3_T & ROB_output_row_valid;
   assign commit_valid = _commit_valid_T & commit_row_complete_2 & commit_row_complete_3;
   wire             commit_is_misprediction =
-    expected_PC != commit_prediction_target & commit_valid;
+    expected_PC != commit_prediction_target & commit_valid & has_taken_branch;
   reg  [31:0]      io_commit_bits_REG_fetch_PC;
   reg              io_commit_bits_REG_T_NT;
   reg  [5:0]       io_commit_bits_REG_ROB_index;

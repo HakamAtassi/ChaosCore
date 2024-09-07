@@ -411,7 +411,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     commit.expected_PC           := expected_PC
 
     // Check for misprediction
-    when((expected_PC =/= commit_prediction.target) && commit_valid) {
+    when((expected_PC =/= commit_prediction.target) && commit_valid && has_taken_branch) {
         commit.is_misprediction      := 1.B
         commit.T_NT                  := commit_resolved(earliest_taken_index).T_NT
         commit.br_type               := commit_resolved(earliest_taken_index).br_type
