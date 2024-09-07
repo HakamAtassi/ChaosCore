@@ -92,7 +92,8 @@ module L1_data_cache(
                 io_CPU_response_bits_fetch_packet_index,
   output [5:0]  io_CPU_response_bits_ROB_index,
   output [31:0] io_CPU_response_bits_data,
-  output [3:0]  io_CPU_response_bits_MOB_index
+  output [3:0]  io_CPU_response_bits_MOB_index,
+  input         io_kill
 );
 
   wire             io_CPU_request_ready_0;
@@ -5316,10 +5317,10 @@ module L1_data_cache(
     _GEN_689 = _GEN_171 & _GEN_686;
     _GEN_690 = _GEN_171 & _GEN_687;
     _GEN_691 = _GEN_171 & (&MSHR_front_index);
-    _GEN_692 = (&DATA_CACHE_STATE) & _GEN_688;
-    _GEN_693 = (&DATA_CACHE_STATE) & _GEN_689;
-    _GEN_694 = (&DATA_CACHE_STATE) & _GEN_690;
-    _GEN_695 = (&DATA_CACHE_STATE) & _GEN_691;
+    _GEN_692 = io_kill | (&DATA_CACHE_STATE) & _GEN_688;
+    _GEN_693 = io_kill | (&DATA_CACHE_STATE) & _GEN_689;
+    _GEN_694 = io_kill | (&DATA_CACHE_STATE) & _GEN_690;
+    _GEN_695 = io_kill | (&DATA_CACHE_STATE) & _GEN_691;
     AXI_AR_buf_arid <= _GEN_241 ? _AXI_request_Q_io_deq_bits_read_ID : 8'h0;
     AXI_AR_buf_araddr <= _GEN_241 ? _AXI_request_Q_io_deq_bits_read_address : 32'h0;
     AXI_AR_buf_arlen <=
@@ -6149,24 +6150,6 @@ module L1_data_cache(
         miss_backend_memory_request_REG_packet_index;
       MSHRs_0_miss_requests_7_ROB_index <= miss_backend_memory_request_REG_ROB_index;
       MSHRs_0_miss_requests_7_PRD <= miss_backend_memory_request_REG_PRD;
-    end
-    if (&DATA_CACHE_STATE) begin
-      if (_GEN_688)
-        MSHRs_0_front_pointer <= 3'h0;
-      else if (_GEN_678)
-        MSHRs_0_front_pointer <= _MSHRs_front_pointer_T;
-      if (_GEN_689)
-        MSHRs_1_front_pointer <= 3'h0;
-      else if (_GEN_686)
-        MSHRs_1_front_pointer <= _MSHRs_front_pointer_T;
-      if (_GEN_690)
-        MSHRs_2_front_pointer <= 3'h0;
-      else if (_GEN_687)
-        MSHRs_2_front_pointer <= _MSHRs_front_pointer_T;
-      if (_GEN_691)
-        MSHRs_3_front_pointer <= 3'h0;
-      else if (&MSHR_front_index)
-        MSHRs_3_front_pointer <= _MSHRs_front_pointer_T;
     end
     MSHRs_0_valid <= ~_GEN_692 & (~_GEN_166 & _GEN_664 | MSHRs_0_valid);
     if (_GEN_693) begin
@@ -9229,6 +9212,30 @@ module L1_data_cache(
       else
         MSHR_back_pointer <= _MSHR_back_pointer_next_T;
     end
+    if (io_kill) begin
+      MSHRs_0_front_pointer <= 3'h0;
+      MSHRs_1_front_pointer <= 3'h0;
+      MSHRs_2_front_pointer <= 3'h0;
+      MSHRs_3_front_pointer <= 3'h0;
+    end
+    else if (&DATA_CACHE_STATE) begin
+      if (_GEN_688)
+        MSHRs_0_front_pointer <= 3'h0;
+      else if (_GEN_678)
+        MSHRs_0_front_pointer <= _MSHRs_front_pointer_T;
+      if (_GEN_689)
+        MSHRs_1_front_pointer <= 3'h0;
+      else if (_GEN_686)
+        MSHRs_1_front_pointer <= _MSHRs_front_pointer_T;
+      if (_GEN_690)
+        MSHRs_2_front_pointer <= 3'h0;
+      else if (_GEN_687)
+        MSHRs_2_front_pointer <= _MSHRs_front_pointer_T;
+      if (_GEN_691)
+        MSHRs_3_front_pointer <= 3'h0;
+      else if (&MSHR_front_index)
+        MSHRs_3_front_pointer <= _MSHRs_front_pointer_T;
+    end
   end // always @(posedge)
   Queue1_final_AXI_response final_response_buffer (
     .clock            (clock),
@@ -9267,7 +9274,8 @@ module L1_data_cache(
     .io_deq_bits_read_valid    (_cacheable_request_Q_io_deq_bits_read_valid),
     .io_deq_bits_read_address  (_cacheable_request_Q_io_deq_bits_read_address),
     .io_deq_bits_read_ID       (_cacheable_request_Q_io_deq_bits_read_ID),
-    .io_deq_bits_read_bytes    (_cacheable_request_Q_io_deq_bits_read_bytes)
+    .io_deq_bits_read_bytes    (_cacheable_request_Q_io_deq_bits_read_bytes),
+    .io_flush                  (io_kill)
   );
   Queue8_AXI_request_Q_entry non_cacheable_request_Q (
     .clock                     (clock),
@@ -9294,7 +9302,8 @@ module L1_data_cache(
     .io_deq_bits_read_valid    (_non_cacheable_request_Q_io_deq_bits_read_valid),
     .io_deq_bits_read_address  (_non_cacheable_request_Q_io_deq_bits_read_address),
     .io_deq_bits_read_ID       (_non_cacheable_request_Q_io_deq_bits_read_ID),
-    .io_deq_bits_read_bytes    (_non_cacheable_request_Q_io_deq_bits_read_bytes)
+    .io_deq_bits_read_bytes    (_non_cacheable_request_Q_io_deq_bits_read_bytes),
+    .io_flush                  (io_kill)
   );
   Queue2_AXI_request_Q_entry AXI_request_Q (
     .clock                     (clock),
@@ -9324,7 +9333,8 @@ module L1_data_cache(
     .io_deq_bits_read_valid    (_AXI_request_Q_io_deq_bits_read_valid),
     .io_deq_bits_read_address  (_AXI_request_Q_io_deq_bits_read_address),
     .io_deq_bits_read_ID       (_AXI_request_Q_io_deq_bits_read_ID),
-    .io_deq_bits_read_bytes    (_AXI_request_Q_io_deq_bits_read_bytes)
+    .io_deq_bits_read_bytes    (_AXI_request_Q_io_deq_bits_read_bytes),
+    .io_flush                  (io_kill)
   );
   Queue8_backend_memory_response cacheable_response_Q (
     .clock                          (clock),
@@ -9344,7 +9354,8 @@ module L1_data_cache(
       (_cacheable_response_Q_io_deq_bits_fetch_packet_index),
     .io_deq_bits_ROB_index          (_cacheable_response_Q_io_deq_bits_ROB_index),
     .io_deq_bits_data               (_cacheable_response_Q_io_deq_bits_data),
-    .io_deq_bits_MOB_index          (_cacheable_response_Q_io_deq_bits_MOB_index)
+    .io_deq_bits_MOB_index          (_cacheable_response_Q_io_deq_bits_MOB_index),
+    .io_flush                       (io_kill)
   );
   Queue8_backend_memory_response non_cacheable_response_Q (
     .clock                          (clock),
@@ -9365,7 +9376,8 @@ module L1_data_cache(
       (_non_cacheable_response_Q_io_deq_bits_fetch_packet_index),
     .io_deq_bits_ROB_index          (_non_cacheable_response_Q_io_deq_bits_ROB_index),
     .io_deq_bits_data               (_non_cacheable_response_Q_io_deq_bits_data),
-    .io_deq_bits_MOB_index          (_non_cacheable_response_Q_io_deq_bits_MOB_index)
+    .io_deq_bits_MOB_index          (_non_cacheable_response_Q_io_deq_bits_MOB_index),
+    .io_flush                       (io_kill)
   );
   Queue3_backend_memory_response CPU_response_skid_buffer (
     .clock                          (clock),
@@ -9386,7 +9398,8 @@ module L1_data_cache(
     .io_deq_bits_fetch_packet_index (io_CPU_response_bits_fetch_packet_index),
     .io_deq_bits_ROB_index          (io_CPU_response_bits_ROB_index),
     .io_deq_bits_data               (io_CPU_response_bits_data),
-    .io_deq_bits_MOB_index          (io_CPU_response_bits_MOB_index)
+    .io_deq_bits_MOB_index          (io_CPU_response_bits_MOB_index),
+    .io_flush                       (io_kill)
   );
   ReadWriteSmem data_memories_0 (
     .clock       (clock),

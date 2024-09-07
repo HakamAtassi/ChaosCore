@@ -219,7 +219,6 @@ class backend(coreParameters:CoreParameters) extends Module{
         execution_engine.io.FU_input(i).bits            <> read_decoded_instructions(i)
 
         io.FU_outputs(i) <> execution_engine.io.FU_output(i)
-        //io.FU_outputs(3) <> MOB.io.MOB_output
     }
 
 
@@ -255,3 +254,13 @@ class backend(coreParameters:CoreParameters) extends Module{
     io.backend_memory_response      <>  MOB.io.backend_memory_response
 
 }
+
+
+
+
+// TODO:
+// Still cant have N many branch units (due to missing ROB update stuff)
+// Such as the ability to read N PCs from the PC file...
+// Need to add dynamic scheduling to the RS
+// Need to add parameterizable outputs from the MOB
+// and need to more clearly distinguish between ports overall and MOB output ports...

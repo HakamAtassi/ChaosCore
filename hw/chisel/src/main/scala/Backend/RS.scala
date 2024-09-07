@@ -95,9 +95,6 @@ class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
     // UPDATE RS ENTRIES //
     ///////////////////////
 
-    //FIXME: make sure that the ready bit will update if its being broadcasted the same cycle the RS entry is being updated
-
-
     for (i <- 0 until RSEntries) {
         for (FU <- 0 until WBPortCount) {
 

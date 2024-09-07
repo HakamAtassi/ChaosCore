@@ -104,7 +104,6 @@ object getPortCount
 
     portCount
   }
-
 }
 
 object findMispredictionCommit {
