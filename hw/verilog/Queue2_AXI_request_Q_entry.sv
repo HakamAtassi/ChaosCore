@@ -51,7 +51,8 @@ module Queue2_AXI_request_Q_entry(
   output         io_deq_bits_read_valid,
   output [31:0]  io_deq_bits_read_address,
   output [7:0]   io_deq_bits_read_ID,
-  output [6:0]   io_deq_bits_read_bytes
+  output [6:0]   io_deq_bits_read_bytes,
+  input          io_flush
 );
 
   wire [351:0] _ram_ext_R0_data;
@@ -70,12 +71,9 @@ module Queue2_AXI_request_Q_entry(
       maybe_full <= 1'h0;
     end
     else begin
-      if (do_enq)
-        wrap <= wrap - 1'h1;
-      if (do_deq)
-        wrap_1 <= wrap_1 - 1'h1;
-      if (~(do_enq == do_deq))
-        maybe_full <= do_enq;
+      wrap <= ~io_flush & (do_enq ? wrap - 1'h1 : wrap);
+      wrap_1 <= ~io_flush & (do_deq ? wrap_1 - 1'h1 : wrap_1);
+      maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
   ram_2x352 ram_ext (
