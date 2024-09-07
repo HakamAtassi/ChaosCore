@@ -450,7 +450,7 @@ class MEMRS_entry(coreParameters:CoreParameters) extends Bundle{
 class FU_output(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     // Arithmetic/Load
-    val PRD                  =   UInt(physicalRegBits.W)
+    val PRD                 =   UInt(physicalRegBits.W)
     val RD_data             =   UInt(32.W)
     val RD_valid            =   Bool()
 
