@@ -98,10 +98,11 @@ module branch_unit(
     automatic logic [31:0] _GEN =
       {{19{io_FU_input_bits_decoded_instruction_IMM[12]}},
        io_FU_input_bits_decoded_instruction_IMM[12:0]};
+    automatic logic        _io_FU_output_valid_T = BRANCH | JAL;
     io_FU_output_bits_fetch_PC_REG <= io_FU_input_bits_fetch_PC;
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;
-    io_FU_output_bits_branch_valid_REG <= BRANCH | JAL | JALR;
+    io_FU_output_bits_branch_valid_REG <= _io_FU_output_valid_T | JALR;
     io_FU_output_bits_branch_taken_REG <= EQ | NE | LT | GE | LTU | GEU | JAL | JALR;
     io_FU_output_bits_target_address_REG <=
       EQ
@@ -130,7 +131,8 @@ module branch_unit(
     io_FU_output_bits_RD_data_REG <= _instruction_PC_T_1 + 32'h4;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
-    io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;
+    io_FU_output_valid_REG <=
+      io_FU_input_valid & (_io_FU_output_valid_T | JALR) & ~io_flush;
   end // always @(posedge)
   assign io_FU_output_valid = io_FU_output_valid_REG;
   assign io_FU_output_bits_PRD = io_FU_output_bits_PRD_REG;

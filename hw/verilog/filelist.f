@@ -47,7 +47,7 @@ backend.sv
 mem_64x70.sv
 ROB_shared_mem.sv
 ROB_WB_mem.sv
-mem_64x26.sv
+mem_64x28.sv
 ROB_entry_mem.sv
 fetch_64x37.sv
 ROB.sv

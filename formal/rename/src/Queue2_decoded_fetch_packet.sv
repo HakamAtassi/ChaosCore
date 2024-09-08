@@ -31,7 +31,8 @@
 module Queue2_decoded_fetch_packet(
   input         clock,
                 reset,
-                io_enq_valid,
+  output        io_enq_ready,
+  input         io_enq_valid,
   input  [31:0] io_enq_bits_fetch_PC,
   input         io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready,
                 io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready,
@@ -271,15 +272,14 @@ module Queue2_decoded_fetch_packet(
   input         io_flush
 );
 
-  wire         io_enq_ready;
   wire [482:0] _ram_ext_R0_data;
   reg          wrap;
   reg          wrap_1;
   reg          maybe_full;
   wire         ptr_match = wrap == wrap_1;
   wire         empty = ptr_match & ~maybe_full;
-  wire         do_enq = io_enq_ready & io_enq_valid;
-  assign io_enq_ready = ~(ptr_match & maybe_full);
+  wire         full = ptr_match & maybe_full;
+  wire         do_enq = ~full & io_enq_valid;
   always @(posedge clock) begin
     if (reset) begin
       wrap <= 1'h0;
@@ -420,6 +420,7 @@ module Queue2_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready,
         io_enq_bits_fetch_PC})
   );
+  assign io_enq_ready = ~full;
   assign io_deq_valid = ~empty;
   assign io_deq_bits_fetch_PC = _ram_ext_R0_data[31:0];
   assign io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready = _ram_ext_R0_data[32];

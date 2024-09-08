@@ -20,6 +20,34 @@ Found 0 SCCs.
 4. Executing MEMORY_NORDFF pass (extracting $dff cells from memories).
 
 5. Executing ASYNC2SYNC pass.
+Replacing free_list.$auto$verificsva.cc:363:getAccept$25090 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$25085, Q=$auto$verificsva.cc:294:getAccept$25079
+Replacing free_list.$auto$verificsva.cc:363:getAccept$25057 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$25052, Q=$auto$verificsva.cc:294:getAccept$25046
+Replacing free_list.$auto$verificsva.cc:363:getAccept$25024 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$25019, Q=$auto$verificsva.cc:294:getAccept$25013
+Replacing free_list.$auto$verificsva.cc:363:getAccept$24991 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$24986, Q=$auto$verificsva.cc:294:getAccept$24980
+Replacing free_list.$auto$verificsva.cc:1820:import$25335 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25331, Q=$auto$verificsva.cc:1818:import$25333
+Replacing free_list.$auto$verificsva.cc:1820:import$25306 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25302, Q=$auto$verificsva.cc:1818:import$25304
+Replacing free_list.$auto$verificsva.cc:1820:import$25277 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25273, Q=$auto$verificsva.cc:1818:import$25275
+Replacing free_list.$auto$verificsva.cc:1820:import$25248 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25244, Q=$auto$verificsva.cc:1818:import$25246
+Replacing free_list.$auto$verificsva.cc:1820:import$25219 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25215, Q=$auto$verificsva.cc:1818:import$25217
+Replacing free_list.$auto$verificsva.cc:1820:import$25190 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25186, Q=$auto$verificsva.cc:1818:import$25188
+Replacing free_list.$auto$verificsva.cc:1820:import$25161 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25157, Q=$auto$verificsva.cc:1818:import$25159
+Replacing free_list.$auto$verificsva.cc:1820:import$25132 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25128, Q=$auto$verificsva.cc:1818:import$25130
+Replacing free_list.$auto$verificsva.cc:1820:import$25103 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25099, Q=$auto$verificsva.cc:1818:import$25101
+Replacing free_list.$auto$verificsva.cc:1820:import$25070 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25066, Q=$auto$verificsva.cc:1818:import$25068
+Replacing free_list.$auto$verificsva.cc:1820:import$25037 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25033, Q=$auto$verificsva.cc:1818:import$25035
+Replacing free_list.$auto$verificsva.cc:1820:import$25004 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$25000, Q=$auto$verificsva.cc:1818:import$25002
+Replacing free_list.$auto$verificsva.cc:1819:import$25334 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25329, Q=$auto$verificsva.cc:1817:import$25332
+Replacing free_list.$auto$verificsva.cc:1819:import$25305 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25300, Q=$auto$verificsva.cc:1817:import$25303
+Replacing free_list.$auto$verificsva.cc:1819:import$25276 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25271, Q=$auto$verificsva.cc:1817:import$25274
+Replacing free_list.$auto$verificsva.cc:1819:import$25247 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25242, Q=$auto$verificsva.cc:1817:import$25245
+Replacing free_list.$auto$verificsva.cc:1819:import$25218 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25213, Q=$auto$verificsva.cc:1817:import$25216
+Replacing free_list.$auto$verificsva.cc:1819:import$25189 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25184, Q=$auto$verificsva.cc:1817:import$25187
+Replacing free_list.$auto$verificsva.cc:1819:import$25160 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25155, Q=$auto$verificsva.cc:1817:import$25158
+Replacing free_list.$auto$verificsva.cc:1819:import$25131 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25126, Q=$auto$verificsva.cc:1817:import$25129
+Replacing free_list.$auto$verificsva.cc:1819:import$25102 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25097, Q=$auto$verificsva.cc:1817:import$25100
+Replacing free_list.$auto$verificsva.cc:1819:import$25069 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25064, Q=$auto$verificsva.cc:1817:import$25067
+Replacing free_list.$auto$verificsva.cc:1819:import$25036 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$25031, Q=$auto$verificsva.cc:1817:import$25034
+Replacing free_list.$auto$verificsva.cc:1819:import$25003 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$24998, Q=$auto$verificsva.cc:1817:import$25001
 
 6. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \free_list..
@@ -50,8 +78,8 @@ Removed a total of 0 cells.
 
 11.4. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \free_list..
-Removed 7 unused cells and 7 unused wires.
-<suppressed ~8 debug messages>
+Removed 11 unused cells and 11 unused wires.
+<suppressed ~12 debug messages>
 
 11.5. Finished fast OPT passes.
 
@@ -61,6 +89,6 @@ Finding unused cells or wires in module \free_list..
 13. Executing RTLIL backend.
 Output filename: ../model/design_prep.il
 
-End of script. Logfile hash: 24017fb74a, CPU: user 0.30s system 0.01s, MEM: 48.46 MB peak
+End of script. Logfile hash: dd2d5485a7, CPU: user 0.29s system 0.01s, MEM: 51.74 MB peak
 Yosys 0.45 (git sha1 9ed031ddd, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)
-Time spent: 33% 4x opt_clean (0 sec), 15% 2x read_ilang (0 sec), ...
+Time spent: 35% 4x opt_clean (0 sec), 13% 2x read_ilang (0 sec), ...

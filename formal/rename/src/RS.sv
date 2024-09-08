@@ -1543,34 +1543,6 @@ module RS(
                                                               ? io_RF_inputs_0_valid_REG_1
                                                               : _GEN_15
                                                                 & io_RF_inputs_0_valid_REG;
-  wire [3:0]  port0_RS_index =
-    _GEN_30
-      ? 4'hF
-      : _GEN_29
-          ? 4'hE
-          : _GEN_28
-              ? 4'hD
-              : _GEN_27
-                  ? 4'hC
-                  : _GEN_26
-                      ? 4'hB
-                      : _GEN_25
-                          ? 4'hA
-                          : _GEN_24
-                              ? 4'h9
-                              : _GEN_23
-                                  ? 4'h8
-                                  : _GEN_22
-                                      ? 4'h7
-                                      : _GEN_21
-                                          ? 4'h6
-                                          : _GEN_20
-                                              ? 4'h5
-                                              : _GEN_19
-                                                  ? 4'h4
-                                                  : _GEN_18
-                                                      ? 4'h3
-                                                      : _GEN_17 ? 4'h2 : {3'h0, _GEN_16};
   wire        _GEN_31 =
     reservation_station_0_decoded_instruction_portID == 2'h1 & schedulable_instructions_0;
   reg         io_RF_inputs_1_bits_REG_ready_bits_RS1_ready;
@@ -3722,8 +3694,38 @@ module RS(
         & reservation_station_15_valid;
       automatic logic       _GEN_495;
       automatic logic       _GEN_496;
+      automatic logic [3:0] port_RS_index_0 =
+        _GEN_30
+          ? 4'hF
+          : _GEN_29
+              ? 4'hE
+              : _GEN_28
+                  ? 4'hD
+                  : _GEN_27
+                      ? 4'hC
+                      : _GEN_26
+                          ? 4'hB
+                          : _GEN_25
+                              ? 4'hA
+                              : _GEN_24
+                                  ? 4'h9
+                                  : _GEN_23
+                                      ? 4'h8
+                                      : _GEN_22
+                                          ? 4'h7
+                                          : _GEN_21
+                                              ? 4'h6
+                                              : _GEN_20
+                                                  ? 4'h5
+                                                  : _GEN_19
+                                                      ? 4'h4
+                                                      : _GEN_18
+                                                          ? 4'h3
+                                                          : _GEN_17
+                                                              ? 4'h2
+                                                              : {3'h0, _GEN_16};
       automatic logic       _GEN_497 = io_RF_inputs_0_ready & io_RF_inputs_0_valid_0;
-      automatic logic       _GEN_498 = port0_RS_index == 4'h0;
+      automatic logic       _GEN_498 = port_RS_index_0 == 4'h0;
       automatic logic       _GEN_499 = _GEN_498 | io_flush;
       automatic logic       _GEN_500;
       automatic logic       _GEN_501;
@@ -3738,7 +3740,7 @@ module RS(
       automatic logic       _GEN_510;
       automatic logic       _GEN_511;
       automatic logic       _GEN_512;
-      automatic logic       _GEN_513 = port0_RS_index == 4'h1;
+      automatic logic       _GEN_513 = port_RS_index_0 == 4'h1;
       automatic logic       _GEN_514 = _GEN_513 | io_flush;
       automatic logic       _GEN_515;
       automatic logic       _GEN_516;
@@ -3753,7 +3755,7 @@ module RS(
       automatic logic       _GEN_525;
       automatic logic       _GEN_526;
       automatic logic       _GEN_527;
-      automatic logic       _GEN_528 = port0_RS_index == 4'h2;
+      automatic logic       _GEN_528 = port_RS_index_0 == 4'h2;
       automatic logic       _GEN_529 = _GEN_528 | io_flush;
       automatic logic       _GEN_530;
       automatic logic       _GEN_531;
@@ -3768,7 +3770,7 @@ module RS(
       automatic logic       _GEN_540;
       automatic logic       _GEN_541;
       automatic logic       _GEN_542;
-      automatic logic       _GEN_543 = port0_RS_index == 4'h3;
+      automatic logic       _GEN_543 = port_RS_index_0 == 4'h3;
       automatic logic       _GEN_544 = _GEN_543 | io_flush;
       automatic logic       _GEN_545;
       automatic logic       _GEN_546;
@@ -3783,7 +3785,7 @@ module RS(
       automatic logic       _GEN_555;
       automatic logic       _GEN_556;
       automatic logic       _GEN_557;
-      automatic logic       _GEN_558 = port0_RS_index == 4'h4;
+      automatic logic       _GEN_558 = port_RS_index_0 == 4'h4;
       automatic logic       _GEN_559 = _GEN_558 | io_flush;
       automatic logic       _GEN_560;
       automatic logic       _GEN_561;
@@ -3798,7 +3800,7 @@ module RS(
       automatic logic       _GEN_570;
       automatic logic       _GEN_571;
       automatic logic       _GEN_572;
-      automatic logic       _GEN_573 = port0_RS_index == 4'h5;
+      automatic logic       _GEN_573 = port_RS_index_0 == 4'h5;
       automatic logic       _GEN_574 = _GEN_573 | io_flush;
       automatic logic       _GEN_575;
       automatic logic       _GEN_576;
@@ -3813,7 +3815,7 @@ module RS(
       automatic logic       _GEN_585;
       automatic logic       _GEN_586;
       automatic logic       _GEN_587;
-      automatic logic       _GEN_588 = port0_RS_index == 4'h6;
+      automatic logic       _GEN_588 = port_RS_index_0 == 4'h6;
       automatic logic       _GEN_589 = _GEN_588 | io_flush;
       automatic logic       _GEN_590;
       automatic logic       _GEN_591;
@@ -3828,7 +3830,7 @@ module RS(
       automatic logic       _GEN_600;
       automatic logic       _GEN_601;
       automatic logic       _GEN_602;
-      automatic logic       _GEN_603 = port0_RS_index == 4'h7;
+      automatic logic       _GEN_603 = port_RS_index_0 == 4'h7;
       automatic logic       _GEN_604 = _GEN_603 | io_flush;
       automatic logic       _GEN_605;
       automatic logic       _GEN_606;
@@ -3843,7 +3845,7 @@ module RS(
       automatic logic       _GEN_615;
       automatic logic       _GEN_616;
       automatic logic       _GEN_617;
-      automatic logic       _GEN_618 = port0_RS_index == 4'h8;
+      automatic logic       _GEN_618 = port_RS_index_0 == 4'h8;
       automatic logic       _GEN_619 = _GEN_618 | io_flush;
       automatic logic       _GEN_620;
       automatic logic       _GEN_621;
@@ -3858,7 +3860,7 @@ module RS(
       automatic logic       _GEN_630;
       automatic logic       _GEN_631;
       automatic logic       _GEN_632;
-      automatic logic       _GEN_633 = port0_RS_index == 4'h9;
+      automatic logic       _GEN_633 = port_RS_index_0 == 4'h9;
       automatic logic       _GEN_634 = _GEN_633 | io_flush;
       automatic logic       _GEN_635;
       automatic logic       _GEN_636;
@@ -3873,7 +3875,7 @@ module RS(
       automatic logic       _GEN_645;
       automatic logic       _GEN_646;
       automatic logic       _GEN_647;
-      automatic logic       _GEN_648 = port0_RS_index == 4'hA;
+      automatic logic       _GEN_648 = port_RS_index_0 == 4'hA;
       automatic logic       _GEN_649 = _GEN_648 | io_flush;
       automatic logic       _GEN_650;
       automatic logic       _GEN_651;
@@ -3888,7 +3890,7 @@ module RS(
       automatic logic       _GEN_660;
       automatic logic       _GEN_661;
       automatic logic       _GEN_662;
-      automatic logic       _GEN_663 = port0_RS_index == 4'hB;
+      automatic logic       _GEN_663 = port_RS_index_0 == 4'hB;
       automatic logic       _GEN_664 = _GEN_663 | io_flush;
       automatic logic       _GEN_665;
       automatic logic       _GEN_666;
@@ -3903,7 +3905,7 @@ module RS(
       automatic logic       _GEN_675;
       automatic logic       _GEN_676;
       automatic logic       _GEN_677;
-      automatic logic       _GEN_678 = port0_RS_index == 4'hC;
+      automatic logic       _GEN_678 = port_RS_index_0 == 4'hC;
       automatic logic       _GEN_679 = _GEN_678 | io_flush;
       automatic logic       _GEN_680;
       automatic logic       _GEN_681;
@@ -3918,7 +3920,7 @@ module RS(
       automatic logic       _GEN_690;
       automatic logic       _GEN_691;
       automatic logic       _GEN_692;
-      automatic logic       _GEN_693 = port0_RS_index == 4'hD;
+      automatic logic       _GEN_693 = port_RS_index_0 == 4'hD;
       automatic logic       _GEN_694 = _GEN_693 | io_flush;
       automatic logic       _GEN_695;
       automatic logic       _GEN_696;
@@ -3933,7 +3935,7 @@ module RS(
       automatic logic       _GEN_705;
       automatic logic       _GEN_706;
       automatic logic       _GEN_707;
-      automatic logic       _GEN_708 = port0_RS_index == 4'hE;
+      automatic logic       _GEN_708 = port_RS_index_0 == 4'hE;
       automatic logic       _GEN_709 = _GEN_708 | io_flush;
       automatic logic       _GEN_710;
       automatic logic       _GEN_711;
@@ -3948,10 +3950,10 @@ module RS(
       automatic logic       _GEN_720;
       automatic logic       _GEN_721;
       automatic logic       _GEN_722;
-      automatic logic       _GEN_723 = (&port0_RS_index) | io_flush;
+      automatic logic       _GEN_723 = (&port_RS_index_0) | io_flush;
       automatic logic       _GEN_724;
       automatic logic       _GEN_725;
-      automatic logic       _GEN_726 = _GEN_497 & (&port0_RS_index) | io_flush;
+      automatic logic       _GEN_726 = _GEN_497 & (&port_RS_index_0) | io_flush;
       automatic logic       _GEN_727;
       automatic logic       _GEN_728;
       automatic logic       _GEN_729;
@@ -3962,7 +3964,7 @@ module RS(
       automatic logic       _GEN_734;
       automatic logic       _GEN_735;
       automatic logic       _GEN_736;
-      automatic logic [3:0] port1_RS_index =
+      automatic logic [3:0] port_RS_index_1 =
         _GEN_46
           ? 4'hF
           : _GEN_45
@@ -4009,7 +4011,7 @@ module RS(
       automatic logic       _GEN_751;
       automatic logic       _GEN_752;
       automatic logic       _GEN_753;
-      automatic logic [3:0] port2_RS_index =
+      automatic logic [3:0] port_RS_index_2 =
         _GEN_62
           ? 4'hF
           : _GEN_61
@@ -6473,38 +6475,38 @@ module RS(
       _GEN_734 = _GEN_497 ? ~_GEN_723 & _GEN_351 : ~io_flush & _GEN_351;
       _GEN_735 = _GEN_497 ? ~_GEN_723 & _GEN_352 : ~io_flush & _GEN_352;
       _GEN_736 = _GEN_497 ? ~_GEN_723 & _GEN_368 : ~io_flush & _GEN_368;
-      _GEN_738 = _GEN_737 & port1_RS_index == 4'h0;
-      _GEN_739 = _GEN_737 & port1_RS_index == 4'h1;
-      _GEN_740 = _GEN_737 & port1_RS_index == 4'h2;
-      _GEN_741 = _GEN_737 & port1_RS_index == 4'h3;
-      _GEN_742 = _GEN_737 & port1_RS_index == 4'h4;
-      _GEN_743 = _GEN_737 & port1_RS_index == 4'h5;
-      _GEN_744 = _GEN_737 & port1_RS_index == 4'h6;
-      _GEN_745 = _GEN_737 & port1_RS_index == 4'h7;
-      _GEN_746 = _GEN_737 & port1_RS_index == 4'h8;
-      _GEN_747 = _GEN_737 & port1_RS_index == 4'h9;
-      _GEN_748 = _GEN_737 & port1_RS_index == 4'hA;
-      _GEN_749 = _GEN_737 & port1_RS_index == 4'hB;
-      _GEN_750 = _GEN_737 & port1_RS_index == 4'hC;
-      _GEN_751 = _GEN_737 & port1_RS_index == 4'hD;
-      _GEN_752 = _GEN_737 & port1_RS_index == 4'hE;
-      _GEN_753 = _GEN_737 & (&port1_RS_index);
-      _GEN_755 = port2_RS_index == 4'h0 | _GEN_738;
-      _GEN_756 = port2_RS_index == 4'h1 | _GEN_739;
-      _GEN_757 = port2_RS_index == 4'h2 | _GEN_740;
-      _GEN_758 = port2_RS_index == 4'h3 | _GEN_741;
-      _GEN_759 = port2_RS_index == 4'h4 | _GEN_742;
-      _GEN_760 = port2_RS_index == 4'h5 | _GEN_743;
-      _GEN_761 = port2_RS_index == 4'h6 | _GEN_744;
-      _GEN_762 = port2_RS_index == 4'h7 | _GEN_745;
-      _GEN_763 = port2_RS_index == 4'h8 | _GEN_746;
-      _GEN_764 = port2_RS_index == 4'h9 | _GEN_747;
-      _GEN_765 = port2_RS_index == 4'hA | _GEN_748;
-      _GEN_766 = port2_RS_index == 4'hB | _GEN_749;
-      _GEN_767 = port2_RS_index == 4'hC | _GEN_750;
-      _GEN_768 = port2_RS_index == 4'hD | _GEN_751;
-      _GEN_769 = port2_RS_index == 4'hE | _GEN_752;
-      _GEN_770 = (&port2_RS_index) | _GEN_753;
+      _GEN_738 = _GEN_737 & port_RS_index_1 == 4'h0;
+      _GEN_739 = _GEN_737 & port_RS_index_1 == 4'h1;
+      _GEN_740 = _GEN_737 & port_RS_index_1 == 4'h2;
+      _GEN_741 = _GEN_737 & port_RS_index_1 == 4'h3;
+      _GEN_742 = _GEN_737 & port_RS_index_1 == 4'h4;
+      _GEN_743 = _GEN_737 & port_RS_index_1 == 4'h5;
+      _GEN_744 = _GEN_737 & port_RS_index_1 == 4'h6;
+      _GEN_745 = _GEN_737 & port_RS_index_1 == 4'h7;
+      _GEN_746 = _GEN_737 & port_RS_index_1 == 4'h8;
+      _GEN_747 = _GEN_737 & port_RS_index_1 == 4'h9;
+      _GEN_748 = _GEN_737 & port_RS_index_1 == 4'hA;
+      _GEN_749 = _GEN_737 & port_RS_index_1 == 4'hB;
+      _GEN_750 = _GEN_737 & port_RS_index_1 == 4'hC;
+      _GEN_751 = _GEN_737 & port_RS_index_1 == 4'hD;
+      _GEN_752 = _GEN_737 & port_RS_index_1 == 4'hE;
+      _GEN_753 = _GEN_737 & (&port_RS_index_1);
+      _GEN_755 = port_RS_index_2 == 4'h0 | _GEN_738;
+      _GEN_756 = port_RS_index_2 == 4'h1 | _GEN_739;
+      _GEN_757 = port_RS_index_2 == 4'h2 | _GEN_740;
+      _GEN_758 = port_RS_index_2 == 4'h3 | _GEN_741;
+      _GEN_759 = port_RS_index_2 == 4'h4 | _GEN_742;
+      _GEN_760 = port_RS_index_2 == 4'h5 | _GEN_743;
+      _GEN_761 = port_RS_index_2 == 4'h6 | _GEN_744;
+      _GEN_762 = port_RS_index_2 == 4'h7 | _GEN_745;
+      _GEN_763 = port_RS_index_2 == 4'h8 | _GEN_746;
+      _GEN_764 = port_RS_index_2 == 4'h9 | _GEN_747;
+      _GEN_765 = port_RS_index_2 == 4'hA | _GEN_748;
+      _GEN_766 = port_RS_index_2 == 4'hB | _GEN_749;
+      _GEN_767 = port_RS_index_2 == 4'hC | _GEN_750;
+      _GEN_768 = port_RS_index_2 == 4'hD | _GEN_751;
+      _GEN_769 = port_RS_index_2 == 4'hE | _GEN_752;
+      _GEN_770 = (&port_RS_index_2) | _GEN_753;
       if (_GEN_754) begin
         reservation_station_0_decoded_instruction_ready_bits_RS1_ready <=
           ~_GEN_755 & _GEN_500;

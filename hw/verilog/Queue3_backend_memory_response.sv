@@ -46,8 +46,7 @@ module Queue3_backend_memory_response(
                 io_deq_bits_fetch_packet_index,
   output [5:0]  io_deq_bits_ROB_index,
   output [31:0] io_deq_bits_data,
-  output [3:0]  io_deq_bits_MOB_index,
-  input         io_flush
+  output [3:0]  io_deq_bits_MOB_index
 );
 
   wire         do_deq;
@@ -68,25 +67,20 @@ module Queue3_backend_memory_response(
       maybe_full <= 1'h0;
     end
     else begin
-      if (io_flush) begin
-        enq_ptr_value <= 2'h0;
-        deq_ptr_value <= 2'h0;
+      if (do_enq) begin
+        if (enq_ptr_value == 2'h2)
+          enq_ptr_value <= 2'h0;
+        else
+          enq_ptr_value <= enq_ptr_value + 2'h1;
       end
-      else begin
-        if (do_enq) begin
-          if (enq_ptr_value == 2'h2)
-            enq_ptr_value <= 2'h0;
-          else
-            enq_ptr_value <= enq_ptr_value + 2'h1;
-        end
-        if (do_deq) begin
-          if (deq_ptr_value == 2'h2)
-            deq_ptr_value <= 2'h0;
-          else
-            deq_ptr_value <= deq_ptr_value + 2'h1;
-        end
+      if (do_deq) begin
+        if (deq_ptr_value == 2'h2)
+          deq_ptr_value <= 2'h0;
+        else
+          deq_ptr_value <= deq_ptr_value + 2'h1;
       end
-      maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
+      if (~(do_enq == do_deq))
+        maybe_full <= do_enq;
     end
   end // always @(posedge)
   ram_3x138 ram_ext (

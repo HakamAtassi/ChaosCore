@@ -52,8 +52,7 @@ module Queue8_AXI_request_Q_entry(
   output         io_deq_bits_read_valid,
   output [31:0]  io_deq_bits_read_address,
   output [7:0]   io_deq_bits_read_ID,
-  output [6:0]   io_deq_bits_read_bytes,
-  input          io_flush
+  output [6:0]   io_deq_bits_read_bytes
 );
 
   wire [351:0] _ram_ext_R0_data;
@@ -72,17 +71,12 @@ module Queue8_AXI_request_Q_entry(
       maybe_full <= 1'h0;
     end
     else begin
-      if (io_flush) begin
-        enq_ptr_value <= 3'h0;
-        deq_ptr_value <= 3'h0;
-      end
-      else begin
-        if (do_enq)
-          enq_ptr_value <= enq_ptr_value + 3'h1;
-        if (do_deq)
-          deq_ptr_value <= deq_ptr_value + 3'h1;
-      end
-      maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
+      if (do_enq)
+        enq_ptr_value <= enq_ptr_value + 3'h1;
+      if (do_deq)
+        deq_ptr_value <= deq_ptr_value + 3'h1;
+      if (~(do_enq == do_deq))
+        maybe_full <= do_enq;
     end
   end // always @(posedge)
   ram_8x352 ram_ext (

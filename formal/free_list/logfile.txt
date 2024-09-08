@@ -1,313 +1,184 @@
-SBY 16:43:09 [free_list] Removing directory '/home/hakam/Repos/ChaosCore/formal/free_list'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_65536x2.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_65536x2.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/PHT_memory.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/PHT_memory.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/gshare.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/gshare.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_4096x56.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_4096x56.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/hash_BTB_mem.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/hash_BTB.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_128x39.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_128x39.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/SDPReadWriteSmem.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RAS.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/RAS.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_prediction.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue1_prediction.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/BP.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/BP.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x271.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_2x271.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue2_fetch_packet.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/predecoder.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/predecoder.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/PC_gen.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/PC_gen.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x271.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_16x271.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue16_fetch_packet.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x65.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_16x65.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_frontend_memory_request.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue16_frontend_memory_request.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x37.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_16x37.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_prediction.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue16_prediction.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_fetch.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/instruction_fetch.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/decoder.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/decoder.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x483.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_2x483.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_decoded_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue2_decoded_fetch_packet.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/fetch_packet_decoder.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/fetch_packet_decoder.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x483.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_16x483.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_decoded_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue16_decoded_fetch_packet.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/free_list.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/free_list.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/WAW_handler.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/WAW_handler.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RAT.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/RAT.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/rename.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/rename.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/frontend.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/frontend.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/RS.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RS_1.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/RS_1.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/simple_MOB.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/simple_MOB.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_65x32.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_65x32.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/sim_nReadmWrite.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/sim_nReadmWrite.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ALU.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ALU.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/branch_unit.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/branch_unit.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FU.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/FU.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FU_1.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/FU_1.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/AGU.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/AGU.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/backend.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/backend.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x70.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_64x70.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_shared_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ROB_shared_mem.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_WB_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ROB_WB_mem.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x26.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_64x26.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_entry_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ROB_entry_mem.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x37.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/fetch_64x37.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ROB.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ChaosCore.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_final_AXI_response.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue1_final_AXI_response.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x2.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_64x2.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem_1.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/SDPReadWriteSmem_1.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x278.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_64x278.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/icache_ReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/icache_ReadWriteSmem.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_validator.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/instruction_validator.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/L1_instruction_cache.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/L1_instruction_cache.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_8x352.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_8x352.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue8_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue8_AXI_request_Q_entry.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x352.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_2x352.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue2_AXI_request_Q_entry.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_8x138.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_8x138.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue8_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue8_backend_memory_response.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_3x138.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_3x138.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue3_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue3_backend_memory_response.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_256x8.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_256x8.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ReadWriteSmem.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_64x21.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_64x21.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ReadWriteSmem_32.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ReadWriteSmem_32.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Arbiter2_AXI_request_Q_entry.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Arbiter2_backend_memory_response.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/L1_data_cache.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/L1_data_cache.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore_tile.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ChaosCore_tile.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/AXI_debug_printer.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/AXI_debug_printer.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/extern_modules.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/extern_modules.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_2x2.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/axi_interconnect_2x2.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SOC.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/SOC.sv'.
-SBY 16:43:09 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_wrap_2x2.v' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/axi_interconnect_wrap_2x2.v'.
-SBY 16:43:09 [free_list] engine_0: smtbmc
-SBY 16:43:09 [free_list] base: starting process "cd free_list/src; yosys -ql ../model/design.log ../model/design.ys"
-SBY 16:43:09 [free_list] base: This is an ACADEMIC LICENSE of TabbyCAD Suite.
-SBY 16:43:09 [free_list] base: This license is granted for the limited purpose of academic and/or research activities.
-SBY 16:43:09 [free_list] base: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
-SBY 16:43:09 [free_list] base: This license was issued to Hakam Atassi.
-SBY 16:43:09 [free_list] base: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
-SBY 16:43:10 [free_list] base: finished (returncode=0)
-SBY 16:43:10 [free_list] prep: starting process "cd free_list/model; yosys -ql design_prep.log design_prep.ys"
-SBY 16:43:10 [free_list] prep: This is an ACADEMIC LICENSE of TabbyCAD Suite.
-SBY 16:43:10 [free_list] prep: This license is granted for the limited purpose of academic and/or research activities.
-SBY 16:43:10 [free_list] prep: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
-SBY 16:43:10 [free_list] prep: This license was issued to Hakam Atassi.
-SBY 16:43:10 [free_list] prep: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
-SBY 16:43:10 [free_list] prep: finished (returncode=0)
-SBY 16:43:10 [free_list] smt2: starting process "cd free_list/model; yosys -ql design_smt2.log design_smt2.ys"
-SBY 16:43:10 [free_list] smt2: This is an ACADEMIC LICENSE of TabbyCAD Suite.
-SBY 16:43:10 [free_list] smt2: This license is granted for the limited purpose of academic and/or research activities.
-SBY 16:43:10 [free_list] smt2: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
-SBY 16:43:10 [free_list] smt2: This license was issued to Hakam Atassi.
-SBY 16:43:10 [free_list] smt2: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
-SBY 16:43:10 [free_list] smt2: finished (returncode=0)
-SBY 16:43:10 [free_list] engine_0: starting process "cd free_list; yosys-smtbmc --presat --unroll --noprogress -t 100  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Solver: yices
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 0..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 0..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 1..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 1..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 2..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 2..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 3..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 3..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 4..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 4..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 5..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 5..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 6..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 6..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 7..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 7..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 8..
-SBY 16:43:11 [free_list] engine_0: ##   0:00:00  Checking assertions in step 8..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:00  Checking assumptions in step 9..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:00  Checking assertions in step 9..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 10..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 10..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 11..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 11..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 12..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 12..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 13..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 13..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 14..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 14..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 15..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 15..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 16..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 16..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 17..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 17..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 18..
-SBY 16:43:12 [free_list] engine_0: ##   0:00:01  Checking assertions in step 18..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:01  Checking assumptions in step 19..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:01  Checking assertions in step 19..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 20..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assertions in step 20..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 21..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assertions in step 21..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 22..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assertions in step 22..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 23..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assertions in step 23..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 24..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assertions in step 24..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 25..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assertions in step 25..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 26..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assertions in step 26..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 27..
-SBY 16:43:13 [free_list] engine_0: ##   0:00:02  Checking assertions in step 27..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:02  Checking assumptions in step 28..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:02  Checking assertions in step 28..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 29..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assertions in step 29..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 30..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assertions in step 30..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 31..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assertions in step 31..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 32..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assertions in step 32..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 33..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assertions in step 33..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 34..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assertions in step 34..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 35..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assertions in step 35..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 36..
-SBY 16:43:14 [free_list] engine_0: ##   0:00:03  Checking assertions in step 36..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:03  Checking assumptions in step 37..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:03  Checking assertions in step 37..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 38..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assertions in step 38..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 39..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assertions in step 39..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 40..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assertions in step 40..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 41..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assertions in step 41..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 42..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assertions in step 42..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 43..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assertions in step 43..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 44..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assertions in step 44..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 45..
-SBY 16:43:15 [free_list] engine_0: ##   0:00:04  Checking assertions in step 45..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:04  Checking assumptions in step 46..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:04  Checking assertions in step 46..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 47..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 47..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 48..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 48..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 49..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 49..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 50..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 50..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 51..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 51..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 52..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 52..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 53..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 53..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 54..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 54..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assumptions in step 55..
-SBY 16:43:16 [free_list] engine_0: ##   0:00:05  Checking assertions in step 55..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assumptions in step 56..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assertions in step 56..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assumptions in step 57..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assertions in step 57..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assumptions in step 58..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assertions in step 58..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assumptions in step 59..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assertions in step 59..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assumptions in step 60..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assertions in step 60..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assumptions in step 61..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assertions in step 61..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assumptions in step 62..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assertions in step 62..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assumptions in step 63..
-SBY 16:43:17 [free_list] engine_0: ##   0:00:06  Checking assertions in step 63..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assumptions in step 64..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assertions in step 64..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assumptions in step 65..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assertions in step 65..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assumptions in step 66..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assertions in step 66..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assumptions in step 67..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assertions in step 67..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assumptions in step 68..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assertions in step 68..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assumptions in step 69..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assertions in step 69..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assumptions in step 70..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assertions in step 70..
-SBY 16:43:18 [free_list] engine_0: ##   0:00:07  Checking assumptions in step 71..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:07  Checking assertions in step 71..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assumptions in step 72..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assertions in step 72..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assumptions in step 73..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assertions in step 73..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assumptions in step 74..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assertions in step 74..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assumptions in step 75..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assertions in step 75..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assumptions in step 76..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assertions in step 76..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assumptions in step 77..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assertions in step 77..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assumptions in step 78..
-SBY 16:43:19 [free_list] engine_0: ##   0:00:08  Checking assertions in step 78..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:08  Checking assumptions in step 79..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:08  Checking assertions in step 79..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assumptions in step 80..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assertions in step 80..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assumptions in step 81..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assertions in step 81..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assumptions in step 82..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assertions in step 82..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assumptions in step 83..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assertions in step 83..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assumptions in step 84..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assertions in step 84..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assumptions in step 85..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assertions in step 85..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assumptions in step 86..
-SBY 16:43:20 [free_list] engine_0: ##   0:00:09  Checking assertions in step 86..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:09  Checking assumptions in step 87..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:09  Checking assertions in step 87..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assumptions in step 88..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assertions in step 88..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assumptions in step 89..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assertions in step 89..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assumptions in step 90..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assertions in step 90..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assumptions in step 91..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assertions in step 91..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assumptions in step 92..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assertions in step 92..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assumptions in step 93..
-SBY 16:43:21 [free_list] engine_0: ##   0:00:10  Checking assertions in step 93..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:10  Checking assumptions in step 94..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:10  Checking assertions in step 94..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assumptions in step 95..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assertions in step 95..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assumptions in step 96..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assertions in step 96..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assumptions in step 97..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assertions in step 97..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assumptions in step 98..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assertions in step 98..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assumptions in step 99..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Checking assertions in step 99..
-SBY 16:43:22 [free_list] engine_0: ##   0:00:11  Status: passed
-SBY 16:43:22 [free_list] engine_0: finished (returncode=0)
-SBY 16:43:22 [free_list] engine_0: Status returned by engine: pass
-SBY 16:43:22 [free_list] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:13 (13)
-SBY 16:43:22 [free_list] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:15 (15)
-SBY 16:43:22 [free_list] summary: engine_0 (smtbmc) returned pass
-SBY 16:43:22 [free_list] summary: engine_0 did not produce any traces
-SBY 16:43:22 [free_list] DONE (PASS, rc=0)
+SBY 12:11:13 [free_list] Removing directory '/home/hakam/Repos/ChaosCore/formal/free_list'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_65536x2.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_65536x2.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/PHT_memory.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/PHT_memory.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/gshare.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/gshare.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_4096x56.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_4096x56.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/hash_BTB_mem.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/hash_BTB.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_128x39.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_128x39.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/SDPReadWriteSmem.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RAS.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/RAS.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_prediction.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue1_prediction.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/BP.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/BP.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x271.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_2x271.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue2_fetch_packet.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/predecoder.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/predecoder.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/PC_gen.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/PC_gen.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x271.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_16x271.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue16_fetch_packet.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x65.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_16x65.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_frontend_memory_request.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue16_frontend_memory_request.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x37.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_16x37.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_prediction.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue16_prediction.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_fetch.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/instruction_fetch.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/decoder.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/decoder.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x483.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_2x483.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_decoded_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue2_decoded_fetch_packet.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/fetch_packet_decoder.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/fetch_packet_decoder.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x483.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_16x483.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_decoded_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue16_decoded_fetch_packet.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/free_list.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/free_list.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/WAW_handler.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/WAW_handler.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RAT.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/RAT.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/rename.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/rename.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/frontend.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/frontend.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/RS.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RS_1.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/RS_1.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/simple_MOB.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/simple_MOB.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_65x32.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_65x32.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/sim_nReadmWrite.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/sim_nReadmWrite.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ALU.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ALU.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/branch_unit.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/branch_unit.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FU.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/FU.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FU_1.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/FU_1.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/AGU.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/AGU.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/backend.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/backend.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x70.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_64x70.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_shared_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ROB_shared_mem.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_WB_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ROB_WB_mem.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x26.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_64x26.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_entry_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ROB_entry_mem.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x37.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/fetch_64x37.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ROB.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ChaosCore.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_final_AXI_response.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue1_final_AXI_response.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x2.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_64x2.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem_1.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/SDPReadWriteSmem_1.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x278.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/mem_64x278.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/icache_ReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/icache_ReadWriteSmem.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_validator.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/instruction_validator.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/L1_instruction_cache.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/L1_instruction_cache.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_8x352.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_8x352.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue8_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue8_AXI_request_Q_entry.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x352.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_2x352.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue2_AXI_request_Q_entry.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_8x138.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_8x138.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue8_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue8_backend_memory_response.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_3x138.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_3x138.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue3_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Queue3_backend_memory_response.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_256x8.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_256x8.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ReadWriteSmem.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_64x21.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ram_64x21.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ReadWriteSmem_32.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ReadWriteSmem_32.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Arbiter2_AXI_request_Q_entry.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/Arbiter2_backend_memory_response.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/L1_data_cache.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/L1_data_cache.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore_tile.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/ChaosCore_tile.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/AXI_debug_printer.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/AXI_debug_printer.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/extern_modules.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/extern_modules.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_2x2.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/axi_interconnect_2x2.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SOC.sv' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/SOC.sv'.
+SBY 12:11:13 [free_list] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_wrap_2x2.v' to '/home/hakam/Repos/ChaosCore/formal/free_list/src/axi_interconnect_wrap_2x2.v'.
+SBY 12:11:13 [free_list] engine_0: smtbmc
+SBY 12:11:13 [free_list] base: starting process "cd free_list/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 12:11:13 [free_list] base: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 12:11:13 [free_list] base: This license is granted for the limited purpose of academic and/or research activities.
+SBY 12:11:13 [free_list] base: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 12:11:13 [free_list] base: This license was issued to Hakam Atassi.
+SBY 12:11:13 [free_list] base: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
+SBY 12:11:14 [free_list] base: finished (returncode=0)
+SBY 12:11:14 [free_list] prep: starting process "cd free_list/model; yosys -ql design_prep.log design_prep.ys"
+SBY 12:11:14 [free_list] prep: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 12:11:14 [free_list] prep: This license is granted for the limited purpose of academic and/or research activities.
+SBY 12:11:14 [free_list] prep: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 12:11:14 [free_list] prep: This license was issued to Hakam Atassi.
+SBY 12:11:14 [free_list] prep: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
+SBY 12:11:14 [free_list] prep: finished (returncode=0)
+SBY 12:11:14 [free_list] smt2: starting process "cd free_list/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 12:11:14 [free_list] smt2: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 12:11:14 [free_list] smt2: This license is granted for the limited purpose of academic and/or research activities.
+SBY 12:11:14 [free_list] smt2: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 12:11:14 [free_list] smt2: This license was issued to Hakam Atassi.
+SBY 12:11:14 [free_list] smt2: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
+SBY 12:11:14 [free_list] smt2: finished (returncode=0)
+SBY 12:11:14 [free_list] engine_0.basecase: starting process "cd free_list; yosys-smtbmc --presat --unroll --noprogress -t 30  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY 12:11:14 [free_list] engine_0.induction: starting process "cd free_list; yosys-smtbmc --presat --unroll -i --noprogress -t 30  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2"
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Solver: yices
+SBY 12:11:15 [free_list] engine_0.induction: ##   0:00:00  Solver: yices
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY 12:11:15 [free_list] engine_0.induction: ##   0:00:00  Trying induction in step 30..
+SBY 12:11:15 [free_list] engine_0.induction: ##   0:00:00  Trying induction in step 29..
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY 12:11:15 [free_list] engine_0.induction: ##   0:00:00  Trying induction in step 28..
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assumptions in step 2..
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assertions in step 2..
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assumptions in step 3..
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assertions in step 3..
+SBY 12:11:15 [free_list] engine_0.induction: ##   0:00:00  Temporal induction successful.
+SBY 12:11:15 [free_list] engine_0.induction: ##   0:00:00  Status: passed
+SBY 12:11:15 [free_list] engine_0.induction: finished (returncode=0)
+SBY 12:11:15 [free_list] engine_0.induction: Status returned by engine for induction: pass
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assumptions in step 4..
+SBY 12:11:15 [free_list] engine_0.basecase: ##   0:00:00  Checking assertions in step 4..
+SBY 12:11:16 [free_list] engine_0.basecase: ##   0:00:01  Checking assumptions in step 5..
+SBY 12:11:16 [free_list] engine_0.basecase: ##   0:00:01  Checking assertions in step 5..
+SBY 12:11:16 [free_list] engine_0.basecase: ##   0:00:01  Checking assumptions in step 6..
+SBY 12:11:16 [free_list] engine_0.basecase: ##   0:00:01  Checking assertions in step 6..
+SBY 12:11:17 [free_list] engine_0.basecase: ##   0:00:02  Checking assumptions in step 7..
+SBY 12:11:17 [free_list] engine_0.basecase: ##   0:00:02  Checking assertions in step 7..
+SBY 12:11:17 [free_list] engine_0.basecase: ##   0:00:02  Checking assumptions in step 8..
+SBY 12:11:17 [free_list] engine_0.basecase: ##   0:00:02  Checking assertions in step 8..
+SBY 12:11:18 [free_list] engine_0.basecase: ##   0:00:03  Checking assumptions in step 9..
+SBY 12:11:18 [free_list] engine_0.basecase: ##   0:00:03  Checking assertions in step 9..
+SBY 12:11:19 [free_list] engine_0.basecase: ##   0:00:04  Checking assumptions in step 10..
+SBY 12:11:19 [free_list] engine_0.basecase: ##   0:00:04  Checking assertions in step 10..
+SBY 12:11:19 [free_list] engine_0.basecase: ##   0:00:04  Checking assumptions in step 11..
+SBY 12:11:19 [free_list] engine_0.basecase: ##   0:00:04  Checking assertions in step 11..
+SBY 12:11:20 [free_list] engine_0.basecase: ##   0:00:05  Checking assumptions in step 12..
+SBY 12:11:20 [free_list] engine_0.basecase: ##   0:00:05  Checking assertions in step 12..
+SBY 12:11:21 [free_list] engine_0.basecase: ##   0:00:06  Checking assumptions in step 13..
+SBY 12:11:21 [free_list] engine_0.basecase: ##   0:00:06  Checking assertions in step 13..
+SBY 12:11:21 [free_list] engine_0.basecase: ##   0:00:06  Checking assumptions in step 14..
+SBY 12:11:22 [free_list] engine_0.basecase: ##   0:00:07  Checking assertions in step 14..
+SBY 12:11:22 [free_list] engine_0.basecase: ##   0:00:07  Checking assumptions in step 15..
+SBY 12:11:23 [free_list] engine_0.basecase: ##   0:00:08  Checking assertions in step 15..
+SBY 12:11:23 [free_list] engine_0.basecase: ##   0:00:08  Checking assumptions in step 16..
+SBY 12:11:23 [free_list] engine_0.basecase: ##   0:00:08  Checking assertions in step 16..
+SBY 12:11:24 [free_list] engine_0.basecase: ##   0:00:09  Checking assumptions in step 17..
+SBY 12:11:24 [free_list] engine_0.basecase: ##   0:00:09  Checking assertions in step 17..
+SBY 12:11:25 [free_list] engine_0.basecase: ##   0:00:10  Checking assumptions in step 18..
+SBY 12:11:25 [free_list] engine_0.basecase: ##   0:00:10  Checking assertions in step 18..
+SBY 12:11:26 [free_list] engine_0.basecase: ##   0:00:11  Checking assumptions in step 19..
+SBY 12:11:26 [free_list] engine_0.basecase: ##   0:00:11  Checking assertions in step 19..
+SBY 12:11:27 [free_list] engine_0.basecase: ##   0:00:12  Checking assumptions in step 20..
+SBY 12:11:27 [free_list] engine_0.basecase: ##   0:00:12  Checking assertions in step 20..
+SBY 12:11:28 [free_list] engine_0.basecase: ##   0:00:13  Checking assumptions in step 21..
+SBY 12:11:28 [free_list] engine_0.basecase: ##   0:00:13  Checking assertions in step 21..
+SBY 12:11:29 [free_list] engine_0.basecase: ##   0:00:14  Checking assumptions in step 22..
+SBY 12:11:30 [free_list] engine_0.basecase: ##   0:00:15  Checking assertions in step 22..
+SBY 12:11:30 [free_list] engine_0.basecase: ##   0:00:15  Checking assumptions in step 23..
+SBY 12:11:31 [free_list] engine_0.basecase: ##   0:00:16  Checking assertions in step 23..
+SBY 12:11:32 [free_list] engine_0.basecase: ##   0:00:17  Checking assumptions in step 24..
+SBY 12:11:32 [free_list] engine_0.basecase: ##   0:00:17  Checking assertions in step 24..
+SBY 12:11:32 [free_list] engine_0.basecase: ##   0:00:17  Checking assumptions in step 25..
+SBY 12:11:34 [free_list] engine_0.basecase: ##   0:00:19  Checking assertions in step 25..
+SBY 12:11:35 [free_list] engine_0.basecase: ##   0:00:20  Checking assumptions in step 26..
+SBY 12:11:35 [free_list] engine_0.basecase: ##   0:00:20  Checking assertions in step 26..
+SBY 12:11:37 [free_list] engine_0.basecase: ##   0:00:22  Checking assumptions in step 27..
+SBY 12:11:38 [free_list] engine_0.basecase: ##   0:00:23  Checking assertions in step 27..
+SBY 12:11:39 [free_list] engine_0.basecase: ##   0:00:24  Checking assumptions in step 28..
+SBY 12:11:39 [free_list] engine_0.basecase: ##   0:00:24  Checking assertions in step 28..
+SBY 12:11:40 [free_list] engine_0.basecase: ##   0:00:25  Checking assumptions in step 29..
+SBY 12:11:41 [free_list] engine_0.basecase: ##   0:00:26  Checking assertions in step 29..
+SBY 12:11:41 [free_list] engine_0.basecase: ##   0:00:26  Status: passed
+SBY 12:11:42 [free_list] engine_0.basecase: finished (returncode=0)
+SBY 12:11:42 [free_list] engine_0.basecase: Status returned by engine for basecase: pass
+SBY 12:11:42 [free_list] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:28 (28)
+SBY 12:11:42 [free_list] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:30 (30)
+SBY 12:11:42 [free_list] summary: engine_0 (smtbmc) returned pass for basecase
+SBY 12:11:42 [free_list] summary: engine_0 (smtbmc) returned pass for induction
+SBY 12:11:42 [free_list] summary: engine_0 did not produce any traces
+SBY 12:11:42 [free_list] summary: successful proof by k-induction.
+SBY 12:11:42 [free_list] DONE (PASS, rc=0)

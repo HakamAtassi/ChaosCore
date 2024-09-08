@@ -45,8 +45,7 @@ module Queue8_backend_memory_response(
                 io_deq_bits_fetch_packet_index,
   output [5:0]  io_deq_bits_ROB_index,
   output [31:0] io_deq_bits_data,
-  output [3:0]  io_deq_bits_MOB_index,
-  input         io_flush
+  output [3:0]  io_deq_bits_MOB_index
 );
 
   wire         io_enq_ready;
@@ -66,17 +65,12 @@ module Queue8_backend_memory_response(
       maybe_full <= 1'h0;
     end
     else begin
-      if (io_flush) begin
-        enq_ptr_value <= 3'h0;
-        deq_ptr_value <= 3'h0;
-      end
-      else begin
-        if (do_enq)
-          enq_ptr_value <= enq_ptr_value + 3'h1;
-        if (do_deq)
-          deq_ptr_value <= deq_ptr_value + 3'h1;
-      end
-      maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
+      if (do_enq)
+        enq_ptr_value <= enq_ptr_value + 3'h1;
+      if (do_deq)
+        deq_ptr_value <= deq_ptr_value + 3'h1;
+      if (~(do_enq == do_deq))
+        maybe_full <= do_enq;
     end
   end // always @(posedge)
   ram_8x138 ram_ext (
