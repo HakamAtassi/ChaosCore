@@ -92,7 +92,8 @@ module L1_data_cache(
                 io_CPU_response_bits_fetch_packet_index,
   output [5:0]  io_CPU_response_bits_ROB_index,
   output [31:0] io_CPU_response_bits_data,
-  output [3:0]  io_CPU_response_bits_MOB_index
+  output [3:0]  io_CPU_response_bits_MOB_index,
+  input         io_kill
 );
 
   wire             io_CPU_request_ready_0;
@@ -296,12 +297,12 @@ module L1_data_cache(
   reg  [31:0]      miss_address_REG;
   assign backend_set = io_CPU_request_bits_addr[10:5];
   assign backend_tag = io_CPU_request_bits_addr[15:11];
-  wire             input_cacheable = io_CPU_request_bits_addr[31];
-  wire             active_non_cacheable = ~input_cacheable & active_valid;
+  wire             active_non_cacheable = ~active_cacheable & active_valid;
   wire             active_non_cacheable_read =
     _active_non_cacheable_read_T & active_non_cacheable;
   wire             active_non_cacheable_write =
     _data_memories_wr_en_31_T_13 & active_non_cacheable;
+  wire             input_cacheable = io_CPU_request_bits_addr[31];
   wire             active_cacheable_write_read = input_cacheable & active_valid;
   wire [4:0]       byte_offset = active_address[4:0];
   wire [4:0]       word_offset = byte_offset / 5'h4;

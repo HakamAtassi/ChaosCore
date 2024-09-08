@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2024-09-08T12:50:08" hostname="hakam-MS-7D46" package="rename" id="0" name="default" tests="20" errors="0" failures="2" time="4" skipped="19">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="FAIL"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+<failure type="FAIL" message="Task returned status FAIL." />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename at rename.sv:1847.3-1850.113" time="0" type="ASSERT" location="rename.sv:1847.3-1850.113" id="_witness_.assert_auto_verificsva_cc_1732_import_9476">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename at rename.sv:1843.3-1846.113" time="0" type="ASSERT" location="rename.sv:1843.3-1846.113" id="_witness_.assert_auto_verificsva_cc_1732_import_9505">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename at rename.sv:1811.3-1814.113" time="0" type="ASSERT" location="rename.sv:1811.3-1814.113" id="_witness_.assert_auto_verificsva_cc_1732_import_9534" tracefile="engine_0/trace.vcd">
+<failure type="ASSERT" message="Property ASSERT in rename at rename.sv:1811.3-1814.113 failed. Trace file: engine_0/trace.vcd" />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename at rename.sv:1807.3-1810.113" time="0" type="ASSERT" location="rename.sv:1807.3-1810.113" id="_witness_.assert_auto_verificsva_cc_1732_import_9563">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename at rename.sv:1783.3-1786.113" time="0" type="ASSERT" location="rename.sv:1783.3-1786.113" id="_witness_.assert_auto_verificsva_cc_1732_import_9592">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename at rename.sv:1779.3-1782.113" time="0" type="ASSERT" location="rename.sv:1779.3-1782.113" id="_witness_.assert_auto_verificsva_cc_1732_import_9621">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename at rename.sv:1763.3-1766.113" time="0" type="ASSERT" location="rename.sv:1763.3-1766.113" id="_witness_.assert_auto_verificsva_cc_1732_import_9650">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename at rename.sv:1759.3-1762.113" time="0" type="ASSERT" location="rename.sv:1759.3-1762.113" id="_witness_.assert_auto_verificsva_cc_1732_import_9679">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1198.3-1200.91" time="0" type="ASSERT" location="free_list.sv:1198.3-1200.91" id="_witness_.assert_auto_verificsva_cc_1732_import_38841">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1194.3-1196.91" time="0" type="ASSERT" location="free_list.sv:1194.3-1196.91" id="_witness_.assert_auto_verificsva_cc_1732_import_38874">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1190.3-1192.91" time="0" type="ASSERT" location="free_list.sv:1190.3-1192.91" id="_witness_.assert_auto_verificsva_cc_1732_import_38907">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1186.3-1188.89" time="0" type="ASSERT" location="free_list.sv:1186.3-1188.89" id="_witness_.assert_auto_verificsva_cc_1732_import_38940">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1183.3-1184.46" time="0" type="ASSERT" location="free_list.sv:1183.3-1184.46" id="_witness_.assert_auto_verificsva_cc_1732_import_38973">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1181.3-1182.48" time="0" type="ASSERT" location="free_list.sv:1181.3-1182.48" id="_witness_.assert_auto_verificsva_cc_1732_import_39002">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1178.3-1179.46" time="0" type="ASSERT" location="free_list.sv:1178.3-1179.46" id="_witness_.assert_auto_verificsva_cc_1732_import_39031">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1176.3-1177.48" time="0" type="ASSERT" location="free_list.sv:1176.3-1177.48" id="_witness_.assert_auto_verificsva_cc_1732_import_39060">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1173.3-1174.46" time="0" type="ASSERT" location="free_list.sv:1173.3-1174.46" id="_witness_.assert_auto_verificsva_cc_1732_import_39089">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1171.3-1172.48" time="0" type="ASSERT" location="free_list.sv:1171.3-1172.48" id="_witness_.assert_auto_verificsva_cc_1732_import_39118">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1168.3-1169.46" time="0" type="ASSERT" location="free_list.sv:1168.3-1169.46" id="_witness_.assert_auto_verificsva_cc_1732_import_39147">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in rename/free_list at free_list.sv:1166.3-1167.48" time="0" type="ASSERT" location="free_list.sv:1166.3-1167.48" id="_witness_.assert_auto_verificsva_cc_1732_import_39176">
+<skipped />
+</testcase>
+<system-out>SBY 12:50:03 [rename] Removing directory '/home/hakam/Repos/ChaosCore/formal/rename'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_65536x2.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/mem_65536x2.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/PHT_memory.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/PHT_memory.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/gshare.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/gshare.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_4096x56.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/mem_4096x56.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/hash_BTB_mem.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/hash_BTB.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_128x39.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/mem_128x39.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/SDPReadWriteSmem.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RAS.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/RAS.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_prediction.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue1_prediction.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/BP.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/BP.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x271.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_2x271.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue2_fetch_packet.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/predecoder.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/predecoder.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/PC_gen.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/PC_gen.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x271.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_16x271.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue16_fetch_packet.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x65.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_16x65.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_frontend_memory_request.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue16_frontend_memory_request.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x37.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_16x37.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_prediction.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue16_prediction.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_fetch.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/instruction_fetch.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/decoder.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/decoder.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x483.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_2x483.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_decoded_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue2_decoded_fetch_packet.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/fetch_packet_decoder.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/fetch_packet_decoder.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x483.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_16x483.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_decoded_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue16_decoded_fetch_packet.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/free_list.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/free_list.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/WAW_handler.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/WAW_handler.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RAT.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/RAT.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/rename.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/rename.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/frontend.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/frontend.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/RS.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RS_1.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/RS_1.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/simple_MOB.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/simple_MOB.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_65x32.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/mem_65x32.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/sim_nReadmWrite.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/sim_nReadmWrite.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ALU.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ALU.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/branch_unit.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/branch_unit.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FU.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/FU.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FU_1.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/FU_1.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/AGU.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/AGU.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/backend.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/backend.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x70.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/mem_64x70.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_shared_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ROB_shared_mem.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_WB_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ROB_WB_mem.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x26.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/mem_64x26.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_entry_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ROB_entry_mem.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x37.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/fetch_64x37.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ROB.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ChaosCore.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_final_AXI_response.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue1_final_AXI_response.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x2.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/mem_64x2.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem_1.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/SDPReadWriteSmem_1.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x278.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/mem_64x278.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/icache_ReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/icache_ReadWriteSmem.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_validator.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/instruction_validator.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/L1_instruction_cache.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/L1_instruction_cache.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_8x352.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_8x352.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue8_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue8_AXI_request_Q_entry.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_2x352.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_2x352.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue2_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue2_AXI_request_Q_entry.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_8x138.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_8x138.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue8_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue8_backend_memory_response.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_3x138.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_3x138.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue3_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Queue3_backend_memory_response.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_256x8.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_256x8.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ReadWriteSmem.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_64x21.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ram_64x21.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ReadWriteSmem_32.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ReadWriteSmem_32.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_AXI_request_Q_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Arbiter2_AXI_request_Q_entry.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_backend_memory_response.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/Arbiter2_backend_memory_response.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/L1_data_cache.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/L1_data_cache.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore_tile.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/ChaosCore_tile.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/AXI_debug_printer.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/AXI_debug_printer.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/extern_modules.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/extern_modules.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_2x2.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/axi_interconnect_2x2.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SOC.sv' to '/home/hakam/Repos/ChaosCore/formal/rename/src/SOC.sv'.
+SBY 12:50:03 [rename] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_wrap_2x2.v' to '/home/hakam/Repos/ChaosCore/formal/rename/src/axi_interconnect_wrap_2x2.v'.
+SBY 12:50:03 [rename] engine_0: smtbmc
+SBY 12:50:03 [rename] base: starting process &quot;cd rename/src; yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 12:50:03 [rename] base: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 12:50:03 [rename] base: This license is granted for the limited purpose of academic and/or research activities.
+SBY 12:50:03 [rename] base: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 12:50:03 [rename] base: This license was issued to Hakam Atassi.
+SBY 12:50:03 [rename] base: Customer PoC: Hakam Atassi &lt;atassih@mcmaster.ca&gt;.
+SBY 12:50:05 [rename] base: finished (returncode=0)
+SBY 12:50:05 [rename] prep: starting process &quot;cd rename/model; yosys -ql design_prep.log design_prep.ys&quot;
+SBY 12:50:05 [rename] prep: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 12:50:05 [rename] prep: This license is granted for the limited purpose of academic and/or research activities.
+SBY 12:50:05 [rename] prep: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 12:50:05 [rename] prep: This license was issued to Hakam Atassi.
+SBY 12:50:05 [rename] prep: Customer PoC: Hakam Atassi &lt;atassih@mcmaster.ca&gt;.
+SBY 12:50:06 [rename] prep: finished (returncode=0)
+SBY 12:50:06 [rename] smt2: starting process &quot;cd rename/model; yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 12:50:06 [rename] smt2: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 12:50:06 [rename] smt2: This license is granted for the limited purpose of academic and/or research activities.
+SBY 12:50:06 [rename] smt2: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 12:50:06 [rename] smt2: This license was issued to Hakam Atassi.
+SBY 12:50:06 [rename] smt2: Customer PoC: Hakam Atassi &lt;atassih@mcmaster.ca&gt;.
+SBY 12:50:06 [rename] smt2: finished (returncode=0)
+SBY 12:50:06 [rename] engine_0: starting process &quot;cd rename; yosys-smtbmc --presat --unroll --noprogress -t 20  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 12:50:06 [rename] engine_0: ##   0:00:00  Solver: yices
+SBY 12:50:06 [rename] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 12:50:06 [rename] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 12:50:07 [rename] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 12:50:07 [rename] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 12:50:07 [rename] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 12:50:07 [rename] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 12:50:07 [rename] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY 12:50:07 [rename] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY 12:50:07 [rename] engine_0: ##   0:00:01  Checking assumptions in step 4..
+SBY 12:50:07 [rename] engine_0: ##   0:00:01  Checking assertions in step 4..
+SBY 12:50:07 [rename] engine_0: ##   0:00:01  BMC failed!
+SBY 12:50:07 [rename] engine_0: ##   0:00:01  Assert failed in rename: rename.sv:1811.3-1814.113 (_witness_.assert_auto_verificsva_cc_1732_import_9534)
+SBY 12:50:07 [rename] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace.vcd
+SBY 12:50:08 [rename] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 12:50:08 [rename] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace.smtc
+SBY 12:50:08 [rename] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 12:50:08 [rename] engine_0: ##   0:00:01  Status: failed
+SBY 12:50:08 [rename] engine_0: finished (returncode=1)
+SBY 12:50:08 [rename] engine_0: Status returned by engine: FAIL
+SBY 12:50:08 [rename] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:04 (4)
+SBY 12:50:08 [rename] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:04 (4)
+SBY 12:50:08 [rename] summary: engine_0 (smtbmc) returned FAIL
+SBY 12:50:08 [rename] summary: counterexample trace: rename/engine_0/trace.vcd
+SBY 12:50:08 [rename] summary:   failed assertion rename._witness_.assert_auto_verificsva_cc_1732_import_9534 at rename.sv:1811.3-1814.113 in step 4
+SBY 12:50:08 [rename] DONE (FAIL, rc=2)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

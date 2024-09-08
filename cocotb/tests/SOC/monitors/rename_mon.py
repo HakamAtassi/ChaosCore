@@ -9,8 +9,8 @@ class rename_mon:
     def __init__(self, dut):
         self.rename = dut
 
-        self.rename_rename_request_queue  = []
-        self.rename_rename_response_queue = []
+        self.rename_request_queue  = []
+        self.rename_response_queue = []
 
         self.model_rename_response_queue = []
 
@@ -34,7 +34,7 @@ class rename_mon:
     def read_rename_request(self):
         return {
             "ready": getattr(self.rename, f"io_decoded_fetch_packet_ready").value,
-            "valid": getattr(self.rename, f"io_decoded_fetch_packet_ready").value,
+            "valid": getattr(self.rename, f"io_decoded_fetch_packet_valid").value,
             "bits" :{
                 "fetch_PC": getattr(self.rename, f"io_decoded_fetch_packet_bits_fetch_PC").value,
                 "valid_bits": [getattr(self.rename,f"io_decoded_fetch_packet_bits_valid_bits_{i}").value for i in range(4)],
@@ -199,7 +199,7 @@ class rename_mon:
                 
                 if(PRD_valid):
                     self.ready[PRD] = 1
-                    #self.rename_rename_request_queue.append(self.read_rename_request())
+                    #self.rename_request_queue.append(self.read_rename_request())
 
 
         # monitor commit
@@ -211,13 +211,13 @@ class rename_mon:
         if(int(self.read_rename_request()["valid"]) and int(self.read_rename_request()["ready"])):
             #print(f"monitored  @ {cocotb.utils.get_sim_time("ns")}")
             #print(int(self.read_rename_request()["valid"]))
-            self.rename_rename_request_queue.append(self.read_rename_request())
+            self.rename_request_queue.append(self.read_rename_request())
             #print(f"{int(self.read_rename_request()["bits"]["fetch_PC"])}")
 
         # monitor rename response
         if(int(self.read_rename_response()["valid"]) and int(self.read_rename_response()["ready"])):
             #print(f"monitored  @ {cocotb.utils.get_sim_time("ns")}")
-            self.rename_rename_response_queue.append(self.read_rename_response())
+            self.rename_response_queue.append(self.read_rename_response())
 
 
         #########
@@ -228,48 +228,51 @@ class rename_mon:
         # model free list
         if(int(self.read_commit()["valid"])):
             for i in range(4):
-                if(self.read_partial_commit()["commit_valid"] and self.read_partial_commit()["RD_valid"]):
+                if(self.read_partial_commit()["commit_valid"][i] and self.read_partial_commit()["RD_valid"][i]):
                     PRDold = self.read_partial_commit()["PRDold"][i]
                     PRD = self.read_partial_commit()["PRD"][i]
+                    RD = self.read_partial_commit()["RD"][i]
 
                     #print(f"@ {cocotb.utils.get_sim_time("ns")}")
 
                     self.PRD_available[PRDold] = True
                     self.commit_PRD_available[PRDold] = True
+                    
                     self.commit_PRD_available[PRD] = False
+
+                    self.commit_RAT[RD] = PRD
 
 
                 self.commit_PRD_available[0] = True
                 self.PRD_available[0] = True
 
 
+
+
             if(self.read_commit()["bits"]["is_misprediction"]):
                 self.PRD_available = copy.deepcopy(self.commit_PRD_available)
+                self.RAT = copy.deepcopy(self.commit_RAT)
                 self.ready = [1]*65
 
         # Assert that accepted output PRDs are infact available
         for i in range(4):
-            rename_response = self.rename_rename_response_queue[0] if len(self.rename_rename_response_queue) else None
+            rename_response = self.rename_response_queue[0] if len(self.rename_response_queue) else None
             if(rename_response and rename_response["valid"] and rename_response["bits"]["decoded_instruction"][i]["RD_valid"]):
 
+                PRD = int(self.rename_response_queue[0]["bits"]["decoded_instruction"][i]["PRD"])
+                RS1 = int(self.rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1"])
+                RS2 = int(self.rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2"])
 
+                RS1_ready = int(self.rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1_ready"])
+                RS2_ready = int(self.rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2_ready"])
 
-                PRD = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["PRD"])
-                RS1 = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1"])
-                RS2 = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2"])
-
-                RS1_ready = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1_ready"])
-                RS2_ready = int(self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2_ready"])
-
-                RS1_valid = self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1_valid"]
-                RS2_valid = self.rename_rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2_valid"]
+                RS1_valid = self.rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS1_valid"]
+                RS2_valid = self.rename_response_queue[0]["bits"]["decoded_instruction"][i]["RS2_valid"]
 
                 # SET PRD as NOT READY
 
-
                 expected_RS1_ready = self.ready[RS1]
                 expected_RS2_ready = self.ready[RS2]
-
 
                 if(RS1_valid):
                     assert expected_RS1_ready == RS1_ready, f"RS1 {RS1} busy incorrect"
@@ -291,13 +294,24 @@ class rename_mon:
 
             
             
-        #if(self.rename_rename_response_queue[0]["valid"] and self.rename_rename_response_queue["bits"]["decoded_instruction"]["RD_valid"]):
-            #PRD = self.rename_rename_response_queue[0]["valid"]["PRD"]
+        #if(self.rename_response_queue[0]["valid"] and self.rename_response_queue["bits"]["decoded_instruction"]["RD_valid"]):
+            #PRD = self.rename_response_queue[0]["valid"]["PRD"]
             #self.PRD_available[PRD] = False
 
 
         # model RAT
         # monitor what input RDs get mapped to on the output
+        for i in range(4):
+            rename_response = self.rename_response_queue[0] if len(self.rename_response_queue) else None
+            if(rename_response and rename_response["valid"] and rename_response["bits"]["decoded_instruction"][i]["RD_valid"]):
+                RD = rename_response["bits"]["decoded_instruction"][i]["RD"]
+                PRD = rename_response["bits"]["decoded_instruction"][i]["PRD"]
+                self.RAT[RD] = PRD
+                #print(f"renamed self.RAT[{int(RD)}] = {int(PRD)}")
+
+
+
+
 
 
 
@@ -305,22 +319,51 @@ class rename_mon:
         ############
         # CHECKERS #
         ############
-        if(self.rename_rename_request_queue):
-            self.model_rename_response_queue.append(self.scoreboard())
+
+        rename_request = self.rename_request_queue[0] if len(self.rename_request_queue) else None
+        if(rename_request):
+            rename_request = self.rename_request_queue[0]
+            for i in range(4):
+                RS1 = rename_request["bits"]["decoded_instruction"][i]["RS1"]
+                RS2 = rename_request["bits"]["decoded_instruction"][i]["RS2"]
+
+                expected_RS1 = self.RAT[RS1]
+                expected_RS2 = self.RAT[RS2]
+
+                #print(f"mapped RS1 {int(RS1)} to {int(expected_RS1)}")
+                #print(f"mapped RS2 {int(RS2)} to {int(expected_RS2)}")
+
+                rename_request["bits"]["decoded_instruction"][i]["RS1"] = expected_RS1
+                rename_request["bits"]["decoded_instruction"][i]["RS2"] = expected_RS2
+
+
+
+
+            self.model_rename_response_queue.append(rename_request)
 
         
-        if(self.rename_rename_response_queue and self.model_rename_response_queue):
+        rename_response = self.rename_response_queue[0] if len(self.rename_response_queue) else None
+        model_rename_response = self.model_rename_response_queue[0] if len(self.model_rename_response_queue) else None
+        if(model_rename_response and rename_response):
             # compare responses 
-            pass
+            expected_response = model_rename_response
+            actual_response = rename_response
+            RS1_valid = expected_response["bits"]["decoded_instruction"][i]["RS1_valid"]
+            if(RS1_valid):
+                expected_RS1 =  expected_response["bits"]["decoded_instruction"][i]["RS1"]
+                actual_RS1 =  actual_response["bits"]["decoded_instruction"][i]["RS1"]
+
+                #assert expected_RS1 == actual_RS1, f"expected RS1 {int(expected_RS1)} got {int(actual_RS1)}"
+                
 
 
         # properties:
         # when a valid PRD is accepted, if cant occur again on PRD until its committed as a PRDold
 
         try:
-            self.rename_rename_request_queue.pop()
+            self.rename_request_queue.pop()
         except(IndexError): pass
-        try: self.rename_rename_response_queue.pop()
+        try: self.rename_response_queue.pop()
         except(IndexError): pass
 
 

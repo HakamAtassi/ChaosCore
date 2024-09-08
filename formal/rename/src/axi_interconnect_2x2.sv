@@ -221,7 +221,7 @@ module axi_interconnect_2x2(
     .FORWARD_ID(1),
     .ID_WIDTH(8),
     .M00_ADDR_WIDTH(24),
-    .M00_BASE_ADDR(-2147483648),
+    .M00_BASE_ADDR(40'd2147483648),
     .M00_CONNECT_READ(3),
     .M00_CONNECT_WRITE(3),
     .M00_SECURE(0),

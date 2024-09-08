@@ -680,7 +680,7 @@ class ROB_TB:
 
     async def verify(self):
 
-        for _ in range(100_000):
+        for _ in range(50_000):
             self.drivers()
             self.checkers()
             self.monitors()

@@ -58,6 +58,8 @@ def apply(data_way: UInt, address: UInt, operation: access_width_t.Type): UInt =
 
 }
 
+
+
 object update_PLRU {
 	/**
 	* @param PLRU: the current read out PLRU state
@@ -66,9 +68,9 @@ object update_PLRU {
 	*/
 	def apply(coreParameters:CoreParameters)(PLRU:UInt, tag_hit_OH:UInt):UInt = {
 		import coreParameters._
-		val updated_PLRU = Wire(UInt(L1_DataCacheWays.W))
+		val updated_PLRU = Wire(UInt(4.W))	// FIXME: Make this a param for L1_data cache ways
 
-		val result = Wire(UInt(L1_DataCacheWays.W))
+		val result = Wire(UInt(4.W))
 
 		updated_PLRU := PLRU | tag_hit_OH.asUInt
 
@@ -78,6 +80,8 @@ object update_PLRU {
 			result := updated_PLRU
 		}
 
+		//printf("%x | %x = %x\n",PLRU, tag_hit_OH.asUInt, (PLRU | Cat(tag_hit_OH.reverse)))
+		//printf("%x | %x = %x\n",PLRU, tag_hit_OH.asUInt, result)
 		result
 	}
 }
@@ -110,15 +114,15 @@ object get_decomposed_dcache_address{
 object get_is_cacheable{
 	def apply(nocParameters:NOCParameters, address:UInt):Bool = {
 		import nocParameters._
-   		//val DRAM_addr = BigInt(DRAM_BASE_ADDR, 16).U	// DRAM_BASE_ADDR = 0x8000_0000
-		val cacheable = address >= DRAM_BASE_ADDR.U
+		
+		val cacheable = address >= "h80000000".U	// FIXME: make this a param
 		cacheable
 	}
 
 }
 
 object DATA_CACHE_STATES extends ChiselEnum {
-	val ACTIVE, STALL, ALLOCATE, REPLAY = Value
+	val ACTIVE, STALL, ALLOCATE, REPLAY = Value // FIXME: 
 }
 
 class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCParameters) extends Module with AXICacheNode{
@@ -129,7 +133,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		val CPU_request		= Flipped(Decoupled(new backend_memory_request(coreParameters)))
 		val CPU_response	= Decoupled(new backend_memory_response(coreParameters))
 
-		val kill			= Input(Bool())
+		val kill 			= Input(Bool())	// Do I need a kill signal?
 
 	}); dontTouch(io)
 
@@ -199,7 +203,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val backend_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
 	val backend_RD					= Wire(UInt(physicalRegBits.W))
 
-	//val replay_request_valid		= Wire(Bool())										// Current request valid?
+	val replay_request_valid		= Wire(Bool())										// Current request valid?
 	val replay_address				= Wire(UInt(32.W))									// The currently active request address
 	val replay_set					= Wire(UInt(log2Ceil(L1_DataCacheSets).W))
 	val replay_tag					= Wire(UInt(log2Ceil(L1_DataCacheTagBits).W))
@@ -278,7 +282,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	hit_set				:=	RegNext(active_set)
 	hit_tag				:=	RegNext(active_tag)
 	hit_MOB_index		:=	RegNext(active_MOB_index)
-	hit_way				:= 	PriorityEncoder(tag_hit_OH.asUInt)
+	hit_way				:= 	PriorityEncoder(tag_hit_OH.asUInt)	// FIXME: OH or non OH for priority encoder
 
 	dontTouch(hit_way)
 	dontTouch(allocate_way)
@@ -329,19 +333,16 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// QUEUES //
 	////////////
 	// Outgoing request queues //
-	val cacheable_request_Q			= 	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=true, useSyncReadMem=true))
-	val non_cacheable_request_Q		=	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=true, useSyncReadMem=true))
-	val AXI_request_Q				= 	Module(new Queue(new AXI_request_Q_entry, 2, flow=false, hasFlush=true, useSyncReadMem=true))
+	val cacheable_request_Q			= 	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=false, useSyncReadMem=true))						// FIXME: needs flush/kill
+	val non_cacheable_request_Q		=	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=false, useSyncReadMem=true))						// FIXME: needs flush/kill
+	val AXI_request_Q				= 	Module(new Queue(new AXI_request_Q_entry, 2, flow=false, hasFlush=false, useSyncReadMem=true))						// FIXME: needs flush/kill
 
 	// Incoming response queues	//
-	val cacheable_response_Q		=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=true, useSyncReadMem=true))
-	val non_cacheable_response_Q	=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=true, useSyncReadMem=true))
+	val cacheable_response_Q		=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
+	val non_cacheable_response_Q	=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
 
 	// Output skid buffer //
-	val CPU_response_skid_buffer	=	Module(new Queue(new backend_memory_response(coreParameters), 3, flow=true, hasFlush=true, useSyncReadMem=true))
-
-
-
+	val CPU_response_skid_buffer	=	Module(new Queue(new backend_memory_response(coreParameters), 3, flow=true, hasFlush=false, useSyncReadMem=true))	// FIXME: needs flush/kill
 
 	///////////////////
 	// DATA MEMORIES //
@@ -718,6 +719,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	MSHR_front_pointer := MSHR_front_pointer_next
 
+	//FIXME: Allocate way and miss way are inconsistent
 	allocate_way				:= MSHRs(MSHR_front_index).allocate_way
 	allocate_address			:= MSHRs(MSHR_front_index).address
 	allocate_set				:= get_decomposed_dcache_address(coreParameters, MSHRs(MSHR_front_index).address).set
@@ -880,7 +882,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	DATA_CACHE_STATE := DATA_CACHE_NEXT_STATE
 
-	//replay_request_valid	:=	0.B 
+	replay_request_valid	:=	0.B //FIXME: 
 	replay_address			:=	MSHRs(MSHR_front_index).front.addr
 	replay_set				:=	get_decomposed_dcache_address(coreParameters, MSHRs(MSHR_front_index).front.addr).set
 	replay_tag				:=	get_decomposed_dcache_address(coreParameters, MSHRs(MSHR_front_index).front.addr).tag
@@ -891,29 +893,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	replay_ROB_index		:=	MSHRs(MSHR_front_index).front.ROB_index
 	replay_packet_index		:=	MSHRs(MSHR_front_index).front.packet_index
 	replay_RD				:=	MSHRs(MSHR_front_index).front.PRD
-
-	///////////
-	// FLUSH //
-	///////////
- 
-	// on flush, clear queues
-	cacheable_request_Q.io.flush.get 		:= io.kill
-	non_cacheable_request_Q.io.flush.get 	:= io.kill
-	AXI_request_Q.io.flush.get 				:= io.kill
-
-	cacheable_response_Q.io.flush.get 		:= io.kill
-	non_cacheable_response_Q.io.flush.get 	:= io.kill
-
-	CPU_response_skid_buffer.io.flush.get 	:= io.kill
-
-	// clear MSHRs
-	for(i <- 0 until L1_MSHREntries){
-		when(io.kill){
-			MSHRs(i).clear
-		}
-	}
-
-
 
 
 
@@ -994,6 +973,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	non_cacheable_response_Q.io.enq.bits.data  		:= axi_response.data(255,256-32)	// non cacheable responses are always 32 bits 
 	non_cacheable_response_Q.io.enq.bits.MOB_index  := non_cacheable_buffer_front.MOB_index
+	non_cacheable_response_Q.io.deq.ready 			:= 1.B	// FIXME: not always ready
 
 	// arbitrate port outputs
 	// Round Robin between cacheable and non-cacheable

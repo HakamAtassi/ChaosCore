@@ -531,7 +531,8 @@ module ChaosCore_tile(
       (_data_cache_io_CPU_response_bits_fetch_packet_index),
     .io_CPU_response_bits_ROB_index          (_data_cache_io_CPU_response_bits_ROB_index),
     .io_CPU_response_bits_data               (_data_cache_io_CPU_response_bits_data),
-    .io_CPU_response_bits_MOB_index          (_data_cache_io_CPU_response_bits_MOB_index)
+    .io_CPU_response_bits_MOB_index          (_data_cache_io_CPU_response_bits_MOB_index),
+    .io_kill                                 (_ChaosCore_io_kill)
   );
 endmodule
 

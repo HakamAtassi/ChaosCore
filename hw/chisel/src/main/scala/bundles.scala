@@ -414,7 +414,7 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
 
     val RD_valid    =   Bool()
     val RD          =   UInt(architecturalRegBits.W)
-    val PRDold      =   UInt(architecturalRegBits.W)
+    val PRDold      =   UInt(physicalRegBits.W)
     val PRD         =   UInt(physicalRegBits.W)
 }
 
