@@ -63,6 +63,6 @@ Module free_list directly or indirectly contains formal properties -> setting "k
 6.2. Executing DEMUXMAP pass.
 Creating SMT-LIBv2 representation of module free_list.
 
-End of script. Logfile hash: a3b412adf1, CPU: user 0.10s system 0.01s, MEM: 44.33 MB peak
+End of script. Logfile hash: a3b412adf1, CPU: user 0.09s system 0.01s, MEM: 44.33 MB peak
 Yosys 0.45 (git sha1 9ed031ddd, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)
-Time spent: 48% 2x write_smt2 (0 sec), 45% 2x read_ilang (0 sec), ...
+Time spent: 48% 2x write_smt2 (0 sec), 46% 2x read_ilang (0 sec), ...

@@ -89,10 +89,10 @@ module decoder(
     end // always @(posedge)
   `endif // not def SYNTHESIS
   wire       _needs_ALU_T_1 = io_instruction_bits_instruction[31:25] == 7'h20;
-  wire       needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
+  wire       needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_11;
   wire       needs_ALU =
     _is_INT_T & (_needs_ALU_T_1 | io_instruction_bits_instruction[31:25] == 7'h0)
-    | _is_INT_T_1 | _is_INT_T_9 | _is_INT_T_11;
+    | _is_INT_T_1 | _is_INT_T_9;
   reg  [1:0] next_ALU_port_0;
   reg  [1:0] next_ALU_port_1;
   reg  [1:0] next_ALU_port_2;

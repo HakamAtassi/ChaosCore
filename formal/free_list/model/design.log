@@ -933,6 +933,6 @@ Module free_list directly or indirectly contains formal properties -> setting "k
 10. Executing RTLIL backend.
 Output filename: ../model/design.il
 
-End of script. Logfile hash: adf0e5ee04, CPU: user 1.04s system 0.02s, MEM: 80.05 MB peak
+End of script. Logfile hash: adf0e5ee04, CPU: user 1.04s system 0.03s, MEM: 80.16 MB peak
 Yosys 0.45 (git sha1 9ed031ddd, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)
-Time spent: 35% 2x hierarchy (0 sec), 17% 5x opt_clean (0 sec), ...
+Time spent: 35% 2x hierarchy (0 sec), 16% 5x opt_clean (0 sec), ...

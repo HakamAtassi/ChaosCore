@@ -35,11 +35,9 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
-
-
-
 case class CoreParameters(
 
+    DEBUG: Boolean = true,
 
     coreConfig: String = "RV32I",  // core extension (IMAF, etc...)
 

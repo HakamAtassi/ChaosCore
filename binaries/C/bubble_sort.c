@@ -33,5 +33,5 @@ int main()
     putchar(x[13]+'0');
     putchar(x[14]+'0');
 
-    while(1){};
+    return 0;
 }

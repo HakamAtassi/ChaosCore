@@ -145,8 +145,9 @@ class ALU(coreParameters:CoreParameters) extends Module{
 
     
 
-    lui_result      := (imm << 12)  // FIXME: is imm signed??
-    auipc_result    := (instruction_PC + (imm<<12)) // same here???
+    lui_result      := Cat(imm, 0.U(12.W)) 
+    auipc_result    := (instruction_PC + Cat(imm, 0.U(12.W))) // same here???
+
 
 
     /////////////
@@ -175,6 +176,10 @@ class ALU(coreParameters:CoreParameters) extends Module{
     val DIVU     =   (instructionType === OP) && FUNCT3 === "b101".U  && MULTIPLY
     val REM      =   (instructionType === OP) && FUNCT3 === "b110".U  && MULTIPLY
     val REMU     =   (instructionType === OP) && FUNCT3 === "b111".U  && MULTIPLY
+
+
+    dontTouch(lui_result)
+    dontTouch(LUI)
 
     arithmetic_result := 0.U
     when(ADD)       {

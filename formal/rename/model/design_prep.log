@@ -25,70 +25,72 @@ Found 0 SCCs.
 4. Executing MEMORY_NORDFF pass (extracting $dff cells from memories).
 
 5. Executing ASYNC2SYNC pass.
-Replacing rename.$auto$verificsva.cc:1820:import$9817 ($adff): ARST=\hasBeenReset, D=\_fire_T_1, Q=$auto$verificsva.cc:1818:import$9815
-Replacing rename.$auto$verificsva.cc:1820:import$9806 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9798, Q=$auto$verificsva.cc:1818:import$9804
-Replacing rename.$auto$verificsva.cc:1820:import$9795 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9787, Q=$auto$verificsva.cc:1818:import$9793
-Replacing rename.$auto$verificsva.cc:1820:import$9784 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9776, Q=$auto$verificsva.cc:1818:import$9782
-Replacing rename.$auto$verificsva.cc:1820:import$9773 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9765, Q=$auto$verificsva.cc:1818:import$9771
-Replacing rename.$auto$verificsva.cc:1820:import$9762 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9754, Q=$auto$verificsva.cc:1818:import$9760
-Replacing rename.$auto$verificsva.cc:1820:import$9751 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9743, Q=$auto$verificsva.cc:1818:import$9749
-Replacing rename.$auto$verificsva.cc:1820:import$9740 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9732, Q=$auto$verificsva.cc:1818:import$9738
-Replacing rename.$auto$verificsva.cc:1820:import$9729 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9721, Q=$auto$verificsva.cc:1818:import$9727
-Replacing rename.$auto$verificsva.cc:1820:import$9718 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9710, Q=$auto$verificsva.cc:1818:import$9716
-Replacing rename.$auto$verificsva.cc:1820:import$9707 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9703, Q=$auto$verificsva.cc:1818:import$9705
-Replacing rename.$auto$verificsva.cc:1820:import$9678 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9674, Q=$auto$verificsva.cc:1818:import$9676
-Replacing rename.$auto$verificsva.cc:1820:import$9649 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9645, Q=$auto$verificsva.cc:1818:import$9647
-Replacing rename.$auto$verificsva.cc:1820:import$9620 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9616, Q=$auto$verificsva.cc:1818:import$9618
-Replacing rename.$auto$verificsva.cc:1820:import$9591 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9587, Q=$auto$verificsva.cc:1818:import$9589
-Replacing rename.$auto$verificsva.cc:1820:import$9562 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9558, Q=$auto$verificsva.cc:1818:import$9560
-Replacing rename.$auto$verificsva.cc:1820:import$9533 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9529, Q=$auto$verificsva.cc:1818:import$9531
-Replacing rename.$auto$verificsva.cc:1820:import$9504 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9500, Q=$auto$verificsva.cc:1818:import$9502
-Replacing rename.$auto$verificsva.cc:1819:import$9816 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9811, Q=$auto$verificsva.cc:1817:import$9814
-Replacing rename.$auto$verificsva.cc:1819:import$9805 ($adff): ARST=\hasBeenReset, D=\io_renamed_decoded_fetch_packet_ready, Q=$auto$verificsva.cc:1817:import$9803
-Replacing rename.$auto$verificsva.cc:1819:import$9794 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9789, Q=$auto$verificsva.cc:1817:import$9792
-Replacing rename.$auto$verificsva.cc:1819:import$9783 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9778, Q=$auto$verificsva.cc:1817:import$9781
-Replacing rename.$auto$verificsva.cc:1819:import$9772 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9767, Q=$auto$verificsva.cc:1817:import$9770
-Replacing rename.$auto$verificsva.cc:1819:import$9761 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9756, Q=$auto$verificsva.cc:1817:import$9759
-Replacing rename.$auto$verificsva.cc:1819:import$9750 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9745, Q=$auto$verificsva.cc:1817:import$9748
-Replacing rename.$auto$verificsva.cc:1819:import$9739 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9734, Q=$auto$verificsva.cc:1817:import$9737
-Replacing rename.$auto$verificsva.cc:1819:import$9728 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9723, Q=$auto$verificsva.cc:1817:import$9726
-Replacing rename.$auto$verificsva.cc:1819:import$9717 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9712, Q=$auto$verificsva.cc:1817:import$9715
-Replacing rename.$auto$verificsva.cc:1819:import$9706 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9701, Q=$auto$verificsva.cc:1817:import$9704
-Replacing rename.$auto$verificsva.cc:1819:import$9677 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9672, Q=$auto$verificsva.cc:1817:import$9675
-Replacing rename.$auto$verificsva.cc:1819:import$9648 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9643, Q=$auto$verificsva.cc:1817:import$9646
-Replacing rename.$auto$verificsva.cc:1819:import$9619 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9614, Q=$auto$verificsva.cc:1817:import$9617
-Replacing rename.$auto$verificsva.cc:1819:import$9590 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9585, Q=$auto$verificsva.cc:1817:import$9588
-Replacing rename.$auto$verificsva.cc:1819:import$9561 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9556, Q=$auto$verificsva.cc:1817:import$9559
-Replacing rename.$auto$verificsva.cc:1819:import$9532 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9527, Q=$auto$verificsva.cc:1817:import$9530
-Replacing rename.$auto$verificsva.cc:1819:import$9503 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9498, Q=$auto$verificsva.cc:1817:import$9501
-Replacing free_list.$auto$verificsva.cc:363:getAccept$38959 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$38954, Q=$auto$verificsva.cc:294:getAccept$38948
-Replacing free_list.$auto$verificsva.cc:363:getAccept$38926 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$38921, Q=$auto$verificsva.cc:294:getAccept$38915
-Replacing free_list.$auto$verificsva.cc:363:getAccept$38893 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$38888, Q=$auto$verificsva.cc:294:getAccept$38882
-Replacing free_list.$auto$verificsva.cc:363:getAccept$38860 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$38855, Q=$auto$verificsva.cc:294:getAccept$38849
-Replacing free_list.$auto$verificsva.cc:1820:import$39204 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39200, Q=$auto$verificsva.cc:1818:import$39202
-Replacing free_list.$auto$verificsva.cc:1820:import$39175 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39171, Q=$auto$verificsva.cc:1818:import$39173
-Replacing free_list.$auto$verificsva.cc:1820:import$39146 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39142, Q=$auto$verificsva.cc:1818:import$39144
-Replacing free_list.$auto$verificsva.cc:1820:import$39117 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39113, Q=$auto$verificsva.cc:1818:import$39115
-Replacing free_list.$auto$verificsva.cc:1820:import$39088 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39084, Q=$auto$verificsva.cc:1818:import$39086
-Replacing free_list.$auto$verificsva.cc:1820:import$39059 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39055, Q=$auto$verificsva.cc:1818:import$39057
-Replacing free_list.$auto$verificsva.cc:1820:import$39030 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39026, Q=$auto$verificsva.cc:1818:import$39028
-Replacing free_list.$auto$verificsva.cc:1820:import$39001 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$38997, Q=$auto$verificsva.cc:1818:import$38999
-Replacing free_list.$auto$verificsva.cc:1820:import$38972 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$38968, Q=$auto$verificsva.cc:1818:import$38970
-Replacing free_list.$auto$verificsva.cc:1820:import$38939 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$38935, Q=$auto$verificsva.cc:1818:import$38937
-Replacing free_list.$auto$verificsva.cc:1820:import$38906 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$38902, Q=$auto$verificsva.cc:1818:import$38904
-Replacing free_list.$auto$verificsva.cc:1820:import$38873 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$38869, Q=$auto$verificsva.cc:1818:import$38871
-Replacing free_list.$auto$verificsva.cc:1819:import$39203 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39198, Q=$auto$verificsva.cc:1817:import$39201
-Replacing free_list.$auto$verificsva.cc:1819:import$39174 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39169, Q=$auto$verificsva.cc:1817:import$39172
-Replacing free_list.$auto$verificsva.cc:1819:import$39145 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39140, Q=$auto$verificsva.cc:1817:import$39143
-Replacing free_list.$auto$verificsva.cc:1819:import$39116 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39111, Q=$auto$verificsva.cc:1817:import$39114
-Replacing free_list.$auto$verificsva.cc:1819:import$39087 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39082, Q=$auto$verificsva.cc:1817:import$39085
-Replacing free_list.$auto$verificsva.cc:1819:import$39058 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39053, Q=$auto$verificsva.cc:1817:import$39056
-Replacing free_list.$auto$verificsva.cc:1819:import$39029 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39024, Q=$auto$verificsva.cc:1817:import$39027
-Replacing free_list.$auto$verificsva.cc:1819:import$39000 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$38995, Q=$auto$verificsva.cc:1817:import$38998
-Replacing free_list.$auto$verificsva.cc:1819:import$38971 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$38966, Q=$auto$verificsva.cc:1817:import$38969
-Replacing free_list.$auto$verificsva.cc:1819:import$38938 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$38933, Q=$auto$verificsva.cc:1817:import$38936
-Replacing free_list.$auto$verificsva.cc:1819:import$38905 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$38900, Q=$auto$verificsva.cc:1817:import$38903
-Replacing free_list.$auto$verificsva.cc:1819:import$38872 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$38867, Q=$auto$verificsva.cc:1817:import$38870
+Replacing rename.$auto$verificsva.cc:1820:import$9995 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9991, Q=$auto$verificsva.cc:1818:import$9993
+Replacing rename.$auto$verificsva.cc:1820:import$9966 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$9962, Q=$auto$verificsva.cc:1818:import$9964
+Replacing rename.$auto$verificsva.cc:1820:import$10290 ($adff): ARST=\hasBeenReset, D=\io_flush, Q=$auto$verificsva.cc:1818:import$10288
+Replacing rename.$auto$verificsva.cc:1820:import$10279 ($adff): ARST=\hasBeenReset, D=\_fire_T_1, Q=$auto$verificsva.cc:1818:import$10277
+Replacing rename.$auto$verificsva.cc:1820:import$10268 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10260, Q=$auto$verificsva.cc:1818:import$10266
+Replacing rename.$auto$verificsva.cc:1820:import$10257 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10249, Q=$auto$verificsva.cc:1818:import$10255
+Replacing rename.$auto$verificsva.cc:1820:import$10246 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10238, Q=$auto$verificsva.cc:1818:import$10244
+Replacing rename.$auto$verificsva.cc:1820:import$10235 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10227, Q=$auto$verificsva.cc:1818:import$10233
+Replacing rename.$auto$verificsva.cc:1820:import$10224 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10216, Q=$auto$verificsva.cc:1818:import$10222
+Replacing rename.$auto$verificsva.cc:1820:import$10213 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10205, Q=$auto$verificsva.cc:1818:import$10211
+Replacing rename.$auto$verificsva.cc:1820:import$10202 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10194, Q=$auto$verificsva.cc:1818:import$10200
+Replacing rename.$auto$verificsva.cc:1820:import$10191 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10183, Q=$auto$verificsva.cc:1818:import$10189
+Replacing rename.$auto$verificsva.cc:1820:import$10180 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10172, Q=$auto$verificsva.cc:1818:import$10178
+Replacing rename.$auto$verificsva.cc:1820:import$10169 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$10165, Q=$auto$verificsva.cc:1818:import$10167
+Replacing rename.$auto$verificsva.cc:1820:import$10140 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$10136, Q=$auto$verificsva.cc:1818:import$10138
+Replacing rename.$auto$verificsva.cc:1820:import$10111 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$10107, Q=$auto$verificsva.cc:1818:import$10109
+Replacing rename.$auto$verificsva.cc:1820:import$10082 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$10078, Q=$auto$verificsva.cc:1818:import$10080
+Replacing rename.$auto$verificsva.cc:1820:import$10053 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$10049, Q=$auto$verificsva.cc:1818:import$10051
+Replacing rename.$auto$verificsva.cc:1820:import$10024 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$10020, Q=$auto$verificsva.cc:1818:import$10022
+Replacing rename.$auto$verificsva.cc:1819:import$9994 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9989, Q=$auto$verificsva.cc:1817:import$9992
+Replacing rename.$auto$verificsva.cc:1819:import$9965 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$9960, Q=$auto$verificsva.cc:1817:import$9963
+Replacing rename.$auto$verificsva.cc:1819:import$10289 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10284, Q=$auto$verificsva.cc:1817:import$10287
+Replacing rename.$auto$verificsva.cc:1819:import$10278 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10273, Q=$auto$verificsva.cc:1817:import$10276
+Replacing rename.$auto$verificsva.cc:1819:import$10267 ($adff): ARST=\hasBeenReset, D=\io_renamed_decoded_fetch_packet_ready, Q=$auto$verificsva.cc:1817:import$10265
+Replacing rename.$auto$verificsva.cc:1819:import$10256 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10251, Q=$auto$verificsva.cc:1817:import$10254
+Replacing rename.$auto$verificsva.cc:1819:import$10245 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10240, Q=$auto$verificsva.cc:1817:import$10243
+Replacing rename.$auto$verificsva.cc:1819:import$10234 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10229, Q=$auto$verificsva.cc:1817:import$10232
+Replacing rename.$auto$verificsva.cc:1819:import$10223 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10218, Q=$auto$verificsva.cc:1817:import$10221
+Replacing rename.$auto$verificsva.cc:1819:import$10212 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10207, Q=$auto$verificsva.cc:1817:import$10210
+Replacing rename.$auto$verificsva.cc:1819:import$10201 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10196, Q=$auto$verificsva.cc:1817:import$10199
+Replacing rename.$auto$verificsva.cc:1819:import$10190 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10185, Q=$auto$verificsva.cc:1817:import$10188
+Replacing rename.$auto$verificsva.cc:1819:import$10179 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10174, Q=$auto$verificsva.cc:1817:import$10177
+Replacing rename.$auto$verificsva.cc:1819:import$10168 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10163, Q=$auto$verificsva.cc:1817:import$10166
+Replacing rename.$auto$verificsva.cc:1819:import$10139 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10134, Q=$auto$verificsva.cc:1817:import$10137
+Replacing rename.$auto$verificsva.cc:1819:import$10110 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10105, Q=$auto$verificsva.cc:1817:import$10108
+Replacing rename.$auto$verificsva.cc:1819:import$10081 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10076, Q=$auto$verificsva.cc:1817:import$10079
+Replacing rename.$auto$verificsva.cc:1819:import$10052 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10047, Q=$auto$verificsva.cc:1817:import$10050
+Replacing rename.$auto$verificsva.cc:1819:import$10023 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$10018, Q=$auto$verificsva.cc:1817:import$10021
+Replacing free_list.$auto$verificsva.cc:363:getAccept$39432 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$39427, Q=$auto$verificsva.cc:294:getAccept$39421
+Replacing free_list.$auto$verificsva.cc:363:getAccept$39399 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$39394, Q=$auto$verificsva.cc:294:getAccept$39388
+Replacing free_list.$auto$verificsva.cc:363:getAccept$39366 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$39361, Q=$auto$verificsva.cc:294:getAccept$39355
+Replacing free_list.$auto$verificsva.cc:363:getAccept$39333 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$39328, Q=$auto$verificsva.cc:294:getAccept$39322
+Replacing free_list.$auto$verificsva.cc:1820:import$39677 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39673, Q=$auto$verificsva.cc:1818:import$39675
+Replacing free_list.$auto$verificsva.cc:1820:import$39648 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39644, Q=$auto$verificsva.cc:1818:import$39646
+Replacing free_list.$auto$verificsva.cc:1820:import$39619 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39615, Q=$auto$verificsva.cc:1818:import$39617
+Replacing free_list.$auto$verificsva.cc:1820:import$39590 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39586, Q=$auto$verificsva.cc:1818:import$39588
+Replacing free_list.$auto$verificsva.cc:1820:import$39561 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39557, Q=$auto$verificsva.cc:1818:import$39559
+Replacing free_list.$auto$verificsva.cc:1820:import$39532 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39528, Q=$auto$verificsva.cc:1818:import$39530
+Replacing free_list.$auto$verificsva.cc:1820:import$39503 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39499, Q=$auto$verificsva.cc:1818:import$39501
+Replacing free_list.$auto$verificsva.cc:1820:import$39474 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39470, Q=$auto$verificsva.cc:1818:import$39472
+Replacing free_list.$auto$verificsva.cc:1820:import$39445 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39441, Q=$auto$verificsva.cc:1818:import$39443
+Replacing free_list.$auto$verificsva.cc:1820:import$39412 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39408, Q=$auto$verificsva.cc:1818:import$39410
+Replacing free_list.$auto$verificsva.cc:1820:import$39379 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39375, Q=$auto$verificsva.cc:1818:import$39377
+Replacing free_list.$auto$verificsva.cc:1820:import$39346 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$39342, Q=$auto$verificsva.cc:1818:import$39344
+Replacing free_list.$auto$verificsva.cc:1819:import$39676 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39671, Q=$auto$verificsva.cc:1817:import$39674
+Replacing free_list.$auto$verificsva.cc:1819:import$39647 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39642, Q=$auto$verificsva.cc:1817:import$39645
+Replacing free_list.$auto$verificsva.cc:1819:import$39618 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39613, Q=$auto$verificsva.cc:1817:import$39616
+Replacing free_list.$auto$verificsva.cc:1819:import$39589 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39584, Q=$auto$verificsva.cc:1817:import$39587
+Replacing free_list.$auto$verificsva.cc:1819:import$39560 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39555, Q=$auto$verificsva.cc:1817:import$39558
+Replacing free_list.$auto$verificsva.cc:1819:import$39531 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39526, Q=$auto$verificsva.cc:1817:import$39529
+Replacing free_list.$auto$verificsva.cc:1819:import$39502 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39497, Q=$auto$verificsva.cc:1817:import$39500
+Replacing free_list.$auto$verificsva.cc:1819:import$39473 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39468, Q=$auto$verificsva.cc:1817:import$39471
+Replacing free_list.$auto$verificsva.cc:1819:import$39444 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39439, Q=$auto$verificsva.cc:1817:import$39442
+Replacing free_list.$auto$verificsva.cc:1819:import$39411 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39406, Q=$auto$verificsva.cc:1817:import$39409
+Replacing free_list.$auto$verificsva.cc:1819:import$39378 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39373, Q=$auto$verificsva.cc:1817:import$39376
+Replacing free_list.$auto$verificsva.cc:1819:import$39345 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$39340, Q=$auto$verificsva.cc:1817:import$39343
 
 6. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \rename..
@@ -168,6 +170,6 @@ Removed 0 unused cells and 1 unused wires.
 13. Executing RTLIL backend.
 Output filename: ../model/design_prep.il
 
-End of script. Logfile hash: 2dd49f0c06, CPU: user 0.52s system 0.02s, MEM: 61.27 MB peak
+End of script. Logfile hash: 64344747c5, CPU: user 0.53s system 0.02s, MEM: 61.44 MB peak
 Yosys 0.45 (git sha1 9ed031ddd, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)
-Time spent: 36% 4x opt_clean (0 sec), 12% 2x read_ilang (0 sec), ...
+Time spent: 36% 4x opt_clean (0 sec), 13% 2x read_ilang (0 sec), ...

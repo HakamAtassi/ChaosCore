@@ -32,6 +32,8 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
+import java.io.PrintWriter
+
 class ROB(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     val portCount = getPortCount(coreParameters)
@@ -50,6 +52,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val commit                      =   ValidIO(new commit(coreParameters))
         val partial_commit              =   Output(new partial_commit(coreParameters))
         val ROB_index                   =   Output(UInt(log2Ceil(ROBEntries).W))
+
 
         // PC FILE //
         // Read port (Exec)
@@ -164,6 +167,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         val ROB_WB_data = Wire(new ROB_WB(coreParameters))
         ROB_WB_data.busy := 0.B
+        ROB_WB_data.RD_data.foreach(_:= 0.U)
 
         dontTouch(ROB_WB_data)
 
@@ -176,6 +180,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU0
         val ROB_WB_data_FU0 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU0.busy             :=  io.FU_outputs(0).valid
+        ROB_WB_data_FU0.RD_data.foreach(_:= io.FU_outputs(0).bits.RD_data)
         ROB_WB_banks(i).io.addrB         :=  io.FU_outputs(0).bits.ROB_index
         ROB_WB_banks(i).io.writeDataB    :=  ROB_WB_data_FU0
         ROB_WB_banks(i).io.writeEnableB  :=  io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U)
@@ -183,6 +188,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU1
         val ROB_WB_data_FU1 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU1.busy             :=  io.FU_outputs(1).valid
+        ROB_WB_data_FU1.RD_data.foreach(_:= io.FU_outputs(1).bits.RD_data)
         ROB_WB_banks(i).io.addrC         :=  io.FU_outputs(1).bits.ROB_index
         ROB_WB_banks(i).io.writeDataC    :=  ROB_WB_data_FU1
         ROB_WB_banks(i).io.writeEnableC  :=  io.FU_outputs(1).valid && (io.FU_outputs(1).bits.fetch_packet_index === i.U)
@@ -190,6 +196,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU2
         val ROB_WB_data_FU2 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU2.busy             :=  io.FU_outputs(2).valid
+        ROB_WB_data_FU2.RD_data.foreach(_:=  io.FU_outputs(2).bits.RD_data)
         ROB_WB_banks(i).io.addrD         :=  io.FU_outputs(2).bits.ROB_index
         ROB_WB_banks(i).io.writeDataD    :=  ROB_WB_data_FU2
         ROB_WB_banks(i).io.writeEnableD  :=  io.FU_outputs(2).valid && (io.FU_outputs(2).bits.fetch_packet_index === i.U)
@@ -197,6 +204,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU3
         val ROB_WB_data_FU3 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU3.busy             :=  io.FU_outputs(3).valid
+        ROB_WB_data_FU3.RD_data.foreach(_:=  io.FU_outputs(3).bits.RD_data)
         ROB_WB_banks(i).io.addrE         :=  io.FU_outputs(3).bits.ROB_index
         ROB_WB_banks(i).io.writeDataE    :=  ROB_WB_data_FU3
         ROB_WB_banks(i).io.writeEnableE  :=  io.FU_outputs(3).valid && (io.FU_outputs(3).bits.fetch_packet_index === i.U)
@@ -204,7 +212,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // commit (connect all ports)
         ROB_WB_banks(i).io.addrG         := front_index + commit_valid
     
-        ROB_WB_banks(i).io.flush   := io.commit.valid && io.commit.bits.is_misprediction
+        ROB_WB_banks(i).io.flush         := io.commit.valid && io.commit.bits.is_misprediction
     }
 
 
@@ -338,8 +346,11 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until fetchWidth){
         ROB_output.complete(i)          := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
+        ROB_output.RD_data.foreach(rd => rd(i) := ROB_WB_banks(i).io.readDataG.RD_data.getOrElse(0.U))
         ROB_output.ROB_entries(i)       := ROB_entry_banks(i).io.readDataB
     }
+
+    dontTouch(ROB_output)
 
     ////////////////////
     // PARTIAL COMMIT //
@@ -347,9 +358,14 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
 
     val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
+
     val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
-    val earliest_taken_index    = Mux1H(has_taken_branch_vec.zipWithIndex.map {case (taken, idx) => taken -> idx.U})
+    val earliest_taken_index    = PriorityEncoder(has_taken_branch_vec.asUInt) //Mux1H(has_taken_branch_vec.zipWithIndex.map {case (taken, idx) => taken -> idx.U})
     val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + (fetchWidth*4).U)
+
+
+
+    dontTouch(has_taken_branch_vec)
 
     // the commit signal for this module is resposible for committing an entire fetch packet at once. 
     // this is convinent for things like the front end that updates structures at the granuality of complete fetch packets. 
@@ -371,7 +387,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
         commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
 
-        partial_commit.valid(i)      := (is_completed || is_invalid) && ROB_output.row_valid && commit_row_complete.take(i+1).reduce(_ && _) && !prev_mispred
+        val allPreviousComplete = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
+        partial_commit.valid(i)      := (is_completed || is_invalid) && ROB_output.row_valid && allPreviousComplete && !prev_mispred
         partial_commit.MOB_index(i)  := ROB_output.ROB_entries(i).MOB_index
         partial_commit.MOB_valid(i)  := is_load || is_store
         partial_commit.ROB_index     := front_index
@@ -387,6 +404,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     ////////////
     // COMMIT //
     ////////////
+
 
 
 
@@ -451,6 +469,40 @@ class ROB(coreParameters:CoreParameters) extends Module{
     //val full = (front_pointer(pointer_width-2, 0) === back_pointer(pointer_width-2, 0)) && (front_pointer =/= back_pointer)
 
     io.ROB_packet.ready := !full
+
+
+
+
+    ///////////
+    // DEBUG //
+    ///////////
+
+
+    if(DEBUG){
+        when(io.commit.valid){
+
+            for(i <- 0 until fetchWidth){
+                val instruction_PC  = io.commit.bits.fetch_PC + (i*4).U
+                val arch_RD         = io.partial_commit.RD(i)
+                val arch_RD_valid   = io.partial_commit.RD_valid(i)
+                val physical_RD     = io.partial_commit.PRD(i)
+                val RD_data         = RegNext(ROB_output.RD_data.map(_(i)).getOrElse(0.U))
+
+                val is_completed    = RegNext(ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
+
+                when(arch_RD_valid && is_completed && io.partial_commit.valid(i)){
+                    // PC RD data
+                    printf("core 0: 3 0x%x    x%d   0x%x \n", instruction_PC, arch_RD, RD_data);
+                }.elsewhen(is_completed && io.partial_commit.valid(i)){
+                    printf("core 0: 3 0x%x    \n", instruction_PC)
+                }
+            }
+        }
+    }
+
+
+
+
 
 
 }
