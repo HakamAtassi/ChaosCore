@@ -377,18 +377,23 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val partial_commit  = Wire(new partial_commit(coreParameters))
 
 
+    val pre_mispred = Wire(Vec(fetchWidth, Bool()))
+
+    dontTouch(pre_mispred)
+
     for(i <- 0 until fetchWidth){   // only commit if all previous instructions are valid, complete, not a misprediction, and not an exception, or just invalid
         val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
         val is_load         = ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && ROB_output.ROB_entries(i).valid
         val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
 
-        val prev_mispred = (i.U > earliest_taken_index) && commit.is_misprediction && commit_valid    // There is a prev misprediction
+
+        pre_mispred(i) := (i.U <= earliest_taken_index && commit_valid) || !has_taken_branch 
 
         commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
 
         val allPreviousComplete = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
-        partial_commit.valid(i)      := (is_completed || is_invalid) && ROB_output.row_valid && allPreviousComplete && !prev_mispred
+        partial_commit.valid(i)      := (is_completed || is_invalid) && ROB_output.row_valid && allPreviousComplete && pre_mispred(i)
         partial_commit.MOB_index(i)  := ROB_output.ROB_entries(i).MOB_index
         partial_commit.MOB_valid(i)  := is_load || is_store
         partial_commit.ROB_index     := front_index
@@ -490,20 +495,50 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
                 val is_completed    = RegNext(ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
 
-                when(arch_RD_valid && is_completed && io.partial_commit.valid(i)){
+                when(arch_RD_valid && is_completed && io.partial_commit.valid(i) && arch_RD=/=0.U){
                     // PC RD data
-                    printf("core 0: 3 0x%x    x%d   0x%x \n", instruction_PC, arch_RD, RD_data);
+                    printf("core   0: 3 0x%x (0x00000000) x%d  0x%x \n", instruction_PC, arch_RD, RD_data);
+                  //printf("core   0: 3 0x80000004 (0x00000093) x1  0x00000000", )
                 }.elsewhen(is_completed && io.partial_commit.valid(i)){
-                    printf("core 0: 3 0x%x    \n", instruction_PC)
+                    printf("core   0: 3 0x%x (0x00000000)  \n", instruction_PC)
                 }
             }
         }
     }
 
-
-
-
-
-
 }
+
+/*
+
+
+
+MISPREDICTION LOGIC ISSUE:
+
+
+Currently, a branch is considered mispredicted basically only if its fetch PCs dont match. 
+However, sometimes the fetch PC can match, and still have a mispredicted branch.
+
+Consider:
+
+0x00: NOP
+0x04: branch x10
+0x08: NOP
+0x0C: NOP
+
+0x10: NOP
+0x14: NOP
+0x18: NOP
+0x1C: NOP
+
+
+here, even the generated expected next PC is going to be x10 regardless of the prediction for 0x04.
+FIX: just add a branch mask. 
+
+
+
+
+
+
+
+*/
 

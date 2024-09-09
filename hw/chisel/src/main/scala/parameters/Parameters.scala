@@ -37,7 +37,7 @@ import chisel3.util._
 
 case class CoreParameters(
 
-    DEBUG: Boolean = true,
+    DEBUG: Boolean = false,
 
     coreConfig: String = "RV32I",  // core extension (IMAF, etc...)
 

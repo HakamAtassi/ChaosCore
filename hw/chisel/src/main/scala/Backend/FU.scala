@@ -315,7 +315,7 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     val target_address = Wire(UInt(32.W))
 
     branch_taken    := 0.B
-    target_address  := io.FU_input.bits.fetch_PC + (fetchWidth.U * 4.U)    // default address is the next fetch_PC
+    target_address  := instruction_PC + 4.U  // default address is the next fetch_PC
     
 
     val SIMM_12_0 = Wire(SInt(32.W))

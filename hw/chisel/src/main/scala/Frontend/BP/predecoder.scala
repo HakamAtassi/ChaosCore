@@ -97,7 +97,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
         val opcode                      = instruction(6, 0)
         val RS1                         = instruction(19, 15)
         val RS2                         = instruction(24, 20)
-        val PRD                          = instruction(11, 7)
+        val PRD                         = instruction(11, 7)
         val is_BTB_taken                = io.prediction.valid && io.prediction.bits.hit && io.prediction.bits.T_NT && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
 
         val (instruction_type, valid)   = InstructionType.safe(opcode(6, 2))
