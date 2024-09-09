@@ -33,7 +33,7 @@ async def test_reset(dut):
 
 
 
-    for _ in range(5000):
+    for _ in range(10000):
         await SOC.clock()
 
     assert False

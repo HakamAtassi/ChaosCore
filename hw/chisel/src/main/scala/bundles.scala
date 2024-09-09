@@ -46,7 +46,7 @@ class fetch_packet(coreParameters:CoreParameters) extends Bundle{
     val valid_bits      = Vec(fetchWidth, Bool())
     val instructions    = Vec(fetchWidth, new Instruction(coreParameters))
 
-    val prediction              = new prediction(coreParameters)
+    val prediction      = new prediction(coreParameters)
 
     val GHR             = UInt(GHRWidth.W)
     val NEXT            = UInt(log2Ceil(RASEntries).W)
@@ -137,8 +137,8 @@ class commit(coreParameters:CoreParameters) extends Bundle{
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
-    val RD                   = Vec(fetchWidth, UInt(architecturalRegBits.W))
-    val PRD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
+    val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
+    val PRD                     = Vec(fetchWidth, UInt(physicalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
 }
 
@@ -188,6 +188,7 @@ class prediction(coreParameters:CoreParameters) extends Bundle{
     val target      =   UInt(32.W)
     val br_type     =   br_type_t()
     val T_NT        =   Bool()
+
 }
 
 class Instruction(coreParameters:CoreParameters) extends Bundle{

@@ -34,8 +34,8 @@ class memory_mon:
         addr = hex(int(monitored_request["bits"]["addr"]))
         data = hex(int(monitored_request["bits"]["data"]))
 
-        #if(monitored_request["valid"] and monitored_request["ready"]):
-            #if(op == "LW"):
-                #print(f"load request from mem[{addr}]")
-            #if(op == "SW"):
-                #print(f"store request to mem[{addr}]={data}")
+        if(monitored_request["valid"] and monitored_request["ready"]):
+            if(op == "LW"):
+                print(f"load request from mem[{addr}]")
+            if(op == "SW"):
+                print(f"store request to mem[{addr}]={data}")
