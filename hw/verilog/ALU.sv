@@ -57,14 +57,18 @@ module ALU(
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
-  reg [31:0] arithmetic_result;
-  reg [31:0] io_FU_output_bits_fetch_PC_REG;
-  reg [1:0]  io_FU_output_bits_fetch_packet_index_REG;
-  reg [6:0]  io_FU_output_bits_PRD_REG;
-  reg        io_FU_output_bits_RD_valid_REG;
-  reg [3:0]  io_FU_output_bits_MOB_index_REG;
-  reg [5:0]  io_FU_output_bits_ROB_index_REG;
-  reg        io_FU_output_valid_REG;
+  reg  [31:0] arithmetic_result;
+  wire [31:0] lui_result = {io_FU_input_bits_decoded_instruction_IMM[19:0], 12'h0};
+  wire        LUI =
+    io_FU_input_bits_decoded_instruction_instructionType == 5'hD
+    & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
+  reg  [31:0] io_FU_output_bits_fetch_PC_REG;
+  reg  [1:0]  io_FU_output_bits_fetch_packet_index_REG;
+  reg  [6:0]  io_FU_output_bits_PRD_REG;
+  reg         io_FU_output_bits_RD_valid_REG;
+  reg  [3:0]  io_FU_output_bits_MOB_index_REG;
+  reg  [5:0]  io_FU_output_bits_ROB_index_REG;
+  reg         io_FU_output_valid_REG;
   always @(posedge clock) begin
     if (reset)
       arithmetic_result <= 32'h0;
@@ -133,18 +137,14 @@ module ALU(
                                             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                               ? {31'h0,
                                                  io_FU_input_bits_RS1_data < operand2_unsigned}
-                                              : io_FU_input_bits_decoded_instruction_instructionType == 5'hD
-                                                & ~io_FU_input_bits_decoded_instruction_MULTIPLY
-                                                  ? {io_FU_input_bits_decoded_instruction_IMM[19:0],
-                                                     12'h0}
+                                              : LUI
+                                                  ? lui_result
                                                   : io_FU_input_bits_decoded_instruction_instructionType == 5'h5
                                                     & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                                       ? io_FU_input_bits_fetch_PC
                                                         + {28'h0,
                                                            io_FU_input_bits_decoded_instruction_packet_index,
-                                                           2'h0}
-                                                        + {io_FU_input_bits_decoded_instruction_IMM[19:0],
-                                                           12'h0}
+                                                           2'h0} + lui_result
                                                       : 32'h0;
     end
     io_FU_output_bits_fetch_PC_REG <= io_FU_input_bits_fetch_PC;

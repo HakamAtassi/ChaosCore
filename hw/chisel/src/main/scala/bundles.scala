@@ -384,6 +384,10 @@ class ROB_output(coreParameters:CoreParameters) extends Bundle{
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
 
+    val RD_data = if (coreParameters.DEBUG) Some(Vec(fetchWidth, UInt(32.W))) else None
+
+
+
     // N per row 
     val ROB_entries             = Vec(fetchWidth, new ROB_entry(coreParameters))    // "static" instruction data
     val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
@@ -419,6 +423,7 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
 }
 
 class ROB_WB(coreParameters:CoreParameters) extends Bundle{
+    val RD_data = if (coreParameters.DEBUG) Some(UInt(32.W)) else None
     val busy                = Bool()
     //val exception           = Bool()
 }

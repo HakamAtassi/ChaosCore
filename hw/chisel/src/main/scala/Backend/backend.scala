@@ -222,6 +222,9 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
 
+    //io.FU_outputs(3) <> MOB.io.MOB_output
+
+
 
     MOB.io.commit <> io.commit
     MOB.io.partial_commit <> io.partial_commit
@@ -252,6 +255,21 @@ class backend(coreParameters:CoreParameters) extends Module{
     
     io.backend_memory_request       <>  MOB.io.backend_memory_request
     io.backend_memory_response      <>  MOB.io.backend_memory_response
+
+
+
+
+
+    ////////////////////////
+    // VERIFICATION HOOKS //
+    // DO NOT TOUCH ///////
+    ////////////////////////
+
+    //val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+
+
+
+
 
 }
 

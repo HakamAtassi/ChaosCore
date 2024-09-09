@@ -680,25 +680,25 @@ module ROB(
   wire [3:0]       ROB_output_ROB_entries_0_MOB_index;
   wire             ROB_output_ROB_entries_0_RD_valid;
   wire [4:0]       ROB_output_ROB_entries_0_RD;
-  wire [4:0]       ROB_output_ROB_entries_0_PRDold;
+  wire [6:0]       ROB_output_ROB_entries_0_PRDold;
   wire [6:0]       ROB_output_ROB_entries_0_PRD;
   wire [1:0]       ROB_output_ROB_entries_1_memory_type;
   wire [3:0]       ROB_output_ROB_entries_1_MOB_index;
   wire             ROB_output_ROB_entries_1_RD_valid;
   wire [4:0]       ROB_output_ROB_entries_1_RD;
-  wire [4:0]       ROB_output_ROB_entries_1_PRDold;
+  wire [6:0]       ROB_output_ROB_entries_1_PRDold;
   wire [6:0]       ROB_output_ROB_entries_1_PRD;
   wire [1:0]       ROB_output_ROB_entries_2_memory_type;
   wire [3:0]       ROB_output_ROB_entries_2_MOB_index;
   wire             ROB_output_ROB_entries_2_RD_valid;
   wire [4:0]       ROB_output_ROB_entries_2_RD;
-  wire [4:0]       ROB_output_ROB_entries_2_PRDold;
+  wire [6:0]       ROB_output_ROB_entries_2_PRDold;
   wire [6:0]       ROB_output_ROB_entries_2_PRD;
   wire [1:0]       ROB_output_ROB_entries_3_memory_type;
   wire [3:0]       ROB_output_ROB_entries_3_MOB_index;
   wire             ROB_output_ROB_entries_3_RD_valid;
   wire [4:0]       ROB_output_ROB_entries_3_RD;
-  wire [4:0]       ROB_output_ROB_entries_3_PRDold;
+  wire [6:0]       ROB_output_ROB_entries_3_PRDold;
   wire [6:0]       ROB_output_ROB_entries_3_PRD;
   always @(posedge clock) begin
     automatic logic            _GEN_6 = io_FU_outputs_0_bits_ROB_index == front_index;
@@ -1384,10 +1384,10 @@ module ROB(
     io_partial_commit_REG_PRD_1 <= ROB_output_ROB_entries_1_PRD;
     io_partial_commit_REG_PRD_2 <= ROB_output_ROB_entries_2_PRD;
     io_partial_commit_REG_PRD_3 <= ROB_output_ROB_entries_3_PRD;
-    io_partial_commit_REG_PRDold_0 <= {2'h0, ROB_output_ROB_entries_0_PRDold};
-    io_partial_commit_REG_PRDold_1 <= {2'h0, ROB_output_ROB_entries_1_PRDold};
-    io_partial_commit_REG_PRDold_2 <= {2'h0, ROB_output_ROB_entries_2_PRDold};
-    io_partial_commit_REG_PRDold_3 <= {2'h0, ROB_output_ROB_entries_3_PRDold};
+    io_partial_commit_REG_PRDold_0 <= ROB_output_ROB_entries_0_PRDold;
+    io_partial_commit_REG_PRDold_1 <= ROB_output_ROB_entries_1_PRDold;
+    io_partial_commit_REG_PRDold_2 <= ROB_output_ROB_entries_2_PRDold;
+    io_partial_commit_REG_PRDold_3 <= ROB_output_ROB_entries_3_PRDold;
   end // always @(posedge)
   ROB_shared_mem shared_mem (
     .clock                                 (clock),
@@ -1518,7 +1518,7 @@ module ROB(
     .io_writeDataA_MOB_index   (io_ROB_packet_bits_decoded_instruction_0_MOB_index),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_0_RD_valid),
     .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_0_RD),
-    .io_writeDataA_PRDold      (io_ROB_packet_bits_decoded_instruction_0_PRDold[4:0]),
+    .io_writeDataA_PRDold      (io_ROB_packet_bits_decoded_instruction_0_PRDold),
     .io_writeDataA_PRD         (io_ROB_packet_bits_decoded_instruction_0_PRD),
     .io_writeEnableA           (allocate),
     .io_addrB                  (_commit_resolved_3_T),
@@ -1543,7 +1543,7 @@ module ROB(
     .io_writeDataA_MOB_index   (io_ROB_packet_bits_decoded_instruction_1_MOB_index),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_1_RD_valid),
     .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_1_RD),
-    .io_writeDataA_PRDold      (io_ROB_packet_bits_decoded_instruction_1_PRDold[4:0]),
+    .io_writeDataA_PRDold      (io_ROB_packet_bits_decoded_instruction_1_PRDold),
     .io_writeDataA_PRD         (io_ROB_packet_bits_decoded_instruction_1_PRD),
     .io_writeEnableA           (allocate),
     .io_addrB                  (_commit_resolved_3_T),
@@ -1568,7 +1568,7 @@ module ROB(
     .io_writeDataA_MOB_index   (io_ROB_packet_bits_decoded_instruction_2_MOB_index),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_2_RD_valid),
     .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_2_RD),
-    .io_writeDataA_PRDold      (io_ROB_packet_bits_decoded_instruction_2_PRDold[4:0]),
+    .io_writeDataA_PRDold      (io_ROB_packet_bits_decoded_instruction_2_PRDold),
     .io_writeDataA_PRD         (io_ROB_packet_bits_decoded_instruction_2_PRD),
     .io_writeEnableA           (allocate),
     .io_addrB                  (_commit_resolved_3_T),
@@ -1593,7 +1593,7 @@ module ROB(
     .io_writeDataA_MOB_index   (io_ROB_packet_bits_decoded_instruction_3_MOB_index),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_3_RD_valid),
     .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_3_RD),
-    .io_writeDataA_PRDold      (io_ROB_packet_bits_decoded_instruction_3_PRDold[4:0]),
+    .io_writeDataA_PRDold      (io_ROB_packet_bits_decoded_instruction_3_PRDold),
     .io_writeDataA_PRD         (io_ROB_packet_bits_decoded_instruction_3_PRD),
     .io_writeEnableA           (allocate),
     .io_addrB                  (_commit_resolved_3_T),

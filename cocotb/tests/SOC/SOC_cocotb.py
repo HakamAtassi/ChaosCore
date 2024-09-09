@@ -11,6 +11,9 @@ from cocotb_utils import *
 from SOC_TB import *
 from L1_caches import instruction_cache_dut
 
+import logging
+
+
 @cocotb.test()
 async def test_reset(dut):
     # Set seed
@@ -30,7 +33,7 @@ async def test_reset(dut):
 
 
 
-    for _ in range(2000):
+    for _ in range(5000):
         await SOC.clock()
 
     assert False

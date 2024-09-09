@@ -1,0 +1,1 @@
+from .colorlogs import logger
