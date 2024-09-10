@@ -151,7 +151,10 @@ module ChaosCore_tile(
   wire        _instruction_cache_io_CPU_response_bits_prediction_hit;
   wire [31:0] _instruction_cache_io_CPU_response_bits_prediction_target;
   wire [2:0]  _instruction_cache_io_CPU_response_bits_prediction_br_type;
-  wire        _instruction_cache_io_CPU_response_bits_prediction_T_NT;
+  wire        _instruction_cache_io_CPU_response_bits_prediction_br_mask_0;
+  wire        _instruction_cache_io_CPU_response_bits_prediction_br_mask_1;
+  wire        _instruction_cache_io_CPU_response_bits_prediction_br_mask_2;
+  wire        _instruction_cache_io_CPU_response_bits_prediction_br_mask_3;
   wire [15:0] _instruction_cache_io_CPU_response_bits_GHR;
   wire [6:0]  _instruction_cache_io_CPU_response_bits_NEXT;
   wire [6:0]  _instruction_cache_io_CPU_response_bits_TOS;
@@ -179,6 +182,10 @@ module ChaosCore_tile(
     .io_commit_bits_T_NT                                          (/* unused */),
     .io_commit_bits_ROB_index                                     (/* unused */),
     .io_commit_bits_br_type                                       (/* unused */),
+    .io_commit_bits_br_mask_0                                     (/* unused */),
+    .io_commit_bits_br_mask_1                                     (/* unused */),
+    .io_commit_bits_br_mask_2                                     (/* unused */),
+    .io_commit_bits_br_mask_3                                     (/* unused */),
     .io_commit_bits_fetch_packet_index                            (/* unused */),
     .io_commit_bits_is_misprediction                              (/* unused */),
     .io_commit_bits_expected_PC                                   (/* unused */),
@@ -255,8 +262,14 @@ module ChaosCore_tile(
       (_instruction_cache_io_CPU_response_bits_prediction_target),
     .io_frontend_memory_response_bits_prediction_br_type
       (_instruction_cache_io_CPU_response_bits_prediction_br_type),
-    .io_frontend_memory_response_bits_prediction_T_NT
-      (_instruction_cache_io_CPU_response_bits_prediction_T_NT),
+    .io_frontend_memory_response_bits_prediction_br_mask_0
+      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_0),
+    .io_frontend_memory_response_bits_prediction_br_mask_1
+      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_1),
+    .io_frontend_memory_response_bits_prediction_br_mask_2
+      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_2),
+    .io_frontend_memory_response_bits_prediction_br_mask_3
+      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_3),
     .io_frontend_memory_response_bits_GHR
       (_instruction_cache_io_CPU_response_bits_GHR),
     .io_frontend_memory_response_bits_NEXT
@@ -445,8 +458,14 @@ module ChaosCore_tile(
       (_instruction_cache_io_CPU_response_bits_prediction_target),
     .io_CPU_response_bits_prediction_br_type
       (_instruction_cache_io_CPU_response_bits_prediction_br_type),
-    .io_CPU_response_bits_prediction_T_NT
-      (_instruction_cache_io_CPU_response_bits_prediction_T_NT),
+    .io_CPU_response_bits_prediction_br_mask_0
+      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_0),
+    .io_CPU_response_bits_prediction_br_mask_1
+      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_1),
+    .io_CPU_response_bits_prediction_br_mask_2
+      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_2),
+    .io_CPU_response_bits_prediction_br_mask_3
+      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_3),
     .io_CPU_response_bits_GHR
       (_instruction_cache_io_CPU_response_bits_GHR),
     .io_CPU_response_bits_NEXT

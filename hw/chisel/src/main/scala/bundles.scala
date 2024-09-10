@@ -107,14 +107,16 @@ object br_type_t extends ChiselEnum{
 class BTB_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
-    val BTB_tag_size:Int            = 32 - log2Ceil(BTBEntries) - 2
+    val tag_size:Int            = 32 - log2Ceil(BTBEntries) - 2
 
-    val BTB_valid                   = Bool()
-    val BTB_tag                     = UInt(BTB_tag_size.W)
-    val BTB_target                  = UInt(32.W)   // FIXME: this can be slightly smaller
+    val valid                   = Bool()
+    val tag                     = UInt(tag_size.W)
+    val target                  = UInt(32.W)   // FIXME: this can be slightly smaller
 
-    val BTB_br_type                 = br_type_t()
-    val BTB_fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
+    val br_mask                 = Vec(fetchWidth, Bool())   // which entry in the fetch packet does this BTB prediction entry correspond to
+
+    val br_type                 = br_type_t()
+    val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 }
 
 class commit(coreParameters:CoreParameters) extends Bundle{
@@ -125,6 +127,7 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
 
     val br_type                 = br_type_t()
+    val br_mask                 = Vec(fetchWidth, Bool())
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val is_misprediction        = Bool()
@@ -187,8 +190,15 @@ class prediction(coreParameters:CoreParameters) extends Bundle{
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
     val br_type     =   br_type_t()
-    val T_NT        =   Bool()
+    val br_mask     =   Vec(fetchWidth, Bool()) // OH of the taken branch in the fetch packet
+}
 
+class resolved_branch(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+    val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
+    val target      =   UInt(32.W)
+    val br_type     =   br_type_t()
+    val T_NT        =   Bool()
 }
 
 class Instruction(coreParameters:CoreParameters) extends Bundle{
@@ -213,6 +223,7 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val RD                  =  UInt(architecturalRegBits.W) // Actual dest
     val PRD                 =  UInt(physicalRegBits.W) // Actual dest
     val PRDold              =  UInt(physicalRegBits.W) // Actual dest
+
 
 
     val RD_valid            =  Bool()

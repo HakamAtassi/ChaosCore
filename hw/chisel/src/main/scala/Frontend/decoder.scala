@@ -135,6 +135,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
 
 
+
+
     when(instructionType === LOAD){
         io.decoded_instruction.bits.memory_type              := memory_type_t.LOAD
     }.elsewhen(instructionType === STORE){

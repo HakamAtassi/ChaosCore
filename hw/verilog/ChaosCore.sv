@@ -36,6 +36,10 @@ module ChaosCore(
   output        io_commit_bits_T_NT,
   output [5:0]  io_commit_bits_ROB_index,
   output [2:0]  io_commit_bits_br_type,
+  output        io_commit_bits_br_mask_0,
+                io_commit_bits_br_mask_1,
+                io_commit_bits_br_mask_2,
+                io_commit_bits_br_mask_3,
   output [1:0]  io_commit_bits_fetch_packet_index,
   output        io_commit_bits_is_misprediction,
   output [31:0] io_commit_bits_expected_PC,
@@ -85,7 +89,10 @@ module ChaosCore(
   input         io_frontend_memory_response_bits_prediction_hit,
   input  [31:0] io_frontend_memory_response_bits_prediction_target,
   input  [2:0]  io_frontend_memory_response_bits_prediction_br_type,
-  input         io_frontend_memory_response_bits_prediction_T_NT,
+  input         io_frontend_memory_response_bits_prediction_br_mask_0,
+                io_frontend_memory_response_bits_prediction_br_mask_1,
+                io_frontend_memory_response_bits_prediction_br_mask_2,
+                io_frontend_memory_response_bits_prediction_br_mask_3,
   input  [15:0] io_frontend_memory_response_bits_GHR,
   input  [6:0]  io_frontend_memory_response_bits_NEXT,
                 io_frontend_memory_response_bits_TOS,
@@ -115,6 +122,10 @@ module ChaosCore(
   wire        _ROB_io_commit_bits_T_NT;
   wire [5:0]  _ROB_io_commit_bits_ROB_index;
   wire [2:0]  _ROB_io_commit_bits_br_type;
+  wire        _ROB_io_commit_bits_br_mask_0;
+  wire        _ROB_io_commit_bits_br_mask_1;
+  wire        _ROB_io_commit_bits_br_mask_2;
+  wire        _ROB_io_commit_bits_br_mask_3;
   wire [1:0]  _ROB_io_commit_bits_fetch_packet_index;
   wire        _ROB_io_commit_bits_is_misprediction;
   wire [31:0] _ROB_io_commit_bits_expected_PC;
@@ -438,7 +449,10 @@ module ChaosCore(
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_prediction_hit;
   wire [31:0] _frontend_io_renamed_decoded_fetch_packet_bits_prediction_target;
   wire [2:0]  _frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_type;
-  wire        _frontend_io_renamed_decoded_fetch_packet_bits_prediction_T_NT;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3;
   wire [7:0]  _frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer;
   wire        flush = _ROB_io_commit_valid & _ROB_io_commit_bits_is_misprediction;
   wire        backend_can_allocate =
@@ -506,8 +520,14 @@ module ChaosCore(
       (io_frontend_memory_response_bits_prediction_target),
     .io_memory_response_bits_prediction_br_type
       (io_frontend_memory_response_bits_prediction_br_type),
-    .io_memory_response_bits_prediction_T_NT
-      (io_frontend_memory_response_bits_prediction_T_NT),
+    .io_memory_response_bits_prediction_br_mask_0
+      (io_frontend_memory_response_bits_prediction_br_mask_0),
+    .io_memory_response_bits_prediction_br_mask_1
+      (io_frontend_memory_response_bits_prediction_br_mask_1),
+    .io_memory_response_bits_prediction_br_mask_2
+      (io_frontend_memory_response_bits_prediction_br_mask_2),
+    .io_memory_response_bits_prediction_br_mask_3
+      (io_frontend_memory_response_bits_prediction_br_mask_3),
     .io_memory_response_bits_GHR
       (io_frontend_memory_response_bits_GHR),
     .io_memory_response_bits_NEXT
@@ -582,6 +602,14 @@ module ChaosCore(
       (_ROB_io_commit_bits_ROB_index),
     .io_commit_bits_br_type
       (_ROB_io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0
+      (_ROB_io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1
+      (_ROB_io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2
+      (_ROB_io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3
+      (_ROB_io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index
       (_ROB_io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
@@ -854,8 +882,14 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_target),
     .io_renamed_decoded_fetch_packet_bits_prediction_br_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_renamed_decoded_fetch_packet_bits_prediction_T_NT
-      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_T_NT),
+    .io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0
+      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0),
+    .io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1
+      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1),
+    .io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2
+      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2),
+    .io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3
+      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3),
     .io_renamed_decoded_fetch_packet_bits_free_list_front_pointer
       (_frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_FU_outputs_0_valid
@@ -1046,6 +1080,10 @@ module ChaosCore(
     .io_commit_bits_T_NT                                (_ROB_io_commit_bits_T_NT),
     .io_commit_bits_ROB_index                           (_ROB_io_commit_bits_ROB_index),
     .io_commit_bits_br_type                             (_ROB_io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0                           (_ROB_io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1                           (_ROB_io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2                           (_ROB_io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3                           (_ROB_io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index
       (_ROB_io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
@@ -1735,8 +1773,14 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_target),
     .io_ROB_packet_bits_prediction_br_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_ROB_packet_bits_prediction_T_NT
-      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_T_NT),
+    .io_ROB_packet_bits_prediction_br_mask_0
+      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0),
+    .io_ROB_packet_bits_prediction_br_mask_1
+      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1),
+    .io_ROB_packet_bits_prediction_br_mask_2
+      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2),
+    .io_ROB_packet_bits_prediction_br_mask_3
+      (_frontend_io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3),
     .io_ROB_packet_bits_free_list_front_pointer
       (_frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_FU_outputs_0_valid
@@ -1876,6 +1920,14 @@ module ChaosCore(
       (_ROB_io_commit_bits_ROB_index),
     .io_commit_bits_br_type
       (_ROB_io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0
+      (_ROB_io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1
+      (_ROB_io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2
+      (_ROB_io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3
+      (_ROB_io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index
       (_ROB_io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
@@ -1983,6 +2035,10 @@ module ChaosCore(
   assign io_commit_bits_T_NT = _ROB_io_commit_bits_T_NT;
   assign io_commit_bits_ROB_index = _ROB_io_commit_bits_ROB_index;
   assign io_commit_bits_br_type = _ROB_io_commit_bits_br_type;
+  assign io_commit_bits_br_mask_0 = _ROB_io_commit_bits_br_mask_0;
+  assign io_commit_bits_br_mask_1 = _ROB_io_commit_bits_br_mask_1;
+  assign io_commit_bits_br_mask_2 = _ROB_io_commit_bits_br_mask_2;
+  assign io_commit_bits_br_mask_3 = _ROB_io_commit_bits_br_mask_3;
   assign io_commit_bits_fetch_packet_index = _ROB_io_commit_bits_fetch_packet_index;
   assign io_commit_bits_is_misprediction = _ROB_io_commit_bits_is_misprediction;
   assign io_commit_bits_expected_PC = _ROB_io_commit_bits_expected_PC;

@@ -37,6 +37,10 @@ module rename(
   input         io_commit_bits_T_NT,
   input  [5:0]  io_commit_bits_ROB_index,
   input  [2:0]  io_commit_bits_br_type,
+  input         io_commit_bits_br_mask_0,
+                io_commit_bits_br_mask_1,
+                io_commit_bits_br_mask_2,
+                io_commit_bits_br_mask_3,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
   input  [31:0] io_commit_bits_expected_PC,
@@ -202,7 +206,10 @@ module rename(
   input         io_decoded_fetch_packet_bits_prediction_hit,
   input  [31:0] io_decoded_fetch_packet_bits_prediction_target,
   input  [2:0]  io_decoded_fetch_packet_bits_prediction_br_type,
-  input         io_decoded_fetch_packet_bits_prediction_T_NT,
+  input         io_decoded_fetch_packet_bits_prediction_br_mask_0,
+                io_decoded_fetch_packet_bits_prediction_br_mask_1,
+                io_decoded_fetch_packet_bits_prediction_br_mask_2,
+                io_decoded_fetch_packet_bits_prediction_br_mask_3,
   input  [7:0]  io_decoded_fetch_packet_bits_free_list_front_pointer,
   input         io_FU_outputs_0_valid,
   input  [6:0]  io_FU_outputs_0_bits_PRD,
@@ -385,7 +392,10 @@ module rename(
   output        io_renamed_decoded_fetch_packet_bits_prediction_hit,
   output [31:0] io_renamed_decoded_fetch_packet_bits_prediction_target,
   output [2:0]  io_renamed_decoded_fetch_packet_bits_prediction_br_type,
-  output        io_renamed_decoded_fetch_packet_bits_prediction_T_NT,
+  output        io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0,
+                io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1,
+                io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2,
+                io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3,
   output [7:0]  io_renamed_decoded_fetch_packet_bits_free_list_front_pointer
 );
 
@@ -676,8 +686,14 @@ module rename(
     io_decoded_fetch_packet_bits_prediction_target;
   wire [2:0]       renamed_decoded_fetch_packet_bits_prediction_br_type =
     io_decoded_fetch_packet_bits_prediction_br_type;
-  wire             renamed_decoded_fetch_packet_bits_prediction_T_NT =
-    io_decoded_fetch_packet_bits_prediction_T_NT;
+  wire             renamed_decoded_fetch_packet_bits_prediction_br_mask_0 =
+    io_decoded_fetch_packet_bits_prediction_br_mask_0;
+  wire             renamed_decoded_fetch_packet_bits_prediction_br_mask_1 =
+    io_decoded_fetch_packet_bits_prediction_br_mask_1;
+  wire             renamed_decoded_fetch_packet_bits_prediction_br_mask_2 =
+    io_decoded_fetch_packet_bits_prediction_br_mask_2;
+  wire             renamed_decoded_fetch_packet_bits_prediction_br_mask_3 =
+    io_decoded_fetch_packet_bits_prediction_br_mask_3;
   wire             comb_ready_bits_0 = 1'h1;
   wire             _fire_T =
     io_decoded_fetch_packet_ready_0 & io_decoded_fetch_packet_valid;
@@ -4354,6 +4370,10 @@ module rename(
     .io_commit_bits_T_NT                    (io_commit_bits_T_NT),
     .io_commit_bits_ROB_index               (io_commit_bits_ROB_index),
     .io_commit_bits_br_type                 (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0               (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1               (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2               (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3               (io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index      (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction        (io_commit_bits_is_misprediction),
     .io_commit_bits_expected_PC             (io_commit_bits_expected_PC),
@@ -4724,8 +4744,14 @@ module rename(
       (renamed_decoded_fetch_packet_bits_prediction_target),
     .io_enq_bits_prediction_br_type
       (renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_enq_bits_prediction_T_NT
-      (renamed_decoded_fetch_packet_bits_prediction_T_NT),
+    .io_enq_bits_prediction_br_mask_0
+      (renamed_decoded_fetch_packet_bits_prediction_br_mask_0),
+    .io_enq_bits_prediction_br_mask_1
+      (renamed_decoded_fetch_packet_bits_prediction_br_mask_1),
+    .io_enq_bits_prediction_br_mask_2
+      (renamed_decoded_fetch_packet_bits_prediction_br_mask_2),
+    .io_enq_bits_prediction_br_mask_3
+      (renamed_decoded_fetch_packet_bits_prediction_br_mask_3),
     .io_enq_bits_free_list_front_pointer
       (renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_deq_ready
@@ -4954,8 +4980,14 @@ module rename(
       (io_renamed_decoded_fetch_packet_bits_prediction_target),
     .io_deq_bits_prediction_br_type
       (io_renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_deq_bits_prediction_T_NT
-      (io_renamed_decoded_fetch_packet_bits_prediction_T_NT),
+    .io_deq_bits_prediction_br_mask_0
+      (io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0),
+    .io_deq_bits_prediction_br_mask_1
+      (io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1),
+    .io_deq_bits_prediction_br_mask_2
+      (io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2),
+    .io_deq_bits_prediction_br_mask_3
+      (io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3),
     .io_deq_bits_free_list_front_pointer
       (io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)

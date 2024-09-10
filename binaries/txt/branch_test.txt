@@ -1,0 +1,11 @@
+
+elf/branch_test.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+80000000 <_start>:
+80000000:	00000013          	nop
+80000004:	00000013          	nop
+80000008:	ff9ff06f          	j	80000000 <_start>
+8000000c:	00000013          	nop

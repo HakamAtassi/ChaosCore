@@ -98,7 +98,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
         val RS1                         = instruction(19, 15)
         val RS2                         = instruction(24, 20)
         val PRD                         = instruction(11, 7)
-        val is_BTB_taken                = io.prediction.valid && io.prediction.bits.hit && io.prediction.bits.T_NT && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
+        val is_BTB_taken                = io.prediction.valid && io.prediction.bits.hit && io.prediction.bits.br_mask(i) && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
 
         val (instruction_type, valid)   = InstructionType.safe(opcode(6, 2))
 
@@ -240,7 +240,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     final_fetch_packet_out.bits.prediction.target    := target_address
     final_fetch_packet_out.bits.prediction.hit       := DontCare
     final_fetch_packet_out.bits.prediction.br_type   := dominantbr_type_t
-    final_fetch_packet_out.bits.prediction.T_NT      := T_NT.reduce(_ || _)
+    final_fetch_packet_out.bits.prediction.br_mask      := T_NT
 
 
     //////////////////////
