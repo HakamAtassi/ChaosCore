@@ -52,7 +52,10 @@ module Queue2_fetch_packet(
   input  [5:0]  io_enq_bits_instructions_3_ROB_index,
   input  [31:0] io_enq_bits_prediction_target,
   input  [2:0]  io_enq_bits_prediction_br_type,
-  input         io_enq_bits_prediction_T_NT,
+  input         io_enq_bits_prediction_br_mask_0,
+                io_enq_bits_prediction_br_mask_1,
+                io_enq_bits_prediction_br_mask_2,
+                io_enq_bits_prediction_br_mask_3,
   input  [15:0] io_enq_bits_GHR,
   input  [6:0]  io_enq_bits_NEXT,
                 io_enq_bits_TOS,
@@ -78,14 +81,17 @@ module Queue2_fetch_packet(
   output        io_deq_bits_prediction_hit,
   output [31:0] io_deq_bits_prediction_target,
   output [2:0]  io_deq_bits_prediction_br_type,
-  output        io_deq_bits_prediction_T_NT,
+  output        io_deq_bits_prediction_br_mask_0,
+                io_deq_bits_prediction_br_mask_1,
+                io_deq_bits_prediction_br_mask_2,
+                io_deq_bits_prediction_br_mask_3,
   output [15:0] io_deq_bits_GHR,
   output [6:0]  io_deq_bits_NEXT,
                 io_deq_bits_TOS,
   input         io_flush
 );
 
-  wire [270:0] _ram_ext_R0_data;
+  wire [273:0] _ram_ext_R0_data;
   reg          wrap;
   reg          wrap_1;
   reg          maybe_full;
@@ -106,7 +112,7 @@ module Queue2_fetch_packet(
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_2x271 ram_ext (
+  ram_2x274 ram_ext (
     .R0_addr (wrap_1),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -118,7 +124,10 @@ module Queue2_fetch_packet(
       ({io_enq_bits_TOS,
         io_enq_bits_NEXT,
         io_enq_bits_GHR,
-        io_enq_bits_prediction_T_NT,
+        io_enq_bits_prediction_br_mask_3,
+        io_enq_bits_prediction_br_mask_2,
+        io_enq_bits_prediction_br_mask_1,
+        io_enq_bits_prediction_br_mask_0,
         io_enq_bits_prediction_br_type,
         io_enq_bits_prediction_target,
         1'h0,
@@ -162,9 +171,12 @@ module Queue2_fetch_packet(
   assign io_deq_bits_prediction_hit = _ram_ext_R0_data[204];
   assign io_deq_bits_prediction_target = _ram_ext_R0_data[236:205];
   assign io_deq_bits_prediction_br_type = _ram_ext_R0_data[239:237];
-  assign io_deq_bits_prediction_T_NT = _ram_ext_R0_data[240];
-  assign io_deq_bits_GHR = _ram_ext_R0_data[256:241];
-  assign io_deq_bits_NEXT = _ram_ext_R0_data[263:257];
-  assign io_deq_bits_TOS = _ram_ext_R0_data[270:264];
+  assign io_deq_bits_prediction_br_mask_0 = _ram_ext_R0_data[240];
+  assign io_deq_bits_prediction_br_mask_1 = _ram_ext_R0_data[241];
+  assign io_deq_bits_prediction_br_mask_2 = _ram_ext_R0_data[242];
+  assign io_deq_bits_prediction_br_mask_3 = _ram_ext_R0_data[243];
+  assign io_deq_bits_GHR = _ram_ext_R0_data[259:244];
+  assign io_deq_bits_NEXT = _ram_ext_R0_data[266:260];
+  assign io_deq_bits_TOS = _ram_ext_R0_data[273:267];
 endmodule
 

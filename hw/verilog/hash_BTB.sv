@@ -33,18 +33,26 @@ module hash_BTB(
                 reset,
   input  [31:0] io_predict_PC,
   output        io_BTB_hit,
-  output [31:0] io_BTB_output_BTB_target,
-  output [2:0]  io_BTB_output_BTB_br_type,
+  output [31:0] io_BTB_output_target,
+  output        io_BTB_output_br_mask_0,
+                io_BTB_output_br_mask_1,
+                io_BTB_output_br_mask_2,
+                io_BTB_output_br_mask_3,
+  output [2:0]  io_BTB_output_br_type,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input  [2:0]  io_commit_bits_br_type,
+  input         io_commit_bits_br_mask_0,
+                io_commit_bits_br_mask_1,
+                io_commit_bits_br_mask_2,
+                io_commit_bits_br_mask_3,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input  [31:0] io_commit_bits_expected_PC
 );
 
-  wire        _BTB_memory_io_data_out_BTB_valid;
-  wire [17:0] _BTB_memory_io_data_out_BTB_tag;
-  wire [1:0]  _BTB_memory_io_data_out_BTB_fetch_packet_index;
+  wire        _BTB_memory_io_data_out_valid;
+  wire [17:0] _BTB_memory_io_data_out_tag;
+  wire [1:0]  _BTB_memory_io_data_out_fetch_packet_index;
   reg  [2:0]  access_fetch_packet_index;
   reg  [15:0] io_BTB_hit_REG;
   always @(posedge clock) begin
@@ -52,24 +60,31 @@ module hash_BTB(
     io_BTB_hit_REG <= io_predict_PC[31:16];
   end // always @(posedge)
   hash_BTB_mem BTB_memory (
-    .clock                              (clock),
-    .reset                              (reset),
-    .io_rd_addr                         (io_predict_PC[15:4]),
-    .io_data_out_BTB_valid              (_BTB_memory_io_data_out_BTB_valid),
-    .io_data_out_BTB_tag                (_BTB_memory_io_data_out_BTB_tag),
-    .io_data_out_BTB_target             (io_BTB_output_BTB_target),
-    .io_data_out_BTB_br_type            (io_BTB_output_BTB_br_type),
-    .io_data_out_BTB_fetch_packet_index (_BTB_memory_io_data_out_BTB_fetch_packet_index),
-    .io_wr_addr                         (io_commit_bits_fetch_PC[15:4]),
-    .io_wr_en                           (io_commit_valid),
-    .io_data_in_BTB_tag                 ({2'h0, io_commit_bits_fetch_PC[31:16]}),
-    .io_data_in_BTB_target              (io_commit_bits_expected_PC),
-    .io_data_in_BTB_br_type             (io_commit_bits_br_type),
-    .io_data_in_BTB_fetch_packet_index  (io_commit_bits_fetch_packet_index)
+    .clock                          (clock),
+    .reset                          (reset),
+    .io_rd_addr                     (io_predict_PC[15:4]),
+    .io_data_out_valid              (_BTB_memory_io_data_out_valid),
+    .io_data_out_tag                (_BTB_memory_io_data_out_tag),
+    .io_data_out_target             (io_BTB_output_target),
+    .io_data_out_br_mask_0          (io_BTB_output_br_mask_0),
+    .io_data_out_br_mask_1          (io_BTB_output_br_mask_1),
+    .io_data_out_br_mask_2          (io_BTB_output_br_mask_2),
+    .io_data_out_br_mask_3          (io_BTB_output_br_mask_3),
+    .io_data_out_br_type            (io_BTB_output_br_type),
+    .io_data_out_fetch_packet_index (_BTB_memory_io_data_out_fetch_packet_index),
+    .io_wr_addr                     (io_commit_bits_fetch_PC[15:4]),
+    .io_wr_en                       (io_commit_valid),
+    .io_data_in_tag                 ({2'h0, io_commit_bits_fetch_PC[31:16]}),
+    .io_data_in_target              (io_commit_bits_expected_PC),
+    .io_data_in_br_mask_0           (io_commit_bits_br_mask_0),
+    .io_data_in_br_mask_1           (io_commit_bits_br_mask_1),
+    .io_data_in_br_mask_2           (io_commit_bits_br_mask_2),
+    .io_data_in_br_mask_3           (io_commit_bits_br_mask_3),
+    .io_data_in_br_type             (io_commit_bits_br_type),
+    .io_data_in_fetch_packet_index  (io_commit_bits_fetch_packet_index)
   );
   assign io_BTB_hit =
-    {2'h0, io_BTB_hit_REG} == _BTB_memory_io_data_out_BTB_tag
-    & _BTB_memory_io_data_out_BTB_valid
-    & {1'h0, _BTB_memory_io_data_out_BTB_fetch_packet_index} >= access_fetch_packet_index;
+    {2'h0, io_BTB_hit_REG} == _BTB_memory_io_data_out_tag & _BTB_memory_io_data_out_valid
+    & {1'h0, _BTB_memory_io_data_out_fetch_packet_index} >= access_fetch_packet_index;
 endmodule
 

@@ -37,6 +37,10 @@ module instruction_fetch(
   input         io_commit_bits_T_NT,
   input  [5:0]  io_commit_bits_ROB_index,
   input  [2:0]  io_commit_bits_br_type,
+  input         io_commit_bits_br_mask_0,
+                io_commit_bits_br_mask_1,
+                io_commit_bits_br_mask_2,
+                io_commit_bits_br_mask_3,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
   input  [31:0] io_commit_bits_expected_PC,
@@ -78,7 +82,10 @@ module instruction_fetch(
   input         io_memory_response_bits_prediction_hit,
   input  [31:0] io_memory_response_bits_prediction_target,
   input  [2:0]  io_memory_response_bits_prediction_br_type,
-  input         io_memory_response_bits_prediction_T_NT,
+  input         io_memory_response_bits_prediction_br_mask_0,
+                io_memory_response_bits_prediction_br_mask_1,
+                io_memory_response_bits_prediction_br_mask_2,
+                io_memory_response_bits_prediction_br_mask_3,
   input  [15:0] io_memory_response_bits_GHR,
   input  [6:0]  io_memory_response_bits_NEXT,
                 io_memory_response_bits_TOS,
@@ -105,7 +112,10 @@ module instruction_fetch(
   output        io_fetch_packet_bits_prediction_hit,
   output [31:0] io_fetch_packet_bits_prediction_target,
   output [2:0]  io_fetch_packet_bits_prediction_br_type,
-  output        io_fetch_packet_bits_prediction_T_NT,
+  output        io_fetch_packet_bits_prediction_br_mask_0,
+                io_fetch_packet_bits_prediction_br_mask_1,
+                io_fetch_packet_bits_prediction_br_mask_2,
+                io_fetch_packet_bits_prediction_br_mask_3,
   output [15:0] io_fetch_packet_bits_GHR,
   output [6:0]  io_fetch_packet_bits_NEXT,
                 io_fetch_packet_bits_TOS,
@@ -118,7 +128,10 @@ module instruction_fetch(
   wire        _BTB_Q_io_deq_bits_hit;
   wire [31:0] _BTB_Q_io_deq_bits_target;
   wire [2:0]  _BTB_Q_io_deq_bits_br_type;
-  wire        _BTB_Q_io_deq_bits_T_NT;
+  wire        _BTB_Q_io_deq_bits_br_mask_0;
+  wire        _BTB_Q_io_deq_bits_br_mask_1;
+  wire        _BTB_Q_io_deq_bits_br_mask_2;
+  wire        _BTB_Q_io_deq_bits_br_mask_3;
   wire        _PC_Q_io_enq_ready;
   wire        _instruction_Q_io_deq_valid;
   wire [31:0] _instruction_Q_io_deq_bits_fetch_PC;
@@ -141,7 +154,10 @@ module instruction_fetch(
   wire        _instruction_Q_io_deq_bits_prediction_hit;
   wire [31:0] _instruction_Q_io_deq_bits_prediction_target;
   wire [2:0]  _instruction_Q_io_deq_bits_prediction_br_type;
-  wire        _instruction_Q_io_deq_bits_prediction_T_NT;
+  wire        _instruction_Q_io_deq_bits_prediction_br_mask_0;
+  wire        _instruction_Q_io_deq_bits_prediction_br_mask_1;
+  wire        _instruction_Q_io_deq_bits_prediction_br_mask_2;
+  wire        _instruction_Q_io_deq_bits_prediction_br_mask_3;
   wire [15:0] _instruction_Q_io_deq_bits_GHR;
   wire [6:0]  _instruction_Q_io_deq_bits_NEXT;
   wire [6:0]  _instruction_Q_io_deq_bits_TOS;
@@ -165,38 +181,63 @@ module instruction_fetch(
   wire        _bp_io_prediction_bits_hit;
   wire [31:0] _bp_io_prediction_bits_target;
   wire [2:0]  _bp_io_prediction_bits_br_type;
-  wire        _bp_io_prediction_bits_T_NT;
+  wire        _bp_io_prediction_bits_br_mask_0;
+  wire        _bp_io_prediction_bits_br_mask_1;
+  wire        _bp_io_prediction_bits_br_mask_2;
+  wire        _bp_io_prediction_bits_br_mask_3;
   wire        _bp_io_flush_T = io_flush | _predecoder_io_revert_valid;
   BP bp (
-    .clock                             (clock),
-    .reset                             (reset),
-    .io_flush                          (_bp_io_flush_T),
-    .io_predict_ready                  (_bp_io_predict_ready),
-    .io_predict_valid                  (_PC_Q_io_enq_ready & _PC_gen_io_PC_next_valid),
-    .io_predict_bits_addr              (_PC_gen_io_PC_next_bits_addr),
-    .io_commit_valid                   (io_commit_valid),
-    .io_commit_bits_fetch_PC           (io_commit_bits_fetch_PC),
-    .io_commit_bits_T_NT               (io_commit_bits_T_NT),
-    .io_commit_bits_br_type            (io_commit_bits_br_type),
-    .io_commit_bits_fetch_packet_index (io_commit_bits_fetch_packet_index),
-    .io_commit_bits_is_misprediction   (io_commit_bits_is_misprediction),
-    .io_commit_bits_expected_PC        (io_commit_bits_expected_PC),
-    .io_commit_bits_GHR                (io_commit_bits_GHR),
-    .io_commit_bits_TOS                (io_commit_bits_TOS),
-    .io_commit_bits_NEXT               (io_commit_bits_NEXT),
-    .io_RAS_update_call_addr           (_predecoder_io_RAS_update_call_addr),
-    .io_RAS_update_call                (_predecoder_io_RAS_update_call),
-    .io_RAS_update_ret                 (_predecoder_io_RAS_update_ret),
-    .io_RAS_read_NEXT                  (_bp_io_RAS_read_NEXT),
-    .io_RAS_read_TOS                   (_bp_io_RAS_read_TOS),
-    .io_RAS_read_ret_addr              (_bp_io_RAS_read_ret_addr),
-    .io_GHR                            (_predecoder_io_GHR),
-    .io_prediction_ready               (_BTB_Q_io_enq_ready),
-    .io_prediction_valid               (_bp_io_prediction_valid),
-    .io_prediction_bits_hit            (_bp_io_prediction_bits_hit),
-    .io_prediction_bits_target         (_bp_io_prediction_bits_target),
-    .io_prediction_bits_br_type        (_bp_io_prediction_bits_br_type),
-    .io_prediction_bits_T_NT           (_bp_io_prediction_bits_T_NT)
+    .clock                                  (clock),
+    .reset                                  (reset),
+    .io_flush                               (_bp_io_flush_T),
+    .io_predict_ready                       (_bp_io_predict_ready),
+    .io_predict_valid
+      (_PC_Q_io_enq_ready & _PC_gen_io_PC_next_valid),
+    .io_predict_bits_addr                   (_PC_gen_io_PC_next_bits_addr),
+    .io_commit_valid                        (io_commit_valid),
+    .io_commit_bits_fetch_PC                (io_commit_bits_fetch_PC),
+    .io_commit_bits_T_NT                    (io_commit_bits_T_NT),
+    .io_commit_bits_ROB_index               (io_commit_bits_ROB_index),
+    .io_commit_bits_br_type                 (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0               (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1               (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2               (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3               (io_commit_bits_br_mask_3),
+    .io_commit_bits_fetch_packet_index      (io_commit_bits_fetch_packet_index),
+    .io_commit_bits_is_misprediction        (io_commit_bits_is_misprediction),
+    .io_commit_bits_expected_PC             (io_commit_bits_expected_PC),
+    .io_commit_bits_GHR                     (io_commit_bits_GHR),
+    .io_commit_bits_TOS                     (io_commit_bits_TOS),
+    .io_commit_bits_NEXT                    (io_commit_bits_NEXT),
+    .io_commit_bits_free_list_front_pointer (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RD_0                    (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1                    (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2                    (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3                    (io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0                   (io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1                   (io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2                   (io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3                   (io_commit_bits_PRD_3),
+    .io_commit_bits_RD_valid_0              (io_commit_bits_RD_valid_0),
+    .io_commit_bits_RD_valid_1              (io_commit_bits_RD_valid_1),
+    .io_commit_bits_RD_valid_2              (io_commit_bits_RD_valid_2),
+    .io_commit_bits_RD_valid_3              (io_commit_bits_RD_valid_3),
+    .io_RAS_update_call_addr                (_predecoder_io_RAS_update_call_addr),
+    .io_RAS_update_call                     (_predecoder_io_RAS_update_call),
+    .io_RAS_update_ret                      (_predecoder_io_RAS_update_ret),
+    .io_RAS_read_NEXT                       (_bp_io_RAS_read_NEXT),
+    .io_RAS_read_TOS                        (_bp_io_RAS_read_TOS),
+    .io_RAS_read_ret_addr                   (_bp_io_RAS_read_ret_addr),
+    .io_GHR                                 (_predecoder_io_GHR),
+    .io_prediction_ready                    (_BTB_Q_io_enq_ready),
+    .io_prediction_valid                    (_bp_io_prediction_valid),
+    .io_prediction_bits_hit                 (_bp_io_prediction_bits_hit),
+    .io_prediction_bits_target              (_bp_io_prediction_bits_target),
+    .io_prediction_bits_br_type             (_bp_io_prediction_bits_br_type),
+    .io_prediction_bits_br_mask_0           (_bp_io_prediction_bits_br_mask_0),
+    .io_prediction_bits_br_mask_1           (_bp_io_prediction_bits_br_mask_1),
+    .io_prediction_bits_br_mask_2           (_bp_io_prediction_bits_br_mask_2),
+    .io_prediction_bits_br_mask_3           (_bp_io_prediction_bits_br_mask_3)
   );
   predecoder predecoder (
     .clock                                                  (clock),
@@ -211,7 +252,14 @@ module instruction_fetch(
     .io_prediction_bits_hit                                 (_BTB_Q_io_deq_bits_hit),
     .io_prediction_bits_target                              (_BTB_Q_io_deq_bits_target),
     .io_prediction_bits_br_type                             (_BTB_Q_io_deq_bits_br_type),
-    .io_prediction_bits_T_NT                                (_BTB_Q_io_deq_bits_T_NT),
+    .io_prediction_bits_br_mask_0
+      (_BTB_Q_io_deq_bits_br_mask_0),
+    .io_prediction_bits_br_mask_1
+      (_BTB_Q_io_deq_bits_br_mask_1),
+    .io_prediction_bits_br_mask_2
+      (_BTB_Q_io_deq_bits_br_mask_2),
+    .io_prediction_bits_br_mask_3
+      (_BTB_Q_io_deq_bits_br_mask_3),
     .io_fetch_packet_ready
       (_predecoder_io_fetch_packet_ready),
     .io_fetch_packet_valid                                  (_instruction_Q_io_deq_valid),
@@ -255,8 +303,14 @@ module instruction_fetch(
       (_instruction_Q_io_deq_bits_prediction_target),
     .io_fetch_packet_bits_prediction_br_type
       (_instruction_Q_io_deq_bits_prediction_br_type),
-    .io_fetch_packet_bits_prediction_T_NT
-      (_instruction_Q_io_deq_bits_prediction_T_NT),
+    .io_fetch_packet_bits_prediction_br_mask_0
+      (_instruction_Q_io_deq_bits_prediction_br_mask_0),
+    .io_fetch_packet_bits_prediction_br_mask_1
+      (_instruction_Q_io_deq_bits_prediction_br_mask_1),
+    .io_fetch_packet_bits_prediction_br_mask_2
+      (_instruction_Q_io_deq_bits_prediction_br_mask_2),
+    .io_fetch_packet_bits_prediction_br_mask_3
+      (_instruction_Q_io_deq_bits_prediction_br_mask_3),
     .io_fetch_packet_bits_GHR
       (_instruction_Q_io_deq_bits_GHR),
     .io_fetch_packet_bits_NEXT
@@ -271,6 +325,10 @@ module instruction_fetch(
     .io_commit_bits_T_NT                                    (io_commit_bits_T_NT),
     .io_commit_bits_ROB_index                               (io_commit_bits_ROB_index),
     .io_commit_bits_br_type                                 (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0                               (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1                               (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2                               (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3                               (io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index
       (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
@@ -331,8 +389,14 @@ module instruction_fetch(
       (io_fetch_packet_bits_prediction_target),
     .io_final_fetch_packet_bits_prediction_br_type
       (io_fetch_packet_bits_prediction_br_type),
-    .io_final_fetch_packet_bits_prediction_T_NT
-      (io_fetch_packet_bits_prediction_T_NT),
+    .io_final_fetch_packet_bits_prediction_br_mask_0
+      (io_fetch_packet_bits_prediction_br_mask_0),
+    .io_final_fetch_packet_bits_prediction_br_mask_1
+      (io_fetch_packet_bits_prediction_br_mask_1),
+    .io_final_fetch_packet_bits_prediction_br_mask_2
+      (io_fetch_packet_bits_prediction_br_mask_2),
+    .io_final_fetch_packet_bits_prediction_br_mask_3
+      (io_fetch_packet_bits_prediction_br_mask_3),
     .io_final_fetch_packet_bits_GHR                         (io_fetch_packet_bits_GHR),
     .io_final_fetch_packet_bits_NEXT                        (io_fetch_packet_bits_NEXT),
     .io_final_fetch_packet_bits_TOS                         (io_fetch_packet_bits_TOS),
@@ -352,6 +416,10 @@ module instruction_fetch(
     .io_commit_bits_T_NT                    (io_commit_bits_T_NT),
     .io_commit_bits_ROB_index               (io_commit_bits_ROB_index),
     .io_commit_bits_br_type                 (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0               (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1               (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2               (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3               (io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index      (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction        (io_commit_bits_is_misprediction),
     .io_commit_bits_expected_PC             (io_commit_bits_expected_PC),
@@ -378,7 +446,10 @@ module instruction_fetch(
     .io_prediction_bits_hit                 (_bp_io_prediction_bits_hit),
     .io_prediction_bits_target              (_bp_io_prediction_bits_target),
     .io_prediction_bits_br_type             (_bp_io_prediction_bits_br_type),
-    .io_prediction_bits_T_NT                (_bp_io_prediction_bits_T_NT),
+    .io_prediction_bits_br_mask_0           (_bp_io_prediction_bits_br_mask_0),
+    .io_prediction_bits_br_mask_1           (_bp_io_prediction_bits_br_mask_1),
+    .io_prediction_bits_br_mask_2           (_bp_io_prediction_bits_br_mask_2),
+    .io_prediction_bits_br_mask_3           (_bp_io_prediction_bits_br_mask_3),
     .io_RAS_read_NEXT                       (_bp_io_RAS_read_NEXT),
     .io_RAS_read_TOS                        (_bp_io_RAS_read_TOS),
     .io_RAS_read_ret_addr                   (_bp_io_RAS_read_ret_addr),
@@ -425,7 +496,14 @@ module instruction_fetch(
     .io_enq_bits_prediction_hit              (io_memory_response_bits_prediction_hit),
     .io_enq_bits_prediction_target           (io_memory_response_bits_prediction_target),
     .io_enq_bits_prediction_br_type          (io_memory_response_bits_prediction_br_type),
-    .io_enq_bits_prediction_T_NT             (io_memory_response_bits_prediction_T_NT),
+    .io_enq_bits_prediction_br_mask_0
+      (io_memory_response_bits_prediction_br_mask_0),
+    .io_enq_bits_prediction_br_mask_1
+      (io_memory_response_bits_prediction_br_mask_1),
+    .io_enq_bits_prediction_br_mask_2
+      (io_memory_response_bits_prediction_br_mask_2),
+    .io_enq_bits_prediction_br_mask_3
+      (io_memory_response_bits_prediction_br_mask_3),
     .io_enq_bits_GHR                         (io_memory_response_bits_GHR),
     .io_enq_bits_NEXT                        (io_memory_response_bits_NEXT),
     .io_enq_bits_TOS                         (io_memory_response_bits_TOS),
@@ -465,7 +543,14 @@ module instruction_fetch(
       (_instruction_Q_io_deq_bits_prediction_target),
     .io_deq_bits_prediction_br_type
       (_instruction_Q_io_deq_bits_prediction_br_type),
-    .io_deq_bits_prediction_T_NT             (_instruction_Q_io_deq_bits_prediction_T_NT),
+    .io_deq_bits_prediction_br_mask_0
+      (_instruction_Q_io_deq_bits_prediction_br_mask_0),
+    .io_deq_bits_prediction_br_mask_1
+      (_instruction_Q_io_deq_bits_prediction_br_mask_1),
+    .io_deq_bits_prediction_br_mask_2
+      (_instruction_Q_io_deq_bits_prediction_br_mask_2),
+    .io_deq_bits_prediction_br_mask_3
+      (_instruction_Q_io_deq_bits_prediction_br_mask_3),
     .io_deq_bits_GHR                         (_instruction_Q_io_deq_bits_GHR),
     .io_deq_bits_NEXT                        (_instruction_Q_io_deq_bits_NEXT),
     .io_deq_bits_TOS                         (_instruction_Q_io_deq_bits_TOS),
@@ -487,23 +572,29 @@ module instruction_fetch(
     .io_flush            (_bp_io_flush_T)
   );
   Queue16_prediction BTB_Q (
-    .clock               (clock),
-    .reset               (reset),
-    .io_enq_ready        (_BTB_Q_io_enq_ready),
-    .io_enq_valid        (_bp_io_prediction_valid),
-    .io_enq_bits_hit     (_bp_io_prediction_bits_hit),
-    .io_enq_bits_target  (_bp_io_prediction_bits_target),
-    .io_enq_bits_br_type (_bp_io_prediction_bits_br_type),
-    .io_enq_bits_T_NT    (_bp_io_prediction_bits_T_NT),
+    .clock                 (clock),
+    .reset                 (reset),
+    .io_enq_ready          (_BTB_Q_io_enq_ready),
+    .io_enq_valid          (_bp_io_prediction_valid),
+    .io_enq_bits_hit       (_bp_io_prediction_bits_hit),
+    .io_enq_bits_target    (_bp_io_prediction_bits_target),
+    .io_enq_bits_br_type   (_bp_io_prediction_bits_br_type),
+    .io_enq_bits_br_mask_0 (_bp_io_prediction_bits_br_mask_0),
+    .io_enq_bits_br_mask_1 (_bp_io_prediction_bits_br_mask_1),
+    .io_enq_bits_br_mask_2 (_bp_io_prediction_bits_br_mask_2),
+    .io_enq_bits_br_mask_3 (_bp_io_prediction_bits_br_mask_3),
     .io_deq_ready
       (_predecoder_io_prediction_ready & _predecoder_io_fetch_packet_ready
        & _instruction_Q_io_deq_valid),
-    .io_deq_valid        (_BTB_Q_io_deq_valid),
-    .io_deq_bits_hit     (_BTB_Q_io_deq_bits_hit),
-    .io_deq_bits_target  (_BTB_Q_io_deq_bits_target),
-    .io_deq_bits_br_type (_BTB_Q_io_deq_bits_br_type),
-    .io_deq_bits_T_NT    (_BTB_Q_io_deq_bits_T_NT),
-    .io_flush            (_bp_io_flush_T)
+    .io_deq_valid          (_BTB_Q_io_deq_valid),
+    .io_deq_bits_hit       (_BTB_Q_io_deq_bits_hit),
+    .io_deq_bits_target    (_BTB_Q_io_deq_bits_target),
+    .io_deq_bits_br_type   (_BTB_Q_io_deq_bits_br_type),
+    .io_deq_bits_br_mask_0 (_BTB_Q_io_deq_bits_br_mask_0),
+    .io_deq_bits_br_mask_1 (_BTB_Q_io_deq_bits_br_mask_1),
+    .io_deq_bits_br_mask_2 (_BTB_Q_io_deq_bits_br_mask_2),
+    .io_deq_bits_br_mask_3 (_BTB_Q_io_deq_bits_br_mask_3),
+    .io_flush              (_bp_io_flush_T)
   );
   assign io_revert_valid = _predecoder_io_revert_valid;
   assign io_revert_bits_PC = _predecoder_io_revert_bits_PC;

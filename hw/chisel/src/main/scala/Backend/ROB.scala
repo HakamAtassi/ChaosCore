@@ -239,6 +239,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_entry_data.PRDold                := io.ROB_packet.bits.decoded_instruction(i).PRDold
         ROB_entry_data.PRD                   := io.ROB_packet.bits.decoded_instruction(i).PRD
 
+
         // allocate
         ROB_entry_banks(i).io.addrA          := back_index
         ROB_entry_banks(i).io.writeDataA     := ROB_entry_data
@@ -281,18 +282,18 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // if they are not valid and the instruction is committing (all instructions in that packet have completed)
     // then do not worry about a misprediction
 
-    val fetch_resolved_banks: Seq[SyncReadMem[prediction]] = Seq.tabulate(fetchWidth) { w =>
-        SyncReadMem(ROBEntries, new prediction(coreParameters))
+    val fetch_resolved_banks: Seq[SyncReadMem[resolved_branch]] = Seq.tabulate(fetchWidth) { w =>
+        SyncReadMem(ROBEntries, new resolved_branch(coreParameters))
     }
     
     
-    val commit_resolved = Wire(Vec(fetchWidth, new prediction(coreParameters)))
+    val commit_resolved = Wire(Vec(fetchWidth, new resolved_branch(coreParameters)))
     //val fwd_commit_resolved = Wire(Vec(fetchWidth, new prediction(coreParameters)))
 
     dontTouch(commit_resolved)
 
     for(i <- 0 until fetchWidth){
-        val FU_resolved_prediction = Wire(new prediction(coreParameters))
+        val FU_resolved_prediction = Wire(new resolved_branch(coreParameters))
         FU_resolved_prediction.target   := io.FU_outputs(0).bits.target_address
         FU_resolved_prediction.T_NT     := io.FU_outputs(0).bits.branch_taken
         FU_resolved_prediction.br_type  := DontCare  //io.FU_outputs(i).bits.
@@ -432,15 +433,34 @@ class ROB(coreParameters:CoreParameters) extends Module{
     commit.br_type               := br_type_t.NONE
     commit.fetch_packet_index    := 0.U
     commit.expected_PC           := expected_PC
+    commit.br_mask               := PriorityEncoderOH(has_taken_branch_vec)
+
+    when(commit_valid){
+        commit.is_misprediction      := 0.B
+        commit.expected_PC           := expected_PC
+        commit.br_mask               := PriorityEncoderOH(has_taken_branch_vec)
+        commit.T_NT                  := commit_resolved(earliest_taken_index).T_NT
+        commit.br_type               := commit_resolved(earliest_taken_index).br_type
+        commit.fetch_packet_index    := earliest_taken_index
+    }
+
 
     // Check for misprediction
-    when((expected_PC =/= commit_prediction.target) && commit_valid && has_taken_branch) {
+    //when((expected_PC =/= commit_prediction.target) && commit_valid && has_taken_branch) {
+
+    val resolved_br_mask = commit_resolved.map(_.T_NT)
+    //dontTouch(resolved_br_mask)
+
+    val correct_prediction = (Cat(PriorityEncoderOH(commit_prediction.br_mask)) ===  Cat(PriorityEncoderOH(resolved_br_mask))) && (expected_PC === commit_prediction.target) 
+        
+    when(!correct_prediction && commit_valid && has_taken_branch) {
         commit.is_misprediction      := 1.B
-        commit.T_NT                  := commit_resolved(earliest_taken_index).T_NT
         commit.br_type               := commit_resolved(earliest_taken_index).br_type
         commit.fetch_packet_index    := earliest_taken_index
         commit.expected_PC           := commit_resolved(earliest_taken_index).target
     }
+
+    dontTouch(commit)
 
     io.commit.bits      := RegNext(commit)
     io.commit.valid     := RegNext(commit_valid)

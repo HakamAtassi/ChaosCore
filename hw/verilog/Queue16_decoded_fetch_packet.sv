@@ -148,7 +148,10 @@ module Queue16_decoded_fetch_packet(
   input         io_enq_bits_prediction_hit,
   input  [31:0] io_enq_bits_prediction_target,
   input  [2:0]  io_enq_bits_prediction_br_type,
-  input         io_enq_bits_prediction_T_NT,
+  input         io_enq_bits_prediction_br_mask_0,
+                io_enq_bits_prediction_br_mask_1,
+                io_enq_bits_prediction_br_mask_2,
+                io_enq_bits_prediction_br_mask_3,
   input  [7:0]  io_enq_bits_free_list_front_pointer,
   input         io_deq_ready,
   output        io_deq_valid,
@@ -267,12 +270,15 @@ module Queue16_decoded_fetch_packet(
   output        io_deq_bits_prediction_hit,
   output [31:0] io_deq_bits_prediction_target,
   output [2:0]  io_deq_bits_prediction_br_type,
-  output        io_deq_bits_prediction_T_NT,
+  output        io_deq_bits_prediction_br_mask_0,
+                io_deq_bits_prediction_br_mask_1,
+                io_deq_bits_prediction_br_mask_2,
+                io_deq_bits_prediction_br_mask_3,
   output [7:0]  io_deq_bits_free_list_front_pointer,
   input         io_flush
 );
 
-  wire [482:0] _ram_ext_R0_data;
+  wire [485:0] _ram_ext_R0_data;
   reg  [3:0]   enq_ptr_value;
   reg  [3:0]   deq_ptr_value;
   reg          maybe_full;
@@ -301,7 +307,7 @@ module Queue16_decoded_fetch_packet(
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_16x483 ram_ext (
+  ram_16x486 ram_ext (
     .R0_addr (do_deq ? ((&deq_ptr_value) ? 4'h0 : deq_ptr_value + 4'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -311,7 +317,10 @@ module Queue16_decoded_fetch_packet(
     .W0_clk  (clock),
     .W0_data
       ({io_enq_bits_free_list_front_pointer,
-        io_enq_bits_prediction_T_NT,
+        io_enq_bits_prediction_br_mask_3,
+        io_enq_bits_prediction_br_mask_2,
+        io_enq_bits_prediction_br_mask_1,
+        io_enq_bits_prediction_br_mask_0,
         io_enq_bits_prediction_br_type,
         io_enq_bits_prediction_target,
         io_enq_bits_prediction_hit,
@@ -545,7 +554,10 @@ module Queue16_decoded_fetch_packet(
   assign io_deq_bits_prediction_hit = _ram_ext_R0_data[438];
   assign io_deq_bits_prediction_target = _ram_ext_R0_data[470:439];
   assign io_deq_bits_prediction_br_type = _ram_ext_R0_data[473:471];
-  assign io_deq_bits_prediction_T_NT = _ram_ext_R0_data[474];
-  assign io_deq_bits_free_list_front_pointer = _ram_ext_R0_data[482:475];
+  assign io_deq_bits_prediction_br_mask_0 = _ram_ext_R0_data[474];
+  assign io_deq_bits_prediction_br_mask_1 = _ram_ext_R0_data[475];
+  assign io_deq_bits_prediction_br_mask_2 = _ram_ext_R0_data[476];
+  assign io_deq_bits_prediction_br_mask_3 = _ram_ext_R0_data[477];
+  assign io_deq_bits_free_list_front_pointer = _ram_ext_R0_data[485:478];
 endmodule
 

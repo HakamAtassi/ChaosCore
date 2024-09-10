@@ -27,6 +27,7 @@ async def test_reset(dut):
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/if.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin")     # construct TB
     SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/bubble_sort.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/branch_test.bin")     # construct TB
 
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/beq.bin")     # construct TB
     await SOC.reset()                      # Reset

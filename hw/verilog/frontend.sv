@@ -59,7 +59,10 @@ module frontend(
   input         io_memory_response_bits_prediction_hit,
   input  [31:0] io_memory_response_bits_prediction_target,
   input  [2:0]  io_memory_response_bits_prediction_br_type,
-  input         io_memory_response_bits_prediction_T_NT,
+  input         io_memory_response_bits_prediction_br_mask_0,
+                io_memory_response_bits_prediction_br_mask_1,
+                io_memory_response_bits_prediction_br_mask_2,
+                io_memory_response_bits_prediction_br_mask_3,
   input  [15:0] io_memory_response_bits_GHR,
   input  [6:0]  io_memory_response_bits_NEXT,
                 io_memory_response_bits_TOS,
@@ -97,6 +100,10 @@ module frontend(
   input         io_commit_bits_T_NT,
   input  [5:0]  io_commit_bits_ROB_index,
   input  [2:0]  io_commit_bits_br_type,
+  input         io_commit_bits_br_mask_0,
+                io_commit_bits_br_mask_1,
+                io_commit_bits_br_mask_2,
+                io_commit_bits_br_mask_3,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
   input  [31:0] io_commit_bits_expected_PC,
@@ -233,7 +240,10 @@ module frontend(
   output        io_renamed_decoded_fetch_packet_bits_prediction_hit,
   output [31:0] io_renamed_decoded_fetch_packet_bits_prediction_target,
   output [2:0]  io_renamed_decoded_fetch_packet_bits_prediction_br_type,
-  output        io_renamed_decoded_fetch_packet_bits_prediction_T_NT,
+  output        io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0,
+                io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1,
+                io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2,
+                io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3,
   output [7:0]  io_renamed_decoded_fetch_packet_bits_free_list_front_pointer,
   input         io_FU_outputs_0_valid,
   input  [6:0]  io_FU_outputs_0_bits_PRD,
@@ -421,7 +431,10 @@ module frontend(
   wire        _instruction_queue_io_deq_bits_prediction_hit;
   wire [31:0] _instruction_queue_io_deq_bits_prediction_target;
   wire [2:0]  _instruction_queue_io_deq_bits_prediction_br_type;
-  wire        _instruction_queue_io_deq_bits_prediction_T_NT;
+  wire        _instruction_queue_io_deq_bits_prediction_br_mask_0;
+  wire        _instruction_queue_io_deq_bits_prediction_br_mask_1;
+  wire        _instruction_queue_io_deq_bits_prediction_br_mask_2;
+  wire        _instruction_queue_io_deq_bits_prediction_br_mask_3;
   wire [7:0]  _instruction_queue_io_deq_bits_free_list_front_pointer;
   wire        _decoders_io_fetch_packet_ready;
   wire        _decoders_io_decoded_fetch_packet_valid;
@@ -556,7 +569,10 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_prediction_hit;
   wire [31:0] _decoders_io_decoded_fetch_packet_bits_prediction_target;
   wire [2:0]  _decoders_io_decoded_fetch_packet_bits_prediction_br_type;
-  wire        _decoders_io_decoded_fetch_packet_bits_prediction_T_NT;
+  wire        _decoders_io_decoded_fetch_packet_bits_prediction_br_mask_0;
+  wire        _decoders_io_decoded_fetch_packet_bits_prediction_br_mask_1;
+  wire        _decoders_io_decoded_fetch_packet_bits_prediction_br_mask_2;
+  wire        _decoders_io_decoded_fetch_packet_bits_prediction_br_mask_3;
   wire [7:0]  _decoders_io_decoded_fetch_packet_bits_free_list_front_pointer;
   wire        _instruction_fetch_io_fetch_packet_valid;
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_fetch_PC;
@@ -575,7 +591,10 @@ module frontend(
   wire        _instruction_fetch_io_fetch_packet_bits_prediction_hit;
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_prediction_target;
   wire [2:0]  _instruction_fetch_io_fetch_packet_bits_prediction_br_type;
-  wire        _instruction_fetch_io_fetch_packet_bits_prediction_T_NT;
+  wire        _instruction_fetch_io_fetch_packet_bits_prediction_br_mask_0;
+  wire        _instruction_fetch_io_fetch_packet_bits_prediction_br_mask_1;
+  wire        _instruction_fetch_io_fetch_packet_bits_prediction_br_mask_2;
+  wire        _instruction_fetch_io_fetch_packet_bits_prediction_br_mask_3;
   wire [15:0] _instruction_fetch_io_fetch_packet_bits_GHR;
   wire [6:0]  _instruction_fetch_io_fetch_packet_bits_NEXT;
   wire [6:0]  _instruction_fetch_io_fetch_packet_bits_TOS;
@@ -588,6 +607,10 @@ module frontend(
     .io_commit_bits_T_NT                                 (io_commit_bits_T_NT),
     .io_commit_bits_ROB_index                            (io_commit_bits_ROB_index),
     .io_commit_bits_br_type                              (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0                            (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1                            (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2                            (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3                            (io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index
       (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
@@ -652,8 +675,14 @@ module frontend(
       (io_memory_response_bits_prediction_target),
     .io_memory_response_bits_prediction_br_type
       (io_memory_response_bits_prediction_br_type),
-    .io_memory_response_bits_prediction_T_NT
-      (io_memory_response_bits_prediction_T_NT),
+    .io_memory_response_bits_prediction_br_mask_0
+      (io_memory_response_bits_prediction_br_mask_0),
+    .io_memory_response_bits_prediction_br_mask_1
+      (io_memory_response_bits_prediction_br_mask_1),
+    .io_memory_response_bits_prediction_br_mask_2
+      (io_memory_response_bits_prediction_br_mask_2),
+    .io_memory_response_bits_prediction_br_mask_3
+      (io_memory_response_bits_prediction_br_mask_3),
     .io_memory_response_bits_GHR                         (io_memory_response_bits_GHR),
     .io_memory_response_bits_NEXT                        (io_memory_response_bits_NEXT),
     .io_memory_response_bits_TOS                         (io_memory_response_bits_TOS),
@@ -698,8 +727,14 @@ module frontend(
       (_instruction_fetch_io_fetch_packet_bits_prediction_target),
     .io_fetch_packet_bits_prediction_br_type
       (_instruction_fetch_io_fetch_packet_bits_prediction_br_type),
-    .io_fetch_packet_bits_prediction_T_NT
-      (_instruction_fetch_io_fetch_packet_bits_prediction_T_NT),
+    .io_fetch_packet_bits_prediction_br_mask_0
+      (_instruction_fetch_io_fetch_packet_bits_prediction_br_mask_0),
+    .io_fetch_packet_bits_prediction_br_mask_1
+      (_instruction_fetch_io_fetch_packet_bits_prediction_br_mask_1),
+    .io_fetch_packet_bits_prediction_br_mask_2
+      (_instruction_fetch_io_fetch_packet_bits_prediction_br_mask_2),
+    .io_fetch_packet_bits_prediction_br_mask_3
+      (_instruction_fetch_io_fetch_packet_bits_prediction_br_mask_3),
     .io_fetch_packet_bits_GHR
       (_instruction_fetch_io_fetch_packet_bits_GHR),
     .io_fetch_packet_bits_NEXT
@@ -749,8 +784,14 @@ module frontend(
       (_instruction_fetch_io_fetch_packet_bits_prediction_target),
     .io_fetch_packet_bits_prediction_br_type
       (_instruction_fetch_io_fetch_packet_bits_prediction_br_type),
-    .io_fetch_packet_bits_prediction_T_NT
-      (_instruction_fetch_io_fetch_packet_bits_prediction_T_NT),
+    .io_fetch_packet_bits_prediction_br_mask_0
+      (_instruction_fetch_io_fetch_packet_bits_prediction_br_mask_0),
+    .io_fetch_packet_bits_prediction_br_mask_1
+      (_instruction_fetch_io_fetch_packet_bits_prediction_br_mask_1),
+    .io_fetch_packet_bits_prediction_br_mask_2
+      (_instruction_fetch_io_fetch_packet_bits_prediction_br_mask_2),
+    .io_fetch_packet_bits_prediction_br_mask_3
+      (_instruction_fetch_io_fetch_packet_bits_prediction_br_mask_3),
     .io_fetch_packet_bits_GHR
       (_instruction_fetch_io_fetch_packet_bits_GHR),
     .io_fetch_packet_bits_NEXT
@@ -991,8 +1032,14 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_prediction_target),
     .io_decoded_fetch_packet_bits_prediction_br_type
       (_decoders_io_decoded_fetch_packet_bits_prediction_br_type),
-    .io_decoded_fetch_packet_bits_prediction_T_NT
-      (_decoders_io_decoded_fetch_packet_bits_prediction_T_NT),
+    .io_decoded_fetch_packet_bits_prediction_br_mask_0
+      (_decoders_io_decoded_fetch_packet_bits_prediction_br_mask_0),
+    .io_decoded_fetch_packet_bits_prediction_br_mask_1
+      (_decoders_io_decoded_fetch_packet_bits_prediction_br_mask_1),
+    .io_decoded_fetch_packet_bits_prediction_br_mask_2
+      (_decoders_io_decoded_fetch_packet_bits_prediction_br_mask_2),
+    .io_decoded_fetch_packet_bits_prediction_br_mask_3
+      (_decoders_io_decoded_fetch_packet_bits_prediction_br_mask_3),
     .io_decoded_fetch_packet_bits_free_list_front_pointer
       (_decoders_io_decoded_fetch_packet_bits_free_list_front_pointer)
   );
@@ -1233,8 +1280,14 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_prediction_target),
     .io_enq_bits_prediction_br_type
       (_decoders_io_decoded_fetch_packet_bits_prediction_br_type),
-    .io_enq_bits_prediction_T_NT
-      (_decoders_io_decoded_fetch_packet_bits_prediction_T_NT),
+    .io_enq_bits_prediction_br_mask_0
+      (_decoders_io_decoded_fetch_packet_bits_prediction_br_mask_0),
+    .io_enq_bits_prediction_br_mask_1
+      (_decoders_io_decoded_fetch_packet_bits_prediction_br_mask_1),
+    .io_enq_bits_prediction_br_mask_2
+      (_decoders_io_decoded_fetch_packet_bits_prediction_br_mask_2),
+    .io_enq_bits_prediction_br_mask_3
+      (_decoders_io_decoded_fetch_packet_bits_prediction_br_mask_3),
     .io_enq_bits_free_list_front_pointer
       (_decoders_io_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_deq_ready
@@ -1471,8 +1524,14 @@ module frontend(
       (_instruction_queue_io_deq_bits_prediction_target),
     .io_deq_bits_prediction_br_type
       (_instruction_queue_io_deq_bits_prediction_br_type),
-    .io_deq_bits_prediction_T_NT
-      (_instruction_queue_io_deq_bits_prediction_T_NT),
+    .io_deq_bits_prediction_br_mask_0
+      (_instruction_queue_io_deq_bits_prediction_br_mask_0),
+    .io_deq_bits_prediction_br_mask_1
+      (_instruction_queue_io_deq_bits_prediction_br_mask_1),
+    .io_deq_bits_prediction_br_mask_2
+      (_instruction_queue_io_deq_bits_prediction_br_mask_2),
+    .io_deq_bits_prediction_br_mask_3
+      (_instruction_queue_io_deq_bits_prediction_br_mask_3),
     .io_deq_bits_free_list_front_pointer
       (_instruction_queue_io_deq_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)
@@ -1494,6 +1553,14 @@ module frontend(
       (io_commit_bits_ROB_index),
     .io_commit_bits_br_type
       (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0
+      (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1
+      (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2
+      (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3
+      (io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index
       (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
@@ -1824,8 +1891,14 @@ module frontend(
       (_instruction_queue_io_deq_bits_prediction_target),
     .io_decoded_fetch_packet_bits_prediction_br_type
       (_instruction_queue_io_deq_bits_prediction_br_type),
-    .io_decoded_fetch_packet_bits_prediction_T_NT
-      (_instruction_queue_io_deq_bits_prediction_T_NT),
+    .io_decoded_fetch_packet_bits_prediction_br_mask_0
+      (_instruction_queue_io_deq_bits_prediction_br_mask_0),
+    .io_decoded_fetch_packet_bits_prediction_br_mask_1
+      (_instruction_queue_io_deq_bits_prediction_br_mask_1),
+    .io_decoded_fetch_packet_bits_prediction_br_mask_2
+      (_instruction_queue_io_deq_bits_prediction_br_mask_2),
+    .io_decoded_fetch_packet_bits_prediction_br_mask_3
+      (_instruction_queue_io_deq_bits_prediction_br_mask_3),
     .io_decoded_fetch_packet_bits_free_list_front_pointer
       (_instruction_queue_io_deq_bits_free_list_front_pointer),
     .io_FU_outputs_0_valid
@@ -2190,8 +2263,14 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_prediction_target),
     .io_renamed_decoded_fetch_packet_bits_prediction_br_type
       (io_renamed_decoded_fetch_packet_bits_prediction_br_type),
-    .io_renamed_decoded_fetch_packet_bits_prediction_T_NT
-      (io_renamed_decoded_fetch_packet_bits_prediction_T_NT),
+    .io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0
+      (io_renamed_decoded_fetch_packet_bits_prediction_br_mask_0),
+    .io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1
+      (io_renamed_decoded_fetch_packet_bits_prediction_br_mask_1),
+    .io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2
+      (io_renamed_decoded_fetch_packet_bits_prediction_br_mask_2),
+    .io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3
+      (io_renamed_decoded_fetch_packet_bits_prediction_br_mask_3),
     .io_renamed_decoded_fetch_packet_bits_free_list_front_pointer
       (io_renamed_decoded_fetch_packet_bits_free_list_front_pointer)
   );

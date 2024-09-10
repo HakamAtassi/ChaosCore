@@ -127,7 +127,8 @@ class gshare(coreParameters:CoreParameters) extends Module{
     // Write updated data
     PHT.io.addrC        := RegNext(hashed_commit_addr)
     PHT.io.writeDataC   := commit_state_updated
-    PHT.io.writeEnableC := RegNext(io.commit.valid) 
+    dontTouch(io.commit)
+    PHT.io.writeEnableC := RegNext(io.commit.valid && io.commit.bits.br_mask.reduce(_ || _))
 
     /////////
     // FSM // 

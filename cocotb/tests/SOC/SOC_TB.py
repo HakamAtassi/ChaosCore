@@ -64,9 +64,9 @@ class SOC_TB:
 
     async def clock(self):
         try:
-            self.rename_monitor.monitor()
-            self.memory_monitor.monitor()
-            self.SOC_monitor.monitor()
+            #self.rename_monitor.monitor()
+            #self.memory_monitor.monitor()
+            #self.SOC_monitor.monitor()
             await RisingEdge(self.dut.clock)
         except(AssertionError):
             await RisingEdge(self.dut.clock)

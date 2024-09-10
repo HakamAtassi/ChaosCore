@@ -32,45 +32,65 @@ module hash_BTB_mem(
   input         clock,
                 reset,
   input  [11:0] io_rd_addr,
-  output        io_data_out_BTB_valid,
-  output [17:0] io_data_out_BTB_tag,
-  output [31:0] io_data_out_BTB_target,
-  output [2:0]  io_data_out_BTB_br_type,
-  output [1:0]  io_data_out_BTB_fetch_packet_index,
+  output        io_data_out_valid,
+  output [17:0] io_data_out_tag,
+  output [31:0] io_data_out_target,
+  output        io_data_out_br_mask_0,
+                io_data_out_br_mask_1,
+                io_data_out_br_mask_2,
+                io_data_out_br_mask_3,
+  output [2:0]  io_data_out_br_type,
+  output [1:0]  io_data_out_fetch_packet_index,
   input  [11:0] io_wr_addr,
   input         io_wr_en,
-  input  [17:0] io_data_in_BTB_tag,
-  input  [31:0] io_data_in_BTB_target,
-  input  [2:0]  io_data_in_BTB_br_type,
-  input  [1:0]  io_data_in_BTB_fetch_packet_index
+  input  [17:0] io_data_in_tag,
+  input  [31:0] io_data_in_target,
+  input         io_data_in_br_mask_0,
+                io_data_in_br_mask_1,
+                io_data_in_br_mask_2,
+                io_data_in_br_mask_3,
+  input  [2:0]  io_data_in_br_type,
+  input  [1:0]  io_data_in_fetch_packet_index
 );
 
-  wire [55:0] _mem_ext_R0_data;
+  wire [59:0] _mem_ext_R0_data;
   reg         hazard_reg;
-  reg         din_buff_BTB_valid;
-  reg  [17:0] din_buff_BTB_tag;
-  reg  [31:0] din_buff_BTB_target;
-  reg  [2:0]  din_buff_BTB_br_type;
-  reg  [1:0]  din_buff_BTB_fetch_packet_index;
+  reg         din_buff_valid;
+  reg  [17:0] din_buff_tag;
+  reg  [31:0] din_buff_target;
+  reg         din_buff_br_mask_0;
+  reg         din_buff_br_mask_1;
+  reg         din_buff_br_mask_2;
+  reg         din_buff_br_mask_3;
+  reg  [2:0]  din_buff_br_type;
+  reg  [1:0]  din_buff_fetch_packet_index;
   always @(posedge clock) begin
     if (reset) begin
       hazard_reg <= 1'h0;
-      din_buff_BTB_valid <= 1'h0;
-      din_buff_BTB_tag <= 18'h0;
-      din_buff_BTB_target <= 32'h0;
-      din_buff_BTB_br_type <= 3'h0;
-      din_buff_BTB_fetch_packet_index <= 2'h0;
+      din_buff_valid <= 1'h0;
+      din_buff_tag <= 18'h0;
+      din_buff_target <= 32'h0;
+      din_buff_br_mask_0 <= 1'h0;
+      din_buff_br_mask_1 <= 1'h0;
+      din_buff_br_mask_2 <= 1'h0;
+      din_buff_br_mask_3 <= 1'h0;
+      din_buff_br_type <= 3'h0;
+      din_buff_fetch_packet_index <= 2'h0;
     end
     else begin
       hazard_reg <= io_rd_addr == io_wr_addr & io_wr_en;
-      din_buff_BTB_valid <= 1'h1;
-      din_buff_BTB_tag <= io_data_in_BTB_tag;
-      din_buff_BTB_target <= io_data_in_BTB_target;
-      din_buff_BTB_br_type <= io_data_in_BTB_br_type;
-      din_buff_BTB_fetch_packet_index <= io_data_in_BTB_fetch_packet_index;
+      din_buff_valid <= 1'h1;
+      din_buff_tag <= io_data_in_tag;
+      din_buff_target <= io_data_in_target;
+      din_buff_br_mask_0 <= io_data_in_br_mask_0;
+      din_buff_br_mask_1 <= io_data_in_br_mask_1;
+      din_buff_br_mask_2 <= io_data_in_br_mask_2;
+      din_buff_br_mask_3 <= io_data_in_br_mask_3;
+      din_buff_br_type <= io_data_in_br_type;
+      din_buff_fetch_packet_index <= io_data_in_fetch_packet_index;
     end
   end // always @(posedge)
-  mem_4096x56 mem_ext (
+  mem_4096x60 mem_ext (
     .R0_addr (io_rd_addr),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -79,19 +99,25 @@ module hash_BTB_mem(
     .W0_en   (io_wr_en),
     .W0_clk  (clock),
     .W0_data
-      ({io_data_in_BTB_fetch_packet_index,
-        io_data_in_BTB_br_type,
-        io_data_in_BTB_target,
-        io_data_in_BTB_tag,
+      ({io_data_in_fetch_packet_index,
+        io_data_in_br_type,
+        io_data_in_br_mask_3,
+        io_data_in_br_mask_2,
+        io_data_in_br_mask_1,
+        io_data_in_br_mask_0,
+        io_data_in_target,
+        io_data_in_tag,
         1'h1})
   );
-  assign io_data_out_BTB_valid = hazard_reg ? din_buff_BTB_valid : _mem_ext_R0_data[0];
-  assign io_data_out_BTB_tag = hazard_reg ? din_buff_BTB_tag : _mem_ext_R0_data[18:1];
-  assign io_data_out_BTB_target =
-    hazard_reg ? din_buff_BTB_target : _mem_ext_R0_data[50:19];
-  assign io_data_out_BTB_br_type =
-    hazard_reg ? din_buff_BTB_br_type : _mem_ext_R0_data[53:51];
-  assign io_data_out_BTB_fetch_packet_index =
-    hazard_reg ? din_buff_BTB_fetch_packet_index : _mem_ext_R0_data[55:54];
+  assign io_data_out_valid = hazard_reg ? din_buff_valid : _mem_ext_R0_data[0];
+  assign io_data_out_tag = hazard_reg ? din_buff_tag : _mem_ext_R0_data[18:1];
+  assign io_data_out_target = hazard_reg ? din_buff_target : _mem_ext_R0_data[50:19];
+  assign io_data_out_br_mask_0 = hazard_reg ? din_buff_br_mask_0 : _mem_ext_R0_data[51];
+  assign io_data_out_br_mask_1 = hazard_reg ? din_buff_br_mask_1 : _mem_ext_R0_data[52];
+  assign io_data_out_br_mask_2 = hazard_reg ? din_buff_br_mask_2 : _mem_ext_R0_data[53];
+  assign io_data_out_br_mask_3 = hazard_reg ? din_buff_br_mask_3 : _mem_ext_R0_data[54];
+  assign io_data_out_br_type = hazard_reg ? din_buff_br_type : _mem_ext_R0_data[57:55];
+  assign io_data_out_fetch_packet_index =
+    hazard_reg ? din_buff_fetch_packet_index : _mem_ext_R0_data[59:58];
 endmodule
 

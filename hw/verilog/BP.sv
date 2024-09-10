@@ -38,13 +38,31 @@ module BP(
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
+  input  [5:0]  io_commit_bits_ROB_index,
   input  [2:0]  io_commit_bits_br_type,
+  input         io_commit_bits_br_mask_0,
+                io_commit_bits_br_mask_1,
+                io_commit_bits_br_mask_2,
+                io_commit_bits_br_mask_3,
   input  [1:0]  io_commit_bits_fetch_packet_index,
   input         io_commit_bits_is_misprediction,
   input  [31:0] io_commit_bits_expected_PC,
   input  [15:0] io_commit_bits_GHR,
   input  [6:0]  io_commit_bits_TOS,
                 io_commit_bits_NEXT,
+  input  [7:0]  io_commit_bits_free_list_front_pointer,
+  input  [4:0]  io_commit_bits_RD_0,
+                io_commit_bits_RD_1,
+                io_commit_bits_RD_2,
+                io_commit_bits_RD_3,
+  input  [6:0]  io_commit_bits_PRD_0,
+                io_commit_bits_PRD_1,
+                io_commit_bits_PRD_2,
+                io_commit_bits_PRD_3,
+  input         io_commit_bits_RD_valid_0,
+                io_commit_bits_RD_valid_1,
+                io_commit_bits_RD_valid_2,
+                io_commit_bits_RD_valid_3,
   input  [31:0] io_RAS_update_call_addr,
   input         io_RAS_update_call,
                 io_RAS_update_ret,
@@ -57,36 +75,76 @@ module BP(
                 io_prediction_bits_hit,
   output [31:0] io_prediction_bits_target,
   output [2:0]  io_prediction_bits_br_type,
-  output        io_prediction_bits_T_NT
+  output        io_prediction_bits_br_mask_0,
+                io_prediction_bits_br_mask_1,
+                io_prediction_bits_br_mask_2,
+                io_prediction_bits_br_mask_3
 );
 
   wire        _BTB_io_BTB_hit;
-  wire [31:0] _BTB_io_BTB_output_BTB_target;
-  wire [2:0]  _BTB_io_BTB_output_BTB_br_type;
+  wire [31:0] _BTB_io_BTB_output_target;
+  wire        _BTB_io_BTB_output_br_mask_0;
+  wire        _BTB_io_BTB_output_br_mask_1;
+  wire        _BTB_io_BTB_output_br_mask_2;
+  wire        _BTB_io_BTB_output_br_mask_3;
+  wire [2:0]  _BTB_io_BTB_output_br_type;
   wire        _gshare_io_T_NT;
+  wire        taken = _gshare_io_T_NT & _BTB_io_BTB_hit;
   reg         prediction_valid_REG;
   always @(posedge clock)
     prediction_valid_REG <= io_predict_valid & ~io_flush;
   gshare gshare (
-    .clock                   (clock),
-    .io_predict_GHR          (io_GHR),
-    .io_predict_PC           (io_predict_bits_addr),
-    .io_T_NT                 (_gshare_io_T_NT),
-    .io_commit_valid         ((|io_commit_bits_br_type) & io_commit_valid),
-    .io_commit_bits_fetch_PC (io_commit_bits_fetch_PC),
-    .io_commit_bits_T_NT     (io_commit_bits_T_NT),
-    .io_commit_bits_GHR      (io_commit_bits_GHR)
+    .clock                                  (clock),
+    .io_predict_GHR                         (io_GHR),
+    .io_predict_PC                          (io_predict_bits_addr),
+    .io_T_NT                                (_gshare_io_T_NT),
+    .io_commit_valid                        (io_commit_valid),
+    .io_commit_bits_fetch_PC                (io_commit_bits_fetch_PC),
+    .io_commit_bits_T_NT                    (io_commit_bits_T_NT),
+    .io_commit_bits_ROB_index               (io_commit_bits_ROB_index),
+    .io_commit_bits_br_type                 (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0               (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1               (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2               (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3               (io_commit_bits_br_mask_3),
+    .io_commit_bits_fetch_packet_index      (io_commit_bits_fetch_packet_index),
+    .io_commit_bits_is_misprediction        (io_commit_bits_is_misprediction),
+    .io_commit_bits_expected_PC             (io_commit_bits_expected_PC),
+    .io_commit_bits_GHR                     (io_commit_bits_GHR),
+    .io_commit_bits_TOS                     (io_commit_bits_TOS),
+    .io_commit_bits_NEXT                    (io_commit_bits_NEXT),
+    .io_commit_bits_free_list_front_pointer (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RD_0                    (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1                    (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2                    (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3                    (io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0                   (io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1                   (io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2                   (io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3                   (io_commit_bits_PRD_3),
+    .io_commit_bits_RD_valid_0              (io_commit_bits_RD_valid_0),
+    .io_commit_bits_RD_valid_1              (io_commit_bits_RD_valid_1),
+    .io_commit_bits_RD_valid_2              (io_commit_bits_RD_valid_2),
+    .io_commit_bits_RD_valid_3              (io_commit_bits_RD_valid_3)
   );
   hash_BTB BTB (
     .clock                             (clock),
     .reset                             (reset),
     .io_predict_PC                     (io_predict_bits_addr),
     .io_BTB_hit                        (_BTB_io_BTB_hit),
-    .io_BTB_output_BTB_target          (_BTB_io_BTB_output_BTB_target),
-    .io_BTB_output_BTB_br_type         (_BTB_io_BTB_output_BTB_br_type),
+    .io_BTB_output_target              (_BTB_io_BTB_output_target),
+    .io_BTB_output_br_mask_0           (_BTB_io_BTB_output_br_mask_0),
+    .io_BTB_output_br_mask_1           (_BTB_io_BTB_output_br_mask_1),
+    .io_BTB_output_br_mask_2           (_BTB_io_BTB_output_br_mask_2),
+    .io_BTB_output_br_mask_3           (_BTB_io_BTB_output_br_mask_3),
+    .io_BTB_output_br_type             (_BTB_io_BTB_output_br_type),
     .io_commit_valid                   (io_commit_bits_T_NT & io_commit_valid),
     .io_commit_bits_fetch_PC           (io_commit_bits_fetch_PC),
     .io_commit_bits_br_type            (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0          (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1          (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2          (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3          (io_commit_bits_br_mask_3),
     .io_commit_bits_fetch_packet_index (io_commit_bits_fetch_packet_index),
     .io_commit_bits_expected_PC        (io_commit_bits_expected_PC)
   );
@@ -104,20 +162,26 @@ module BP(
     .io_TOS          (io_RAS_read_TOS)
   );
   Queue1_prediction prediction_skid_buffer (
-    .clock               (clock),
-    .reset               (reset),
-    .io_enq_valid        (prediction_valid_REG),
-    .io_enq_bits_hit     (_BTB_io_BTB_hit),
-    .io_enq_bits_target  (_BTB_io_BTB_output_BTB_target),
-    .io_enq_bits_br_type (_BTB_io_BTB_output_BTB_br_type),
-    .io_enq_bits_T_NT    (_gshare_io_T_NT),
-    .io_deq_ready        (io_prediction_ready),
-    .io_deq_valid        (io_prediction_valid),
-    .io_deq_bits_hit     (io_prediction_bits_hit),
-    .io_deq_bits_target  (io_prediction_bits_target),
-    .io_deq_bits_br_type (io_prediction_bits_br_type),
-    .io_deq_bits_T_NT    (io_prediction_bits_T_NT),
-    .io_flush            (io_flush)
+    .clock                 (clock),
+    .reset                 (reset),
+    .io_enq_valid          (prediction_valid_REG),
+    .io_enq_bits_hit       (_BTB_io_BTB_hit),
+    .io_enq_bits_target    (_BTB_io_BTB_output_target),
+    .io_enq_bits_br_type   (_BTB_io_BTB_output_br_type),
+    .io_enq_bits_br_mask_0 (taken & _BTB_io_BTB_output_br_mask_0),
+    .io_enq_bits_br_mask_1 (taken & _BTB_io_BTB_output_br_mask_1),
+    .io_enq_bits_br_mask_2 (taken & _BTB_io_BTB_output_br_mask_2),
+    .io_enq_bits_br_mask_3 (taken & _BTB_io_BTB_output_br_mask_3),
+    .io_deq_ready          (io_prediction_ready),
+    .io_deq_valid          (io_prediction_valid),
+    .io_deq_bits_hit       (io_prediction_bits_hit),
+    .io_deq_bits_target    (io_prediction_bits_target),
+    .io_deq_bits_br_type   (io_prediction_bits_br_type),
+    .io_deq_bits_br_mask_0 (io_prediction_bits_br_mask_0),
+    .io_deq_bits_br_mask_1 (io_prediction_bits_br_mask_1),
+    .io_deq_bits_br_mask_2 (io_prediction_bits_br_mask_2),
+    .io_deq_bits_br_mask_3 (io_prediction_bits_br_mask_3),
+    .io_flush              (io_flush)
   );
   assign io_predict_ready = io_prediction_ready;
 endmodule
