@@ -153,7 +153,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     comb_committed := MOB.map(MOB_entry => MOB_entry.committed)
 
     for(i <- 0 until fetchWidth){
-        when(io.partial_commit.valid(i) && MOB(io.partial_commit.MOB_index(i)).valid && io.partial_commit.MOB_valid(i)){
+        when(io.partial_commit.valid(i) && MOB(io.partial_commit.MOB_index(i)).valid && (io.partial_commit.ROB_index === MOB(io.partial_commit.MOB_index(i)).ROB_index) && io.partial_commit.MOB_valid(i)){
             comb_committed(io.partial_commit.MOB_index(i)) := 1.B
         }
     }
@@ -165,10 +165,10 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     ///////////
     // FLUSH //
     ///////////
-    val flushed_entries = PopCount(comb_committed.zip(MOB).map { case (committed, mobEntry) => !committed && mobEntry.valid })
+    val committed_entries = PopCount(comb_committed.zip(MOB).map { case (committed, mobEntry) => committed && mobEntry.valid })
 
 
-    dontTouch(flushed_entries)
+    dontTouch(committed_entries)
 
     when(io.flush){
         for(i <- 0 until MOBEntries){
@@ -177,7 +177,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
                 MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
             }
         }
-        back_pointer := back_pointer - flushed_entries  // walk back back pointer a few elements
+        //back_pointer := back_pointer - flushed_entries   // walk back back pointer a few elements
+        back_pointer := front_pointer + committed_entries
     }
 
 
@@ -196,7 +197,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // cache request
 
     io.backend_memory_request.bits   := 0.U.asTypeOf(new backend_memory_request(coreParameters))
-    io.backend_memory_request.valid  := (MOB_front.committed && MOB_front.resolved && (MOB_front.memory_type === memory_type_t.STORE)) || (MOB_front.resolved && (MOB_front.memory_type === memory_type_t.LOAD)) && MOB_front.valid
+    io.backend_memory_request.valid  := (MOB_front.committed && MOB_front.resolved) && MOB_front.valid
     
     //(MOB_front.committed || (MOB_front.memory_type === memory_type_t.LOAD)) && MOB_front.valid
 

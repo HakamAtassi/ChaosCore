@@ -100,7 +100,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     //| Read to commit        |//
     //|-----------------------|//
 
-    val row_valid_mem        =   RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
+    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
     val row_valid       =   row_valid_mem(front_pointer(pointer_width-2, 0))
 
 
@@ -126,7 +126,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     dontTouch(front_index)
 
-    val shared_mem      = Module(new ROB_shared_mem(coreParameters, depth=ROBEntries))
+    val shared_mem       = Module(new ROB_shared_mem(coreParameters, depth=ROBEntries))
     val shared_mem_input = Wire(new ROB_shared(coreParameters))
 
     shared_mem_input.fetch_PC                   := io.ROB_packet.bits.fetch_PC
@@ -302,14 +302,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
         commit_resolved(i) := fetch_resolved_banks(i).read(front_index + commit_valid)
         // allocate
-        when(io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U) && (io.FU_outputs(0).bits.branch_valid)){
+        when(io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U)){
             fetch_resolved_banks(i).write(io.FU_outputs(0).bits.ROB_index, FU_resolved_prediction)
 
             when(RegNext(io.FU_outputs(0).bits.ROB_index === front_index && io.FU_outputs(0).bits.fetch_packet_index === i.U)){
                 commit_resolved(i.U) := RegNext(FU_resolved_prediction)
             }
         }
-
     }
 
 
@@ -361,7 +360,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
 
     val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
-    val earliest_taken_index    = PriorityEncoder(has_taken_branch_vec.asUInt) //Mux1H(has_taken_branch_vec.zipWithIndex.map {case (taken, idx) => taken -> idx.U})
+    val earliest_taken_index    = PriorityEncoder(has_taken_branch_vec.asUInt) 
     val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + (fetchWidth*4).U)
 
 
@@ -394,7 +393,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
 
         val allPreviousComplete = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
-        partial_commit.valid(i)      := (is_completed || is_invalid) && ROB_output.row_valid && allPreviousComplete && pre_mispred(i)
+        partial_commit.valid(i)      := (is_completed) && ROB_output.row_valid && allPreviousComplete && pre_mispred(i)
         partial_commit.MOB_index(i)  := ROB_output.ROB_entries(i).MOB_index
         partial_commit.MOB_valid(i)  := is_load || is_store
         partial_commit.ROB_index     := front_index
@@ -448,17 +447,48 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // Check for misprediction
     //when((expected_PC =/= commit_prediction.target) && commit_valid && has_taken_branch) {
 
-    val resolved_br_mask = commit_resolved.map(_.T_NT)
-    //dontTouch(resolved_br_mask)
+    val resolved_br_mask = Wire(Vec(fetchWidth, Bool()))
+    resolved_br_mask := commit_resolved.map(_.T_NT)
+    dontTouch(resolved_br_mask)
 
     val correct_prediction = (Cat(PriorityEncoderOH(commit_prediction.br_mask)) ===  Cat(PriorityEncoderOH(resolved_br_mask))) && (expected_PC === commit_prediction.target) 
-        
-    when(!correct_prediction && commit_valid && has_taken_branch) {
+
+
+    //FIXME: this section, particularly the taken branch logic, needs to be cleaned up ALOT
+
+    val has_branch = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_entry_banks(i).io.readDataB.is_branch}).reduce(_ || _)
+
+
+    dontTouch(correct_prediction)
+    dontTouch(has_branch)
+    val test = Wire(UInt(32.W))
+
+    test := 0.U
+
+
+    dontTouch(test)
+
+    when(!correct_prediction && commit_valid && has_branch) {
         commit.is_misprediction      := 1.B
         commit.br_type               := commit_resolved(earliest_taken_index).br_type
         commit.fetch_packet_index    := earliest_taken_index
-        commit.expected_PC           := commit_resolved(earliest_taken_index).target
+        for(i <- fetchWidth-1 to 0 by - 1){
+            when(commit_resolved(i).T_NT =/= commit_prediction.br_mask(i)){
+                when(commit_resolved(i).T_NT === 1.B){
+                    // branch was actually taken and prediction was not taken
+                    // set expected PC to the computed address
+                    commit.expected_PC := commit_resolved(i).target
+                    test := commit_resolved(i).target
+                }.otherwise{
+                    // branch was actually not taken and prediction was taken
+                    // set expected PC to the branch + 4.U
+                    commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
+                    test := ROB_output.fetch_PC + (i*4).U + 4.U
+                }
+            }
+        }
     }
+
 
     dontTouch(commit)
 
