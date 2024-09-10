@@ -1,6 +1,6 @@
-class cpu_io_driver extends uvm_driver;
+class cpu_io_sequencer extends uvm_sequencer;
 
-    virtual interface instruction_cache_if i;
+    `uvm_component_utils(cpu_io_sequencer)
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
