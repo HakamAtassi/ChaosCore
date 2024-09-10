@@ -1,6 +1,4 @@
-class cpu_io_driver extends uvm_driver;
-
-    virtual interface instruction_cache_if i;
+class dram_axi_monitor extends cache_agent;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
