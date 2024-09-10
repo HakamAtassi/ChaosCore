@@ -463,224 +463,7 @@ module simple_MOB(
      {MOB_2_valid},
      {MOB_1_valid},
      {MOB_0_valid}};
-  wire              _GEN_4 =
-    io_partial_commit_valid_0 & _GEN_3[io_partial_commit_MOB_index_0]
-    & io_partial_commit_MOB_valid_0;
-  wire              _GEN_5 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h0;
-  wire              _GEN_6 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h1;
-  wire              _GEN_7 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h2;
-  wire              _GEN_8 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h3;
-  wire              _GEN_9 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h4;
-  wire              _GEN_10 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h5;
-  wire              _GEN_11 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h6;
-  wire              _GEN_12 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h7;
-  wire              _GEN_13 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h8;
-  wire              _GEN_14 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'h9;
-  wire              _GEN_15 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'hA;
-  wire              _GEN_16 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'hB;
-  wire              _GEN_17 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'hC;
-  wire              _GEN_18 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'hD;
-  wire              _GEN_19 = _GEN_4 & io_partial_commit_MOB_index_0 == 4'hE;
-  wire              _GEN_20 = _GEN_4 & (&io_partial_commit_MOB_index_0);
-  wire              _GEN_21 =
-    io_partial_commit_valid_1 & _GEN_3[io_partial_commit_MOB_index_1]
-    & io_partial_commit_MOB_valid_1;
-  wire              _GEN_22 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h0 | _GEN_5 | MOB_0_committed
-      : _GEN_5 | MOB_0_committed;
-  wire              _GEN_23 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h1 | _GEN_6 | MOB_1_committed
-      : _GEN_6 | MOB_1_committed;
-  wire              _GEN_24 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h2 | _GEN_7 | MOB_2_committed
-      : _GEN_7 | MOB_2_committed;
-  wire              _GEN_25 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h3 | _GEN_8 | MOB_3_committed
-      : _GEN_8 | MOB_3_committed;
-  wire              _GEN_26 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h4 | _GEN_9 | MOB_4_committed
-      : _GEN_9 | MOB_4_committed;
-  wire              _GEN_27 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h5 | _GEN_10 | MOB_5_committed
-      : _GEN_10 | MOB_5_committed;
-  wire              _GEN_28 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h6 | _GEN_11 | MOB_6_committed
-      : _GEN_11 | MOB_6_committed;
-  wire              _GEN_29 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h7 | _GEN_12 | MOB_7_committed
-      : _GEN_12 | MOB_7_committed;
-  wire              _GEN_30 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h8 | _GEN_13 | MOB_8_committed
-      : _GEN_13 | MOB_8_committed;
-  wire              _GEN_31 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'h9 | _GEN_14 | MOB_9_committed
-      : _GEN_14 | MOB_9_committed;
-  wire              _GEN_32 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'hA | _GEN_15 | MOB_10_committed
-      : _GEN_15 | MOB_10_committed;
-  wire              _GEN_33 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'hB | _GEN_16 | MOB_11_committed
-      : _GEN_16 | MOB_11_committed;
-  wire              _GEN_34 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'hC | _GEN_17 | MOB_12_committed
-      : _GEN_17 | MOB_12_committed;
-  wire              _GEN_35 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'hD | _GEN_18 | MOB_13_committed
-      : _GEN_18 | MOB_13_committed;
-  wire              _GEN_36 =
-    _GEN_21
-      ? io_partial_commit_MOB_index_1 == 4'hE | _GEN_19 | MOB_14_committed
-      : _GEN_19 | MOB_14_committed;
-  wire              _GEN_37 =
-    _GEN_21
-      ? (&io_partial_commit_MOB_index_1) | _GEN_20 | MOB_15_committed
-      : _GEN_20 | MOB_15_committed;
-  wire              _GEN_38 =
-    io_partial_commit_valid_2 & _GEN_3[io_partial_commit_MOB_index_2]
-    & io_partial_commit_MOB_valid_2;
-  wire              _GEN_39 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h0;
-  wire              _GEN_40 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h1;
-  wire              _GEN_41 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h2;
-  wire              _GEN_42 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h3;
-  wire              _GEN_43 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h4;
-  wire              _GEN_44 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h5;
-  wire              _GEN_45 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h6;
-  wire              _GEN_46 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h7;
-  wire              _GEN_47 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h8;
-  wire              _GEN_48 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'h9;
-  wire              _GEN_49 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'hA;
-  wire              _GEN_50 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'hB;
-  wire              _GEN_51 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'hC;
-  wire              _GEN_52 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'hD;
-  wire              _GEN_53 = _GEN_38 & io_partial_commit_MOB_index_2 == 4'hE;
-  wire              _GEN_54 = _GEN_38 & (&io_partial_commit_MOB_index_2);
-  wire              _GEN_55 =
-    io_partial_commit_valid_3 & _GEN_3[io_partial_commit_MOB_index_3]
-    & io_partial_commit_MOB_valid_3;
-  wire              comb_committed_0 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h0 | _GEN_39 | _GEN_22
-      : _GEN_39 | _GEN_22;
-  wire              comb_committed_1 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h1 | _GEN_40 | _GEN_23
-      : _GEN_40 | _GEN_23;
-  wire              comb_committed_2 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h2 | _GEN_41 | _GEN_24
-      : _GEN_41 | _GEN_24;
-  wire              comb_committed_3 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h3 | _GEN_42 | _GEN_25
-      : _GEN_42 | _GEN_25;
-  wire              comb_committed_4 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h4 | _GEN_43 | _GEN_26
-      : _GEN_43 | _GEN_26;
-  wire              comb_committed_5 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h5 | _GEN_44 | _GEN_27
-      : _GEN_44 | _GEN_27;
-  wire              comb_committed_6 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h6 | _GEN_45 | _GEN_28
-      : _GEN_45 | _GEN_28;
-  wire              comb_committed_7 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h7 | _GEN_46 | _GEN_29
-      : _GEN_46 | _GEN_29;
-  wire              comb_committed_8 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h8 | _GEN_47 | _GEN_30
-      : _GEN_47 | _GEN_30;
-  wire              comb_committed_9 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'h9 | _GEN_48 | _GEN_31
-      : _GEN_48 | _GEN_31;
-  wire              comb_committed_10 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'hA | _GEN_49 | _GEN_32
-      : _GEN_49 | _GEN_32;
-  wire              comb_committed_11 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'hB | _GEN_50 | _GEN_33
-      : _GEN_50 | _GEN_33;
-  wire              comb_committed_12 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'hC | _GEN_51 | _GEN_34
-      : _GEN_51 | _GEN_34;
-  wire              comb_committed_13 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'hD | _GEN_52 | _GEN_35
-      : _GEN_52 | _GEN_35;
-  wire              comb_committed_14 =
-    _GEN_55
-      ? io_partial_commit_MOB_index_3 == 4'hE | _GEN_53 | _GEN_36
-      : _GEN_53 | _GEN_36;
-  wire              comb_committed_15 =
-    _GEN_55 ? (&io_partial_commit_MOB_index_3) | _GEN_54 | _GEN_37 : _GEN_54 | _GEN_37;
-  wire [4:0]        flushed_entries =
-    {1'h0,
-     {1'h0,
-      {1'h0,
-       {1'h0, ~comb_committed_0 & MOB_0_valid} + {1'h0, ~comb_committed_1 & MOB_1_valid}}
-        + {1'h0,
-           {1'h0, ~comb_committed_2 & MOB_2_valid}
-             + {1'h0, ~comb_committed_3 & MOB_3_valid}}}
-       + {1'h0,
-          {1'h0,
-           {1'h0, ~comb_committed_4 & MOB_4_valid}
-             + {1'h0, ~comb_committed_5 & MOB_5_valid}}
-            + {1'h0,
-               {1'h0, ~comb_committed_6 & MOB_6_valid}
-                 + {1'h0, ~comb_committed_7 & MOB_7_valid}}}}
-    + {1'h0,
-       {1'h0,
-        {1'h0,
-         {1'h0, ~comb_committed_8 & MOB_8_valid}
-           + {1'h0, ~comb_committed_9 & MOB_9_valid}}
-          + {1'h0,
-             {1'h0, ~comb_committed_10 & MOB_10_valid}
-               + {1'h0, ~comb_committed_11 & MOB_11_valid}}}
-         + {1'h0,
-            {1'h0,
-             {1'h0, ~comb_committed_12 & MOB_12_valid}
-               + {1'h0, ~comb_committed_13 & MOB_13_valid}}
-              + {1'h0,
-                 {1'h0, ~comb_committed_14 & MOB_14_valid}
-                   + {1'h0, ~comb_committed_15 & MOB_15_valid}}}};
-  wire [15:0][1:0]  _GEN_56 =
-    {{MOB_15_memory_type},
-     {MOB_14_memory_type},
-     {MOB_13_memory_type},
-     {MOB_12_memory_type},
-     {MOB_11_memory_type},
-     {MOB_10_memory_type},
-     {MOB_9_memory_type},
-     {MOB_8_memory_type},
-     {MOB_7_memory_type},
-     {MOB_6_memory_type},
-     {MOB_5_memory_type},
-     {MOB_4_memory_type},
-     {MOB_3_memory_type},
-     {MOB_2_memory_type},
-     {MOB_1_memory_type},
-     {MOB_0_memory_type}};
-  wire [15:0][5:0]  _GEN_57 =
+  wire [15:0][5:0]  _GEN_4 =
     {{MOB_15_ROB_index},
      {MOB_14_ROB_index},
      {MOB_13_ROB_index},
@@ -697,6 +480,226 @@ module simple_MOB(
      {MOB_2_ROB_index},
      {MOB_1_ROB_index},
      {MOB_0_ROB_index}};
+  wire              _GEN_5 =
+    io_partial_commit_valid_0 & _GEN_3[io_partial_commit_MOB_index_0]
+    & io_partial_commit_ROB_index == _GEN_4[io_partial_commit_MOB_index_0]
+    & io_partial_commit_MOB_valid_0;
+  wire              _GEN_6 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h0;
+  wire              _GEN_7 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h1;
+  wire              _GEN_8 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h2;
+  wire              _GEN_9 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h3;
+  wire              _GEN_10 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h4;
+  wire              _GEN_11 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h5;
+  wire              _GEN_12 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h6;
+  wire              _GEN_13 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h7;
+  wire              _GEN_14 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h8;
+  wire              _GEN_15 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'h9;
+  wire              _GEN_16 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'hA;
+  wire              _GEN_17 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'hB;
+  wire              _GEN_18 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'hC;
+  wire              _GEN_19 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'hD;
+  wire              _GEN_20 = _GEN_5 & io_partial_commit_MOB_index_0 == 4'hE;
+  wire              _GEN_21 = _GEN_5 & (&io_partial_commit_MOB_index_0);
+  wire              _GEN_22 =
+    io_partial_commit_valid_1 & _GEN_3[io_partial_commit_MOB_index_1]
+    & io_partial_commit_ROB_index == _GEN_4[io_partial_commit_MOB_index_1]
+    & io_partial_commit_MOB_valid_1;
+  wire              _GEN_23 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h0 | _GEN_6 | MOB_0_committed
+      : _GEN_6 | MOB_0_committed;
+  wire              _GEN_24 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h1 | _GEN_7 | MOB_1_committed
+      : _GEN_7 | MOB_1_committed;
+  wire              _GEN_25 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h2 | _GEN_8 | MOB_2_committed
+      : _GEN_8 | MOB_2_committed;
+  wire              _GEN_26 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h3 | _GEN_9 | MOB_3_committed
+      : _GEN_9 | MOB_3_committed;
+  wire              _GEN_27 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h4 | _GEN_10 | MOB_4_committed
+      : _GEN_10 | MOB_4_committed;
+  wire              _GEN_28 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h5 | _GEN_11 | MOB_5_committed
+      : _GEN_11 | MOB_5_committed;
+  wire              _GEN_29 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h6 | _GEN_12 | MOB_6_committed
+      : _GEN_12 | MOB_6_committed;
+  wire              _GEN_30 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h7 | _GEN_13 | MOB_7_committed
+      : _GEN_13 | MOB_7_committed;
+  wire              _GEN_31 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h8 | _GEN_14 | MOB_8_committed
+      : _GEN_14 | MOB_8_committed;
+  wire              _GEN_32 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'h9 | _GEN_15 | MOB_9_committed
+      : _GEN_15 | MOB_9_committed;
+  wire              _GEN_33 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'hA | _GEN_16 | MOB_10_committed
+      : _GEN_16 | MOB_10_committed;
+  wire              _GEN_34 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'hB | _GEN_17 | MOB_11_committed
+      : _GEN_17 | MOB_11_committed;
+  wire              _GEN_35 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'hC | _GEN_18 | MOB_12_committed
+      : _GEN_18 | MOB_12_committed;
+  wire              _GEN_36 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'hD | _GEN_19 | MOB_13_committed
+      : _GEN_19 | MOB_13_committed;
+  wire              _GEN_37 =
+    _GEN_22
+      ? io_partial_commit_MOB_index_1 == 4'hE | _GEN_20 | MOB_14_committed
+      : _GEN_20 | MOB_14_committed;
+  wire              _GEN_38 =
+    _GEN_22
+      ? (&io_partial_commit_MOB_index_1) | _GEN_21 | MOB_15_committed
+      : _GEN_21 | MOB_15_committed;
+  wire              _GEN_39 =
+    io_partial_commit_valid_2 & _GEN_3[io_partial_commit_MOB_index_2]
+    & io_partial_commit_ROB_index == _GEN_4[io_partial_commit_MOB_index_2]
+    & io_partial_commit_MOB_valid_2;
+  wire              _GEN_40 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h0;
+  wire              _GEN_41 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h1;
+  wire              _GEN_42 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h2;
+  wire              _GEN_43 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h3;
+  wire              _GEN_44 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h4;
+  wire              _GEN_45 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h5;
+  wire              _GEN_46 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h6;
+  wire              _GEN_47 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h7;
+  wire              _GEN_48 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h8;
+  wire              _GEN_49 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'h9;
+  wire              _GEN_50 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'hA;
+  wire              _GEN_51 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'hB;
+  wire              _GEN_52 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'hC;
+  wire              _GEN_53 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'hD;
+  wire              _GEN_54 = _GEN_39 & io_partial_commit_MOB_index_2 == 4'hE;
+  wire              _GEN_55 = _GEN_39 & (&io_partial_commit_MOB_index_2);
+  wire              _GEN_56 =
+    io_partial_commit_valid_3 & _GEN_3[io_partial_commit_MOB_index_3]
+    & io_partial_commit_ROB_index == _GEN_4[io_partial_commit_MOB_index_3]
+    & io_partial_commit_MOB_valid_3;
+  wire              comb_committed_0 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h0 | _GEN_40 | _GEN_23
+      : _GEN_40 | _GEN_23;
+  wire              comb_committed_1 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h1 | _GEN_41 | _GEN_24
+      : _GEN_41 | _GEN_24;
+  wire              comb_committed_2 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h2 | _GEN_42 | _GEN_25
+      : _GEN_42 | _GEN_25;
+  wire              comb_committed_3 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h3 | _GEN_43 | _GEN_26
+      : _GEN_43 | _GEN_26;
+  wire              comb_committed_4 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h4 | _GEN_44 | _GEN_27
+      : _GEN_44 | _GEN_27;
+  wire              comb_committed_5 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h5 | _GEN_45 | _GEN_28
+      : _GEN_45 | _GEN_28;
+  wire              comb_committed_6 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h6 | _GEN_46 | _GEN_29
+      : _GEN_46 | _GEN_29;
+  wire              comb_committed_7 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h7 | _GEN_47 | _GEN_30
+      : _GEN_47 | _GEN_30;
+  wire              comb_committed_8 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h8 | _GEN_48 | _GEN_31
+      : _GEN_48 | _GEN_31;
+  wire              comb_committed_9 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'h9 | _GEN_49 | _GEN_32
+      : _GEN_49 | _GEN_32;
+  wire              comb_committed_10 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'hA | _GEN_50 | _GEN_33
+      : _GEN_50 | _GEN_33;
+  wire              comb_committed_11 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'hB | _GEN_51 | _GEN_34
+      : _GEN_51 | _GEN_34;
+  wire              comb_committed_12 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'hC | _GEN_52 | _GEN_35
+      : _GEN_52 | _GEN_35;
+  wire              comb_committed_13 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'hD | _GEN_53 | _GEN_36
+      : _GEN_53 | _GEN_36;
+  wire              comb_committed_14 =
+    _GEN_56
+      ? io_partial_commit_MOB_index_3 == 4'hE | _GEN_54 | _GEN_37
+      : _GEN_54 | _GEN_37;
+  wire              comb_committed_15 =
+    _GEN_56 ? (&io_partial_commit_MOB_index_3) | _GEN_55 | _GEN_38 : _GEN_55 | _GEN_38;
+  wire [4:0]        committed_entries =
+    {1'h0,
+     {1'h0,
+      {1'h0,
+       {1'h0, comb_committed_0 & MOB_0_valid} + {1'h0, comb_committed_1 & MOB_1_valid}}
+        + {1'h0,
+           {1'h0, comb_committed_2 & MOB_2_valid}
+             + {1'h0, comb_committed_3 & MOB_3_valid}}}
+       + {1'h0,
+          {1'h0,
+           {1'h0, comb_committed_4 & MOB_4_valid}
+             + {1'h0, comb_committed_5 & MOB_5_valid}}
+            + {1'h0,
+               {1'h0, comb_committed_6 & MOB_6_valid}
+                 + {1'h0, comb_committed_7 & MOB_7_valid}}}}
+    + {1'h0,
+       {1'h0,
+        {1'h0,
+         {1'h0, comb_committed_8 & MOB_8_valid} + {1'h0, comb_committed_9 & MOB_9_valid}}
+          + {1'h0,
+             {1'h0, comb_committed_10 & MOB_10_valid}
+               + {1'h0, comb_committed_11 & MOB_11_valid}}}
+         + {1'h0,
+            {1'h0,
+             {1'h0, comb_committed_12 & MOB_12_valid}
+               + {1'h0, comb_committed_13 & MOB_13_valid}}
+              + {1'h0,
+                 {1'h0, comb_committed_14 & MOB_14_valid}
+                   + {1'h0, comb_committed_15 & MOB_15_valid}}}};
+  wire [15:0][1:0]  _GEN_57 =
+    {{MOB_15_memory_type},
+     {MOB_14_memory_type},
+     {MOB_13_memory_type},
+     {MOB_12_memory_type},
+     {MOB_11_memory_type},
+     {MOB_10_memory_type},
+     {MOB_9_memory_type},
+     {MOB_8_memory_type},
+     {MOB_7_memory_type},
+     {MOB_6_memory_type},
+     {MOB_5_memory_type},
+     {MOB_4_memory_type},
+     {MOB_3_memory_type},
+     {MOB_2_memory_type},
+     {MOB_1_memory_type},
+     {MOB_0_memory_type}};
   wire [15:0][1:0]  _GEN_58 =
     {{MOB_15_fetch_packet_index},
      {MOB_14_fetch_packet_index},
@@ -817,8 +820,7 @@ module simple_MOB(
      {MOB_1_resolved},
      {MOB_0_resolved}};
   wire              io_backend_memory_request_valid_0 =
-    _GEN_63[front_index] & _GEN_64[front_index] & _GEN_56[front_index] == 2'h2
-    | _GEN_64[front_index] & _GEN_56[front_index] == 2'h1 & _GEN_3[front_index];
+    _GEN_63[front_index] & _GEN_64[front_index] & _GEN_3[front_index];
   wire [15:0]       _availalbe_MOB_entries_T_1 =
     ~{MOB_0_valid,
       MOB_1_valid,
@@ -2586,7 +2588,7 @@ module simple_MOB(
           MOB_15_data <= 32'h0;
       end
       if (io_flush)
-        back_pointer <= back_pointer - flushed_entries;
+        back_pointer <= front_pointer + committed_entries;
       else
         back_pointer <=
           back_pointer + {2'h0, {1'h0, _GEN + _GEN_0} + {1'h0, _GEN_1 + _GEN_2}};
@@ -2628,11 +2630,11 @@ module simple_MOB(
   assign io_backend_memory_request_valid = io_backend_memory_request_valid_0;
   assign io_backend_memory_request_bits_addr = _GEN_59[front_index];
   assign io_backend_memory_request_bits_data = _GEN_62[front_index];
-  assign io_backend_memory_request_bits_memory_type = _GEN_56[front_index];
+  assign io_backend_memory_request_bits_memory_type = _GEN_57[front_index];
   assign io_backend_memory_request_bits_access_width = _GEN_60[front_index];
   assign io_backend_memory_request_bits_MOB_index = front_index;
   assign io_backend_memory_request_bits_packet_index = _GEN_58[front_index];
-  assign io_backend_memory_request_bits_ROB_index = _GEN_57[front_index];
+  assign io_backend_memory_request_bits_ROB_index = _GEN_4[front_index];
   assign io_backend_memory_request_bits_PRD = _GEN_61[front_index];
   assign io_backend_memory_response_ready = 1'h1;
 endmodule
