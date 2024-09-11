@@ -1,5 +1,9 @@
+`ifndef CACHE_RESP
+`define CACHE_RESP
 
-class cache_resp extends uvm_transaction;
+`include "cpu_io_sequencer.svh"
+
+class cache_resp extends uvm_sequence_item;
 
   `uvm_object_utils(cache_resp)    
   `uvm_declare_p_sequencer(cpu_io_sequencer)
@@ -11,18 +15,9 @@ class cache_resp extends uvm_transaction;
   rand logic io_CPU_response_ready;
   rand logic io_kill;
   
-  function new(string name = "", uvm_component initiator = null);
-    super.new(name, initiator);
+  function new(string name = "");
+    super.new(name);
   endfunction : new
-
-  task body();
-    this.io_CPU_request_valid = 1;
-    this.io_CPU_request_bits_addr = 0;
-    this.io_CPU_request_bits_wr_data = 0;
-    this.io_CPU_request_bits_wr_en = 0;
-    this.io_CPU_response_ready = 0;
-    this.io_kill = 0;
-  endtask
 
   function string convert2string();
     return $psprintf("data: %2h", io_CPU_request_bits_addr);
@@ -58,3 +53,5 @@ class cache_resp extends uvm_transaction;
 
   endfunction
 endclass : cache_resp
+
+`endif

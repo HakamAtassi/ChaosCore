@@ -1,8 +1,11 @@
+`ifndef CACHE_REQ
+`define CACHE_REQ
 
-class cache_req extends uvm_transaction;
+
+`include "cpu_io_sequencer.svh"
+class cache_req extends uvm_sequence_item;
 
   `uvm_object_utils(cache_req)    
-  `uvm_declare_p_sequencer(cpu_io_sequencer)
 
   rand logic        io_CPU_request_ready;
   rand logic        io_CPU_response_valid;
@@ -31,12 +34,12 @@ class cache_req extends uvm_transaction;
   rand logic [6:0]  io_CPU_response_bits_NEXT;
   rand logic              io_CPU_response_bits_TOS;
   
-  function new(string name = "", uvm_component initiator = null);
-    super.new(name, initiator);
+  function new(string name = "");
+    super.new(name);
   endfunction : new
 
   function string convert2string();
-    return $psprintf("data: %2h", io_CPU_request_bits_addr);
+    return $psprintf("data: %2h", io_CPU_response_bits_fetch_PC);
   endfunction : convert2string
 
   function void do_copy(uvm_object rhs);
@@ -109,3 +112,25 @@ class cache_req extends uvm_transaction;
 
   endfunction
 endclass : cache_req
+
+
+class base_sequence extends uvm_sequence#(cache_req);
+
+  `uvm_declare_p_sequencer(cpu_io_sequencer)
+
+  function new(string name = "");
+    super.new(name);
+  endfunction : new
+
+  task body;
+    repeat(1) begin
+      `uvm_info("CACHE REQ", "Creating sequence", UVM_LOW)
+      req = cache_req::type_id::create("req");
+      start_item(req);
+      assert(!req.randomize());
+      finish_item(req);
+    end
+  endtask
+
+endclass
+`endif
