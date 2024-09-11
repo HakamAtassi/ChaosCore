@@ -1,8 +1,8 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1725415986" />
-    <testcase name="test_reset" classname="SOC_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/tests/SOC/SOC_cocotb.py" lineno="14" time="0.5738921165466309" sim_time_ns="3999.001" ratio_time="6968.2103738657415">
-      <failure message="Test failed with RANDOM_SEED=1725415986" />
+    <property name="random_seed" value="1726016281" />
+    <testcase name="test_reset" classname="SOC_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/tests/SOC/SOC_cocotb.py" lineno="17" time="3.853519916534424" sim_time_ns="20009.001" ratio_time="5192.395896060308">
+      <failure message="Test failed with RANDOM_SEED=1726016281" />
     </testcase>
   </testsuite>
 </testsuites>

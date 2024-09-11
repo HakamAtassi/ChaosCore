@@ -22,6 +22,36 @@ do
     ${rvdir}/riscv32-unknown-elf-objcopy "elf/$name.elf" -O binary "bin/$name.bin"
 done
 
+for cfile in C/*/*.c; 
+do
+
+
+    filename=$(basename -- "$cfile")
+    name="${filename%.*}"
+    echo "Building C File: $name/$name"
+
+    if [ "$name" == "utils" ]; then
+        echo "Skipping utils"
+        continue
+    fi
+
+    if [ "$name" == "test_utils" ]; then
+        echo "Skipping utils"
+        continue
+    fi
+
+    # Compile the C file to ELF using the linker script
+    ${rvdir}/riscv32-unknown-elf-gcc -ffreestanding -nostdlib -O2 -fno-plt -fno-pic -march=rv32i -mabi=ilp32 startup.S "C/$name/$name.c" -T $linker_script -o "elf/$name.elf"
+
+    # Disassemble the ELF file to TXT
+    ${rvdir}/riscv32-unknown-elf-objdump -d -Mnumeric "elf/$name.elf" > "txt/$name.txt"
+
+    # Assemble the ELF file to binary
+    ${rvdir}/riscv32-unknown-elf-objcopy "elf/$name.elf" -O binary "bin/$name.bin"
+done
+
+
+
 # Build ASM files
 for asmfile in asm/*.asm; 
 do
@@ -42,9 +72,6 @@ do
 done
 
 echo "Build process completed"
-
-
-
 
 # generate spike traces for debugging
 #spike -m0x80000000:0x90000000,0x80000:0x90000 --log=spike_traces/vec_add.log --log-commits -d --isa=rv32i elf/vec_add.elf
