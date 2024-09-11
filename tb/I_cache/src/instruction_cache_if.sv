@@ -164,7 +164,7 @@ interface instruction_cache_if;
     initial begin : clock_gen
       clock = 0;
       forever #10 clock = ~clock;
-   end
+    end
 
 endinterface : instruction_cache_if
 

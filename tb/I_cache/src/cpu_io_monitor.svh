@@ -1,7 +1,9 @@
+`ifndef CPU_IO_MONITOR
+`define CPU_IO_MONITOR
 
+`include "cache_req.svh"
+`include "cache_resp.svh"
 class cpu_io_monitor extends uvm_monitor;
-
-    virtual interface instruction_cache_if i;
 
     `uvm_component_utils(cpu_io_monitor)
 
@@ -13,6 +15,7 @@ class cpu_io_monitor extends uvm_monitor;
     endfunction
 
     function void build_phase(uvm_phase phase);
+        `uvm_info("MONITOR","Creating CPU IO Monitor...",500);
         super.build_phase(phase);
         rsp_port = new("rsp_port", this);
         req_port = new("req_port", this);
@@ -22,11 +25,8 @@ class cpu_io_monitor extends uvm_monitor;
 
         cache_resp response = new();
         cache_req request = new();
-        forever begin
-             @(posedge i.clk);
-             #1;
-        end
 
     endtask
 
 endclass
+`endif

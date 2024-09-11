@@ -1,6 +1,7 @@
-class cache_agent extends uvm_agent;
+`ifndef CACHE_AGENT
+`define CACHE_AGENT
 
-    virtual interface instruction_cache_if i;
+class cache_agent extends uvm_agent;
 
     function new(string name="", uvm_component parent);
         super.new(name, parent);
@@ -8,9 +9,9 @@ class cache_agent extends uvm_agent;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-
-        i = global_cache_if;
     endfunction : build_phase
 
 
 endclass
+
+`endif

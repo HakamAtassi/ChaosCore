@@ -1,3 +1,7 @@
+`ifndef CPU_IO_SEQUENCER
+`define CPU_IO_SEQUENCER
+
+
 class cpu_io_sequencer extends uvm_sequencer;
 
     `uvm_component_utils(cpu_io_sequencer)
@@ -7,3 +11,4 @@ class cpu_io_sequencer extends uvm_sequencer;
     endfunction
 
 endclass
+`endif
