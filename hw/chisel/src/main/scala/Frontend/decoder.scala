@@ -70,6 +70,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
     //Do we check entire funct7 field or just check for single bit?
     val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
+
+
     val SUBTRACT    =   ((instructionType === OP || instructionType === OP_IMM) && FUNCT7 === 0x20.U)
     val IS_IMM   =      (instructionType === OP_IMM) || 
                         (instructionType === LUI) || 
@@ -80,7 +82,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                         (instructionType === JAL) || 
                         (instructionType === JALR) 
 
-    val needs_divider        =   (instructionType === OP) && ( FUNCT3 === 0x4.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U) && FUNCT7(0)
+    val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
+    val needs_mul            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === AUIPC)
     val needs_CSRs           =   0.B
     val needs_ALU            =   ((instructionType === OP) &&
@@ -187,7 +190,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
         io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
         io.decoded_instruction.bits.portID := 0.U
-    }.elsewhen(needs_divider){
+    }.elsewhen(needs_div || needs_mul){
         io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_memory){
         io.decoded_instruction.bits.portID := 0.U

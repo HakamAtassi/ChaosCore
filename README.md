@@ -80,7 +80,9 @@ sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip li
 #git clone https://github.com/riscv-collab/riscv-gnu-toolchain --recurse-submodules
 git clone https://github.com/riscv-collab/riscv-gnu-toolchain
 cd riscv-gnu-toolchain
-./configure --prefix=/opt/riscv --with-arch=rv32gc_zicsr_zifencei --with-abi=ilp32  # build the "complete" RISC-V RV32 config with privilages
+#./configure --prefix=/opt/riscv --with-arch=rv32gc_zicsr_zifencei --with-abi=ilp32  # build the "complete" RISC-V RV32 config with privilages
+./configure --prefix=/opt/riscv --with-arch=rv32im_zicsr_zifencei --with-abi=ilp32 --enable-multilib
+
 sudo make -j12
 ```
 

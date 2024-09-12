@@ -83,56 +83,56 @@ module ALU(
       automatic logic [4:0]  shamt =
         (|(operand2_unsigned[31:5])) ? 5'h0 : operand2_unsigned[4:0];
       automatic logic [31:0] _GEN = {27'h0, shamt};
-      automatic logic        _REMU_T =
+      automatic logic        _SLTU_T =
         io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
       automatic logic        _SLTU_T_1 =
         io_FU_input_bits_decoded_instruction_instructionType == 5'h4;
-      automatic logic        _MUL_T_1 =
+      automatic logic        _SUB_T_3 =
         io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
-      automatic logic        _DIVU_T_1 =
+      automatic logic        _SRA_T_3 =
         io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
       automatic logic [62:0] _sll_result_T = {31'h0, io_FU_input_bits_RS1_data} << shamt;
       arithmetic_result <=
-        (_REMU_T | _SLTU_T_1) & _MUL_T_1 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+        (_SLTU_T | _SLTU_T_1) & _SUB_T_3 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
         & ~io_FU_input_bits_decoded_instruction_SUBTRACT
           ? io_FU_input_bits_RS1_data + operand2_unsigned
-          : (_REMU_T | _SLTU_T_1) & _MUL_T_1
+          : (_SLTU_T | _SLTU_T_1) & _SUB_T_3
             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
             & io_FU_input_bits_decoded_instruction_SUBTRACT
               ? io_FU_input_bits_RS1_data - operand2_unsigned
-              : (_REMU_T | _SLTU_T_1)
+              : (_SLTU_T | _SLTU_T_1)
                 & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4
                 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                   ? io_FU_input_bits_RS1_data ^ operand2_unsigned
-                  : (_REMU_T | _SLTU_T_1)
+                  : (_SLTU_T | _SLTU_T_1)
                     & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h6
                     & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                       ? io_FU_input_bits_RS1_data | operand2_unsigned
-                      : (_REMU_T | _SLTU_T_1)
+                      : (_SLTU_T | _SLTU_T_1)
                         & (&io_FU_input_bits_decoded_instruction_FUNCT3)
                         & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                           ? io_FU_input_bits_RS1_data & operand2_unsigned
-                          : (_REMU_T | _SLTU_T_1)
+                          : (_SLTU_T | _SLTU_T_1)
                             & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1
                             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                               ? _sll_result_T[31:0]
-                              : (_REMU_T | _SLTU_T_1) & _DIVU_T_1
+                              : (_SLTU_T | _SLTU_T_1) & _SRA_T_3
                                 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                 & ~io_FU_input_bits_decoded_instruction_SUBTRACT
                                   ? io_FU_input_bits_RS1_data >> _GEN
-                                  : (_REMU_T | _SLTU_T_1) & _DIVU_T_1
+                                  : (_SLTU_T | _SLTU_T_1) & _SRA_T_3
                                     & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                     & io_FU_input_bits_decoded_instruction_SUBTRACT
                                       ? $signed($signed(io_FU_input_bits_RS1_data)
                                                 >>> _GEN)
-                                      : (_REMU_T | _SLTU_T_1)
+                                      : (_SLTU_T | _SLTU_T_1)
                                         & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2
                                         & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                           ? {31'h0,
                                              $signed(io_FU_input_bits_RS1_data) < $signed(io_FU_input_bits_decoded_instruction_IS_IMM
                                                                                             ? IMM_signed
                                                                                             : io_FU_input_bits_RS2_data)}
-                                          : (_REMU_T | _SLTU_T_1)
+                                          : (_SLTU_T | _SLTU_T_1)
                                             & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h3
                                             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                               ? {31'h0,

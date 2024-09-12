@@ -39,6 +39,7 @@ case class CoreParameters(
 
     DEBUG: Boolean = false,
 
+    // FIXME: add a requirement here than makes sure that the core config actually makes sense
     coreConfig: String = "RV32I",  // core extension (IMAF, etc...)
 
     fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
