@@ -40,7 +40,7 @@ case class CoreParameters(
     DEBUG: Boolean = false,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
-    coreConfig: String = "RV32I",  // core extension (IMAF, etc...)
+    coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)
 
     fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
 
@@ -103,7 +103,7 @@ case class CoreParameters(
     // Add as many FUs as desired. 
     FUParamSeq: Seq[FUParams] = Seq(
         FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=true, supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=true, supportsDiv=true, supportsBranch=false, supportsAddressGeneration=false),
         FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsAddressGeneration=false),
         FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsAddressGeneration=true),
     )
@@ -121,6 +121,15 @@ case class CoreParameters(
     val physicalRegBits: Int      = log2Ceil(physicalRegCount)      // N regs but x0 does not exist as a physical reg
     val architecturalRegBits: Int = log2Ceil(architecturalRegCount)
     val RATCheckpointBits:Int     = log2Ceil(RATCheckpointCount)
+
+
+    val userXLEN:Int = if (coreConfig.startsWith("RV32")) {
+        32
+    } else if (coreConfig.startsWith("RV64")) {
+        64
+    } else {
+        throw new IllegalArgumentException("Invalid base architecture in coreConfig: " + coreConfig)
+    }
 
 
     ////////////////
@@ -144,6 +153,27 @@ case class CoreParameters(
     //val FURSPortCount:Int = // total number of FUs that connect to the INTRS  // TODO:
 
     val portedFUParamSeq = generateFUPorts(FUParamSeq)
+
+
+
+    ////////////////
+    // EXTENSIONS //
+    ////////////////
+
+    //coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)
+    val userExtensions = coreConfig.substring(4)  // Extract extensions
+
+    val has_mul = userExtensions.contains("M")
+
+    //////////////////
+    // REQUIREMENTS //
+    //////////////////
+
+    val supportedExtensions = Seq("I", "IM", "IMA", "32G")
+
+    require(supportedExtensions.contains(userExtensions), 
+    s"Invalid extensions: $userExtensions. Supported extensions are: ${supportedExtensions.mkString(", ")}")
+
 
 
 

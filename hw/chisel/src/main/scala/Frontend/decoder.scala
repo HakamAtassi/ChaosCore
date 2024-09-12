@@ -148,13 +148,13 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
         io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
     }
 
-    io.decoded_instruction.bits.access_width                  := access_width_t.NONE
+    io.decoded_instruction.bits.access_width                 := access_width_t.NONE
     when(FUNCT3  === "b000".U){
-        io.decoded_instruction.bits.access_width              := access_width_t.B
+        io.decoded_instruction.bits.access_width             := access_width_t.B
     }.elsewhen(FUNCT3  === "b001".U){
-        io.decoded_instruction.bits.access_width              := access_width_t.HW
+        io.decoded_instruction.bits.access_width             := access_width_t.HW
     }.elsewhen(FUNCT3  === "b010".U){
-        io.decoded_instruction.bits.access_width              := access_width_t.W
+        io.decoded_instruction.bits.access_width             := access_width_t.W
     }
 
 

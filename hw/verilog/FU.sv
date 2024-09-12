@@ -101,10 +101,10 @@ module FU(
   wire [5:0]  _ALU_io_FU_output_bits_ROB_index;
   wire [1:0]  _ALU_io_FU_output_bits_fetch_packet_index;
   ALU ALU (
-    .clock                                                (clock),
-    .reset                                                (reset),
-    .io_flush                                             (io_flush),
-    .io_FU_input_valid                                    (io_FU_input_valid),
+    .clock                                                  (clock),
+    .reset                                                  (reset),
+    .io_flush                                               (io_flush),
+    .io_FU_input_valid                                      (io_FU_input_valid),
     .io_FU_input_bits_decoded_instruction_PRD
       (io_FU_input_bits_decoded_instruction_PRD),
     .io_FU_input_bits_decoded_instruction_RD_valid
@@ -121,17 +121,21 @@ module FU(
       (io_FU_input_bits_decoded_instruction_MOB_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_bits_decoded_instruction_instructionType),
+    .io_FU_input_bits_decoded_instruction_needs_ALU
+      (io_FU_input_bits_decoded_instruction_needs_ALU),
+    .io_FU_input_bits_decoded_instruction_needs_branch_unit
+      (io_FU_input_bits_decoded_instruction_needs_branch_unit),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_bits_decoded_instruction_IS_IMM),
-    .io_FU_input_bits_RS1_data                            (io_FU_input_bits_RS1_data),
-    .io_FU_input_bits_RS2_data                            (io_FU_input_bits_RS2_data),
-    .io_FU_input_bits_fetch_PC                            (io_FU_input_bits_fetch_PC),
-    .io_FU_output_valid                                   (_ALU_io_FU_output_valid),
-    .io_FU_output_bits_PRD                                (_ALU_io_FU_output_bits_PRD),
+    .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),
+    .io_FU_input_bits_RS2_data                              (io_FU_input_bits_RS2_data),
+    .io_FU_input_bits_fetch_PC                              (io_FU_input_bits_fetch_PC),
+    .io_FU_output_valid                                     (_ALU_io_FU_output_valid),
+    .io_FU_output_bits_PRD                                  (_ALU_io_FU_output_bits_PRD),
     .io_FU_output_bits_RD_data
       (_ALU_io_FU_output_bits_RD_data),
     .io_FU_output_bits_RD_valid
@@ -146,9 +150,10 @@ module FU(
       (_ALU_io_FU_output_bits_fetch_packet_index)
   );
   branch_unit branch_unit (
-    .clock                                                (clock),
-    .io_flush                                             (io_flush),
-    .io_FU_input_valid                                    (io_FU_input_valid),
+    .clock                                                  (clock),
+    .reset                                                  (reset),
+    .io_flush                                               (io_flush),
+    .io_FU_input_valid                                      (io_FU_input_valid),
     .io_FU_input_bits_decoded_instruction_PRD
       (io_FU_input_bits_decoded_instruction_PRD),
     .io_FU_input_bits_decoded_instruction_RD_valid
@@ -165,9 +170,15 @@ module FU(
       (io_FU_input_bits_decoded_instruction_MOB_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_bits_decoded_instruction_instructionType),
-    .io_FU_input_bits_RS1_data                            (io_FU_input_bits_RS1_data),
-    .io_FU_input_bits_RS2_data                            (io_FU_input_bits_RS2_data),
-    .io_FU_input_bits_fetch_PC                            (io_FU_input_bits_fetch_PC),
+    .io_FU_input_bits_decoded_instruction_needs_ALU
+      (io_FU_input_bits_decoded_instruction_needs_ALU),
+    .io_FU_input_bits_decoded_instruction_needs_branch_unit
+      (io_FU_input_bits_decoded_instruction_needs_branch_unit),
+    .io_FU_input_bits_decoded_instruction_MULTIPLY
+      (io_FU_input_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),
+    .io_FU_input_bits_RS2_data                              (io_FU_input_bits_RS2_data),
+    .io_FU_input_bits_fetch_PC                              (io_FU_input_bits_fetch_PC),
     .io_FU_output_valid
       (_branch_unit_io_FU_output_valid),
     .io_FU_output_bits_PRD
