@@ -154,11 +154,7 @@ module decoder(
       : needs_branch_unit
           ? 2'h0
           : {1'h0,
-             _is_INT_T
-               & (io_instruction_bits_instruction[14:12] == 3'h4
-                  | io_instruction_bits_instruction[14:12] == 3'h5
-                  | io_instruction_bits_instruction[14:12] == 3'h6
-                  | (&(io_instruction_bits_instruction[14:12])))
+             _is_INT_T & io_instruction_bits_instruction[25] | _is_INT_T
                & io_instruction_bits_instruction[25]};
   assign io_decoded_instruction_bits_RS_type =
     _is_INT_T | _is_INT_T_1 | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9

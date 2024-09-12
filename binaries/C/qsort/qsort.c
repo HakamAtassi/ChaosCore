@@ -137,13 +137,6 @@ void sort(size_t n, type arr[])
 
 int main( int argc, char* argv[] )
 {
-#if PREALLOCATE
-  // If needed we preallocate everything in the caches
-  sort(DATA_SIZE, verify_data);
-  if (verify(DATA_SIZE, input_data, input_data))
-    return 1;
-#endif
-
   // Do the sort
   //setStats(1);
   sort( DATA_SIZE, input_data );

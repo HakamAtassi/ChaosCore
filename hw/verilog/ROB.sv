@@ -664,49 +664,57 @@ module ROB(
   wire             _GEN_8 = commit_is_misprediction | commit_valid;
   wire [2:0]       commit_br_type = _GEN_8 ? _GEN_6[earliest_taken_index] : 3'h0;
   wire [1:0]       commit_fetch_packet_index = _GEN_8 ? earliest_taken_index : 2'h0;
-  wire             _GEN_9 = commit_resolved_3_T_NT == commit_prediction_br_mask_3;
-  wire             _GEN_10 = commit_resolved_2_T_NT == commit_prediction_br_mask_2;
-  wire             _GEN_11 = commit_resolved_1_T_NT == commit_prediction_br_mask_1;
-  wire             _GEN_12 = commit_resolved_0_T_NT == commit_prediction_br_mask_0;
+  wire             _GEN_9 =
+    commit_resolved_3_T_NT != commit_prediction_br_mask_3
+    & _ROB_entry_banks_3_io_readDataB_is_branch & ROB_output_ROB_entries_3_valid;
+  wire             _GEN_10 =
+    commit_resolved_2_T_NT != commit_prediction_br_mask_2
+    & _ROB_entry_banks_2_io_readDataB_is_branch & ROB_output_ROB_entries_2_valid;
+  wire             _GEN_11 =
+    commit_resolved_1_T_NT != commit_prediction_br_mask_1
+    & _ROB_entry_banks_1_io_readDataB_is_branch & ROB_output_ROB_entries_1_valid;
+  wire             _GEN_12 =
+    commit_resolved_0_T_NT != commit_prediction_br_mask_0
+    & _ROB_entry_banks_0_io_readDataB_is_branch & ROB_output_ROB_entries_0_valid;
   wire [31:0]      commit_expected_PC =
     commit_is_misprediction
       ? (_GEN_12
-           ? (_GEN_11
-                ? (_GEN_10
-                     ? (_GEN_9
-                          ? expected_PC
-                          : commit_resolved_3_T_NT
-                              ? commit_resolved_3_target
-                              : ROB_output_fetch_PC + 32'h10)
-                     : commit_resolved_2_T_NT
-                         ? commit_resolved_2_target
-                         : ROB_output_fetch_PC + 32'hC)
-                : commit_resolved_1_T_NT
+           ? (commit_resolved_0_T_NT
+                ? commit_resolved_0_target
+                : ROB_output_fetch_PC + 32'h4)
+           : _GEN_11
+               ? (commit_resolved_1_T_NT
                     ? commit_resolved_1_target
                     : ROB_output_fetch_PC + 32'h8)
-           : commit_resolved_0_T_NT
-               ? commit_resolved_0_target
-               : ROB_output_fetch_PC + 32'h4)
+               : _GEN_10
+                   ? (commit_resolved_2_T_NT
+                        ? commit_resolved_2_target
+                        : ROB_output_fetch_PC + 32'hC)
+                   : _GEN_9
+                       ? (commit_resolved_3_T_NT
+                            ? commit_resolved_3_target
+                            : ROB_output_fetch_PC + 32'h10)
+                       : expected_PC)
       : expected_PC;
   wire [31:0]      test =
     commit_is_misprediction
       ? (_GEN_12
-           ? (_GEN_11
-                ? (_GEN_10
-                     ? (_GEN_9
-                          ? 32'h0
-                          : commit_resolved_3_T_NT
-                              ? commit_resolved_3_target
-                              : ROB_output_fetch_PC + 32'h10)
-                     : commit_resolved_2_T_NT
-                         ? commit_resolved_2_target
-                         : ROB_output_fetch_PC + 32'hC)
-                : commit_resolved_1_T_NT
+           ? (commit_resolved_0_T_NT
+                ? commit_resolved_0_target
+                : ROB_output_fetch_PC + 32'h4)
+           : _GEN_11
+               ? (commit_resolved_1_T_NT
                     ? commit_resolved_1_target
                     : ROB_output_fetch_PC + 32'h8)
-           : commit_resolved_0_T_NT
-               ? commit_resolved_0_target
-               : ROB_output_fetch_PC + 32'h4)
+               : _GEN_10
+                   ? (commit_resolved_2_T_NT
+                        ? commit_resolved_2_target
+                        : ROB_output_fetch_PC + 32'hC)
+                   : _GEN_9
+                       ? (commit_resolved_3_T_NT
+                            ? commit_resolved_3_target
+                            : ROB_output_fetch_PC + 32'h10)
+                       : 32'h0)
       : 32'h0;
   reg  [31:0]      io_commit_bits_REG_fetch_PC;
   reg              io_commit_bits_REG_T_NT;
@@ -1473,14 +1481,18 @@ module ROB(
     io_commit_bits_REG_RD_valid_2 <= commit_RD_valid_2;
     io_commit_bits_REG_RD_valid_3 <= commit_RD_valid_3;
     io_commit_valid_REG <= commit_valid;
-    io_partial_commit_REG_valid_0 <= is_completed & ROB_output_row_valid & pre_mispred_0;
+    io_partial_commit_REG_valid_0 <=
+      is_completed & ROB_output_ROB_entries_0_valid & ROB_output_row_valid
+      & pre_mispred_0;
     io_partial_commit_REG_valid_1 <=
-      is_completed_1 & ROB_output_row_valid & commit_row_complete_0 & pre_mispred_1;
+      is_completed_1 & ROB_output_ROB_entries_1_valid & ROB_output_row_valid
+      & commit_row_complete_0 & pre_mispred_1;
     io_partial_commit_REG_valid_2 <=
-      is_completed_2 & ROB_output_row_valid & allPreviousComplete & pre_mispred_2;
+      is_completed_2 & ROB_output_ROB_entries_2_valid & ROB_output_row_valid
+      & allPreviousComplete & pre_mispred_2;
     io_partial_commit_REG_valid_3 <=
-      is_completed_3 & ROB_output_row_valid & allPreviousComplete & commit_row_complete_2
-      & pre_mispred_3;
+      is_completed_3 & ROB_output_ROB_entries_3_valid & ROB_output_row_valid
+      & allPreviousComplete & commit_row_complete_2 & pre_mispred_3;
     io_partial_commit_REG_ROB_index <= front_index;
     io_partial_commit_REG_MOB_index_0 <= ROB_output_ROB_entries_0_MOB_index;
     io_partial_commit_REG_MOB_index_1 <= ROB_output_ROB_entries_1_MOB_index;

@@ -217,9 +217,6 @@ int main( int argc, char* argv[] )
 
   // If needed we preallocate everything in the caches
 
-#if PREALLOCATE
-  towers_solve( &towers );
-#endif
 
   // Solve it
 

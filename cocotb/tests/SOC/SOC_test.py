@@ -20,10 +20,10 @@ configs = {
     "defines": ["-j16"],
     "toplevel": f"{module}",                                  # top level HDL (Update me!)
     "testcase": None,                                         # This is populated by import_tests.py
-    "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND", "-Wno-PINMISSING", "-Wno-SYMRSVDWORD", "-Wno-TIMESCALEMOD",],
+    "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND", "-Wno-PINMISSING", "-Wno-SYMRSVDWORD", "-Wno-TIMESCALEMOD"],
     # ONLY ENABLE DURING DEBUG
     "waves": 1,                                         # Add waves (1/2)
-    "extra_args": ["--trace-fst", "--trace-structs", "--MAKEFLAGS OPT_FAST=-O0"]    # Add waves (2/2)
+    "extra_args": ["--trace-fst", "--trace-structs"]    # Add waves (2/2)
     # Waves are in sim_build/dump.fst
 }
 

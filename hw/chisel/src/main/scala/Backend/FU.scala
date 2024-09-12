@@ -77,6 +77,7 @@ class ALU(coreParameters:CoreParameters) extends Module{
 
 
     // Arithmetic Regs
+    // Base
     val add_result      = Wire(UInt(32.W))
     val sub_result      = Wire(UInt(32.W))
     val slt_result      = Wire(UInt(32.W))
@@ -89,6 +90,11 @@ class ALU(coreParameters:CoreParameters) extends Module{
     val sra_result      = Wire(SInt(32.W))
     val lui_result      = Wire(UInt(32.W))
     val auipc_result    = Wire(UInt(32.W))
+
+    
+
+
+
 
     val RS1_signed      = Wire(SInt(32.W))
     val RS1_unsigned    = Wire(UInt(32.W))
@@ -141,6 +147,9 @@ class ALU(coreParameters:CoreParameters) extends Module{
     sltu_result     := RS1_unsigned < operand2_unsigned
 
 
+
+
+
     val RS2_shamt = Mux(RS2_data >= 32.U, 32.U, RS2_data(4,0))   // Saturate RS2 shift amount
 
     
@@ -168,14 +177,7 @@ class ALU(coreParameters:CoreParameters) extends Module{
     val LUI     =   (instructionType === InstructionType.LUI) && !MULTIPLY
     val AUIPC   =   (instructionType === InstructionType.AUIPC) && !MULTIPLY
 
-    val MUL      =   (instructionType === OP) && FUNCT3 === "b000".U  && MULTIPLY
-    val MULH     =   (instructionType === OP) && FUNCT3 === "b001".U  && MULTIPLY
-    val MULHSU   =   (instructionType === OP) && FUNCT3 === "b010".U  && MULTIPLY
-    val MULHU    =   (instructionType === OP) && FUNCT3 === "b011".U  && MULTIPLY
-    val DIV      =   (instructionType === OP) && FUNCT3 === "b100".U  && MULTIPLY
-    val DIVU     =   (instructionType === OP) && FUNCT3 === "b101".U  && MULTIPLY
-    val REM      =   (instructionType === OP) && FUNCT3 === "b110".U  && MULTIPLY
-    val REMU     =   (instructionType === OP) && FUNCT3 === "b111".U  && MULTIPLY
+
 
 
     dontTouch(lui_result)
@@ -206,8 +208,7 @@ class ALU(coreParameters:CoreParameters) extends Module{
         arithmetic_result   := lui_result
     }.elsewhen(AUIPC){
         arithmetic_result   := auipc_result
-    }
-
+    }    
 
     // ALU pipelined; always ready
     io.FU_input.ready       :=   1.B    
@@ -265,7 +266,7 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
 
     val instruction_PC       = Wire(UInt(32.W))
 
-    IMM                            :=  (io.FU_input.bits.decoded_instruction.IMM).asUInt
+    IMM                     :=  (io.FU_input.bits.decoded_instruction.IMM).asUInt
 
 
 
@@ -277,7 +278,7 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
     // Op select
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
-    val IS_IMM           =   io.FU_input.bits.decoded_instruction.IS_IMM
+    val IS_IMM              =   io.FU_input.bits.decoded_instruction.IS_IMM
     val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
     val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 
@@ -382,9 +383,160 @@ class branch_unit(coreParameters:CoreParameters) extends Module{
 
 }
 
-//class mult
 
-//class div
+
+class mul_div_unit(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+    import InstructionType._
+
+    val io = IO(new Bundle{
+        val flush         =   Input(Bool())
+
+        // Input
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
+        
+        // Output
+        val FU_output     =   ValidIO(new FU_output(coreParameters))
+    })
+
+    // misaligned fetch exception ??
+
+    // Operand data
+    val RS1_data            =   io.FU_input.bits.RS1_data
+    val RS2_data            =   io.FU_input.bits.RS2_data
+    val imm                 =   io.FU_input.bits.decoded_instruction.IMM
+    val instruction_PC      =   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
+
+    // Dest reg
+    val PRD                  =   io.FU_input.bits.decoded_instruction.PRD
+
+    //////////////////////////
+    //////////////////////////
+    //////////////////////////
+
+
+    val arithmetic_result = RegInit(UInt(32.W), 0.U)
+
+
+    // Arithmetic Regs
+    // Base
+
+    val RS1_signed      = Wire(SInt(32.W))
+    val RS1_unsigned    = Wire(UInt(32.W))
+
+    val RS2_signed      = Wire(SInt(32.W))
+    val RS2_unsigned    = Wire(UInt(32.W))
+
+    val IMM_signed          = Wire(SInt(32.W))
+    val IMM_unsigned        = Wire(UInt(32.W))
+
+    RS1_signed              := RS1_data.asSInt
+    RS1_unsigned            := RS1_data.asUInt
+
+    RS2_signed              := RS2_data.asSInt
+    RS2_unsigned            := RS2_data.asUInt
+
+    IMM_signed              := imm(12,0).asSInt
+    IMM_unsigned            := IMM_signed.asUInt
+
+
+    val operand1_signed     = RS1_signed
+    val operand1_unsigned   = RS1_unsigned
+
+
+
+    // Op select
+    val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
+    val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
+    val IS_IMM              =   io.FU_input.bits.decoded_instruction.IS_IMM
+    val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
+    val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
+
+
+    val operand2_signed     = Mux(IS_IMM, IMM_signed, RS2_signed)
+    val operand2_unsigned   = Mux(IS_IMM, IMM_unsigned, RS2_unsigned)
+
+
+
+    val MUL      =   (instructionType === OP) && FUNCT3 === "b000".U  && MULTIPLY
+    val MULH     =   (instructionType === OP) && FUNCT3 === "b001".U  && MULTIPLY
+    val MULSU    =   (instructionType === OP) && FUNCT3 === "b010".U  && MULTIPLY
+    val MULU     =   (instructionType === OP) && FUNCT3 === "b011".U  && MULTIPLY
+    val DIV      =   (instructionType === OP) && FUNCT3 === "b100".U  && MULTIPLY
+    val DIVU     =   (instructionType === OP) && FUNCT3 === "b101".U  && MULTIPLY
+    val REM      =   (instructionType === OP) && FUNCT3 === "b110".U  && MULTIPLY
+    val REMU     =   (instructionType === OP) && FUNCT3 === "b111".U  && MULTIPLY
+
+    // Mul
+    val mul_result          =   Wire(UInt(32.W))
+    val mulh_result         =   Wire(UInt(32.W))
+    val mulsu_result        =   Wire(UInt(32.W))
+    val mulu_result         =   Wire(UInt(32.W))
+    val div_result          =   Wire(UInt(32.W))
+    val divu_result         =   Wire(UInt(32.W))
+    val rem_result          =   Wire(UInt(32.W))
+    val remu_result         =   Wire(UInt(32.W))
+
+    val mul_result_64_s_s = sign_extend(operand1_signed.asUInt, 64) * sign_extend(operand2_signed.asUInt, 64)
+    val mul_result_64_s_u = sign_extend(operand1_signed.asUInt, 64) *  Cat(0.U(32.W), operand2_unsigned) 
+    val mul_result_64_u_u = (Cat(0.U(32.W),operand1_unsigned) * Cat(0.U(32.W), operand2_unsigned))
+
+    mul_result      := mul_result_64_s_s(31,0)
+    mulh_result     := mul_result_64_s_u(63,32)
+    mulsu_result    := mul_result_64_s_u(63,32)
+    mulu_result     := mul_result_64_u_u(63,32)
+    div_result      := operand1_signed.asUInt / operand2_signed.asUInt
+    divu_result     := operand1_unsigned / operand2_unsigned
+    rem_result      := operand1_signed.asUInt % operand2_signed.asUInt
+    remu_result     := operand1_unsigned % operand2_unsigned
+
+    when(MULH){
+        arithmetic_result   := mulh_result
+    }.elsewhen(MULSU){
+        arithmetic_result   := mulsu_result
+    }.elsewhen(MULU){
+        arithmetic_result   := mulu_result
+    }.elsewhen(DIV){
+        arithmetic_result   := div_result
+    }.elsewhen(DIVU){
+        arithmetic_result   := divu_result
+    }.elsewhen(REM){
+        arithmetic_result   := rem_result
+    }.elsewhen(REMU){
+        arithmetic_result   := remu_result
+    }
+
+    // ALU pipelined; always ready
+    io.FU_input.ready       :=   1.B    
+
+    // Not a branch unit (all FUs share the same output channel)
+    io.FU_output.bits.branch_taken          :=  DontCare
+    io.FU_output.bits.target_address        :=  DontCare
+    io.FU_output.bits.branch_valid          :=  0.B
+
+    io.FU_output.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
+    io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
+
+    // Actual Outputs
+    io.FU_output.bits.PRD                   :=   RegNext(io.FU_input.bits.decoded_instruction.PRD)
+    io.FU_output.bits.RD_valid              :=   RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    io.FU_output.bits.RD_data               :=   arithmetic_result
+
+    io.FU_output.bits.MOB_index             :=   RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    io.FU_output.bits.address               :=   0.U
+
+    io.FU_output.bits.address               :=   DontCare
+    io.FU_output.bits.memory_type           :=   DontCare
+    io.FU_output.bits.access_width          :=   DontCare
+    io.FU_output.bits.is_unsigned           :=   DontCare
+    io.FU_output.bits.wr_data               :=   DontCare
+
+
+    io.FU_output.bits.ROB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    io.FU_output.valid           :=   RegNext(io.FU_input.valid && !io.flush)
+
+}
+
 
 class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     import InstructionType._
@@ -404,6 +556,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     val ALU             = if (supportsInt)                  Some(Module(new ALU(coreParameters))) else None
     val branch_unit     = if (supportsBranch)               Some(Module(new branch_unit(coreParameters))) else None
     val AGU             = if (supportsAddressGeneration)    Some(Module(new AGU(coreParameters))) else None
+    val mul_div         = if (supportsMult || supportsDiv)  Some(Module(new mul_div_unit(coreParameters))) else None    // FIXME: for now, mult or div each generate support for both (cant have one without the other)
 
 
     //ALU.get.io.FU_input         := DontCare
@@ -414,6 +567,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     ALU.foreach         {ALU => ALU.io.FU_input                     <> io.FU_input }
     branch_unit.foreach {branch_unit => branch_unit.io.FU_input     <> io.FU_input }
     AGU.foreach         { AGU => AGU.io.FU_input                    <> io.FU_input }
+    mul_div.foreach     { mul_div => mul_div.io.FU_input                <> io.FU_input }
 
 
     // route outputs
@@ -439,14 +593,21 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
         }
     }
 
+    if(mul_div.isDefined){
+        when(mul_div.get.io.FU_output.valid){
+            io.FU_output <> mul_div.get.io.FU_output
+        }
+    }
+
 
 
     //////////////////
     // ASSIGN FLUSH //
     //////////////////
-    if(ALU.isDefined){ALU.get.io.flush      <> io.flush}
-    if(branch_unit.isDefined){branch_unit.get.io.flush <> io.flush}
-    if(AGU.isDefined){AGU.get.io.flush         <> io.flush}
+    if(ALU.isDefined){ALU.get.io.flush                  <> io.flush}
+    if(branch_unit.isDefined){branch_unit.get.io.flush  <> io.flush}
+    if(AGU.isDefined){AGU.get.io.flush                  <> io.flush}
+    if(mul_div.isDefined){mul_div.get.io.flush          <> io.flush}
 
 }
 

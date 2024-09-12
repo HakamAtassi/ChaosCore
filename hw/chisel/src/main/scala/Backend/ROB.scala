@@ -384,6 +384,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){   // only commit if all previous instructions are valid, complete, not a misprediction, and not an exception, or just invalid
         val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
+        val is_valid        = (ROB_output.ROB_entries(i).valid)
         val is_load         = ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && ROB_output.ROB_entries(i).valid
         val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
 
@@ -393,7 +394,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
 
         val allPreviousComplete = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
-        partial_commit.valid(i)      := (is_completed) && ROB_output.row_valid && allPreviousComplete && pre_mispred(i)
+        partial_commit.valid(i)      := (is_completed) && is_valid  && ROB_output.row_valid && allPreviousComplete && pre_mispred(i)
         partial_commit.MOB_index(i)  := ROB_output.ROB_entries(i).MOB_index
         partial_commit.MOB_valid(i)  := is_load || is_store
         partial_commit.ROB_index     := front_index
@@ -473,7 +474,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
         commit.br_type               := commit_resolved(earliest_taken_index).br_type
         commit.fetch_packet_index    := earliest_taken_index
         for(i <- fetchWidth-1 to 0 by - 1){
-            when(commit_resolved(i).T_NT =/= commit_prediction.br_mask(i)){
+            val is_valid  = ROB_output.ROB_entries(i).valid
+            val is_branch = ROB_entry_banks(i).io.readDataB.is_branch
+            when((commit_resolved(i).T_NT =/= commit_prediction.br_mask(i)) && is_branch && is_valid){
                 when(commit_resolved(i).T_NT === 1.B){
                     // branch was actually taken and prediction was not taken
                     // set expected PC to the computed address

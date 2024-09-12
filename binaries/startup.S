@@ -37,7 +37,7 @@ _start:
     li x31, 0
     
 
-    li sp, 0x80004000 # Init stack pointer
+    li sp, 0x80100000
 
     la t0, main   # Load the address of 'main' into register t0
     jr t0         # Jump to 'main'
