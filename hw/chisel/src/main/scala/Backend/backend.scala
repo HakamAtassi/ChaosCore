@@ -148,7 +148,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     val execution_engine = Module(new execution_engine(coreParameters))
 
-    portedFUParamSeq.map(println)
+    //portedFUParamSeq.map(println)
 
     for(i <- 0 until portCount){
         val RS_port     = portedFUParamSeq(i).INTRS_MEMRS_port

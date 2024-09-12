@@ -13,8 +13,7 @@ do
     echo "Building C File: $name"
 
     # Compile the C file to ELF using the linker script
-    #${rvdir}/riscv32-unknown-elf-gcc -ffreestanding -O2 -fno-plt -fno-pic -march=rv32i -mabi=ilp32 startup.S "C/$name.c" -T $linker_script -o "elf/$name.elf"
-    ${rvdir}/riscv32-unknown-elf-gcc -march=rv32im -nostartfiles -nostdlib -std=gnu99 startup.S "C/$name.c"  -O2 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf"  -T $linker_script -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wpedantic -Wcast-qual -g -pedantic  -ffreestanding 
+    ${rvdir}/riscv32-unknown-elf-gcc -march=rv32im -nostartfiles -std=gnu99 startup.S "C/$name.c"  -O2 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf"  -T $linker_script -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wpedantic -Wcast-qual -g -pedantic  -ffreestanding 
 
 
     # Disassemble the ELF file to TXT
@@ -43,9 +42,7 @@ do
     fi
 
     # Compile the C file to ELF using the linker script
-    #${rvdir}/riscv32-unknown-elf-gcc -ffreestanding -O2 -fno-plt -fno-pic -march=rv32i -mabi=ilp32 startup.S "C/$name/$name.c" -T $linker_script -o "elf/$name.elf"
-    #${rvdir}/riscv32-unknown-elf-gcc -march=rv32im -std=gnu99 "C/$name/$name.c" -O3 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf" -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -g -pedantic -Wcast-qual -ffreestanding -Wpedantic
-    ${rvdir}/riscv32-unknown-elf-gcc -march=rv32im -nostartfiles -nostdlib -std=gnu99 startup.S "C/$name/$name.c"  -O2 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf"  -T $linker_script -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wpedantic -Wcast-qual -g -pedantic  -ffreestanding 
+    ${rvdir}/riscv32-unknown-elf-gcc -march=rv32im -nostartfiles  -std=gnu99 startup.S "C/$name/$name.c"  -O2 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf"  -T $linker_script -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wpedantic -Wcast-qual -g -pedantic  -ffreestanding 
 
     # Disassemble the ELF file to TXT
     ${rvdir}/riscv32-unknown-elf-objdump -d -Mnumeric "elf/$name.elf" > "txt/$name.txt"

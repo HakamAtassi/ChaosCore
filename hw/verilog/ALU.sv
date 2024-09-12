@@ -41,7 +41,9 @@ module ALU(
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_bits_decoded_instruction_MOB_index,
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
-  input         io_FU_input_bits_decoded_instruction_SUBTRACT,
+  input         io_FU_input_bits_decoded_instruction_needs_ALU,
+                io_FU_input_bits_decoded_instruction_needs_branch_unit,
+                io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_bits_decoded_instruction_IS_IMM,
   input  [31:0] io_FU_input_bits_RS1_data,
@@ -57,18 +59,26 @@ module ALU(
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
+  wire [31:0] instruction_PC =
+    io_FU_input_bits_fetch_PC
+    + {28'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0};
   reg  [31:0] arithmetic_result;
-  wire [31:0] lui_result = {io_FU_input_bits_decoded_instruction_IMM[19:0], 12'h0};
-  wire        LUI =
-    io_FU_input_bits_decoded_instruction_instructionType == 5'hD
+  wire        AUIPC =
+    io_FU_input_bits_decoded_instruction_instructionType == 5'h5
     & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
+  wire        ALU_input_valid =
+    io_FU_input_valid & io_FU_input_bits_decoded_instruction_needs_ALU;
+  wire        branch_unit_input_valid =
+    io_FU_input_valid & io_FU_input_bits_decoded_instruction_needs_branch_unit;
+  wire        mult_unit_input_valid =
+    io_FU_input_valid & io_FU_input_bits_decoded_instruction_MULTIPLY;
+  reg         io_FU_output_valid_REG;
   reg  [31:0] io_FU_output_bits_fetch_PC_REG;
   reg  [1:0]  io_FU_output_bits_fetch_packet_index_REG;
   reg  [6:0]  io_FU_output_bits_PRD_REG;
   reg         io_FU_output_bits_RD_valid_REG;
   reg  [3:0]  io_FU_output_bits_MOB_index_REG;
   reg  [5:0]  io_FU_output_bits_ROB_index_REG;
-  reg         io_FU_output_valid_REG;
   always @(posedge clock) begin
     if (reset)
       arithmetic_result <= 32'h0;
@@ -82,71 +92,66 @@ module ALU(
           : io_FU_input_bits_RS2_data;
       automatic logic [4:0]  shamt =
         (|(operand2_unsigned[31:5])) ? 5'h0 : operand2_unsigned[4:0];
-      automatic logic [31:0] _GEN = {27'h0, shamt};
-      automatic logic        _SLTU_T =
+      automatic logic        _REMU_T =
         io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
       automatic logic        _SLTU_T_1 =
         io_FU_input_bits_decoded_instruction_instructionType == 5'h4;
-      automatic logic        _SUB_T_3 =
-        io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
-      automatic logic        _SRA_T_3 =
-        io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
+      automatic logic        _BEQ_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
+      automatic logic        _BGE_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
+      automatic logic [31:0] _GEN = {27'h0, shamt};
       automatic logic [62:0] _sll_result_T = {31'h0, io_FU_input_bits_RS1_data} << shamt;
       arithmetic_result <=
-        (_SLTU_T | _SLTU_T_1) & _SUB_T_3 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+        (_REMU_T | _SLTU_T_1) & _BEQ_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY
         & ~io_FU_input_bits_decoded_instruction_SUBTRACT
           ? io_FU_input_bits_RS1_data + operand2_unsigned
-          : (_SLTU_T | _SLTU_T_1) & _SUB_T_3
+          : (_REMU_T | _SLTU_T_1) & _BEQ_T
             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
             & io_FU_input_bits_decoded_instruction_SUBTRACT
               ? io_FU_input_bits_RS1_data - operand2_unsigned
-              : (_SLTU_T | _SLTU_T_1)
+              : (_REMU_T | _SLTU_T_1)
                 & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4
                 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                   ? io_FU_input_bits_RS1_data ^ operand2_unsigned
-                  : (_SLTU_T | _SLTU_T_1)
+                  : (_REMU_T | _SLTU_T_1)
                     & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h6
                     & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                       ? io_FU_input_bits_RS1_data | operand2_unsigned
-                      : (_SLTU_T | _SLTU_T_1)
+                      : (_REMU_T | _SLTU_T_1)
                         & (&io_FU_input_bits_decoded_instruction_FUNCT3)
                         & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                           ? io_FU_input_bits_RS1_data & operand2_unsigned
-                          : (_SLTU_T | _SLTU_T_1)
+                          : (_REMU_T | _SLTU_T_1)
                             & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1
                             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                               ? _sll_result_T[31:0]
-                              : (_SLTU_T | _SLTU_T_1) & _SRA_T_3
+                              : (_REMU_T | _SLTU_T_1) & _BGE_T
                                 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                 & ~io_FU_input_bits_decoded_instruction_SUBTRACT
                                   ? io_FU_input_bits_RS1_data >> _GEN
-                                  : (_SLTU_T | _SLTU_T_1) & _SRA_T_3
+                                  : (_REMU_T | _SLTU_T_1) & _BGE_T
                                     & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                     & io_FU_input_bits_decoded_instruction_SUBTRACT
                                       ? $signed($signed(io_FU_input_bits_RS1_data)
                                                 >>> _GEN)
-                                      : (_SLTU_T | _SLTU_T_1)
+                                      : (_REMU_T | _SLTU_T_1)
                                         & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2
                                         & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                           ? {31'h0,
                                              $signed(io_FU_input_bits_RS1_data) < $signed(io_FU_input_bits_decoded_instruction_IS_IMM
                                                                                             ? IMM_signed
                                                                                             : io_FU_input_bits_RS2_data)}
-                                          : (_SLTU_T | _SLTU_T_1)
+                                          : (_REMU_T | _SLTU_T_1)
                                             & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h3
                                             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                               ? {31'h0,
                                                  io_FU_input_bits_RS1_data < operand2_unsigned}
-                                              : LUI
-                                                  ? lui_result
-                                                  : io_FU_input_bits_decoded_instruction_instructionType == 5'h5
-                                                    & ~io_FU_input_bits_decoded_instruction_MULTIPLY
-                                                      ? io_FU_input_bits_fetch_PC
-                                                        + {28'h0,
-                                                           io_FU_input_bits_decoded_instruction_packet_index,
-                                                           2'h0} + lui_result
-                                                      : 32'h0;
+                                              : io_FU_input_bits_decoded_instruction_instructionType == 5'hD
+                                                & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+                                                  ? {io_FU_input_bits_decoded_instruction_IMM[19:0],
+                                                     12'h0}
+                                                  : 32'h0;
     end
+    io_FU_output_valid_REG <= ALU_input_valid & ~io_flush;
     io_FU_output_bits_fetch_PC_REG <= io_FU_input_bits_fetch_PC;
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;
@@ -154,7 +159,6 @@ module ALU(
     io_FU_output_bits_RD_valid_REG <= io_FU_input_bits_decoded_instruction_RD_valid;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
-    io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;
   end // always @(posedge)
   assign io_FU_output_valid = io_FU_output_valid_REG;
   assign io_FU_output_bits_PRD = io_FU_output_bits_PRD_REG;

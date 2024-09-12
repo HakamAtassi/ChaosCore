@@ -411,7 +411,7 @@ module execution_engine(
     .io_FU_output_bits_fetch_packet_index
       (io_FU_output_1_bits_fetch_packet_index)
   );
-  FU_1 FUs_2 (
+  FU_2 FUs_2 (
     .clock                                                     (clock),
     .reset                                                     (reset),
     .io_flush                                                  (io_flush),

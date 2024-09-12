@@ -39,7 +39,9 @@ sim_nReadmWrite.sv
 ALU.sv
 branch_unit.sv
 FU.sv
+mul_unit.sv
 FU_1.sv
+FU_2.sv
 AGU.sv
 FU_3.sv
 execution_engine.sv
