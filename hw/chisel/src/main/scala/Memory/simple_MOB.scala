@@ -118,6 +118,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
             MOB_entry.PRD                  :=  io.reserve(i).bits.PRD
             MOB_entry.ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB_entry.fetch_packet_index   :=  io.reserve(i).bits.packet_index
+            MOB_entry.mem_signed           :=  io.reserve(i).bits.mem_signed
 
             io.reserved_pointers(i).bits                        := back_index + index_offset
             io.reserved_pointers(i).valid                       := 1.U
@@ -207,6 +208,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.backend_memory_request.bits.PRD          := MOB_front.PRD
     io.backend_memory_request.bits.ROB_index    := MOB_front.ROB_index
     io.backend_memory_request.bits.MOB_index    := front_index
+    io.backend_memory_request.bits.mem_signed   := MOB_front.mem_signed
     io.backend_memory_request.bits.data         := MOB_front.data
     io.backend_memory_request.bits.packet_index := MOB_front.fetch_packet_index
     

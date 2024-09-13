@@ -51,6 +51,7 @@ module decoder(
                 io_decoded_instruction_bits_SUBTRACT,
                 io_decoded_instruction_bits_MULTIPLY,
                 io_decoded_instruction_bits_IS_IMM,
+                io_decoded_instruction_bits_mem_signed,
   output [1:0]  io_decoded_instruction_bits_memory_type,
                 io_decoded_instruction_bits_access_width
 );
@@ -93,6 +94,9 @@ module decoder(
   wire       needs_ALU =
     _is_INT_T & (_needs_ALU_T_1 | io_instruction_bits_instruction[31:25] == 7'h0)
     | _is_INT_T_1 | _is_INT_T_9;
+  wire       _GEN_0 = io_instruction_bits_instruction[14:12] == 3'h0;
+  wire       _GEN_1 = io_instruction_bits_instruction[14:12] == 3'h1;
+  wire       _GEN_2 = io_instruction_bits_instruction[14:12] == 3'h2;
   reg  [1:0] next_ALU_port_0;
   reg  [1:0] next_ALU_port_1;
   reg  [1:0] next_ALU_port_2;
@@ -170,12 +174,17 @@ module decoder(
   assign io_decoded_instruction_bits_IS_IMM =
     _is_INT_T_1 | _is_INT_T_9 | _is_INT_T_11 | _is_MEM_T_1 | _is_MEM_T | _is_INT_T_3
     | _is_INT_T_5 | _is_INT_T_7;
+  assign io_decoded_instruction_bits_mem_signed = _GEN_0 | _GEN_1 | _GEN_2;
   assign io_decoded_instruction_bits_memory_type = _is_MEM_T ? 2'h1 : {_is_MEM_T_1, 1'h0};
   assign io_decoded_instruction_bits_access_width =
-    io_instruction_bits_instruction[14:12] == 3'h0
+    _GEN_0
       ? 2'h1
-      : io_instruction_bits_instruction[14:12] == 3'h1
+      : _GEN_1
           ? 2'h2
-          : {2{io_instruction_bits_instruction[14:12] == 3'h2}};
+          : _GEN_2
+              ? 2'h3
+              : io_instruction_bits_instruction[14:12] == 3'h4
+                  ? 2'h1
+                  : {io_instruction_bits_instruction[14:12] == 3'h5, 1'h0};
 endmodule
 

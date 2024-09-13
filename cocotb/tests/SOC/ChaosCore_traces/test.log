@@ -1,231 +1,377 @@
-============================= test session starts ==============================
-platform linux -- Python 3.12.3, pytest-8.3.2, pluggy-1.5.0
-rootdir: /home/hakam/Repos/ChaosCore/cocotb/tests/SOC
-plugins: cocotb-test-0.2.5
-collected 1 item
+core   0: 3 0x80000000 (0x00000000)  
+core   0: 3 0x80000004 (0x00000000) x 1  0x00000000 
+core   0: 3 0x80000008 (0x00000000) x 2  0x00000000 
+core   0: 3 0x8000000c (0x00000000) x 3  0x00000000 
+core   0: 3 0x80000010 (0x00000000) x 4  0x00000000 
+core   0: 3 0x80000014 (0x00000000) x 5  0x00000000 
+core   0: 3 0x80000018 (0x00000000) x 6  0x00000000 
+core   0: 3 0x8000001c (0x00000000) x 7  0x00000000 
+core   0: 3 0x80000020 (0x00000000) x 8  0x00000000 
+core   0: 3 0x80000024 (0x00000000) x 9  0x00000000 
+core   0: 3 0x80000028 (0x00000000) x10  0x00000000 
+core   0: 3 0x8000002c (0x00000000) x11  0x00000000 
+core   0: 3 0x80000030 (0x00000000) x12  0x00000000 
+core   0: 3 0x80000034 (0x00000000) x13  0x00000000 
+core   0: 3 0x80000038 (0x00000000) x14  0x00000000 
+core   0: 3 0x8000003c (0x00000000) x15  0x00000000 
+core   0: 3 0x80000040 (0x00000000) x16  0x00000000 
+core   0: 3 0x80000044 (0x00000000) x17  0x00000000 
+core   0: 3 0x80000048 (0x00000000) x18  0x00000000 
+core   0: 3 0x8000004c (0x00000000) x19  0x00000000 
+core   0: 3 0x80000050 (0x00000000) x20  0x00000000 
+core   0: 3 0x80000054 (0x00000000) x21  0x00000000 
+core   0: 3 0x80000058 (0x00000000) x22  0x00000000 
+core   0: 3 0x8000005c (0x00000000) x23  0x00000000 
+core   0: 3 0x80000060 (0x00000000) x24  0x00000000 
+core   0: 3 0x80000064 (0x00000000) x25  0x00000000 
+core   0: 3 0x80000068 (0x00000000) x26  0x00000000 
+core   0: 3 0x8000006c (0x00000000) x27  0x00000000 
+core   0: 3 0x80000070 (0x00000000) x28  0x00000000 
+core   0: 3 0x80000074 (0x00000000) x29  0x00000000 
+core   0: 3 0x80000078 (0x00000000) x30  0x00000000 
+core   0: 3 0x8000007c (0x00000000) x31  0x00000000 
+core   0: 3 0x80000080 (0x00000000) x 2  0x80100000 
+core   0: 3 0x80000084 (0x00000000) x 5  0x80000084 
+core   0: 3 0x80000088 (0x00000000) x 5  0x8000066c 
+core   0: 3 0x8000008c (0x00000000)  
+core   0: 3 0x8000066c (0x00000000) x10  0x80001000 
+core   0: 3 0x80000670 (0x00000000) x 2  0x800ffff0 
+core   0: 3 0x80000674 (0x00000000) x10  0x800012d4 
+core   0: 3 0x80000678 (0x00000000)  
+core   0: 3 0x8000067c (0x00000000) x 1  0x80000680 
+core   0: 3 0x800005cc (0x00000000) x 2  0x800fffb0 
+core   0: 3 0x800005d0 (0x00000000) x 6  0x800fffd4 
+core   0: 3 0x800005d4 (0x00000000)  
+core   0: 3 0x800005d8 (0x00000000) x11  0x800fffd4 
+core   0: 3 0x800005dc (0x00000000)  
+core   0: 3 0x800005e0 (0x00000000)  
+core   0: 3 0x800005e4 (0x00000000)  
+core   0: 3 0x800005e8 (0x00000000)  
+core   0: 3 0x800005ec (0x00000000)  
+core   0: 3 0x800005f0 (0x00000000)  
+core   0: 3 0x800005f4 (0x00000000)  
+core   0: 3 0x800005f8 (0x00000000)  
+core   0: 3 0x800005fc (0x00000000) x 1  0x80000600 
+core   0: 3 0x800000a0 (0x00000000) x15  0x80001000 
+core   0: 3 0x800000a4 (0x00000000) x 2  0x800ffe60 
+core   0: 3 0x800000a8 (0x00000000) x15  0x800012dc 
+core   0: 3 0x800000ac (0x00000000)  
+core   0: 3 0x800000b0 (0x00000000)  
+core   0: 3 0x800000b4 (0x00000000)  
+core   0: 3 0x800000b8 (0x00000000)  
+core   0: 3 0x800000bc (0x00000000)  
+core   0: 3 0x800000c0 (0x00000000)  
+core   0: 3 0x800000c4 (0x00000000)  
+core   0: 3 0x800000c8 (0x00000000)  
+core   0: 3 0x800000cc (0x00000000)  
+core   0: 3 0x800000d0 (0x00000000)  
+core   0: 3 0x800000d4 (0x00000000) x 8  0x800012d4 
+core   0: 3 0x800000d8 (0x00000000)  
+core   0: 3 0x800000dc (0x00000000) x25  0x00000025 
+core   0: 3 0x800000e0 (0x00000000) x26  0x00080000 
+core   0: 3 0x800000e4 (0x00000000)  
+core   0: 3 0x800000e8 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012d5 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012d6 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012d7 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012d8 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012d9 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012da 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012db 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012dc 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012dd 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012de 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012df 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e0 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e1 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e2 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e3 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e4 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e5 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
 
-SOC_test.py F                                                            [100%]
+core   0: 3 0x800000ec (0x00000000)  
 
-=================================== FAILURES ===================================
-__________________________________ test_reset __________________________________
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e6 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e7 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
 
-    def test_reset():
-            configs["testcase"] = "test_reset"
->           run(**configs)
-E           SystemExit: FAILED 1 tests.
+core   0: 3 0x800000ec (0x00000000)  
 
-SOC_test.py:34: SystemExit
------------------------------- Captured log call -------------------------------
-INFO     cocotb:simulator.py:334 Running command: perl /usr/local/bin/verilator -cc --exe -Mdir /home/hakam/Repos/ChaosCore/cocotb/tests/SOC/sim_build -DCOCOTB_SIM=1 --top-module SOC --vpi --public-flat-rw --prefix Vtop -o SOC -LDFLAGS -Wl,-rpath,/home/hakam/Repos/ChaosCore/venv/lib/python3.12/site-packages/cocotb/libs -L/home/hakam/Repos/ChaosCore/venv/lib/python3.12/site-packages/cocotb/libs -lcocotbvpi_verilator -Wno-DECLFILENAME -Wno-UNUSED -Wno-UNDRIVEN -Wno-WIDTH -Wno-UNOPTFLAT -Wno-WIDTHEXPAND -Wno-PINMISSING -Wno-SYMRSVDWORD -Wno-TIMESCALEMOD --trace-fst --trace-structs --trace-fst --trace-structs -D-j16 /home/hakam/Repos/ChaosCore/venv/lib/python3.12/site-packages/cocotb/share/lib/verilator/verilator.cpp /home/hakam/Repos/ChaosCore/hw/verilog/Q_2.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_256x8.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x53.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x483.sv /home/hakam/Repos/ChaosCore/hw/verilog/MEMFU.sv /home/hakam/Repos/ChaosCore/hw/verilog/fetch_prediction_bank_64x40.sv /home/hakam/Repos/ChaosCore/hw/verilog/decoder.sv /home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB_mem.sv /home/hakam/Repos/ChaosCore/hw/verilog/simple_MOB.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_3x36.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x288.sv /home/hakam/Repos/ChaosCore/hw/verilog/Q_3.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x744_0.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_8x256.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_prediction.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x455.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue8_UInt32.sv /home/hakam/Repos/ChaosCore/hw/verilog/RAS.sv /home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB.sv /home/hakam/Repos/ChaosCore/hw/verilog/AXI_debug_printer.sv /home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x37.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x471.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x17.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x352.sv /home/hakam/Repos/ChaosCore/hw/verilog/axi_ram_wrap.sv /home/hakam/Repos/ChaosCore/hw/verilog/icache_ReadWriteSmem.sv /home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_backend_memory_response.sv /home/hakam/Repos/ChaosCore/hw/verilog/gshare.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_4x193.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_UInt4096.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x21.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x104.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x54.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x471_0.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x204.sv /home/hakam/Repos/ChaosCore/hw/verilog/mul_div_unit.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x234.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue2_fetch_packet.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x364.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x26.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x40.sv /home/hakam/Repos/ChaosCore/hw/verilog/FU_2.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x388.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_load_request.sv /home/hakam/Repos/ChaosCore/hw/verilog/Q_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_8x138.sv /home/hakam/Repos/ChaosCore/hw/verilog/ReadWriteSmem.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x348.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_8x36.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x12.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x134.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x37.sv /home/hakam/Repos/ChaosCore/hw/verilog/Q_4.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x744.sv /home/hakam/Repos/ChaosCore/hw/verilog/ROB.sv /home/hakam/Repos/ChaosCore/hw/verilog/ROB_shared_mem.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue8_backend_memory_response.sv /home/hakam/Repos/ChaosCore/hw/verilog/predecoder.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x74.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue3_backend_memory_response.sv /home/hakam/Repos/ChaosCore/hw/verilog/WAW_handler.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_UInt256_2.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_3x68.sv /home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_FU_output.sv /home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x278.sv /home/hakam/Repos/ChaosCore/hw/verilog/frontend.sv /home/hakam/Repos/ChaosCore/hw/verilog/BRU.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x204.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_FTQ_entry_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_UInt256.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x345.sv /home/hakam/Repos/ChaosCore/hw/verilog/AGU.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x690.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x274.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x447.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x418.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x434.sv /home/hakam/Repos/ChaosCore/hw/verilog/free_list.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x743_0.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x65.sv /home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x28.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x743.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_frontend_memory_request.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x274.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_FTQ_entry_2.sv /home/hakam/Repos/ChaosCore/hw/verilog/ROB_WB_mem.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x743.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x486.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_4096x60.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_8x336.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x2.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_prediction.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x744.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x727.sv /home/hakam/Repos/ChaosCore/hw/verilog/MEMRS.sv /home/hakam/Repos/ChaosCore/hw/verilog/ReadWriteSmem_32.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue2_FTQ_entry_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x3.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_4x336.sv /home/hakam/Repos/ChaosCore/hw/verilog/backend.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x727.sv /home/hakam/Repos/ChaosCore/hw/verilog/fetch_resolved_banks_64x37.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x271.sv /home/hakam/Repos/ChaosCore/hw/verilog/ALU.sv /home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x53.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue8_UInt256.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue4_AXI_request_Q_entry.sv /home/hakam/Repos/ChaosCore/hw/verilog/L1_data_cache.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x110.sv /home/hakam/Repos/ChaosCore/hw/verilog/FTQ.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue2_AXI_request_Q_entry.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x110.sv /home/hakam/Repos/ChaosCore/hw/verilog/branch_unit.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_decoded_fetch_packet.sv /home/hakam/Repos/ChaosCore/hw/verilog/FU_3.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x287.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_memory_request.sv /home/hakam/Repos/ChaosCore/hw/verilog/extern_modules.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x21.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x471.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_128x39.sv /home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore.sv /home/hakam/Repos/ChaosCore/hw/verilog/fetch_64x54.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_fetch_packet.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x70.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue8_backend_memory_request.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x288.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_UInt256_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/Q.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x438.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_final_AXI_response.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_65536x2.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x234.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue2_decoded_fetch_packet_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_8x68.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue2_decoded_fetch_packet.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_8x32.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x483.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_decoded_fetch_packet_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x727_0.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x690_0.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x486.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_64x21.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue4_FU_output.sv /home/hakam/Repos/ChaosCore/hw/verilog/ROB_entry_mem.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x388.sv /home/hakam/Repos/ChaosCore/hw/verilog/debug_printer.sv /home/hakam/Repos/ChaosCore/hw/verilog/PC_gen.sv /home/hakam/Repos/ChaosCore/hw/verilog/execution_engine.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x287.sv /home/hakam/Repos/ChaosCore/hw/verilog/RAT.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_FTQ_entry.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x134.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x2_0.sv /home/hakam/Repos/ChaosCore/hw/verilog/AXI_master_slave.sv /home/hakam/Repos/ChaosCore/hw/verilog/SOC.sv /home/hakam/Repos/ChaosCore/hw/verilog/rename.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_8x72.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_4x192.sv /home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_2x2.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x438.sv /home/hakam/Repos/ChaosCore/hw/verilog/PHT_memory.sv /home/hakam/Repos/ChaosCore/hw/verilog/instruction_validator.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_busy_64x1.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_65x32.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_3x138.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_FTQ_entry.sv /home/hakam/Repos/ChaosCore/hw/verilog/L1_instruction_cache.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x434_0.sv /home/hakam/Repos/ChaosCore/hw/verilog/BP.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x32.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x434.sv /home/hakam/Repos/ChaosCore/hw/verilog/FU_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue8_AXI_request_Q_entry.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_4096x56.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_memory_request_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/instruction_fetch.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue8_AXI_request.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_fetch_packet.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x104.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x455.sv /home/hakam/Repos/ChaosCore/hw/verilog/AXI_master.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_memory_request.sv /home/hakam/Repos/ChaosCore/hw/verilog/MOB.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue2_FTQ_entry.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x336.sv /home/hakam/Repos/ChaosCore/hw/verilog/mem_64x44.sv /home/hakam/Repos/ChaosCore/hw/verilog/sim_nReadmWrite.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x271.sv /home/hakam/Repos/ChaosCore/hw/verilog/RS.sv /home/hakam/Repos/ChaosCore/hw/verilog/Arbiter2_AXI_request_Q_entry.sv /home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore_tile.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_8x352.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_16x418.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x329.sv /home/hakam/Repos/ChaosCore/hw/verilog/fetch_packet_decoder.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue1_UInt32.sv /home/hakam/Repos/ChaosCore/hw/verilog/FU.sv /home/hakam/Repos/ChaosCore/hw/verilog/RS_1.sv /home/hakam/Repos/ChaosCore/hw/verilog/Queue16_decoded_fetch_packet.sv /home/hakam/Repos/ChaosCore/hw/verilog/ram_2x690.sv /home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_wrap_2x2.v /home/hakam/Repos/ChaosCore/hw/verilog/axi_ram.v /home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v /home/hakam/Repos/ChaosCore/hw/verilog/nReadmWrite.v /home/hakam/Repos/ChaosCore/hw/verilog/arbiter.v /home/hakam/Repos/ChaosCore/hw/verilog/priority_encoder.v
-INFO     cocotb:simulator.py:305 - V e r i l a t i o n   R e p o r t: Verilator 5.024 2024-04-05 rev v5.024
-INFO     cocotb:simulator.py:305 - Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
-INFO     cocotb:simulator.py:305 - Verilator: Walltime 0.001 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.000 s on 1 threads; alloced 18.406 MB
-INFO     cocotb:simulator.py:334 Running command: make -C /home/hakam/Repos/ChaosCore/cocotb/tests/SOC/sim_build -f Vtop.mk
-INFO     cocotb:simulator.py:305 make: Entering directory '/home/hakam/Repos/ChaosCore/cocotb/tests/SOC/sim_build'
-INFO     cocotb:simulator.py:305 make: Nothing to be done for 'default'.
-INFO     cocotb:simulator.py:305 make: Leaving directory '/home/hakam/Repos/ChaosCore/cocotb/tests/SOC/sim_build'
-INFO     cocotb:simulator.py:334 Running command: /home/hakam/Repos/ChaosCore/cocotb/tests/SOC/sim_build/SOC
-INFO     cocotb:simulator.py:305      -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:105  in set_program_name_in_venv        Using Python virtual environment interpreter at /home/hakam/Repos/ChaosCore/venv/bin/python
-INFO     cocotb:simulator.py:305      -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb                             Running on Verilator version 5.024 2024-04-05
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb                             Running tests with cocotb v1.8.1 from /home/hakam/Repos/ChaosCore/venv/lib/python3.12/site-packages/cocotb
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb                             Seeding Python random module with 1726178109
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.regression                  Found test SOC_cocotb.test_reset
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.regression                  running test_reset (1/1)
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   AXI slave model (write)
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   cocotbext-axi version 0.1.24
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Copyright (c) 2021 Alex Forencich
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   https://github.com/alexforencich/cocotbext-axi
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Reset de-asserted
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Reset de-asserted
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Reset de-asserted
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   AXI slave model configuration:
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     Address width: 32 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     ID width: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     Byte size: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     Data width: 32 bits (4 bytes)
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   AXI slave model signals:
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awaddr width: 32 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awburst width: 2 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awcache width: 4 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awid width: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awlen width: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awlock width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awprot width: 3 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awqos width: 4 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awready width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awregion width: 4 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awsize width: 3 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awuser width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     awvalid width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     wdata width: 32 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     wlast width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     wready width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     wstrb width: 4 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     wuser width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     wvalid width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     bid width: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     bready width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     bresp width: 2 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     buser width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     bvalid width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Reset de-asserted
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   AXI slave model (read)
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   cocotbext-axi version 0.1.24
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Copyright (c) 2021 Alex Forencich
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   https://github.com/alexforencich/cocotbext-axi
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Reset de-asserted
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Reset de-asserted
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   AXI slave model configuration:
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     Address width: 32 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     ID width: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     Byte size: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     Data width: 32 bits (4 bytes)
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   AXI slave model signals:
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     araddr width: 32 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arburst width: 2 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arcache width: 4 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arid width: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arlen width: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arlock width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arprot width: 3 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arqos width: 4 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arready width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arregion width: 4 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arsize width: 3 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     aruser width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     arvalid width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     rdata width: 32 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     rid width: 8 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     rlast width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     rready width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     rresp width: 2 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     ruser width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                     rvalid width: 1 bits
-INFO     cocotb:simulator.py:305      0.00ns INFO     cocotb.SOC.m_axi                   Reset de-asserted
-INFO     cocotb:simulator.py:305 RAM00000000: 13 00 00 00 93 00 00 00 13 01 00 00 93 01 00 00  ................
-INFO     cocotb:simulator.py:305 RAM00000010: 13 02 00 00 93 02 00 00 13 03 00 00 93 03 00 00  ................
-INFO     cocotb:simulator.py:305 RAM00000020: 13 04 00 00 93 04 00 00 13 05 00 00 93 05 00 00  ................
-INFO     cocotb:simulator.py:305 RAM00000030: 13 06 00 00 93 06 00 00 13 07 00 00 93 07 00 00  ................
-INFO     cocotb:simulator.py:305 RAM00000040: 13 08 00 00 93 08 00 00 13 09 00 00 93 09 00 00  ................
-INFO     cocotb:simulator.py:305 RAM00000050: 13 0a 00 00 93 0a 00 00 13 0b 00 00 93 0b 00 00  ................
-INFO     cocotb:simulator.py:305 RAM00000060: 13 0c 00 00 93 0c 00 00 13 0d 00 00 93 0d 00 00  ................
-INFO     cocotb:simulator.py:305 RAM00000070: 13 0e 00 00 93 0e 00 00 13 0f 00 00 93 0f 00 00  ................
-INFO     cocotb:simulator.py:305 RAM00000080: 37 01 10 80 97 02 00 00 93 82 82 5e 67 80 02 00  7..........^g...
-INFO     cocotb:simulator.py:305 RAM00000090: b7 07 08 00 23 a0 a7 00 13 05 00 00 67 80 00 00  ....#.......g...
-INFO     cocotb:simulator.py:305 RAM000000a0: b7 17 00 80 13 01 01 eb 93 87 47 36 23 24 81 14  ..........G6#$..
-INFO     cocotb:simulator.py:305 RAM000000b0: 23 22 91 13 23 20 a1 13 23 26 11 14 23 22 91 14  #"..#...#&..#"..
-INFO     cocotb:simulator.py:305 RAM000000c0: 23 20 21 15 23 2a 51 13 23 28 61 13 23 24 81 13  #.!.#*Q.#(a.#$..
-INFO     cocotb:simulator.py:305 RAM000000d0: 23 2e b1 11 13 04 05 00 23 24 b1 00 93 0c 50 02  #.......#$....P.
-INFO     cocotb:simulator.py:305 RAM000000e0: 37 0d 08 00 23 26 f1 00 6f 00 00 01 63 8c 07 04  7...#&..o...c...
-INFO     cocotb:simulator.py:305 RAM000000f0: 13 04 14 00 23 20 fd 00 83 47 04 00 e3 98 97 ff  ....#....G......
-INFO     cocotb:simulator.py:305 RAM00000100: 83 45 14 00 93 08 14 00 13 86 08 00 13 0c 00 02  .E..............
-INFO     cocotb:simulator.py:305 RAM00000110: 93 06 f0 ff 13 0b f0 ff 13 03 00 00 93 87 d5 fd  ................
-INFO     cocotb:simulator.py:305 RAM00000120: 93 f7 f7 0f 13 07 50 05 13 04 16 00 63 64 f7 06  ......P.....cd..
-INFO     cocotb:simulator.py:305 RAM00000130: 03 27 c1 00 93 97 27 00 b3 87 e7 00 83 a7 07 00  .'....'.........
-INFO     cocotb:simulator.py:305 RAM00000140: 67 80 07 00 83 20 c1 14 03 24 81 14 83 24 41 14  g........$...$A.
-INFO     cocotb:simulator.py:305 RAM00000150: 03 29 01 14 83 2a 41 13 03 2b 01 13 03 2c 81 12  .)...*A..+...,..
-INFO     cocotb:simulator.py:305 RAM00000160: 83 2c 41 12 03 2d 01 12 83 2d c1 11 13 01 01 15  .,A..-...-......
-INFO     cocotb:simulator.py:305 RAM00000170: 67 80 00 00 13 8c 05 00 83 45 16 00 13 07 50 05  g........E....P.
-INFO     cocotb:simulator.py:305 RAM00000180: 13 06 04 00 93 87 d5 fd 93 f7 f7 0f 13 04 16 00  ................
-INFO     cocotb:simulator.py:305 RAM00000190: e3 70 f7 fa b7 07 08 00 93 06 50 02 23 a0 d7 00  .p........P.#...
-INFO     cocotb:simulator.py:305 RAM000001a0: 13 84 08 00 6f f0 5f f5 03 45 16 00 93 07 90 00  ....o._..E......
-INFO     cocotb:simulator.py:305 RAM000001b0: 93 86 05 fd 13 06 05 fd 93 05 05 00 63 e4 c7 3a  ............c..:
-INFO     cocotb:simulator.py:305 RAM000001c0: 13 06 04 00 13 0e 90 00 93 97 26 00 b3 87 d7 00  ..........&.....
-INFO     cocotb:simulator.py:305 RAM000001d0: 13 06 16 00 93 97 17 00 b3 87 a7 00 03 45 06 00  .............E..
-INFO     cocotb:simulator.py:305 RAM000001e0: 93 86 07 fd 93 07 05 fd 93 05 05 00 e3 7e fe fc  .............~..
-INFO     cocotb:simulator.py:305 RAM000001f0: e3 56 0b f2 13 8b 06 00 93 06 f0 ff 6f f0 1f f2  .V..........o...
-INFO     cocotb:simulator.py:305 RAM00000200: 83 45 16 00 13 06 04 00 6f f0 5f f1 b7 07 08 00  .E......o._.....
-INFO     cocotb:simulator.py:305 RAM00000210: 93 06 50 02 23 a0 d7 00 6f f0 1f ee 83 27 81 00  ..P.#...o....'..
-INFO     cocotb:simulator.py:305 RAM00000220: 83 45 16 00 13 06 04 00 83 a6 07 00 93 87 47 00  .E............G.
-INFO     cocotb:simulator.py:305 RAM00000230: 23 24 f1 00 6f f0 df fb b7 07 08 00 23 2e 31 13  #$..o.......#.1.
-INFO     cocotb:simulator.py:305 RAM00000240: 23 2c 41 13 93 06 00 03 23 a0 d7 00 93 06 80 07  #,A.....#.......
-INFO     cocotb:simulator.py:305 RAM00000250: 23 a0 d7 00 83 27 81 00 93 0a 00 01 93 0d 00 00  #....'..........
-INFO     cocotb:simulator.py:305 RAM00000260: 93 87 47 00 03 27 81 00 93 04 00 00 03 29 07 00  ..G..'.......)..
-INFO     cocotb:simulator.py:305 RAM00000270: 23 24 f1 00 13 86 0a 00 93 06 00 00 13 05 09 00  #$..............
-INFO     cocotb:simulator.py:305 RAM00000280: 93 85 04 00 ef 00 50 4f 23 28 a1 00 63 8e 9d 24  ......PO#(..c..$
-INFO     cocotb:simulator.py:305 RAM00000290: 23 26 71 13 13 0a 10 00 93 0b 41 01 13 86 0a 00  #&q.......A.....
-INFO     cocotb:simulator.py:305 RAM000002a0: 93 06 00 00 13 05 09 00 93 85 04 00 ef 00 d0 09  ................
-INFO     cocotb:simulator.py:305 RAM000002b0: 13 86 0a 00 93 06 00 00 13 09 05 00 93 84 05 00  ................
-INFO     cocotb:simulator.py:305 RAM000002c0: ef 00 90 4b 23 a0 ab 00 93 09 0a 00 93 8b 4b 00  ...K#.........K.
-INFO     cocotb:simulator.py:305 RAM000002d0: 13 0a 1a 00 e3 94 9d fc e3 72 59 fd 83 2b c1 12  .........rY..+..
-INFO     cocotb:simulator.py:305 RAM000002e0: 93 07 fb ff 13 06 fa ff b7 06 08 00 63 58 6a 01  ............cXj.
-INFO     cocotb:simulator.py:305 RAM000002f0: 23 a0 86 01 93 87 f7 ff e3 9c c7 fe 13 06 01 01  #...............
-INFO     cocotb:simulator.py:305 RAM00000300: 93 99 29 00 b3 09 36 01 13 05 90 00 b7 05 08 00  ..)...6.........
-INFO     cocotb:simulator.py:305 RAM00000310: 6f 00 80 00 93 89 07 00 83 a7 09 00 93 06 00 03  o...............
-INFO     cocotb:simulator.py:305 RAM00000320: 63 74 f5 00 93 06 70 05 b3 87 d7 00 23 a0 f5 00  ct....p.....#...
-INFO     cocotb:simulator.py:305 RAM00000330: 93 87 c9 ff e3 10 36 ff 83 29 c1 13 03 2a 81 13  ......6..)...*..
-INFO     cocotb:simulator.py:305 RAM00000340: 6f f0 9f db 23 2e 31 13 23 2c 41 13 93 07 10 00  o...#.1.#,A.....
-INFO     cocotb:simulator.py:305 RAM00000350: 63 c4 67 1a 83 27 81 00 03 a9 07 00 93 87 47 00  c.g..'........G.
-INFO     cocotb:simulator.py:305 RAM00000360: 23 24 f1 00 93 54 f9 41 63 d0 04 02 b3 37 20 01  #$...T.Ac....7..
-INFO     cocotb:simulator.py:305 RAM00000370: b3 04 90 40 b7 06 08 00 13 06 d0 02 23 a0 c6 00  ...@........#...
-INFO     cocotb:simulator.py:305 RAM00000380: 33 09 20 41 b3 84 f4 40 93 0a a0 00 93 0d 00 00  3..A...@........
-INFO     cocotb:simulator.py:305 RAM00000390: 6f f0 5f ee 83 45 16 00 13 03 13 00 13 06 04 00  o._..E..........
-INFO     cocotb:simulator.py:305 RAM000003a0: 6f f0 df d7 23 2e 31 13 23 2c 41 13 93 0a 00 01  o...#.1.#,A.....
-INFO     cocotb:simulator.py:305 RAM000003b0: 93 0d 00 00 93 07 10 00 63 c4 67 10 83 27 81 00  ........c.g..'..
-INFO     cocotb:simulator.py:305 RAM000003c0: 93 87 47 00 6f f0 1f ea 03 27 81 00 23 26 71 13  ..G.o....'..#&q.
-INFO     cocotb:simulator.py:305 RAM000003d0: 83 27 07 00 93 0b 47 00 63 88 07 16 63 5e 60 05  .'....G.c...c^`.
-INFO     cocotb:simulator.py:305 RAM000003e0: 13 06 d0 02 63 1c cc 00 03 c6 07 00 63 1a 06 04  ....c.......c...
-INFO     cocotb:simulator.py:305 RAM000003f0: 6f 00 c0 07 b7 17 00 80 93 87 c7 35 13 86 07 00  o..........5....
-INFO     cocotb:simulator.py:305      0.00ns INFO     test                               Hello from SOC mon
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000000 (0x00000000)
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000004 (0x00000000) x 1  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000008 (0x00000000) x 2  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000000c (0x00000000) x 3  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000010 (0x00000000) x 4  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000014 (0x00000000) x 5  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000018 (0x00000000) x 6  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000001c (0x00000000) x 7  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000020 (0x00000000) x 8  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000024 (0x00000000) x 9  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000028 (0x00000000) x10  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000002c (0x00000000) x11  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000030 (0x00000000) x12  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000034 (0x00000000) x13  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000038 (0x00000000) x14  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000003c (0x00000000) x15  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000040 (0x00000000) x16  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000044 (0x00000000) x17  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000048 (0x00000000) x18  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000004c (0x00000000) x19  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000050 (0x00000000) x20  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000054 (0x00000000) x21  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000058 (0x00000000) x22  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000005c (0x00000000) x23  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000060 (0x00000000) x24  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000064 (0x00000000) x25  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000068 (0x00000000) x26  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000006c (0x00000000) x27  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000070 (0x00000000) x28  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000074 (0x00000000) x29  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000078 (0x00000000) x30  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000007c (0x00000000) x31  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000080 (0x00000000) x 2  0x80100000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000084 (0x00000000) x 5  0x80000088
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000088 (0x00000000) x 5  0x80000670
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000008c (0x00000000)
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000670 (0x00000000) x15  0x000004bc
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000674 (0x00000000) x11  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x80000678 (0x00000000) x12  0x00000000
-ERROR    cocotb:simulator.py:305 core   0: 3 0x8000067c (0x00000000) x13  0x00000000
-INFO     cocotb:simulator.py:305  20009.00ns INFO     cocotb.regression                  test_reset failed
-INFO     cocotb:simulator.py:305                                                         Traceback (most recent call last):
-INFO     cocotb:simulator.py:305                                                           File "/home/hakam/Repos/ChaosCore/cocotb/tests/SOC/SOC_cocotb.py", line 41, in test_reset
-INFO     cocotb:simulator.py:305                                                             assert False
-INFO     cocotb:simulator.py:305                                                         AssertionError: assert False
-INFO     cocotb:simulator.py:305  20009.00ns INFO     cocotb.regression                  **************************************************************************************
-INFO     cocotb:simulator.py:305                                                         ** TEST                          STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
-INFO     cocotb:simulator.py:305                                                         **************************************************************************************
-INFO     cocotb:simulator.py:305                                                         ** SOC_cocotb.test_reset          FAIL       20009.00           4.15       4824.57  **
-INFO     cocotb:simulator.py:305                                                         **************************************************************************************
-INFO     cocotb:simulator.py:305                                                         ** TESTS=1 PASS=0 FAIL=1 SKIP=0              20009.00           4.32       4635.18  **
-INFO     cocotb:simulator.py:305                                                         **************************************************************************************
-INFO     cocotb:simulator.py:305 
-INFO     cocotb:simulator.py:305 Addressing configuration for axi_interconnect instance SOC.axi_interconnect.NOC.axi_interconnect_inst
-INFO     cocotb:simulator.py:305  0 ( 0): 80000000 / 24 -- 80000000-80ffffff
-INFO     cocotb:simulator.py:305  1 ( 0): 00080000 / 12 -- 00080000-00080fff
-INFO     cocotb:simulator.py:305 - :0: Verilog $finish
-ERROR    cocotb:simulator.py:256 Failed: SOC_cocotb::test_reset
-=========================== short test summary info ============================
-FAILED SOC_test.py::test_reset - SystemExit: FAILED 1 tests.
-============================== 1 failed in 4.72s ===============================
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e8 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012e9 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012ea 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012eb 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012ec 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012ed 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012ee 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012ef 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f0 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f1 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f2 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f3 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f4 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f5 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f6 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f7 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f8 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012f9 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012fa 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012fb 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012fc 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012fd 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012fe 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x800012ff 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x80001300 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x80001301 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x80001302 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x80001303 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+�core   0: 3 0x800000ec (0x00000000)  
+�core   0: 3 0x800000f0 (0x00000000) x 8  0x80001304 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x80001305 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+tcore   0: 3 0x800000ec (0x00000000)  
+tcore   0: 3 0x800000f0 (0x00000000) x 8  0x80001306 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x80001307 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+tcore   0: 3 0x800000ec (0x00000000)  
+tcore   0: 3 0x800000f0 (0x00000000) x 8  0x80001308 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x80001309 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+�core   0: 3 0x800000ec (0x00000000)  
+�core   0: 3 0x800000f0 (0x00000000) x 8  0x8000130a 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x8000130b 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+�core   0: 3 0x800000ec (0x00000000)  
+�core   0: 3 0x800000f0 (0x00000000) x 8  0x8000130c 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x8000130d 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+�core   0: 3 0x800000ec (0x00000000)  
+�core   0: 3 0x800000f0 (0x00000000) x 8  0x8000130e 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+core   0: 3 0x800000ec (0x00000000)  
+core   0: 3 0x800000f0 (0x00000000) x 8  0x8000130f 
+core   0: 3 0x800000f4 (0x00000000)  
+core   0: 3 0x800000f8 (0x00000000) x15  0x00000000 
+core   0: 3 0x800000fc (0x00000000)  
+�core   0: 3 0x800000ec (0x00000000)  
+�core   0: 3 0x800000f0 (0x00000000) x 8  0x80001310 
+core   0: 3 0x800000f4 (0x00000000)  

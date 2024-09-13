@@ -58,6 +58,7 @@ module simple_MOB(
                 io_reserve_0_bits_SUBTRACT,
                 io_reserve_0_bits_MULTIPLY,
                 io_reserve_0_bits_IS_IMM,
+                io_reserve_0_bits_mem_signed,
   input  [1:0]  io_reserve_0_bits_memory_type,
                 io_reserve_0_bits_access_width,
   output        io_reserve_1_ready,
@@ -86,6 +87,7 @@ module simple_MOB(
                 io_reserve_1_bits_SUBTRACT,
                 io_reserve_1_bits_MULTIPLY,
                 io_reserve_1_bits_IS_IMM,
+                io_reserve_1_bits_mem_signed,
   input  [1:0]  io_reserve_1_bits_memory_type,
                 io_reserve_1_bits_access_width,
   output        io_reserve_2_ready,
@@ -114,6 +116,7 @@ module simple_MOB(
                 io_reserve_2_bits_SUBTRACT,
                 io_reserve_2_bits_MULTIPLY,
                 io_reserve_2_bits_IS_IMM,
+                io_reserve_2_bits_mem_signed,
   input  [1:0]  io_reserve_2_bits_memory_type,
                 io_reserve_2_bits_access_width,
   output        io_reserve_3_ready,
@@ -142,6 +145,7 @@ module simple_MOB(
                 io_reserve_3_bits_SUBTRACT,
                 io_reserve_3_bits_MULTIPLY,
                 io_reserve_3_bits_IS_IMM,
+                io_reserve_3_bits_mem_signed,
   input  [1:0]  io_reserve_3_bits_memory_type,
                 io_reserve_3_bits_access_width,
   output        io_reserved_pointers_0_valid,
@@ -246,6 +250,7 @@ module simple_MOB(
   output        io_backend_memory_request_valid,
   output [31:0] io_backend_memory_request_bits_addr,
                 io_backend_memory_request_bits_data,
+  output        io_backend_memory_request_bits_mem_signed,
   output [1:0]  io_backend_memory_request_bits_memory_type,
                 io_backend_memory_request_bits_access_width,
   output [3:0]  io_backend_memory_request_bits_MOB_index,
@@ -271,6 +276,7 @@ module simple_MOB(
   reg  [5:0]        MOB_0_ROB_index;
   reg  [1:0]        MOB_0_fetch_packet_index;
   reg  [31:0]       MOB_0_address;
+  reg               MOB_0_mem_signed;
   reg  [1:0]        MOB_0_access_width;
   reg  [6:0]        MOB_0_PRD;
   reg  [31:0]       MOB_0_data;
@@ -281,6 +287,7 @@ module simple_MOB(
   reg  [5:0]        MOB_1_ROB_index;
   reg  [1:0]        MOB_1_fetch_packet_index;
   reg  [31:0]       MOB_1_address;
+  reg               MOB_1_mem_signed;
   reg  [1:0]        MOB_1_access_width;
   reg  [6:0]        MOB_1_PRD;
   reg  [31:0]       MOB_1_data;
@@ -291,6 +298,7 @@ module simple_MOB(
   reg  [5:0]        MOB_2_ROB_index;
   reg  [1:0]        MOB_2_fetch_packet_index;
   reg  [31:0]       MOB_2_address;
+  reg               MOB_2_mem_signed;
   reg  [1:0]        MOB_2_access_width;
   reg  [6:0]        MOB_2_PRD;
   reg  [31:0]       MOB_2_data;
@@ -301,6 +309,7 @@ module simple_MOB(
   reg  [5:0]        MOB_3_ROB_index;
   reg  [1:0]        MOB_3_fetch_packet_index;
   reg  [31:0]       MOB_3_address;
+  reg               MOB_3_mem_signed;
   reg  [1:0]        MOB_3_access_width;
   reg  [6:0]        MOB_3_PRD;
   reg  [31:0]       MOB_3_data;
@@ -311,6 +320,7 @@ module simple_MOB(
   reg  [5:0]        MOB_4_ROB_index;
   reg  [1:0]        MOB_4_fetch_packet_index;
   reg  [31:0]       MOB_4_address;
+  reg               MOB_4_mem_signed;
   reg  [1:0]        MOB_4_access_width;
   reg  [6:0]        MOB_4_PRD;
   reg  [31:0]       MOB_4_data;
@@ -321,6 +331,7 @@ module simple_MOB(
   reg  [5:0]        MOB_5_ROB_index;
   reg  [1:0]        MOB_5_fetch_packet_index;
   reg  [31:0]       MOB_5_address;
+  reg               MOB_5_mem_signed;
   reg  [1:0]        MOB_5_access_width;
   reg  [6:0]        MOB_5_PRD;
   reg  [31:0]       MOB_5_data;
@@ -331,6 +342,7 @@ module simple_MOB(
   reg  [5:0]        MOB_6_ROB_index;
   reg  [1:0]        MOB_6_fetch_packet_index;
   reg  [31:0]       MOB_6_address;
+  reg               MOB_6_mem_signed;
   reg  [1:0]        MOB_6_access_width;
   reg  [6:0]        MOB_6_PRD;
   reg  [31:0]       MOB_6_data;
@@ -341,6 +353,7 @@ module simple_MOB(
   reg  [5:0]        MOB_7_ROB_index;
   reg  [1:0]        MOB_7_fetch_packet_index;
   reg  [31:0]       MOB_7_address;
+  reg               MOB_7_mem_signed;
   reg  [1:0]        MOB_7_access_width;
   reg  [6:0]        MOB_7_PRD;
   reg  [31:0]       MOB_7_data;
@@ -351,6 +364,7 @@ module simple_MOB(
   reg  [5:0]        MOB_8_ROB_index;
   reg  [1:0]        MOB_8_fetch_packet_index;
   reg  [31:0]       MOB_8_address;
+  reg               MOB_8_mem_signed;
   reg  [1:0]        MOB_8_access_width;
   reg  [6:0]        MOB_8_PRD;
   reg  [31:0]       MOB_8_data;
@@ -361,6 +375,7 @@ module simple_MOB(
   reg  [5:0]        MOB_9_ROB_index;
   reg  [1:0]        MOB_9_fetch_packet_index;
   reg  [31:0]       MOB_9_address;
+  reg               MOB_9_mem_signed;
   reg  [1:0]        MOB_9_access_width;
   reg  [6:0]        MOB_9_PRD;
   reg  [31:0]       MOB_9_data;
@@ -371,6 +386,7 @@ module simple_MOB(
   reg  [5:0]        MOB_10_ROB_index;
   reg  [1:0]        MOB_10_fetch_packet_index;
   reg  [31:0]       MOB_10_address;
+  reg               MOB_10_mem_signed;
   reg  [1:0]        MOB_10_access_width;
   reg  [6:0]        MOB_10_PRD;
   reg  [31:0]       MOB_10_data;
@@ -381,6 +397,7 @@ module simple_MOB(
   reg  [5:0]        MOB_11_ROB_index;
   reg  [1:0]        MOB_11_fetch_packet_index;
   reg  [31:0]       MOB_11_address;
+  reg               MOB_11_mem_signed;
   reg  [1:0]        MOB_11_access_width;
   reg  [6:0]        MOB_11_PRD;
   reg  [31:0]       MOB_11_data;
@@ -391,6 +408,7 @@ module simple_MOB(
   reg  [5:0]        MOB_12_ROB_index;
   reg  [1:0]        MOB_12_fetch_packet_index;
   reg  [31:0]       MOB_12_address;
+  reg               MOB_12_mem_signed;
   reg  [1:0]        MOB_12_access_width;
   reg  [6:0]        MOB_12_PRD;
   reg  [31:0]       MOB_12_data;
@@ -401,6 +419,7 @@ module simple_MOB(
   reg  [5:0]        MOB_13_ROB_index;
   reg  [1:0]        MOB_13_fetch_packet_index;
   reg  [31:0]       MOB_13_address;
+  reg               MOB_13_mem_signed;
   reg  [1:0]        MOB_13_access_width;
   reg  [6:0]        MOB_13_PRD;
   reg  [31:0]       MOB_13_data;
@@ -411,6 +430,7 @@ module simple_MOB(
   reg  [5:0]        MOB_14_ROB_index;
   reg  [1:0]        MOB_14_fetch_packet_index;
   reg  [31:0]       MOB_14_address;
+  reg               MOB_14_mem_signed;
   reg  [1:0]        MOB_14_access_width;
   reg  [6:0]        MOB_14_PRD;
   reg  [31:0]       MOB_14_data;
@@ -421,6 +441,7 @@ module simple_MOB(
   reg  [5:0]        MOB_15_ROB_index;
   reg  [1:0]        MOB_15_fetch_packet_index;
   reg  [31:0]       MOB_15_address;
+  reg               MOB_15_mem_signed;
   reg  [1:0]        MOB_15_access_width;
   reg  [6:0]        MOB_15_PRD;
   reg  [31:0]       MOB_15_data;
@@ -734,7 +755,24 @@ module simple_MOB(
      {MOB_2_address},
      {MOB_1_address},
      {MOB_0_address}};
-  wire [15:0][1:0]  _GEN_60 =
+  wire [15:0]       _GEN_60 =
+    {{MOB_15_mem_signed},
+     {MOB_14_mem_signed},
+     {MOB_13_mem_signed},
+     {MOB_12_mem_signed},
+     {MOB_11_mem_signed},
+     {MOB_10_mem_signed},
+     {MOB_9_mem_signed},
+     {MOB_8_mem_signed},
+     {MOB_7_mem_signed},
+     {MOB_6_mem_signed},
+     {MOB_5_mem_signed},
+     {MOB_4_mem_signed},
+     {MOB_3_mem_signed},
+     {MOB_2_mem_signed},
+     {MOB_1_mem_signed},
+     {MOB_0_mem_signed}};
+  wire [15:0][1:0]  _GEN_61 =
     {{MOB_15_access_width},
      {MOB_14_access_width},
      {MOB_13_access_width},
@@ -751,7 +789,7 @@ module simple_MOB(
      {MOB_2_access_width},
      {MOB_1_access_width},
      {MOB_0_access_width}};
-  wire [15:0][6:0]  _GEN_61 =
+  wire [15:0][6:0]  _GEN_62 =
     {{MOB_15_PRD},
      {MOB_14_PRD},
      {MOB_13_PRD},
@@ -768,7 +806,7 @@ module simple_MOB(
      {MOB_2_PRD},
      {MOB_1_PRD},
      {MOB_0_PRD}};
-  wire [15:0][31:0] _GEN_62 =
+  wire [15:0][31:0] _GEN_63 =
     {{MOB_15_data},
      {MOB_14_data},
      {MOB_13_data},
@@ -785,7 +823,7 @@ module simple_MOB(
      {MOB_2_data},
      {MOB_1_data},
      {MOB_0_data}};
-  wire [15:0]       _GEN_63 =
+  wire [15:0]       _GEN_64 =
     {{MOB_15_committed},
      {MOB_14_committed},
      {MOB_13_committed},
@@ -802,7 +840,7 @@ module simple_MOB(
      {MOB_2_committed},
      {MOB_1_committed},
      {MOB_0_committed}};
-  wire [15:0]       _GEN_64 =
+  wire [15:0]       _GEN_65 =
     {{MOB_15_resolved},
      {MOB_14_resolved},
      {MOB_13_resolved},
@@ -820,7 +858,7 @@ module simple_MOB(
      {MOB_1_resolved},
      {MOB_0_resolved}};
   wire              io_backend_memory_request_valid_0 =
-    _GEN_63[front_index] & _GEN_64[front_index] & _GEN_3[front_index];
+    _GEN_64[front_index] & _GEN_65[front_index] & _GEN_3[front_index];
   wire [15:0]       _availalbe_MOB_entries_T_1 =
     ~{MOB_0_valid,
       MOB_1_valid,
@@ -876,6 +914,7 @@ module simple_MOB(
       MOB_0_ROB_index <= 6'h0;
       MOB_0_fetch_packet_index <= 2'h0;
       MOB_0_address <= 32'h0;
+      MOB_0_mem_signed <= 1'h0;
       MOB_0_access_width <= 2'h0;
       MOB_0_PRD <= 7'h0;
       MOB_0_data <= 32'h0;
@@ -886,6 +925,7 @@ module simple_MOB(
       MOB_1_ROB_index <= 6'h0;
       MOB_1_fetch_packet_index <= 2'h0;
       MOB_1_address <= 32'h0;
+      MOB_1_mem_signed <= 1'h0;
       MOB_1_access_width <= 2'h0;
       MOB_1_PRD <= 7'h0;
       MOB_1_data <= 32'h0;
@@ -896,6 +936,7 @@ module simple_MOB(
       MOB_2_ROB_index <= 6'h0;
       MOB_2_fetch_packet_index <= 2'h0;
       MOB_2_address <= 32'h0;
+      MOB_2_mem_signed <= 1'h0;
       MOB_2_access_width <= 2'h0;
       MOB_2_PRD <= 7'h0;
       MOB_2_data <= 32'h0;
@@ -906,6 +947,7 @@ module simple_MOB(
       MOB_3_ROB_index <= 6'h0;
       MOB_3_fetch_packet_index <= 2'h0;
       MOB_3_address <= 32'h0;
+      MOB_3_mem_signed <= 1'h0;
       MOB_3_access_width <= 2'h0;
       MOB_3_PRD <= 7'h0;
       MOB_3_data <= 32'h0;
@@ -916,6 +958,7 @@ module simple_MOB(
       MOB_4_ROB_index <= 6'h0;
       MOB_4_fetch_packet_index <= 2'h0;
       MOB_4_address <= 32'h0;
+      MOB_4_mem_signed <= 1'h0;
       MOB_4_access_width <= 2'h0;
       MOB_4_PRD <= 7'h0;
       MOB_4_data <= 32'h0;
@@ -926,6 +969,7 @@ module simple_MOB(
       MOB_5_ROB_index <= 6'h0;
       MOB_5_fetch_packet_index <= 2'h0;
       MOB_5_address <= 32'h0;
+      MOB_5_mem_signed <= 1'h0;
       MOB_5_access_width <= 2'h0;
       MOB_5_PRD <= 7'h0;
       MOB_5_data <= 32'h0;
@@ -936,6 +980,7 @@ module simple_MOB(
       MOB_6_ROB_index <= 6'h0;
       MOB_6_fetch_packet_index <= 2'h0;
       MOB_6_address <= 32'h0;
+      MOB_6_mem_signed <= 1'h0;
       MOB_6_access_width <= 2'h0;
       MOB_6_PRD <= 7'h0;
       MOB_6_data <= 32'h0;
@@ -946,6 +991,7 @@ module simple_MOB(
       MOB_7_ROB_index <= 6'h0;
       MOB_7_fetch_packet_index <= 2'h0;
       MOB_7_address <= 32'h0;
+      MOB_7_mem_signed <= 1'h0;
       MOB_7_access_width <= 2'h0;
       MOB_7_PRD <= 7'h0;
       MOB_7_data <= 32'h0;
@@ -956,6 +1002,7 @@ module simple_MOB(
       MOB_8_ROB_index <= 6'h0;
       MOB_8_fetch_packet_index <= 2'h0;
       MOB_8_address <= 32'h0;
+      MOB_8_mem_signed <= 1'h0;
       MOB_8_access_width <= 2'h0;
       MOB_8_PRD <= 7'h0;
       MOB_8_data <= 32'h0;
@@ -966,6 +1013,7 @@ module simple_MOB(
       MOB_9_ROB_index <= 6'h0;
       MOB_9_fetch_packet_index <= 2'h0;
       MOB_9_address <= 32'h0;
+      MOB_9_mem_signed <= 1'h0;
       MOB_9_access_width <= 2'h0;
       MOB_9_PRD <= 7'h0;
       MOB_9_data <= 32'h0;
@@ -976,6 +1024,7 @@ module simple_MOB(
       MOB_10_ROB_index <= 6'h0;
       MOB_10_fetch_packet_index <= 2'h0;
       MOB_10_address <= 32'h0;
+      MOB_10_mem_signed <= 1'h0;
       MOB_10_access_width <= 2'h0;
       MOB_10_PRD <= 7'h0;
       MOB_10_data <= 32'h0;
@@ -986,6 +1035,7 @@ module simple_MOB(
       MOB_11_ROB_index <= 6'h0;
       MOB_11_fetch_packet_index <= 2'h0;
       MOB_11_address <= 32'h0;
+      MOB_11_mem_signed <= 1'h0;
       MOB_11_access_width <= 2'h0;
       MOB_11_PRD <= 7'h0;
       MOB_11_data <= 32'h0;
@@ -996,6 +1046,7 @@ module simple_MOB(
       MOB_12_ROB_index <= 6'h0;
       MOB_12_fetch_packet_index <= 2'h0;
       MOB_12_address <= 32'h0;
+      MOB_12_mem_signed <= 1'h0;
       MOB_12_access_width <= 2'h0;
       MOB_12_PRD <= 7'h0;
       MOB_12_data <= 32'h0;
@@ -1006,6 +1057,7 @@ module simple_MOB(
       MOB_13_ROB_index <= 6'h0;
       MOB_13_fetch_packet_index <= 2'h0;
       MOB_13_address <= 32'h0;
+      MOB_13_mem_signed <= 1'h0;
       MOB_13_access_width <= 2'h0;
       MOB_13_PRD <= 7'h0;
       MOB_13_data <= 32'h0;
@@ -1016,6 +1068,7 @@ module simple_MOB(
       MOB_14_ROB_index <= 6'h0;
       MOB_14_fetch_packet_index <= 2'h0;
       MOB_14_address <= 32'h0;
+      MOB_14_mem_signed <= 1'h0;
       MOB_14_access_width <= 2'h0;
       MOB_14_PRD <= 7'h0;
       MOB_14_data <= 32'h0;
@@ -1026,6 +1079,7 @@ module simple_MOB(
       MOB_15_ROB_index <= 6'h0;
       MOB_15_fetch_packet_index <= 2'h0;
       MOB_15_address <= 32'h0;
+      MOB_15_mem_signed <= 1'h0;
       MOB_15_access_width <= 2'h0;
       MOB_15_PRD <= 7'h0;
       MOB_15_data <= 32'h0;
@@ -1035,7 +1089,6 @@ module simple_MOB(
       back_pointer <= 5'h0;
     end
     else begin
-      automatic logic _GEN_65;
       automatic logic _GEN_66;
       automatic logic _GEN_67;
       automatic logic _GEN_68;
@@ -1147,77 +1200,77 @@ module simple_MOB(
       automatic logic _GEN_174;
       automatic logic _GEN_175;
       automatic logic _GEN_176;
-      automatic logic _GEN_177;
+      automatic logic _GEN_177 = _io_reserved_pointers_3_bits_T == 4'h0;
       automatic logic _GEN_178;
       automatic logic _GEN_179;
       automatic logic _GEN_180;
       automatic logic _GEN_181;
-      automatic logic _GEN_182;
+      automatic logic _GEN_182 = _io_reserved_pointers_3_bits_T == 4'h1;
       automatic logic _GEN_183;
       automatic logic _GEN_184;
       automatic logic _GEN_185;
       automatic logic _GEN_186;
-      automatic logic _GEN_187;
+      automatic logic _GEN_187 = _io_reserved_pointers_3_bits_T == 4'h2;
       automatic logic _GEN_188;
       automatic logic _GEN_189;
       automatic logic _GEN_190;
       automatic logic _GEN_191;
-      automatic logic _GEN_192;
+      automatic logic _GEN_192 = _io_reserved_pointers_3_bits_T == 4'h3;
       automatic logic _GEN_193;
       automatic logic _GEN_194;
       automatic logic _GEN_195;
       automatic logic _GEN_196;
-      automatic logic _GEN_197;
+      automatic logic _GEN_197 = _io_reserved_pointers_3_bits_T == 4'h4;
       automatic logic _GEN_198;
       automatic logic _GEN_199;
       automatic logic _GEN_200;
       automatic logic _GEN_201;
-      automatic logic _GEN_202;
+      automatic logic _GEN_202 = _io_reserved_pointers_3_bits_T == 4'h5;
       automatic logic _GEN_203;
       automatic logic _GEN_204;
       automatic logic _GEN_205;
       automatic logic _GEN_206;
-      automatic logic _GEN_207;
+      automatic logic _GEN_207 = _io_reserved_pointers_3_bits_T == 4'h6;
       automatic logic _GEN_208;
       automatic logic _GEN_209;
       automatic logic _GEN_210;
       automatic logic _GEN_211;
-      automatic logic _GEN_212;
+      automatic logic _GEN_212 = _io_reserved_pointers_3_bits_T == 4'h7;
       automatic logic _GEN_213;
       automatic logic _GEN_214;
       automatic logic _GEN_215;
       automatic logic _GEN_216;
-      automatic logic _GEN_217;
+      automatic logic _GEN_217 = _io_reserved_pointers_3_bits_T == 4'h8;
       automatic logic _GEN_218;
       automatic logic _GEN_219;
       automatic logic _GEN_220;
       automatic logic _GEN_221;
-      automatic logic _GEN_222;
+      automatic logic _GEN_222 = _io_reserved_pointers_3_bits_T == 4'h9;
       automatic logic _GEN_223;
       automatic logic _GEN_224;
       automatic logic _GEN_225;
       automatic logic _GEN_226;
-      automatic logic _GEN_227;
+      automatic logic _GEN_227 = _io_reserved_pointers_3_bits_T == 4'hA;
       automatic logic _GEN_228;
       automatic logic _GEN_229;
       automatic logic _GEN_230;
       automatic logic _GEN_231;
-      automatic logic _GEN_232;
+      automatic logic _GEN_232 = _io_reserved_pointers_3_bits_T == 4'hB;
       automatic logic _GEN_233;
       automatic logic _GEN_234;
       automatic logic _GEN_235;
       automatic logic _GEN_236;
-      automatic logic _GEN_237;
+      automatic logic _GEN_237 = _io_reserved_pointers_3_bits_T == 4'hC;
       automatic logic _GEN_238;
       automatic logic _GEN_239;
       automatic logic _GEN_240;
       automatic logic _GEN_241;
-      automatic logic _GEN_242;
+      automatic logic _GEN_242 = _io_reserved_pointers_3_bits_T == 4'hD;
       automatic logic _GEN_243;
       automatic logic _GEN_244;
       automatic logic _GEN_245;
       automatic logic _GEN_246;
-      automatic logic _GEN_247;
+      automatic logic _GEN_247 = _io_reserved_pointers_3_bits_T == 4'hE;
       automatic logic _GEN_248;
       automatic logic _GEN_249;
       automatic logic _GEN_250;
@@ -1225,8 +1278,7 @@ module simple_MOB(
       automatic logic _GEN_252;
       automatic logic _GEN_253;
       automatic logic _GEN_254;
-      automatic logic _GEN_255 =
-        io_backend_memory_request_ready & io_backend_memory_request_valid_0;
+      automatic logic _GEN_255;
       automatic logic _GEN_256;
       automatic logic _GEN_257;
       automatic logic _GEN_258;
@@ -1242,345 +1294,572 @@ module simple_MOB(
       automatic logic _GEN_268;
       automatic logic _GEN_269;
       automatic logic _GEN_270;
-      _GEN_65 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h0;
-      _GEN_66 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h1;
-      _GEN_67 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h2;
-      _GEN_68 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h3;
-      _GEN_69 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h4;
-      _GEN_70 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h5;
-      _GEN_71 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h6;
-      _GEN_72 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h7;
-      _GEN_73 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h8;
-      _GEN_74 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h9;
-      _GEN_75 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hA;
-      _GEN_76 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hB;
-      _GEN_77 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hC;
-      _GEN_78 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hD;
-      _GEN_79 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hE;
-      _GEN_80 = written_vec_0 & (&_io_reserved_pointers_0_bits_T);
-      _GEN_81 = _io_reserved_pointers_1_bits_T == 4'h0;
-      _GEN_82 = _GEN_81 | _GEN_65;
-      _GEN_83 = written_vec_1 ? _GEN_82 | MOB_0_valid : _GEN_65 | MOB_0_valid;
-      _GEN_84 = written_vec_1 ? ~_GEN_82 & MOB_0_resolved : ~_GEN_65 & MOB_0_resolved;
-      _GEN_85 = _io_reserved_pointers_1_bits_T == 4'h1;
-      _GEN_86 = _GEN_85 | _GEN_66;
-      _GEN_87 = written_vec_1 ? _GEN_86 | MOB_1_valid : _GEN_66 | MOB_1_valid;
-      _GEN_88 = written_vec_1 ? ~_GEN_86 & MOB_1_resolved : ~_GEN_66 & MOB_1_resolved;
-      _GEN_89 = _io_reserved_pointers_1_bits_T == 4'h2;
-      _GEN_90 = _GEN_89 | _GEN_67;
-      _GEN_91 = written_vec_1 ? _GEN_90 | MOB_2_valid : _GEN_67 | MOB_2_valid;
-      _GEN_92 = written_vec_1 ? ~_GEN_90 & MOB_2_resolved : ~_GEN_67 & MOB_2_resolved;
-      _GEN_93 = _io_reserved_pointers_1_bits_T == 4'h3;
-      _GEN_94 = _GEN_93 | _GEN_68;
-      _GEN_95 = written_vec_1 ? _GEN_94 | MOB_3_valid : _GEN_68 | MOB_3_valid;
-      _GEN_96 = written_vec_1 ? ~_GEN_94 & MOB_3_resolved : ~_GEN_68 & MOB_3_resolved;
-      _GEN_97 = _io_reserved_pointers_1_bits_T == 4'h4;
+      automatic logic _GEN_271;
+      automatic logic _GEN_272;
+      automatic logic _GEN_273;
+      automatic logic _GEN_274;
+      automatic logic _GEN_275;
+      automatic logic _GEN_276;
+      automatic logic _GEN_277;
+      automatic logic _GEN_278;
+      automatic logic _GEN_279;
+      automatic logic _GEN_280;
+      automatic logic _GEN_281;
+      automatic logic _GEN_282;
+      automatic logic _GEN_283;
+      automatic logic _GEN_284;
+      automatic logic _GEN_285;
+      automatic logic _GEN_286;
+      automatic logic _GEN_287;
+      automatic logic _GEN_288;
+      automatic logic _GEN_289;
+      automatic logic _GEN_290;
+      automatic logic _GEN_291;
+      automatic logic _GEN_292;
+      automatic logic _GEN_293;
+      automatic logic _GEN_294;
+      automatic logic _GEN_295;
+      automatic logic _GEN_296;
+      automatic logic _GEN_297;
+      automatic logic _GEN_298;
+      automatic logic _GEN_299;
+      automatic logic _GEN_300;
+      automatic logic _GEN_301;
+      automatic logic _GEN_302;
+      automatic logic _GEN_303;
+      automatic logic _GEN_304 =
+        io_backend_memory_request_ready & io_backend_memory_request_valid_0;
+      automatic logic _GEN_305;
+      automatic logic _GEN_306;
+      automatic logic _GEN_307;
+      automatic logic _GEN_308;
+      automatic logic _GEN_309;
+      automatic logic _GEN_310;
+      automatic logic _GEN_311;
+      automatic logic _GEN_312;
+      automatic logic _GEN_313;
+      automatic logic _GEN_314;
+      automatic logic _GEN_315;
+      automatic logic _GEN_316;
+      automatic logic _GEN_317;
+      automatic logic _GEN_318;
+      automatic logic _GEN_319;
+      _GEN_66 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h0;
+      _GEN_67 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h1;
+      _GEN_68 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h2;
+      _GEN_69 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h3;
+      _GEN_70 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h4;
+      _GEN_71 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h5;
+      _GEN_72 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h6;
+      _GEN_73 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h7;
+      _GEN_74 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h8;
+      _GEN_75 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h9;
+      _GEN_76 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hA;
+      _GEN_77 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hB;
+      _GEN_78 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hC;
+      _GEN_79 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hD;
+      _GEN_80 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hE;
+      _GEN_81 = written_vec_0 & (&_io_reserved_pointers_0_bits_T);
+      _GEN_82 = _io_reserved_pointers_1_bits_T == 4'h0;
+      _GEN_83 = _GEN_82 | _GEN_66;
+      _GEN_84 = written_vec_1 ? _GEN_83 | MOB_0_valid : _GEN_66 | MOB_0_valid;
+      _GEN_85 = written_vec_1 & _GEN_82;
+      _GEN_86 = written_vec_1 ? ~_GEN_83 & MOB_0_resolved : ~_GEN_66 & MOB_0_resolved;
+      _GEN_87 = _io_reserved_pointers_1_bits_T == 4'h1;
+      _GEN_88 = _GEN_87 | _GEN_67;
+      _GEN_89 = written_vec_1 ? _GEN_88 | MOB_1_valid : _GEN_67 | MOB_1_valid;
+      _GEN_90 = written_vec_1 & _GEN_87;
+      _GEN_91 = written_vec_1 ? ~_GEN_88 & MOB_1_resolved : ~_GEN_67 & MOB_1_resolved;
+      _GEN_92 = _io_reserved_pointers_1_bits_T == 4'h2;
+      _GEN_93 = _GEN_92 | _GEN_68;
+      _GEN_94 = written_vec_1 ? _GEN_93 | MOB_2_valid : _GEN_68 | MOB_2_valid;
+      _GEN_95 = written_vec_1 & _GEN_92;
+      _GEN_96 = written_vec_1 ? ~_GEN_93 & MOB_2_resolved : ~_GEN_68 & MOB_2_resolved;
+      _GEN_97 = _io_reserved_pointers_1_bits_T == 4'h3;
       _GEN_98 = _GEN_97 | _GEN_69;
-      _GEN_99 = written_vec_1 ? _GEN_98 | MOB_4_valid : _GEN_69 | MOB_4_valid;
-      _GEN_100 = written_vec_1 ? ~_GEN_98 & MOB_4_resolved : ~_GEN_69 & MOB_4_resolved;
-      _GEN_101 = _io_reserved_pointers_1_bits_T == 4'h5;
-      _GEN_102 = _GEN_101 | _GEN_70;
-      _GEN_103 = written_vec_1 ? _GEN_102 | MOB_5_valid : _GEN_70 | MOB_5_valid;
-      _GEN_104 = written_vec_1 ? ~_GEN_102 & MOB_5_resolved : ~_GEN_70 & MOB_5_resolved;
-      _GEN_105 = _io_reserved_pointers_1_bits_T == 4'h6;
-      _GEN_106 = _GEN_105 | _GEN_71;
-      _GEN_107 = written_vec_1 ? _GEN_106 | MOB_6_valid : _GEN_71 | MOB_6_valid;
-      _GEN_108 = written_vec_1 ? ~_GEN_106 & MOB_6_resolved : ~_GEN_71 & MOB_6_resolved;
-      _GEN_109 = _io_reserved_pointers_1_bits_T == 4'h7;
-      _GEN_110 = _GEN_109 | _GEN_72;
-      _GEN_111 = written_vec_1 ? _GEN_110 | MOB_7_valid : _GEN_72 | MOB_7_valid;
-      _GEN_112 = written_vec_1 ? ~_GEN_110 & MOB_7_resolved : ~_GEN_72 & MOB_7_resolved;
-      _GEN_113 = _io_reserved_pointers_1_bits_T == 4'h8;
-      _GEN_114 = _GEN_113 | _GEN_73;
-      _GEN_115 = written_vec_1 ? _GEN_114 | MOB_8_valid : _GEN_73 | MOB_8_valid;
-      _GEN_116 = written_vec_1 ? ~_GEN_114 & MOB_8_resolved : ~_GEN_73 & MOB_8_resolved;
-      _GEN_117 = _io_reserved_pointers_1_bits_T == 4'h9;
-      _GEN_118 = _GEN_117 | _GEN_74;
-      _GEN_119 = written_vec_1 ? _GEN_118 | MOB_9_valid : _GEN_74 | MOB_9_valid;
-      _GEN_120 = written_vec_1 ? ~_GEN_118 & MOB_9_resolved : ~_GEN_74 & MOB_9_resolved;
-      _GEN_121 = _io_reserved_pointers_1_bits_T == 4'hA;
-      _GEN_122 = _GEN_121 | _GEN_75;
-      _GEN_123 = written_vec_1 ? _GEN_122 | MOB_10_valid : _GEN_75 | MOB_10_valid;
-      _GEN_124 = written_vec_1 ? ~_GEN_122 & MOB_10_resolved : ~_GEN_75 & MOB_10_resolved;
-      _GEN_125 = _io_reserved_pointers_1_bits_T == 4'hB;
-      _GEN_126 = _GEN_125 | _GEN_76;
-      _GEN_127 = written_vec_1 ? _GEN_126 | MOB_11_valid : _GEN_76 | MOB_11_valid;
-      _GEN_128 = written_vec_1 ? ~_GEN_126 & MOB_11_resolved : ~_GEN_76 & MOB_11_resolved;
-      _GEN_129 = _io_reserved_pointers_1_bits_T == 4'hC;
-      _GEN_130 = _GEN_129 | _GEN_77;
-      _GEN_131 = written_vec_1 ? _GEN_130 | MOB_12_valid : _GEN_77 | MOB_12_valid;
-      _GEN_132 = written_vec_1 ? ~_GEN_130 & MOB_12_resolved : ~_GEN_77 & MOB_12_resolved;
-      _GEN_133 = _io_reserved_pointers_1_bits_T == 4'hD;
-      _GEN_134 = _GEN_133 | _GEN_78;
-      _GEN_135 = written_vec_1 ? _GEN_134 | MOB_13_valid : _GEN_78 | MOB_13_valid;
-      _GEN_136 = written_vec_1 ? ~_GEN_134 & MOB_13_resolved : ~_GEN_78 & MOB_13_resolved;
-      _GEN_137 = _io_reserved_pointers_1_bits_T == 4'hE;
-      _GEN_138 = _GEN_137 | _GEN_79;
-      _GEN_139 = written_vec_1 ? _GEN_138 | MOB_14_valid : _GEN_79 | MOB_14_valid;
-      _GEN_140 = written_vec_1 ? ~_GEN_138 & MOB_14_resolved : ~_GEN_79 & MOB_14_resolved;
-      _GEN_141 = (&_io_reserved_pointers_1_bits_T) | _GEN_80;
-      _GEN_142 = written_vec_1 ? _GEN_141 | MOB_15_valid : _GEN_80 | MOB_15_valid;
-      _GEN_143 = written_vec_1 ? ~_GEN_141 & MOB_15_resolved : ~_GEN_80 & MOB_15_resolved;
-      _GEN_144 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h0;
-      _GEN_145 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h1;
-      _GEN_146 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h2;
-      _GEN_147 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h3;
-      _GEN_148 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h4;
-      _GEN_149 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h5;
-      _GEN_150 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h6;
-      _GEN_151 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h7;
-      _GEN_152 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h8;
-      _GEN_153 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h9;
-      _GEN_154 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hA;
-      _GEN_155 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hB;
-      _GEN_156 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hC;
-      _GEN_157 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hD;
-      _GEN_158 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hE;
-      _GEN_159 = written_vec_2 & (&_io_reserved_pointers_2_bits_T);
-      _GEN_160 = _io_reserved_pointers_3_bits_T == 4'h0;
-      _GEN_161 = _GEN_160 | _GEN_144;
-      _GEN_162 = written_vec_3 ? _GEN_161 | _GEN_83 : _GEN_144 | _GEN_83;
-      _GEN_163 = _io_reserved_pointers_3_bits_T == 4'h1;
-      _GEN_164 = _GEN_163 | _GEN_145;
-      _GEN_165 = written_vec_3 ? _GEN_164 | _GEN_87 : _GEN_145 | _GEN_87;
-      _GEN_166 = _io_reserved_pointers_3_bits_T == 4'h2;
-      _GEN_167 = _GEN_166 | _GEN_146;
-      _GEN_168 = written_vec_3 ? _GEN_167 | _GEN_91 : _GEN_146 | _GEN_91;
-      _GEN_169 = _io_reserved_pointers_3_bits_T == 4'h3;
-      _GEN_170 = _GEN_169 | _GEN_147;
-      _GEN_171 = written_vec_3 ? _GEN_170 | _GEN_95 : _GEN_147 | _GEN_95;
-      _GEN_172 = _io_reserved_pointers_3_bits_T == 4'h4;
-      _GEN_173 = _GEN_172 | _GEN_148;
-      _GEN_174 = written_vec_3 ? _GEN_173 | _GEN_99 : _GEN_148 | _GEN_99;
-      _GEN_175 = _io_reserved_pointers_3_bits_T == 4'h5;
-      _GEN_176 = _GEN_175 | _GEN_149;
-      _GEN_177 = written_vec_3 ? _GEN_176 | _GEN_103 : _GEN_149 | _GEN_103;
-      _GEN_178 = _io_reserved_pointers_3_bits_T == 4'h6;
-      _GEN_179 = _GEN_178 | _GEN_150;
-      _GEN_180 = written_vec_3 ? _GEN_179 | _GEN_107 : _GEN_150 | _GEN_107;
-      _GEN_181 = _io_reserved_pointers_3_bits_T == 4'h7;
-      _GEN_182 = _GEN_181 | _GEN_151;
-      _GEN_183 = written_vec_3 ? _GEN_182 | _GEN_111 : _GEN_151 | _GEN_111;
-      _GEN_184 = _io_reserved_pointers_3_bits_T == 4'h8;
-      _GEN_185 = _GEN_184 | _GEN_152;
-      _GEN_186 = written_vec_3 ? _GEN_185 | _GEN_115 : _GEN_152 | _GEN_115;
-      _GEN_187 = _io_reserved_pointers_3_bits_T == 4'h9;
-      _GEN_188 = _GEN_187 | _GEN_153;
-      _GEN_189 = written_vec_3 ? _GEN_188 | _GEN_119 : _GEN_153 | _GEN_119;
-      _GEN_190 = _io_reserved_pointers_3_bits_T == 4'hA;
-      _GEN_191 = _GEN_190 | _GEN_154;
-      _GEN_192 = written_vec_3 ? _GEN_191 | _GEN_123 : _GEN_154 | _GEN_123;
-      _GEN_193 = _io_reserved_pointers_3_bits_T == 4'hB;
-      _GEN_194 = _GEN_193 | _GEN_155;
-      _GEN_195 = written_vec_3 ? _GEN_194 | _GEN_127 : _GEN_155 | _GEN_127;
-      _GEN_196 = _io_reserved_pointers_3_bits_T == 4'hC;
-      _GEN_197 = _GEN_196 | _GEN_156;
-      _GEN_198 = written_vec_3 ? _GEN_197 | _GEN_131 : _GEN_156 | _GEN_131;
-      _GEN_199 = _io_reserved_pointers_3_bits_T == 4'hD;
-      _GEN_200 = _GEN_199 | _GEN_157;
-      _GEN_201 = written_vec_3 ? _GEN_200 | _GEN_135 : _GEN_157 | _GEN_135;
-      _GEN_202 = _io_reserved_pointers_3_bits_T == 4'hE;
-      _GEN_203 = _GEN_202 | _GEN_158;
-      _GEN_204 = written_vec_3 ? _GEN_203 | _GEN_139 : _GEN_158 | _GEN_139;
-      _GEN_205 = (&_io_reserved_pointers_3_bits_T) | _GEN_159;
-      _GEN_206 = written_vec_3 ? _GEN_205 | _GEN_142 : _GEN_159 | _GEN_142;
-      _GEN_207 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h0;
-      _GEN_208 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h1;
-      _GEN_209 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h2;
-      _GEN_210 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h3;
-      _GEN_211 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h4;
-      _GEN_212 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h5;
-      _GEN_213 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h6;
-      _GEN_214 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h7;
-      _GEN_215 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h8;
-      _GEN_216 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h9;
-      _GEN_217 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hA;
-      _GEN_218 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hB;
-      _GEN_219 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hC;
-      _GEN_220 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hD;
-      _GEN_221 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hE;
-      _GEN_222 = io_AGU_output_valid & (&io_AGU_output_bits_MOB_index);
-      _GEN_223 = _GEN_207 | (written_vec_3 ? ~_GEN_161 & _GEN_84 : ~_GEN_144 & _GEN_84);
-      _GEN_224 = _GEN_208 | (written_vec_3 ? ~_GEN_164 & _GEN_88 : ~_GEN_145 & _GEN_88);
-      _GEN_225 = _GEN_209 | (written_vec_3 ? ~_GEN_167 & _GEN_92 : ~_GEN_146 & _GEN_92);
-      _GEN_226 = _GEN_210 | (written_vec_3 ? ~_GEN_170 & _GEN_96 : ~_GEN_147 & _GEN_96);
-      _GEN_227 = _GEN_211 | (written_vec_3 ? ~_GEN_173 & _GEN_100 : ~_GEN_148 & _GEN_100);
-      _GEN_228 = _GEN_212 | (written_vec_3 ? ~_GEN_176 & _GEN_104 : ~_GEN_149 & _GEN_104);
-      _GEN_229 = _GEN_213 | (written_vec_3 ? ~_GEN_179 & _GEN_108 : ~_GEN_150 & _GEN_108);
-      _GEN_230 = _GEN_214 | (written_vec_3 ? ~_GEN_182 & _GEN_112 : ~_GEN_151 & _GEN_112);
-      _GEN_231 = _GEN_215 | (written_vec_3 ? ~_GEN_185 & _GEN_116 : ~_GEN_152 & _GEN_116);
-      _GEN_232 = _GEN_216 | (written_vec_3 ? ~_GEN_188 & _GEN_120 : ~_GEN_153 & _GEN_120);
-      _GEN_233 = _GEN_217 | (written_vec_3 ? ~_GEN_191 & _GEN_124 : ~_GEN_154 & _GEN_124);
-      _GEN_234 = _GEN_218 | (written_vec_3 ? ~_GEN_194 & _GEN_128 : ~_GEN_155 & _GEN_128);
-      _GEN_235 = _GEN_219 | (written_vec_3 ? ~_GEN_197 & _GEN_132 : ~_GEN_156 & _GEN_132);
-      _GEN_236 = _GEN_220 | (written_vec_3 ? ~_GEN_200 & _GEN_136 : ~_GEN_157 & _GEN_136);
-      _GEN_237 = _GEN_221 | (written_vec_3 ? ~_GEN_203 & _GEN_140 : ~_GEN_158 & _GEN_140);
-      _GEN_238 = _GEN_222 | (written_vec_3 ? ~_GEN_205 & _GEN_143 : ~_GEN_159 & _GEN_143);
-      _GEN_239 = io_flush & ~comb_committed_0 & MOB_0_valid;
-      _GEN_240 = io_flush & ~comb_committed_1 & MOB_1_valid;
-      _GEN_241 = io_flush & ~comb_committed_2 & MOB_2_valid;
-      _GEN_242 = io_flush & ~comb_committed_3 & MOB_3_valid;
-      _GEN_243 = io_flush & ~comb_committed_4 & MOB_4_valid;
-      _GEN_244 = io_flush & ~comb_committed_5 & MOB_5_valid;
-      _GEN_245 = io_flush & ~comb_committed_6 & MOB_6_valid;
-      _GEN_246 = io_flush & ~comb_committed_7 & MOB_7_valid;
-      _GEN_247 = io_flush & ~comb_committed_8 & MOB_8_valid;
-      _GEN_248 = io_flush & ~comb_committed_9 & MOB_9_valid;
-      _GEN_249 = io_flush & ~comb_committed_10 & MOB_10_valid;
-      _GEN_250 = io_flush & ~comb_committed_11 & MOB_11_valid;
-      _GEN_251 = io_flush & ~comb_committed_12 & MOB_12_valid;
-      _GEN_252 = io_flush & ~comb_committed_13 & MOB_13_valid;
-      _GEN_253 = io_flush & ~comb_committed_14 & MOB_14_valid;
-      _GEN_254 = io_flush & ~comb_committed_15 & MOB_15_valid;
-      _GEN_256 = front_index == 4'h0;
-      _GEN_257 = front_index == 4'h1;
-      _GEN_258 = front_index == 4'h2;
-      _GEN_259 = front_index == 4'h3;
-      _GEN_260 = front_index == 4'h4;
-      _GEN_261 = front_index == 4'h5;
-      _GEN_262 = front_index == 4'h6;
-      _GEN_263 = front_index == 4'h7;
-      _GEN_264 = front_index == 4'h8;
-      _GEN_265 = front_index == 4'h9;
-      _GEN_266 = front_index == 4'hA;
-      _GEN_267 = front_index == 4'hB;
-      _GEN_268 = front_index == 4'hC;
-      _GEN_269 = front_index == 4'hD;
-      _GEN_270 = front_index == 4'hE;
-      if (_GEN_255) begin
-        automatic logic _GEN_271;
-        automatic logic _GEN_272;
-        automatic logic _GEN_273;
-        automatic logic _GEN_274;
-        automatic logic _GEN_275;
-        automatic logic _GEN_276;
-        automatic logic _GEN_277;
-        automatic logic _GEN_278;
-        automatic logic _GEN_279;
-        automatic logic _GEN_280;
-        automatic logic _GEN_281;
-        automatic logic _GEN_282;
-        automatic logic _GEN_283;
-        automatic logic _GEN_284;
-        automatic logic _GEN_285;
-        automatic logic _GEN_286;
-        _GEN_271 = _GEN_256 | _GEN_239;
-        _GEN_272 = _GEN_257 | _GEN_240;
-        _GEN_273 = _GEN_258 | _GEN_241;
-        _GEN_274 = _GEN_259 | _GEN_242;
-        _GEN_275 = _GEN_260 | _GEN_243;
-        _GEN_276 = _GEN_261 | _GEN_244;
-        _GEN_277 = _GEN_262 | _GEN_245;
-        _GEN_278 = _GEN_263 | _GEN_246;
-        _GEN_279 = _GEN_264 | _GEN_247;
-        _GEN_280 = _GEN_265 | _GEN_248;
-        _GEN_281 = _GEN_266 | _GEN_249;
-        _GEN_282 = _GEN_267 | _GEN_250;
-        _GEN_283 = _GEN_268 | _GEN_251;
-        _GEN_284 = _GEN_269 | _GEN_252;
-        _GEN_285 = _GEN_270 | _GEN_253;
-        _GEN_286 = (&front_index) | _GEN_254;
-        MOB_0_valid <= ~_GEN_271 & _GEN_162;
-        MOB_0_committed <= ~_GEN_271 & comb_committed_0;
-        MOB_0_resolved <= ~_GEN_271 & _GEN_223;
-        MOB_1_valid <= ~_GEN_272 & _GEN_165;
-        MOB_1_committed <= ~_GEN_272 & comb_committed_1;
-        MOB_1_resolved <= ~_GEN_272 & _GEN_224;
-        MOB_2_valid <= ~_GEN_273 & _GEN_168;
-        MOB_2_committed <= ~_GEN_273 & comb_committed_2;
-        MOB_2_resolved <= ~_GEN_273 & _GEN_225;
-        MOB_3_valid <= ~_GEN_274 & _GEN_171;
-        MOB_3_committed <= ~_GEN_274 & comb_committed_3;
-        MOB_3_resolved <= ~_GEN_274 & _GEN_226;
-        MOB_4_valid <= ~_GEN_275 & _GEN_174;
-        MOB_4_committed <= ~_GEN_275 & comb_committed_4;
-        MOB_4_resolved <= ~_GEN_275 & _GEN_227;
-        MOB_5_valid <= ~_GEN_276 & _GEN_177;
-        MOB_5_committed <= ~_GEN_276 & comb_committed_5;
-        MOB_5_resolved <= ~_GEN_276 & _GEN_228;
-        MOB_6_valid <= ~_GEN_277 & _GEN_180;
-        MOB_6_committed <= ~_GEN_277 & comb_committed_6;
-        MOB_6_resolved <= ~_GEN_277 & _GEN_229;
-        MOB_7_valid <= ~_GEN_278 & _GEN_183;
-        MOB_7_committed <= ~_GEN_278 & comb_committed_7;
-        MOB_7_resolved <= ~_GEN_278 & _GEN_230;
-        MOB_8_valid <= ~_GEN_279 & _GEN_186;
-        MOB_8_committed <= ~_GEN_279 & comb_committed_8;
-        MOB_8_resolved <= ~_GEN_279 & _GEN_231;
-        MOB_9_valid <= ~_GEN_280 & _GEN_189;
-        MOB_9_committed <= ~_GEN_280 & comb_committed_9;
-        MOB_9_resolved <= ~_GEN_280 & _GEN_232;
-        MOB_10_valid <= ~_GEN_281 & _GEN_192;
-        MOB_10_committed <= ~_GEN_281 & comb_committed_10;
-        MOB_10_resolved <= ~_GEN_281 & _GEN_233;
-        MOB_11_valid <= ~_GEN_282 & _GEN_195;
-        MOB_11_committed <= ~_GEN_282 & comb_committed_11;
-        MOB_11_resolved <= ~_GEN_282 & _GEN_234;
-        MOB_12_valid <= ~_GEN_283 & _GEN_198;
-        MOB_12_committed <= ~_GEN_283 & comb_committed_12;
-        MOB_12_resolved <= ~_GEN_283 & _GEN_235;
-        MOB_13_valid <= ~_GEN_284 & _GEN_201;
-        MOB_13_committed <= ~_GEN_284 & comb_committed_13;
-        MOB_13_resolved <= ~_GEN_284 & _GEN_236;
-        MOB_14_valid <= ~_GEN_285 & _GEN_204;
-        MOB_14_committed <= ~_GEN_285 & comb_committed_14;
-        MOB_14_resolved <= ~_GEN_285 & _GEN_237;
-        MOB_15_valid <= ~_GEN_286 & _GEN_206;
-        MOB_15_committed <= ~_GEN_286 & comb_committed_15;
-        MOB_15_resolved <= ~_GEN_286 & _GEN_238;
+      _GEN_99 = written_vec_1 ? _GEN_98 | MOB_3_valid : _GEN_69 | MOB_3_valid;
+      _GEN_100 = written_vec_1 & _GEN_97;
+      _GEN_101 = written_vec_1 ? ~_GEN_98 & MOB_3_resolved : ~_GEN_69 & MOB_3_resolved;
+      _GEN_102 = _io_reserved_pointers_1_bits_T == 4'h4;
+      _GEN_103 = _GEN_102 | _GEN_70;
+      _GEN_104 = written_vec_1 ? _GEN_103 | MOB_4_valid : _GEN_70 | MOB_4_valid;
+      _GEN_105 = written_vec_1 & _GEN_102;
+      _GEN_106 = written_vec_1 ? ~_GEN_103 & MOB_4_resolved : ~_GEN_70 & MOB_4_resolved;
+      _GEN_107 = _io_reserved_pointers_1_bits_T == 4'h5;
+      _GEN_108 = _GEN_107 | _GEN_71;
+      _GEN_109 = written_vec_1 ? _GEN_108 | MOB_5_valid : _GEN_71 | MOB_5_valid;
+      _GEN_110 = written_vec_1 & _GEN_107;
+      _GEN_111 = written_vec_1 ? ~_GEN_108 & MOB_5_resolved : ~_GEN_71 & MOB_5_resolved;
+      _GEN_112 = _io_reserved_pointers_1_bits_T == 4'h6;
+      _GEN_113 = _GEN_112 | _GEN_72;
+      _GEN_114 = written_vec_1 ? _GEN_113 | MOB_6_valid : _GEN_72 | MOB_6_valid;
+      _GEN_115 = written_vec_1 & _GEN_112;
+      _GEN_116 = written_vec_1 ? ~_GEN_113 & MOB_6_resolved : ~_GEN_72 & MOB_6_resolved;
+      _GEN_117 = _io_reserved_pointers_1_bits_T == 4'h7;
+      _GEN_118 = _GEN_117 | _GEN_73;
+      _GEN_119 = written_vec_1 ? _GEN_118 | MOB_7_valid : _GEN_73 | MOB_7_valid;
+      _GEN_120 = written_vec_1 & _GEN_117;
+      _GEN_121 = written_vec_1 ? ~_GEN_118 & MOB_7_resolved : ~_GEN_73 & MOB_7_resolved;
+      _GEN_122 = _io_reserved_pointers_1_bits_T == 4'h8;
+      _GEN_123 = _GEN_122 | _GEN_74;
+      _GEN_124 = written_vec_1 ? _GEN_123 | MOB_8_valid : _GEN_74 | MOB_8_valid;
+      _GEN_125 = written_vec_1 & _GEN_122;
+      _GEN_126 = written_vec_1 ? ~_GEN_123 & MOB_8_resolved : ~_GEN_74 & MOB_8_resolved;
+      _GEN_127 = _io_reserved_pointers_1_bits_T == 4'h9;
+      _GEN_128 = _GEN_127 | _GEN_75;
+      _GEN_129 = written_vec_1 ? _GEN_128 | MOB_9_valid : _GEN_75 | MOB_9_valid;
+      _GEN_130 = written_vec_1 & _GEN_127;
+      _GEN_131 = written_vec_1 ? ~_GEN_128 & MOB_9_resolved : ~_GEN_75 & MOB_9_resolved;
+      _GEN_132 = _io_reserved_pointers_1_bits_T == 4'hA;
+      _GEN_133 = _GEN_132 | _GEN_76;
+      _GEN_134 = written_vec_1 ? _GEN_133 | MOB_10_valid : _GEN_76 | MOB_10_valid;
+      _GEN_135 = written_vec_1 & _GEN_132;
+      _GEN_136 = written_vec_1 ? ~_GEN_133 & MOB_10_resolved : ~_GEN_76 & MOB_10_resolved;
+      _GEN_137 = _io_reserved_pointers_1_bits_T == 4'hB;
+      _GEN_138 = _GEN_137 | _GEN_77;
+      _GEN_139 = written_vec_1 ? _GEN_138 | MOB_11_valid : _GEN_77 | MOB_11_valid;
+      _GEN_140 = written_vec_1 & _GEN_137;
+      _GEN_141 = written_vec_1 ? ~_GEN_138 & MOB_11_resolved : ~_GEN_77 & MOB_11_resolved;
+      _GEN_142 = _io_reserved_pointers_1_bits_T == 4'hC;
+      _GEN_143 = _GEN_142 | _GEN_78;
+      _GEN_144 = written_vec_1 ? _GEN_143 | MOB_12_valid : _GEN_78 | MOB_12_valid;
+      _GEN_145 = written_vec_1 & _GEN_142;
+      _GEN_146 = written_vec_1 ? ~_GEN_143 & MOB_12_resolved : ~_GEN_78 & MOB_12_resolved;
+      _GEN_147 = _io_reserved_pointers_1_bits_T == 4'hD;
+      _GEN_148 = _GEN_147 | _GEN_79;
+      _GEN_149 = written_vec_1 ? _GEN_148 | MOB_13_valid : _GEN_79 | MOB_13_valid;
+      _GEN_150 = written_vec_1 & _GEN_147;
+      _GEN_151 = written_vec_1 ? ~_GEN_148 & MOB_13_resolved : ~_GEN_79 & MOB_13_resolved;
+      _GEN_152 = _io_reserved_pointers_1_bits_T == 4'hE;
+      _GEN_153 = _GEN_152 | _GEN_80;
+      _GEN_154 = written_vec_1 ? _GEN_153 | MOB_14_valid : _GEN_80 | MOB_14_valid;
+      _GEN_155 = written_vec_1 & _GEN_152;
+      _GEN_156 = written_vec_1 ? ~_GEN_153 & MOB_14_resolved : ~_GEN_80 & MOB_14_resolved;
+      _GEN_157 = (&_io_reserved_pointers_1_bits_T) | _GEN_81;
+      _GEN_158 = written_vec_1 ? _GEN_157 | MOB_15_valid : _GEN_81 | MOB_15_valid;
+      _GEN_159 = written_vec_1 & (&_io_reserved_pointers_1_bits_T);
+      _GEN_160 = written_vec_1 ? ~_GEN_157 & MOB_15_resolved : ~_GEN_81 & MOB_15_resolved;
+      _GEN_161 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h0;
+      _GEN_162 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h1;
+      _GEN_163 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h2;
+      _GEN_164 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h3;
+      _GEN_165 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h4;
+      _GEN_166 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h5;
+      _GEN_167 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h6;
+      _GEN_168 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h7;
+      _GEN_169 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h8;
+      _GEN_170 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h9;
+      _GEN_171 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hA;
+      _GEN_172 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hB;
+      _GEN_173 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hC;
+      _GEN_174 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hD;
+      _GEN_175 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hE;
+      _GEN_176 = written_vec_2 & (&_io_reserved_pointers_2_bits_T);
+      _GEN_178 = _GEN_177 | _GEN_161;
+      _GEN_179 = written_vec_3 ? _GEN_178 | _GEN_84 : _GEN_161 | _GEN_84;
+      _GEN_180 = written_vec_3 & _GEN_177;
+      _GEN_181 =
+        _GEN_180
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_161
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_85
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_66 ? io_reserve_0_bits_mem_signed : MOB_0_mem_signed;
+      _GEN_183 = _GEN_182 | _GEN_162;
+      _GEN_184 = written_vec_3 ? _GEN_183 | _GEN_89 : _GEN_162 | _GEN_89;
+      _GEN_185 = written_vec_3 & _GEN_182;
+      _GEN_186 =
+        _GEN_185
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_162
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_90
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_67 ? io_reserve_0_bits_mem_signed : MOB_1_mem_signed;
+      _GEN_188 = _GEN_187 | _GEN_163;
+      _GEN_189 = written_vec_3 ? _GEN_188 | _GEN_94 : _GEN_163 | _GEN_94;
+      _GEN_190 = written_vec_3 & _GEN_187;
+      _GEN_191 =
+        _GEN_190
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_163
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_95
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_68 ? io_reserve_0_bits_mem_signed : MOB_2_mem_signed;
+      _GEN_193 = _GEN_192 | _GEN_164;
+      _GEN_194 = written_vec_3 ? _GEN_193 | _GEN_99 : _GEN_164 | _GEN_99;
+      _GEN_195 = written_vec_3 & _GEN_192;
+      _GEN_196 =
+        _GEN_195
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_164
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_100
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_69 ? io_reserve_0_bits_mem_signed : MOB_3_mem_signed;
+      _GEN_198 = _GEN_197 | _GEN_165;
+      _GEN_199 = written_vec_3 ? _GEN_198 | _GEN_104 : _GEN_165 | _GEN_104;
+      _GEN_200 = written_vec_3 & _GEN_197;
+      _GEN_201 =
+        _GEN_200
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_165
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_105
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_70 ? io_reserve_0_bits_mem_signed : MOB_4_mem_signed;
+      _GEN_203 = _GEN_202 | _GEN_166;
+      _GEN_204 = written_vec_3 ? _GEN_203 | _GEN_109 : _GEN_166 | _GEN_109;
+      _GEN_205 = written_vec_3 & _GEN_202;
+      _GEN_206 =
+        _GEN_205
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_166
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_110
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_71 ? io_reserve_0_bits_mem_signed : MOB_5_mem_signed;
+      _GEN_208 = _GEN_207 | _GEN_167;
+      _GEN_209 = written_vec_3 ? _GEN_208 | _GEN_114 : _GEN_167 | _GEN_114;
+      _GEN_210 = written_vec_3 & _GEN_207;
+      _GEN_211 =
+        _GEN_210
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_167
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_115
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_72 ? io_reserve_0_bits_mem_signed : MOB_6_mem_signed;
+      _GEN_213 = _GEN_212 | _GEN_168;
+      _GEN_214 = written_vec_3 ? _GEN_213 | _GEN_119 : _GEN_168 | _GEN_119;
+      _GEN_215 = written_vec_3 & _GEN_212;
+      _GEN_216 =
+        _GEN_215
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_168
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_120
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_73 ? io_reserve_0_bits_mem_signed : MOB_7_mem_signed;
+      _GEN_218 = _GEN_217 | _GEN_169;
+      _GEN_219 = written_vec_3 ? _GEN_218 | _GEN_124 : _GEN_169 | _GEN_124;
+      _GEN_220 = written_vec_3 & _GEN_217;
+      _GEN_221 =
+        _GEN_220
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_169
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_125
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_74 ? io_reserve_0_bits_mem_signed : MOB_8_mem_signed;
+      _GEN_223 = _GEN_222 | _GEN_170;
+      _GEN_224 = written_vec_3 ? _GEN_223 | _GEN_129 : _GEN_170 | _GEN_129;
+      _GEN_225 = written_vec_3 & _GEN_222;
+      _GEN_226 =
+        _GEN_225
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_170
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_130
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_75 ? io_reserve_0_bits_mem_signed : MOB_9_mem_signed;
+      _GEN_228 = _GEN_227 | _GEN_171;
+      _GEN_229 = written_vec_3 ? _GEN_228 | _GEN_134 : _GEN_171 | _GEN_134;
+      _GEN_230 = written_vec_3 & _GEN_227;
+      _GEN_231 =
+        _GEN_230
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_171
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_135
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_76 ? io_reserve_0_bits_mem_signed : MOB_10_mem_signed;
+      _GEN_233 = _GEN_232 | _GEN_172;
+      _GEN_234 = written_vec_3 ? _GEN_233 | _GEN_139 : _GEN_172 | _GEN_139;
+      _GEN_235 = written_vec_3 & _GEN_232;
+      _GEN_236 =
+        _GEN_235
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_172
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_140
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_77 ? io_reserve_0_bits_mem_signed : MOB_11_mem_signed;
+      _GEN_238 = _GEN_237 | _GEN_173;
+      _GEN_239 = written_vec_3 ? _GEN_238 | _GEN_144 : _GEN_173 | _GEN_144;
+      _GEN_240 = written_vec_3 & _GEN_237;
+      _GEN_241 =
+        _GEN_240
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_173
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_145
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_78 ? io_reserve_0_bits_mem_signed : MOB_12_mem_signed;
+      _GEN_243 = _GEN_242 | _GEN_174;
+      _GEN_244 = written_vec_3 ? _GEN_243 | _GEN_149 : _GEN_174 | _GEN_149;
+      _GEN_245 = written_vec_3 & _GEN_242;
+      _GEN_246 =
+        _GEN_245
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_174
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_150
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_79 ? io_reserve_0_bits_mem_signed : MOB_13_mem_signed;
+      _GEN_248 = _GEN_247 | _GEN_175;
+      _GEN_249 = written_vec_3 ? _GEN_248 | _GEN_154 : _GEN_175 | _GEN_154;
+      _GEN_250 = written_vec_3 & _GEN_247;
+      _GEN_251 =
+        _GEN_250
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_175
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_155
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_80 ? io_reserve_0_bits_mem_signed : MOB_14_mem_signed;
+      _GEN_252 = (&_io_reserved_pointers_3_bits_T) | _GEN_176;
+      _GEN_253 = written_vec_3 ? _GEN_252 | _GEN_158 : _GEN_176 | _GEN_158;
+      _GEN_254 = written_vec_3 & (&_io_reserved_pointers_3_bits_T);
+      _GEN_255 =
+        _GEN_254
+          ? io_reserve_3_bits_mem_signed
+          : _GEN_176
+              ? io_reserve_2_bits_mem_signed
+              : _GEN_159
+                  ? io_reserve_1_bits_mem_signed
+                  : _GEN_81 ? io_reserve_0_bits_mem_signed : MOB_15_mem_signed;
+      _GEN_256 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h0;
+      _GEN_257 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h1;
+      _GEN_258 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h2;
+      _GEN_259 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h3;
+      _GEN_260 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h4;
+      _GEN_261 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h5;
+      _GEN_262 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h6;
+      _GEN_263 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h7;
+      _GEN_264 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h8;
+      _GEN_265 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h9;
+      _GEN_266 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hA;
+      _GEN_267 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hB;
+      _GEN_268 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hC;
+      _GEN_269 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hD;
+      _GEN_270 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hE;
+      _GEN_271 = io_AGU_output_valid & (&io_AGU_output_bits_MOB_index);
+      _GEN_272 = _GEN_256 | (written_vec_3 ? ~_GEN_178 & _GEN_86 : ~_GEN_161 & _GEN_86);
+      _GEN_273 = _GEN_257 | (written_vec_3 ? ~_GEN_183 & _GEN_91 : ~_GEN_162 & _GEN_91);
+      _GEN_274 = _GEN_258 | (written_vec_3 ? ~_GEN_188 & _GEN_96 : ~_GEN_163 & _GEN_96);
+      _GEN_275 = _GEN_259 | (written_vec_3 ? ~_GEN_193 & _GEN_101 : ~_GEN_164 & _GEN_101);
+      _GEN_276 = _GEN_260 | (written_vec_3 ? ~_GEN_198 & _GEN_106 : ~_GEN_165 & _GEN_106);
+      _GEN_277 = _GEN_261 | (written_vec_3 ? ~_GEN_203 & _GEN_111 : ~_GEN_166 & _GEN_111);
+      _GEN_278 = _GEN_262 | (written_vec_3 ? ~_GEN_208 & _GEN_116 : ~_GEN_167 & _GEN_116);
+      _GEN_279 = _GEN_263 | (written_vec_3 ? ~_GEN_213 & _GEN_121 : ~_GEN_168 & _GEN_121);
+      _GEN_280 = _GEN_264 | (written_vec_3 ? ~_GEN_218 & _GEN_126 : ~_GEN_169 & _GEN_126);
+      _GEN_281 = _GEN_265 | (written_vec_3 ? ~_GEN_223 & _GEN_131 : ~_GEN_170 & _GEN_131);
+      _GEN_282 = _GEN_266 | (written_vec_3 ? ~_GEN_228 & _GEN_136 : ~_GEN_171 & _GEN_136);
+      _GEN_283 = _GEN_267 | (written_vec_3 ? ~_GEN_233 & _GEN_141 : ~_GEN_172 & _GEN_141);
+      _GEN_284 = _GEN_268 | (written_vec_3 ? ~_GEN_238 & _GEN_146 : ~_GEN_173 & _GEN_146);
+      _GEN_285 = _GEN_269 | (written_vec_3 ? ~_GEN_243 & _GEN_151 : ~_GEN_174 & _GEN_151);
+      _GEN_286 = _GEN_270 | (written_vec_3 ? ~_GEN_248 & _GEN_156 : ~_GEN_175 & _GEN_156);
+      _GEN_287 = _GEN_271 | (written_vec_3 ? ~_GEN_252 & _GEN_160 : ~_GEN_176 & _GEN_160);
+      _GEN_288 = io_flush & ~comb_committed_0 & MOB_0_valid;
+      _GEN_289 = io_flush & ~comb_committed_1 & MOB_1_valid;
+      _GEN_290 = io_flush & ~comb_committed_2 & MOB_2_valid;
+      _GEN_291 = io_flush & ~comb_committed_3 & MOB_3_valid;
+      _GEN_292 = io_flush & ~comb_committed_4 & MOB_4_valid;
+      _GEN_293 = io_flush & ~comb_committed_5 & MOB_5_valid;
+      _GEN_294 = io_flush & ~comb_committed_6 & MOB_6_valid;
+      _GEN_295 = io_flush & ~comb_committed_7 & MOB_7_valid;
+      _GEN_296 = io_flush & ~comb_committed_8 & MOB_8_valid;
+      _GEN_297 = io_flush & ~comb_committed_9 & MOB_9_valid;
+      _GEN_298 = io_flush & ~comb_committed_10 & MOB_10_valid;
+      _GEN_299 = io_flush & ~comb_committed_11 & MOB_11_valid;
+      _GEN_300 = io_flush & ~comb_committed_12 & MOB_12_valid;
+      _GEN_301 = io_flush & ~comb_committed_13 & MOB_13_valid;
+      _GEN_302 = io_flush & ~comb_committed_14 & MOB_14_valid;
+      _GEN_303 = io_flush & ~comb_committed_15 & MOB_15_valid;
+      _GEN_305 = front_index == 4'h0;
+      _GEN_306 = front_index == 4'h1;
+      _GEN_307 = front_index == 4'h2;
+      _GEN_308 = front_index == 4'h3;
+      _GEN_309 = front_index == 4'h4;
+      _GEN_310 = front_index == 4'h5;
+      _GEN_311 = front_index == 4'h6;
+      _GEN_312 = front_index == 4'h7;
+      _GEN_313 = front_index == 4'h8;
+      _GEN_314 = front_index == 4'h9;
+      _GEN_315 = front_index == 4'hA;
+      _GEN_316 = front_index == 4'hB;
+      _GEN_317 = front_index == 4'hC;
+      _GEN_318 = front_index == 4'hD;
+      _GEN_319 = front_index == 4'hE;
+      if (_GEN_304) begin
+        automatic logic _GEN_320;
+        automatic logic _GEN_321;
+        automatic logic _GEN_322;
+        automatic logic _GEN_323;
+        automatic logic _GEN_324;
+        automatic logic _GEN_325;
+        automatic logic _GEN_326;
+        automatic logic _GEN_327;
+        automatic logic _GEN_328;
+        automatic logic _GEN_329;
+        automatic logic _GEN_330;
+        automatic logic _GEN_331;
+        automatic logic _GEN_332;
+        automatic logic _GEN_333;
+        automatic logic _GEN_334;
+        automatic logic _GEN_335;
+        _GEN_320 = _GEN_305 | _GEN_288;
+        _GEN_321 = _GEN_306 | _GEN_289;
+        _GEN_322 = _GEN_307 | _GEN_290;
+        _GEN_323 = _GEN_308 | _GEN_291;
+        _GEN_324 = _GEN_309 | _GEN_292;
+        _GEN_325 = _GEN_310 | _GEN_293;
+        _GEN_326 = _GEN_311 | _GEN_294;
+        _GEN_327 = _GEN_312 | _GEN_295;
+        _GEN_328 = _GEN_313 | _GEN_296;
+        _GEN_329 = _GEN_314 | _GEN_297;
+        _GEN_330 = _GEN_315 | _GEN_298;
+        _GEN_331 = _GEN_316 | _GEN_299;
+        _GEN_332 = _GEN_317 | _GEN_300;
+        _GEN_333 = _GEN_318 | _GEN_301;
+        _GEN_334 = _GEN_319 | _GEN_302;
+        _GEN_335 = (&front_index) | _GEN_303;
+        MOB_0_valid <= ~_GEN_320 & _GEN_179;
+        MOB_0_mem_signed <= ~_GEN_320 & _GEN_181;
+        MOB_0_committed <= ~_GEN_320 & comb_committed_0;
+        MOB_0_resolved <= ~_GEN_320 & _GEN_272;
+        MOB_1_valid <= ~_GEN_321 & _GEN_184;
+        MOB_1_mem_signed <= ~_GEN_321 & _GEN_186;
+        MOB_1_committed <= ~_GEN_321 & comb_committed_1;
+        MOB_1_resolved <= ~_GEN_321 & _GEN_273;
+        MOB_2_valid <= ~_GEN_322 & _GEN_189;
+        MOB_2_mem_signed <= ~_GEN_322 & _GEN_191;
+        MOB_2_committed <= ~_GEN_322 & comb_committed_2;
+        MOB_2_resolved <= ~_GEN_322 & _GEN_274;
+        MOB_3_valid <= ~_GEN_323 & _GEN_194;
+        MOB_3_mem_signed <= ~_GEN_323 & _GEN_196;
+        MOB_3_committed <= ~_GEN_323 & comb_committed_3;
+        MOB_3_resolved <= ~_GEN_323 & _GEN_275;
+        MOB_4_valid <= ~_GEN_324 & _GEN_199;
+        MOB_4_mem_signed <= ~_GEN_324 & _GEN_201;
+        MOB_4_committed <= ~_GEN_324 & comb_committed_4;
+        MOB_4_resolved <= ~_GEN_324 & _GEN_276;
+        MOB_5_valid <= ~_GEN_325 & _GEN_204;
+        MOB_5_mem_signed <= ~_GEN_325 & _GEN_206;
+        MOB_5_committed <= ~_GEN_325 & comb_committed_5;
+        MOB_5_resolved <= ~_GEN_325 & _GEN_277;
+        MOB_6_valid <= ~_GEN_326 & _GEN_209;
+        MOB_6_mem_signed <= ~_GEN_326 & _GEN_211;
+        MOB_6_committed <= ~_GEN_326 & comb_committed_6;
+        MOB_6_resolved <= ~_GEN_326 & _GEN_278;
+        MOB_7_valid <= ~_GEN_327 & _GEN_214;
+        MOB_7_mem_signed <= ~_GEN_327 & _GEN_216;
+        MOB_7_committed <= ~_GEN_327 & comb_committed_7;
+        MOB_7_resolved <= ~_GEN_327 & _GEN_279;
+        MOB_8_valid <= ~_GEN_328 & _GEN_219;
+        MOB_8_mem_signed <= ~_GEN_328 & _GEN_221;
+        MOB_8_committed <= ~_GEN_328 & comb_committed_8;
+        MOB_8_resolved <= ~_GEN_328 & _GEN_280;
+        MOB_9_valid <= ~_GEN_329 & _GEN_224;
+        MOB_9_mem_signed <= ~_GEN_329 & _GEN_226;
+        MOB_9_committed <= ~_GEN_329 & comb_committed_9;
+        MOB_9_resolved <= ~_GEN_329 & _GEN_281;
+        MOB_10_valid <= ~_GEN_330 & _GEN_229;
+        MOB_10_mem_signed <= ~_GEN_330 & _GEN_231;
+        MOB_10_committed <= ~_GEN_330 & comb_committed_10;
+        MOB_10_resolved <= ~_GEN_330 & _GEN_282;
+        MOB_11_valid <= ~_GEN_331 & _GEN_234;
+        MOB_11_mem_signed <= ~_GEN_331 & _GEN_236;
+        MOB_11_committed <= ~_GEN_331 & comb_committed_11;
+        MOB_11_resolved <= ~_GEN_331 & _GEN_283;
+        MOB_12_valid <= ~_GEN_332 & _GEN_239;
+        MOB_12_mem_signed <= ~_GEN_332 & _GEN_241;
+        MOB_12_committed <= ~_GEN_332 & comb_committed_12;
+        MOB_12_resolved <= ~_GEN_332 & _GEN_284;
+        MOB_13_valid <= ~_GEN_333 & _GEN_244;
+        MOB_13_mem_signed <= ~_GEN_333 & _GEN_246;
+        MOB_13_committed <= ~_GEN_333 & comb_committed_13;
+        MOB_13_resolved <= ~_GEN_333 & _GEN_285;
+        MOB_14_valid <= ~_GEN_334 & _GEN_249;
+        MOB_14_mem_signed <= ~_GEN_334 & _GEN_251;
+        MOB_14_committed <= ~_GEN_334 & comb_committed_14;
+        MOB_14_resolved <= ~_GEN_334 & _GEN_286;
+        MOB_15_valid <= ~_GEN_335 & _GEN_253;
+        MOB_15_mem_signed <= ~_GEN_335 & _GEN_255;
+        MOB_15_committed <= ~_GEN_335 & comb_committed_15;
+        MOB_15_resolved <= ~_GEN_335 & _GEN_287;
         front_pointer <= front_pointer + 5'h1;
       end
       else begin
-        MOB_0_valid <= ~_GEN_239 & _GEN_162;
-        MOB_0_committed <= ~_GEN_239 & comb_committed_0;
-        MOB_0_resolved <= ~_GEN_239 & _GEN_223;
-        MOB_1_valid <= ~_GEN_240 & _GEN_165;
-        MOB_1_committed <= ~_GEN_240 & comb_committed_1;
-        MOB_1_resolved <= ~_GEN_240 & _GEN_224;
-        MOB_2_valid <= ~_GEN_241 & _GEN_168;
-        MOB_2_committed <= ~_GEN_241 & comb_committed_2;
-        MOB_2_resolved <= ~_GEN_241 & _GEN_225;
-        MOB_3_valid <= ~_GEN_242 & _GEN_171;
-        MOB_3_committed <= ~_GEN_242 & comb_committed_3;
-        MOB_3_resolved <= ~_GEN_242 & _GEN_226;
-        MOB_4_valid <= ~_GEN_243 & _GEN_174;
-        MOB_4_committed <= ~_GEN_243 & comb_committed_4;
-        MOB_4_resolved <= ~_GEN_243 & _GEN_227;
-        MOB_5_valid <= ~_GEN_244 & _GEN_177;
-        MOB_5_committed <= ~_GEN_244 & comb_committed_5;
-        MOB_5_resolved <= ~_GEN_244 & _GEN_228;
-        MOB_6_valid <= ~_GEN_245 & _GEN_180;
-        MOB_6_committed <= ~_GEN_245 & comb_committed_6;
-        MOB_6_resolved <= ~_GEN_245 & _GEN_229;
-        MOB_7_valid <= ~_GEN_246 & _GEN_183;
-        MOB_7_committed <= ~_GEN_246 & comb_committed_7;
-        MOB_7_resolved <= ~_GEN_246 & _GEN_230;
-        MOB_8_valid <= ~_GEN_247 & _GEN_186;
-        MOB_8_committed <= ~_GEN_247 & comb_committed_8;
-        MOB_8_resolved <= ~_GEN_247 & _GEN_231;
-        MOB_9_valid <= ~_GEN_248 & _GEN_189;
-        MOB_9_committed <= ~_GEN_248 & comb_committed_9;
-        MOB_9_resolved <= ~_GEN_248 & _GEN_232;
-        MOB_10_valid <= ~_GEN_249 & _GEN_192;
-        MOB_10_committed <= ~_GEN_249 & comb_committed_10;
-        MOB_10_resolved <= ~_GEN_249 & _GEN_233;
-        MOB_11_valid <= ~_GEN_250 & _GEN_195;
-        MOB_11_committed <= ~_GEN_250 & comb_committed_11;
-        MOB_11_resolved <= ~_GEN_250 & _GEN_234;
-        MOB_12_valid <= ~_GEN_251 & _GEN_198;
-        MOB_12_committed <= ~_GEN_251 & comb_committed_12;
-        MOB_12_resolved <= ~_GEN_251 & _GEN_235;
-        MOB_13_valid <= ~_GEN_252 & _GEN_201;
-        MOB_13_committed <= ~_GEN_252 & comb_committed_13;
-        MOB_13_resolved <= ~_GEN_252 & _GEN_236;
-        MOB_14_valid <= ~_GEN_253 & _GEN_204;
-        MOB_14_committed <= ~_GEN_253 & comb_committed_14;
-        MOB_14_resolved <= ~_GEN_253 & _GEN_237;
-        MOB_15_valid <= ~_GEN_254 & _GEN_206;
-        MOB_15_committed <= ~_GEN_254 & comb_committed_15;
-        MOB_15_resolved <= ~_GEN_254 & _GEN_238;
+        MOB_0_valid <= ~_GEN_288 & _GEN_179;
+        MOB_0_mem_signed <= ~_GEN_288 & _GEN_181;
+        MOB_0_committed <= ~_GEN_288 & comb_committed_0;
+        MOB_0_resolved <= ~_GEN_288 & _GEN_272;
+        MOB_1_valid <= ~_GEN_289 & _GEN_184;
+        MOB_1_mem_signed <= ~_GEN_289 & _GEN_186;
+        MOB_1_committed <= ~_GEN_289 & comb_committed_1;
+        MOB_1_resolved <= ~_GEN_289 & _GEN_273;
+        MOB_2_valid <= ~_GEN_290 & _GEN_189;
+        MOB_2_mem_signed <= ~_GEN_290 & _GEN_191;
+        MOB_2_committed <= ~_GEN_290 & comb_committed_2;
+        MOB_2_resolved <= ~_GEN_290 & _GEN_274;
+        MOB_3_valid <= ~_GEN_291 & _GEN_194;
+        MOB_3_mem_signed <= ~_GEN_291 & _GEN_196;
+        MOB_3_committed <= ~_GEN_291 & comb_committed_3;
+        MOB_3_resolved <= ~_GEN_291 & _GEN_275;
+        MOB_4_valid <= ~_GEN_292 & _GEN_199;
+        MOB_4_mem_signed <= ~_GEN_292 & _GEN_201;
+        MOB_4_committed <= ~_GEN_292 & comb_committed_4;
+        MOB_4_resolved <= ~_GEN_292 & _GEN_276;
+        MOB_5_valid <= ~_GEN_293 & _GEN_204;
+        MOB_5_mem_signed <= ~_GEN_293 & _GEN_206;
+        MOB_5_committed <= ~_GEN_293 & comb_committed_5;
+        MOB_5_resolved <= ~_GEN_293 & _GEN_277;
+        MOB_6_valid <= ~_GEN_294 & _GEN_209;
+        MOB_6_mem_signed <= ~_GEN_294 & _GEN_211;
+        MOB_6_committed <= ~_GEN_294 & comb_committed_6;
+        MOB_6_resolved <= ~_GEN_294 & _GEN_278;
+        MOB_7_valid <= ~_GEN_295 & _GEN_214;
+        MOB_7_mem_signed <= ~_GEN_295 & _GEN_216;
+        MOB_7_committed <= ~_GEN_295 & comb_committed_7;
+        MOB_7_resolved <= ~_GEN_295 & _GEN_279;
+        MOB_8_valid <= ~_GEN_296 & _GEN_219;
+        MOB_8_mem_signed <= ~_GEN_296 & _GEN_221;
+        MOB_8_committed <= ~_GEN_296 & comb_committed_8;
+        MOB_8_resolved <= ~_GEN_296 & _GEN_280;
+        MOB_9_valid <= ~_GEN_297 & _GEN_224;
+        MOB_9_mem_signed <= ~_GEN_297 & _GEN_226;
+        MOB_9_committed <= ~_GEN_297 & comb_committed_9;
+        MOB_9_resolved <= ~_GEN_297 & _GEN_281;
+        MOB_10_valid <= ~_GEN_298 & _GEN_229;
+        MOB_10_mem_signed <= ~_GEN_298 & _GEN_231;
+        MOB_10_committed <= ~_GEN_298 & comb_committed_10;
+        MOB_10_resolved <= ~_GEN_298 & _GEN_282;
+        MOB_11_valid <= ~_GEN_299 & _GEN_234;
+        MOB_11_mem_signed <= ~_GEN_299 & _GEN_236;
+        MOB_11_committed <= ~_GEN_299 & comb_committed_11;
+        MOB_11_resolved <= ~_GEN_299 & _GEN_283;
+        MOB_12_valid <= ~_GEN_300 & _GEN_239;
+        MOB_12_mem_signed <= ~_GEN_300 & _GEN_241;
+        MOB_12_committed <= ~_GEN_300 & comb_committed_12;
+        MOB_12_resolved <= ~_GEN_300 & _GEN_284;
+        MOB_13_valid <= ~_GEN_301 & _GEN_244;
+        MOB_13_mem_signed <= ~_GEN_301 & _GEN_246;
+        MOB_13_committed <= ~_GEN_301 & comb_committed_13;
+        MOB_13_resolved <= ~_GEN_301 & _GEN_285;
+        MOB_14_valid <= ~_GEN_302 & _GEN_249;
+        MOB_14_mem_signed <= ~_GEN_302 & _GEN_251;
+        MOB_14_committed <= ~_GEN_302 & comb_committed_14;
+        MOB_14_resolved <= ~_GEN_302 & _GEN_286;
+        MOB_15_valid <= ~_GEN_303 & _GEN_253;
+        MOB_15_mem_signed <= ~_GEN_303 & _GEN_255;
+        MOB_15_committed <= ~_GEN_303 & comb_committed_15;
+        MOB_15_resolved <= ~_GEN_303 & _GEN_287;
       end
-      if (_GEN_255 & _GEN_256 | _GEN_239) begin
+      if (_GEN_304 & _GEN_305 | _GEN_288) begin
         MOB_0_memory_type <= 2'h0;
         MOB_0_ROB_index <= 6'h0;
         MOB_0_fetch_packet_index <= 2'h0;
@@ -1590,60 +1869,56 @@ module simple_MOB(
         MOB_0_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_287;
-        automatic logic _GEN_288;
-        automatic logic _GEN_289;
-        automatic logic _GEN_290;
-        _GEN_287 = written_vec_1 & _GEN_81;
-        _GEN_288 = written_vec_1 & _GEN_81 | _GEN_65;
-        _GEN_289 = written_vec_3 & _GEN_160;
-        _GEN_290 = written_vec_3 ? _GEN_161 | _GEN_288 : _GEN_144 | _GEN_288;
-        if (_GEN_289) begin
+        automatic logic _GEN_336;
+        automatic logic _GEN_337;
+        _GEN_336 = written_vec_1 & _GEN_82 | _GEN_66;
+        _GEN_337 = written_vec_3 ? _GEN_178 | _GEN_336 : _GEN_161 | _GEN_336;
+        if (_GEN_180) begin
           MOB_0_memory_type <= io_reserve_3_bits_memory_type;
           MOB_0_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_0_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_144) begin
+        else if (_GEN_161) begin
           MOB_0_memory_type <= io_reserve_2_bits_memory_type;
           MOB_0_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_0_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_287) begin
+        else if (_GEN_85) begin
           MOB_0_memory_type <= io_reserve_1_bits_memory_type;
           MOB_0_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_0_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_65) begin
+        else if (_GEN_66) begin
           MOB_0_memory_type <= io_reserve_0_bits_memory_type;
           MOB_0_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_0_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_207)
+        if (_GEN_256)
           MOB_0_address <= io_AGU_output_bits_address;
-        else if (_GEN_290)
+        else if (_GEN_337)
           MOB_0_address <= 32'h0;
-        if (_GEN_289) begin
+        if (_GEN_180) begin
           MOB_0_access_width <= io_reserve_3_bits_access_width;
           MOB_0_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_144) begin
+        else if (_GEN_161) begin
           MOB_0_access_width <= io_reserve_2_bits_access_width;
           MOB_0_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_287) begin
+        else if (_GEN_85) begin
           MOB_0_access_width <= io_reserve_1_bits_access_width;
           MOB_0_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_65) begin
+        else if (_GEN_66) begin
           MOB_0_access_width <= io_reserve_0_bits_access_width;
           MOB_0_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_207)
+        if (_GEN_256)
           MOB_0_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_290)
+        else if (_GEN_337)
           MOB_0_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_257 | _GEN_240) begin
+      if (_GEN_304 & _GEN_306 | _GEN_289) begin
         MOB_1_memory_type <= 2'h0;
         MOB_1_ROB_index <= 6'h0;
         MOB_1_fetch_packet_index <= 2'h0;
@@ -1653,60 +1928,56 @@ module simple_MOB(
         MOB_1_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_291;
-        automatic logic _GEN_292;
-        automatic logic _GEN_293;
-        automatic logic _GEN_294;
-        _GEN_291 = written_vec_1 & _GEN_85;
-        _GEN_292 = written_vec_1 & _GEN_85 | _GEN_66;
-        _GEN_293 = written_vec_3 & _GEN_163;
-        _GEN_294 = written_vec_3 ? _GEN_164 | _GEN_292 : _GEN_145 | _GEN_292;
-        if (_GEN_293) begin
+        automatic logic _GEN_338;
+        automatic logic _GEN_339;
+        _GEN_338 = written_vec_1 & _GEN_87 | _GEN_67;
+        _GEN_339 = written_vec_3 ? _GEN_183 | _GEN_338 : _GEN_162 | _GEN_338;
+        if (_GEN_185) begin
           MOB_1_memory_type <= io_reserve_3_bits_memory_type;
           MOB_1_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_1_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_145) begin
+        else if (_GEN_162) begin
           MOB_1_memory_type <= io_reserve_2_bits_memory_type;
           MOB_1_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_1_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_291) begin
+        else if (_GEN_90) begin
           MOB_1_memory_type <= io_reserve_1_bits_memory_type;
           MOB_1_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_1_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_66) begin
+        else if (_GEN_67) begin
           MOB_1_memory_type <= io_reserve_0_bits_memory_type;
           MOB_1_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_1_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_208)
+        if (_GEN_257)
           MOB_1_address <= io_AGU_output_bits_address;
-        else if (_GEN_294)
+        else if (_GEN_339)
           MOB_1_address <= 32'h0;
-        if (_GEN_293) begin
+        if (_GEN_185) begin
           MOB_1_access_width <= io_reserve_3_bits_access_width;
           MOB_1_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_145) begin
+        else if (_GEN_162) begin
           MOB_1_access_width <= io_reserve_2_bits_access_width;
           MOB_1_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_291) begin
+        else if (_GEN_90) begin
           MOB_1_access_width <= io_reserve_1_bits_access_width;
           MOB_1_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_66) begin
+        else if (_GEN_67) begin
           MOB_1_access_width <= io_reserve_0_bits_access_width;
           MOB_1_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_208)
+        if (_GEN_257)
           MOB_1_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_294)
+        else if (_GEN_339)
           MOB_1_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_258 | _GEN_241) begin
+      if (_GEN_304 & _GEN_307 | _GEN_290) begin
         MOB_2_memory_type <= 2'h0;
         MOB_2_ROB_index <= 6'h0;
         MOB_2_fetch_packet_index <= 2'h0;
@@ -1716,60 +1987,56 @@ module simple_MOB(
         MOB_2_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_295;
-        automatic logic _GEN_296;
-        automatic logic _GEN_297;
-        automatic logic _GEN_298;
-        _GEN_295 = written_vec_1 & _GEN_89;
-        _GEN_296 = written_vec_1 & _GEN_89 | _GEN_67;
-        _GEN_297 = written_vec_3 & _GEN_166;
-        _GEN_298 = written_vec_3 ? _GEN_167 | _GEN_296 : _GEN_146 | _GEN_296;
-        if (_GEN_297) begin
+        automatic logic _GEN_340;
+        automatic logic _GEN_341;
+        _GEN_340 = written_vec_1 & _GEN_92 | _GEN_68;
+        _GEN_341 = written_vec_3 ? _GEN_188 | _GEN_340 : _GEN_163 | _GEN_340;
+        if (_GEN_190) begin
           MOB_2_memory_type <= io_reserve_3_bits_memory_type;
           MOB_2_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_2_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_146) begin
+        else if (_GEN_163) begin
           MOB_2_memory_type <= io_reserve_2_bits_memory_type;
           MOB_2_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_2_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_295) begin
+        else if (_GEN_95) begin
           MOB_2_memory_type <= io_reserve_1_bits_memory_type;
           MOB_2_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_2_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_67) begin
+        else if (_GEN_68) begin
           MOB_2_memory_type <= io_reserve_0_bits_memory_type;
           MOB_2_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_2_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_209)
+        if (_GEN_258)
           MOB_2_address <= io_AGU_output_bits_address;
-        else if (_GEN_298)
+        else if (_GEN_341)
           MOB_2_address <= 32'h0;
-        if (_GEN_297) begin
+        if (_GEN_190) begin
           MOB_2_access_width <= io_reserve_3_bits_access_width;
           MOB_2_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_146) begin
+        else if (_GEN_163) begin
           MOB_2_access_width <= io_reserve_2_bits_access_width;
           MOB_2_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_295) begin
+        else if (_GEN_95) begin
           MOB_2_access_width <= io_reserve_1_bits_access_width;
           MOB_2_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_67) begin
+        else if (_GEN_68) begin
           MOB_2_access_width <= io_reserve_0_bits_access_width;
           MOB_2_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_209)
+        if (_GEN_258)
           MOB_2_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_298)
+        else if (_GEN_341)
           MOB_2_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_259 | _GEN_242) begin
+      if (_GEN_304 & _GEN_308 | _GEN_291) begin
         MOB_3_memory_type <= 2'h0;
         MOB_3_ROB_index <= 6'h0;
         MOB_3_fetch_packet_index <= 2'h0;
@@ -1779,60 +2046,56 @@ module simple_MOB(
         MOB_3_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_299;
-        automatic logic _GEN_300;
-        automatic logic _GEN_301;
-        automatic logic _GEN_302;
-        _GEN_299 = written_vec_1 & _GEN_93;
-        _GEN_300 = written_vec_1 & _GEN_93 | _GEN_68;
-        _GEN_301 = written_vec_3 & _GEN_169;
-        _GEN_302 = written_vec_3 ? _GEN_170 | _GEN_300 : _GEN_147 | _GEN_300;
-        if (_GEN_301) begin
+        automatic logic _GEN_342;
+        automatic logic _GEN_343;
+        _GEN_342 = written_vec_1 & _GEN_97 | _GEN_69;
+        _GEN_343 = written_vec_3 ? _GEN_193 | _GEN_342 : _GEN_164 | _GEN_342;
+        if (_GEN_195) begin
           MOB_3_memory_type <= io_reserve_3_bits_memory_type;
           MOB_3_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_3_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_147) begin
+        else if (_GEN_164) begin
           MOB_3_memory_type <= io_reserve_2_bits_memory_type;
           MOB_3_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_3_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_299) begin
+        else if (_GEN_100) begin
           MOB_3_memory_type <= io_reserve_1_bits_memory_type;
           MOB_3_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_3_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_68) begin
+        else if (_GEN_69) begin
           MOB_3_memory_type <= io_reserve_0_bits_memory_type;
           MOB_3_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_3_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_210)
+        if (_GEN_259)
           MOB_3_address <= io_AGU_output_bits_address;
-        else if (_GEN_302)
+        else if (_GEN_343)
           MOB_3_address <= 32'h0;
-        if (_GEN_301) begin
+        if (_GEN_195) begin
           MOB_3_access_width <= io_reserve_3_bits_access_width;
           MOB_3_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_147) begin
+        else if (_GEN_164) begin
           MOB_3_access_width <= io_reserve_2_bits_access_width;
           MOB_3_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_299) begin
+        else if (_GEN_100) begin
           MOB_3_access_width <= io_reserve_1_bits_access_width;
           MOB_3_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_68) begin
+        else if (_GEN_69) begin
           MOB_3_access_width <= io_reserve_0_bits_access_width;
           MOB_3_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_210)
+        if (_GEN_259)
           MOB_3_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_302)
+        else if (_GEN_343)
           MOB_3_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_260 | _GEN_243) begin
+      if (_GEN_304 & _GEN_309 | _GEN_292) begin
         MOB_4_memory_type <= 2'h0;
         MOB_4_ROB_index <= 6'h0;
         MOB_4_fetch_packet_index <= 2'h0;
@@ -1842,60 +2105,56 @@ module simple_MOB(
         MOB_4_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_303;
-        automatic logic _GEN_304;
-        automatic logic _GEN_305;
-        automatic logic _GEN_306;
-        _GEN_303 = written_vec_1 & _GEN_97;
-        _GEN_304 = written_vec_1 & _GEN_97 | _GEN_69;
-        _GEN_305 = written_vec_3 & _GEN_172;
-        _GEN_306 = written_vec_3 ? _GEN_173 | _GEN_304 : _GEN_148 | _GEN_304;
-        if (_GEN_305) begin
+        automatic logic _GEN_344;
+        automatic logic _GEN_345;
+        _GEN_344 = written_vec_1 & _GEN_102 | _GEN_70;
+        _GEN_345 = written_vec_3 ? _GEN_198 | _GEN_344 : _GEN_165 | _GEN_344;
+        if (_GEN_200) begin
           MOB_4_memory_type <= io_reserve_3_bits_memory_type;
           MOB_4_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_4_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_148) begin
+        else if (_GEN_165) begin
           MOB_4_memory_type <= io_reserve_2_bits_memory_type;
           MOB_4_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_4_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_303) begin
+        else if (_GEN_105) begin
           MOB_4_memory_type <= io_reserve_1_bits_memory_type;
           MOB_4_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_4_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_69) begin
+        else if (_GEN_70) begin
           MOB_4_memory_type <= io_reserve_0_bits_memory_type;
           MOB_4_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_4_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_211)
+        if (_GEN_260)
           MOB_4_address <= io_AGU_output_bits_address;
-        else if (_GEN_306)
+        else if (_GEN_345)
           MOB_4_address <= 32'h0;
-        if (_GEN_305) begin
+        if (_GEN_200) begin
           MOB_4_access_width <= io_reserve_3_bits_access_width;
           MOB_4_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_148) begin
+        else if (_GEN_165) begin
           MOB_4_access_width <= io_reserve_2_bits_access_width;
           MOB_4_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_303) begin
+        else if (_GEN_105) begin
           MOB_4_access_width <= io_reserve_1_bits_access_width;
           MOB_4_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_69) begin
+        else if (_GEN_70) begin
           MOB_4_access_width <= io_reserve_0_bits_access_width;
           MOB_4_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_211)
+        if (_GEN_260)
           MOB_4_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_306)
+        else if (_GEN_345)
           MOB_4_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_261 | _GEN_244) begin
+      if (_GEN_304 & _GEN_310 | _GEN_293) begin
         MOB_5_memory_type <= 2'h0;
         MOB_5_ROB_index <= 6'h0;
         MOB_5_fetch_packet_index <= 2'h0;
@@ -1905,60 +2164,56 @@ module simple_MOB(
         MOB_5_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_307;
-        automatic logic _GEN_308;
-        automatic logic _GEN_309;
-        automatic logic _GEN_310;
-        _GEN_307 = written_vec_1 & _GEN_101;
-        _GEN_308 = written_vec_1 & _GEN_101 | _GEN_70;
-        _GEN_309 = written_vec_3 & _GEN_175;
-        _GEN_310 = written_vec_3 ? _GEN_176 | _GEN_308 : _GEN_149 | _GEN_308;
-        if (_GEN_309) begin
+        automatic logic _GEN_346;
+        automatic logic _GEN_347;
+        _GEN_346 = written_vec_1 & _GEN_107 | _GEN_71;
+        _GEN_347 = written_vec_3 ? _GEN_203 | _GEN_346 : _GEN_166 | _GEN_346;
+        if (_GEN_205) begin
           MOB_5_memory_type <= io_reserve_3_bits_memory_type;
           MOB_5_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_5_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_149) begin
+        else if (_GEN_166) begin
           MOB_5_memory_type <= io_reserve_2_bits_memory_type;
           MOB_5_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_5_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_307) begin
+        else if (_GEN_110) begin
           MOB_5_memory_type <= io_reserve_1_bits_memory_type;
           MOB_5_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_5_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_70) begin
+        else if (_GEN_71) begin
           MOB_5_memory_type <= io_reserve_0_bits_memory_type;
           MOB_5_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_5_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_212)
+        if (_GEN_261)
           MOB_5_address <= io_AGU_output_bits_address;
-        else if (_GEN_310)
+        else if (_GEN_347)
           MOB_5_address <= 32'h0;
-        if (_GEN_309) begin
+        if (_GEN_205) begin
           MOB_5_access_width <= io_reserve_3_bits_access_width;
           MOB_5_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_149) begin
+        else if (_GEN_166) begin
           MOB_5_access_width <= io_reserve_2_bits_access_width;
           MOB_5_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_307) begin
+        else if (_GEN_110) begin
           MOB_5_access_width <= io_reserve_1_bits_access_width;
           MOB_5_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_70) begin
+        else if (_GEN_71) begin
           MOB_5_access_width <= io_reserve_0_bits_access_width;
           MOB_5_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_212)
+        if (_GEN_261)
           MOB_5_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_310)
+        else if (_GEN_347)
           MOB_5_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_262 | _GEN_245) begin
+      if (_GEN_304 & _GEN_311 | _GEN_294) begin
         MOB_6_memory_type <= 2'h0;
         MOB_6_ROB_index <= 6'h0;
         MOB_6_fetch_packet_index <= 2'h0;
@@ -1968,60 +2223,56 @@ module simple_MOB(
         MOB_6_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_311;
-        automatic logic _GEN_312;
-        automatic logic _GEN_313;
-        automatic logic _GEN_314;
-        _GEN_311 = written_vec_1 & _GEN_105;
-        _GEN_312 = written_vec_1 & _GEN_105 | _GEN_71;
-        _GEN_313 = written_vec_3 & _GEN_178;
-        _GEN_314 = written_vec_3 ? _GEN_179 | _GEN_312 : _GEN_150 | _GEN_312;
-        if (_GEN_313) begin
+        automatic logic _GEN_348;
+        automatic logic _GEN_349;
+        _GEN_348 = written_vec_1 & _GEN_112 | _GEN_72;
+        _GEN_349 = written_vec_3 ? _GEN_208 | _GEN_348 : _GEN_167 | _GEN_348;
+        if (_GEN_210) begin
           MOB_6_memory_type <= io_reserve_3_bits_memory_type;
           MOB_6_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_6_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_150) begin
+        else if (_GEN_167) begin
           MOB_6_memory_type <= io_reserve_2_bits_memory_type;
           MOB_6_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_6_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_311) begin
+        else if (_GEN_115) begin
           MOB_6_memory_type <= io_reserve_1_bits_memory_type;
           MOB_6_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_6_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_71) begin
+        else if (_GEN_72) begin
           MOB_6_memory_type <= io_reserve_0_bits_memory_type;
           MOB_6_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_6_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_213)
+        if (_GEN_262)
           MOB_6_address <= io_AGU_output_bits_address;
-        else if (_GEN_314)
+        else if (_GEN_349)
           MOB_6_address <= 32'h0;
-        if (_GEN_313) begin
+        if (_GEN_210) begin
           MOB_6_access_width <= io_reserve_3_bits_access_width;
           MOB_6_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_150) begin
+        else if (_GEN_167) begin
           MOB_6_access_width <= io_reserve_2_bits_access_width;
           MOB_6_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_311) begin
+        else if (_GEN_115) begin
           MOB_6_access_width <= io_reserve_1_bits_access_width;
           MOB_6_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_71) begin
+        else if (_GEN_72) begin
           MOB_6_access_width <= io_reserve_0_bits_access_width;
           MOB_6_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_213)
+        if (_GEN_262)
           MOB_6_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_314)
+        else if (_GEN_349)
           MOB_6_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_263 | _GEN_246) begin
+      if (_GEN_304 & _GEN_312 | _GEN_295) begin
         MOB_7_memory_type <= 2'h0;
         MOB_7_ROB_index <= 6'h0;
         MOB_7_fetch_packet_index <= 2'h0;
@@ -2031,60 +2282,56 @@ module simple_MOB(
         MOB_7_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_315;
-        automatic logic _GEN_316;
-        automatic logic _GEN_317;
-        automatic logic _GEN_318;
-        _GEN_315 = written_vec_1 & _GEN_109;
-        _GEN_316 = written_vec_1 & _GEN_109 | _GEN_72;
-        _GEN_317 = written_vec_3 & _GEN_181;
-        _GEN_318 = written_vec_3 ? _GEN_182 | _GEN_316 : _GEN_151 | _GEN_316;
-        if (_GEN_317) begin
+        automatic logic _GEN_350;
+        automatic logic _GEN_351;
+        _GEN_350 = written_vec_1 & _GEN_117 | _GEN_73;
+        _GEN_351 = written_vec_3 ? _GEN_213 | _GEN_350 : _GEN_168 | _GEN_350;
+        if (_GEN_215) begin
           MOB_7_memory_type <= io_reserve_3_bits_memory_type;
           MOB_7_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_7_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_151) begin
+        else if (_GEN_168) begin
           MOB_7_memory_type <= io_reserve_2_bits_memory_type;
           MOB_7_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_7_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_315) begin
+        else if (_GEN_120) begin
           MOB_7_memory_type <= io_reserve_1_bits_memory_type;
           MOB_7_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_7_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_72) begin
+        else if (_GEN_73) begin
           MOB_7_memory_type <= io_reserve_0_bits_memory_type;
           MOB_7_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_7_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_214)
+        if (_GEN_263)
           MOB_7_address <= io_AGU_output_bits_address;
-        else if (_GEN_318)
+        else if (_GEN_351)
           MOB_7_address <= 32'h0;
-        if (_GEN_317) begin
+        if (_GEN_215) begin
           MOB_7_access_width <= io_reserve_3_bits_access_width;
           MOB_7_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_151) begin
+        else if (_GEN_168) begin
           MOB_7_access_width <= io_reserve_2_bits_access_width;
           MOB_7_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_315) begin
+        else if (_GEN_120) begin
           MOB_7_access_width <= io_reserve_1_bits_access_width;
           MOB_7_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_72) begin
+        else if (_GEN_73) begin
           MOB_7_access_width <= io_reserve_0_bits_access_width;
           MOB_7_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_214)
+        if (_GEN_263)
           MOB_7_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_318)
+        else if (_GEN_351)
           MOB_7_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_264 | _GEN_247) begin
+      if (_GEN_304 & _GEN_313 | _GEN_296) begin
         MOB_8_memory_type <= 2'h0;
         MOB_8_ROB_index <= 6'h0;
         MOB_8_fetch_packet_index <= 2'h0;
@@ -2094,60 +2341,56 @@ module simple_MOB(
         MOB_8_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_319;
-        automatic logic _GEN_320;
-        automatic logic _GEN_321;
-        automatic logic _GEN_322;
-        _GEN_319 = written_vec_1 & _GEN_113;
-        _GEN_320 = written_vec_1 & _GEN_113 | _GEN_73;
-        _GEN_321 = written_vec_3 & _GEN_184;
-        _GEN_322 = written_vec_3 ? _GEN_185 | _GEN_320 : _GEN_152 | _GEN_320;
-        if (_GEN_321) begin
+        automatic logic _GEN_352;
+        automatic logic _GEN_353;
+        _GEN_352 = written_vec_1 & _GEN_122 | _GEN_74;
+        _GEN_353 = written_vec_3 ? _GEN_218 | _GEN_352 : _GEN_169 | _GEN_352;
+        if (_GEN_220) begin
           MOB_8_memory_type <= io_reserve_3_bits_memory_type;
           MOB_8_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_8_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_152) begin
+        else if (_GEN_169) begin
           MOB_8_memory_type <= io_reserve_2_bits_memory_type;
           MOB_8_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_8_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_319) begin
+        else if (_GEN_125) begin
           MOB_8_memory_type <= io_reserve_1_bits_memory_type;
           MOB_8_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_8_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_73) begin
+        else if (_GEN_74) begin
           MOB_8_memory_type <= io_reserve_0_bits_memory_type;
           MOB_8_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_8_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_215)
+        if (_GEN_264)
           MOB_8_address <= io_AGU_output_bits_address;
-        else if (_GEN_322)
+        else if (_GEN_353)
           MOB_8_address <= 32'h0;
-        if (_GEN_321) begin
+        if (_GEN_220) begin
           MOB_8_access_width <= io_reserve_3_bits_access_width;
           MOB_8_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_152) begin
+        else if (_GEN_169) begin
           MOB_8_access_width <= io_reserve_2_bits_access_width;
           MOB_8_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_319) begin
+        else if (_GEN_125) begin
           MOB_8_access_width <= io_reserve_1_bits_access_width;
           MOB_8_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_73) begin
+        else if (_GEN_74) begin
           MOB_8_access_width <= io_reserve_0_bits_access_width;
           MOB_8_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_215)
+        if (_GEN_264)
           MOB_8_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_322)
+        else if (_GEN_353)
           MOB_8_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_265 | _GEN_248) begin
+      if (_GEN_304 & _GEN_314 | _GEN_297) begin
         MOB_9_memory_type <= 2'h0;
         MOB_9_ROB_index <= 6'h0;
         MOB_9_fetch_packet_index <= 2'h0;
@@ -2157,60 +2400,56 @@ module simple_MOB(
         MOB_9_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_323;
-        automatic logic _GEN_324;
-        automatic logic _GEN_325;
-        automatic logic _GEN_326;
-        _GEN_323 = written_vec_1 & _GEN_117;
-        _GEN_324 = written_vec_1 & _GEN_117 | _GEN_74;
-        _GEN_325 = written_vec_3 & _GEN_187;
-        _GEN_326 = written_vec_3 ? _GEN_188 | _GEN_324 : _GEN_153 | _GEN_324;
-        if (_GEN_325) begin
+        automatic logic _GEN_354;
+        automatic logic _GEN_355;
+        _GEN_354 = written_vec_1 & _GEN_127 | _GEN_75;
+        _GEN_355 = written_vec_3 ? _GEN_223 | _GEN_354 : _GEN_170 | _GEN_354;
+        if (_GEN_225) begin
           MOB_9_memory_type <= io_reserve_3_bits_memory_type;
           MOB_9_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_9_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_153) begin
+        else if (_GEN_170) begin
           MOB_9_memory_type <= io_reserve_2_bits_memory_type;
           MOB_9_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_9_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_323) begin
+        else if (_GEN_130) begin
           MOB_9_memory_type <= io_reserve_1_bits_memory_type;
           MOB_9_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_9_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_74) begin
+        else if (_GEN_75) begin
           MOB_9_memory_type <= io_reserve_0_bits_memory_type;
           MOB_9_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_9_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_216)
+        if (_GEN_265)
           MOB_9_address <= io_AGU_output_bits_address;
-        else if (_GEN_326)
+        else if (_GEN_355)
           MOB_9_address <= 32'h0;
-        if (_GEN_325) begin
+        if (_GEN_225) begin
           MOB_9_access_width <= io_reserve_3_bits_access_width;
           MOB_9_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_153) begin
+        else if (_GEN_170) begin
           MOB_9_access_width <= io_reserve_2_bits_access_width;
           MOB_9_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_323) begin
+        else if (_GEN_130) begin
           MOB_9_access_width <= io_reserve_1_bits_access_width;
           MOB_9_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_74) begin
+        else if (_GEN_75) begin
           MOB_9_access_width <= io_reserve_0_bits_access_width;
           MOB_9_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_216)
+        if (_GEN_265)
           MOB_9_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_326)
+        else if (_GEN_355)
           MOB_9_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_266 | _GEN_249) begin
+      if (_GEN_304 & _GEN_315 | _GEN_298) begin
         MOB_10_memory_type <= 2'h0;
         MOB_10_ROB_index <= 6'h0;
         MOB_10_fetch_packet_index <= 2'h0;
@@ -2220,60 +2459,56 @@ module simple_MOB(
         MOB_10_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_327;
-        automatic logic _GEN_328;
-        automatic logic _GEN_329;
-        automatic logic _GEN_330;
-        _GEN_327 = written_vec_1 & _GEN_121;
-        _GEN_328 = written_vec_1 & _GEN_121 | _GEN_75;
-        _GEN_329 = written_vec_3 & _GEN_190;
-        _GEN_330 = written_vec_3 ? _GEN_191 | _GEN_328 : _GEN_154 | _GEN_328;
-        if (_GEN_329) begin
+        automatic logic _GEN_356;
+        automatic logic _GEN_357;
+        _GEN_356 = written_vec_1 & _GEN_132 | _GEN_76;
+        _GEN_357 = written_vec_3 ? _GEN_228 | _GEN_356 : _GEN_171 | _GEN_356;
+        if (_GEN_230) begin
           MOB_10_memory_type <= io_reserve_3_bits_memory_type;
           MOB_10_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_10_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_154) begin
+        else if (_GEN_171) begin
           MOB_10_memory_type <= io_reserve_2_bits_memory_type;
           MOB_10_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_10_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_327) begin
+        else if (_GEN_135) begin
           MOB_10_memory_type <= io_reserve_1_bits_memory_type;
           MOB_10_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_10_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_75) begin
+        else if (_GEN_76) begin
           MOB_10_memory_type <= io_reserve_0_bits_memory_type;
           MOB_10_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_10_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_217)
+        if (_GEN_266)
           MOB_10_address <= io_AGU_output_bits_address;
-        else if (_GEN_330)
+        else if (_GEN_357)
           MOB_10_address <= 32'h0;
-        if (_GEN_329) begin
+        if (_GEN_230) begin
           MOB_10_access_width <= io_reserve_3_bits_access_width;
           MOB_10_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_154) begin
+        else if (_GEN_171) begin
           MOB_10_access_width <= io_reserve_2_bits_access_width;
           MOB_10_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_327) begin
+        else if (_GEN_135) begin
           MOB_10_access_width <= io_reserve_1_bits_access_width;
           MOB_10_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_75) begin
+        else if (_GEN_76) begin
           MOB_10_access_width <= io_reserve_0_bits_access_width;
           MOB_10_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_217)
+        if (_GEN_266)
           MOB_10_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_330)
+        else if (_GEN_357)
           MOB_10_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_267 | _GEN_250) begin
+      if (_GEN_304 & _GEN_316 | _GEN_299) begin
         MOB_11_memory_type <= 2'h0;
         MOB_11_ROB_index <= 6'h0;
         MOB_11_fetch_packet_index <= 2'h0;
@@ -2283,60 +2518,56 @@ module simple_MOB(
         MOB_11_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_331;
-        automatic logic _GEN_332;
-        automatic logic _GEN_333;
-        automatic logic _GEN_334;
-        _GEN_331 = written_vec_1 & _GEN_125;
-        _GEN_332 = written_vec_1 & _GEN_125 | _GEN_76;
-        _GEN_333 = written_vec_3 & _GEN_193;
-        _GEN_334 = written_vec_3 ? _GEN_194 | _GEN_332 : _GEN_155 | _GEN_332;
-        if (_GEN_333) begin
+        automatic logic _GEN_358;
+        automatic logic _GEN_359;
+        _GEN_358 = written_vec_1 & _GEN_137 | _GEN_77;
+        _GEN_359 = written_vec_3 ? _GEN_233 | _GEN_358 : _GEN_172 | _GEN_358;
+        if (_GEN_235) begin
           MOB_11_memory_type <= io_reserve_3_bits_memory_type;
           MOB_11_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_11_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_155) begin
+        else if (_GEN_172) begin
           MOB_11_memory_type <= io_reserve_2_bits_memory_type;
           MOB_11_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_11_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_331) begin
+        else if (_GEN_140) begin
           MOB_11_memory_type <= io_reserve_1_bits_memory_type;
           MOB_11_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_11_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_76) begin
+        else if (_GEN_77) begin
           MOB_11_memory_type <= io_reserve_0_bits_memory_type;
           MOB_11_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_11_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_218)
+        if (_GEN_267)
           MOB_11_address <= io_AGU_output_bits_address;
-        else if (_GEN_334)
+        else if (_GEN_359)
           MOB_11_address <= 32'h0;
-        if (_GEN_333) begin
+        if (_GEN_235) begin
           MOB_11_access_width <= io_reserve_3_bits_access_width;
           MOB_11_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_155) begin
+        else if (_GEN_172) begin
           MOB_11_access_width <= io_reserve_2_bits_access_width;
           MOB_11_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_331) begin
+        else if (_GEN_140) begin
           MOB_11_access_width <= io_reserve_1_bits_access_width;
           MOB_11_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_76) begin
+        else if (_GEN_77) begin
           MOB_11_access_width <= io_reserve_0_bits_access_width;
           MOB_11_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_218)
+        if (_GEN_267)
           MOB_11_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_334)
+        else if (_GEN_359)
           MOB_11_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_268 | _GEN_251) begin
+      if (_GEN_304 & _GEN_317 | _GEN_300) begin
         MOB_12_memory_type <= 2'h0;
         MOB_12_ROB_index <= 6'h0;
         MOB_12_fetch_packet_index <= 2'h0;
@@ -2346,60 +2577,56 @@ module simple_MOB(
         MOB_12_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_335;
-        automatic logic _GEN_336;
-        automatic logic _GEN_337;
-        automatic logic _GEN_338;
-        _GEN_335 = written_vec_1 & _GEN_129;
-        _GEN_336 = written_vec_1 & _GEN_129 | _GEN_77;
-        _GEN_337 = written_vec_3 & _GEN_196;
-        _GEN_338 = written_vec_3 ? _GEN_197 | _GEN_336 : _GEN_156 | _GEN_336;
-        if (_GEN_337) begin
+        automatic logic _GEN_360;
+        automatic logic _GEN_361;
+        _GEN_360 = written_vec_1 & _GEN_142 | _GEN_78;
+        _GEN_361 = written_vec_3 ? _GEN_238 | _GEN_360 : _GEN_173 | _GEN_360;
+        if (_GEN_240) begin
           MOB_12_memory_type <= io_reserve_3_bits_memory_type;
           MOB_12_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_12_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_156) begin
+        else if (_GEN_173) begin
           MOB_12_memory_type <= io_reserve_2_bits_memory_type;
           MOB_12_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_12_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_335) begin
+        else if (_GEN_145) begin
           MOB_12_memory_type <= io_reserve_1_bits_memory_type;
           MOB_12_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_12_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_77) begin
+        else if (_GEN_78) begin
           MOB_12_memory_type <= io_reserve_0_bits_memory_type;
           MOB_12_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_12_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_219)
+        if (_GEN_268)
           MOB_12_address <= io_AGU_output_bits_address;
-        else if (_GEN_338)
+        else if (_GEN_361)
           MOB_12_address <= 32'h0;
-        if (_GEN_337) begin
+        if (_GEN_240) begin
           MOB_12_access_width <= io_reserve_3_bits_access_width;
           MOB_12_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_156) begin
+        else if (_GEN_173) begin
           MOB_12_access_width <= io_reserve_2_bits_access_width;
           MOB_12_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_335) begin
+        else if (_GEN_145) begin
           MOB_12_access_width <= io_reserve_1_bits_access_width;
           MOB_12_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_77) begin
+        else if (_GEN_78) begin
           MOB_12_access_width <= io_reserve_0_bits_access_width;
           MOB_12_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_219)
+        if (_GEN_268)
           MOB_12_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_338)
+        else if (_GEN_361)
           MOB_12_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_269 | _GEN_252) begin
+      if (_GEN_304 & _GEN_318 | _GEN_301) begin
         MOB_13_memory_type <= 2'h0;
         MOB_13_ROB_index <= 6'h0;
         MOB_13_fetch_packet_index <= 2'h0;
@@ -2409,60 +2636,56 @@ module simple_MOB(
         MOB_13_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_339;
-        automatic logic _GEN_340;
-        automatic logic _GEN_341;
-        automatic logic _GEN_342;
-        _GEN_339 = written_vec_1 & _GEN_133;
-        _GEN_340 = written_vec_1 & _GEN_133 | _GEN_78;
-        _GEN_341 = written_vec_3 & _GEN_199;
-        _GEN_342 = written_vec_3 ? _GEN_200 | _GEN_340 : _GEN_157 | _GEN_340;
-        if (_GEN_341) begin
+        automatic logic _GEN_362;
+        automatic logic _GEN_363;
+        _GEN_362 = written_vec_1 & _GEN_147 | _GEN_79;
+        _GEN_363 = written_vec_3 ? _GEN_243 | _GEN_362 : _GEN_174 | _GEN_362;
+        if (_GEN_245) begin
           MOB_13_memory_type <= io_reserve_3_bits_memory_type;
           MOB_13_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_13_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_157) begin
+        else if (_GEN_174) begin
           MOB_13_memory_type <= io_reserve_2_bits_memory_type;
           MOB_13_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_13_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_339) begin
+        else if (_GEN_150) begin
           MOB_13_memory_type <= io_reserve_1_bits_memory_type;
           MOB_13_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_13_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_78) begin
+        else if (_GEN_79) begin
           MOB_13_memory_type <= io_reserve_0_bits_memory_type;
           MOB_13_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_13_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_220)
+        if (_GEN_269)
           MOB_13_address <= io_AGU_output_bits_address;
-        else if (_GEN_342)
+        else if (_GEN_363)
           MOB_13_address <= 32'h0;
-        if (_GEN_341) begin
+        if (_GEN_245) begin
           MOB_13_access_width <= io_reserve_3_bits_access_width;
           MOB_13_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_157) begin
+        else if (_GEN_174) begin
           MOB_13_access_width <= io_reserve_2_bits_access_width;
           MOB_13_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_339) begin
+        else if (_GEN_150) begin
           MOB_13_access_width <= io_reserve_1_bits_access_width;
           MOB_13_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_78) begin
+        else if (_GEN_79) begin
           MOB_13_access_width <= io_reserve_0_bits_access_width;
           MOB_13_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_220)
+        if (_GEN_269)
           MOB_13_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_342)
+        else if (_GEN_363)
           MOB_13_data <= 32'h0;
       end
-      if (_GEN_255 & _GEN_270 | _GEN_253) begin
+      if (_GEN_304 & _GEN_319 | _GEN_302) begin
         MOB_14_memory_type <= 2'h0;
         MOB_14_ROB_index <= 6'h0;
         MOB_14_fetch_packet_index <= 2'h0;
@@ -2472,60 +2695,56 @@ module simple_MOB(
         MOB_14_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_343;
-        automatic logic _GEN_344;
-        automatic logic _GEN_345;
-        automatic logic _GEN_346;
-        _GEN_343 = written_vec_1 & _GEN_137;
-        _GEN_344 = written_vec_1 & _GEN_137 | _GEN_79;
-        _GEN_345 = written_vec_3 & _GEN_202;
-        _GEN_346 = written_vec_3 ? _GEN_203 | _GEN_344 : _GEN_158 | _GEN_344;
-        if (_GEN_345) begin
+        automatic logic _GEN_364;
+        automatic logic _GEN_365;
+        _GEN_364 = written_vec_1 & _GEN_152 | _GEN_80;
+        _GEN_365 = written_vec_3 ? _GEN_248 | _GEN_364 : _GEN_175 | _GEN_364;
+        if (_GEN_250) begin
           MOB_14_memory_type <= io_reserve_3_bits_memory_type;
           MOB_14_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_14_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_158) begin
+        else if (_GEN_175) begin
           MOB_14_memory_type <= io_reserve_2_bits_memory_type;
           MOB_14_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_14_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_343) begin
+        else if (_GEN_155) begin
           MOB_14_memory_type <= io_reserve_1_bits_memory_type;
           MOB_14_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_14_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_79) begin
+        else if (_GEN_80) begin
           MOB_14_memory_type <= io_reserve_0_bits_memory_type;
           MOB_14_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_14_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_221)
+        if (_GEN_270)
           MOB_14_address <= io_AGU_output_bits_address;
-        else if (_GEN_346)
+        else if (_GEN_365)
           MOB_14_address <= 32'h0;
-        if (_GEN_345) begin
+        if (_GEN_250) begin
           MOB_14_access_width <= io_reserve_3_bits_access_width;
           MOB_14_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_158) begin
+        else if (_GEN_175) begin
           MOB_14_access_width <= io_reserve_2_bits_access_width;
           MOB_14_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_343) begin
+        else if (_GEN_155) begin
           MOB_14_access_width <= io_reserve_1_bits_access_width;
           MOB_14_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_79) begin
+        else if (_GEN_80) begin
           MOB_14_access_width <= io_reserve_0_bits_access_width;
           MOB_14_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_221)
+        if (_GEN_270)
           MOB_14_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_346)
+        else if (_GEN_365)
           MOB_14_data <= 32'h0;
       end
-      if (_GEN_255 & (&front_index) | _GEN_254) begin
+      if (_GEN_304 & (&front_index) | _GEN_303) begin
         MOB_15_memory_type <= 2'h0;
         MOB_15_ROB_index <= 6'h0;
         MOB_15_fetch_packet_index <= 2'h0;
@@ -2535,56 +2754,53 @@ module simple_MOB(
         MOB_15_data <= 32'h0;
       end
       else begin
-        automatic logic _GEN_347;
-        automatic logic _GEN_348;
-        automatic logic _GEN_349 = written_vec_3 & (&_io_reserved_pointers_3_bits_T);
-        automatic logic _GEN_350;
-        _GEN_347 = written_vec_1 & (&_io_reserved_pointers_1_bits_T);
-        _GEN_348 = written_vec_1 & (&_io_reserved_pointers_1_bits_T) | _GEN_80;
-        _GEN_350 = written_vec_3 ? _GEN_205 | _GEN_348 : _GEN_159 | _GEN_348;
-        if (_GEN_349) begin
+        automatic logic _GEN_366;
+        automatic logic _GEN_367;
+        _GEN_366 = written_vec_1 & (&_io_reserved_pointers_1_bits_T) | _GEN_81;
+        _GEN_367 = written_vec_3 ? _GEN_252 | _GEN_366 : _GEN_176 | _GEN_366;
+        if (_GEN_254) begin
           MOB_15_memory_type <= io_reserve_3_bits_memory_type;
           MOB_15_ROB_index <= io_reserve_3_bits_ROB_index;
           MOB_15_fetch_packet_index <= io_reserve_3_bits_packet_index;
         end
-        else if (_GEN_159) begin
+        else if (_GEN_176) begin
           MOB_15_memory_type <= io_reserve_2_bits_memory_type;
           MOB_15_ROB_index <= io_reserve_2_bits_ROB_index;
           MOB_15_fetch_packet_index <= io_reserve_2_bits_packet_index;
         end
-        else if (_GEN_347) begin
+        else if (_GEN_159) begin
           MOB_15_memory_type <= io_reserve_1_bits_memory_type;
           MOB_15_ROB_index <= io_reserve_1_bits_ROB_index;
           MOB_15_fetch_packet_index <= io_reserve_1_bits_packet_index;
         end
-        else if (_GEN_80) begin
+        else if (_GEN_81) begin
           MOB_15_memory_type <= io_reserve_0_bits_memory_type;
           MOB_15_ROB_index <= io_reserve_0_bits_ROB_index;
           MOB_15_fetch_packet_index <= io_reserve_0_bits_packet_index;
         end
-        if (_GEN_222)
+        if (_GEN_271)
           MOB_15_address <= io_AGU_output_bits_address;
-        else if (_GEN_350)
+        else if (_GEN_367)
           MOB_15_address <= 32'h0;
-        if (_GEN_349) begin
+        if (_GEN_254) begin
           MOB_15_access_width <= io_reserve_3_bits_access_width;
           MOB_15_PRD <= io_reserve_3_bits_PRD;
         end
-        else if (_GEN_159) begin
+        else if (_GEN_176) begin
           MOB_15_access_width <= io_reserve_2_bits_access_width;
           MOB_15_PRD <= io_reserve_2_bits_PRD;
         end
-        else if (_GEN_347) begin
+        else if (_GEN_159) begin
           MOB_15_access_width <= io_reserve_1_bits_access_width;
           MOB_15_PRD <= io_reserve_1_bits_PRD;
         end
-        else if (_GEN_80) begin
+        else if (_GEN_81) begin
           MOB_15_access_width <= io_reserve_0_bits_access_width;
           MOB_15_PRD <= io_reserve_0_bits_PRD;
         end
-        if (_GEN_222)
+        if (_GEN_271)
           MOB_15_data <= io_AGU_output_bits_wr_data;
-        else if (_GEN_350)
+        else if (_GEN_367)
           MOB_15_data <= 32'h0;
       end
       if (io_flush)
@@ -2629,13 +2845,14 @@ module simple_MOB(
     io_backend_memory_response_bits_fetch_packet_index[1:0];
   assign io_backend_memory_request_valid = io_backend_memory_request_valid_0;
   assign io_backend_memory_request_bits_addr = _GEN_59[front_index];
-  assign io_backend_memory_request_bits_data = _GEN_62[front_index];
+  assign io_backend_memory_request_bits_data = _GEN_63[front_index];
+  assign io_backend_memory_request_bits_mem_signed = _GEN_60[front_index];
   assign io_backend_memory_request_bits_memory_type = _GEN_57[front_index];
-  assign io_backend_memory_request_bits_access_width = _GEN_60[front_index];
+  assign io_backend_memory_request_bits_access_width = _GEN_61[front_index];
   assign io_backend_memory_request_bits_MOB_index = front_index;
   assign io_backend_memory_request_bits_packet_index = _GEN_58[front_index];
   assign io_backend_memory_request_bits_ROB_index = _GEN_4[front_index];
-  assign io_backend_memory_request_bits_PRD = _GEN_61[front_index];
+  assign io_backend_memory_request_bits_PRD = _GEN_62[front_index];
   assign io_backend_memory_response_ready = 1'h1;
 endmodule
 

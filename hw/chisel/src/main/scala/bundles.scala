@@ -255,6 +255,8 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 
     val IS_IMM              =  Bool() 
 
+
+    val mem_signed          = Bool()
     val memory_type         =  memory_type_t()   // LOAD/STORE
     val access_width        =  access_width_t()  // B/HW/W
 
@@ -525,6 +527,7 @@ class backend_memory_request(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val addr            = UInt(32.W)
     val data            = UInt(32.W)
+    val mem_signed      = Bool()               // LOAD/STORE
     val memory_type     = memory_type_t()               // LOAD/STORE
     val access_width    = access_width_t()              // B/HW/W
 
@@ -561,7 +564,7 @@ object access_width_t extends ChiselEnum{
 class memory_access(coreParameters:CoreParameters) extends Bundle{   // output of the AGU
     import coreParameters._
     val memory_type     = memory_type_t()   // LOAD/STORE
-    val PRD              = UInt(physicalRegBits.W)
+    val PRD             = UInt(physicalRegBits.W)
     val access_width    = access_width_t()  // B/HW/W
     val is_unsigned     = Bool()            // signed/is_unsigned
     val address         = UInt(32.W)
@@ -620,6 +623,7 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val address                 = UInt(32.W)        // LOAD/STORE address
+    val mem_signed              = Bool()
     val access_width            = access_width_t()  // B/HW/W
 
     val PRD                      = UInt(physicalRegBits.W) // dest reg

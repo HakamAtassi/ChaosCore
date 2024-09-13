@@ -72,14 +72,14 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
 
 
-    val SUBTRACT    =   ((instructionType === OP || instructionType === OP_IMM) && FUNCT7 === 0x20.U)
-    val IS_IMM   =      (instructionType === OP_IMM) || 
-                        (instructionType === LUI) || 
-                        (instructionType === AUIPC) || 
-                        (instructionType === STORE) || 
-                        (instructionType === LOAD) || 
-                        (instructionType === BRANCH) || 
-                        (instructionType === JAL) || 
+    val SUBTRACT    =   ((instructionType === OP        ||  instructionType === OP_IMM) && FUNCT7 === 0x20.U)
+    val IS_IMM   =      (instructionType === OP_IMM)    || 
+                        (instructionType === LUI)       || 
+                        (instructionType === AUIPC)     || 
+                        (instructionType === STORE)     || 
+                        (instructionType === LOAD)      || 
+                        (instructionType === BRANCH)    || 
+                        (instructionType === JAL)       || 
                         (instructionType === JALR) 
 
     val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
@@ -148,13 +148,28 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
         io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
     }
 
+    
+
+    //FIXME: 
+    //add LBU, LHU...
+
     io.decoded_instruction.bits.access_width                 := access_width_t.NONE
-    when(FUNCT3  === "b000".U){
+    io.decoded_instruction.bits.mem_signed  := 0.B
+    when(FUNCT3  === "b000".U){ // LB
         io.decoded_instruction.bits.access_width             := access_width_t.B
-    }.elsewhen(FUNCT3  === "b001".U){
+        io.decoded_instruction.bits.mem_signed  := 1.B
+    }.elsewhen(FUNCT3  === "b001".U){   // LHW
         io.decoded_instruction.bits.access_width             := access_width_t.HW
-    }.elsewhen(FUNCT3  === "b010".U){
+        io.decoded_instruction.bits.mem_signed  := 1.B
+    }.elsewhen(FUNCT3  === "b010".U){   // LW
         io.decoded_instruction.bits.access_width             := access_width_t.W
+        io.decoded_instruction.bits.mem_signed  := 1.B
+    }.elsewhen(FUNCT3  === "b100".U){   // LBU
+        io.decoded_instruction.bits.access_width             := access_width_t.B
+        io.decoded_instruction.bits.mem_signed  := 0.B
+    }.elsewhen(FUNCT3  === "b101".U){   // LHWU
+        io.decoded_instruction.bits.access_width             := access_width_t.HW
+        io.decoded_instruction.bits.mem_signed  := 0.B
     }
 
 

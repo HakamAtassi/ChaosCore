@@ -84,6 +84,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_access_width,
   output        io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,
@@ -110,6 +111,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_access_width,
   output        io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,
@@ -136,6 +138,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_access_width,
   output        io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,
@@ -162,6 +165,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_access_width,
   output        io_decoded_fetch_packet_bits_valid_bits_0,
@@ -199,6 +203,7 @@ module fetch_packet_decoder(
   wire        _decoders_3_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_3_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_3_io_decoded_instruction_bits_IS_IMM;
+  wire        _decoders_3_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_3_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_3_io_decoded_instruction_bits_access_width;
   wire [4:0]  _decoders_2_io_decoded_instruction_bits_RD;
@@ -218,6 +223,7 @@ module fetch_packet_decoder(
   wire        _decoders_2_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_2_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_2_io_decoded_instruction_bits_IS_IMM;
+  wire        _decoders_2_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_2_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_2_io_decoded_instruction_bits_access_width;
   wire [4:0]  _decoders_1_io_decoded_instruction_bits_RD;
@@ -237,6 +243,7 @@ module fetch_packet_decoder(
   wire        _decoders_1_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_1_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_1_io_decoded_instruction_bits_IS_IMM;
+  wire        _decoders_1_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_1_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_1_io_decoded_instruction_bits_access_width;
   wire [4:0]  _decoders_0_io_decoded_instruction_bits_RD;
@@ -256,6 +263,7 @@ module fetch_packet_decoder(
   wire        _decoders_0_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_0_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_0_io_decoded_instruction_bits_IS_IMM;
+  wire        _decoders_0_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;
   always @(posedge clock)
@@ -303,6 +311,8 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_MULTIPLY),
     .io_decoded_instruction_bits_IS_IMM
       (_decoders_0_io_decoded_instruction_bits_IS_IMM),
+    .io_decoded_instruction_bits_mem_signed
+      (_decoders_0_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
       (_decoders_0_io_decoded_instruction_bits_memory_type),
     .io_decoded_instruction_bits_access_width
@@ -351,6 +361,8 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_MULTIPLY),
     .io_decoded_instruction_bits_IS_IMM
       (_decoders_1_io_decoded_instruction_bits_IS_IMM),
+    .io_decoded_instruction_bits_mem_signed
+      (_decoders_1_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
       (_decoders_1_io_decoded_instruction_bits_memory_type),
     .io_decoded_instruction_bits_access_width
@@ -399,6 +411,8 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_MULTIPLY),
     .io_decoded_instruction_bits_IS_IMM
       (_decoders_2_io_decoded_instruction_bits_IS_IMM),
+    .io_decoded_instruction_bits_mem_signed
+      (_decoders_2_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
       (_decoders_2_io_decoded_instruction_bits_memory_type),
     .io_decoded_instruction_bits_access_width
@@ -447,6 +461,8 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_MULTIPLY),
     .io_decoded_instruction_bits_IS_IMM
       (_decoders_3_io_decoded_instruction_bits_IS_IMM),
+    .io_decoded_instruction_bits_mem_signed
+      (_decoders_3_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
       (_decoders_3_io_decoded_instruction_bits_memory_type),
     .io_decoded_instruction_bits_access_width
@@ -501,6 +517,8 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_0_IS_IMM
       (_decoders_0_io_decoded_instruction_bits_IS_IMM),
+    .io_enq_bits_decoded_instruction_0_mem_signed
+      (_decoders_0_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_0_memory_type
       (_decoders_0_io_decoded_instruction_bits_memory_type),
     .io_enq_bits_decoded_instruction_0_access_width
@@ -546,6 +564,8 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_1_IS_IMM
       (_decoders_1_io_decoded_instruction_bits_IS_IMM),
+    .io_enq_bits_decoded_instruction_1_mem_signed
+      (_decoders_1_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_1_memory_type
       (_decoders_1_io_decoded_instruction_bits_memory_type),
     .io_enq_bits_decoded_instruction_1_access_width
@@ -591,6 +611,8 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_2_IS_IMM
       (_decoders_2_io_decoded_instruction_bits_IS_IMM),
+    .io_enq_bits_decoded_instruction_2_mem_signed
+      (_decoders_2_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_2_memory_type
       (_decoders_2_io_decoded_instruction_bits_memory_type),
     .io_enq_bits_decoded_instruction_2_access_width
@@ -636,6 +658,8 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_3_IS_IMM
       (_decoders_3_io_decoded_instruction_bits_IS_IMM),
+    .io_enq_bits_decoded_instruction_3_mem_signed
+      (_decoders_3_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_3_memory_type
       (_decoders_3_io_decoded_instruction_bits_memory_type),
     .io_enq_bits_decoded_instruction_3_access_width
@@ -720,6 +744,8 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_deq_bits_decoded_instruction_0_IS_IMM
       (io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
+    .io_deq_bits_decoded_instruction_0_mem_signed
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_deq_bits_decoded_instruction_0_memory_type
       (io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
     .io_deq_bits_decoded_instruction_0_access_width
@@ -772,6 +798,8 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_deq_bits_decoded_instruction_1_IS_IMM
       (io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
+    .io_deq_bits_decoded_instruction_1_mem_signed
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_deq_bits_decoded_instruction_1_memory_type
       (io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
     .io_deq_bits_decoded_instruction_1_access_width
@@ -824,6 +852,8 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_deq_bits_decoded_instruction_2_IS_IMM
       (io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
+    .io_deq_bits_decoded_instruction_2_mem_signed
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_deq_bits_decoded_instruction_2_memory_type
       (io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
     .io_deq_bits_decoded_instruction_2_access_width
@@ -876,6 +906,8 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_deq_bits_decoded_instruction_3_IS_IMM
       (io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
+    .io_deq_bits_decoded_instruction_3_mem_signed
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_deq_bits_decoded_instruction_3_memory_type
       (io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
     .io_deq_bits_decoded_instruction_3_access_width

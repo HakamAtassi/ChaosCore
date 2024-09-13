@@ -167,6 +167,7 @@ module ChaosCore_tile(
   wire        _ChaosCore_io_backend_memory_request_valid;
   wire [31:0] _ChaosCore_io_backend_memory_request_bits_addr;
   wire [31:0] _ChaosCore_io_backend_memory_request_bits_data;
+  wire        _ChaosCore_io_backend_memory_request_bits_mem_signed;
   wire [1:0]  _ChaosCore_io_backend_memory_request_bits_memory_type;
   wire [1:0]  _ChaosCore_io_backend_memory_request_bits_access_width;
   wire [3:0]  _ChaosCore_io_backend_memory_request_bits_MOB_index;
@@ -284,6 +285,8 @@ module ChaosCore_tile(
       (_ChaosCore_io_backend_memory_request_bits_addr),
     .io_backend_memory_request_bits_data
       (_ChaosCore_io_backend_memory_request_bits_data),
+    .io_backend_memory_request_bits_mem_signed
+      (_ChaosCore_io_backend_memory_request_bits_mem_signed),
     .io_backend_memory_request_bits_memory_type
       (_ChaosCore_io_backend_memory_request_bits_memory_type),
     .io_backend_memory_request_bits_access_width
@@ -529,6 +532,8 @@ module ChaosCore_tile(
       (_ChaosCore_io_backend_memory_request_bits_addr),
     .io_CPU_request_bits_data
       (_ChaosCore_io_backend_memory_request_bits_data),
+    .io_CPU_request_bits_mem_signed
+      (_ChaosCore_io_backend_memory_request_bits_mem_signed),
     .io_CPU_request_bits_memory_type
       (_ChaosCore_io_backend_memory_request_bits_memory_type),
     .io_CPU_request_bits_access_width
