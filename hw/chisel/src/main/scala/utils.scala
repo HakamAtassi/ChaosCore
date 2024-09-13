@@ -357,6 +357,22 @@ object sign_extend {
   }
 }
 
+object sign_extend_var {
+  def apply(data: UInt, from: Int, to:Int): UInt = {
+    require(to >=  from,"Width for sign extension must be greater than or equal to the width of the data.")
+
+    // Convert the data to a SInt to sign-extend it
+    val temp = Wire(SInt(from.W))
+    temp := data.asSInt
+
+    val temp2 = Wire(UInt(to.W))
+    temp2 := temp.asUInt
+
+    // Convert back to UInt
+    temp2
+  }
+}
+
 object generateFUPorts {
   def apply(FUParamSeq: Seq[FUParams]): Seq[FUParams] = {
 

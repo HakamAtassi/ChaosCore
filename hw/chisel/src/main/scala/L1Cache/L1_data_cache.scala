@@ -181,6 +181,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val active_tag					= Wire(UInt(L1_DataCacheTagBits.W))
 	val active_memory_type			= Wire(memory_type_t())
 	val active_access_width			= Wire(access_width_t())
+	val active_mem_signed			= Wire(Bool())
 	val active_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
 	val active_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
 	val active_RD					= Wire(UInt(physicalRegBits.W))
@@ -198,6 +199,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val backend_tag					= Wire(UInt(log2Ceil(L1_DataCacheTagBits).W))
 	val backend_memory_type			= Wire(memory_type_t())
 	val backend_access_width		= Wire(access_width_t())
+	val backend_mem_signed	 		= Wire(Bool())
 	val backend_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
 	val backend_packet_index		= Wire(UInt(log2Ceil(fetchWidth).W))
 	val backend_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
@@ -209,6 +211,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val replay_tag					= Wire(UInt(log2Ceil(L1_DataCacheTagBits).W))
 	val replay_memory_type			= Wire(memory_type_t())
 	val replay_access_width			= Wire(access_width_t())
+	val replay_mem_signed			= Wire(Bool())
 	val replay_data					= Wire(UInt(32.W))
 	val replay_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
 	val replay_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
@@ -228,6 +231,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val output_data					= Wire(UInt(32.W))
 	val output_address				= Wire(UInt(32.W))
 	val output_operation			= Wire(access_width_t())
+	val output_mem_signed			= Wire(Bool())
 	val output_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
 	val output_ROB_index			= Wire(UInt(log2Ceil(ROBEntries).W))
 	val output_packet_index			= Wire(UInt(log2Ceil(fetchWidth).W))
@@ -258,6 +262,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	active_tag					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_tag, 			backend_tag)
 	active_memory_type			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_memory_type, 	backend_memory_type)
 	active_access_width			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_access_width, backend_access_width)
+	active_mem_signed			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_mem_signed, 	backend_mem_signed)
 	active_MOB_index			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_MOB_index, 	backend_MOB_index)
 	active_ROB_index			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_ROB_index, 	backend_ROB_index)
 	active_packet_index			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_packet_index,	backend_packet_index)
@@ -300,6 +305,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	backend_tag				:=  get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).tag
 	backend_memory_type		:=  io.CPU_request.bits.memory_type
 	backend_access_width	:=  io.CPU_request.bits.access_width
+	backend_mem_signed		:=  io.CPU_request.bits.mem_signed
 	backend_MOB_index		:=  io.CPU_request.bits.MOB_index
 	backend_packet_index	:=  io.CPU_request.bits.packet_index
 	backend_ROB_index		:=  io.CPU_request.bits.ROB_index
@@ -366,7 +372,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	// Assign data_memory_wr_en
 	for(i <- 0 until L1_cacheLineSizeBytes){
-
 		data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(
 			(word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)	||
 			(half_word_offset 	=== (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)	||
@@ -384,6 +389,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	dontTouch(data_memories_wr_en)
 	dontTouch(allocate_cache_line)
 
+	//FIXME: this might be broken. why is active access width checked then allocate cache line possibly assiged? doesnt make sense...
 	when(RegNext(active_access_width === access_width_t.W)){
 		for(i <- 0 until L1_cacheLineSizeBytes){
 			data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%4)*8)(7,0))) 
@@ -398,7 +404,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		}
 	}.otherwise{
 		for(i <- 0 until L1_cacheLineSizeBytes){
-			data_memories_data_in(i) 	:= 0.U
+			data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), 0.U) 
 		}
 	}
 
@@ -475,9 +481,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// VALID MEMORY //
 	//////////////////
 	// Memory of "way" width, sets length (Regs).
-
-	////
-
 
   	val valid_memory = RegInit(VecInit.tabulate(L1_DataCacheSets, L1_DataCacheWays){ (x, y) => 0.B })
   	val valid_memory_next = VecInit.tabulate(L1_DataCacheSets, L1_DataCacheWays){ (x, y) => 0.B }
@@ -830,6 +833,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	AXI_request_Q.io.enq <> AXI_request_arb.io.out
 
 	// Perform AXI request
+
 	when(write_request_valid && read_request_valid){
 		// when performing read/write pair, both channels must be ready
 		AXI_request_Q.io.deq.ready := 	AXI_write_request(write_request_address, write_request_ID, write_request_data, write_request_bytes) && 
@@ -888,6 +892,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	replay_tag				:=	get_decomposed_dcache_address(coreParameters, MSHRs(MSHR_front_index).front.addr).tag
 	replay_memory_type		:=	MSHRs(MSHR_front_index).front.memory_type
 	replay_access_width		:=	MSHRs(MSHR_front_index).front.access_width
+	replay_mem_signed		:=	MSHRs(MSHR_front_index).front.mem_signed
     replay_data				:=	MSHRs(MSHR_front_index).front.data
 	replay_MOB_index		:=	MSHRs(MSHR_front_index).front.MOB_index
 	replay_ROB_index		:=	MSHRs(MSHR_front_index).front.ROB_index
@@ -910,6 +915,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val output_cacheable  = ShiftRegister(active_cacheable, 2)
 	output_address		 := ShiftRegister(active_address, 2)
 	output_operation	 := ShiftRegister(active_access_width, 2)
+	output_mem_signed	 := ShiftRegister(active_mem_signed, 2)
 	output_RD            := ShiftRegister(active_RD, 2)
 	output_ROB_index	 := ShiftRegister(active_ROB_index, 2)
 	output_packet_index	 := ShiftRegister(active_packet_index, 2)
@@ -918,7 +924,20 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 
 	dontTouch(output_address)
-	output_data := format_dcache_word(data_way, output_address, output_operation)
+	
+	//FIXME: add sign extending here based on mem_signed
+	when(output_mem_signed){
+		when(output_operation === access_width_t.B){
+			output_data := sign_extend_var(format_dcache_word(data_way, output_address, output_operation), from=8, to=32)
+		}.elsewhen(output_operation === access_width_t.HW){
+			output_data := sign_extend_var(format_dcache_word(data_way, output_address, output_operation), from=16, to=32)
+		}.otherwise{
+			output_data := format_dcache_word(data_way, output_address, output_operation)
+		}
+	}.otherwise{
+		output_data := format_dcache_word(data_way, output_address, output_operation)
+	}
+
 
 	dontTouch(data_way)
 	
@@ -1040,50 +1059,3 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 									!(DATA_CACHE_NEXT_STATE === DATA_CACHE_STATES.ALLOCATE) && // you dont want to accept a new input (that may miss) when you have a response from the DRAM
 									!(inflight_write_miss_next(active_set).reduce(_ || _))
 }
-
-// MAJOR ISSUE:
-// If you have a write miss and a read miss back to back, the write miss will request to read data,
-// and will not update its PLRU/dirty, etc untill the dram responds with the data. 
-// Meanwhile, the read data will request 
-
-// Problem 1: PLRU is updated too late. this makes write miss read miss conflicts pretty likely (since they will alias to the same set & way)
-// Fix 1: make the PLRU update on cache access and not on hit. 
-
-// Problem 2: write miss => read/write miss to the same set back to back causes the write data to be discarded/dropped
-
-// On miss write => look up cache for where to place data, request data, update MSHR
-// On miss read (to same set) => look up cache for where to place data. Data will be found not dirty. Send request to DRAM and SMHR
-// On write data response, allocate line, and write new data. 
-// On read response, overwrite previously just allocated line to same set and way. 
-// Data from miss write has now been lost...
-
-// The underlying problem is that the second request, the read, has no knowledge about the fact that first request is a write. 
-// As such, it sees a clean line (despite the fact that it will soon be filled with a new line, and will have a write replay) that does not need to be evicted
-// If the second request did somehow know about its in-flight write status, the problem is still not solved becaues that line cant be evicted since its data is still being fetched
-
-
-
-// Fix 2: When a miss is detected, before requesting a read/write from DRAM, check if that line's data is in flight, or is busy. 
-// If a miss collides with a line (wants to allocate to a line) that is currently busy, wait for that operation to complete before beforing an AXI read and possible write.
-// When this collision is detected, buffer the request 
-
-
-// Simpler solution to this problem
-
-
-// Basically, there is a memory consistency issue when there is a write miss to some set/way followed by a read/write miss to the same set/way
-// That arrises because the second miss is unable to evict data that has not yet been recieved. 
-// In other words, when the first write miss occurs, there is a 50/100 cycle window that, if contains another allocate to the same way/set as the first miss
-// will simply overwrite the first wire request data in the cache, meaning the write data is lost. 
-
-// Luckily, the only way this can occur is if the set/way that was just allocated to goes from the most recently used to the least recently used, making it subject to eviction.
-// Since this type of access pattern is fairly uncommon, when a miss request to an outstanding write set, the cache is locked up until the line has been allocated, in which the request is replayed,
-// including checking for an eviction and requesting the data from DRAM
-
-
-// The simplest solution to the problem:
-// When the cache recieves a request to a set that currently has an in-flight write miss request, do not accept the request (mark cache unready).
-// Note that this is regardless of the way, and regardless of the request is actually a hit or a miss. 
-// This requires a buffer that stores an "in flight write miss" for each set. 
-// This bit is set when a write miss takes place, and is cleared on replay. 
-// If a CPU request address indicates an inflight write miss for any way in that set, the cache is just marked unready. 

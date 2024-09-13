@@ -21,10 +21,10 @@ ram_16x40.sv
 Queue16_prediction.sv
 instruction_fetch.sv
 decoder.sv
-ram_2x486.sv
+ram_2x490.sv
 Queue2_decoded_fetch_packet.sv
 fetch_packet_decoder.sv
-ram_16x486.sv
+ram_16x490.sv
 Queue16_decoded_fetch_packet.sv
 free_list.sv
 WAW_handler.sv

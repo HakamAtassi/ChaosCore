@@ -100,6 +100,7 @@ module ChaosCore(
   output        io_backend_memory_request_valid,
   output [31:0] io_backend_memory_request_bits_addr,
                 io_backend_memory_request_bits_data,
+  output        io_backend_memory_request_bits_mem_signed,
   output [1:0]  io_backend_memory_request_bits_memory_type,
                 io_backend_memory_request_bits_access_width,
   output [3:0]  io_backend_memory_request_bits_MOB_index,
@@ -306,6 +307,8 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;
+  wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed;
   wire [1:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type;
   wire [1:0]
@@ -349,6 +352,8 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;
+  wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed;
   wire [1:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type;
   wire [1:0]
@@ -392,6 +397,8 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;
+  wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed;
   wire [1:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type;
   wire [1:0]
@@ -435,6 +442,8 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;
+  wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed;
   wire [1:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type;
   wire [1:0]
@@ -702,6 +711,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width
@@ -754,6 +765,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width
@@ -806,6 +819,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width
@@ -858,6 +873,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width
@@ -1063,6 +1080,8 @@ module ChaosCore(
       (io_backend_memory_request_bits_addr),
     .io_backend_memory_request_bits_data
       (io_backend_memory_request_bits_data),
+    .io_backend_memory_request_bits_mem_signed
+      (io_backend_memory_request_bits_mem_signed),
     .io_backend_memory_request_bits_memory_type
       (io_backend_memory_request_bits_memory_type),
     .io_backend_memory_request_bits_access_width
@@ -1205,6 +1224,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_backend_packet_0_bits_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
+    .io_backend_packet_0_bits_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_backend_packet_0_bits_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
     .io_backend_packet_0_bits_access_width
@@ -1262,6 +1283,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_backend_packet_1_bits_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
+    .io_backend_packet_1_bits_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_backend_packet_1_bits_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
     .io_backend_packet_1_bits_access_width
@@ -1319,6 +1342,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_backend_packet_2_bits_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
+    .io_backend_packet_2_bits_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_backend_packet_2_bits_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
     .io_backend_packet_2_bits_access_width
@@ -1376,6 +1401,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_backend_packet_3_bits_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
+    .io_backend_packet_3_bits_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_backend_packet_3_bits_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
     .io_backend_packet_3_bits_access_width
@@ -1593,6 +1620,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_0_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
+    .io_ROB_packet_bits_decoded_instruction_0_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_0_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
     .io_ROB_packet_bits_decoded_instruction_0_access_width
@@ -1645,6 +1674,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_1_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
+    .io_ROB_packet_bits_decoded_instruction_1_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_1_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
     .io_ROB_packet_bits_decoded_instruction_1_access_width
@@ -1697,6 +1728,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_2_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
+    .io_ROB_packet_bits_decoded_instruction_2_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_2_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
     .io_ROB_packet_bits_decoded_instruction_2_access_width
@@ -1749,6 +1782,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_3_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
+    .io_ROB_packet_bits_decoded_instruction_3_mem_signed
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_3_memory_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
     .io_ROB_packet_bits_decoded_instruction_3_access_width

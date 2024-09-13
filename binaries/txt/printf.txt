@@ -50,8 +50,8 @@ Disassembly of section .text:
 
 800000a0 <vprintfmt.constprop.0>:
 800000a0:	800017b7          	lui	x15,0x80001
-800000a4:	eb010113          	addi	x2,x2,-336 # 800ffeb0 <__bss_end+0xfe92c>
-800000a8:	2dc78793          	addi	x15,x15,732 # 800012dc <__umoddi3+0x3f4>
+800000a4:	eb010113          	addi	x2,x2,-336 # 800ffeb0 <__bss_end+0xfe924>
+800000a8:	2e478793          	addi	x15,x15,740 # 800012e4 <__umoddi3+0x3fc>
 800000ac:	14812423          	sw	x8,328(x2)
 800000b0:	13912223          	sw	x25,292(x2)
 800000b4:	13a12023          	sw	x26,288(x2)
@@ -459,7 +459,7 @@ Disassembly of section .text:
 800006cc:	000e0593          	mv	x11,x28
 800006d0:	22069063          	bnez	x13,800008f0 <__moddi3+0x260>
 800006d4:	80001737          	lui	x14,0x80001
-800006d8:	43470713          	addi	x14,x14,1076 # 80001434 <__clz_tab>
+800006d8:	43c70713          	addi	x14,x14,1084 # 8000143c <__clz_tab>
 800006dc:	0ece7663          	bgeu	x28,x12,800007c8 <__moddi3+0x138>
 800006e0:	000106b7          	lui	x13,0x10
 800006e4:	0cd67863          	bgeu	x12,x13,800007b4 <__moddi3+0x124>
@@ -601,7 +601,7 @@ Disassembly of section .text:
 80000904:	00371713          	slli	x14,x14,0x3
 80000908:	800018b7          	lui	x17,0x80001
 8000090c:	00e6d333          	srl	x6,x13,x14
-80000910:	43488893          	addi	x17,x17,1076 # 80001434 <__clz_tab>
+80000910:	43c88893          	addi	x17,x17,1084 # 8000143c <__clz_tab>
 80000914:	006888b3          	add	x17,x17,x6
 80000918:	0008c883          	lbu	x17,0(x17)
 8000091c:	02000313          	li	x6,32
@@ -716,7 +716,7 @@ Disassembly of section .text:
 80000ac8:	00058793          	mv	x15,x11
 80000acc:	28069263          	bnez	x13,80000d50 <__udivdi3+0x298>
 80000ad0:	800015b7          	lui	x11,0x80001
-80000ad4:	43458593          	addi	x11,x11,1076 # 80001434 <__clz_tab>
+80000ad4:	43c58593          	addi	x11,x11,1084 # 8000143c <__clz_tab>
 80000ad8:	0ec37663          	bgeu	x6,x12,80000bc4 <__udivdi3+0x10c>
 80000adc:	000106b7          	lui	x13,0x10
 80000ae0:	0cd67863          	bgeu	x12,x13,80000bb0 <__udivdi3+0xf8>
@@ -883,7 +883,7 @@ Disassembly of section .text:
 80000d64:	00371713          	slli	x14,x14,0x3
 80000d68:	800017b7          	lui	x15,0x80001
 80000d6c:	00e6d5b3          	srl	x11,x13,x14
-80000d70:	43478793          	addi	x15,x15,1076 # 80001434 <__clz_tab>
+80000d70:	43c78793          	addi	x15,x15,1084 # 8000143c <__clz_tab>
 80000d74:	00b787b3          	add	x15,x15,x11
 80000d78:	0007c783          	lbu	x15,0(x15)
 80000d7c:	00e787b3          	add	x15,x15,x14
@@ -984,7 +984,7 @@ Disassembly of section .text:
 80000ef0:	00058713          	mv	x14,x11
 80000ef4:	20069663          	bnez	x13,80001100 <__umoddi3+0x218>
 80000ef8:	800018b7          	lui	x17,0x80001
-80000efc:	43488893          	addi	x17,x17,1076 # 80001434 <__clz_tab>
+80000efc:	43c88893          	addi	x17,x17,1084 # 8000143c <__clz_tab>
 80000f00:	0cc5fc63          	bgeu	x11,x12,80000fd8 <__umoddi3+0xf0>
 80000f04:	000106b7          	lui	x13,0x10
 80000f08:	0ad67e63          	bgeu	x12,x13,80000fc4 <__umoddi3+0xdc>
@@ -1121,7 +1121,7 @@ Disassembly of section .text:
 80001114:	00381813          	slli	x16,x16,0x3
 80001118:	800018b7          	lui	x17,0x80001
 8000111c:	0106d333          	srl	x6,x13,x16
-80001120:	43488893          	addi	x17,x17,1076 # 80001434 <__clz_tab>
+80001120:	43c88893          	addi	x17,x17,1084 # 8000143c <__clz_tab>
 80001124:	006888b3          	add	x17,x17,x6
 80001128:	0008c883          	lbu	x17,0(x17)
 8000112c:	02000313          	li	x6,32

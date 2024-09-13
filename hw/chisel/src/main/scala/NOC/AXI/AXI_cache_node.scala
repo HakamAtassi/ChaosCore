@@ -138,6 +138,8 @@ trait AXICacheNode {
     (final_response_buffer.io.deq.bits, final_response_buffer.io.deq.fire)
   }
 
+
+
   /////////////
   // AXI FSM //
   /////////////
@@ -271,8 +273,8 @@ trait AXICacheNode {
     when(AXI_port.AXI_R.fire && AXI_port.AXI_R.bits.rlast.asBool){
       AXI_read_buffer := 0.U
       final_response_buffer.io.enq.bits.data := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
-      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid
-      final_response_buffer.io.enq.valid := 1.B
+      final_response_buffer.io.enq.bits.ID   := AXI_port.AXI_R.bits.rid
+      final_response_buffer.io.enq.valid     := 1.B
     }.elsewhen(AXI_port.AXI_R.fire){
       AXI_read_buffer := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
     }
