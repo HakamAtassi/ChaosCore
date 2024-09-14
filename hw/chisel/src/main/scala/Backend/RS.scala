@@ -186,6 +186,14 @@ class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
         }
     }
 
+
+    when(io.flush){
+        for(port <- 0 until RSPortCount){
+            io.RF_inputs(port).bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+            io.RF_inputs(port).valid := 0.B
+        }
+    }
+
     /////////////////////
     // READY SIGNALING //
     /////////////////////

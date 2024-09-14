@@ -559,38 +559,3 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }
 
 }
-
-/*
-
-
-
-MISPREDICTION LOGIC ISSUE:
-
-
-Currently, a branch is considered mispredicted basically only if its fetch PCs dont match. 
-However, sometimes the fetch PC can match, and still have a mispredicted branch.
-
-Consider:
-
-0x00: NOP
-0x04: branch x10
-0x08: NOP
-0x0C: NOP
-
-0x10: NOP
-0x14: NOP
-0x18: NOP
-0x1C: NOP
-
-
-here, even the generated expected next PC is going to be x10 regardless of the prediction for 0x04.
-FIX: just add a branch mask. 
-
-
-
-
-
-
-
-*/
-

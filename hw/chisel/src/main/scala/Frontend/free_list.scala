@@ -95,18 +95,25 @@ class free_list(coreParameters:CoreParameters) extends Module{
                 free_list_buffer(commit_PRDold) := 1.B
                 commit_free_list_buffer(commit_PRDold) := 1.B
             }
-        }
-    }
 
-    when(io.commit.valid){  // remove to freelist (commit)
-        for(i <- 0 until fetchWidth){
             when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i) && io.partial_commit.PRD(i) =/= 0.U){
                 val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
                 commit_PRD := (io.partial_commit.PRD(i) - 1.U) % (physicalRegCount-1).U
                 commit_free_list_buffer(commit_PRD) := 0.B
             }
+
         }
     }
+
+    //when(io.commit.valid){  // remove to freelist (commit)
+        //for(i <- 0 until fetchWidth){
+            //when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i) && io.partial_commit.PRD(i) =/= 0.U){
+                //val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
+                //commit_PRD := (io.partial_commit.PRD(i) - 1.U) % (physicalRegCount-1).U
+                //commit_free_list_buffer(commit_PRD) := 0.B
+            //}
+        //}
+    //}
 
 
     ///////////////////
@@ -122,14 +129,16 @@ class free_list(coreParameters:CoreParameters) extends Module{
                 commit_PRD := io.partial_commit.PRD(i) - 1.U
                 free_list_buffer(commit_PRD) := 0.B
             }
-        }
-        for(i <- 0 until fetchWidth){
+
             when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i)){
                 val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
                 commit_PRDold := io.partial_commit.PRDold(i) - 1.U
                 free_list_buffer(commit_PRDold) := 1.B
             }
+
         }
+        //for(i <- 0 until fetchWidth){
+        //}
     }
 
 

@@ -52,6 +52,9 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
     srl_result      := RS1_unsigned >> shamt
     sra_result      := RS1_signed   >> shamt
 
+    dontTouch(shamt)
+    dontTouch(sra_result)
+
     slt_result      := RS1_signed < operand2_signed
     sltu_result     := RS1_unsigned < operand2_unsigned
 
