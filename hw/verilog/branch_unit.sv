@@ -159,7 +159,7 @@ module branch_unit(
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
   end // always @(posedge)
-  assign io_FU_output_valid = io_FU_output_valid_REG;
+  assign io_FU_output_valid = io_FU_output_valid_REG & ~io_flush;
   assign io_FU_output_bits_PRD = io_FU_output_bits_PRD_REG;
   assign io_FU_output_bits_RD_data = arithmetic_result;
   assign io_FU_output_bits_RD_valid = io_FU_output_bits_RD_valid_REG;

@@ -44,7 +44,7 @@ class rename_mon:
                 "hit": getattr(self.rename, f"io_decoded_fetch_packet_bits_prediction_hit").value, 
                 "target": getattr(self.rename, f"io_decoded_fetch_packet_bits_prediction_target").value, 
                 "br_type": getattr(self.rename, f"io_decoded_fetch_packet_bits_prediction_br_type").value, 
-                "T_NT": getattr(self.rename, f"io_decoded_fetch_packet_bits_prediction_T_NT").value, 
+               #"T_NT": getattr(self.rename, f"io_decoded_fetch_packet_bits_prediction_T_NT").value, 
                 "front_pointer": getattr(self.rename, f"io_decoded_fetch_packet_bits_free_list_front_pointer").value, 
                 "decoded_instruction": [{
                     "RS1_ready": getattr(self.rename, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value,
@@ -89,7 +89,7 @@ class rename_mon:
                 "hit": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_prediction_hit").value,
                 "target": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_prediction_target").value,
                 "br_type": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_prediction_br_type").value,
-                "T_NT": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_prediction_T_NT").value,
+                #"T_NT": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_prediction_T_NT").value,
                 "free_list_front_pointer": getattr(self.rename, f"io_renamed_decoded_fetch_packet_bits_free_list_front_pointer").value,
                 "valid_bits": [getattr(self.rename,f"io_renamed_decoded_fetch_packet_bits_valid_bits_{i}").value for i in range(4)],
                 "decoded_instruction":[{

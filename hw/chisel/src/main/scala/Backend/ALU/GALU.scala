@@ -141,8 +141,9 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
     val shamt = Wire(UInt(5.W))
 
+    // FIXME: saturate to 31 or 32?
     when(operand2_unsigned >= 32.U){
-        shamt := 32.U
+        shamt := 31.U
     }.otherwise{
         shamt := operand2_unsigned(4, 0).asUInt
     }
@@ -213,7 +214,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     // ALU pipelined; always ready
     io.FU_input.ready       :=  1.B    
     io.FU_output            :=  DontCare
-    io.FU_output.valid      :=  RegNext(input_valid && !io.flush)
+    io.FU_output.valid      :=  RegNext(input_valid && !io.flush) && !io.flush
 
 }
 

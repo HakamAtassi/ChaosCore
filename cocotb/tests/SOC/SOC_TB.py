@@ -34,7 +34,7 @@ class SOC_TB:
             self.axi_ram.write(i, byte.to_bytes(1, byteorder='little'))
         
         # Optionally, dump a portion of memory to verify
-        self.axi_ram.hexdump(0x0000, min(len(binary_data), 1024), prefix="RAM")  # Dump up to 1KB or file size
+        self.axi_ram.hexdump(0x0000, len(binary_data), prefix="RAM")  # Dump up to 1KB or file size
 
 
 
