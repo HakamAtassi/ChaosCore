@@ -153,14 +153,13 @@ module decoder(
       ? next_ALU_port_0
       : needs_branch_unit
           ? 2'h0
-          : _is_INT_T
-            & (io_instruction_bits_instruction[14:12] == 3'h4
-               | io_instruction_bits_instruction[14:12] == 3'h5
-               | io_instruction_bits_instruction[14:12] == 3'h6
-               | (&(io_instruction_bits_instruction[14:12])))
-            & io_instruction_bits_instruction[25]
-              ? 2'h1
-              : {2{_is_MEM_T_1 | _is_MEM_T}};
+          : {1'h0,
+             _is_INT_T
+               & (io_instruction_bits_instruction[14:12] == 3'h4
+                  | io_instruction_bits_instruction[14:12] == 3'h5
+                  | io_instruction_bits_instruction[14:12] == 3'h6
+                  | (&(io_instruction_bits_instruction[14:12])))
+               & io_instruction_bits_instruction[25]};
   assign io_decoded_instruction_bits_RS_type =
     _is_INT_T | _is_INT_T_1 | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
     | _is_INT_T_11

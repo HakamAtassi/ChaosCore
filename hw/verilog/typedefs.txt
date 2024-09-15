@@ -9,9 +9,9 @@ endinterface;
 
 interface instruction_cache_address_packet;
     localparam set_bits = $clog2(L1_instructionCacheSets);
-    localparam tag_bits = 32 - $clog2(L1_instructionCacheBlockSizeBytes)-set_bits;
-    localparam instruction_offset_bits = $clog2(L1_instructionCacheBlockSizeBytes/4);
-    localparam fetch_packet_bits = $clog2(L1_instructionCacheBlockSizeBytes/4/fetchWidth);
+    localparam tag_bits = 32 - $clog2(L1_cacheLineSizeBytes)-set_bits;
+    localparam instruction_offset_bits = $clog2(L1_cacheLineSizeBytes/4);
+    localparam fetch_packet_bits = $clog2(L1_cacheLineSizeBytes/4/fetchWidth);
     logic[tag_bits-1:0] tag;
     logic[set_bits-1:0] set;
     logic[fetch_packet_bits-1:0] fetch_packet;
@@ -125,9 +125,9 @@ endinterface;
 
 interface instruction_cache_data_line;
     localparam set_bits = $clog2(L1_instructionCacheSets);
-    localparam byte_offset_bits = $clog2(L1_instructionCacheBlockSizeBytes);
+    localparam byte_offset_bits = $clog2(L1_cacheLineSizeBytes);
     localparam tag_bits = 32 - set_bits - byte_offset_bits;
-    localparam data_bits = L1_instructionCacheBlockSizeBytes*8;
+    localparam data_bits = L1_cacheLineSizeBytes*8;
     logic[1-1:0] valid;
     logic[tag_bits-1:0] tag;
     logic[data_bits-1:0] data;

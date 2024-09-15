@@ -1,0 +1,275 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Sun Sep  8 21:42:04 2024
+[*]
+[dumpfile] "/home/hakam/Repos/ChaosCore/formal/rename/engine_0/trace.vcd"
+[dumpfile_mtime] "Sun Sep  8 21:30:47 2024"
+[dumpfile_size] 191210
+[savefile] "/home/hakam/Repos/ChaosCore/formal/rename_gtk.gtkw"
+[timestart] 0
+[size] 1920 1001
+[pos] -1 -1
+*-3.729945 13 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] rename.
+[sst_width] 421
+[signals_width] 663
+[sst_expanded] 1
+[sst_vpaned_height] 264
+@28
+rename.clock
+rename.reset
+@200
+-
+@28
+rename.io_decoded_fetch_packet_valid
+rename.io_decoded_fetch_packet_ready
+@200
+-
+@28
+rename.io_renamed_decoded_fetch_packet_valid
+@200
+-
+@800200
+-input RD
+@22
+rename.io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]
+rename.io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]
+rename.io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]
+@25
+rename.io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]
+@200
+-
+@28
+rename.io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
+@1000200
+-input RD
+@200
+-
+@800200
+-input RS1
+@24
+rename.io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[6:0]
+@22
+rename.io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[6:0]
+@24
+rename.io_decoded_fetch_packet_bits_decoded_instruction_2_RS1[6:0]
+rename.io_decoded_fetch_packet_bits_decoded_instruction_3_RS1[6:0]
+@200
+-
+@28
+rename.io_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid
+@1000200
+-input RS1
+@200
+-
+@800200
+-input RS2
+@22
+rename.io_decoded_fetch_packet_bits_decoded_instruction_0_RS2[6:0]
+rename.io_decoded_fetch_packet_bits_decoded_instruction_1_RS2[6:0]
+rename.io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[6:0]
+rename.io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[6:0]
+@200
+-
+@28
+rename.io_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid
+rename.io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid
+@1000200
+-input RS2
+@200
+-
+@22
+rename.expected_RS1_0[6:0]
+rename.expected_RS1_1[6:0]
+rename.expected_RS1_2[6:0]
+rename.expected_RS1_3[6:0]
+@200
+-
+@22
+rename.expected_RS2_0[6:0]
+rename.expected_RS2_1[6:0]
+rename.expected_RS2_2[6:0]
+rename.expected_RS2_3[6:0]
+@200
+-
+-
+-
+-
+@c00200
+-spec RAT
+@22
+rename.RAT.speculative_RAT_0[6:0]
+rename.RAT.speculative_RAT_1[6:0]
+rename.RAT.speculative_RAT_2[6:0]
+rename.RAT.speculative_RAT_3[6:0]
+rename.RAT.speculative_RAT_4[6:0]
+rename.RAT.speculative_RAT_5[6:0]
+rename.RAT.speculative_RAT_6[6:0]
+rename.RAT.speculative_RAT_7[6:0]
+rename.RAT.speculative_RAT_8[6:0]
+rename.RAT.speculative_RAT_9[6:0]
+rename.RAT.speculative_RAT_10[6:0]
+rename.RAT.speculative_RAT_11[6:0]
+rename.RAT.speculative_RAT_12[6:0]
+rename.RAT.speculative_RAT_13[6:0]
+rename.RAT.speculative_RAT_14[6:0]
+rename.RAT.speculative_RAT_15[6:0]
+rename.RAT.speculative_RAT_16[6:0]
+rename.RAT.speculative_RAT_17[6:0]
+rename.RAT.speculative_RAT_18[6:0]
+rename.RAT.speculative_RAT_19[6:0]
+rename.RAT.speculative_RAT_20[6:0]
+rename.RAT.speculative_RAT_21[6:0]
+rename.RAT.speculative_RAT_22[6:0]
+rename.RAT.speculative_RAT_23[6:0]
+rename.RAT.speculative_RAT_24[6:0]
+rename.RAT.speculative_RAT_25[6:0]
+rename.RAT.speculative_RAT_26[6:0]
+rename.RAT.speculative_RAT_27[6:0]
+rename.RAT.speculative_RAT_28[6:0]
+rename.RAT.speculative_RAT_29[6:0]
+rename.RAT.speculative_RAT_30[6:0]
+rename.RAT.speculative_RAT_31[6:0]
+@1401200
+-spec RAT
+@200
+-
+-
+-
+-
+-
+-
+-
+@22
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRD[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRD[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRD[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRD[6:0]
+@200
+-
+@22
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_PRDold[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_PRDold[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_PRDold[6:0]
+@200
+-
+@22
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1[6:0]
+@200
+-
+@22
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2[6:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2[6:0]
+@200
+-
+@28
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid
+@200
+-
+@28
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid
+@200
+-
+-
+@22
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]
+@200
+-
+-
+-
+@22
+rename.expected_RS1_0[6:0]
+rename.expected_RS1_1[6:0]
+rename.expected_RS1_2[6:0]
+rename.expected_RS1_3[6:0]
+@200
+-
+@22
+rename.expected_RS2_0[6:0]
+rename.expected_RS2_1[6:0]
+rename.expected_RS2_2[6:0]
+rename.expected_RS2_3[6:0]
+@200
+-
+-
+@28
+rename.io_renamed_decoded_fetch_packet_valid
+rename.io_renamed_decoded_fetch_packet_ready
+@200
+-
+@28
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
+rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
+@200
+-
+@28
+rename.io_renamed_decoded_fetch_packet_bits_valid_bits_0
+rename.io_renamed_decoded_fetch_packet_bits_valid_bits_1
+rename.io_renamed_decoded_fetch_packet_bits_valid_bits_2
+rename.io_renamed_decoded_fetch_packet_bits_valid_bits_3
+@200
+-
+@c00200
+-formal RAT
+@22
+rename.formal_RAT_0[6:0]
+rename.formal_RAT_1[6:0]
+rename.formal_RAT_2[6:0]
+rename.formal_RAT_3[6:0]
+rename.formal_RAT_4[6:0]
+rename.formal_RAT_5[6:0]
+rename.formal_RAT_6[6:0]
+rename.formal_RAT_7[6:0]
+rename.formal_RAT_8[6:0]
+rename.formal_RAT_9[6:0]
+rename.formal_RAT_10[6:0]
+rename.formal_RAT_11[6:0]
+rename.formal_RAT_12[6:0]
+rename.formal_RAT_13[6:0]
+rename.formal_RAT_14[6:0]
+rename.formal_RAT_15[6:0]
+rename.formal_RAT_16[6:0]
+rename.formal_RAT_17[6:0]
+rename.formal_RAT_18[6:0]
+rename.formal_RAT_19[6:0]
+rename.formal_RAT_20[6:0]
+rename.formal_RAT_21[6:0]
+rename.formal_RAT_22[6:0]
+rename.formal_RAT_23[6:0]
+rename.formal_RAT_24[6:0]
+rename.formal_RAT_25[6:0]
+rename.formal_RAT_26[6:0]
+rename.formal_RAT_27[6:0]
+rename.formal_RAT_28[6:0]
+rename.formal_RAT_29[6:0]
+rename.formal_RAT_30[6:0]
+rename.formal_RAT_31[6:0]
+@1401200
+-formal RAT
+[pattern_trace] 1
+[pattern_trace] 0

@@ -7,6 +7,8 @@ from cocotb.triggers import RisingEdge, ReadOnly
 import random
 
 from monitors.rename_mon import *
+from monitors.memory_mon import *
+from monitors.SOC_mon import *
 
 
 class SOC_TB:
@@ -19,6 +21,9 @@ class SOC_TB:
         self.memory_capacity = 256*(2**20)
         self.axi_ram = AxiRam(AxiBus.from_prefix(dut, "m_axi"), dut.clock, dut.reset, size=self.memory_capacity)
 
+        self.axi_ram.write_if.log.setLevel(logging.CRITICAL)
+        self.axi_ram.read_if.log.setLevel(logging.CRITICAL)
+
 
 
         with open(binary, "rb") as f:
@@ -29,12 +34,17 @@ class SOC_TB:
             self.axi_ram.write(i, byte.to_bytes(1, byteorder='little'))
         
         # Optionally, dump a portion of memory to verify
-        self.axi_ram.hexdump(0x0000, min(len(binary_data), 1024), prefix="RAM")  # Dump up to 1KB or file size
+        self.axi_ram.hexdump(0x0000, len(binary_data), prefix="RAM")  # Dump up to 1KB or file size
 
+
+
+        # TOP MONITOR #
+        self.SOC_monitor = SOC_mon(self.dut.ChaosCore_tile.ChaosCore)   # this monitors instructions and their commit/value...
 
 
         # INIT MONITORS #
         self.rename_monitor = rename_mon(self.dut.ChaosCore_tile.ChaosCore.frontend.rename)
+        self.memory_monitor = memory_mon(self.dut.ChaosCore_tile.ChaosCore.backend.MOB)
 
         
 
@@ -54,7 +64,9 @@ class SOC_TB:
 
     async def clock(self):
         try:
-            self.rename_monitor.monitor()
+            #self.rename_monitor.monitor()
+            #self.memory_monitor.monitor()
+            #self.SOC_monitor.monitor()
             await RisingEdge(self.dut.clock)
         except(AssertionError):
             await RisingEdge(self.dut.clock)

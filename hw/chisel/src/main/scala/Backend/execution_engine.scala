@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------------------------
 * Filename: execution_engine.scala
 * Author: Hakam Atassi
-* Date: Apr 23 2024
+* Date: Sep 5 2024
 * Description: The wrapper containing all the FUs.
 * License: MIT
 *
@@ -26,3 +26,37 @@
 * SOFTWARE.
 * ------------------------------------------------------------------------------------ 
 */
+
+package ChaosCore
+
+
+import chisel3._
+import circt.stage.ChiselStage 
+import chisel3.util._
+
+class execution_engine(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+    val portCount = FUParamSeq.length
+
+    val io = IO(new Bundle{
+        val flush         =   Input(Bool())
+
+        val FU_input      =   Vec(portCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
+        
+        val FU_output     =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+    })
+
+    // FUs
+    val FUs: Seq[FU] = Seq.tabulate(FUParamSeq.length) { i => Module(new FU(FUParamSeq(i))(coreParameters))}
+
+
+    for(i <- 0 until portCount){
+        FUs(i).io.flush     <> io.flush
+        FUs(i).io.FU_input  <> io.FU_input(i)
+        FUs(i).io.FU_output <> io.FU_output(i)
+    }
+
+
+
+
+}

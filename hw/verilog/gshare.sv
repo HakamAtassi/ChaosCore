@@ -36,7 +36,31 @@ module gshare(
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
-  input  [15:0] io_commit_bits_GHR
+  input  [5:0]  io_commit_bits_ROB_index,
+  input  [2:0]  io_commit_bits_br_type,
+  input         io_commit_bits_br_mask_0,
+                io_commit_bits_br_mask_1,
+                io_commit_bits_br_mask_2,
+                io_commit_bits_br_mask_3,
+  input  [1:0]  io_commit_bits_fetch_packet_index,
+  input         io_commit_bits_is_misprediction,
+  input  [31:0] io_commit_bits_expected_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [7:0]  io_commit_bits_free_list_front_pointer,
+  input  [4:0]  io_commit_bits_RD_0,
+                io_commit_bits_RD_1,
+                io_commit_bits_RD_2,
+                io_commit_bits_RD_3,
+  input  [6:0]  io_commit_bits_PRD_0,
+                io_commit_bits_PRD_1,
+                io_commit_bits_PRD_2,
+                io_commit_bits_PRD_3,
+  input         io_commit_bits_RD_valid_0,
+                io_commit_bits_RD_valid_1,
+                io_commit_bits_RD_valid_2,
+                io_commit_bits_RD_valid_3
 );
 
   wire [15:0] _PHT_io_readDataA;
@@ -48,7 +72,10 @@ module gshare(
   reg         REG;
   always @(posedge clock) begin
     PHT_io_addrC_REG <= hashed_commit_addr;
-    PHT_io_writeEnableC_REG <= io_commit_valid;
+    PHT_io_writeEnableC_REG <=
+      io_commit_valid
+      & (io_commit_bits_br_mask_0 | io_commit_bits_br_mask_1 | io_commit_bits_br_mask_2
+         | io_commit_bits_br_mask_3);
     REG <= io_commit_bits_T_NT;
   end // always @(posedge)
   PHT_memory PHT (

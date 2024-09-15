@@ -43,3 +43,5 @@ free_list.anno.json
 syn/*.jou
 syn/.log
 
+
+binaries/spike_traces/

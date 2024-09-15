@@ -17,7 +17,7 @@ configs = {
     "simulator": "verilator",
     "verilog_sources": verilog_files,
     "module": f"{module}_cocotb",
-    "defines": ["-j12"],
+    "defines": ["-j16"],
     "toplevel": f"{module}",                                  # top level HDL (Update me!)
     "testcase": None,                                         # This is populated by import_tests.py
     "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND", "-Wno-PINMISSING", "-Wno-SYMRSVDWORD", "-Wno-TIMESCALEMOD"],

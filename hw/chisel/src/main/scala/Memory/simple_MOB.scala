@@ -37,12 +37,6 @@ import chisel3.util._
 import getPortCount._
 
 
-//FIXME: 
-// Update this module that that it has partial ordering
-// Meaning that loads cannot execute if there are previous unresolved stores
-// when an entry is found to have no oustanding previous stores, use it to look up the MOB, forward the data, and request the load. 
-
-
 class simple_MOB(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     val portCount       = getPortCount(coreParameters)
@@ -124,6 +118,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
             MOB_entry.PRD                  :=  io.reserve(i).bits.PRD
             MOB_entry.ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB_entry.fetch_packet_index   :=  io.reserve(i).bits.packet_index
+            MOB_entry.mem_signed           :=  io.reserve(i).bits.mem_signed
 
             io.reserved_pointers(i).bits                        := back_index + index_offset
             io.reserved_pointers(i).valid                       := 1.U
@@ -159,7 +154,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     comb_committed := MOB.map(MOB_entry => MOB_entry.committed)
 
     for(i <- 0 until fetchWidth){
-        when(io.partial_commit.valid(i) && MOB(io.partial_commit.MOB_index(i)).valid && io.partial_commit.MOB_valid(i)){
+        when(io.partial_commit.valid(i) && MOB(io.partial_commit.MOB_index(i)).valid && (io.partial_commit.ROB_index === MOB(io.partial_commit.MOB_index(i)).ROB_index) && io.partial_commit.MOB_valid(i)){
             comb_committed(io.partial_commit.MOB_index(i)) := 1.B
         }
     }
@@ -171,10 +166,10 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     ///////////
     // FLUSH //
     ///////////
-    val flushed_entries = PopCount(comb_committed.zip(MOB).map { case (committed, mobEntry) => !committed && mobEntry.valid })
+    val committed_entries = PopCount(comb_committed.zip(MOB).map { case (committed, mobEntry) => committed && mobEntry.valid })
 
 
-    dontTouch(flushed_entries)
+    dontTouch(committed_entries)
 
     when(io.flush){
         for(i <- 0 until MOBEntries){
@@ -183,7 +178,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
                 MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
             }
         }
-        back_pointer := back_pointer - flushed_entries  // walk back back pointer a few elements
+        //back_pointer := back_pointer - flushed_entries   // walk back back pointer a few elements
+        back_pointer := front_pointer + committed_entries
     }
 
 
@@ -202,7 +198,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // cache request
 
     io.backend_memory_request.bits   := 0.U.asTypeOf(new backend_memory_request(coreParameters))
-    io.backend_memory_request.valid  := (MOB_front.committed && MOB_front.resolved && (MOB_front.memory_type === memory_type_t.STORE)) || (MOB_front.resolved && (MOB_front.memory_type === memory_type_t.LOAD)) && MOB_front.valid
+    io.backend_memory_request.valid  := (MOB_front.committed && MOB_front.resolved) && MOB_front.valid
     
     //(MOB_front.committed || (MOB_front.memory_type === memory_type_t.LOAD)) && MOB_front.valid
 
@@ -212,6 +208,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.backend_memory_request.bits.PRD          := MOB_front.PRD
     io.backend_memory_request.bits.ROB_index    := MOB_front.ROB_index
     io.backend_memory_request.bits.MOB_index    := front_index
+    io.backend_memory_request.bits.mem_signed   := MOB_front.mem_signed
     io.backend_memory_request.bits.data         := MOB_front.data
     io.backend_memory_request.bits.packet_index := MOB_front.fetch_packet_index
     
@@ -227,8 +224,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.MOB_output.bits.ROB_index            := io.backend_memory_response.bits.ROB_index
     io.MOB_output.bits.MOB_index            := io.backend_memory_response.bits.MOB_index    // why is this needed?
     io.MOB_output.bits.address              := io.backend_memory_response.bits.addr
-    io.MOB_output.bits.PRD                   := io.backend_memory_response.bits.PRD
-    io.MOB_output.bits.RD_data                   := io.backend_memory_response.bits.data
+    io.MOB_output.bits.PRD                  := io.backend_memory_response.bits.PRD
+    io.MOB_output.bits.RD_data              := io.backend_memory_response.bits.data
     io.MOB_output.bits.RD_valid             := io.backend_memory_response.valid
     io.MOB_output.bits.fetch_packet_index   := io.backend_memory_response.bits.fetch_packet_index
     io.MOB_output.valid                     := io.backend_memory_response.valid

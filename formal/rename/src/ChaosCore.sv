@@ -143,6 +143,10 @@ module ChaosCore(
   wire [3:0]  _ROB_io_partial_commit_MOB_index_1;
   wire [3:0]  _ROB_io_partial_commit_MOB_index_2;
   wire [3:0]  _ROB_io_partial_commit_MOB_index_3;
+  wire        _ROB_io_partial_commit_MOB_valid_0;
+  wire        _ROB_io_partial_commit_MOB_valid_1;
+  wire        _ROB_io_partial_commit_MOB_valid_2;
+  wire        _ROB_io_partial_commit_MOB_valid_3;
   wire [4:0]  _ROB_io_partial_commit_RD_0;
   wire [4:0]  _ROB_io_partial_commit_RD_1;
   wire [4:0]  _ROB_io_partial_commit_RD_2;
@@ -528,6 +532,14 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (_ROB_io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (_ROB_io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (_ROB_io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (_ROB_io_partial_commit_MOB_valid_3),
     .io_partial_commit_RD_0
       (_ROB_io_partial_commit_RD_0),
     .io_partial_commit_RD_1
@@ -1070,6 +1082,14 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (_ROB_io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (_ROB_io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (_ROB_io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (_ROB_io_partial_commit_MOB_valid_3),
     .io_partial_commit_RD_0                             (_ROB_io_partial_commit_RD_0),
     .io_partial_commit_RD_1                             (_ROB_io_partial_commit_RD_1),
     .io_partial_commit_RD_2                             (_ROB_io_partial_commit_RD_2),
@@ -1912,6 +1932,14 @@ module ChaosCore(
       (_ROB_io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (_ROB_io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (_ROB_io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (_ROB_io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (_ROB_io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (_ROB_io_partial_commit_MOB_valid_3),
     .io_partial_commit_RD_0
       (_ROB_io_partial_commit_RD_0),
     .io_partial_commit_RD_1

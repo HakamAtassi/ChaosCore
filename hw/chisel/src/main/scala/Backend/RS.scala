@@ -42,27 +42,26 @@ import Thermometor._
 
 // FIXME: the output port assignment and stuff should all be parameterizable
 // Ex: memrs needs only 1 port. its ID is arbitrary, stuff like that
-class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
+
+// FIXME: the number of ports the RS has should be based on the number of INT/MEM FUs
+class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
     import coreParameters._
 
-    val portCount = getPortCount(coreParameters)
-    val portCountBits = log2Ceil(portCount)
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                   =   Input(Bool())
+        val flush             =   Input(Bool())
 
         // ALLOCATE //
-        val backend_packet          =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
+        val backend_packet    =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
         // UPDATE //
-        val FU_outputs        =      Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))    //FIXME: +1 is placeholder.
+        val FU_outputs        =      Vec(WBPortCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
         // REG READ (then execute) //
-        val RF_inputs         =      Vec(ALUportCount, Decoupled(new decoded_instruction(coreParameters)))
+        val RF_inputs         =      Vec(RSPortCount, Decoupled(new decoded_instruction(coreParameters)))
 
     }); dontTouch(io)
-
 
 
     ///////////////////////////////
@@ -96,11 +95,8 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
     // UPDATE RS ENTRIES //
     ///////////////////////
 
-    //FIXME: make sure that the ready bit will update if its being broadcasted the same cycle the RS entry is being updated
-
-
     for (i <- 0 until RSEntries) {
-        for (FU <- 0 until portCount) {
+        for (FU <- 0 until WBPortCount) {
 
             when((io.FU_outputs(FU).bits.PRD === reservation_station(i).decoded_instruction.RS1) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid){
                 when(reservation_station(i).valid){
@@ -137,7 +133,7 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
     dontTouch(schedulable_instructions)
 
     // to this (more functional)
-  for(i <- 0 until RSEntries){
+    for(i <- 0 until RSEntries){
 
         schedulable_instructions(i) :=  ((reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid) &&
                                         ((reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid) && 
@@ -162,113 +158,42 @@ class RS(coreParameters:CoreParameters, RSType:String="RS") extends Module{
     // for each port, select an input and place it
     // if it was found that the instruction was accepted, free it from the RS
 
-    for (i <- 0 until ALUportCount){
+    for (i <- 0 until RSPortCount){
         io.RF_inputs(i).valid := 0.B
         io.RF_inputs(i).bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
     }
 
-    // Assign port 0
-    val port0_RS_index = Wire(UInt(log2Ceil(RSEntries).W))
-    val port1_RS_index = Wire(UInt(log2Ceil(RSEntries).W))
-    val port2_RS_index = Wire(UInt(log2Ceil(RSEntries).W))
-    val port3_RS_index = Wire(UInt(log2Ceil(RSEntries).W))
+    val port_RS_index  = Wire(Vec(RSPortCount, UInt(log2Ceil(RSEntries).W)))
 
-    port0_RS_index := 0.U
-    port1_RS_index := 0.U
-    port2_RS_index := 0.U
-    port3_RS_index := 0.U
+    port_RS_index := Seq.fill(RSPortCount)(0.U)
+
 
     // FIXME: convert these to "PriorityMux"
 
-
-    dontTouch(port0_RS_index)
-
-    // port 0 //
-    if(RSType == "MEMRS"){
+    for(port <- 0 until RSPortCount){
+        // port 0 //
         for(i <- 0 until RSEntries){
             val current_instruction = reservation_station(i)
-            when((current_instruction.decoded_instruction.portID === 3.U) && schedulable_instructions(i)){
-                io.RF_inputs(0).bits := RegNext(reservation_station(i.U).decoded_instruction)
-                io.RF_inputs(0).valid := RegNext(reservation_station(i.U).valid)
-                port0_RS_index := i.U
+            when((current_instruction.decoded_instruction.portID === port.U) && schedulable_instructions(i)){
+                io.RF_inputs(port).bits := RegNext(reservation_station(i.U).decoded_instruction)
+                io.RF_inputs(port).valid := RegNext(reservation_station(i.U).valid)
+                port_RS_index(port) := i.U
             }
         }
 
-        when(io.RF_inputs(0).fire){
-            reservation_station(port0_RS_index) := 0.U.asTypeOf(new RS_entry(coreParameters))
-        }
-    }else{
-        for(i <- 0 until RSEntries){
-            val current_instruction = reservation_station(i)
-            when((current_instruction.decoded_instruction.portID === 0.U) && schedulable_instructions(i)){
-                io.RF_inputs(0).bits := RegNext(reservation_station(i.U).decoded_instruction)
-                io.RF_inputs(0).valid := RegNext(reservation_station(i.U).valid)
-                port0_RS_index := i.U
-            }
-        }
-
-        when(io.RF_inputs(0).fire){
-            reservation_station(port0_RS_index) := 0.U.asTypeOf(new RS_entry(coreParameters))
-        }
-    }
-
-    ////////////
-    // port 1 //
-    ////////////
-    for(i <- 0 until RSEntries){
-        val current_instruction = reservation_station(i)
-        when((current_instruction.decoded_instruction.portID === 1.U) && schedulable_instructions(i)){
-            io.RF_inputs(1).bits := RegNext(reservation_station(i.U).decoded_instruction)
-            io.RF_inputs(1).valid := RegNext(reservation_station(i.U).valid)
-            port1_RS_index := i.U
+        when(io.RF_inputs(port).fire){
+            reservation_station(port_RS_index(port)) := 0.U.asTypeOf(new RS_entry(coreParameters))
         }
     }
 
 
-    when(io.RF_inputs(1).fire){
-        reservation_station(port1_RS_index) := 0.U.asTypeOf(new RS_entry(coreParameters))
-    }
-
-    ////////////
-    // port 2 //
-    ////////////
-    for(i <- 0 until RSEntries){
-        val current_instruction = reservation_station(i)
-        when((current_instruction.decoded_instruction.portID === 2.U) && schedulable_instructions(i)){
-            io.RF_inputs(2).bits := RegNext(reservation_station(i.U).decoded_instruction)
-            io.RF_inputs(2).valid := RegNext(reservation_station(i.U).valid)
-            port2_RS_index := i.U
+    when(io.flush){
+        for(port <- 0 until RSPortCount){
+            io.RF_inputs(port).bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+            io.RF_inputs(port).valid := 0.B
         }
     }
 
-
-    when(io.RF_inputs(2).fire){
-        reservation_station(port2_RS_index) := 0.U.asTypeOf(new RS_entry(coreParameters))
-    }
-
-    ////////////
-    // port 3 //
-    ////////////
-
-    if(coreConfig.contains("M")){
-        for(i <- 0 until RSEntries){
-            val current_instruction = reservation_station(i)
-            when((current_instruction.decoded_instruction.portID === 3.U) && schedulable_instructions(i)){
-                io.RF_inputs(3).bits := RegNext(reservation_station(i.U).decoded_instruction)
-                io.RF_inputs(3).valid := RegNext(reservation_station(i.U).valid)
-                port3_RS_index := i.U
-            }
-        }
-    }
-
-
-    if(coreConfig.contains("M")){
-        when(io.RF_inputs(3).fire){
-            reservation_station(port3_RS_index) := 0.U.asTypeOf(new RS_entry(coreParameters))
-        }
-    }
-
-    
     /////////////////////
     // READY SIGNALING //
     /////////////////////

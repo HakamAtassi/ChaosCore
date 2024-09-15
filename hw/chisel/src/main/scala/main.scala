@@ -101,7 +101,7 @@ object Main extends App {
     //VerilogGenerator.generateVerilog(new SOC(coreParameters, addressMap, nocParameters), 
      //"../verilog/Core/SOC.v")
 
-    //removeYosysInvalid("../verilog/")
+    removeYosysInvalid("../verilog/")
     //generate_sv_interfaces("src/main/scala/coreParameters.scala", "src/main/scala/bundles.scala")
 
 }

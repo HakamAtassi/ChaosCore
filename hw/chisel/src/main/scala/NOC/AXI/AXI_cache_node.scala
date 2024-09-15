@@ -15,8 +15,10 @@ The AXI node will then transport 1 beat at a time in an INCR only burst type.
 
 trait AXICacheNode {
   val nocParameters:NOCParameters
+  val coreParameters:CoreParameters
 
   import nocParameters._
+  import coreParameters._
 
   // actual verilog IO
   // chisel dataview mapping
@@ -76,7 +78,7 @@ trait AXICacheNode {
     AXI_AR_buf.arid    := ID
     AXI_AR_buf.araddr  := address
     AXI_AR_buf.arlen   := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
-    AXI_AR_buf.arsize  := log2Ceil(DATA_WIDTH/8).U // FIXME: hardcoded..
+    AXI_AR_buf.arsize  := log2Ceil(DATA_WIDTH/8).U
     AXI_AR_buf.arburst := 0x1.U
     AXI_AR_buf.arlock  := 0x0.U
     AXI_AR_buf.arcache := 0x0.U
@@ -86,7 +88,7 @@ trait AXICacheNode {
     AXI_port.AXI_AR.bits.arid    := ID
     AXI_port.AXI_AR.bits.araddr  := address
     AXI_port.AXI_AR.bits.arlen   := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
-    AXI_port.AXI_AR.bits.arsize  := log2Ceil(DATA_WIDTH/8).U // FIXME: hardcoded..
+    AXI_port.AXI_AR.bits.arsize  := log2Ceil(DATA_WIDTH/8).U
     AXI_port.AXI_AR.bits.arburst := 0x1.U
     AXI_port.AXI_AR.bits.arlock  := 0x0.U
     AXI_port.AXI_AR.bits.arcache := 0x0.U
@@ -96,7 +98,7 @@ trait AXICacheNode {
 
   }
   
-  val AXI_AW_DATA_BUFFER = Reg(UInt(256.W))   // FIXME: make this a param based on cache line width
+  val AXI_AW_DATA_BUFFER = Reg(UInt((L1_cacheLineSizeBytes*8).W))
   def AXI_write_request(address:UInt, ID:UInt, data:UInt, bytes:UInt): Bool = {
     import nocParameters._
     // awlen = transfer size / bus width 
@@ -105,7 +107,7 @@ trait AXICacheNode {
     AXI_AW_buf.awid      := ID
     AXI_AW_buf.awaddr    := address
     AXI_AW_buf.awlen     := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
-    AXI_AW_buf.awsize    := log2Ceil(DATA_WIDTH/8).U  // FIXME: hardcoded..
+    AXI_AW_buf.awsize    := log2Ceil(DATA_WIDTH/8).U
     AXI_AW_buf.awburst   := 0x1.U
     AXI_AW_buf.awlock    := 0.U
     AXI_AW_buf.awcache   := 0.U
@@ -115,7 +117,7 @@ trait AXICacheNode {
     AXI_port.AXI_AW.bits.awid      := ID
     AXI_port.AXI_AW.bits.awaddr    := address
     AXI_port.AXI_AW.bits.awlen     := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
-    AXI_port.AXI_AW.bits.awsize    := log2Ceil(DATA_WIDTH/8).U  // FIXME: hardcoded..
+    AXI_port.AXI_AW.bits.awsize    := log2Ceil(DATA_WIDTH/8).U
     AXI_port.AXI_AW.bits.awburst   := 0x1.U
     AXI_port.AXI_AW.bits.awlock    := 0.U
     AXI_port.AXI_AW.bits.awcache   := 0.U
@@ -135,6 +137,8 @@ trait AXICacheNode {
     final_response_buffer.io.deq.ready := 1.B
     (final_response_buffer.io.deq.bits, final_response_buffer.io.deq.fire)
   }
+
+
 
   /////////////
   // AXI FSM //
@@ -240,8 +244,8 @@ trait AXICacheNode {
     AXI_port.AXI_AR.valid        := 1.B
     AXI_port.AXI_AR.bits.arid    := AXI_AR_buf.arid
     AXI_port.AXI_AR.bits.araddr  := AXI_AR_buf.araddr
-    AXI_port.AXI_AR.bits.arlen   := AXI_AR_buf.arlen  //Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
-    AXI_port.AXI_AR.bits.arsize  := AXI_AR_buf.arsize //log2Ceil(DATA_WIDTH/8).U // FIXME: hardcoded..
+    AXI_port.AXI_AR.bits.arlen   := AXI_AR_buf.arlen
+    AXI_port.AXI_AR.bits.arsize  := AXI_AR_buf.arsize 
     AXI_port.AXI_AR.bits.arburst := 0x1.U
     AXI_port.AXI_AR.bits.arlock  := 0x0.U
     AXI_port.AXI_AR.bits.arcache := 0x0.U
@@ -269,8 +273,8 @@ trait AXICacheNode {
     when(AXI_port.AXI_R.fire && AXI_port.AXI_R.bits.rlast.asBool){
       AXI_read_buffer := 0.U
       final_response_buffer.io.enq.bits.data := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
-      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid
-      final_response_buffer.io.enq.valid := 1.B
+      final_response_buffer.io.enq.bits.ID   := AXI_port.AXI_R.bits.rid
+      final_response_buffer.io.enq.valid     := 1.B
     }.elsewhen(AXI_port.AXI_R.fire){
       AXI_read_buffer := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
     }
@@ -316,7 +320,7 @@ trait AXICacheNode {
     when(W_done && R_done){
       AXI_read_buffer := 0.U
       final_response_buffer.io.enq.bits.data := AXI_read_buffer
-      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid // FIXME: this is wrong (load from buffer i think)
+      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid
       final_response_buffer.io.enq.valid := 1.B
     }
 
@@ -335,7 +339,7 @@ trait AXICacheNode {
     when(AXI_port.AXI_R.fire && AXI_port.AXI_R.bits.rlast.asBool){
       AXI_read_buffer := 0.U
       final_response_buffer.io.enq.bits.data := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
-      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid // FIXME: this is wrong (load from buffer i think)
+      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid
       final_response_buffer.io.enq.valid := 1.B
     }
   }

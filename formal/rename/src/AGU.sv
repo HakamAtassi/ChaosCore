@@ -71,7 +71,7 @@ module AGU(
   reg  [1:0]  io_FU_output_bits_access_width_REG;
   reg         hasBeenResetReg;
   initial
-    hasBeenResetReg = 1'bx;
+    hasBeenResetReg = 1'b0;
   wire        hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;
   assert property (@(posedge clock) disable iff (~hasBeenReset) io_flush
                    |=> ~io_FU_output_valid_REG);

@@ -36,18 +36,24 @@ module Queue16_prediction(
                 io_enq_bits_hit,
   input  [31:0] io_enq_bits_target,
   input  [2:0]  io_enq_bits_br_type,
-  input         io_enq_bits_T_NT,
+  input         io_enq_bits_br_mask_0,
+                io_enq_bits_br_mask_1,
+                io_enq_bits_br_mask_2,
+                io_enq_bits_br_mask_3,
                 io_deq_ready,
   output        io_deq_valid,
                 io_deq_bits_hit,
   output [31:0] io_deq_bits_target,
   output [2:0]  io_deq_bits_br_type,
-  output        io_deq_bits_T_NT,
+  output        io_deq_bits_br_mask_0,
+                io_deq_bits_br_mask_1,
+                io_deq_bits_br_mask_2,
+                io_deq_bits_br_mask_3,
   input         io_flush
 );
 
   wire        do_deq;
-  wire [36:0] _ram_ext_R0_data;
+  wire [39:0] _ram_ext_R0_data;
   reg  [3:0]  enq_ptr_value;
   reg  [3:0]  deq_ptr_value;
   reg         maybe_full;
@@ -77,7 +83,7 @@ module Queue16_prediction(
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_16x37 ram_ext (
+  ram_16x40 ram_ext (
     .R0_addr (do_deq ? ((&deq_ptr_value) ? 4'h0 : deq_ptr_value + 4'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -86,13 +92,22 @@ module Queue16_prediction(
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
-      ({io_enq_bits_T_NT, io_enq_bits_br_type, io_enq_bits_target, io_enq_bits_hit})
+      ({io_enq_bits_br_mask_3,
+        io_enq_bits_br_mask_2,
+        io_enq_bits_br_mask_1,
+        io_enq_bits_br_mask_0,
+        io_enq_bits_br_type,
+        io_enq_bits_target,
+        io_enq_bits_hit})
   );
   assign io_enq_ready = ~full;
   assign io_deq_valid = io_deq_valid_0;
   assign io_deq_bits_hit = empty ? io_enq_bits_hit : _ram_ext_R0_data[0];
   assign io_deq_bits_target = empty ? io_enq_bits_target : _ram_ext_R0_data[32:1];
   assign io_deq_bits_br_type = empty ? io_enq_bits_br_type : _ram_ext_R0_data[35:33];
-  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[36];
+  assign io_deq_bits_br_mask_0 = empty ? io_enq_bits_br_mask_0 : _ram_ext_R0_data[36];
+  assign io_deq_bits_br_mask_1 = empty ? io_enq_bits_br_mask_1 : _ram_ext_R0_data[37];
+  assign io_deq_bits_br_mask_2 = empty ? io_enq_bits_br_mask_2 : _ram_ext_R0_data[38];
+  assign io_deq_bits_br_mask_3 = empty ? io_enq_bits_br_mask_3 : _ram_ext_R0_data[39];
 endmodule
 

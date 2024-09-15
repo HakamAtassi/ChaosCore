@@ -449,6 +449,7 @@ module fetch_packet_decoder(
   Queue2_decoded_fetch_packet decoded_fetch_packet_out_Q (
     .clock                                                  (clock),
     .reset                                                  (reset),
+    .io_enq_ready                                           (/* unused */),
     .io_enq_valid
       (io_fetch_packet_ready_REG & io_fetch_packet_valid & ~io_flush),
     .io_enq_bits_fetch_PC

@@ -31,3 +31,5 @@ async def test_reset(dut):
     await ROB.clock()
     await ROB.clock()
     await ROB.clock()
+
+    assert False

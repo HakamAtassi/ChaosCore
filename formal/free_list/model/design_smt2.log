@@ -19,6 +19,7 @@ Top module:  \free_list
 2.2. Analyzing design hierarchy..
 Top module:  \free_list
 Removed 0 unused modules.
+Module free_list directly or indirectly contains formal properties -> setting "keep" attribute.
 
 3. Executing FORMALFF pass.
 
@@ -28,29 +29,32 @@ Removed 0 unused modules.
 
 === free_list ===
 
-   Number of wires:               6562
-   Number of wire bits:           8350
-   Number of public wires:         269
-   Number of public wire bits:     921
-   Number of ports:                 65
-   Number of port bits:            320
+   Number of wires:               6730
+   Number of wire bits:           8657
+   Number of public wires:         292
+   Number of public wire bits:    1066
+   Number of ports:                 69
+   Number of port bits:            324
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:               6443
+   Number of cells:               6603
      $add                           67
-     $and                         1614
-     $anyinit                      128
+     $and                         1631
+     $anyinit                      132
+     $assert                        12
      $assume                         1
-     $eq                           744
+     $bmux                           8
+     $eq                           756
+     $ff                            29
      $logic_not                     12
-     $mux                         1276
-     $not                          777
+     $mux                         1333
+     $not                          790
      $or                          1792
      $reduce_and                    12
-     $reduce_or                      9
+     $reduce_or                     13
      $shl                            3
-     $sub                            8
+     $sub                           12
 
 6. Executing SMT2 backend.
 
@@ -59,6 +63,6 @@ Removed 0 unused modules.
 6.2. Executing DEMUXMAP pass.
 Creating SMT-LIBv2 representation of module free_list.
 
-End of script. Logfile hash: 1880873098, CPU: user 0.12s system 0.01s, MEM: 42.99 MB peak
+End of script. Logfile hash: a3b412adf1, CPU: user 0.09s system 0.01s, MEM: 44.33 MB peak
 Yosys 0.45 (git sha1 9ed031ddd, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)
-Time spent: 51% 2x read_ilang (0 sec), 43% 2x write_smt2 (0 sec), ...
+Time spent: 48% 2x write_smt2 (0 sec), 46% 2x read_ilang (0 sec), ...

@@ -1,0 +1,5 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:04 (4)
+Elapsed process time [H:MM:SS (secs)]: 0:00:04 (4)
+engine_0 (smtbmc) returned FAIL
+counterexample trace: engine_0/trace.vcd
+  failed assertion rename._witness_.assert_auto_verificsva_cc_1732_import_10025 at rename.sv:2514.3-2517.113 in step 3

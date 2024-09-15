@@ -95,10 +95,8 @@ class RAT(coreParameters:CoreParameters) extends Module{
         // Exception/Commit
         //val exception                   =   Input(Bool())
 
-        val partial_commit          =      Input(new partial_commit(coreParameters))                                         // commit mem op
+        val partial_commit              =   Input(new partial_commit(coreParameters))
         val commit                      =   Input(ValidIO(new commit(coreParameters)))
-
-
 
         // renamed outputs
         val RAT_PRDold                  =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
@@ -132,12 +130,6 @@ class RAT(coreParameters:CoreParameters) extends Module{
         }
     }
 
-    when(io.commit.valid && (io.commit.bits.is_misprediction)){
-        for(i <- 0 until architecturalRegCount){
-            speculative_RAT(i) := commit_RAT(i)
-        }
-    }
-
     ////////////////
     // COMMIT RAT //
     ////////////////
@@ -145,7 +137,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     for (i <- 0 until fetchWidth){
         //FIXME: use global flush signal and do not reconstruct
         //when(io.commit.valid && (io.commit.bits.RD_valid(i) && !(io.commit.valid && io.commit.bits.is_misprediction))){
-        when(io.partial_commit.valid.take(i+1).reduce(_ && _) && io.commit.bits.RD_valid(i)){
+        when(io.partial_commit.valid(i) && io.commit.bits.RD_valid(i)){
             commit_RAT(io.commit.bits.RD(i)) := io.commit.bits.PRD(i)
         }
     }
@@ -154,8 +146,9 @@ class RAT(coreParameters:CoreParameters) extends Module{
     // REVERT //
     ////////////
     when(io.commit.valid && (io.commit.bits.is_misprediction)){
+        speculative_RAT := commit_RAT
         for(i <- 0 until fetchWidth){
-            when(io.partial_commit.valid.take(i+1).reduce(_ && _) && io.commit.bits.RD_valid(i)){
+            when(io.partial_commit.valid(i) && io.commit.bits.RD_valid(i)){
                 speculative_RAT(io.commit.bits.RD(i)) := io.commit.bits.PRD(i)
             }
         }
@@ -185,7 +178,7 @@ class rename(coreParameters:CoreParameters) extends Module{
 
         // CHECKPOINT 
         val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
-        val partial_commit          =      Input(new partial_commit(coreParameters))                                         // commit mem op
+        val partial_commit                  =   Input(new partial_commit(coreParameters))                                         // commit mem op
 
         // Instruction input (decoded)
         val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
@@ -203,26 +196,20 @@ class rename(coreParameters:CoreParameters) extends Module{
         accepted_decoded_packet := io.decoded_fetch_packet.bits
     }
 
-//    when(io.renamed_decoded_fetch_packet.fire){
-        //for(i <- 0 until fetchWidth){
-            //val instruction_fetch_PC = accepted_decoded_packet.fetch_PC + i.U*4.U
-            //val oldRS1  =   accepted_decoded_packet.decoded_instruction(i).RS1
-            //val oldRS2  =   accepted_decoded_packet.decoded_instruction(i).RS2
-            //val oldRD   =   accepted_decoded_packet.decoded_instruction(i).RD
 
-            //val RS1  =   io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1
-            //val RS2  =   io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2
-            //val RD   =   io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD
-            //printf("fetchPC (%x) renamed %x <= %x , %x | to %x <= %x, %x\n", instruction_fetch_PC, oldRD, oldRS1, oldRS2, RD, RS1, RS2)
-        //}
-        //printf("\n")
-    //}
+
+    /////////////
+    // MODULES //
+    /////////////
+    val free_list       = Module(new free_list(coreParameters))
+    val WAW_handler     = Module(new WAW_handler(coreParameters:CoreParameters))
+    val RAT             = Module(new RAT(coreParameters:CoreParameters))
 
     //////////////////
     // HELPER WIRES //
     //////////////////
     
-    val fire = (io.decoded_fetch_packet.fire) && !(io.commit.valid && io.commit.bits.is_misprediction)
+    val fire = io.decoded_fetch_packet.fire && !(io.commit.valid && io.commit.bits.is_misprediction) 
 
     ////////////////////
     // OUTPUT BUNDLES //
@@ -231,13 +218,6 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     renamed_decoded_fetch_packet.bits       := io.decoded_fetch_packet.bits
     renamed_decoded_fetch_packet.valid      := fire
-
-    /////////////
-    // MODULES //
-    /////////////
-    val free_list       = Module(new free_list(coreParameters))
-    val WAW_handler     = Module(new WAW_handler(coreParameters:CoreParameters))
-    val RAT             = Module(new RAT(coreParameters:CoreParameters))
 
     ///////////////
     // FREE LIST //
@@ -296,20 +276,20 @@ class rename(coreParameters:CoreParameters) extends Module{
         for(j <- 0 until i){
             // forward RS1
             when((io.decoded_fetch_packet.bits.decoded_instruction(i).RS1 === io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
-                (io.decoded_fetch_packet.bits.decoded_instruction(i).RS1_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid)
+                (io.decoded_fetch_packet.bits.decoded_instruction(i).RS1_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid) && io.decoded_fetch_packet.bits.valid_bits(j)
                         ){
                 renamed_RS1(i) := free_list.io.renamed_values(j)
             }
             // forward RS2
             when((io.decoded_fetch_packet.bits.decoded_instruction(i).RS2 === io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
-                            (io.decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid)
+                            (io.decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid) && io.decoded_fetch_packet.bits.valid_bits(j)
             ){
                 renamed_RS2(i) := free_list.io.renamed_values(j)
             }
             // forward RDold
             when((io.decoded_fetch_packet.bits.decoded_instruction(i).RD === io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
                             (io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid && 
-                            io.decoded_fetch_packet.bits.decoded_instruction(i).RD =/= 0.U && io.decoded_fetch_packet.bits.decoded_instruction(j).RD =/= 0.U)
+                            io.decoded_fetch_packet.bits.decoded_instruction(i).RD =/= 0.U && io.decoded_fetch_packet.bits.decoded_instruction(j).RD =/= 0.U) && io.decoded_fetch_packet.bits.valid_bits(j)
             ){
                 renamed_PRDold(i) := free_list.io.renamed_values(j)
             }
@@ -345,7 +325,6 @@ class rename(coreParameters:CoreParameters) extends Module{
             comb_ready_bits(set_RD) := 1.B
             ready_memory(set_RD) := 1.B
         }
-
     }
 
 
@@ -378,10 +357,12 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     // fetch packet Q takes up a lot of area...
     val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
-    val outputs_ready                   = free_list.io.can_allocate && io.renamed_decoded_fetch_packet.ready 
+    val outputs_ready                   =  io.renamed_decoded_fetch_packet.ready 
+
+    dontTouch(renamed_decoded_fetch_packet)
 
     renamed_decoded_fetch_packet_Q.io.enq                   <> renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_Q.io.enq.valid             := (io.decoded_fetch_packet.fire) && !io.flush
+    renamed_decoded_fetch_packet_Q.io.enq.valid             := (renamed_decoded_fetch_packet.valid) && !io.flush
 
     renamed_decoded_fetch_packet_Q.io.deq                   <> io.renamed_decoded_fetch_packet
     renamed_decoded_fetch_packet_Q.io.flush.get             := io.flush
@@ -412,10 +393,10 @@ class rename(coreParameters:CoreParameters) extends Module{
     }
 
     for(i <- 0 until fetchWidth){
-        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD 
+        val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD
         val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid 
 
-        when(RD_valid && io.renamed_decoded_fetch_packet.fire){    // is this fine?
+        when(RD_valid && io.renamed_decoded_fetch_packet.fire && io.renamed_decoded_fetch_packet.bits.valid_bits(i)){    // is this fine?
             ready_memory(set_RD) := 0.B
         }
     }
@@ -423,22 +404,124 @@ class rename(coreParameters:CoreParameters) extends Module{
     ready_memory(0) := 1.B
     comb_ready_bits(0) := 1.B
 
+    io.decoded_fetch_packet.ready                           := RegNext(outputs_ready) && free_list.io.can_allocate
 
 
-    // in order:
-    // update RDs based on fetch packet (unready) when output is accepted
-    // 
 
 
-    io.decoded_fetch_packet.ready                           := RegNext(outputs_ready)
+    ////////////
+    // FORMAL //
+    ////////////
+
+    
+    val formal_RAT      = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
+    val formal_RAT_comb = WireInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
+
+    formal_RAT_comb := formal_RAT
+
+    val no_flush: Sequence = !(io.commit.valid && io.commit.bits.is_misprediction)
+    val no_flush2: Sequence = !io.flush
+    val always_ready: Sequence = (io.renamed_decoded_fetch_packet.ready === 1.B)    // FIXME: bug likely in backpressure
+
+    AssumeProperty(no_flush2)
+    AssumeProperty(no_flush)
+    AssumeProperty(always_ready)
+
+    for(i <- 0 until fetchWidth){
+        val RS1_size: Sequence = io.decoded_fetch_packet.bits.decoded_instruction(i).RS1 < 32.U
+        val RS2_size: Sequence = io.decoded_fetch_packet.bits.decoded_instruction(i).RS2 < 32.U
+
+        AssumeProperty(RS1_size)
+        AssumeProperty(RS2_size)
+
+    }
+
+
+    // update formal RAT
+    when(io.renamed_decoded_fetch_packet.fire){
+        for(i <- 0 until fetchWidth){
+            when(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.renamed_decoded_fetch_packet.bits.valid_bits(i)){
+                val RD  = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD
+                val PRD = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD
+                formal_RAT_comb(RD) := PRD
+            }
+        }
+    }
+
+
+
+
+
+    val input_RS1 = Reg(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+    val input_RS2 = Reg(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+
+    for(i <- 0 until fetchWidth){
+        when(io.decoded_fetch_packet.fire){
+            input_RS1(i) := io.decoded_fetch_packet.bits.decoded_instruction(i).RS1
+            input_RS2(i) := io.decoded_fetch_packet.bits.decoded_instruction(i).RS2
+        }
+    }
+
+
+    val expected_RS1 = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
+    val expected_RS2 = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
+
+    dontTouch(expected_RS1)
+    dontTouch(expected_RS2)
+
+    for(i <- 0 until fetchWidth){
+
+
+        val output_RS1  = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1
+        val output_RS2  = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2
+
+
+        expected_RS1(i) := formal_RAT_comb(input_RS1(i))
+        expected_RS2(i) := formal_RAT_comb(input_RS2(i))
+
+
+
+        // check for hazard
+        for(j <- 0 until i){
+            when(io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).RD === input_RS1(i) && 
+            io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).RD_valid && 
+            io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1_valid && 
+            io.renamed_decoded_fetch_packet.bits.valid_bits(j) && input_RS1(i) =/= 0.U){
+                expected_RS1(i) := io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).PRD
+            }
+
+            when(io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).RD === input_RS2(i) && 
+                io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).RD_valid && 
+                io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid && 
+                io.renamed_decoded_fetch_packet.bits.valid_bits(j) && input_RS2(i) =/= 0.U){
+                expected_RS2(i) := io.renamed_decoded_fetch_packet.bits.decoded_instruction(j).PRD
+            }
+        }
+
+        val RS1_rename_match: Sequence = output_RS1 === expected_RS1(i)
+        val RS2_rename_match: Sequence = output_RS2 === expected_RS2(i)
+
+        val check_RS1: Sequence = io.renamed_decoded_fetch_packet.fire && io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1_valid
+        val check_RS2: Sequence = io.renamed_decoded_fetch_packet.fire && io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid
+
+        val RS1_match: Property =  check_RS1 |-> (RS1_rename_match)
+        val RS2_match: Property =  check_RS2 |-> (RS2_rename_match)
+
+        AssertProperty(RS1_match)
+        AssertProperty(RS2_match)
+    }
+
+    formal_RAT := formal_RAT_comb
+
+
+
+    // on output valid ready, create an RD PRD mapping
+    // RS1 RS2 mapping is either from this mapping table or from the current output (forward)
+
+
+
+
+
+
 }
 
-
-
-/*
-
-Problem:
-When a later instruction in a fetch packet writes to a renamed register an earlier instruction is searching up the memory of, 
-the comb memory will indicate that the first instruction's RS1/RS2 is indicated as not ready when infact it should be as it has not yet been written1/RS2 is indicated as not ready when infact it should be as it has not yet been written.
-
-*/
