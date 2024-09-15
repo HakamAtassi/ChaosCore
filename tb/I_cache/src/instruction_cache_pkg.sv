@@ -8,7 +8,6 @@ package instruction_cache_pkg;
 //agents
 `include "cache_agent.svh"
 `include "cpu_io_agent.svh"
-`include "dram_axi_agent.svh"
 
 `include "cache_req.svh"
 `include "cpu_io_monitor.svh"

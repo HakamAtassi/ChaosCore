@@ -13,6 +13,10 @@ class cache_req extends uvm_sequence_item;
   rand logic io_CPU_request_bits_wr_en;
   rand logic io_CPU_response_ready;
   rand logic io_kill;
+
+  constraint c_io_kill { io_kill == 0; }
+  constraint c_wr_data { io_CPU_request_bits_wr_data == 0; }
+  constraint c_wr_en { io_CPU_request_bits_wr_en == 0; }
   
   function new(string name = "");
     super.new(name);
@@ -20,21 +24,13 @@ class cache_req extends uvm_sequence_item;
 
   function string convert2string();
     return $psprintf(
-                      "reset: %b\n" + 
-                      "io_CPU_request_valid: %2h\n" + 
-                      "io_CPU_request_bits_addr: %2h\n" + 
-                      "io_CPU_request_bits_wr_data: %2h\n" + 
-                      "io_CPU_request_bits_wr_en: %2h\n" + 
-                      "io_CPU_response_ready: %2h\n" + 
-                      "io_kill: %2h\n",
-                      reset,
-                      io_CPU_request_valid,
-                      io_CPU_request_bits_addr,
-                      io_CPU_request_bits_wr_data,
-                      io_CPU_request_bits_wr_en,
-                      io_CPU_response_ready,
-                      io_kill
-                      );
+                      "reset: %1b\n", reset ,
+                      "io_CPU_request_valid: %2h\n", io_CPU_request_valid,
+                      "io_CPU_request_bits_addr: %2h\n", io_CPU_request_bits_addr,
+                      "io_CPU_request_bits_wr_data: %2h\n", io_CPU_request_bits_addr,
+                      "io_CPU_request_bits_wr_en: %2h\n", io_CPU_request_bits_wr_en,
+                      "io_CPU_response_ready: %2h\n", io_CPU_response_ready,
+                      "io_kill: %2h\n", io_kill);
   endfunction : convert2string
 
   function void do_copy(uvm_object rhs);
@@ -87,56 +83,32 @@ class cache_rsp extends uvm_sequence_item;
   endfunction : new
 
   function string convert2string();
-    return $psprintf("io_CPU_request_ready: %2h\n" +
-                      "io_CPU_response_valid: %2h\n" +
-                      "io_CPU_response_bits_fetch_PC: %2h\n" +
-                      "io_CPU_response_bits_valid_bits_0: %2h\n" +
-                      "io_CPU_response_bits_valid_bits_1: %2h\n" +
-                      "io_CPU_response_bits_valid_bits_2: %2h\n" +
-                      "io_CPU_response_bits_valid_bits_3: %2h\n" +
-                      "io_CPU_response_bits_instructions_0_instruction: %2h\n" +
-                      "io_CPU_response_bits_instructions_0_packet_index: %2h\n" +
-                      "io_CPU_response_bits_instructions_0_ROB_index: %2h\n" +
-                      "io_CPU_response_bits_instructions_1_instruction: %2h\n" +
-                      "io_CPU_response_bits_instructions_1_packet_index: %2h\n" +
-                      "io_CPU_response_bits_instructions_1_ROB_index: %2h\n" +
-                      "io_CPU_response_bits_instructions_2_instruction: %2h\n" +
-                      "io_CPU_response_bits_instructions_2_packet_index: %2h\n" +
-                      "io_CPU_response_bits_instructions_2_ROB_index: %2h\n" +
-                      "io_CPU_response_bits_prediction_hit: %2h\n" +
-                      "io_CPU_response_bits_prediction_target: %2h\n" +
-                      "io_CPU_response_bits_prediction_br_type: %2h\n" +
-                      "io_CPU_response_bits_prediction_T_NT: %2h\n" +
-                      "io_CPU_response_bits_GHR: %2h\n" +
-                      "io_CPU_response_bits_NEXT: %2h\n" +
-                      "io_CPU_response_bits_TOS: %2h\n",
-                      io_CPU_request_ready,
-                      io_CPU_response_valid,
-                      io_CPU_response_bits_fetch_PC,
-                      io_CPU_response_bits_valid_bits_0,
-                      io_CPU_response_bits_valid_bits_1,
-                      io_CPU_response_bits_valid_bits_2,
-                      io_CPU_response_bits_valid_bits_3,
-                      io_CPU_response_bits_instructions_0_instruction,
-                      io_CPU_response_bits_instructions_0_packet_index,
-                      io_CPU_response_bits_instructions_0_ROB_index,
-                      io_CPU_response_bits_instructions_1_instruction,
-                      io_CPU_response_bits_instructions_1_packet_index,
-                      io_CPU_response_bits_instructions_1_ROB_index,
-                      io_CPU_response_bits_instructions_2_instruction,
-                      io_CPU_response_bits_instructions_2_packet_index,
-                      io_CPU_response_bits_instructions_2_ROB_index,
-                      io_CPU_response_bits_instructions_3_instruction,
-                      io_CPU_response_bits_instructions_3_packet_index,
-                      io_CPU_response_bits_instructions_3_ROB_index,
-                      io_CPU_response_bits_prediction_hit,
-                      io_CPU_response_bits_prediction_target,
-                      io_CPU_response_bits_prediction_br_type,
-                      io_CPU_response_bits_prediction_T_NT,
-                      io_CPU_response_bits_GHR,
-                      io_CPU_response_bits_NEXT,
-                      io_CPU_response_bits_TOS,
-                      );
+    return $psprintf("io_CPU_request_ready: %2h\n", io_CPU_request_ready,
+                      "io_CPU_response_valid: %2h\n", io_CPU_response_valid,
+                      "io_CPU_response_bits_fetch_PC: %2h\n", io_CPU_response_bits_fetch_PC,
+                      "io_CPU_response_bits_valid_bits_0: %2h\n", io_CPU_response_bits_valid_bits_0,
+                      "io_CPU_response_bits_valid_bits_1: %2h\n", io_CPU_response_bits_valid_bits_1,
+                      "io_CPU_response_bits_valid_bits_2: %2h\n", io_CPU_response_bits_valid_bits_2,
+                      "io_CPU_response_bits_valid_bits_3: %2h\n", io_CPU_response_bits_valid_bits_3,
+                      "io_CPU_response_bits_instructions_0_instruction: %2h\n", io_CPU_response_bits_instructions_0_instruction,
+                      "io_CPU_response_bits_instructions_0_packet_index: %2h\n", io_CPU_response_bits_instructions_0_packet_index,
+                      "io_CPU_response_bits_instructions_0_ROB_index: %2h\n", io_CPU_response_bits_instructions_0_ROB_index,
+                      "io_CPU_response_bits_instructions_1_instruction: %2h\n", io_CPU_response_bits_instructions_1_instruction,
+                      "io_CPU_response_bits_instructions_1_packet_index: %2h\n", io_CPU_response_bits_instructions_1_packet_index,
+                      "io_CPU_response_bits_instructions_1_ROB_index: %2h\n", io_CPU_response_bits_instructions_1_ROB_index,
+                      "io_CPU_response_bits_instructions_2_instruction: %2h\n", io_CPU_response_bits_instructions_2_instruction,
+                      "io_CPU_response_bits_instructions_2_packet_index: %2h\n", io_CPU_response_bits_instructions_2_packet_index,
+                      "io_CPU_response_bits_instructions_2_ROB_index: %2h\n", io_CPU_response_bits_instructions_2_ROB_index,
+                      "io_CPU_response_bits_instructions_3_instruction: %2h\n", io_CPU_response_bits_instructions_3_instruction,
+                      "io_CPU_response_bits_instructions_3_packet_index: %2h\n", io_CPU_response_bits_instructions_3_packet_index,
+                      "io_CPU_response_bits_instructions_3_ROB_index: %2h\n", io_CPU_response_bits_instructions_3_ROB_index,
+                      "io_CPU_response_bits_prediction_hit: %2h\n", io_CPU_response_bits_prediction_hit,
+                      "io_CPU_response_bits_prediction_target: %2h\n", io_CPU_response_bits_prediction_target,
+                      "io_CPU_response_bits_prediction_br_type: %2h\n", io_CPU_response_bits_prediction_br_type,
+                      "io_CPU_response_bits_prediction_T_NT: %2h\n", io_CPU_response_bits_prediction_T_NT,
+                      "io_CPU_response_bits_GHR: %2h\n", io_CPU_response_bits_GHR,
+                      "io_CPU_response_bits_NEXT: %2h\n", io_CPU_response_bits_NEXT,
+                      "io_CPU_response_bits_TOS: %2h\n", io_CPU_response_bits_TOS);
   endfunction : convert2string
 
   function void do_copy(uvm_object rhs);
@@ -180,6 +152,8 @@ class base_sequence extends uvm_sequence#(cache_req, cache_rsp);
       assert(req.randomize());
       `uvm_info("test_seq",{"Sending transaction ",req.convert2string()}, UVM_MEDIUM);
       finish_item(req);
+      get_response(rsp);
+       `uvm_info("test_seq",{"Got back: ",rsp.convert2string()},UVM_MEDIUM);
     end
   endtask
 
