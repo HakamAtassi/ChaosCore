@@ -35,7 +35,7 @@ import chisel3.util._
 class instruction_fetch(coreParameters:CoreParameters) extends Module{
   import coreParameters._
 
-    val dataSizeBits                = L1_instructionCacheBlockSizeBytes*8
+    val dataSizeBits                = L1_cacheLineSizeBytes*8
 
     val io = IO(new Bundle{
         // FLUSH

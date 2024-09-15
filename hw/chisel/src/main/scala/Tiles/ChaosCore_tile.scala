@@ -61,6 +61,7 @@ class ChaosCore_tile(coreParameters:CoreParameters, addressMap:AddressMap, nocPa
     val data_cache          = Module(new L1_data_cache(coreParameters, nocParameters))
 
     instruction_cache.io.kill         := ChaosCore.io.kill
+    data_cache.io.kill                := ChaosCore.io.kill
 
 
     

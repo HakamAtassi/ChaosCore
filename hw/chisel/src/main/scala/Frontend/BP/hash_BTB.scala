@@ -95,7 +95,6 @@ class hash_BTB(coreParameters:CoreParameters) extends Module{
         val predict_PC                          = Input(UInt(32.W))
         val predict_valid                       = Input(Bool())
 
-
         //prediction-output
         val BTB_hit                             = Output(Bool())
         val BTB_output                          = Output(new BTB_entry(coreParameters))
@@ -124,11 +123,12 @@ class hash_BTB(coreParameters:CoreParameters) extends Module{
     val commit_BTB_entry = Wire(new BTB_entry(coreParameters))
 
     // FIXME: consider updating this to its own bundle and using <>
-    commit_BTB_entry.BTB_valid                  := 1.B
-    commit_BTB_entry.BTB_tag                    := commit_input_tag
-    commit_BTB_entry.BTB_target                 := io.commit.bits.expected_PC
-    commit_BTB_entry.BTB_br_type                := io.commit.bits.br_type
-    commit_BTB_entry.BTB_fetch_packet_index     := io.commit.bits.fetch_packet_index
+    commit_BTB_entry.valid                  := 1.B
+    commit_BTB_entry.tag                    := commit_input_tag
+    commit_BTB_entry.target                 := io.commit.bits.expected_PC
+    commit_BTB_entry.br_type                := io.commit.bits.br_type
+    commit_BTB_entry.fetch_packet_index     := io.commit.bits.fetch_packet_index
+    commit_BTB_entry.br_mask                := io.commit.bits.br_mask
 
     BTB_memory.io.data_in := commit_BTB_entry
 
@@ -136,13 +136,13 @@ class hash_BTB(coreParameters:CoreParameters) extends Module{
     // Hit logic and assignment logic // 
     ////////////////////////////////////
 
-    val BTB_valid_output    = BTB_memory.io.data_out.BTB_valid
-    val BTB_tag_output      = BTB_memory.io.data_out.BTB_tag
-    val BTB_fetch_packet_index_output      = BTB_memory.io.data_out.BTB_fetch_packet_index
+    val BTB_valid_output    = BTB_memory.io.data_out.valid
+    val BTB_tag_output      = BTB_memory.io.data_out.tag
+    val BTB_fetch_packet_index_output      = BTB_memory.io.data_out.fetch_packet_index
 
     val access_fetch_packet_index = RegNext(get_decomposed_icache_address(coreParameters, io.predict_PC).instruction_offset)
 
     io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && BTB_valid_output.asBool && (BTB_fetch_packet_index_output >= access_fetch_packet_index)
     io.BTB_output <> BTB_memory.io.data_out
-    io.BTB_output.BTB_valid := RegNext(io.predict_valid)
+    io.BTB_output.valid := RegNext(io.predict_valid)
 }

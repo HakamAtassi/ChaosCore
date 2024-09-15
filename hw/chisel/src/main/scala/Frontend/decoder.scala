@@ -70,22 +70,25 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
     //Do we check entire funct7 field or just check for single bit?
     val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
-    val SUBTRACT    =   ((instructionType === OP || instructionType === OP_IMM) && FUNCT7 === 0x20.U)
-    val IS_IMM   =      (instructionType === OP_IMM) || 
-                        (instructionType === LUI) || 
-                        (instructionType === AUIPC) || 
-                        (instructionType === STORE) || 
-                        (instructionType === LOAD) || 
-                        (instructionType === BRANCH) || 
-                        (instructionType === JAL) || 
+
+
+    val SUBTRACT    =   ((instructionType === OP        ||  instructionType === OP_IMM) && FUNCT7 === 0x20.U)
+    val IS_IMM   =      (instructionType === OP_IMM)    || 
+                        (instructionType === LUI)       || 
+                        (instructionType === AUIPC)     || 
+                        (instructionType === STORE)     || 
+                        (instructionType === LOAD)      || 
+                        (instructionType === BRANCH)    || 
+                        (instructionType === JAL)       || 
                         (instructionType === JALR) 
 
-    val needs_divider        =   (instructionType === OP) && ( FUNCT3 === 0x4.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U) && FUNCT7(0)
-    val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR)
+    val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
+    val needs_mul            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
+    val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === AUIPC)
     val needs_CSRs           =   0.B
     val needs_ALU            =   ((instructionType === OP) &&
                                  ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
-                                 (instructionType === OP_IMM) || (instructionType === LUI) || (instructionType === AUIPC)
+                                 (instructionType === OP_IMM) || (instructionType === LUI)
 
 
 
@@ -135,6 +138,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
 
 
+
+
     when(instructionType === LOAD){
         io.decoded_instruction.bits.memory_type              := memory_type_t.LOAD
     }.elsewhen(instructionType === STORE){
@@ -143,13 +148,28 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
         io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
     }
 
-    io.decoded_instruction.bits.access_width                  := access_width_t.NONE
-    when(FUNCT3  === "b000".U){
-        io.decoded_instruction.bits.access_width              := access_width_t.B
-    }.elsewhen(FUNCT3  === "b001".U){
-        io.decoded_instruction.bits.access_width              := access_width_t.HW
-    }.elsewhen(FUNCT3  === "b010".U){
-        io.decoded_instruction.bits.access_width              := access_width_t.W
+    
+
+    //FIXME: 
+    //add LBU, LHU...
+
+    io.decoded_instruction.bits.access_width                 := access_width_t.NONE
+    io.decoded_instruction.bits.mem_signed  := 0.B
+    when(FUNCT3  === "b000".U){ // LB
+        io.decoded_instruction.bits.access_width             := access_width_t.B
+        io.decoded_instruction.bits.mem_signed  := 1.B
+    }.elsewhen(FUNCT3  === "b001".U){   // LHW
+        io.decoded_instruction.bits.access_width             := access_width_t.HW
+        io.decoded_instruction.bits.mem_signed  := 1.B
+    }.elsewhen(FUNCT3  === "b010".U){   // LW
+        io.decoded_instruction.bits.access_width             := access_width_t.W
+        io.decoded_instruction.bits.mem_signed  := 1.B
+    }.elsewhen(FUNCT3  === "b100".U){   // LBU
+        io.decoded_instruction.bits.access_width             := access_width_t.B
+        io.decoded_instruction.bits.mem_signed  := 0.B
+    }.elsewhen(FUNCT3  === "b101".U){   // LHWU
+        io.decoded_instruction.bits.access_width             := access_width_t.HW
+        io.decoded_instruction.bits.mem_signed  := 0.B
     }
 
 
@@ -173,6 +193,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     // ALU instructions can be scheduled to any of the ALU ports. 
     // The port it is scheduled to is random. 
 
+    // FIXME: this whole section needs to be replaced with an actual scheduler based on the FU port types...
     val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
 
     when(needs_ALU){
@@ -184,10 +205,10 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
         io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
         io.decoded_instruction.bits.portID := 0.U
-    }.elsewhen(needs_divider){
+    }.elsewhen(needs_div || needs_mul){
         io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_memory){
-        io.decoded_instruction.bits.portID := 3.U
+        io.decoded_instruction.bits.portID := 0.U
     }.otherwise{
         io.decoded_instruction.bits.portID := 0.U
     }

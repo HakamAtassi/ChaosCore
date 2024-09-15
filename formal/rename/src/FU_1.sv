@@ -81,10 +81,6 @@ module FU_1(
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
-  reg  monitor_output_REG;
-  wire monitor_output = monitor_output_REG;
-  always @(posedge clock)
-    monitor_output_REG <= io_FU_input_valid;
   ALU ALU (
     .clock                                                (clock),
     .reset                                                (reset),

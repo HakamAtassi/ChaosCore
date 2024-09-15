@@ -104,7 +104,6 @@ object getPortCount
 
     portCount
   }
-
 }
 
 object findMispredictionCommit {
@@ -204,9 +203,9 @@ object get_decomposed_icache_address{
       import coreParameters._
 
       val set_bits                    = log2Ceil(L1_instructionCacheSets)
-      val tag_bits                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+      val tag_bits                    = 32 - log2Ceil(L1_cacheLineSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
       val instruction_offset_bits     = log2Ceil(fetchWidth)
-      val fetch_packet_bits           = log2Ceil(L1_instructionCacheBlockSizeBytes/4/fetchWidth)
+      val fetch_packet_bits           = log2Ceil(L1_cacheLineSizeBytes/4/fetchWidth)
 
       val decomposed_icache_address = Wire(new instruction_cache_address_packet(coreParameters))
 
@@ -355,5 +354,55 @@ object sign_extend {
 
     // Convert back to UInt
     temp.asUInt
+  }
+}
+
+object sign_extend_var {
+  def apply(data: UInt, from: Int, to:Int): UInt = {
+    require(to >=  from,"Width for sign extension must be greater than or equal to the width of the data.")
+
+    // Convert the data to a SInt to sign-extend it
+    val temp = Wire(SInt(from.W))
+    temp := data.asSInt
+
+    val temp2 = Wire(UInt(to.W))
+    temp2 := temp.asUInt
+
+    // Convert back to UInt
+    temp2
+  }
+}
+
+object generateFUPorts {
+  def apply(FUParamSeq: Seq[FUParams]): Seq[FUParams] = {
+
+    var INTRS_port_count = 0
+    var MEMRS_port_count = 0
+
+    // Use map to create a new sequence with updated port information
+    FUParamSeq.zipWithIndex.map { case (fu, i) =>
+      val RS1_RS2_indices: Seq[Int] = Seq(i * 2, i * 2 + 1)
+      val PRF_RD = i
+
+      var RS_port = 0
+
+      // Update RS_port based on whether the FU is an INTFU or MEMFU
+      if (fu.is_INTFU) {
+        RS_port = INTRS_port_count
+        INTRS_port_count += 1
+      }
+
+      if (fu.is_MEMFU) {
+        RS_port = MEMRS_port_count
+        MEMRS_port_count += 1
+      }
+
+      // Return a new FUParams instance with updated values
+      fu.copy(
+        INTRS_MEMRS_port = RS_port,
+        RS1_RS2_indices = RS1_RS2_indices,
+        PRFRD = PRF_RD
+      )
+    }
   }
 }

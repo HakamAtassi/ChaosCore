@@ -58,6 +58,7 @@ module FU_1(
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_bits_decoded_instruction_IS_IMM,
+                io_FU_input_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
   input  [31:0] io_FU_input_bits_RS1_data,
@@ -81,15 +82,27 @@ module FU_1(
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
-  reg  monitor_output_REG;
-  wire monitor_output = monitor_output_REG;
-  always @(posedge clock)
-    monitor_output_REG <= io_FU_input_valid;
+  wire        _mul_io_FU_output_valid;
+  wire [6:0]  _mul_io_FU_output_bits_PRD;
+  wire [31:0] _mul_io_FU_output_bits_RD_data;
+  wire        _mul_io_FU_output_bits_RD_valid;
+  wire [31:0] _mul_io_FU_output_bits_fetch_PC;
+  wire [3:0]  _mul_io_FU_output_bits_MOB_index;
+  wire [5:0]  _mul_io_FU_output_bits_ROB_index;
+  wire [1:0]  _mul_io_FU_output_bits_fetch_packet_index;
+  wire        _ALU_io_FU_output_valid;
+  wire [6:0]  _ALU_io_FU_output_bits_PRD;
+  wire [31:0] _ALU_io_FU_output_bits_RD_data;
+  wire        _ALU_io_FU_output_bits_RD_valid;
+  wire [31:0] _ALU_io_FU_output_bits_fetch_PC;
+  wire [3:0]  _ALU_io_FU_output_bits_MOB_index;
+  wire [5:0]  _ALU_io_FU_output_bits_ROB_index;
+  wire [1:0]  _ALU_io_FU_output_bits_fetch_packet_index;
   ALU ALU (
-    .clock                                                (clock),
-    .reset                                                (reset),
-    .io_flush                                             (io_flush),
-    .io_FU_input_valid                                    (io_FU_input_valid),
+    .clock                                                  (clock),
+    .reset                                                  (reset),
+    .io_flush                                               (io_flush),
+    .io_FU_input_valid                                      (io_FU_input_valid),
     .io_FU_input_bits_decoded_instruction_PRD
       (io_FU_input_bits_decoded_instruction_PRD),
     .io_FU_input_bits_decoded_instruction_RD_valid
@@ -106,26 +119,98 @@ module FU_1(
       (io_FU_input_bits_decoded_instruction_MOB_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_bits_decoded_instruction_instructionType),
+    .io_FU_input_bits_decoded_instruction_needs_ALU
+      (io_FU_input_bits_decoded_instruction_needs_ALU),
+    .io_FU_input_bits_decoded_instruction_needs_branch_unit
+      (io_FU_input_bits_decoded_instruction_needs_branch_unit),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_bits_decoded_instruction_IS_IMM),
-    .io_FU_input_bits_RS1_data                            (io_FU_input_bits_RS1_data),
-    .io_FU_input_bits_RS2_data                            (io_FU_input_bits_RS2_data),
-    .io_FU_input_bits_fetch_PC                            (io_FU_input_bits_fetch_PC),
-    .io_FU_output_valid                                   (io_FU_output_valid),
-    .io_FU_output_bits_PRD                                (io_FU_output_bits_PRD),
-    .io_FU_output_bits_RD_data                            (io_FU_output_bits_RD_data),
-    .io_FU_output_bits_RD_valid                           (io_FU_output_bits_RD_valid),
-    .io_FU_output_bits_fetch_PC                           (io_FU_output_bits_fetch_PC),
-    .io_FU_output_bits_MOB_index                          (io_FU_output_bits_MOB_index),
-    .io_FU_output_bits_ROB_index                          (io_FU_output_bits_ROB_index),
+    .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),
+    .io_FU_input_bits_RS2_data                              (io_FU_input_bits_RS2_data),
+    .io_FU_input_bits_fetch_PC                              (io_FU_input_bits_fetch_PC),
+    .io_FU_output_valid                                     (_ALU_io_FU_output_valid),
+    .io_FU_output_bits_PRD                                  (_ALU_io_FU_output_bits_PRD),
+    .io_FU_output_bits_RD_data
+      (_ALU_io_FU_output_bits_RD_data),
+    .io_FU_output_bits_RD_valid
+      (_ALU_io_FU_output_bits_RD_valid),
+    .io_FU_output_bits_fetch_PC
+      (_ALU_io_FU_output_bits_fetch_PC),
+    .io_FU_output_bits_MOB_index
+      (_ALU_io_FU_output_bits_MOB_index),
+    .io_FU_output_bits_ROB_index
+      (_ALU_io_FU_output_bits_ROB_index),
     .io_FU_output_bits_fetch_packet_index
-      (io_FU_output_bits_fetch_packet_index)
+      (_ALU_io_FU_output_bits_fetch_packet_index)
+  );
+  mul_unit mul (
+    .clock                                                  (clock),
+    .reset                                                  (reset),
+    .io_flush                                               (io_flush),
+    .io_FU_input_valid                                      (io_FU_input_valid),
+    .io_FU_input_bits_decoded_instruction_PRD
+      (io_FU_input_bits_decoded_instruction_PRD),
+    .io_FU_input_bits_decoded_instruction_RD_valid
+      (io_FU_input_bits_decoded_instruction_RD_valid),
+    .io_FU_input_bits_decoded_instruction_IMM
+      (io_FU_input_bits_decoded_instruction_IMM),
+    .io_FU_input_bits_decoded_instruction_FUNCT3
+      (io_FU_input_bits_decoded_instruction_FUNCT3),
+    .io_FU_input_bits_decoded_instruction_packet_index
+      (io_FU_input_bits_decoded_instruction_packet_index),
+    .io_FU_input_bits_decoded_instruction_ROB_index
+      (io_FU_input_bits_decoded_instruction_ROB_index),
+    .io_FU_input_bits_decoded_instruction_MOB_index
+      (io_FU_input_bits_decoded_instruction_MOB_index),
+    .io_FU_input_bits_decoded_instruction_instructionType
+      (io_FU_input_bits_decoded_instruction_instructionType),
+    .io_FU_input_bits_decoded_instruction_needs_ALU
+      (io_FU_input_bits_decoded_instruction_needs_ALU),
+    .io_FU_input_bits_decoded_instruction_needs_branch_unit
+      (io_FU_input_bits_decoded_instruction_needs_branch_unit),
+    .io_FU_input_bits_decoded_instruction_MULTIPLY
+      (io_FU_input_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_decoded_instruction_IS_IMM
+      (io_FU_input_bits_decoded_instruction_IS_IMM),
+    .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),
+    .io_FU_input_bits_RS2_data                              (io_FU_input_bits_RS2_data),
+    .io_FU_input_bits_fetch_PC                              (io_FU_input_bits_fetch_PC),
+    .io_FU_output_valid                                     (_mul_io_FU_output_valid),
+    .io_FU_output_bits_PRD                                  (_mul_io_FU_output_bits_PRD),
+    .io_FU_output_bits_RD_data
+      (_mul_io_FU_output_bits_RD_data),
+    .io_FU_output_bits_RD_valid
+      (_mul_io_FU_output_bits_RD_valid),
+    .io_FU_output_bits_fetch_PC
+      (_mul_io_FU_output_bits_fetch_PC),
+    .io_FU_output_bits_MOB_index
+      (_mul_io_FU_output_bits_MOB_index),
+    .io_FU_output_bits_ROB_index
+      (_mul_io_FU_output_bits_ROB_index),
+    .io_FU_output_bits_fetch_packet_index
+      (_mul_io_FU_output_bits_fetch_packet_index)
   );
   assign io_FU_input_ready = 1'h1;
+  assign io_FU_output_valid =
+    _mul_io_FU_output_valid ? _mul_io_FU_output_valid : _ALU_io_FU_output_valid;
+  assign io_FU_output_bits_PRD =
+    _mul_io_FU_output_valid ? _mul_io_FU_output_bits_PRD : _ALU_io_FU_output_bits_PRD;
+  assign io_FU_output_bits_RD_data =
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_RD_data
+      : _ALU_io_FU_output_bits_RD_data;
+  assign io_FU_output_bits_RD_valid =
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_RD_valid
+      : _ALU_io_FU_output_bits_RD_valid;
+  assign io_FU_output_bits_fetch_PC =
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_fetch_PC
+      : _ALU_io_FU_output_bits_fetch_PC;
   assign io_FU_output_bits_branch_taken = 1'h0;
   assign io_FU_output_bits_target_address = 32'h0;
   assign io_FU_output_bits_branch_valid = 1'h0;
@@ -134,5 +219,17 @@ module FU_1(
   assign io_FU_output_bits_access_width = 2'h0;
   assign io_FU_output_bits_is_unsigned = 1'h0;
   assign io_FU_output_bits_wr_data = 32'h0;
+  assign io_FU_output_bits_MOB_index =
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_MOB_index
+      : _ALU_io_FU_output_bits_MOB_index;
+  assign io_FU_output_bits_ROB_index =
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_ROB_index
+      : _ALU_io_FU_output_bits_ROB_index;
+  assign io_FU_output_bits_fetch_packet_index =
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_fetch_packet_index
+      : _ALU_io_FU_output_bits_fetch_packet_index;
 endmodule
 

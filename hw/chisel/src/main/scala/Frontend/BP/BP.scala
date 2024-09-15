@@ -114,7 +114,6 @@ class BP(coreParameters:CoreParameters) extends Module{
 
     // commit port
     gshare.io.commit                <> io.commit
-    gshare.io.commit.valid          := update_PHT
 
     //////////////
     // Init BTB //
@@ -152,10 +151,17 @@ class BP(coreParameters:CoreParameters) extends Module{
     // FIXME: something needs to be added here to ensure that predictions after 
     // A replated mispredicted packet are correct...
 
-    prediction.bits.target    := BTB.io.BTB_output.BTB_target
-    prediction.bits.br_type   := BTB.io.BTB_output.BTB_br_type
+    // the gshare bit defines if a branch that hits in the BTB should actually be taken or not...
+
+    prediction.bits.target    := BTB.io.BTB_output.target
+    prediction.bits.br_type   := BTB.io.BTB_output.br_type
     prediction.bits.hit       := BTB.io.BTB_hit
-    prediction.bits.T_NT      := gshare.io.T_NT
+
+    val taken = gshare.io.T_NT && BTB.io.BTB_hit
+    prediction.bits.br_mask   := Seq.fill(fetchWidth)(0.B)
+    when(taken){
+        prediction.bits.br_mask   := BTB.io.BTB_output.br_mask
+    }
 
     prediction.valid        := RegNext(io.predict.valid && !io.flush) //BTB.io.BTB_output.valid && gshare.io.valid
     prediction.ready        := io.prediction.ready

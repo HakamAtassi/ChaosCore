@@ -37,8 +37,8 @@ module ROB_entry_mem(
   input  [3:0] io_writeDataA_MOB_index,
   input        io_writeDataA_RD_valid,
   input  [4:0] io_writeDataA_RD,
-               io_writeDataA_PRDold,
-  input  [6:0] io_writeDataA_PRD,
+  input  [6:0] io_writeDataA_PRDold,
+               io_writeDataA_PRD,
   input        io_writeEnableA,
   input  [5:0] io_addrB,
   output       io_readDataB_valid,
@@ -47,12 +47,12 @@ module ROB_entry_mem(
   output [3:0] io_readDataB_MOB_index,
   output       io_readDataB_RD_valid,
   output [4:0] io_readDataB_RD,
-               io_readDataB_PRDold,
-  output [6:0] io_readDataB_PRD
+  output [6:0] io_readDataB_PRDold,
+               io_readDataB_PRD
 );
 
-  wire [25:0] _mem_ext_R0_data;
-  mem_64x26 mem_ext (
+  wire [27:0] _mem_ext_R0_data;
+  mem_64x28 mem_ext (
     .R0_addr (io_addrB),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -76,7 +76,7 @@ module ROB_entry_mem(
   assign io_readDataB_MOB_index = _mem_ext_R0_data[7:4];
   assign io_readDataB_RD_valid = _mem_ext_R0_data[8];
   assign io_readDataB_RD = _mem_ext_R0_data[13:9];
-  assign io_readDataB_PRDold = _mem_ext_R0_data[18:14];
-  assign io_readDataB_PRD = _mem_ext_R0_data[25:19];
+  assign io_readDataB_PRDold = _mem_ext_R0_data[20:14];
+  assign io_readDataB_PRD = _mem_ext_R0_data[27:21];
 endmodule
 

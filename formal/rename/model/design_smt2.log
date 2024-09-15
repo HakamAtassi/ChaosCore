@@ -14,11 +14,23 @@ Input filename: design_prep.il
 2. Executing HIERARCHY pass (managing design hierarchy).
 
 2.1. Analyzing design hierarchy..
-Top module:  \free_list
+Top module:  \rename
+Used module:     \Queue2_decoded_fetch_packet
+Used module:         \ram_2x483
+Used module:     \free_list
+Used module:     \WAW_handler
+Used module:     \RAT
 
 2.2. Analyzing design hierarchy..
-Top module:  \free_list
+Top module:  \rename
+Used module:     \Queue2_decoded_fetch_packet
+Used module:         \ram_2x483
+Used module:     \free_list
+Used module:     \WAW_handler
+Used module:     \RAT
 Removed 0 unused modules.
+Module rename directly or indirectly contains formal properties -> setting "keep" attribute.
+Module free_list directly or indirectly contains formal properties -> setting "keep" attribute.
 
 3. Executing FORMALFF pass.
 
@@ -26,39 +38,195 @@ Removed 0 unused modules.
 
 5. Printing statistics.
 
-=== free_list ===
+=== rename ===
 
-   Number of wires:               6562
-   Number of wire bits:           8350
-   Number of public wires:         269
-   Number of public wire bits:     921
-   Number of ports:                 65
-   Number of port bits:            320
+   Number of wires:               3766
+   Number of wire bits:           7845
+   Number of public wires:        1123
+   Number of public wire bits:    4084
+   Number of ports:                358
+   Number of port bits:           2003
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:               6443
+   Number of cells:               3235
+     $and                          830
+     $anyinit                      105
+     $assert                         8
+     $assume                        12
+     $bmux                          16
+     $eq                           690
+     $ff                            39
+     $logic_not                      4
+     $lt                             8
+     $mux                          628
+     $not                          286
+     $or                           585
+     $reduce_and                     4
+     $reduce_or                     16
+     Queue2_decoded_fetch_packet      1
+     RAT                             1
+     WAW_handler                     1
+     free_list                       1
+
+=== ram_2x483 ===
+
+   Number of wires:                 10
+   Number of wire bits:           1938
+   Number of public wires:           9
+   Number of public wire bits:    1455
+   Number of ports:                  8
+   Number of port bits:            972
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  3
+     $anyseq                         1
+     $mem_v2                         1
+     $mux                            1
+
+=== free_list ===
+
+   Number of wires:               6726
+   Number of wire bits:           8649
+   Number of public wires:         292
+   Number of public wire bits:    1083
+   Number of ports:                 69
+   Number of port bits:            324
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               6603
      $add                           67
-     $and                         1614
-     $anyinit                      128
+     $and                         1631
+     $anyinit                      132
+     $assert                        12
      $assume                         1
-     $eq                           744
+     $bmux                           8
+     $eq                           756
+     $ff                            29
      $logic_not                     12
-     $mux                         1276
-     $not                          777
+     $mux                         1333
+     $not                          790
      $or                          1792
      $reduce_and                    12
-     $reduce_or                      9
+     $reduce_or                     13
      $shl                            3
-     $sub                            8
+     $sub                           12
+
+=== WAW_handler ===
+
+   Number of wires:                 42
+   Number of wire bits:            122
+   Number of public wires:          24
+   Number of public wire bits:     104
+   Number of ports:                 24
+   Number of port bits:            104
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 21
+     $and                            6
+     $ne                             6
+     $not                            3
+     $or                             6
+
+=== RAT ===
+
+   Number of wires:               1018
+   Number of wire bits:           3890
+   Number of public wires:         148
+   Number of public wire bits:     908
+   Number of ports:                 52
+   Number of port bits:            236
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                947
+     $and                          261
+     $anyinit                       64
+     $assume                         1
+     $bmux                          12
+     $eq                           240
+     $logic_not                      8
+     $mux                          352
+     $not                            1
+     $reduce_and                     8
+
+=== Queue2_decoded_fetch_packet ===
+
+   Number of wires:                266
+   Number of wire bits:           1480
+   Number of public wires:         249
+   Number of public wire bits:    1463
+   Number of ports:                241
+   Number of port bits:            973
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 28
+     $add                            2
+     $and                            7
+     $anyinit                        3
+     $assume                         1
+     $mux                            6
+     $not                            6
+     $xor                            2
+     ram_2x483                       1
+
+=== design hierarchy ===
+
+   rename                            1
+     Queue2_decoded_fetch_packet      1
+       ram_2x483                     1
+     RAT                             1
+     WAW_handler                     1
+     free_list                       1
+
+   Number of wires:              11828
+   Number of wire bits:          23924
+   Number of public wires:        1845
+   Number of public wire bits:    9097
+   Number of ports:                752
+   Number of port bits:           4612
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10832
+     $add                           69
+     $and                         2735
+     $anyinit                      304
+     $anyseq                         1
+     $assert                        20
+     $assume                        15
+     $bmux                          36
+     $eq                          1686
+     $ff                            68
+     $logic_not                     24
+     $lt                             8
+     $mem_v2                         1
+     $mux                         2320
+     $ne                             6
+     $not                         1086
+     $or                          2383
+     $reduce_and                    24
+     $reduce_or                     29
+     $shl                            3
+     $sub                           12
+     $xor                            2
 
 6. Executing SMT2 backend.
 
 6.1. Executing BMUXMAP pass.
 
 6.2. Executing DEMUXMAP pass.
+Creating SMT-LIBv2 representation of module RAT.
+Creating SMT-LIBv2 representation of module WAW_handler.
 Creating SMT-LIBv2 representation of module free_list.
+Creating SMT-LIBv2 representation of module ram_2x483.
+Creating SMT-LIBv2 representation of module Queue2_decoded_fetch_packet.
+Creating SMT-LIBv2 representation of module rename.
 
-End of script. Logfile hash: 1880873098, CPU: user 0.09s system 0.01s, MEM: 43.24 MB peak
+End of script. Logfile hash: 5e4e56deab, CPU: user 0.19s system 0.01s, MEM: 56.93 MB peak
 Yosys 0.45 (git sha1 9ed031ddd, clang++ 14.0.0-1ubuntu1.1 -fPIC -O3)
-Time spent: 49% 2x read_ilang (0 sec), 46% 2x write_smt2 (0 sec), ...
+Time spent: 52% 2x write_smt2 (0 sec), 39% 2x read_ilang (0 sec), ...

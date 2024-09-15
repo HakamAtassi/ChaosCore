@@ -248,305 +248,779 @@ module RAT(
       speculative_RAT_31 <= 7'h0;
     end
     else begin
-      automatic logic _GEN_0;
-      automatic logic _GEN_1 = io_partial_commit_valid_0 & io_partial_commit_valid_1;
+      automatic logic _GEN_0 = io_partial_commit_valid_0 & io_commit_bits_RD_valid_0;
+      automatic logic _GEN_1;
       automatic logic _GEN_2;
-      automatic logic _GEN_3 = _GEN_1 & io_partial_commit_valid_2;
+      automatic logic _GEN_3;
       automatic logic _GEN_4;
-      automatic logic _GEN_5 =
-        _GEN_3 & io_partial_commit_valid_3 & io_commit_bits_RD_valid_3;
-      _GEN_0 = io_partial_commit_valid_0 & io_commit_bits_RD_valid_0;
-      _GEN_2 = _GEN_1 & io_commit_bits_RD_valid_1;
-      _GEN_4 = _GEN_3 & io_commit_bits_RD_valid_2;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h0)
+      automatic logic _GEN_5;
+      automatic logic _GEN_6;
+      automatic logic _GEN_7;
+      automatic logic _GEN_8;
+      automatic logic _GEN_9;
+      automatic logic _GEN_10;
+      automatic logic _GEN_11;
+      automatic logic _GEN_12;
+      automatic logic _GEN_13;
+      automatic logic _GEN_14;
+      automatic logic _GEN_15;
+      automatic logic _GEN_16;
+      automatic logic _GEN_17;
+      automatic logic _GEN_18;
+      automatic logic _GEN_19;
+      automatic logic _GEN_20;
+      automatic logic _GEN_21;
+      automatic logic _GEN_22;
+      automatic logic _GEN_23;
+      automatic logic _GEN_24;
+      automatic logic _GEN_25;
+      automatic logic _GEN_26;
+      automatic logic _GEN_27;
+      automatic logic _GEN_28;
+      automatic logic _GEN_29;
+      automatic logic _GEN_30;
+      automatic logic _GEN_31;
+      automatic logic _GEN_32;
+      automatic logic _GEN_33 = io_partial_commit_valid_1 & io_commit_bits_RD_valid_1;
+      automatic logic _GEN_34;
+      automatic logic _GEN_35;
+      automatic logic _GEN_36;
+      automatic logic _GEN_37;
+      automatic logic _GEN_38;
+      automatic logic _GEN_39;
+      automatic logic _GEN_40;
+      automatic logic _GEN_41;
+      automatic logic _GEN_42;
+      automatic logic _GEN_43;
+      automatic logic _GEN_44;
+      automatic logic _GEN_45;
+      automatic logic _GEN_46;
+      automatic logic _GEN_47;
+      automatic logic _GEN_48;
+      automatic logic _GEN_49;
+      automatic logic _GEN_50;
+      automatic logic _GEN_51;
+      automatic logic _GEN_52;
+      automatic logic _GEN_53;
+      automatic logic _GEN_54;
+      automatic logic _GEN_55;
+      automatic logic _GEN_56;
+      automatic logic _GEN_57;
+      automatic logic _GEN_58;
+      automatic logic _GEN_59;
+      automatic logic _GEN_60;
+      automatic logic _GEN_61;
+      automatic logic _GEN_62;
+      automatic logic _GEN_63;
+      automatic logic _GEN_64;
+      automatic logic _GEN_65;
+      automatic logic _GEN_66 = io_partial_commit_valid_2 & io_commit_bits_RD_valid_2;
+      automatic logic _GEN_67;
+      automatic logic _GEN_68;
+      automatic logic _GEN_69;
+      automatic logic _GEN_70;
+      automatic logic _GEN_71;
+      automatic logic _GEN_72;
+      automatic logic _GEN_73;
+      automatic logic _GEN_74;
+      automatic logic _GEN_75;
+      automatic logic _GEN_76;
+      automatic logic _GEN_77;
+      automatic logic _GEN_78;
+      automatic logic _GEN_79;
+      automatic logic _GEN_80;
+      automatic logic _GEN_81;
+      automatic logic _GEN_82;
+      automatic logic _GEN_83;
+      automatic logic _GEN_84;
+      automatic logic _GEN_85;
+      automatic logic _GEN_86;
+      automatic logic _GEN_87;
+      automatic logic _GEN_88;
+      automatic logic _GEN_89;
+      automatic logic _GEN_90;
+      automatic logic _GEN_91;
+      automatic logic _GEN_92;
+      automatic logic _GEN_93;
+      automatic logic _GEN_94;
+      automatic logic _GEN_95;
+      automatic logic _GEN_96;
+      automatic logic _GEN_97;
+      automatic logic _GEN_98;
+      automatic logic _GEN_99 = io_partial_commit_valid_3 & io_commit_bits_RD_valid_3;
+      automatic logic _GEN_100;
+      automatic logic _GEN_101;
+      automatic logic _GEN_102;
+      automatic logic _GEN_103;
+      automatic logic _GEN_104;
+      automatic logic _GEN_105;
+      automatic logic _GEN_106;
+      automatic logic _GEN_107;
+      automatic logic _GEN_108;
+      automatic logic _GEN_109;
+      automatic logic _GEN_110;
+      automatic logic _GEN_111;
+      automatic logic _GEN_112;
+      automatic logic _GEN_113;
+      automatic logic _GEN_114;
+      automatic logic _GEN_115;
+      automatic logic _GEN_116;
+      automatic logic _GEN_117;
+      automatic logic _GEN_118;
+      automatic logic _GEN_119;
+      automatic logic _GEN_120;
+      automatic logic _GEN_121;
+      automatic logic _GEN_122;
+      automatic logic _GEN_123;
+      automatic logic _GEN_124;
+      automatic logic _GEN_125;
+      automatic logic _GEN_126;
+      automatic logic _GEN_127;
+      automatic logic _GEN_128;
+      automatic logic _GEN_129;
+      automatic logic _GEN_130;
+      automatic logic _GEN_131;
+      _GEN_1 = _GEN_0 & io_commit_bits_RD_0 == 5'h0;
+      _GEN_2 = _GEN_0 & io_commit_bits_RD_0 == 5'h1;
+      _GEN_3 = _GEN_0 & io_commit_bits_RD_0 == 5'h2;
+      _GEN_4 = _GEN_0 & io_commit_bits_RD_0 == 5'h3;
+      _GEN_5 = _GEN_0 & io_commit_bits_RD_0 == 5'h4;
+      _GEN_6 = _GEN_0 & io_commit_bits_RD_0 == 5'h5;
+      _GEN_7 = _GEN_0 & io_commit_bits_RD_0 == 5'h6;
+      _GEN_8 = _GEN_0 & io_commit_bits_RD_0 == 5'h7;
+      _GEN_9 = _GEN_0 & io_commit_bits_RD_0 == 5'h8;
+      _GEN_10 = _GEN_0 & io_commit_bits_RD_0 == 5'h9;
+      _GEN_11 = _GEN_0 & io_commit_bits_RD_0 == 5'hA;
+      _GEN_12 = _GEN_0 & io_commit_bits_RD_0 == 5'hB;
+      _GEN_13 = _GEN_0 & io_commit_bits_RD_0 == 5'hC;
+      _GEN_14 = _GEN_0 & io_commit_bits_RD_0 == 5'hD;
+      _GEN_15 = _GEN_0 & io_commit_bits_RD_0 == 5'hE;
+      _GEN_16 = _GEN_0 & io_commit_bits_RD_0 == 5'hF;
+      _GEN_17 = _GEN_0 & io_commit_bits_RD_0 == 5'h10;
+      _GEN_18 = _GEN_0 & io_commit_bits_RD_0 == 5'h11;
+      _GEN_19 = _GEN_0 & io_commit_bits_RD_0 == 5'h12;
+      _GEN_20 = _GEN_0 & io_commit_bits_RD_0 == 5'h13;
+      _GEN_21 = _GEN_0 & io_commit_bits_RD_0 == 5'h14;
+      _GEN_22 = _GEN_0 & io_commit_bits_RD_0 == 5'h15;
+      _GEN_23 = _GEN_0 & io_commit_bits_RD_0 == 5'h16;
+      _GEN_24 = _GEN_0 & io_commit_bits_RD_0 == 5'h17;
+      _GEN_25 = _GEN_0 & io_commit_bits_RD_0 == 5'h18;
+      _GEN_26 = _GEN_0 & io_commit_bits_RD_0 == 5'h19;
+      _GEN_27 = _GEN_0 & io_commit_bits_RD_0 == 5'h1A;
+      _GEN_28 = _GEN_0 & io_commit_bits_RD_0 == 5'h1B;
+      _GEN_29 = _GEN_0 & io_commit_bits_RD_0 == 5'h1C;
+      _GEN_30 = _GEN_0 & io_commit_bits_RD_0 == 5'h1D;
+      _GEN_31 = _GEN_0 & io_commit_bits_RD_0 == 5'h1E;
+      _GEN_32 = _GEN_0 & (&io_commit_bits_RD_0);
+      _GEN_34 = _GEN_33 & io_commit_bits_RD_1 == 5'h0;
+      _GEN_35 = _GEN_33 & io_commit_bits_RD_1 == 5'h1;
+      _GEN_36 = _GEN_33 & io_commit_bits_RD_1 == 5'h2;
+      _GEN_37 = _GEN_33 & io_commit_bits_RD_1 == 5'h3;
+      _GEN_38 = _GEN_33 & io_commit_bits_RD_1 == 5'h4;
+      _GEN_39 = _GEN_33 & io_commit_bits_RD_1 == 5'h5;
+      _GEN_40 = _GEN_33 & io_commit_bits_RD_1 == 5'h6;
+      _GEN_41 = _GEN_33 & io_commit_bits_RD_1 == 5'h7;
+      _GEN_42 = _GEN_33 & io_commit_bits_RD_1 == 5'h8;
+      _GEN_43 = _GEN_33 & io_commit_bits_RD_1 == 5'h9;
+      _GEN_44 = _GEN_33 & io_commit_bits_RD_1 == 5'hA;
+      _GEN_45 = _GEN_33 & io_commit_bits_RD_1 == 5'hB;
+      _GEN_46 = _GEN_33 & io_commit_bits_RD_1 == 5'hC;
+      _GEN_47 = _GEN_33 & io_commit_bits_RD_1 == 5'hD;
+      _GEN_48 = _GEN_33 & io_commit_bits_RD_1 == 5'hE;
+      _GEN_49 = _GEN_33 & io_commit_bits_RD_1 == 5'hF;
+      _GEN_50 = _GEN_33 & io_commit_bits_RD_1 == 5'h10;
+      _GEN_51 = _GEN_33 & io_commit_bits_RD_1 == 5'h11;
+      _GEN_52 = _GEN_33 & io_commit_bits_RD_1 == 5'h12;
+      _GEN_53 = _GEN_33 & io_commit_bits_RD_1 == 5'h13;
+      _GEN_54 = _GEN_33 & io_commit_bits_RD_1 == 5'h14;
+      _GEN_55 = _GEN_33 & io_commit_bits_RD_1 == 5'h15;
+      _GEN_56 = _GEN_33 & io_commit_bits_RD_1 == 5'h16;
+      _GEN_57 = _GEN_33 & io_commit_bits_RD_1 == 5'h17;
+      _GEN_58 = _GEN_33 & io_commit_bits_RD_1 == 5'h18;
+      _GEN_59 = _GEN_33 & io_commit_bits_RD_1 == 5'h19;
+      _GEN_60 = _GEN_33 & io_commit_bits_RD_1 == 5'h1A;
+      _GEN_61 = _GEN_33 & io_commit_bits_RD_1 == 5'h1B;
+      _GEN_62 = _GEN_33 & io_commit_bits_RD_1 == 5'h1C;
+      _GEN_63 = _GEN_33 & io_commit_bits_RD_1 == 5'h1D;
+      _GEN_64 = _GEN_33 & io_commit_bits_RD_1 == 5'h1E;
+      _GEN_65 = _GEN_33 & (&io_commit_bits_RD_1);
+      _GEN_67 = _GEN_66 & io_commit_bits_RD_2 == 5'h0;
+      _GEN_68 = _GEN_66 & io_commit_bits_RD_2 == 5'h1;
+      _GEN_69 = _GEN_66 & io_commit_bits_RD_2 == 5'h2;
+      _GEN_70 = _GEN_66 & io_commit_bits_RD_2 == 5'h3;
+      _GEN_71 = _GEN_66 & io_commit_bits_RD_2 == 5'h4;
+      _GEN_72 = _GEN_66 & io_commit_bits_RD_2 == 5'h5;
+      _GEN_73 = _GEN_66 & io_commit_bits_RD_2 == 5'h6;
+      _GEN_74 = _GEN_66 & io_commit_bits_RD_2 == 5'h7;
+      _GEN_75 = _GEN_66 & io_commit_bits_RD_2 == 5'h8;
+      _GEN_76 = _GEN_66 & io_commit_bits_RD_2 == 5'h9;
+      _GEN_77 = _GEN_66 & io_commit_bits_RD_2 == 5'hA;
+      _GEN_78 = _GEN_66 & io_commit_bits_RD_2 == 5'hB;
+      _GEN_79 = _GEN_66 & io_commit_bits_RD_2 == 5'hC;
+      _GEN_80 = _GEN_66 & io_commit_bits_RD_2 == 5'hD;
+      _GEN_81 = _GEN_66 & io_commit_bits_RD_2 == 5'hE;
+      _GEN_82 = _GEN_66 & io_commit_bits_RD_2 == 5'hF;
+      _GEN_83 = _GEN_66 & io_commit_bits_RD_2 == 5'h10;
+      _GEN_84 = _GEN_66 & io_commit_bits_RD_2 == 5'h11;
+      _GEN_85 = _GEN_66 & io_commit_bits_RD_2 == 5'h12;
+      _GEN_86 = _GEN_66 & io_commit_bits_RD_2 == 5'h13;
+      _GEN_87 = _GEN_66 & io_commit_bits_RD_2 == 5'h14;
+      _GEN_88 = _GEN_66 & io_commit_bits_RD_2 == 5'h15;
+      _GEN_89 = _GEN_66 & io_commit_bits_RD_2 == 5'h16;
+      _GEN_90 = _GEN_66 & io_commit_bits_RD_2 == 5'h17;
+      _GEN_91 = _GEN_66 & io_commit_bits_RD_2 == 5'h18;
+      _GEN_92 = _GEN_66 & io_commit_bits_RD_2 == 5'h19;
+      _GEN_93 = _GEN_66 & io_commit_bits_RD_2 == 5'h1A;
+      _GEN_94 = _GEN_66 & io_commit_bits_RD_2 == 5'h1B;
+      _GEN_95 = _GEN_66 & io_commit_bits_RD_2 == 5'h1C;
+      _GEN_96 = _GEN_66 & io_commit_bits_RD_2 == 5'h1D;
+      _GEN_97 = _GEN_66 & io_commit_bits_RD_2 == 5'h1E;
+      _GEN_98 = _GEN_66 & (&io_commit_bits_RD_2);
+      _GEN_100 = _GEN_99 & io_commit_bits_RD_3 == 5'h0;
+      _GEN_101 = _GEN_99 & io_commit_bits_RD_3 == 5'h1;
+      _GEN_102 = _GEN_99 & io_commit_bits_RD_3 == 5'h2;
+      _GEN_103 = _GEN_99 & io_commit_bits_RD_3 == 5'h3;
+      _GEN_104 = _GEN_99 & io_commit_bits_RD_3 == 5'h4;
+      _GEN_105 = _GEN_99 & io_commit_bits_RD_3 == 5'h5;
+      _GEN_106 = _GEN_99 & io_commit_bits_RD_3 == 5'h6;
+      _GEN_107 = _GEN_99 & io_commit_bits_RD_3 == 5'h7;
+      _GEN_108 = _GEN_99 & io_commit_bits_RD_3 == 5'h8;
+      _GEN_109 = _GEN_99 & io_commit_bits_RD_3 == 5'h9;
+      _GEN_110 = _GEN_99 & io_commit_bits_RD_3 == 5'hA;
+      _GEN_111 = _GEN_99 & io_commit_bits_RD_3 == 5'hB;
+      _GEN_112 = _GEN_99 & io_commit_bits_RD_3 == 5'hC;
+      _GEN_113 = _GEN_99 & io_commit_bits_RD_3 == 5'hD;
+      _GEN_114 = _GEN_99 & io_commit_bits_RD_3 == 5'hE;
+      _GEN_115 = _GEN_99 & io_commit_bits_RD_3 == 5'hF;
+      _GEN_116 = _GEN_99 & io_commit_bits_RD_3 == 5'h10;
+      _GEN_117 = _GEN_99 & io_commit_bits_RD_3 == 5'h11;
+      _GEN_118 = _GEN_99 & io_commit_bits_RD_3 == 5'h12;
+      _GEN_119 = _GEN_99 & io_commit_bits_RD_3 == 5'h13;
+      _GEN_120 = _GEN_99 & io_commit_bits_RD_3 == 5'h14;
+      _GEN_121 = _GEN_99 & io_commit_bits_RD_3 == 5'h15;
+      _GEN_122 = _GEN_99 & io_commit_bits_RD_3 == 5'h16;
+      _GEN_123 = _GEN_99 & io_commit_bits_RD_3 == 5'h17;
+      _GEN_124 = _GEN_99 & io_commit_bits_RD_3 == 5'h18;
+      _GEN_125 = _GEN_99 & io_commit_bits_RD_3 == 5'h19;
+      _GEN_126 = _GEN_99 & io_commit_bits_RD_3 == 5'h1A;
+      _GEN_127 = _GEN_99 & io_commit_bits_RD_3 == 5'h1B;
+      _GEN_128 = _GEN_99 & io_commit_bits_RD_3 == 5'h1C;
+      _GEN_129 = _GEN_99 & io_commit_bits_RD_3 == 5'h1D;
+      _GEN_130 = _GEN_99 & io_commit_bits_RD_3 == 5'h1E;
+      _GEN_131 = _GEN_99 & (&io_commit_bits_RD_3);
+      if (_GEN_100)
         commit_RAT_0 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h0)
+      else if (_GEN_67)
         commit_RAT_0 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h0)
+      else if (_GEN_34)
         commit_RAT_0 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h0)
+      else if (_GEN_1)
         commit_RAT_0 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h1)
+      if (_GEN_101)
         commit_RAT_1 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h1)
+      else if (_GEN_68)
         commit_RAT_1 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h1)
+      else if (_GEN_35)
         commit_RAT_1 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h1)
+      else if (_GEN_2)
         commit_RAT_1 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h2)
+      if (_GEN_102)
         commit_RAT_2 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h2)
+      else if (_GEN_69)
         commit_RAT_2 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h2)
+      else if (_GEN_36)
         commit_RAT_2 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h2)
+      else if (_GEN_3)
         commit_RAT_2 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h3)
+      if (_GEN_103)
         commit_RAT_3 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h3)
+      else if (_GEN_70)
         commit_RAT_3 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h3)
+      else if (_GEN_37)
         commit_RAT_3 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h3)
+      else if (_GEN_4)
         commit_RAT_3 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h4)
+      if (_GEN_104)
         commit_RAT_4 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h4)
+      else if (_GEN_71)
         commit_RAT_4 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h4)
+      else if (_GEN_38)
         commit_RAT_4 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h4)
+      else if (_GEN_5)
         commit_RAT_4 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h5)
+      if (_GEN_105)
         commit_RAT_5 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h5)
+      else if (_GEN_72)
         commit_RAT_5 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h5)
+      else if (_GEN_39)
         commit_RAT_5 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h5)
+      else if (_GEN_6)
         commit_RAT_5 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h6)
+      if (_GEN_106)
         commit_RAT_6 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h6)
+      else if (_GEN_73)
         commit_RAT_6 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h6)
+      else if (_GEN_40)
         commit_RAT_6 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h6)
+      else if (_GEN_7)
         commit_RAT_6 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h7)
+      if (_GEN_107)
         commit_RAT_7 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h7)
+      else if (_GEN_74)
         commit_RAT_7 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h7)
+      else if (_GEN_41)
         commit_RAT_7 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h7)
+      else if (_GEN_8)
         commit_RAT_7 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h8)
+      if (_GEN_108)
         commit_RAT_8 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h8)
+      else if (_GEN_75)
         commit_RAT_8 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h8)
+      else if (_GEN_42)
         commit_RAT_8 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h8)
+      else if (_GEN_9)
         commit_RAT_8 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h9)
+      if (_GEN_109)
         commit_RAT_9 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h9)
+      else if (_GEN_76)
         commit_RAT_9 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h9)
+      else if (_GEN_43)
         commit_RAT_9 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h9)
+      else if (_GEN_10)
         commit_RAT_9 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'hA)
+      if (_GEN_110)
         commit_RAT_10 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'hA)
+      else if (_GEN_77)
         commit_RAT_10 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'hA)
+      else if (_GEN_44)
         commit_RAT_10 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'hA)
+      else if (_GEN_11)
         commit_RAT_10 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'hB)
+      if (_GEN_111)
         commit_RAT_11 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'hB)
+      else if (_GEN_78)
         commit_RAT_11 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'hB)
+      else if (_GEN_45)
         commit_RAT_11 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'hB)
+      else if (_GEN_12)
         commit_RAT_11 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'hC)
+      if (_GEN_112)
         commit_RAT_12 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'hC)
+      else if (_GEN_79)
         commit_RAT_12 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'hC)
+      else if (_GEN_46)
         commit_RAT_12 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'hC)
+      else if (_GEN_13)
         commit_RAT_12 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'hD)
+      if (_GEN_113)
         commit_RAT_13 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'hD)
+      else if (_GEN_80)
         commit_RAT_13 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'hD)
+      else if (_GEN_47)
         commit_RAT_13 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'hD)
+      else if (_GEN_14)
         commit_RAT_13 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'hE)
+      if (_GEN_114)
         commit_RAT_14 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'hE)
+      else if (_GEN_81)
         commit_RAT_14 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'hE)
+      else if (_GEN_48)
         commit_RAT_14 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'hE)
+      else if (_GEN_15)
         commit_RAT_14 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'hF)
+      if (_GEN_115)
         commit_RAT_15 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'hF)
+      else if (_GEN_82)
         commit_RAT_15 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'hF)
+      else if (_GEN_49)
         commit_RAT_15 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'hF)
+      else if (_GEN_16)
         commit_RAT_15 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h10)
+      if (_GEN_116)
         commit_RAT_16 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h10)
+      else if (_GEN_83)
         commit_RAT_16 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h10)
+      else if (_GEN_50)
         commit_RAT_16 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h10)
+      else if (_GEN_17)
         commit_RAT_16 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h11)
+      if (_GEN_117)
         commit_RAT_17 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h11)
+      else if (_GEN_84)
         commit_RAT_17 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h11)
+      else if (_GEN_51)
         commit_RAT_17 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h11)
+      else if (_GEN_18)
         commit_RAT_17 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h12)
+      if (_GEN_118)
         commit_RAT_18 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h12)
+      else if (_GEN_85)
         commit_RAT_18 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h12)
+      else if (_GEN_52)
         commit_RAT_18 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h12)
+      else if (_GEN_19)
         commit_RAT_18 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h13)
+      if (_GEN_119)
         commit_RAT_19 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h13)
+      else if (_GEN_86)
         commit_RAT_19 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h13)
+      else if (_GEN_53)
         commit_RAT_19 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h13)
+      else if (_GEN_20)
         commit_RAT_19 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h14)
+      if (_GEN_120)
         commit_RAT_20 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h14)
+      else if (_GEN_87)
         commit_RAT_20 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h14)
+      else if (_GEN_54)
         commit_RAT_20 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h14)
+      else if (_GEN_21)
         commit_RAT_20 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h15)
+      if (_GEN_121)
         commit_RAT_21 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h15)
+      else if (_GEN_88)
         commit_RAT_21 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h15)
+      else if (_GEN_55)
         commit_RAT_21 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h15)
+      else if (_GEN_22)
         commit_RAT_21 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h16)
+      if (_GEN_122)
         commit_RAT_22 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h16)
+      else if (_GEN_89)
         commit_RAT_22 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h16)
+      else if (_GEN_56)
         commit_RAT_22 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h16)
+      else if (_GEN_23)
         commit_RAT_22 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h17)
+      if (_GEN_123)
         commit_RAT_23 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h17)
+      else if (_GEN_90)
         commit_RAT_23 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h17)
+      else if (_GEN_57)
         commit_RAT_23 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h17)
+      else if (_GEN_24)
         commit_RAT_23 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h18)
+      if (_GEN_124)
         commit_RAT_24 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h18)
+      else if (_GEN_91)
         commit_RAT_24 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h18)
+      else if (_GEN_58)
         commit_RAT_24 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h18)
+      else if (_GEN_25)
         commit_RAT_24 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h19)
+      if (_GEN_125)
         commit_RAT_25 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h19)
+      else if (_GEN_92)
         commit_RAT_25 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h19)
+      else if (_GEN_59)
         commit_RAT_25 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h19)
+      else if (_GEN_26)
         commit_RAT_25 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h1A)
+      if (_GEN_126)
         commit_RAT_26 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h1A)
+      else if (_GEN_93)
         commit_RAT_26 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h1A)
+      else if (_GEN_60)
         commit_RAT_26 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h1A)
+      else if (_GEN_27)
         commit_RAT_26 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h1B)
+      if (_GEN_127)
         commit_RAT_27 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h1B)
+      else if (_GEN_94)
         commit_RAT_27 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h1B)
+      else if (_GEN_61)
         commit_RAT_27 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h1B)
+      else if (_GEN_28)
         commit_RAT_27 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h1C)
+      if (_GEN_128)
         commit_RAT_28 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h1C)
+      else if (_GEN_95)
         commit_RAT_28 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h1C)
+      else if (_GEN_62)
         commit_RAT_28 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h1C)
+      else if (_GEN_29)
         commit_RAT_28 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h1D)
+      if (_GEN_129)
         commit_RAT_29 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h1D)
+      else if (_GEN_96)
         commit_RAT_29 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h1D)
+      else if (_GEN_63)
         commit_RAT_29 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h1D)
+      else if (_GEN_30)
         commit_RAT_29 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & io_commit_bits_RD_3 == 5'h1E)
+      if (_GEN_130)
         commit_RAT_30 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & io_commit_bits_RD_2 == 5'h1E)
+      else if (_GEN_97)
         commit_RAT_30 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & io_commit_bits_RD_1 == 5'h1E)
+      else if (_GEN_64)
         commit_RAT_30 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & io_commit_bits_RD_0 == 5'h1E)
+      else if (_GEN_31)
         commit_RAT_30 <= io_commit_bits_PRD_0;
-      if (_GEN_5 & (&io_commit_bits_RD_3))
+      if (_GEN_131)
         commit_RAT_31 <= io_commit_bits_PRD_3;
-      else if (_GEN_4 & (&io_commit_bits_RD_2))
+      else if (_GEN_98)
         commit_RAT_31 <= io_commit_bits_PRD_2;
-      else if (_GEN_2 & (&io_commit_bits_RD_1))
+      else if (_GEN_65)
         commit_RAT_31 <= io_commit_bits_PRD_1;
-      else if (_GEN_0 & (&io_commit_bits_RD_0))
+      else if (_GEN_32)
         commit_RAT_31 <= io_commit_bits_PRD_0;
       if (io_commit_valid & io_commit_bits_is_misprediction) begin
-        speculative_RAT_0 <= commit_RAT_0;
-        speculative_RAT_1 <= commit_RAT_1;
-        speculative_RAT_2 <= commit_RAT_2;
-        speculative_RAT_3 <= commit_RAT_3;
-        speculative_RAT_4 <= commit_RAT_4;
-        speculative_RAT_5 <= commit_RAT_5;
-        speculative_RAT_6 <= commit_RAT_6;
-        speculative_RAT_7 <= commit_RAT_7;
-        speculative_RAT_8 <= commit_RAT_8;
-        speculative_RAT_9 <= commit_RAT_9;
-        speculative_RAT_10 <= commit_RAT_10;
-        speculative_RAT_11 <= commit_RAT_11;
-        speculative_RAT_12 <= commit_RAT_12;
-        speculative_RAT_13 <= commit_RAT_13;
-        speculative_RAT_14 <= commit_RAT_14;
-        speculative_RAT_15 <= commit_RAT_15;
-        speculative_RAT_16 <= commit_RAT_16;
-        speculative_RAT_17 <= commit_RAT_17;
-        speculative_RAT_18 <= commit_RAT_18;
-        speculative_RAT_19 <= commit_RAT_19;
-        speculative_RAT_20 <= commit_RAT_20;
-        speculative_RAT_21 <= commit_RAT_21;
-        speculative_RAT_22 <= commit_RAT_22;
-        speculative_RAT_23 <= commit_RAT_23;
-        speculative_RAT_24 <= commit_RAT_24;
-        speculative_RAT_25 <= commit_RAT_25;
-        speculative_RAT_26 <= commit_RAT_26;
-        speculative_RAT_27 <= commit_RAT_27;
-        speculative_RAT_28 <= commit_RAT_28;
-        speculative_RAT_29 <= commit_RAT_29;
-        speculative_RAT_30 <= commit_RAT_30;
-        speculative_RAT_31 <= commit_RAT_31;
+        speculative_RAT_0 <=
+          _GEN_100
+            ? io_commit_bits_PRD_3
+            : _GEN_67
+                ? io_commit_bits_PRD_2
+                : _GEN_34
+                    ? io_commit_bits_PRD_1
+                    : _GEN_1 ? io_commit_bits_PRD_0 : commit_RAT_0;
+        speculative_RAT_1 <=
+          _GEN_101
+            ? io_commit_bits_PRD_3
+            : _GEN_68
+                ? io_commit_bits_PRD_2
+                : _GEN_35
+                    ? io_commit_bits_PRD_1
+                    : _GEN_2 ? io_commit_bits_PRD_0 : commit_RAT_1;
+        speculative_RAT_2 <=
+          _GEN_102
+            ? io_commit_bits_PRD_3
+            : _GEN_69
+                ? io_commit_bits_PRD_2
+                : _GEN_36
+                    ? io_commit_bits_PRD_1
+                    : _GEN_3 ? io_commit_bits_PRD_0 : commit_RAT_2;
+        speculative_RAT_3 <=
+          _GEN_103
+            ? io_commit_bits_PRD_3
+            : _GEN_70
+                ? io_commit_bits_PRD_2
+                : _GEN_37
+                    ? io_commit_bits_PRD_1
+                    : _GEN_4 ? io_commit_bits_PRD_0 : commit_RAT_3;
+        speculative_RAT_4 <=
+          _GEN_104
+            ? io_commit_bits_PRD_3
+            : _GEN_71
+                ? io_commit_bits_PRD_2
+                : _GEN_38
+                    ? io_commit_bits_PRD_1
+                    : _GEN_5 ? io_commit_bits_PRD_0 : commit_RAT_4;
+        speculative_RAT_5 <=
+          _GEN_105
+            ? io_commit_bits_PRD_3
+            : _GEN_72
+                ? io_commit_bits_PRD_2
+                : _GEN_39
+                    ? io_commit_bits_PRD_1
+                    : _GEN_6 ? io_commit_bits_PRD_0 : commit_RAT_5;
+        speculative_RAT_6 <=
+          _GEN_106
+            ? io_commit_bits_PRD_3
+            : _GEN_73
+                ? io_commit_bits_PRD_2
+                : _GEN_40
+                    ? io_commit_bits_PRD_1
+                    : _GEN_7 ? io_commit_bits_PRD_0 : commit_RAT_6;
+        speculative_RAT_7 <=
+          _GEN_107
+            ? io_commit_bits_PRD_3
+            : _GEN_74
+                ? io_commit_bits_PRD_2
+                : _GEN_41
+                    ? io_commit_bits_PRD_1
+                    : _GEN_8 ? io_commit_bits_PRD_0 : commit_RAT_7;
+        speculative_RAT_8 <=
+          _GEN_108
+            ? io_commit_bits_PRD_3
+            : _GEN_75
+                ? io_commit_bits_PRD_2
+                : _GEN_42
+                    ? io_commit_bits_PRD_1
+                    : _GEN_9 ? io_commit_bits_PRD_0 : commit_RAT_8;
+        speculative_RAT_9 <=
+          _GEN_109
+            ? io_commit_bits_PRD_3
+            : _GEN_76
+                ? io_commit_bits_PRD_2
+                : _GEN_43
+                    ? io_commit_bits_PRD_1
+                    : _GEN_10 ? io_commit_bits_PRD_0 : commit_RAT_9;
+        speculative_RAT_10 <=
+          _GEN_110
+            ? io_commit_bits_PRD_3
+            : _GEN_77
+                ? io_commit_bits_PRD_2
+                : _GEN_44
+                    ? io_commit_bits_PRD_1
+                    : _GEN_11 ? io_commit_bits_PRD_0 : commit_RAT_10;
+        speculative_RAT_11 <=
+          _GEN_111
+            ? io_commit_bits_PRD_3
+            : _GEN_78
+                ? io_commit_bits_PRD_2
+                : _GEN_45
+                    ? io_commit_bits_PRD_1
+                    : _GEN_12 ? io_commit_bits_PRD_0 : commit_RAT_11;
+        speculative_RAT_12 <=
+          _GEN_112
+            ? io_commit_bits_PRD_3
+            : _GEN_79
+                ? io_commit_bits_PRD_2
+                : _GEN_46
+                    ? io_commit_bits_PRD_1
+                    : _GEN_13 ? io_commit_bits_PRD_0 : commit_RAT_12;
+        speculative_RAT_13 <=
+          _GEN_113
+            ? io_commit_bits_PRD_3
+            : _GEN_80
+                ? io_commit_bits_PRD_2
+                : _GEN_47
+                    ? io_commit_bits_PRD_1
+                    : _GEN_14 ? io_commit_bits_PRD_0 : commit_RAT_13;
+        speculative_RAT_14 <=
+          _GEN_114
+            ? io_commit_bits_PRD_3
+            : _GEN_81
+                ? io_commit_bits_PRD_2
+                : _GEN_48
+                    ? io_commit_bits_PRD_1
+                    : _GEN_15 ? io_commit_bits_PRD_0 : commit_RAT_14;
+        speculative_RAT_15 <=
+          _GEN_115
+            ? io_commit_bits_PRD_3
+            : _GEN_82
+                ? io_commit_bits_PRD_2
+                : _GEN_49
+                    ? io_commit_bits_PRD_1
+                    : _GEN_16 ? io_commit_bits_PRD_0 : commit_RAT_15;
+        speculative_RAT_16 <=
+          _GEN_116
+            ? io_commit_bits_PRD_3
+            : _GEN_83
+                ? io_commit_bits_PRD_2
+                : _GEN_50
+                    ? io_commit_bits_PRD_1
+                    : _GEN_17 ? io_commit_bits_PRD_0 : commit_RAT_16;
+        speculative_RAT_17 <=
+          _GEN_117
+            ? io_commit_bits_PRD_3
+            : _GEN_84
+                ? io_commit_bits_PRD_2
+                : _GEN_51
+                    ? io_commit_bits_PRD_1
+                    : _GEN_18 ? io_commit_bits_PRD_0 : commit_RAT_17;
+        speculative_RAT_18 <=
+          _GEN_118
+            ? io_commit_bits_PRD_3
+            : _GEN_85
+                ? io_commit_bits_PRD_2
+                : _GEN_52
+                    ? io_commit_bits_PRD_1
+                    : _GEN_19 ? io_commit_bits_PRD_0 : commit_RAT_18;
+        speculative_RAT_19 <=
+          _GEN_119
+            ? io_commit_bits_PRD_3
+            : _GEN_86
+                ? io_commit_bits_PRD_2
+                : _GEN_53
+                    ? io_commit_bits_PRD_1
+                    : _GEN_20 ? io_commit_bits_PRD_0 : commit_RAT_19;
+        speculative_RAT_20 <=
+          _GEN_120
+            ? io_commit_bits_PRD_3
+            : _GEN_87
+                ? io_commit_bits_PRD_2
+                : _GEN_54
+                    ? io_commit_bits_PRD_1
+                    : _GEN_21 ? io_commit_bits_PRD_0 : commit_RAT_20;
+        speculative_RAT_21 <=
+          _GEN_121
+            ? io_commit_bits_PRD_3
+            : _GEN_88
+                ? io_commit_bits_PRD_2
+                : _GEN_55
+                    ? io_commit_bits_PRD_1
+                    : _GEN_22 ? io_commit_bits_PRD_0 : commit_RAT_21;
+        speculative_RAT_22 <=
+          _GEN_122
+            ? io_commit_bits_PRD_3
+            : _GEN_89
+                ? io_commit_bits_PRD_2
+                : _GEN_56
+                    ? io_commit_bits_PRD_1
+                    : _GEN_23 ? io_commit_bits_PRD_0 : commit_RAT_22;
+        speculative_RAT_23 <=
+          _GEN_123
+            ? io_commit_bits_PRD_3
+            : _GEN_90
+                ? io_commit_bits_PRD_2
+                : _GEN_57
+                    ? io_commit_bits_PRD_1
+                    : _GEN_24 ? io_commit_bits_PRD_0 : commit_RAT_23;
+        speculative_RAT_24 <=
+          _GEN_124
+            ? io_commit_bits_PRD_3
+            : _GEN_91
+                ? io_commit_bits_PRD_2
+                : _GEN_58
+                    ? io_commit_bits_PRD_1
+                    : _GEN_25 ? io_commit_bits_PRD_0 : commit_RAT_24;
+        speculative_RAT_25 <=
+          _GEN_125
+            ? io_commit_bits_PRD_3
+            : _GEN_92
+                ? io_commit_bits_PRD_2
+                : _GEN_59
+                    ? io_commit_bits_PRD_1
+                    : _GEN_26 ? io_commit_bits_PRD_0 : commit_RAT_25;
+        speculative_RAT_26 <=
+          _GEN_126
+            ? io_commit_bits_PRD_3
+            : _GEN_93
+                ? io_commit_bits_PRD_2
+                : _GEN_60
+                    ? io_commit_bits_PRD_1
+                    : _GEN_27 ? io_commit_bits_PRD_0 : commit_RAT_26;
+        speculative_RAT_27 <=
+          _GEN_127
+            ? io_commit_bits_PRD_3
+            : _GEN_94
+                ? io_commit_bits_PRD_2
+                : _GEN_61
+                    ? io_commit_bits_PRD_1
+                    : _GEN_28 ? io_commit_bits_PRD_0 : commit_RAT_27;
+        speculative_RAT_28 <=
+          _GEN_128
+            ? io_commit_bits_PRD_3
+            : _GEN_95
+                ? io_commit_bits_PRD_2
+                : _GEN_62
+                    ? io_commit_bits_PRD_1
+                    : _GEN_29 ? io_commit_bits_PRD_0 : commit_RAT_28;
+        speculative_RAT_29 <=
+          _GEN_129
+            ? io_commit_bits_PRD_3
+            : _GEN_96
+                ? io_commit_bits_PRD_2
+                : _GEN_63
+                    ? io_commit_bits_PRD_1
+                    : _GEN_30 ? io_commit_bits_PRD_0 : commit_RAT_29;
+        speculative_RAT_30 <=
+          _GEN_130
+            ? io_commit_bits_PRD_3
+            : _GEN_97
+                ? io_commit_bits_PRD_2
+                : _GEN_64
+                    ? io_commit_bits_PRD_1
+                    : _GEN_31 ? io_commit_bits_PRD_0 : commit_RAT_30;
+        speculative_RAT_31 <=
+          _GEN_131
+            ? io_commit_bits_PRD_3
+            : _GEN_98
+                ? io_commit_bits_PRD_2
+                : _GEN_65
+                    ? io_commit_bits_PRD_1
+                    : _GEN_32 ? io_commit_bits_PRD_0 : commit_RAT_31;
       end
       else begin
         if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h0)

@@ -72,6 +72,10 @@ module frontend(
                 io_partial_commit_MOB_index_1,
                 io_partial_commit_MOB_index_2,
                 io_partial_commit_MOB_index_3,
+  input         io_partial_commit_MOB_valid_0,
+                io_partial_commit_MOB_valid_1,
+                io_partial_commit_MOB_valid_2,
+                io_partial_commit_MOB_valid_3,
   input  [4:0]  io_partial_commit_RD_0,
                 io_partial_commit_RD_1,
                 io_partial_commit_RD_2,
@@ -1546,6 +1550,14 @@ module frontend(
       (io_partial_commit_MOB_index_2),
     .io_partial_commit_MOB_index_3
       (io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (io_partial_commit_MOB_valid_3),
     .io_partial_commit_RD_0
       (io_partial_commit_RD_0),
     .io_partial_commit_RD_1

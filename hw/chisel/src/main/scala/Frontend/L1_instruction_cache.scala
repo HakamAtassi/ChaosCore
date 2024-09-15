@@ -45,27 +45,19 @@ class instruction_validator(fetchWidth: Int) extends Module {
     val instruction_index = Input(UInt(log2Ceil(fetchWidth).W))
     val instruction_output = Output(UInt(fetchWidth.W))
   })
+    // instruction offset -> valid mask
+    //fetch width = 2
+        // 0 -> 11
+        // 1 -> 01
 
-  val lookupTable = fetchWidth match {
-    case 2 =>
-      // Define the lookup table for fetchWidth = 2
-      VecInit(
-        "b11".U(fetchWidth.W), // 0 -> 11
-        "b01".U(fetchWidth.W)  // 1 -> 01
-      )
-    case 4 =>
-      // Define the lookup table for fetchWidth = 4
-      VecInit(
-        "b1111".U(fetchWidth.W), // 00 -> 1111
-        "b0111".U(fetchWidth.W), // 01 -> 0111
-        "b0011".U(fetchWidth.W), // 10 -> 0011
-        "b0001".U(fetchWidth.W)  // 11 -> 0001
-      )
-    case _ =>
-      VecInit(Seq.fill(fetchWidth)(0.U(fetchWidth.W)))
-  }
+    // fetch width = 4
+        //00 -> 1111
+        //01 -> 0111
+        //10 -> 0011
+        //11 -> 0001
 
-  io.instruction_output := lookupTable(io.instruction_index)
+    val masks = VecInit(Seq.tabulate(fetchWidth)(i => ((1 << (fetchWidth - i)) - 1).U(fetchWidth.W)))
+    io.instruction_output := masks(io.instruction_index)
 }
 
 class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:NOCParameters) extends Module with AXICacheNode{
@@ -74,7 +66,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val ways = L1_instructionCacheWays
     val sets = L1_instructionCacheSets
 
-    val blockSizeBytes = L1_instructionCacheBlockSizeBytes
+    val blockSizeBytes = L1_cacheLineSizeBytes
 
     val depth                       = sets
     val byteOffsetBits              = log2Ceil(blockSizeBytes)                                          // Bits needed to each byte in a cache line
@@ -93,7 +85,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     val consumedKB                  = (sets*ways*wayDataWidth + sets*LRUBits)/8.0/1024.0 
 
-    println(s"Buidling L1 Cache")
+    println(s"Buidling L1 instruction Cache")
     println(s"Cache Config: Fetch Width=${fetchWidth}, Ways=${ways}, Sets=${sets}, Block Size=${blockSizeBytes}B")
     println(s"Consumed memory: ${consumedKB}KB")
 
@@ -159,7 +151,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     //RegInit(Bool(), 0.B)
 
 
-	val axi_response = Wire(UInt((L1_instructionCacheBlockSizeBytes*8).W))
+	val axi_response = Wire(UInt((L1_cacheLineSizeBytes*8).W))
 	val axi_response_valid = Wire(Bool())
 
     axi_response := 0.U
@@ -167,14 +159,13 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     val already_requested = RegInit(Bool(), 0.B)
 
-    //dontTouch(io.DRAM_response)
 
     switch(cache_state){
 
         is(cacheState.Active){  // Wait for request
 
             when(miss===1.B && io.kill === 0.U){           // Buffer current request, stall cache, go to wait state
-		        val read_accepted = AXI_read_request(request_addr, 0.U, L1_instructionCacheBlockSizeBytes.U)
+		        val read_accepted = AXI_read_request(request_addr, 0.U, L1_cacheLineSizeBytes.U)
                 when(read_accepted){
                     cache_state              := cacheState.Allocate
                 }.otherwise{
@@ -188,7 +179,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
         }
 
         is(cacheState.Request){
-            val read_accepted = AXI_read_request(request_addr, 0.U, L1_instructionCacheBlockSizeBytes.U)
+            val read_accepted = AXI_read_request(request_addr, 0.U, L1_cacheLineSizeBytes.U)
             when(read_accepted){
                 cache_state              := cacheState.Allocate
             }
