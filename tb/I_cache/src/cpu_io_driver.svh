@@ -26,6 +26,7 @@ class cpu_io_driver extends uvm_driver #(cache_req, cache_rsp);
         
         forever begin
             @(negedge cache_vif.clock);
+            cache_vif.io_CPU_response_ready = 0;
             seq_item_port.try_next_item(req);
             if (req!=null) begin
                 seq_item_port.item_done();
@@ -39,6 +40,7 @@ class cpu_io_driver extends uvm_driver #(cache_req, cache_rsp);
 
             @(posedge cache_vif.clock);
             #1;
+            cache_vif.io_CPU_response_ready = 1;
             rsp = new;
             rsp.io_CPU_request_ready = cache_vif.io_CPU_request_ready;
             rsp.io_CPU_response_valid = cache_vif.io_CPU_response_valid;
