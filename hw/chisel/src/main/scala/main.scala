@@ -66,14 +66,14 @@ object Main extends App {
                                                                         //firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
                                                                         //)
 
-    ChiselStage.emitSystemVerilogFile(new L1_data_cache(coreParameters, nocParameters), Array("--split-verilog", 
-                                                                        "--target", "verilog", 
-                                                                        "--target-dir", "../verilog", 
-                                                                        "--preserve-aggregate", "all", 
-                                                                         "--dump-fir",
-                                                                        ), 
-                                                                        firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
-                                                                        )
+    //ChiselStage.emitSystemVerilogFile(new L1_data_cache(coreParameters, nocParameters), Array("--split-verilog", 
+                                                                        //"--target", "verilog", 
+                                                                        //"--target-dir", "../verilog", 
+                                                                        //"--preserve-aggregate", "all", 
+                                                                         //"--dump-fir",
+                                                                        //), 
+                                                                        //firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
+                                                                        //)
 
 
 

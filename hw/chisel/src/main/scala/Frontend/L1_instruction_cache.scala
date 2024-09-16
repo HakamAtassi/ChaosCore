@@ -39,7 +39,6 @@ object cacheState extends ChiselEnum{
     val Active, Request, Allocate, Kill, Replay, Stall = Value
 }
 
-
 class instruction_validator(fetchWidth: Int) extends Module {
   val io = IO(new Bundle {
     val instruction_index = Input(UInt(log2Ceil(fetchWidth).W))
@@ -82,12 +81,25 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val instructionsPerPacketBits   = log2Ceil(fetchWidth)                                              // number of bits needed to address each instruction in a fetch packet
     val tagBits                     = 32 - setBits - fetchPacketBits - instructionsPerPacketBits - 2    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
     val wayDataWidth                = validBits + tagBits + dataSizeBits                              // width of the data line
-
     val consumedKB                  = (sets*ways*wayDataWidth + sets*LRUBits)/8.0/1024.0 
+    val consumedKBData              = (sets*ways*dataSizeBits)/8.0/1024.0 
 
-    println(s"Buidling L1 instruction Cache")
-    println(s"Cache Config: Fetch Width=${fetchWidth}, Ways=${ways}, Sets=${sets}, Block Size=${blockSizeBytes}B")
-    println(s"Consumed memory: ${consumedKB}KB")
+
+    println("========================================")
+    println("========== BUILDING L1 I-CACHE =========")
+    println("========================================")
+    println("Parameters:")
+    println("-----------------------------------------")
+    println(f"Fetch Width     : ${fetchWidth}%-10d")
+    println(f"Ways            : ${ways}%-10d")
+    println(f"Sets            : ${sets}%-10d")
+    println(f"Block Size      : ${blockSizeBytes} B")
+    println("-----------------------------------------")
+    println(f"Total Consumed Memory (data): ${consumedKBData}%.2f KB")
+    println(f"Total Consumed Memory : ${consumedKB}%.2f KB")
+    println("=========================================")
+    println("\n\n")
+
 
     val io = IO(new Bundle{
         val CPU_request         =     Flipped(Decoupled(new frontend_memory_request(coreParameters)))            // Inputs from CPU
