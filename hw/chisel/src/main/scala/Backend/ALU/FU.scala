@@ -40,7 +40,8 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     import FUParam._
     val io = IO(new Bundle{
         // FLUSH
-        val flush         =   Input(Bool())
+        val flush = Flipped(ValidIO(new flush(coreParameters)))
+
 
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))

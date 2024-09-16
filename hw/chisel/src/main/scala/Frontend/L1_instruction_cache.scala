@@ -105,7 +105,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
         val CPU_request         =     Flipped(Decoupled(new frontend_memory_request(coreParameters)))            // Inputs from CPU
         val CPU_response        =     Decoupled(new fetch_packet(coreParameters))                       // TO CPU
 
-        val kill                =     Input(Bool())                                                 // flush in progress request(s) 
+        val flush               =     Flipped(ValidIO(new flush(coreParameters)))
+
     })
 
 
@@ -176,7 +177,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
         is(cacheState.Active){  // Wait for request
 
-            when(miss===1.B && io.kill === 0.U){           // Buffer current request, stall cache, go to wait state
+            when(miss===1.B && io.flush.valid === 0.U){           // Buffer current request, stall cache, go to wait state
 		        val read_accepted = AXI_read_request(request_addr, 0.U, L1_cacheLineSizeBytes.U)
                 when(read_accepted){
                     cache_state              := cacheState.Allocate
@@ -198,7 +199,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
         }
 
         is(cacheState.Allocate){    // wait for response
-            when(io.kill === 1.U){
+            when(io.flush.valid === 1.U){
                 cache_state := cacheState.Kill    // Ignore miss, go back to active.
                 cache_valid := 0.B
             }.otherwise{
@@ -221,7 +222,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
         }
 
         is(cacheState.Replay){
-            when(io.kill === 1.U){
+            when(io.flush.valid === 1.U){
                 cache_state := cacheState.Active    // Ignore miss, go back to active.
                 cache_valid := 0.B
             }.otherwise{
@@ -307,8 +308,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val replay_valid = Wire(Bool())
     replay_valid := cache_state === cacheState.Replay
 
-    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.kill) & !RegNext(reset.asBool)
-    miss    := (~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.kill) & !RegNext(reset.asBool)
+    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)
+    miss    := (~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)
 
     /////////////////////////////////////
     // Fetch Packet Selecting & Output //
@@ -349,7 +350,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     //////////////////
     // predecoded instruction & FTQ outputs passed through a skid buffer
 
-    CPU_response.valid     := (cache_valid || hit) && !(io.kill || RegNext(io.kill))
+    CPU_response.valid     := (cache_valid || hit) && !(io.flush.valid || RegNext(io.flush.valid))
 
     // For a new input to be accepted:
     // cache must be active
@@ -361,7 +362,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val CPU_response_skid_buffer         = Module(new Queue(new fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
     CPU_response_skid_buffer.io.enq                  <> CPU_response
-    CPU_response_skid_buffer.io.flush.get            <> io.kill
+    CPU_response_skid_buffer.io.flush.get            <> io.flush.valid
 
     CPU_response.bits.fetch_PC := fetch_PC_buf.addr
 

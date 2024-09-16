@@ -41,7 +41,8 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
     val io = IO(new Bundle{
-        val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
+        //val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
+        val flush                           =   Flipped(ValidIO(new flush(coreParameters)))
         val revert                          =   Flipped(ValidIO(new revert(coreParameters)))
 
         val prediction                      =   Flipped(Decoupled(new prediction(coreParameters)))           // BTB response
@@ -60,8 +61,6 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
     val flush_PC_mux           = Wire(UInt(32.W))
 
     // MUX ctrl
-    val is_misprediction       = Wire(Bool())
-    val is_violation           = Wire(Bool())
     val is_revert              = Wire(Bool())
     val flushing_event         = Wire(Bool())
     val use_BTB                = Wire(Bool())
@@ -76,19 +75,17 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
     val PC_increment           =   Wire(UInt(32.W))
 
     // FIXME: why do I reconstruct flush here....??
-    is_misprediction    := (io.commit.valid && io.commit.bits.is_misprediction)
-    is_violation        := (io.commit.valid)
     is_revert           := (io.revert.valid)
     is_branch           := (io.prediction.bits.br_type === br_type_t.BR)     && io.prediction.valid
     is_jalr             := (io.prediction.bits.br_type === br_type_t.JALR)   && io.prediction.valid
     is_ret              := (io.prediction.bits.br_type === br_type_t.RET)    && io.prediction.valid
     use_BTB             := (io.prediction.bits.hit && io.prediction.valid && !is_ret)
     use_RAS             := is_ret
-    flushing_event      := is_misprediction || is_revert 
+    flushing_event      := io.flush.valid || is_revert 
 
     // FLUSHING MUX //
-    when(io.commit.valid && (io.commit.bits.is_misprediction)){
-        flush_PC_mux := io.commit.bits.expected_PC
+    when(io.flush.valid){
+        flush_PC_mux := io.flush.bits.redirect_PC
     }.elsewhen(io.revert.valid){
         flush_PC_mux := io.revert.bits.PC
     }.otherwise(flush_PC_mux := 0.U)    // TODO: exception

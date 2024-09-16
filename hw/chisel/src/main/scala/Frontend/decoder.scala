@@ -85,10 +85,15 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_mul            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === AUIPC)
-    val needs_CSRs           =   0.B
+    val needs_CSRs           =   (instructionType === SYSTEM) && (FUNCT3 === 0x1.U || FUNCT3 === 0x2.U || FUNCT3 === 0x3.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
     val needs_ALU            =   ((instructionType === OP) &&
                                  ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
                                  (instructionType === OP_IMM) || (instructionType === LUI)
+
+
+    val FENCE    =   ((instructionType === MISC_MEM) && FUNCT3 === 0x0.U)
+
+
 
 
 
@@ -125,6 +130,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                                                         instructionType === STORE       || 
                                                         instructionType === BRANCH)     && 
                                                         io.instruction.valid
+
+
     io.decoded_instruction.bits.RD                   := PRD
     io.decoded_instruction.bits.PRDold               := DontCare
     io.decoded_instruction.bits.PRD                  := DontCare
@@ -134,6 +141,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     io.decoded_instruction.bits.FUNCT3               := FUNCT3
     io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
     io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
+    io.decoded_instruction.bits.FENCE                := FENCE       // FLUSH of ANY TYPE    (they all do the same thing)
     io.decoded_instruction.bits.IS_IMM               := IS_IMM   // subtract or arithmetic shift...
 
 
@@ -180,6 +188,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     io.decoded_instruction.bits.ROB_index            := 0.U
     io.decoded_instruction.bits.MOB_index            := 0.U
     io.decoded_instruction.bits.needs_ALU            := needs_ALU
+    io.decoded_instruction.bits.needs_memory         := needs_memory
     io.decoded_instruction.bits.needs_branch_unit    := needs_branch_unit
     io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
 
@@ -204,7 +213,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     }.elsewhen(needs_branch_unit){
         io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
-        io.decoded_instruction.bits.portID := 0.U
+        io.decoded_instruction.bits.portID := 2.U
     }.elsewhen(needs_div || needs_mul){
         io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_memory){
@@ -237,7 +246,7 @@ class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     val io = IO(new Bundle{
         // FLUSH
-        val flush                =  Input(Bool())
+        val flush = Flipped(ValidIO(new flush(coreParameters)))
 
         val fetch_packet         =  Flipped(Decoupled(new fetch_packet(coreParameters)))          // Fetch packet result (To Decoders)
 
@@ -269,7 +278,7 @@ class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
         io.fetch_packet.ready                            := io.decoded_fetch_packet.ready
     }
 
-    decoded_fetch_packet.valid                           := io.fetch_packet.valid && !io.flush
+    decoded_fetch_packet.valid                           := io.fetch_packet.valid && !io.flush.valid
     decoded_fetch_packet.bits.fetch_PC                   := io.fetch_packet.bits.fetch_PC
     decoded_fetch_packet.bits.valid_bits                 := io.fetch_packet.bits.valid_bits
     decoded_fetch_packet.bits.GHR                        := io.fetch_packet.bits.GHR
@@ -285,14 +294,14 @@ class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
 
     val decoded_fetch_packet_out_Q                      = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
-    decoded_fetch_packet.valid                          := (io.fetch_packet.fire) && !io.flush
+    decoded_fetch_packet.valid                          := (io.fetch_packet.fire) && !io.flush.valid
 
     decoded_fetch_packet.bits.prediction                := io.fetch_packet.bits.prediction
 
     decoded_fetch_packet_out_Q.io.enq                   <> decoded_fetch_packet
     decoded_fetch_packet_out_Q.io.deq                   <> io.decoded_fetch_packet
     decoded_fetch_packet_out_Q.io.deq.ready             := io.decoded_fetch_packet.ready
-    decoded_fetch_packet_out_Q.io.flush.get             := io.flush
+    decoded_fetch_packet_out_Q.io.flush.get             := io.flush.valid
 
 
 

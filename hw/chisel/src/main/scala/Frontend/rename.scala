@@ -174,7 +174,7 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH
-        val flush                           =   Input(Bool())
+        val flush = Flipped(ValidIO(new flush(coreParameters)))
 
         // CHECKPOINT 
         val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
@@ -362,10 +362,10 @@ class rename(coreParameters:CoreParameters) extends Module{
     dontTouch(renamed_decoded_fetch_packet)
 
     renamed_decoded_fetch_packet_Q.io.enq                   <> renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_Q.io.enq.valid             := (renamed_decoded_fetch_packet.valid) && !io.flush
+    renamed_decoded_fetch_packet_Q.io.enq.valid             := (renamed_decoded_fetch_packet.valid) && !io.flush.valid
 
     renamed_decoded_fetch_packet_Q.io.deq                   <> io.renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_Q.io.flush.get             := io.flush
+    renamed_decoded_fetch_packet_Q.io.flush.get             := io.flush.valid
 
 
 
@@ -420,7 +420,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     formal_RAT_comb := formal_RAT
 
     val no_flush: Sequence = !(io.commit.valid && io.commit.bits.is_misprediction)
-    val no_flush2: Sequence = !io.flush
+    val no_flush2: Sequence = !io.flush.valid
     val always_ready: Sequence = (io.renamed_decoded_fetch_packet.ready === 1.B)    // FIXME: bug likely in backpressure
 
     AssumeProperty(no_flush2)

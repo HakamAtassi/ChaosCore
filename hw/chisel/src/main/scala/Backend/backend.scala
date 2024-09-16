@@ -50,7 +50,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                       =   Input(Bool())
+        val flush                       =   Flipped(ValidIO(new flush(coreParameters)))
 
         // pointers to MOB entries for updating later
         val reserved_pointers           =   Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry

@@ -40,7 +40,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH
-        val flush         =   Input(Bool())
+        val flush = Flipped(ValidIO(new flush(coreParameters)))
+
 
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
@@ -200,6 +201,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val ALU_input_valid                     =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_ALU
     val branch_unit_input_valid             =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_branch_unit
     val mult_unit_input_valid               =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.MULTIPLY
+    val AGU_input_valid                      =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_memory
+    
 
 
     dontTouch(ALU_input_valid)
@@ -214,7 +217,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     // ALU pipelined; always ready
     io.FU_input.ready       :=  1.B    
     io.FU_output            :=  DontCare
-    io.FU_output.valid      :=  RegNext(input_valid && !io.flush) && !io.flush
+    io.FU_output.valid      :=  RegNext(input_valid && !io.flush.valid) && !io.flush.valid
 
 }
 

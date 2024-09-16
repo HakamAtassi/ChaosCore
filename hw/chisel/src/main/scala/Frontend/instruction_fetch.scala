@@ -39,7 +39,8 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH
-        val flush                 =   Input(Bool())
+        val flush                 =   Flipped(ValidIO(new flush(coreParameters)))
+
         val commit                =   Flipped(ValidIO(new commit(coreParameters)))
         val memory_response       =   Flipped(Decoupled(new fetch_packet(coreParameters)))               // TO CPU
 
@@ -83,7 +84,7 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     //////////////
     // PC ARBIT //
     //////////////
-    PC_gen.io.commit            <> io.commit
+    PC_gen.io.flush            <> io.flush
     PC_gen.io.prediction        <> bp.io.prediction
     PC_gen.io.RAS_read          <> bp.io.RAS_read
     PC_gen.io.revert            <> predecoder.io.revert
@@ -115,11 +116,11 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     /////////////
     // FLUSHES //
     /////////////
-    BTB_Q.io.flush.get                :=  io.flush || io.revert.valid
-    PC_Q.io.flush.get                 :=  io.flush || io.revert.valid
-    instruction_Q.io.flush.get        :=  io.flush || io.revert.valid
-    bp.io.flush                       :=  io.flush || io.revert.valid
-    predecoder.io.flush               :=  io.flush // NO REVERT HERE 
+    BTB_Q.io.flush.get                :=  io.flush.valid || io.revert.valid
+    PC_Q.io.flush.get                 :=  io.flush.valid || io.revert.valid
+    instruction_Q.io.flush.get        :=  io.flush.valid || io.revert.valid
+    bp.io.flush                       :=  io.flush.valid || io.revert.valid
+    predecoder.io.flush               :=  io.flush.valid // NO REVERT HERE 
 
     /////////////
     // OUTPUTS //

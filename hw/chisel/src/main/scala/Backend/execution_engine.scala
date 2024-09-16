@@ -39,7 +39,7 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     val portCount = FUParamSeq.length
 
     val io = IO(new Bundle{
-        val flush         =   Input(Bool())
+        val flush        =    Flipped(ValidIO(new flush(coreParameters)))
 
         val FU_input      =   Vec(portCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
         

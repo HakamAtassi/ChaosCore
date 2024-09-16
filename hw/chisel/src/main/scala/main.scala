@@ -102,6 +102,7 @@ object Main extends App {
      //"../verilog/Core/SOC.v")
 
     removeYosysInvalid("../verilog/")
+    //fixHexPrint("../verilog/")
     //generate_sv_interfaces("src/main/scala/coreParameters.scala", "src/main/scala/bundles.scala")
 
 }
