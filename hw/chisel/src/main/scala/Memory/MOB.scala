@@ -52,7 +52,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                   =      Input(Bool())
+        val flush               =     Flipped(ValidIO(new flush(coreParameters)))
 
         // ALLOCATE //
         val reserve                 =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))         // reserve entry (rename)
@@ -470,7 +470,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
     ///////////
     // FLUSH //
     ///////////
-    when(io.flush){   //FIXME: 
+    when(io.flush.valid){   //FIXME: 
         for(i <- 0 until MOBEntries){
             MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
         }
@@ -488,7 +488,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
     val availalbe_MOB_entries = PopCount(~Cat(MOB.map(_.valid)))
     
     for (i <- 0 until fetchWidth){
-        io.reserve(i).ready := (availalbe_MOB_entries >= fetchWidth.U) && !io.flush
+        io.reserve(i).ready := (availalbe_MOB_entries >= fetchWidth.U) && !io.flush.valid
     }
 
 

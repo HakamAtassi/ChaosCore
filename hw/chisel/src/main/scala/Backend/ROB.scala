@@ -27,6 +27,10 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+
+
+
+
 package ChaosCore
 
 import chisel3._
@@ -40,7 +44,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                       =   Input(Bool())
 
         // ALLOCATE //
         val ROB_packet                  =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
@@ -52,6 +55,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val commit                      =   ValidIO(new commit(coreParameters))
         val partial_commit              =   Output(new partial_commit(coreParameters))
         val ROB_index                   =   Output(UInt(log2Ceil(ROBEntries).W))
+
+
+        // FLUSH 
+        val flush = ValidIO(new flush(coreParameters)) 
 
 
         // PC FILE //
@@ -112,7 +119,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         row_valid_mem(front_pointer(pointer_width-2, 0)) := 0.B
     }
 
-    when(io.flush){
+    when(io.flush.valid){
         row_valid_mem := Seq.fill(ROBEntries)(0.B)
     }
 
@@ -288,7 +295,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     
     
     val commit_resolved = Wire(Vec(fetchWidth, new resolved_branch(coreParameters)))
-    //val fwd_commit_resolved = Wire(Vec(fetchWidth, new prediction(coreParameters)))
 
     dontTouch(commit_resolved)
 
@@ -299,15 +305,14 @@ class ROB(coreParameters:CoreParameters) extends Module{
         FU_resolved_prediction.br_type  := DontCare  //io.FU_outputs(i).bits.
         FU_resolved_prediction.hit      := DontCare  // FIXME: what is this for? 
 
-
         commit_resolved(i) := fetch_resolved_banks(i).read(front_index + commit_valid)
         // allocate
         when(io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U)){
             fetch_resolved_banks(i).write(io.FU_outputs(0).bits.ROB_index, FU_resolved_prediction)
 
-            when(RegNext(io.FU_outputs(0).bits.ROB_index === front_index && io.FU_outputs(0).bits.fetch_packet_index === i.U)){
-                commit_resolved(i.U) := RegNext(FU_resolved_prediction)
-            }
+        }
+        when(RegNext(io.FU_outputs(0).bits.ROB_index === front_index && io.FU_outputs(0).bits.fetch_packet_index === i.U) && RegNext(io.FU_outputs(0).valid)){
+            commit_resolved(i.U) := RegNext(FU_resolved_prediction)
         }
     }
 
@@ -445,8 +450,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }
 
 
-    // Check for misprediction
-    //when((expected_PC =/= commit_prediction.target) && commit_valid && has_taken_branch) {
 
     val resolved_br_mask = Wire(Vec(fetchWidth, Bool()))
     resolved_br_mask := commit_resolved.map(_.T_NT)
@@ -460,19 +463,34 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val has_branch = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_entry_banks(i).io.readDataB.is_branch}).reduce(_ || _)
 
 
+
+    ////////////////////////////////
+    // CONTROL FLOW REDIRECT LOOP //
+    ////////////////////////////////
+
+    val flush = Wire(new flush(coreParameters))
+
+    flush.is_misprediction    := 0.B
+    flush.is_exception        := 0.B
+    flush.is_fence            := 0.B
+    flush.is_CSR              := 0.B
+
+    flush.flushing_PC         := 0.U
+    flush.redirect_PC         := 0.U
+
+
     dontTouch(correct_prediction)
     dontTouch(has_branch)
-    val test = Wire(UInt(32.W))
-
-    test := 0.U
-
-
-    dontTouch(test)
 
     when(!correct_prediction && commit_valid && has_branch) {
         commit.is_misprediction      := 1.B
         commit.br_type               := commit_resolved(earliest_taken_index).br_type
         commit.fetch_packet_index    := earliest_taken_index
+
+
+        flush.is_misprediction      := 1.B
+
+
         for(i <- fetchWidth-1 to 0 by - 1){
             val is_valid  = ROB_output.ROB_entries(i).valid
             val is_branch = ROB_entry_banks(i).io.readDataB.is_branch
@@ -481,23 +499,44 @@ class ROB(coreParameters:CoreParameters) extends Module{
                     // branch was actually taken and prediction was not taken
                     // set expected PC to the computed address
                     commit.expected_PC := commit_resolved(i).target
-                    test := commit_resolved(i).target
+                    flush.redirect_PC  := commit_resolved(i).target
                 }.otherwise{
                     // branch was actually not taken and prediction was taken
                     // set expected PC to the branch + 4.U
                     commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
-                    test := ROB_output.fetch_PC + (i*4).U + 4.U
+                    flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
                 }
             }
         }
     }
 
+    //////////////////
+    // FLUSH SIGNAL //
+    //////////////////
+
+    //when(commit_valid){
+        //commit.is_misprediction      := 0.B
+        //commit.expected_PC           := expected_PC
+        //commit.br_mask               := PriorityEncoderOH(has_taken_branch_vec)
+        //commit.T_NT                  := commit_resolved(earliest_taken_index).T_NT
+        //commit.br_type               := commit_resolved(earliest_taken_index).br_type
+        //commit.fetch_packet_index    := earliest_taken_index
+    //}
+
+
 
     dontTouch(commit)
+
+
+
+
 
     io.commit.bits      := RegNext(commit)
     io.commit.valid     := RegNext(commit_valid)
     io.partial_commit   := RegNext(partial_commit)
+    
+    io.flush.valid      := RegNext(flush.is_valid())
+    io.flush.bits       := RegNext(flush)
 
 
     // COMMIT //
@@ -549,10 +588,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
                 when(arch_RD_valid && is_completed && io.partial_commit.valid(i) && arch_RD=/=0.U){
                     // PC RD data
-                    printf("core   0: 3 0x%x (0x00000000) x%d  0x%x \n", instruction_PC, arch_RD, RD_data);
+                    printf("core   0: 3 0x%x x%d 0x%x\n", instruction_PC, arch_RD, RD_data);
                   //printf("core   0: 3 0x80000004 (0x00000093) x1  0x00000000", )
                 }.elsewhen(is_completed && io.partial_commit.valid(i)){
-                    printf("core   0: 3 0x%x (0x00000000)  \n", instruction_PC)
+                    printf("core   0: 3 0x%x\n", instruction_PC)
                 }
             }
         }

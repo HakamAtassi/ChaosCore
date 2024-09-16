@@ -31,7 +31,6 @@
 module ROB(
   input         clock,
                 reset,
-                io_flush,
   output        io_ROB_packet_ready,
   input         io_ROB_packet_valid,
   input  [31:0] io_ROB_packet_bits_fetch_PC,
@@ -56,8 +55,10 @@ module ROB(
   input         io_ROB_packet_bits_decoded_instruction_0_needs_ALU,
                 io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit,
                 io_ROB_packet_bits_decoded_instruction_0_needs_CSRs,
+                io_ROB_packet_bits_decoded_instruction_0_needs_memory,
                 io_ROB_packet_bits_decoded_instruction_0_SUBTRACT,
                 io_ROB_packet_bits_decoded_instruction_0_MULTIPLY,
+                io_ROB_packet_bits_decoded_instruction_0_FENCE,
                 io_ROB_packet_bits_decoded_instruction_0_IS_IMM,
                 io_ROB_packet_bits_decoded_instruction_0_mem_signed,
   input  [1:0]  io_ROB_packet_bits_decoded_instruction_0_memory_type,
@@ -83,8 +84,10 @@ module ROB(
   input         io_ROB_packet_bits_decoded_instruction_1_needs_ALU,
                 io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit,
                 io_ROB_packet_bits_decoded_instruction_1_needs_CSRs,
+                io_ROB_packet_bits_decoded_instruction_1_needs_memory,
                 io_ROB_packet_bits_decoded_instruction_1_SUBTRACT,
                 io_ROB_packet_bits_decoded_instruction_1_MULTIPLY,
+                io_ROB_packet_bits_decoded_instruction_1_FENCE,
                 io_ROB_packet_bits_decoded_instruction_1_IS_IMM,
                 io_ROB_packet_bits_decoded_instruction_1_mem_signed,
   input  [1:0]  io_ROB_packet_bits_decoded_instruction_1_memory_type,
@@ -110,8 +113,10 @@ module ROB(
   input         io_ROB_packet_bits_decoded_instruction_2_needs_ALU,
                 io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit,
                 io_ROB_packet_bits_decoded_instruction_2_needs_CSRs,
+                io_ROB_packet_bits_decoded_instruction_2_needs_memory,
                 io_ROB_packet_bits_decoded_instruction_2_SUBTRACT,
                 io_ROB_packet_bits_decoded_instruction_2_MULTIPLY,
+                io_ROB_packet_bits_decoded_instruction_2_FENCE,
                 io_ROB_packet_bits_decoded_instruction_2_IS_IMM,
                 io_ROB_packet_bits_decoded_instruction_2_mem_signed,
   input  [1:0]  io_ROB_packet_bits_decoded_instruction_2_memory_type,
@@ -137,8 +142,10 @@ module ROB(
   input         io_ROB_packet_bits_decoded_instruction_3_needs_ALU,
                 io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit,
                 io_ROB_packet_bits_decoded_instruction_3_needs_CSRs,
+                io_ROB_packet_bits_decoded_instruction_3_needs_memory,
                 io_ROB_packet_bits_decoded_instruction_3_SUBTRACT,
                 io_ROB_packet_bits_decoded_instruction_3_MULTIPLY,
+                io_ROB_packet_bits_decoded_instruction_3_FENCE,
                 io_ROB_packet_bits_decoded_instruction_3_IS_IMM,
                 io_ROB_packet_bits_decoded_instruction_3_mem_signed,
   input  [1:0]  io_ROB_packet_bits_decoded_instruction_3_memory_type,
@@ -280,6 +287,13 @@ module ROB(
                 io_partial_commit_PRDold_2,
                 io_partial_commit_PRDold_3,
   output [5:0]  io_ROB_index,
+  output        io_flush_valid,
+                io_flush_bits_is_misprediction,
+                io_flush_bits_is_exception,
+                io_flush_bits_is_fence,
+                io_flush_bits_is_CSR,
+  output [31:0] io_flush_bits_flushing_PC,
+                io_flush_bits_redirect_PC,
   input  [5:0]  io_PC_file_exec_addr,
   output [31:0] io_PC_file_exec_data
 );
@@ -414,12 +428,11 @@ module ROB(
   wire             resolved_br_mask_1 = commit_resolved_1_T_NT;
   wire             resolved_br_mask_2 = commit_resolved_2_T_NT;
   wire             resolved_br_mask_3 = commit_resolved_3_T_NT;
-  wire             fetch_resolved_banks_0_MPORT_1_en =
-    io_FU_outputs_0_valid & _ROB_WB_banks_0_io_writeEnableB_T;
   reg              REG;
+  reg              REG_1;
+  wire             _GEN_0 = REG & REG_1;
   reg  [31:0]      commit_resolved_0_REG_target;
   reg              commit_resolved_0_REG_T_NT;
-  wire             _GEN_0 = fetch_resolved_banks_0_MPORT_1_en & REG;
   wire             commit_resolved_0_hit =
     ~_GEN_0 & _fetch_resolved_banks_0_ext_R0_data[0];
   wire [31:0]      commit_resolved_0_target =
@@ -428,12 +441,11 @@ module ROB(
     _GEN_0 ? 3'h0 : _fetch_resolved_banks_0_ext_R0_data[35:33];
   assign commit_resolved_0_T_NT =
     _GEN_0 ? commit_resolved_0_REG_T_NT : _fetch_resolved_banks_0_ext_R0_data[36];
-  wire             fetch_resolved_banks_1_MPORT_2_en =
-    io_FU_outputs_0_valid & _ROB_WB_banks_1_io_writeEnableB_T;
-  reg              REG_1;
+  reg              REG_2;
+  reg              REG_3;
+  wire             _GEN_1 = REG_2 & REG_3;
   reg  [31:0]      commit_resolved_1_REG_target;
   reg              commit_resolved_1_REG_T_NT;
-  wire             _GEN_1 = fetch_resolved_banks_1_MPORT_2_en & REG_1;
   wire             commit_resolved_1_hit =
     ~_GEN_1 & _fetch_resolved_banks_1_ext_R0_data[0];
   wire [31:0]      commit_resolved_1_target =
@@ -442,12 +454,11 @@ module ROB(
     _GEN_1 ? 3'h0 : _fetch_resolved_banks_1_ext_R0_data[35:33];
   assign commit_resolved_1_T_NT =
     _GEN_1 ? commit_resolved_1_REG_T_NT : _fetch_resolved_banks_1_ext_R0_data[36];
-  wire             fetch_resolved_banks_2_MPORT_3_en =
-    io_FU_outputs_0_valid & _ROB_WB_banks_2_io_writeEnableB_T;
-  reg              REG_2;
+  reg              REG_4;
+  reg              REG_5;
+  wire             _GEN_2 = REG_4 & REG_5;
   reg  [31:0]      commit_resolved_2_REG_target;
   reg              commit_resolved_2_REG_T_NT;
-  wire             _GEN_2 = fetch_resolved_banks_2_MPORT_3_en & REG_2;
   wire             commit_resolved_2_hit =
     ~_GEN_2 & _fetch_resolved_banks_2_ext_R0_data[0];
   wire [31:0]      commit_resolved_2_target =
@@ -456,12 +467,11 @@ module ROB(
     _GEN_2 ? 3'h0 : _fetch_resolved_banks_2_ext_R0_data[35:33];
   assign commit_resolved_2_T_NT =
     _GEN_2 ? commit_resolved_2_REG_T_NT : _fetch_resolved_banks_2_ext_R0_data[36];
-  wire             fetch_resolved_banks_3_MPORT_4_en =
-    io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index);
-  reg              REG_3;
+  reg              REG_6;
+  reg              REG_7;
+  wire             _GEN_3 = REG_6 & REG_7;
   reg  [31:0]      commit_resolved_3_REG_target;
   reg              commit_resolved_3_REG_T_NT;
-  wire             _GEN_3 = fetch_resolved_banks_3_MPORT_4_en & REG_3;
   wire             commit_resolved_3_hit =
     ~_GEN_3 & _fetch_resolved_banks_3_ext_R0_data[0];
   wire [31:0]      commit_resolved_3_target =
@@ -700,26 +710,6 @@ module ROB(
                             : ROB_output_fetch_PC + 32'h10)
                        : expected_PC)
       : expected_PC;
-  wire [31:0]      test =
-    commit_is_misprediction
-      ? (_GEN_12
-           ? (commit_resolved_0_T_NT
-                ? commit_resolved_0_target
-                : ROB_output_fetch_PC + 32'h4)
-           : _GEN_11
-               ? (commit_resolved_1_T_NT
-                    ? commit_resolved_1_target
-                    : ROB_output_fetch_PC + 32'h8)
-               : _GEN_10
-                   ? (commit_resolved_2_T_NT
-                        ? commit_resolved_2_target
-                        : ROB_output_fetch_PC + 32'hC)
-                   : _GEN_9
-                       ? (commit_resolved_3_T_NT
-                            ? commit_resolved_3_target
-                            : ROB_output_fetch_PC + 32'h10)
-                       : 32'h0)
-      : 32'h0;
   reg  [31:0]      io_commit_bits_REG_fetch_PC;
   reg              io_commit_bits_REG_T_NT;
   reg  [5:0]       io_commit_bits_REG_ROB_index;
@@ -775,6 +765,9 @@ module ROB(
   reg  [6:0]       io_partial_commit_REG_PRDold_1;
   reg  [6:0]       io_partial_commit_REG_PRDold_2;
   reg  [6:0]       io_partial_commit_REG_PRDold_3;
+  reg              io_flush_valid_REG;
+  reg              io_flush_bits_REG_is_misprediction;
+  reg  [31:0]      io_flush_bits_REG_redirect_PC;
   assign io_ROB_packet_ready_0 =
     {1'h0,
      {1'h0,
@@ -1127,334 +1120,338 @@ module ROB(
       row_valid_mem_0 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h0 | io_flush | _GEN_78) & _GEN_14
-             : ~(io_flush | _GEN_78) & _GEN_14);
+             ? ~(commit_ROB_index == 6'h0 | io_flush_valid_REG | _GEN_78) & _GEN_14
+             : ~(io_flush_valid_REG | _GEN_78) & _GEN_14);
       row_valid_mem_1 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h1 | io_flush | _GEN_79) & _GEN_15
-             : ~(io_flush | _GEN_79) & _GEN_15);
+             ? ~(commit_ROB_index == 6'h1 | io_flush_valid_REG | _GEN_79) & _GEN_15
+             : ~(io_flush_valid_REG | _GEN_79) & _GEN_15);
       row_valid_mem_2 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h2 | io_flush | _GEN_80) & _GEN_16
-             : ~(io_flush | _GEN_80) & _GEN_16);
+             ? ~(commit_ROB_index == 6'h2 | io_flush_valid_REG | _GEN_80) & _GEN_16
+             : ~(io_flush_valid_REG | _GEN_80) & _GEN_16);
       row_valid_mem_3 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h3 | io_flush | _GEN_81) & _GEN_17
-             : ~(io_flush | _GEN_81) & _GEN_17);
+             ? ~(commit_ROB_index == 6'h3 | io_flush_valid_REG | _GEN_81) & _GEN_17
+             : ~(io_flush_valid_REG | _GEN_81) & _GEN_17);
       row_valid_mem_4 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h4 | io_flush | _GEN_82) & _GEN_18
-             : ~(io_flush | _GEN_82) & _GEN_18);
+             ? ~(commit_ROB_index == 6'h4 | io_flush_valid_REG | _GEN_82) & _GEN_18
+             : ~(io_flush_valid_REG | _GEN_82) & _GEN_18);
       row_valid_mem_5 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h5 | io_flush | _GEN_83) & _GEN_19
-             : ~(io_flush | _GEN_83) & _GEN_19);
+             ? ~(commit_ROB_index == 6'h5 | io_flush_valid_REG | _GEN_83) & _GEN_19
+             : ~(io_flush_valid_REG | _GEN_83) & _GEN_19);
       row_valid_mem_6 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h6 | io_flush | _GEN_84) & _GEN_20
-             : ~(io_flush | _GEN_84) & _GEN_20);
+             ? ~(commit_ROB_index == 6'h6 | io_flush_valid_REG | _GEN_84) & _GEN_20
+             : ~(io_flush_valid_REG | _GEN_84) & _GEN_20);
       row_valid_mem_7 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h7 | io_flush | _GEN_85) & _GEN_21
-             : ~(io_flush | _GEN_85) & _GEN_21);
+             ? ~(commit_ROB_index == 6'h7 | io_flush_valid_REG | _GEN_85) & _GEN_21
+             : ~(io_flush_valid_REG | _GEN_85) & _GEN_21);
       row_valid_mem_8 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h8 | io_flush | _GEN_86) & _GEN_22
-             : ~(io_flush | _GEN_86) & _GEN_22);
+             ? ~(commit_ROB_index == 6'h8 | io_flush_valid_REG | _GEN_86) & _GEN_22
+             : ~(io_flush_valid_REG | _GEN_86) & _GEN_22);
       row_valid_mem_9 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h9 | io_flush | _GEN_87) & _GEN_23
-             : ~(io_flush | _GEN_87) & _GEN_23);
+             ? ~(commit_ROB_index == 6'h9 | io_flush_valid_REG | _GEN_87) & _GEN_23
+             : ~(io_flush_valid_REG | _GEN_87) & _GEN_23);
       row_valid_mem_10 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'hA | io_flush | _GEN_88) & _GEN_24
-             : ~(io_flush | _GEN_88) & _GEN_24);
+             ? ~(commit_ROB_index == 6'hA | io_flush_valid_REG | _GEN_88) & _GEN_24
+             : ~(io_flush_valid_REG | _GEN_88) & _GEN_24);
       row_valid_mem_11 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'hB | io_flush | _GEN_89) & _GEN_25
-             : ~(io_flush | _GEN_89) & _GEN_25);
+             ? ~(commit_ROB_index == 6'hB | io_flush_valid_REG | _GEN_89) & _GEN_25
+             : ~(io_flush_valid_REG | _GEN_89) & _GEN_25);
       row_valid_mem_12 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'hC | io_flush | _GEN_90) & _GEN_26
-             : ~(io_flush | _GEN_90) & _GEN_26);
+             ? ~(commit_ROB_index == 6'hC | io_flush_valid_REG | _GEN_90) & _GEN_26
+             : ~(io_flush_valid_REG | _GEN_90) & _GEN_26);
       row_valid_mem_13 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'hD | io_flush | _GEN_91) & _GEN_27
-             : ~(io_flush | _GEN_91) & _GEN_27);
+             ? ~(commit_ROB_index == 6'hD | io_flush_valid_REG | _GEN_91) & _GEN_27
+             : ~(io_flush_valid_REG | _GEN_91) & _GEN_27);
       row_valid_mem_14 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'hE | io_flush | _GEN_92) & _GEN_28
-             : ~(io_flush | _GEN_92) & _GEN_28);
+             ? ~(commit_ROB_index == 6'hE | io_flush_valid_REG | _GEN_92) & _GEN_28
+             : ~(io_flush_valid_REG | _GEN_92) & _GEN_28);
       row_valid_mem_15 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'hF | io_flush | _GEN_93) & _GEN_29
-             : ~(io_flush | _GEN_93) & _GEN_29);
+             ? ~(commit_ROB_index == 6'hF | io_flush_valid_REG | _GEN_93) & _GEN_29
+             : ~(io_flush_valid_REG | _GEN_93) & _GEN_29);
       row_valid_mem_16 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h10 | io_flush | _GEN_94) & _GEN_30
-             : ~(io_flush | _GEN_94) & _GEN_30);
+             ? ~(commit_ROB_index == 6'h10 | io_flush_valid_REG | _GEN_94) & _GEN_30
+             : ~(io_flush_valid_REG | _GEN_94) & _GEN_30);
       row_valid_mem_17 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h11 | io_flush | _GEN_95) & _GEN_31
-             : ~(io_flush | _GEN_95) & _GEN_31);
+             ? ~(commit_ROB_index == 6'h11 | io_flush_valid_REG | _GEN_95) & _GEN_31
+             : ~(io_flush_valid_REG | _GEN_95) & _GEN_31);
       row_valid_mem_18 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h12 | io_flush | _GEN_96) & _GEN_32
-             : ~(io_flush | _GEN_96) & _GEN_32);
+             ? ~(commit_ROB_index == 6'h12 | io_flush_valid_REG | _GEN_96) & _GEN_32
+             : ~(io_flush_valid_REG | _GEN_96) & _GEN_32);
       row_valid_mem_19 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h13 | io_flush | _GEN_97) & _GEN_33
-             : ~(io_flush | _GEN_97) & _GEN_33);
+             ? ~(commit_ROB_index == 6'h13 | io_flush_valid_REG | _GEN_97) & _GEN_33
+             : ~(io_flush_valid_REG | _GEN_97) & _GEN_33);
       row_valid_mem_20 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h14 | io_flush | _GEN_98) & _GEN_34
-             : ~(io_flush | _GEN_98) & _GEN_34);
+             ? ~(commit_ROB_index == 6'h14 | io_flush_valid_REG | _GEN_98) & _GEN_34
+             : ~(io_flush_valid_REG | _GEN_98) & _GEN_34);
       row_valid_mem_21 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h15 | io_flush | _GEN_99) & _GEN_35
-             : ~(io_flush | _GEN_99) & _GEN_35);
+             ? ~(commit_ROB_index == 6'h15 | io_flush_valid_REG | _GEN_99) & _GEN_35
+             : ~(io_flush_valid_REG | _GEN_99) & _GEN_35);
       row_valid_mem_22 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h16 | io_flush | _GEN_100) & _GEN_36
-             : ~(io_flush | _GEN_100) & _GEN_36);
+             ? ~(commit_ROB_index == 6'h16 | io_flush_valid_REG | _GEN_100) & _GEN_36
+             : ~(io_flush_valid_REG | _GEN_100) & _GEN_36);
       row_valid_mem_23 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h17 | io_flush | _GEN_101) & _GEN_37
-             : ~(io_flush | _GEN_101) & _GEN_37);
+             ? ~(commit_ROB_index == 6'h17 | io_flush_valid_REG | _GEN_101) & _GEN_37
+             : ~(io_flush_valid_REG | _GEN_101) & _GEN_37);
       row_valid_mem_24 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h18 | io_flush | _GEN_102) & _GEN_38
-             : ~(io_flush | _GEN_102) & _GEN_38);
+             ? ~(commit_ROB_index == 6'h18 | io_flush_valid_REG | _GEN_102) & _GEN_38
+             : ~(io_flush_valid_REG | _GEN_102) & _GEN_38);
       row_valid_mem_25 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h19 | io_flush | _GEN_103) & _GEN_39
-             : ~(io_flush | _GEN_103) & _GEN_39);
+             ? ~(commit_ROB_index == 6'h19 | io_flush_valid_REG | _GEN_103) & _GEN_39
+             : ~(io_flush_valid_REG | _GEN_103) & _GEN_39);
       row_valid_mem_26 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h1A | io_flush | _GEN_104) & _GEN_40
-             : ~(io_flush | _GEN_104) & _GEN_40);
+             ? ~(commit_ROB_index == 6'h1A | io_flush_valid_REG | _GEN_104) & _GEN_40
+             : ~(io_flush_valid_REG | _GEN_104) & _GEN_40);
       row_valid_mem_27 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h1B | io_flush | _GEN_105) & _GEN_41
-             : ~(io_flush | _GEN_105) & _GEN_41);
+             ? ~(commit_ROB_index == 6'h1B | io_flush_valid_REG | _GEN_105) & _GEN_41
+             : ~(io_flush_valid_REG | _GEN_105) & _GEN_41);
       row_valid_mem_28 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h1C | io_flush | _GEN_106) & _GEN_42
-             : ~(io_flush | _GEN_106) & _GEN_42);
+             ? ~(commit_ROB_index == 6'h1C | io_flush_valid_REG | _GEN_106) & _GEN_42
+             : ~(io_flush_valid_REG | _GEN_106) & _GEN_42);
       row_valid_mem_29 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h1D | io_flush | _GEN_107) & _GEN_43
-             : ~(io_flush | _GEN_107) & _GEN_43);
+             ? ~(commit_ROB_index == 6'h1D | io_flush_valid_REG | _GEN_107) & _GEN_43
+             : ~(io_flush_valid_REG | _GEN_107) & _GEN_43);
       row_valid_mem_30 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h1E | io_flush | _GEN_108) & _GEN_44
-             : ~(io_flush | _GEN_108) & _GEN_44);
+             ? ~(commit_ROB_index == 6'h1E | io_flush_valid_REG | _GEN_108) & _GEN_44
+             : ~(io_flush_valid_REG | _GEN_108) & _GEN_44);
       row_valid_mem_31 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h1F | io_flush | _GEN_109) & _GEN_45
-             : ~(io_flush | _GEN_109) & _GEN_45);
+             ? ~(commit_ROB_index == 6'h1F | io_flush_valid_REG | _GEN_109) & _GEN_45
+             : ~(io_flush_valid_REG | _GEN_109) & _GEN_45);
       row_valid_mem_32 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h20 | io_flush | _GEN_110) & _GEN_46
-             : ~(io_flush | _GEN_110) & _GEN_46);
+             ? ~(commit_ROB_index == 6'h20 | io_flush_valid_REG | _GEN_110) & _GEN_46
+             : ~(io_flush_valid_REG | _GEN_110) & _GEN_46);
       row_valid_mem_33 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h21 | io_flush | _GEN_111) & _GEN_47
-             : ~(io_flush | _GEN_111) & _GEN_47);
+             ? ~(commit_ROB_index == 6'h21 | io_flush_valid_REG | _GEN_111) & _GEN_47
+             : ~(io_flush_valid_REG | _GEN_111) & _GEN_47);
       row_valid_mem_34 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h22 | io_flush | _GEN_112) & _GEN_48
-             : ~(io_flush | _GEN_112) & _GEN_48);
+             ? ~(commit_ROB_index == 6'h22 | io_flush_valid_REG | _GEN_112) & _GEN_48
+             : ~(io_flush_valid_REG | _GEN_112) & _GEN_48);
       row_valid_mem_35 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h23 | io_flush | _GEN_113) & _GEN_49
-             : ~(io_flush | _GEN_113) & _GEN_49);
+             ? ~(commit_ROB_index == 6'h23 | io_flush_valid_REG | _GEN_113) & _GEN_49
+             : ~(io_flush_valid_REG | _GEN_113) & _GEN_49);
       row_valid_mem_36 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h24 | io_flush | _GEN_114) & _GEN_50
-             : ~(io_flush | _GEN_114) & _GEN_50);
+             ? ~(commit_ROB_index == 6'h24 | io_flush_valid_REG | _GEN_114) & _GEN_50
+             : ~(io_flush_valid_REG | _GEN_114) & _GEN_50);
       row_valid_mem_37 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h25 | io_flush | _GEN_115) & _GEN_51
-             : ~(io_flush | _GEN_115) & _GEN_51);
+             ? ~(commit_ROB_index == 6'h25 | io_flush_valid_REG | _GEN_115) & _GEN_51
+             : ~(io_flush_valid_REG | _GEN_115) & _GEN_51);
       row_valid_mem_38 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h26 | io_flush | _GEN_116) & _GEN_52
-             : ~(io_flush | _GEN_116) & _GEN_52);
+             ? ~(commit_ROB_index == 6'h26 | io_flush_valid_REG | _GEN_116) & _GEN_52
+             : ~(io_flush_valid_REG | _GEN_116) & _GEN_52);
       row_valid_mem_39 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h27 | io_flush | _GEN_117) & _GEN_53
-             : ~(io_flush | _GEN_117) & _GEN_53);
+             ? ~(commit_ROB_index == 6'h27 | io_flush_valid_REG | _GEN_117) & _GEN_53
+             : ~(io_flush_valid_REG | _GEN_117) & _GEN_53);
       row_valid_mem_40 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h28 | io_flush | _GEN_118) & _GEN_54
-             : ~(io_flush | _GEN_118) & _GEN_54);
+             ? ~(commit_ROB_index == 6'h28 | io_flush_valid_REG | _GEN_118) & _GEN_54
+             : ~(io_flush_valid_REG | _GEN_118) & _GEN_54);
       row_valid_mem_41 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h29 | io_flush | _GEN_119) & _GEN_55
-             : ~(io_flush | _GEN_119) & _GEN_55);
+             ? ~(commit_ROB_index == 6'h29 | io_flush_valid_REG | _GEN_119) & _GEN_55
+             : ~(io_flush_valid_REG | _GEN_119) & _GEN_55);
       row_valid_mem_42 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h2A | io_flush | _GEN_120) & _GEN_56
-             : ~(io_flush | _GEN_120) & _GEN_56);
+             ? ~(commit_ROB_index == 6'h2A | io_flush_valid_REG | _GEN_120) & _GEN_56
+             : ~(io_flush_valid_REG | _GEN_120) & _GEN_56);
       row_valid_mem_43 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h2B | io_flush | _GEN_121) & _GEN_57
-             : ~(io_flush | _GEN_121) & _GEN_57);
+             ? ~(commit_ROB_index == 6'h2B | io_flush_valid_REG | _GEN_121) & _GEN_57
+             : ~(io_flush_valid_REG | _GEN_121) & _GEN_57);
       row_valid_mem_44 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h2C | io_flush | _GEN_122) & _GEN_58
-             : ~(io_flush | _GEN_122) & _GEN_58);
+             ? ~(commit_ROB_index == 6'h2C | io_flush_valid_REG | _GEN_122) & _GEN_58
+             : ~(io_flush_valid_REG | _GEN_122) & _GEN_58);
       row_valid_mem_45 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h2D | io_flush | _GEN_123) & _GEN_59
-             : ~(io_flush | _GEN_123) & _GEN_59);
+             ? ~(commit_ROB_index == 6'h2D | io_flush_valid_REG | _GEN_123) & _GEN_59
+             : ~(io_flush_valid_REG | _GEN_123) & _GEN_59);
       row_valid_mem_46 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h2E | io_flush | _GEN_124) & _GEN_60
-             : ~(io_flush | _GEN_124) & _GEN_60);
+             ? ~(commit_ROB_index == 6'h2E | io_flush_valid_REG | _GEN_124) & _GEN_60
+             : ~(io_flush_valid_REG | _GEN_124) & _GEN_60);
       row_valid_mem_47 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h2F | io_flush | _GEN_125) & _GEN_61
-             : ~(io_flush | _GEN_125) & _GEN_61);
+             ? ~(commit_ROB_index == 6'h2F | io_flush_valid_REG | _GEN_125) & _GEN_61
+             : ~(io_flush_valid_REG | _GEN_125) & _GEN_61);
       row_valid_mem_48 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h30 | io_flush | _GEN_126) & _GEN_62
-             : ~(io_flush | _GEN_126) & _GEN_62);
+             ? ~(commit_ROB_index == 6'h30 | io_flush_valid_REG | _GEN_126) & _GEN_62
+             : ~(io_flush_valid_REG | _GEN_126) & _GEN_62);
       row_valid_mem_49 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h31 | io_flush | _GEN_127) & _GEN_63
-             : ~(io_flush | _GEN_127) & _GEN_63);
+             ? ~(commit_ROB_index == 6'h31 | io_flush_valid_REG | _GEN_127) & _GEN_63
+             : ~(io_flush_valid_REG | _GEN_127) & _GEN_63);
       row_valid_mem_50 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h32 | io_flush | _GEN_128) & _GEN_64
-             : ~(io_flush | _GEN_128) & _GEN_64);
+             ? ~(commit_ROB_index == 6'h32 | io_flush_valid_REG | _GEN_128) & _GEN_64
+             : ~(io_flush_valid_REG | _GEN_128) & _GEN_64);
       row_valid_mem_51 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h33 | io_flush | _GEN_129) & _GEN_65
-             : ~(io_flush | _GEN_129) & _GEN_65);
+             ? ~(commit_ROB_index == 6'h33 | io_flush_valid_REG | _GEN_129) & _GEN_65
+             : ~(io_flush_valid_REG | _GEN_129) & _GEN_65);
       row_valid_mem_52 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h34 | io_flush | _GEN_130) & _GEN_66
-             : ~(io_flush | _GEN_130) & _GEN_66);
+             ? ~(commit_ROB_index == 6'h34 | io_flush_valid_REG | _GEN_130) & _GEN_66
+             : ~(io_flush_valid_REG | _GEN_130) & _GEN_66);
       row_valid_mem_53 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h35 | io_flush | _GEN_131) & _GEN_67
-             : ~(io_flush | _GEN_131) & _GEN_67);
+             ? ~(commit_ROB_index == 6'h35 | io_flush_valid_REG | _GEN_131) & _GEN_67
+             : ~(io_flush_valid_REG | _GEN_131) & _GEN_67);
       row_valid_mem_54 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h36 | io_flush | _GEN_132) & _GEN_68
-             : ~(io_flush | _GEN_132) & _GEN_68);
+             ? ~(commit_ROB_index == 6'h36 | io_flush_valid_REG | _GEN_132) & _GEN_68
+             : ~(io_flush_valid_REG | _GEN_132) & _GEN_68);
       row_valid_mem_55 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h37 | io_flush | _GEN_133) & _GEN_69
-             : ~(io_flush | _GEN_133) & _GEN_69);
+             ? ~(commit_ROB_index == 6'h37 | io_flush_valid_REG | _GEN_133) & _GEN_69
+             : ~(io_flush_valid_REG | _GEN_133) & _GEN_69);
       row_valid_mem_56 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h38 | io_flush | _GEN_134) & _GEN_70
-             : ~(io_flush | _GEN_134) & _GEN_70);
+             ? ~(commit_ROB_index == 6'h38 | io_flush_valid_REG | _GEN_134) & _GEN_70
+             : ~(io_flush_valid_REG | _GEN_134) & _GEN_70);
       row_valid_mem_57 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h39 | io_flush | _GEN_135) & _GEN_71
-             : ~(io_flush | _GEN_135) & _GEN_71);
+             ? ~(commit_ROB_index == 6'h39 | io_flush_valid_REG | _GEN_135) & _GEN_71
+             : ~(io_flush_valid_REG | _GEN_135) & _GEN_71);
       row_valid_mem_58 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h3A | io_flush | _GEN_136) & _GEN_72
-             : ~(io_flush | _GEN_136) & _GEN_72);
+             ? ~(commit_ROB_index == 6'h3A | io_flush_valid_REG | _GEN_136) & _GEN_72
+             : ~(io_flush_valid_REG | _GEN_136) & _GEN_72);
       row_valid_mem_59 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h3B | io_flush | _GEN_137) & _GEN_73
-             : ~(io_flush | _GEN_137) & _GEN_73);
+             ? ~(commit_ROB_index == 6'h3B | io_flush_valid_REG | _GEN_137) & _GEN_73
+             : ~(io_flush_valid_REG | _GEN_137) & _GEN_73);
       row_valid_mem_60 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h3C | io_flush | _GEN_138) & _GEN_74
-             : ~(io_flush | _GEN_138) & _GEN_74);
+             ? ~(commit_ROB_index == 6'h3C | io_flush_valid_REG | _GEN_138) & _GEN_74
+             : ~(io_flush_valid_REG | _GEN_138) & _GEN_74);
       row_valid_mem_61 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h3D | io_flush | _GEN_139) & _GEN_75
-             : ~(io_flush | _GEN_139) & _GEN_75);
+             ? ~(commit_ROB_index == 6'h3D | io_flush_valid_REG | _GEN_139) & _GEN_75
+             : ~(io_flush_valid_REG | _GEN_139) & _GEN_75);
       row_valid_mem_62 <=
         ~_GEN_142
         & (commit_valid
-             ? ~(commit_ROB_index == 6'h3E | io_flush | _GEN_140) & _GEN_76
-             : ~(io_flush | _GEN_140) & _GEN_76);
+             ? ~(commit_ROB_index == 6'h3E | io_flush_valid_REG | _GEN_140) & _GEN_76
+             : ~(io_flush_valid_REG | _GEN_140) & _GEN_76);
       row_valid_mem_63 <=
         ~_GEN_142
         & (commit_valid
-             ? ~((&commit_ROB_index) | io_flush | _GEN_141) & _GEN_77
-             : ~(io_flush | _GEN_141) & _GEN_77);
+             ? ~((&commit_ROB_index) | io_flush_valid_REG | _GEN_141) & _GEN_77
+             : ~(io_flush_valid_REG | _GEN_141) & _GEN_77);
     end
     REG <= _GEN_13 & _ROB_WB_banks_0_io_writeEnableB_T;
+    REG_1 <= io_FU_outputs_0_valid;
     commit_resolved_0_REG_target <= io_FU_outputs_0_bits_target_address;
     commit_resolved_0_REG_T_NT <= io_FU_outputs_0_bits_branch_taken;
-    REG_1 <= _GEN_13 & _ROB_WB_banks_1_io_writeEnableB_T;
+    REG_2 <= _GEN_13 & _ROB_WB_banks_1_io_writeEnableB_T;
+    REG_3 <= io_FU_outputs_0_valid;
     commit_resolved_1_REG_target <= io_FU_outputs_0_bits_target_address;
     commit_resolved_1_REG_T_NT <= io_FU_outputs_0_bits_branch_taken;
-    REG_2 <= _GEN_13 & _ROB_WB_banks_2_io_writeEnableB_T;
+    REG_4 <= _GEN_13 & _ROB_WB_banks_2_io_writeEnableB_T;
+    REG_5 <= io_FU_outputs_0_valid;
     commit_resolved_2_REG_target <= io_FU_outputs_0_bits_target_address;
     commit_resolved_2_REG_T_NT <= io_FU_outputs_0_bits_branch_taken;
-    REG_3 <= _GEN_13 & (&io_FU_outputs_0_bits_fetch_packet_index);
+    REG_6 <= _GEN_13 & (&io_FU_outputs_0_bits_fetch_packet_index);
+    REG_7 <= io_FU_outputs_0_valid;
     commit_resolved_3_REG_target <= io_FU_outputs_0_bits_target_address;
     commit_resolved_3_REG_T_NT <= io_FU_outputs_0_bits_branch_taken;
     io_commit_bits_REG_fetch_PC <= commit_fetch_PC;
@@ -1530,6 +1527,28 @@ module ROB(
     io_partial_commit_REG_PRDold_1 <= ROB_output_ROB_entries_1_PRDold;
     io_partial_commit_REG_PRDold_2 <= ROB_output_ROB_entries_2_PRDold;
     io_partial_commit_REG_PRDold_3 <= ROB_output_ROB_entries_3_PRDold;
+    io_flush_valid_REG <= commit_is_misprediction;
+    io_flush_bits_REG_is_misprediction <= commit_is_misprediction;
+    io_flush_bits_REG_redirect_PC <=
+      commit_is_misprediction
+        ? (_GEN_12
+             ? (commit_resolved_0_T_NT
+                  ? commit_resolved_0_target
+                  : ROB_output_fetch_PC + 32'h4)
+             : _GEN_11
+                 ? (commit_resolved_1_T_NT
+                      ? commit_resolved_1_target
+                      : ROB_output_fetch_PC + 32'h8)
+                 : _GEN_10
+                     ? (commit_resolved_2_T_NT
+                          ? commit_resolved_2_target
+                          : ROB_output_fetch_PC + 32'hC)
+                     : _GEN_9
+                         ? (commit_resolved_3_T_NT
+                              ? commit_resolved_3_target
+                              : ROB_output_fetch_PC + 32'h10)
+                         : 32'h0)
+        : 32'h0;
   end // always @(posedge)
   ROB_shared_mem shared_mem (
     .clock                                 (clock),
@@ -1773,7 +1792,7 @@ module ROB(
     .R0_clk  (clock),
     .R0_data (_fetch_resolved_banks_0_ext_R0_data),
     .W0_addr (io_FU_outputs_0_bits_ROB_index),
-    .W0_en   (fetch_resolved_banks_0_MPORT_1_en),
+    .W0_en   (io_FU_outputs_0_valid & _ROB_WB_banks_0_io_writeEnableB_T),
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
@@ -1783,7 +1802,7 @@ module ROB(
     .R0_clk  (clock),
     .R0_data (_fetch_resolved_banks_1_ext_R0_data),
     .W0_addr (io_FU_outputs_0_bits_ROB_index),
-    .W0_en   (fetch_resolved_banks_1_MPORT_2_en),
+    .W0_en   (io_FU_outputs_0_valid & _ROB_WB_banks_1_io_writeEnableB_T),
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
@@ -1793,7 +1812,7 @@ module ROB(
     .R0_clk  (clock),
     .R0_data (_fetch_resolved_banks_2_ext_R0_data),
     .W0_addr (io_FU_outputs_0_bits_ROB_index),
-    .W0_en   (fetch_resolved_banks_2_MPORT_3_en),
+    .W0_en   (io_FU_outputs_0_valid & _ROB_WB_banks_2_io_writeEnableB_T),
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
@@ -1803,7 +1822,7 @@ module ROB(
     .R0_clk  (clock),
     .R0_data (_fetch_resolved_banks_3_ext_R0_data),
     .W0_addr (io_FU_outputs_0_bits_ROB_index),
-    .W0_en   (fetch_resolved_banks_3_MPORT_4_en),
+    .W0_en   (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
@@ -1867,5 +1886,12 @@ module ROB(
   assign io_partial_commit_PRDold_2 = io_partial_commit_REG_PRDold_2;
   assign io_partial_commit_PRDold_3 = io_partial_commit_REG_PRDold_3;
   assign io_ROB_index = back_pointer[5:0];
+  assign io_flush_valid = io_flush_valid_REG;
+  assign io_flush_bits_is_misprediction = io_flush_bits_REG_is_misprediction;
+  assign io_flush_bits_is_exception = 1'h0;
+  assign io_flush_bits_is_fence = 1'h0;
+  assign io_flush_bits_is_CSR = 1'h0;
+  assign io_flush_bits_flushing_PC = 32'h0;
+  assign io_flush_bits_redirect_PC = io_flush_bits_REG_redirect_PC;
 endmodule
 

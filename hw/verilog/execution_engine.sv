@@ -31,7 +31,13 @@
 module execution_engine(
   input         clock,
                 reset,
-                io_flush,
+                io_flush_valid,
+                io_flush_bits_is_misprediction,
+                io_flush_bits_is_exception,
+                io_flush_bits_is_fence,
+                io_flush_bits_is_CSR,
+  input  [31:0] io_flush_bits_flushing_PC,
+                io_flush_bits_redirect_PC,
   output        io_FU_input_0_ready,
   input         io_FU_input_0_valid,
                 io_FU_input_0_bits_decoded_instruction_ready_bits_RS1_ready,
@@ -55,8 +61,10 @@ module execution_engine(
   input         io_FU_input_0_bits_decoded_instruction_needs_ALU,
                 io_FU_input_0_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_0_bits_decoded_instruction_needs_CSRs,
+                io_FU_input_0_bits_decoded_instruction_needs_memory,
                 io_FU_input_0_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_0_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_0_bits_decoded_instruction_FENCE,
                 io_FU_input_0_bits_decoded_instruction_IS_IMM,
                 io_FU_input_0_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_0_bits_decoded_instruction_memory_type,
@@ -87,8 +95,10 @@ module execution_engine(
   input         io_FU_input_1_bits_decoded_instruction_needs_ALU,
                 io_FU_input_1_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_1_bits_decoded_instruction_needs_CSRs,
+                io_FU_input_1_bits_decoded_instruction_needs_memory,
                 io_FU_input_1_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_1_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_1_bits_decoded_instruction_FENCE,
                 io_FU_input_1_bits_decoded_instruction_IS_IMM,
                 io_FU_input_1_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_1_bits_decoded_instruction_memory_type,
@@ -119,8 +129,10 @@ module execution_engine(
   input         io_FU_input_2_bits_decoded_instruction_needs_ALU,
                 io_FU_input_2_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_2_bits_decoded_instruction_needs_CSRs,
+                io_FU_input_2_bits_decoded_instruction_needs_memory,
                 io_FU_input_2_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_2_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_2_bits_decoded_instruction_FENCE,
                 io_FU_input_2_bits_decoded_instruction_IS_IMM,
                 io_FU_input_2_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_2_bits_decoded_instruction_memory_type,
@@ -150,8 +162,10 @@ module execution_engine(
   input         io_FU_input_3_bits_decoded_instruction_needs_ALU,
                 io_FU_input_3_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_3_bits_decoded_instruction_needs_CSRs,
+                io_FU_input_3_bits_decoded_instruction_needs_memory,
                 io_FU_input_3_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_3_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_3_bits_decoded_instruction_FENCE,
                 io_FU_input_3_bits_decoded_instruction_IS_IMM,
                 io_FU_input_3_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_3_bits_decoded_instruction_memory_type,
@@ -228,7 +242,17 @@ module execution_engine(
   FU FUs_0 (
     .clock                                                     (clock),
     .reset                                                     (reset),
-    .io_flush                                                  (io_flush),
+    .io_flush_valid                                            (io_flush_valid),
+    .io_flush_bits_is_misprediction
+      (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception
+      (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                                    (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                                      (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC
+      (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC
+      (io_flush_bits_redirect_PC),
     .io_FU_input_ready                                         (io_FU_input_0_ready),
     .io_FU_input_valid                                         (io_FU_input_0_valid),
     .io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready
@@ -273,10 +297,14 @@ module execution_engine(
       (io_FU_input_0_bits_decoded_instruction_needs_branch_unit),
     .io_FU_input_bits_decoded_instruction_needs_CSRs
       (io_FU_input_0_bits_decoded_instruction_needs_CSRs),
+    .io_FU_input_bits_decoded_instruction_needs_memory
+      (io_FU_input_0_bits_decoded_instruction_needs_memory),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_0_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_0_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_decoded_instruction_FENCE
+      (io_FU_input_0_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_0_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_mem_signed
@@ -325,7 +353,17 @@ module execution_engine(
   FU_1 FUs_1 (
     .clock                                                     (clock),
     .reset                                                     (reset),
-    .io_flush                                                  (io_flush),
+    .io_flush_valid                                            (io_flush_valid),
+    .io_flush_bits_is_misprediction
+      (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception
+      (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                                    (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                                      (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC
+      (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC
+      (io_flush_bits_redirect_PC),
     .io_FU_input_ready                                         (io_FU_input_1_ready),
     .io_FU_input_valid                                         (io_FU_input_1_valid),
     .io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready
@@ -370,10 +408,14 @@ module execution_engine(
       (io_FU_input_1_bits_decoded_instruction_needs_branch_unit),
     .io_FU_input_bits_decoded_instruction_needs_CSRs
       (io_FU_input_1_bits_decoded_instruction_needs_CSRs),
+    .io_FU_input_bits_decoded_instruction_needs_memory
+      (io_FU_input_1_bits_decoded_instruction_needs_memory),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_1_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_1_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_decoded_instruction_FENCE
+      (io_FU_input_1_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_1_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_mem_signed
@@ -422,7 +464,17 @@ module execution_engine(
   FU_2 FUs_2 (
     .clock                                                     (clock),
     .reset                                                     (reset),
-    .io_flush                                                  (io_flush),
+    .io_flush_valid                                            (io_flush_valid),
+    .io_flush_bits_is_misprediction
+      (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception
+      (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                                    (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                                      (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC
+      (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC
+      (io_flush_bits_redirect_PC),
     .io_FU_input_ready                                         (io_FU_input_2_ready),
     .io_FU_input_valid                                         (io_FU_input_2_valid),
     .io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready
@@ -467,10 +519,14 @@ module execution_engine(
       (io_FU_input_2_bits_decoded_instruction_needs_branch_unit),
     .io_FU_input_bits_decoded_instruction_needs_CSRs
       (io_FU_input_2_bits_decoded_instruction_needs_CSRs),
+    .io_FU_input_bits_decoded_instruction_needs_memory
+      (io_FU_input_2_bits_decoded_instruction_needs_memory),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_2_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_2_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_decoded_instruction_FENCE
+      (io_FU_input_2_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_2_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_mem_signed
@@ -518,8 +574,17 @@ module execution_engine(
   );
   FU_3 FUs_3 (
     .clock                                                     (clock),
-    .reset                                                     (reset),
-    .io_flush                                                  (io_flush),
+    .io_flush_valid                                            (io_flush_valid),
+    .io_flush_bits_is_misprediction
+      (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception
+      (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                                    (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                                      (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC
+      (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC
+      (io_flush_bits_redirect_PC),
     .io_FU_input_ready                                         (/* unused */),
     .io_FU_input_valid                                         (io_FU_input_3_valid),
     .io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready
@@ -564,10 +629,14 @@ module execution_engine(
       (io_FU_input_3_bits_decoded_instruction_needs_branch_unit),
     .io_FU_input_bits_decoded_instruction_needs_CSRs
       (io_FU_input_3_bits_decoded_instruction_needs_CSRs),
+    .io_FU_input_bits_decoded_instruction_needs_memory
+      (io_FU_input_3_bits_decoded_instruction_needs_memory),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_3_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_3_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_decoded_instruction_FENCE
+      (io_FU_input_3_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_3_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_mem_signed

@@ -109,7 +109,7 @@ module L1_instruction_cache(
   output [15:0] io_CPU_response_bits_GHR,
   output [6:0]  io_CPU_response_bits_NEXT,
                 io_CPU_response_bits_TOS,
-  input         io_kill
+  input         io_flush_valid
 );
 
   wire             CPU_response_valid;
@@ -164,7 +164,7 @@ module L1_instruction_cache(
   reg              replay_address_wr_en;
   reg  [31:0]      request_addr;
   reg              cache_valid;
-  wire             _GEN_16 = miss & ~io_kill;
+  wire             _GEN_16 = miss & ~io_flush_valid;
   wire             _GEN_17 = cache_state == 3'h1;
   wire             _GEN_18 = (|cache_state) ? _GEN_17 : _GEN_16;
   wire             m_axi_arvalid_0 =
@@ -172,17 +172,17 @@ module L1_instruction_cache(
   wire             _GEN_19 = cache_state == 3'h2;
   wire             _GEN_20 = cache_state == 3'h3;
   wire             _GEN_21 = ~(|cache_state) | _GEN_17;
-  assign _GEN = ~_GEN_21 & (_GEN_19 ? ~io_kill : _GEN_20);
+  assign _GEN = ~_GEN_21 & (_GEN_19 ? ~io_flush_valid : _GEN_20);
   wire [255:0]     axi_response =
     _GEN_21
       ? 256'h0
       : _GEN_19
-          ? (io_kill ? 256'h0 : _final_response_buffer_io_deq_bits_data)
+          ? (io_flush_valid ? 256'h0 : _final_response_buffer_io_deq_bits_data)
           : _GEN_20 ? _final_response_buffer_io_deq_bits_data : 256'h0;
   wire             axi_response_valid =
     ~_GEN_21
     & (_GEN_19
-         ? ~io_kill & _GEN & _final_response_buffer_io_deq_valid
+         ? ~io_flush_valid & _GEN & _final_response_buffer_io_deq_valid
          : _GEN_20 & _GEN & _final_response_buffer_io_deq_valid);
   wire             _current_address_T_1 = (|cache_state) | miss;
   wire [31:0]      current_address_addr =
@@ -241,7 +241,8 @@ module L1_instruction_cache(
   reg              CPU_response_bits_instructions_2_instruction_REG;
   reg              CPU_response_bits_instructions_3_instruction_REG;
   reg              CPU_response_valid_REG;
-  assign CPU_response_valid = (cache_valid | hit) & ~(io_kill | CPU_response_valid_REG);
+  assign CPU_response_valid =
+    (cache_valid | hit) & ~(io_flush_valid | CPU_response_valid_REG);
   wire             io_CPU_request_ready_0 = ~(|cache_state) & ~miss;
   always @(posedge clock) begin
     automatic logic _GEN_23 = ~W_done & m_axi_wready & m_axi_wvalid_0;
@@ -305,16 +306,16 @@ module L1_instruction_cache(
     hit_oh_vec_0_REG <= current_packet_tag;
     hit_oh_vec_1_REG <= current_packet_tag;
     hit_REG <= _miss_T_2 & ~(|cache_state);
-    hit_REG_1 <= io_kill;
+    hit_REG_1 <= io_flush_valid;
     hit_REG_2 <= reset;
     miss_REG <= _miss_T_2;
-    miss_REG_1 <= io_kill;
+    miss_REG_1 <= io_flush_valid;
     miss_REG_2 <= reset;
     CPU_response_bits_instructions_0_instruction_REG <= current_packet_fetch_packet;
     CPU_response_bits_instructions_1_instruction_REG <= current_packet_fetch_packet;
     CPU_response_bits_instructions_2_instruction_REG <= current_packet_fetch_packet;
     CPU_response_bits_instructions_3_instruction_REG <= current_packet_fetch_packet;
-    CPU_response_valid_REG <= io_kill;
+    CPU_response_valid_REG <= io_flush_valid;
     if (reset) begin
       AXI_REQUEST_STATE <= 3'h0;
       R_done <= 1'h0;
@@ -334,7 +335,7 @@ module L1_instruction_cache(
       _GEN_28 = m_axi_arready & m_axi_arvalid_0;
       _GEN_29 =
         cache_state == 3'h4
-        & (io_kill | CPU_response_valid & _CPU_response_skid_buffer_io_enq_ready);
+        & (io_flush_valid | CPU_response_valid & _CPU_response_skid_buffer_io_enq_ready);
       if (|AXI_REQUEST_STATE) begin
         automatic logic [7:0][2:0] _GEN_30;
         _GEN_30 =
@@ -380,7 +381,7 @@ module L1_instruction_cache(
             cache_state <= 3'h2;
         end
         else if (_GEN_19) begin
-          if (io_kill)
+          if (io_flush_valid)
             cache_state <= 3'h3;
           else if (axi_response_valid)
             cache_state <= 3'h4;
@@ -405,7 +406,7 @@ module L1_instruction_cache(
       end
       if (~_GEN_21) begin
         if (_GEN_19)
-          cache_valid <= ~io_kill & cache_valid;
+          cache_valid <= ~io_flush_valid & cache_valid;
         else
           cache_valid <= (_GEN_20 | ~_GEN_29) & cache_valid;
       end
@@ -540,7 +541,7 @@ module L1_instruction_cache(
     .io_deq_bits_GHR                         (io_CPU_response_bits_GHR),
     .io_deq_bits_NEXT                        (io_CPU_response_bits_NEXT),
     .io_deq_bits_TOS                         (io_CPU_response_bits_TOS),
-    .io_flush                                (io_kill)
+    .io_flush                                (io_flush_valid)
   );
   assign m_axi_awvalid = 1'h0;
   assign m_axi_awid = 8'h0;
