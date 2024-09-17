@@ -96,19 +96,19 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // Not a branch unit (all FUs share the same output channel)
     io.FU_output.bits.branch_valid          := 0.B
 
-    io.FU_output.bits.fetch_PC              := RegNext(io.FU_input.bits.fetch_PC)
-    io.FU_output.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
+    io.FU_output.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
+    io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     // Actual Outputs
-    io.FU_output.bits.PRD                   :=   RegNext(io.FU_input.bits.decoded_instruction.PRD)
-    io.FU_output.bits.RD_valid              :=   RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    io.FU_output.bits.RD_data               :=   arithmetic_result
+    io.FU_output.bits.PRD                   :=  RegNext(io.FU_input.bits.decoded_instruction.PRD)
+    io.FU_output.bits.RD_valid              :=  RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    io.FU_output.bits.RD_data               :=  arithmetic_result
 
 
-    io.FU_output.bits.MOB_index             :=   RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
-    io.FU_output.bits.address               :=   0.U
+    io.FU_output.bits.MOB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    io.FU_output.bits.address               :=  0.U
 
-    io.FU_output.bits.ROB_index             :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    io.FU_output.bits.ROB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
 
 
     input_valid                             :=  ALU_input_valid

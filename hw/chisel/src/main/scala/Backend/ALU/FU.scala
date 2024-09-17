@@ -40,14 +40,16 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     import FUParam._
     val io = IO(new Bundle{
         // FLUSH
-        val flush = Flipped(ValidIO(new flush(coreParameters)))
-
+        val flush         =   Flipped(ValidIO(new flush(coreParameters)))
 
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
         
         // Output
         val FU_output     =   ValidIO(new FU_output(coreParameters))
+
+        // partial_commit (for CSRs)
+        val partial_commit  =   Input(new partial_commit(coreParameters))
     }); dontTouch(io)
 
 
@@ -55,17 +57,25 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     val branch_unit     = if (supportsBranch)               Some(Module(new branch_unit(coreParameters))) else None
     val AGU             = if (supportsAddressGeneration)    Some(Module(new AGU(coreParameters))) else None
     val mul             = if (supportsMult || supportsDiv)  Some(Module(new mul_unit(coreParameters))) else None    // FIXME: for now, mult or div each generate support for both (cant have one without the other)
+    val CSR             = if (supportsCSRs)                 Some(Module(new CSRs(coreParameters))) else None    // FIXME: for now, mult or div each generate support for both (cant have one without the other)
 
     // assign inputs
     ALU.foreach         {ALU => ALU.io.FU_input                     <> io.FU_input }
     branch_unit.foreach {branch_unit => branch_unit.io.FU_input     <> io.FU_input }
     AGU.foreach         { AGU => AGU.io.FU_input                    <> io.FU_input }
     mul.foreach         { mul => mul.io.FU_input                    <> io.FU_input }
+    CSR.foreach         { CSR => CSR.io.FU_input                    <> io.FU_input }
 
+    // assign inputs
+    ALU.foreach         {ALU => ALU.io.partial_commit                     <> io.partial_commit }
+    branch_unit.foreach {branch_unit => branch_unit.io.partial_commit     <> io.partial_commit }
+    AGU.foreach         { AGU => AGU.io.partial_commit                    <> io.partial_commit }
+    mul.foreach         { mul => mul.io.partial_commit                    <> io.partial_commit }
+    CSR.foreach         { CSR => CSR.io.partial_commit                    <> io.partial_commit }
+    
 
     // route outputs
     io.FU_output := DontCare
-
 
 
     if(ALU.isDefined){
@@ -92,6 +102,12 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
         }
     }
 
+    if(CSR.isDefined){
+        when(CSR.get.io.FU_output.valid){
+            io.FU_output <> CSR.get.io.FU_output
+        }
+    }
+
 
     //////////////////
     // ASSIGN FLUSH //
@@ -100,6 +116,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     if(branch_unit.isDefined){branch_unit.get.io.flush  <> io.flush}
     if(AGU.isDefined){AGU.get.io.flush                  <> io.flush}
     if(mul.isDefined){mul.get.io.flush                  <> io.flush}
+    if(CSR.isDefined){CSR.get.io.flush                  <> io.flush}
 
 }
 

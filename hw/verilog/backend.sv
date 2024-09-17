@@ -2110,6 +2110,60 @@ module backend(
       (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC
       (io_flush_bits_redirect_PC),
+    .io_partial_commit_valid_0
+      (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (io_partial_commit_MOB_valid_3),
+    .io_partial_commit_RD_0                                      (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                                      (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                                      (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                                      (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (io_partial_commit_RD_valid_3),
+    .io_partial_commit_PRD_0
+      (io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1
+      (io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2
+      (io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3
+      (io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (io_partial_commit_PRDold_3),
     .io_FU_input_0_ready
       (_execution_engine_io_FU_input_0_ready),
     .io_FU_input_0_valid

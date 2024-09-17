@@ -39,11 +39,13 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     val portCount = FUParamSeq.length
 
     val io = IO(new Bundle{
-        val flush        =    Flipped(ValidIO(new flush(coreParameters)))
+        val flush           =   Flipped(ValidIO(new flush(coreParameters)))
 
-        val FU_input      =   Vec(portCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
+        val partial_commit  =   Input(new partial_commit(coreParameters))
+
+        val FU_input        =   Vec(portCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
         
-        val FU_output     =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+        val FU_output       =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
     })
 
     // FUs
@@ -52,6 +54,7 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until portCount){
         FUs(i).io.flush     <> io.flush
+        FUs(i).io.partial_commit    <> io.partial_commit
         FUs(i).io.FU_input  <> io.FU_input(i)
         FUs(i).io.FU_output <> io.FU_output(i)
     }

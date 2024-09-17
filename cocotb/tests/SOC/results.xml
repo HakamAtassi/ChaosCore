@@ -1,8 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1726467511" />
-    <testcase name="test_reset" classname="SOC_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/tests/SOC/SOC_cocotb.py" lineno="17" time="66.93365025520325" sim_time_ns="300009.001" ratio_time="4482.18496759301">
-      <failure message="Test failed with RANDOM_SEED=1726467511" />
-    </testcase>
-  </testsuite>
-</testsuites>

@@ -34,20 +34,23 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
+// General ALU/GALU
 class GALU(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     import InstructionType._
 
     val io = IO(new Bundle{
-        // FLUSH
-        val flush = Flipped(ValidIO(new flush(coreParameters)))
-
+        // Flush
+        val flush         =   Flipped(ValidIO(new flush(coreParameters)))
 
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
         
         // Output
         val FU_output     =   ValidIO(new FU_output(coreParameters))
+
+        // commit (for CSRs only)
+        val partial_commit  =   Input(new partial_commit(coreParameters))
     })
 
     // misaligned fetch exception ??
@@ -77,6 +80,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
 
     val arithmetic_result = RegInit(UInt(32.W), 0.U)
+
+    val CSR_addr = imm(11, 0).asUInt
 
 
     // Arithmetic Regs
@@ -201,7 +206,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val ALU_input_valid                     =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_ALU
     val branch_unit_input_valid             =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_branch_unit
     val mult_unit_input_valid               =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.MULTIPLY
-    val AGU_input_valid                      =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_memory
+    val AGU_input_valid                     =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_memory
+    val CSR_input_valid                     =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_CSRs
     
 
 

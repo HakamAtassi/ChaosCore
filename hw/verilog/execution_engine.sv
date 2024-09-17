@@ -38,6 +38,35 @@ module execution_engine(
                 io_flush_bits_is_CSR,
   input  [31:0] io_flush_bits_flushing_PC,
                 io_flush_bits_redirect_PC,
+  input         io_partial_commit_valid_0,
+                io_partial_commit_valid_1,
+                io_partial_commit_valid_2,
+                io_partial_commit_valid_3,
+  input  [5:0]  io_partial_commit_ROB_index,
+  input  [3:0]  io_partial_commit_MOB_index_0,
+                io_partial_commit_MOB_index_1,
+                io_partial_commit_MOB_index_2,
+                io_partial_commit_MOB_index_3,
+  input         io_partial_commit_MOB_valid_0,
+                io_partial_commit_MOB_valid_1,
+                io_partial_commit_MOB_valid_2,
+                io_partial_commit_MOB_valid_3,
+  input  [4:0]  io_partial_commit_RD_0,
+                io_partial_commit_RD_1,
+                io_partial_commit_RD_2,
+                io_partial_commit_RD_3,
+  input         io_partial_commit_RD_valid_0,
+                io_partial_commit_RD_valid_1,
+                io_partial_commit_RD_valid_2,
+                io_partial_commit_RD_valid_3,
+  input  [6:0]  io_partial_commit_PRD_0,
+                io_partial_commit_PRD_1,
+                io_partial_commit_PRD_2,
+                io_partial_commit_PRD_3,
+                io_partial_commit_PRDold_0,
+                io_partial_commit_PRDold_1,
+                io_partial_commit_PRDold_2,
+                io_partial_commit_PRDold_3,
   output        io_FU_input_0_ready,
   input         io_FU_input_0_valid,
                 io_FU_input_0_bits_decoded_instruction_ready_bits_RS1_ready,
@@ -348,7 +377,57 @@ module execution_engine(
     .io_FU_output_bits_ROB_index
       (io_FU_output_0_bits_ROB_index),
     .io_FU_output_bits_fetch_packet_index
-      (io_FU_output_0_bits_fetch_packet_index)
+      (io_FU_output_0_bits_fetch_packet_index),
+    .io_partial_commit_valid_0
+      (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (io_partial_commit_MOB_valid_3),
+    .io_partial_commit_RD_0                                    (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                                    (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                                    (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                                    (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (io_partial_commit_RD_valid_3),
+    .io_partial_commit_PRD_0                                   (io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1                                   (io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2                                   (io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3                                   (io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (io_partial_commit_PRDold_3)
   );
   FU_1 FUs_1 (
     .clock                                                     (clock),
@@ -459,7 +538,57 @@ module execution_engine(
     .io_FU_output_bits_ROB_index
       (io_FU_output_1_bits_ROB_index),
     .io_FU_output_bits_fetch_packet_index
-      (io_FU_output_1_bits_fetch_packet_index)
+      (io_FU_output_1_bits_fetch_packet_index),
+    .io_partial_commit_valid_0
+      (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (io_partial_commit_MOB_valid_3),
+    .io_partial_commit_RD_0                                    (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                                    (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                                    (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                                    (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (io_partial_commit_RD_valid_3),
+    .io_partial_commit_PRD_0                                   (io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1                                   (io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2                                   (io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3                                   (io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (io_partial_commit_PRDold_3)
   );
   FU_2 FUs_2 (
     .clock                                                     (clock),
@@ -570,7 +699,57 @@ module execution_engine(
     .io_FU_output_bits_ROB_index
       (io_FU_output_2_bits_ROB_index),
     .io_FU_output_bits_fetch_packet_index
-      (io_FU_output_2_bits_fetch_packet_index)
+      (io_FU_output_2_bits_fetch_packet_index),
+    .io_partial_commit_valid_0
+      (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (io_partial_commit_MOB_valid_3),
+    .io_partial_commit_RD_0                                    (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                                    (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                                    (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                                    (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (io_partial_commit_RD_valid_3),
+    .io_partial_commit_PRD_0                                   (io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1                                   (io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2                                   (io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3                                   (io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (io_partial_commit_PRDold_3)
   );
   FU_3 FUs_3 (
     .clock                                                     (clock),
@@ -680,7 +859,57 @@ module execution_engine(
     .io_FU_output_bits_ROB_index
       (io_FU_output_3_bits_ROB_index),
     .io_FU_output_bits_fetch_packet_index
-      (io_FU_output_3_bits_fetch_packet_index)
+      (io_FU_output_3_bits_fetch_packet_index),
+    .io_partial_commit_valid_0
+      (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (io_partial_commit_MOB_valid_3),
+    .io_partial_commit_RD_0                                    (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                                    (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                                    (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                                    (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (io_partial_commit_RD_valid_3),
+    .io_partial_commit_PRD_0                                   (io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1                                   (io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2                                   (io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3                                   (io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (io_partial_commit_PRDold_3)
   );
 endmodule
 

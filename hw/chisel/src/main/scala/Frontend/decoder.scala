@@ -80,7 +80,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                         (instructionType === LOAD)      || 
                         (instructionType === BRANCH)    || 
                         (instructionType === JAL)       || 
-                        (instructionType === JALR) 
+                        (instructionType === JALR)      ||
+                        (instructionType === SYSTEM)
 
     val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_mul            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
@@ -213,7 +214,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     }.elsewhen(needs_branch_unit){
         io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
-        io.decoded_instruction.bits.portID := 2.U
+        io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_div || needs_mul){
         io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_memory){
@@ -225,7 +226,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
     // Assign a reservation station
 
-    val is_INT   =   (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === LUI) || (instructionType === AUIPC)
+    val is_INT   =   (instructionType === SYSTEM) || (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === LUI) || (instructionType === AUIPC)
     val is_MEM   =   (instructionType === LOAD) || (instructionType === STORE)
 
     when(is_INT){

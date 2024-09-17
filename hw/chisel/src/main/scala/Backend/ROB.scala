@@ -361,9 +361,38 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // PARTIAL COMMIT //
     ////////////////////
 
+    // There are two commit signals:
+    // Commit & partial commit
+
+    // Commit refers to if the entire fetch packet is ready to commit.
+    // For this to be true, all instructions must be either invalid || store (or any other post commit instruction) || (valid & complete) 
+
+    // partial commit is a little different
+    // when commiting part of a fetch packet, you start from left to right
+    // the partial commit status is then determined on a case by case basis
+
+    // for any isntruction in a fetch packet to commit partially:
+    // (all prev done) && (no prev flush) && (no prev taken branch) && is_valid && is_complete
+    // All previous instructions in that fetch packet must be completed so that it can be guaranteed that the committing instruction is not after a taken branch or simiar
+    // Once it is determined that all previous instructions are complete, check the following:
+    // No prev flush => no previous instructions are trigger a flush directly, such as a CSR access or fence
+    // No prev taken branch => do not commit any instructions in a fetch packet after a branch
+    // is valid => the current instruction is valid
+    // is complete => the current instruction is complete
+
+
+
+
+
+
+
+
+
+    // commit signal V1
+
+
 
     val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
-
     val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
     val earliest_taken_index    = PriorityEncoder(has_taken_branch_vec.asUInt) 
     val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + (fetchWidth*4).U)
@@ -386,6 +415,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     dontTouch(pre_mispred)
 
+
     for(i <- 0 until fetchWidth){   // only commit if all previous instructions are valid, complete, not a misprediction, and not an exception, or just invalid
         val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
@@ -394,9 +424,11 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
 
 
-        pre_mispred(i) := (i.U <= earliest_taken_index && commit_valid) || !has_taken_branch 
+        val after_taken_branch   = (i.U > earliest_taken_index) && has_taken_branch
 
-        commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
+        pre_mispred(i) := (i.U <= earliest_taken_index && commit_row_complete.take(i+1).reduce(_ && _) ) || !has_taken_branch 
+
+        commit_row_complete(i) := (is_completed || is_invalid || after_taken_branch) && ROB_output.row_valid  // stores happen after they commit
 
         val allPreviousComplete = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
         partial_commit.valid(i)      := (is_completed) && is_valid  && ROB_output.row_valid && allPreviousComplete && pre_mispred(i)
@@ -411,6 +443,24 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }
 
     commit_valid := commit_row_complete.reduce(_ && _)
+
+
+
+
+    // commit signal V2
+
+//    // commit signal
+    //for(i <- 0 until fetchWidth){
+        //val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
+        //val is_invalid      = (!ROB_output.ROB_entries(i).valid)
+        //val is_valid        = (ROB_output.ROB_entries(i).valid)
+        //val is_load         = ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && ROB_output.ROB_entries(i).valid
+        //val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
+
+        //commit_row_complete(i) := (is_completed || is_invalid || after_taken_branch) && ROB_output.row_valid  // stores happen after they commit
+    //}
+
+
 
     ////////////
     // COMMIT //
@@ -514,20 +564,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // FLUSH SIGNAL //
     //////////////////
 
-    //when(commit_valid){
-        //commit.is_misprediction      := 0.B
-        //commit.expected_PC           := expected_PC
-        //commit.br_mask               := PriorityEncoderOH(has_taken_branch_vec)
-        //commit.T_NT                  := commit_resolved(earliest_taken_index).T_NT
-        //commit.br_type               := commit_resolved(earliest_taken_index).br_type
-        //commit.fetch_packet_index    := earliest_taken_index
-    //}
-
-
-
     dontTouch(commit)
-
-
 
 
 
