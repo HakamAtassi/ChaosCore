@@ -149,6 +149,7 @@ class commit(coreParameters:CoreParameters) extends Bundle{
 class flush(coreParameters:CoreParameters) extends Bundle{
     val is_misprediction    = Bool()
     val is_exception        = Bool()
+    
     val is_fence            = Bool()
     val is_CSR              = Bool()
 

@@ -237,7 +237,14 @@ class ROB(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         val ROB_entry_data = Wire(new ROB_entry(coreParameters))
         ROB_entry_data.valid                 := io.ROB_packet.bits.valid_bits(i)
-        ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
+
+
+        // FIXME: this is because right now AUIPC sets needs_branch_unit, which inturn tricks the ROB into thinking AUIPCs are branches. 
+        // The decoder is a mess right no
+        ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.BRANCH || 
+                                                io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.JALR   || 
+                                                io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.JAL
+        
         ROB_entry_data.is_flushing           := io.ROB_packet.bits.decoded_instruction(i).needs_CSRs  || io.ROB_packet.bits.decoded_instruction(i).FENCE 
         ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
         ROB_entry_data.MOB_index             := io.ROB_packet.bits.decoded_instruction(i).MOB_index
@@ -397,9 +404,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // FIXME: these should be named something like "taken_branch_OH"
     val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
     
-    val has_flushing_instr      = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && (ROB_entry_banks(i).io.readDataB.is_flushing)})
+    val has_flushing_instr_vec      = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && (ROB_entry_banks(i).io.readDataB.is_flushing)})
 
     val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
+    val has_flushing_instr      = has_flushing_instr_vec.reduce(_ || _)
     val earliest_taken_index    = PriorityEncoder(has_taken_branch_vec.asUInt) 
     val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + (fetchWidth*4).U)
 
@@ -442,7 +450,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         val partial_commit_all_prev_complete_val        = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
         val partial_commit_is_after_taken_branch_val    = if (i == 0) false.B else has_taken_branch_vec.take(i).reduce(_ || _)
-        val partial_commit_is_after_flushing_event_val  = if (i == 0) false.B else has_flushing_instr.take(i).reduce(_ || _)
+        val partial_commit_is_after_flushing_event_val  = if (i == 0) false.B else has_flushing_instr_vec.take(i).reduce(_ || _)
 
         partial_commit_all_prev_complete(i)        := partial_commit_all_prev_complete_val
         partial_commit_is_after_taken_branch(i)    := partial_commit_is_after_taken_branch_val
@@ -498,9 +506,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     commit.br_mask               := PriorityEncoderOH(has_taken_branch_vec)
 
     when(commit_valid){
-        commit.is_misprediction      := 0.B
-        commit.expected_PC           := expected_PC
-        commit.br_mask               := PriorityEncoderOH(has_taken_branch_vec)
         commit.T_NT                  := commit_resolved(earliest_taken_index).T_NT
         commit.br_type               := commit_resolved(earliest_taken_index).br_type
         commit.fetch_packet_index    := earliest_taken_index
@@ -537,33 +542,78 @@ class ROB(coreParameters:CoreParameters) extends Module{
     dontTouch(correct_prediction)
     dontTouch(has_branch)
 
-    when((!correct_prediction && commit_valid && has_branch)) {
-        commit.is_misprediction      := 1.B
-        commit.br_type               := commit_resolved(earliest_taken_index).br_type
-        commit.fetch_packet_index    := earliest_taken_index
+
+    // V2 //
+    // when current fetch packet has a branch or a flushing instr (fence, CSR)
+    // find the earliest violation (if any) and flush from that point onward
 
 
-        flush.is_misprediction      := 1.B
-
+    when((commit_valid && (has_branch || has_flushing_instr))) {
+        
 
         for(i <- fetchWidth-1 to 0 by - 1){
+
             val is_valid  = ROB_output.ROB_entries(i).valid
             val is_branch = ROB_entry_banks(i).io.readDataB.is_branch
-            when((commit_resolved(i).T_NT =/= commit_prediction.br_mask(i)) && is_branch && is_valid){
-                when(commit_resolved(i).T_NT === 1.B){
-                    // branch was actually taken and prediction was not taken
-                    // set expected PC to the computed address
+            // FIXME: seperate these correctly, currently indistinguishable...
+            val is_fence  = ROB_entry_banks(i).io.readDataB.is_flushing
+            val is_CSR    = ROB_entry_banks(i).io.readDataB.is_flushing
+            when(is_branch && is_valid){
+
+
+                when(commit_resolved(i).T_NT === 1.B && commit_prediction.br_mask(i) === 0.B && is_branch){
+                    commit.is_misprediction      := 1.B
+                    commit.br_type               := commit_resolved(i).br_type 
+                    commit.fetch_packet_index    := i.U
+                    flush.is_misprediction       := 1.B
+
+                    flush.is_fence              := 0.B
+                    flush.is_CSR                := 0.B
+
+
                     commit.expected_PC := commit_resolved(i).target
                     flush.redirect_PC  := commit_resolved(i).target
-                }.otherwise{
-                    // branch was actually not taken and prediction was taken
-                    // set expected PC to the branch + 4.U
+                }.elsewhen(commit_resolved(i).T_NT === 0.B && commit_prediction.br_mask(i) === 1.B && is_branch){
+                    commit.is_misprediction      := 1.B
+                    commit.br_type               := commit_resolved(i).br_type 
+                    commit.fetch_packet_index    := i.U
+                    flush.is_misprediction       := 1.B
+
+                    flush.is_fence              := 0.B
+                    flush.is_CSR                := 0.B
+
                     commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
                     flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
+                }.elsewhen(commit_resolved(i).T_NT === 1.B && commit_prediction.br_mask(i) === 1.B && (commit_prediction.target =/= commit_resolved(i).target) && is_branch){
+                    commit.is_misprediction      := 1.B
+                    commit.br_type               := commit_resolved(i).br_type
+                    commit.fetch_packet_index    := i.U
+                    flush.is_misprediction       := 1.B
+
+                    flush.is_fence              := 0.B
+                    flush.is_CSR                := 0.B
+
+                    commit.expected_PC := commit_resolved(i).target
+                    flush.redirect_PC  := commit_resolved(i).target
                 }
+
+            }.elsewhen(has_flushing_instr_vec(i) && is_branch){
+                commit.is_misprediction      := 0.B
+                commit.br_type               := br_type_t.NONE
+                commit.fetch_packet_index    := 0.U
+
+                flush.is_misprediction      := 0.B
+                //FIXME: ditto
+                flush.is_fence              := 1.B
+                flush.is_CSR                := 1.B
+
+                commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
+                flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
             }
         }
     }
+
+    dontTouch(has_flushing_instr_vec)
 
     //////////////////
     // FLUSH SIGNAL //
