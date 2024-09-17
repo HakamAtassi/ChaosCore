@@ -238,6 +238,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val ROB_entry_data = Wire(new ROB_entry(coreParameters))
         ROB_entry_data.valid                 := io.ROB_packet.bits.valid_bits(i)
         ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
+        ROB_entry_data.is_flushing           := io.ROB_packet.bits.decoded_instruction(i).needs_CSRs  || io.ROB_packet.bits.decoded_instruction(i).FENCE 
         ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
         ROB_entry_data.MOB_index             := io.ROB_packet.bits.decoded_instruction(i).MOB_index
 
@@ -245,6 +246,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_entry_data.RD                    := io.ROB_packet.bits.decoded_instruction(i).RD
         ROB_entry_data.PRDold                := io.ROB_packet.bits.decoded_instruction(i).PRDold
         ROB_entry_data.PRD                   := io.ROB_packet.bits.decoded_instruction(i).PRD
+
+
 
 
         // allocate
@@ -391,13 +394,14 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // commit signal V1
 
 
-
+    // FIXME: these should be named something like "taken_branch_OH"
     val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
+    
+    val has_flushing_instr      = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && (ROB_entry_banks(i).io.readDataB.is_flushing)})
+
     val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
     val earliest_taken_index    = PriorityEncoder(has_taken_branch_vec.asUInt) 
     val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + (fetchWidth*4).U)
-
-
 
     dontTouch(has_taken_branch_vec)
 
@@ -410,64 +414,67 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val commit          = Wire(new commit(coreParameters))
     val partial_commit  = Wire(new partial_commit(coreParameters))
 
+    val partial_commit_is_complete              = Wire(Vec(fetchWidth, Bool()))
+    val partial_commit_is_valid                 = Wire(Vec(fetchWidth, Bool()))
+    val partial_commit_all_prev_complete        = Wire(Vec(fetchWidth, Bool()))
 
-    val pre_mispred = Wire(Vec(fetchWidth, Bool()))
+    val partial_commit_is_after_taken_branch    = Wire(Vec(fetchWidth, Bool()))
+    val partial_commit_is_after_flushing_event  = Wire(Vec(fetchWidth, Bool()))
 
-    dontTouch(pre_mispred)
-
-
-    for(i <- 0 until fetchWidth){   // only commit if all previous instructions are valid, complete, not a misprediction, and not an exception, or just invalid
+    // commit signal
+    for(i <- 0 until fetchWidth){
         val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
         val is_valid        = (ROB_output.ROB_entries(i).valid)
         val is_load         = ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && ROB_output.ROB_entries(i).valid
         val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
-
-
-        val after_taken_branch   = (i.U > earliest_taken_index) && has_taken_branch
-
-        pre_mispred(i) := (i.U <= earliest_taken_index && commit_row_complete.take(i+1).reduce(_ && _) ) || !has_taken_branch 
-
-        commit_row_complete(i) := (is_completed || is_invalid || after_taken_branch) && ROB_output.row_valid  // stores happen after they commit
-
-        val allPreviousComplete = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
-        partial_commit.valid(i)      := (is_completed) && is_valid  && ROB_output.row_valid && allPreviousComplete && pre_mispred(i)
-        partial_commit.MOB_index(i)  := ROB_output.ROB_entries(i).MOB_index
-        partial_commit.MOB_valid(i)  := is_load || is_store
-        partial_commit.ROB_index     := front_index
-        partial_commit.RD_valid(i)   := ROB_output.ROB_entries(i).RD_valid
-        partial_commit.RD(i)         := ROB_output.ROB_entries(i).RD
-        partial_commit.PRD(i)        := ROB_output.ROB_entries(i).PRD
-        partial_commit.PRDold(i)     := ROB_output.ROB_entries(i).PRDold
-
+        commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
     }
 
     commit_valid := commit_row_complete.reduce(_ && _)
 
 
+    for(i <- 0 until fetchWidth){   // only commit if all previous instructions are valid, complete, not a misprediction, and not an exception, or just invalid
+        partial_commit_is_complete(i)               := commit_row_complete(i) 
+        partial_commit_is_valid(i)                  := ROB_output.ROB_entries(i).valid
+    }
+
+    for(i <- 0 until fetchWidth){
+        val partial_commit_all_prev_complete_val        = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
+        val partial_commit_is_after_taken_branch_val    = if (i == 0) false.B else has_taken_branch_vec.take(i).reduce(_ || _)
+        val partial_commit_is_after_flushing_event_val  = if (i == 0) false.B else has_flushing_instr.take(i).reduce(_ || _)
+
+        partial_commit_all_prev_complete(i)        := partial_commit_all_prev_complete_val
+        partial_commit_is_after_taken_branch(i)    := partial_commit_is_after_taken_branch_val
+        partial_commit_is_after_flushing_event(i)  := partial_commit_is_after_flushing_event_val
+    }
+
+    dontTouch(partial_commit_all_prev_complete)
+    dontTouch(partial_commit_is_after_taken_branch)
+    dontTouch(partial_commit_is_after_flushing_event)
 
 
-    // commit signal V2
 
-//    // commit signal
-    //for(i <- 0 until fetchWidth){
-        //val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
-        //val is_invalid      = (!ROB_output.ROB_entries(i).valid)
-        //val is_valid        = (ROB_output.ROB_entries(i).valid)
-        //val is_load         = ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD && ROB_output.ROB_entries(i).valid
-        //val is_store        = ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE && ROB_output.ROB_entries(i).valid
 
-        //commit_row_complete(i) := (is_completed || is_invalid || after_taken_branch) && ROB_output.row_valid  // stores happen after they commit
-    //}
+    for(i <- 0 until fetchWidth){
+        partial_commit.valid(i) := partial_commit_is_valid(i) && partial_commit_is_complete(i) && partial_commit_all_prev_complete(i) && !partial_commit_is_after_taken_branch(i) && !partial_commit_is_after_flushing_event(i)
+        partial_commit.MOB_valid(i)  := (ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE) || 
+                                        (ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD) && 
+                                        partial_commit.valid(i)
+    }
 
+    partial_commit.ROB_index  := front_index
+
+    partial_commit.MOB_index  := ROB_output.ROB_entries.map(_.MOB_index)
+    partial_commit.RD_valid   := ROB_output.ROB_entries.map(_.RD_valid)
+    partial_commit.RD         := ROB_output.ROB_entries.map(_.RD)
+    partial_commit.PRD        := ROB_output.ROB_entries.map(_.PRD)
+    partial_commit.PRDold     := ROB_output.ROB_entries.map(_.PRDold)
 
 
     ////////////
     // COMMIT //
     ////////////
-
-
-
 
 
     commit.GHR                           := ROB_output.GHR
@@ -524,15 +531,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
     flush.is_exception        := 0.B
     flush.is_fence            := 0.B
     flush.is_CSR              := 0.B
-
     flush.flushing_PC         := 0.U
     flush.redirect_PC         := 0.U
-
 
     dontTouch(correct_prediction)
     dontTouch(has_branch)
 
-    when(!correct_prediction && commit_valid && has_branch) {
+    when((!correct_prediction && commit_valid && has_branch)) {
         commit.is_misprediction      := 1.B
         commit.br_type               := commit_resolved(earliest_taken_index).br_type
         commit.fetch_packet_index    := earliest_taken_index

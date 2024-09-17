@@ -298,10 +298,12 @@ module ROB(
   output [31:0] io_PC_file_exec_data
 );
 
+  wire             ROB_output_ROB_entries_3_is_flushing;
   wire             io_ROB_packet_ready_0;
   reg              io_commit_valid_REG;
   reg              io_commit_bits_REG_is_misprediction;
   wire             commit_valid;
+  wire             commit_row_complete_0;
   wire             ROB_output_ROB_entries_3_RD_valid;
   wire             ROB_output_ROB_entries_2_RD_valid;
   wire             ROB_output_ROB_entries_1_RD_valid;
@@ -331,12 +333,18 @@ module ROB(
   wire [39:0]      _fetch_prediction_bank_ext_R0_data;
   wire             _ROB_entry_banks_3_io_readDataB_is_branch;
   wire             _ROB_entry_banks_2_io_readDataB_is_branch;
+  wire             _ROB_entry_banks_2_io_readDataB_is_flushing;
   wire             _ROB_entry_banks_1_io_readDataB_is_branch;
+  wire             _ROB_entry_banks_1_io_readDataB_is_flushing;
   wire             _ROB_entry_banks_0_io_readDataB_is_branch;
+  wire             _ROB_entry_banks_0_io_readDataB_is_flushing;
+  wire             partial_commit_all_prev_complete_0 = 1'h1;
   wire             ROB_WB_data_busy = 1'h0;
   wire             ROB_WB_data_1_busy = 1'h0;
   wire             ROB_WB_data_2_busy = 1'h0;
   wire             ROB_WB_data_3_busy = 1'h0;
+  wire             partial_commit_is_after_taken_branch_0 = 1'h0;
+  wire             partial_commit_is_after_flushing_event_0 = 1'h0;
   reg  [6:0]       front_pointer;
   reg  [6:0]       back_pointer;
   wire [5:0]       ROB_output_ROB_index = front_index;
@@ -566,26 +574,37 @@ module ROB(
   wire             ROB_output_row_valid = _GEN_4[front_index];
   wire             ROB_output_ROB_entries_0_valid;
   wire             ROB_output_complete_0;
+  wire             _has_flushing_instr_T =
+    ROB_output_ROB_entries_0_valid & ROB_output_complete_0;
   wire             ROB_output_ROB_entries_1_valid;
   wire             ROB_output_complete_1;
   wire             has_taken_branch_vec_0 =
-    ROB_output_ROB_entries_0_valid & ROB_output_complete_0 & commit_resolved_0_T_NT
+    _has_flushing_instr_T & commit_resolved_0_T_NT
     & _ROB_entry_banks_0_io_readDataB_is_branch;
+  wire             _has_flushing_instr_T_2 =
+    ROB_output_ROB_entries_1_valid & ROB_output_complete_1;
   wire             ROB_output_ROB_entries_2_valid;
   wire             ROB_output_complete_2;
   wire             has_taken_branch_vec_1 =
-    ROB_output_ROB_entries_1_valid & ROB_output_complete_1 & commit_resolved_1_T_NT
+    _has_flushing_instr_T_2 & commit_resolved_1_T_NT
     & _ROB_entry_banks_1_io_readDataB_is_branch;
+  wire             _has_flushing_instr_T_4 =
+    ROB_output_ROB_entries_2_valid & ROB_output_complete_2;
   wire             ROB_output_ROB_entries_3_valid;
   wire             ROB_output_complete_3;
   wire             has_taken_branch_vec_2 =
-    ROB_output_ROB_entries_2_valid & ROB_output_complete_2 & commit_resolved_2_T_NT
+    _has_flushing_instr_T_4 & commit_resolved_2_T_NT
     & _ROB_entry_banks_2_io_readDataB_is_branch;
   wire             has_taken_branch_vec_3 =
     ROB_output_ROB_entries_3_valid & ROB_output_complete_3 & commit_resolved_3_T_NT
     & _ROB_entry_banks_3_io_readDataB_is_branch;
+  wire             partial_commit_is_after_taken_branch_1 = has_taken_branch_vec_0;
+  wire             partial_commit_is_after_flushing_event_1 =
+    _has_flushing_instr_T & _ROB_entry_banks_0_io_readDataB_is_flushing;
+  wire             partial_commit_is_after_taken_branch_2 =
+    has_taken_branch_vec_0 | has_taken_branch_vec_1;
   wire             has_taken_branch =
-    has_taken_branch_vec_0 | has_taken_branch_vec_1 | has_taken_branch_vec_2
+    partial_commit_is_after_taken_branch_2 | has_taken_branch_vec_2
     | has_taken_branch_vec_3;
   wire [1:0]       earliest_taken_index =
     has_taken_branch_vec_0
@@ -608,40 +627,33 @@ module ROB(
      {commit_resolved_0_T_NT}};
   wire [31:0]      expected_PC =
     has_taken_branch ? _GEN_5[earliest_taken_index] : ROB_output_fetch_PC + 32'h10;
-  wire             is_completed = ROB_output_complete_0 & ROB_output_ROB_entries_0_valid;
-  wire             commit_row_complete_0;
-  wire             pre_mispred_0 = commit_row_complete_0 | ~has_taken_branch;
+  wire             partial_commit_all_prev_complete_1 = commit_row_complete_0;
   assign commit_row_complete_0 =
-    (is_completed | ~ROB_output_ROB_entries_0_valid) & ROB_output_row_valid;
-  wire             is_completed_1 =
-    ROB_output_complete_1 & ROB_output_ROB_entries_1_valid;
-  wire             commit_row_complete_1;
-  wire             allPreviousComplete = commit_row_complete_0 & commit_row_complete_1;
-  wire             pre_mispred_1 =
-    (|earliest_taken_index) & allPreviousComplete | ~has_taken_branch;
-  assign commit_row_complete_1 =
-    (is_completed_1 | ~ROB_output_ROB_entries_1_valid | earliest_taken_index == 2'h0
-     & has_taken_branch) & ROB_output_row_valid;
-  wire             is_completed_2 =
-    ROB_output_complete_2 & ROB_output_ROB_entries_2_valid;
-  wire             commit_row_complete_2;
-  wire             pre_mispred_2 =
-    earliest_taken_index[1] & allPreviousComplete & commit_row_complete_2
-    | ~has_taken_branch;
-  assign commit_row_complete_2 =
-    (is_completed_2 | ~ROB_output_ROB_entries_2_valid | ~(earliest_taken_index[1])
-     & has_taken_branch) & ROB_output_row_valid;
-  wire             is_completed_3 =
-    ROB_output_complete_3 & ROB_output_ROB_entries_3_valid;
-  wire             commit_row_complete_3;
-  wire             pre_mispred_3 =
-    (&earliest_taken_index) & allPreviousComplete & commit_row_complete_2
-    & commit_row_complete_3 | ~has_taken_branch;
-  assign commit_row_complete_3 =
-    (is_completed_3 | ~ROB_output_ROB_entries_3_valid | earliest_taken_index != 2'h3
-     & has_taken_branch) & ROB_output_row_valid;
+    (ROB_output_complete_0 & ROB_output_ROB_entries_0_valid
+     | ~ROB_output_ROB_entries_0_valid) & ROB_output_row_valid;
+  wire             commit_row_complete_1 =
+    (ROB_output_complete_1 & ROB_output_ROB_entries_1_valid
+     | ~ROB_output_ROB_entries_1_valid) & ROB_output_row_valid;
+  wire             commit_row_complete_2 =
+    (ROB_output_complete_2 & ROB_output_ROB_entries_2_valid
+     | ~ROB_output_ROB_entries_2_valid) & ROB_output_row_valid;
+  wire             commit_row_complete_3 =
+    (ROB_output_complete_3 & ROB_output_ROB_entries_3_valid
+     | ~ROB_output_ROB_entries_3_valid) & ROB_output_row_valid;
+  wire             partial_commit_all_prev_complete_2 =
+    commit_row_complete_0 & commit_row_complete_1;
   assign commit_valid =
-    allPreviousComplete & commit_row_complete_2 & commit_row_complete_3;
+    partial_commit_all_prev_complete_2 & commit_row_complete_2 & commit_row_complete_3;
+  wire             partial_commit_is_after_flushing_event_2 =
+    partial_commit_is_after_flushing_event_1 | _has_flushing_instr_T_2
+    & _ROB_entry_banks_1_io_readDataB_is_flushing;
+  wire             partial_commit_all_prev_complete_3 =
+    partial_commit_all_prev_complete_2 & commit_row_complete_2;
+  wire             partial_commit_is_after_taken_branch_3 =
+    partial_commit_is_after_taken_branch_2 | has_taken_branch_vec_2;
+  wire             partial_commit_is_after_flushing_event_3 =
+    partial_commit_is_after_flushing_event_2 | _has_flushing_instr_T_4
+    & _ROB_entry_banks_2_io_readDataB_is_flushing;
   wire [3:0]       _enc_T_3 = {has_taken_branch_vec_3, 3'h0};
   wire [3:0]       enc =
     has_taken_branch_vec_0
@@ -856,6 +868,22 @@ module ROB(
   wire [6:0]       ROB_output_ROB_entries_3_PRDold;
   always @(posedge clock) begin
     automatic logic _GEN_13 = io_FU_outputs_0_bits_ROB_index == front_index;
+    automatic logic partial_commit_valid_0 =
+      ROB_output_ROB_entries_0_valid & commit_row_complete_0
+      & partial_commit_all_prev_complete_0 & ~partial_commit_is_after_taken_branch_0
+      & ~partial_commit_is_after_flushing_event_0;
+    automatic logic partial_commit_valid_1 =
+      ROB_output_ROB_entries_1_valid & commit_row_complete_1
+      & partial_commit_all_prev_complete_1 & ~partial_commit_is_after_taken_branch_1
+      & ~partial_commit_is_after_flushing_event_1;
+    automatic logic partial_commit_valid_2 =
+      ROB_output_ROB_entries_2_valid & commit_row_complete_2
+      & partial_commit_all_prev_complete_2 & ~partial_commit_is_after_taken_branch_2
+      & ~partial_commit_is_after_flushing_event_2;
+    automatic logic partial_commit_valid_3 =
+      ROB_output_ROB_entries_3_valid & commit_row_complete_3
+      & partial_commit_all_prev_complete_3 & ~partial_commit_is_after_taken_branch_3
+      & ~partial_commit_is_after_flushing_event_3;
     if (reset) begin
       front_pointer <= 7'h0;
       back_pointer <= 7'h0;
@@ -1491,35 +1519,27 @@ module ROB(
     io_commit_bits_REG_RD_valid_2 <= commit_RD_valid_2;
     io_commit_bits_REG_RD_valid_3 <= commit_RD_valid_3;
     io_commit_valid_REG <= commit_valid;
-    io_partial_commit_REG_valid_0 <=
-      is_completed & ROB_output_ROB_entries_0_valid & ROB_output_row_valid
-      & pre_mispred_0;
-    io_partial_commit_REG_valid_1 <=
-      is_completed_1 & ROB_output_ROB_entries_1_valid & ROB_output_row_valid
-      & commit_row_complete_0 & pre_mispred_1;
-    io_partial_commit_REG_valid_2 <=
-      is_completed_2 & ROB_output_ROB_entries_2_valid & ROB_output_row_valid
-      & allPreviousComplete & pre_mispred_2;
-    io_partial_commit_REG_valid_3 <=
-      is_completed_3 & ROB_output_ROB_entries_3_valid & ROB_output_row_valid
-      & allPreviousComplete & commit_row_complete_2 & pre_mispred_3;
+    io_partial_commit_REG_valid_0 <= partial_commit_valid_0;
+    io_partial_commit_REG_valid_1 <= partial_commit_valid_1;
+    io_partial_commit_REG_valid_2 <= partial_commit_valid_2;
+    io_partial_commit_REG_valid_3 <= partial_commit_valid_3;
     io_partial_commit_REG_ROB_index <= front_index;
     io_partial_commit_REG_MOB_index_0 <= ROB_output_ROB_entries_0_MOB_index;
     io_partial_commit_REG_MOB_index_1 <= ROB_output_ROB_entries_1_MOB_index;
     io_partial_commit_REG_MOB_index_2 <= ROB_output_ROB_entries_2_MOB_index;
     io_partial_commit_REG_MOB_index_3 <= ROB_output_ROB_entries_3_MOB_index;
     io_partial_commit_REG_MOB_valid_0 <=
-      ROB_output_ROB_entries_0_memory_type == 2'h1 & ROB_output_ROB_entries_0_valid
-      | ROB_output_ROB_entries_0_memory_type == 2'h2 & ROB_output_ROB_entries_0_valid;
+      ROB_output_ROB_entries_0_memory_type == 2'h2
+      | ROB_output_ROB_entries_0_memory_type == 2'h1 & partial_commit_valid_0;
     io_partial_commit_REG_MOB_valid_1 <=
-      ROB_output_ROB_entries_1_memory_type == 2'h1 & ROB_output_ROB_entries_1_valid
-      | ROB_output_ROB_entries_1_memory_type == 2'h2 & ROB_output_ROB_entries_1_valid;
+      ROB_output_ROB_entries_1_memory_type == 2'h2
+      | ROB_output_ROB_entries_1_memory_type == 2'h1 & partial_commit_valid_1;
     io_partial_commit_REG_MOB_valid_2 <=
-      ROB_output_ROB_entries_2_memory_type == 2'h1 & ROB_output_ROB_entries_2_valid
-      | ROB_output_ROB_entries_2_memory_type == 2'h2 & ROB_output_ROB_entries_2_valid;
+      ROB_output_ROB_entries_2_memory_type == 2'h2
+      | ROB_output_ROB_entries_2_memory_type == 2'h1 & partial_commit_valid_2;
     io_partial_commit_REG_MOB_valid_3 <=
-      ROB_output_ROB_entries_3_memory_type == 2'h1 & ROB_output_ROB_entries_3_valid
-      | ROB_output_ROB_entries_3_memory_type == 2'h2 & ROB_output_ROB_entries_3_valid;
+      ROB_output_ROB_entries_3_memory_type == 2'h2
+      | ROB_output_ROB_entries_3_memory_type == 2'h1 & partial_commit_valid_3;
     io_partial_commit_REG_RD_0 <= ROB_output_ROB_entries_0_RD;
     io_partial_commit_REG_RD_1 <= ROB_output_ROB_entries_1_RD;
     io_partial_commit_REG_RD_2 <= ROB_output_ROB_entries_2_RD;
@@ -1684,6 +1704,9 @@ module ROB(
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_0),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit),
+    .io_writeDataA_is_flushing
+      (io_ROB_packet_bits_decoded_instruction_0_needs_CSRs
+       | io_ROB_packet_bits_decoded_instruction_0_FENCE),
     .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_0_memory_type),
     .io_writeDataA_MOB_index   (io_ROB_packet_bits_decoded_instruction_0_MOB_index),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_0_RD_valid),
@@ -1694,6 +1717,7 @@ module ROB(
     .io_addrB                  (_commit_resolved_3_T),
     .io_readDataB_valid        (ROB_output_ROB_entries_0_valid),
     .io_readDataB_is_branch    (_ROB_entry_banks_0_io_readDataB_is_branch),
+    .io_readDataB_is_flushing  (_ROB_entry_banks_0_io_readDataB_is_flushing),
     .io_readDataB_memory_type  (ROB_output_ROB_entries_0_memory_type),
     .io_readDataB_MOB_index    (ROB_output_ROB_entries_0_MOB_index),
     .io_readDataB_RD_valid     (ROB_output_ROB_entries_0_RD_valid),
@@ -1703,12 +1727,18 @@ module ROB(
   );
   wire             ROB_output_ROB_entries_0_is_branch;
   assign ROB_output_ROB_entries_0_is_branch = _ROB_entry_banks_0_io_readDataB_is_branch;
+  wire             ROB_output_ROB_entries_0_is_flushing;
+  assign ROB_output_ROB_entries_0_is_flushing =
+    _ROB_entry_banks_0_io_readDataB_is_flushing;
   ROB_entry_mem ROB_entry_banks_1 (
     .clock                     (clock),
     .io_addrA                  (back_pointer[5:0]),
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_1),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit),
+    .io_writeDataA_is_flushing
+      (io_ROB_packet_bits_decoded_instruction_1_needs_CSRs
+       | io_ROB_packet_bits_decoded_instruction_1_FENCE),
     .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_1_memory_type),
     .io_writeDataA_MOB_index   (io_ROB_packet_bits_decoded_instruction_1_MOB_index),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_1_RD_valid),
@@ -1719,6 +1749,7 @@ module ROB(
     .io_addrB                  (_commit_resolved_3_T),
     .io_readDataB_valid        (ROB_output_ROB_entries_1_valid),
     .io_readDataB_is_branch    (_ROB_entry_banks_1_io_readDataB_is_branch),
+    .io_readDataB_is_flushing  (_ROB_entry_banks_1_io_readDataB_is_flushing),
     .io_readDataB_memory_type  (ROB_output_ROB_entries_1_memory_type),
     .io_readDataB_MOB_index    (ROB_output_ROB_entries_1_MOB_index),
     .io_readDataB_RD_valid     (ROB_output_ROB_entries_1_RD_valid),
@@ -1728,12 +1759,18 @@ module ROB(
   );
   wire             ROB_output_ROB_entries_1_is_branch;
   assign ROB_output_ROB_entries_1_is_branch = _ROB_entry_banks_1_io_readDataB_is_branch;
+  wire             ROB_output_ROB_entries_1_is_flushing;
+  assign ROB_output_ROB_entries_1_is_flushing =
+    _ROB_entry_banks_1_io_readDataB_is_flushing;
   ROB_entry_mem ROB_entry_banks_2 (
     .clock                     (clock),
     .io_addrA                  (back_pointer[5:0]),
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_2),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit),
+    .io_writeDataA_is_flushing
+      (io_ROB_packet_bits_decoded_instruction_2_needs_CSRs
+       | io_ROB_packet_bits_decoded_instruction_2_FENCE),
     .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_2_memory_type),
     .io_writeDataA_MOB_index   (io_ROB_packet_bits_decoded_instruction_2_MOB_index),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_2_RD_valid),
@@ -1744,6 +1781,7 @@ module ROB(
     .io_addrB                  (_commit_resolved_3_T),
     .io_readDataB_valid        (ROB_output_ROB_entries_2_valid),
     .io_readDataB_is_branch    (_ROB_entry_banks_2_io_readDataB_is_branch),
+    .io_readDataB_is_flushing  (_ROB_entry_banks_2_io_readDataB_is_flushing),
     .io_readDataB_memory_type  (ROB_output_ROB_entries_2_memory_type),
     .io_readDataB_MOB_index    (ROB_output_ROB_entries_2_MOB_index),
     .io_readDataB_RD_valid     (ROB_output_ROB_entries_2_RD_valid),
@@ -1753,12 +1791,18 @@ module ROB(
   );
   wire             ROB_output_ROB_entries_2_is_branch;
   assign ROB_output_ROB_entries_2_is_branch = _ROB_entry_banks_2_io_readDataB_is_branch;
+  wire             ROB_output_ROB_entries_2_is_flushing;
+  assign ROB_output_ROB_entries_2_is_flushing =
+    _ROB_entry_banks_2_io_readDataB_is_flushing;
   ROB_entry_mem ROB_entry_banks_3 (
     .clock                     (clock),
     .io_addrA                  (back_pointer[5:0]),
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_3),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit),
+    .io_writeDataA_is_flushing
+      (io_ROB_packet_bits_decoded_instruction_3_needs_CSRs
+       | io_ROB_packet_bits_decoded_instruction_3_FENCE),
     .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_3_memory_type),
     .io_writeDataA_MOB_index   (io_ROB_packet_bits_decoded_instruction_3_MOB_index),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_3_RD_valid),
@@ -1769,6 +1813,7 @@ module ROB(
     .io_addrB                  (_commit_resolved_3_T),
     .io_readDataB_valid        (ROB_output_ROB_entries_3_valid),
     .io_readDataB_is_branch    (_ROB_entry_banks_3_io_readDataB_is_branch),
+    .io_readDataB_is_flushing  (ROB_output_ROB_entries_3_is_flushing),
     .io_readDataB_memory_type  (ROB_output_ROB_entries_3_memory_type),
     .io_readDataB_MOB_index    (ROB_output_ROB_entries_3_MOB_index),
     .io_readDataB_RD_valid     (ROB_output_ROB_entries_3_RD_valid),
