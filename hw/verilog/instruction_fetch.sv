@@ -248,7 +248,14 @@ module instruction_fetch(
   predecoder predecoder (
     .clock                                                  (clock),
     .reset                                                  (reset),
-    .io_flush                                               (io_flush_valid),
+    .io_flush_valid                                         (io_flush_valid),
+    .io_flush_bits_is_misprediction
+      (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception                             (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                                 (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                                   (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC                              (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC                              (io_flush_bits_redirect_PC),
     .io_revert_valid                                        (_predecoder_io_revert_valid),
     .io_revert_bits_PC
       (_predecoder_io_revert_bits_PC),

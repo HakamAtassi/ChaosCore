@@ -751,8 +751,7 @@ module rename(
   wire             comb_ready_bits_0 = 1'h1;
   wire             _fire_T =
     io_decoded_fetch_packet_ready_0 & io_decoded_fetch_packet_valid;
-  wire             _fire_T_1 = io_commit_valid & io_commit_bits_is_misprediction;
-  wire             renamed_decoded_fetch_packet_valid = _fire_T & ~_fire_T_1;
+  wire             renamed_decoded_fetch_packet_valid = _fire_T & ~io_flush_valid;
   wire [7:0]       renamed_decoded_fetch_packet_bits_free_list_front_pointer =
     {1'h0, _free_list_io_free_list_front_pointer};
   wire [6:0]       _GEN = {2'h0, io_decoded_fetch_packet_bits_decoded_instruction_0_RD};
@@ -1782,7 +1781,8 @@ module rename(
     hasBeenResetReg = 1'b0;
   wire             hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;
   assume property (@(posedge clock) disable iff (~hasBeenReset) ~io_flush_valid);
-  assume property (@(posedge clock) disable iff (~hasBeenReset) ~_fire_T_1);
+  assume property (@(posedge clock) disable iff (~hasBeenReset)
+                   ~(io_commit_valid & io_commit_bits_is_misprediction));
   assume property (@(posedge clock) disable iff (~hasBeenReset)
                    io_renamed_decoded_fetch_packet_ready);
   assume property (@(posedge clock) disable iff (~hasBeenReset)
@@ -2734,133 +2734,133 @@ module rename(
     end
     else begin
       automatic logic _GEN_336 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_1 : comb_ready_bits_1);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_1 : comb_ready_bits_1);
       automatic logic _GEN_337 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_2 : comb_ready_bits_2);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_2 : comb_ready_bits_2);
       automatic logic _GEN_338 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_3 : comb_ready_bits_3);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_3 : comb_ready_bits_3);
       automatic logic _GEN_339 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_4 : comb_ready_bits_4);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_4 : comb_ready_bits_4);
       automatic logic _GEN_340 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_5 : comb_ready_bits_5);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_5 : comb_ready_bits_5);
       automatic logic _GEN_341 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_6 : comb_ready_bits_6);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_6 : comb_ready_bits_6);
       automatic logic _GEN_342 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_7 : comb_ready_bits_7);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_7 : comb_ready_bits_7);
       automatic logic _GEN_343 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_8 : comb_ready_bits_8);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_8 : comb_ready_bits_8);
       automatic logic _GEN_344 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_9 : comb_ready_bits_9);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_9 : comb_ready_bits_9);
       automatic logic _GEN_345 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_10 : comb_ready_bits_10);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_10 : comb_ready_bits_10);
       automatic logic _GEN_346 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_11 : comb_ready_bits_11);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_11 : comb_ready_bits_11);
       automatic logic _GEN_347 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_12 : comb_ready_bits_12);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_12 : comb_ready_bits_12);
       automatic logic _GEN_348 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_13 : comb_ready_bits_13);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_13 : comb_ready_bits_13);
       automatic logic _GEN_349 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_14 : comb_ready_bits_14);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_14 : comb_ready_bits_14);
       automatic logic _GEN_350 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_15 : comb_ready_bits_15);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_15 : comb_ready_bits_15);
       automatic logic _GEN_351 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_16 : comb_ready_bits_16);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_16 : comb_ready_bits_16);
       automatic logic _GEN_352 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_17 : comb_ready_bits_17);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_17 : comb_ready_bits_17);
       automatic logic _GEN_353 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_18 : comb_ready_bits_18);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_18 : comb_ready_bits_18);
       automatic logic _GEN_354 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_19 : comb_ready_bits_19);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_19 : comb_ready_bits_19);
       automatic logic _GEN_355 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_20 : comb_ready_bits_20);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_20 : comb_ready_bits_20);
       automatic logic _GEN_356 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_21 : comb_ready_bits_21);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_21 : comb_ready_bits_21);
       automatic logic _GEN_357 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_22 : comb_ready_bits_22);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_22 : comb_ready_bits_22);
       automatic logic _GEN_358 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_23 : comb_ready_bits_23);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_23 : comb_ready_bits_23);
       automatic logic _GEN_359 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_24 : comb_ready_bits_24);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_24 : comb_ready_bits_24);
       automatic logic _GEN_360 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_25 : comb_ready_bits_25);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_25 : comb_ready_bits_25);
       automatic logic _GEN_361 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_26 : comb_ready_bits_26);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_26 : comb_ready_bits_26);
       automatic logic _GEN_362 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_27 : comb_ready_bits_27);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_27 : comb_ready_bits_27);
       automatic logic _GEN_363 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_28 : comb_ready_bits_28);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_28 : comb_ready_bits_28);
       automatic logic _GEN_364 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_29 : comb_ready_bits_29);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_29 : comb_ready_bits_29);
       automatic logic _GEN_365 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_30 : comb_ready_bits_30);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_30 : comb_ready_bits_30);
       automatic logic _GEN_366 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_31 : comb_ready_bits_31);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_31 : comb_ready_bits_31);
       automatic logic _GEN_367 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_32 : comb_ready_bits_32);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_32 : comb_ready_bits_32);
       automatic logic _GEN_368 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_33 : comb_ready_bits_33);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_33 : comb_ready_bits_33);
       automatic logic _GEN_369 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_34 : comb_ready_bits_34);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_34 : comb_ready_bits_34);
       automatic logic _GEN_370 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_35 : comb_ready_bits_35);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_35 : comb_ready_bits_35);
       automatic logic _GEN_371 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_36 : comb_ready_bits_36);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_36 : comb_ready_bits_36);
       automatic logic _GEN_372 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_37 : comb_ready_bits_37);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_37 : comb_ready_bits_37);
       automatic logic _GEN_373 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_38 : comb_ready_bits_38);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_38 : comb_ready_bits_38);
       automatic logic _GEN_374 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_39 : comb_ready_bits_39);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_39 : comb_ready_bits_39);
       automatic logic _GEN_375 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_40 : comb_ready_bits_40);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_40 : comb_ready_bits_40);
       automatic logic _GEN_376 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_41 : comb_ready_bits_41);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_41 : comb_ready_bits_41);
       automatic logic _GEN_377 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_42 : comb_ready_bits_42);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_42 : comb_ready_bits_42);
       automatic logic _GEN_378 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_43 : comb_ready_bits_43);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_43 : comb_ready_bits_43);
       automatic logic _GEN_379 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_44 : comb_ready_bits_44);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_44 : comb_ready_bits_44);
       automatic logic _GEN_380 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_45 : comb_ready_bits_45);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_45 : comb_ready_bits_45);
       automatic logic _GEN_381 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_46 : comb_ready_bits_46);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_46 : comb_ready_bits_46);
       automatic logic _GEN_382 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_47 : comb_ready_bits_47);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_47 : comb_ready_bits_47);
       automatic logic _GEN_383 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_48 : comb_ready_bits_48);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_48 : comb_ready_bits_48);
       automatic logic _GEN_384 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_49 : comb_ready_bits_49);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_49 : comb_ready_bits_49);
       automatic logic _GEN_385 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_50 : comb_ready_bits_50);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_50 : comb_ready_bits_50);
       automatic logic _GEN_386 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_51 : comb_ready_bits_51);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_51 : comb_ready_bits_51);
       automatic logic _GEN_387 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_52 : comb_ready_bits_52);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_52 : comb_ready_bits_52);
       automatic logic _GEN_388 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_53 : comb_ready_bits_53);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_53 : comb_ready_bits_53);
       automatic logic _GEN_389 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_54 : comb_ready_bits_54);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_54 : comb_ready_bits_54);
       automatic logic _GEN_390 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_55 : comb_ready_bits_55);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_55 : comb_ready_bits_55);
       automatic logic _GEN_391 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_56 : comb_ready_bits_56);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_56 : comb_ready_bits_56);
       automatic logic _GEN_392 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_57 : comb_ready_bits_57);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_57 : comb_ready_bits_57);
       automatic logic _GEN_393 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_58 : comb_ready_bits_58);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_58 : comb_ready_bits_58);
       automatic logic _GEN_394 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_59 : comb_ready_bits_59);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_59 : comb_ready_bits_59);
       automatic logic _GEN_395 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_60 : comb_ready_bits_60);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_60 : comb_ready_bits_60);
       automatic logic _GEN_396 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_61 : comb_ready_bits_61);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_61 : comb_ready_bits_61);
       automatic logic _GEN_397 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_62 : comb_ready_bits_62);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_62 : comb_ready_bits_62);
       automatic logic _GEN_398 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_63 : comb_ready_bits_63);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_63 : comb_ready_bits_63);
       automatic logic _GEN_399 =
-        _fire_T_1 | (_GEN_194 ? comb_ready_bits_64 : comb_ready_bits_64);
+        io_flush_valid | (_GEN_194 ? comb_ready_bits_64 : comb_ready_bits_64);
       automatic logic _GEN_400 =
         _renamed_decoded_fetch_packet_Q_io_deq_bits_decoded_instruction_0_RD_valid
         & _GEN_194 & _renamed_decoded_fetch_packet_Q_io_deq_bits_valid_bits_0;
@@ -4447,6 +4447,13 @@ module rename(
     .io_commit_bits_RD_valid_1              (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2              (io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3              (io_commit_bits_RD_valid_3),
+    .io_flush_valid                         (io_flush_valid),
+    .io_flush_bits_is_misprediction         (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception             (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                 (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                   (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC              (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC              (io_flush_bits_redirect_PC),
     .io_free_list_front_pointer             (_free_list_io_free_list_front_pointer),
     .io_can_allocate                        (_free_list_io_can_allocate)
   );
@@ -4497,8 +4504,8 @@ module rename(
     .io_FL_RD_values_3          (_WAW_handler_io_FL_RD_values_3)
   );
   RAT RAT (
-    .clock                           (clock),
-    .reset                           (reset),
+    .clock                     (clock),
+    .reset                     (reset),
     .io_instruction_RS1_0
       (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),
     .io_instruction_RS1_1
@@ -4515,51 +4522,50 @@ module rename(
       (io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[4:0]),
     .io_instruction_RS2_3
       (io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[4:0]),
-    .io_instruction_RD_0             (_WAW_handler_io_RAT_RD_values_0),
-    .io_instruction_RD_1             (_WAW_handler_io_RAT_RD_values_1),
-    .io_instruction_RD_2             (_WAW_handler_io_RAT_RD_values_2),
-    .io_instruction_RD_3             (_WAW_handler_io_RAT_RD_values_3),
-    .io_free_list_wr_en_0            (_WAW_handler_io_RAT_wr_en_0),
-    .io_free_list_wr_en_1            (_WAW_handler_io_RAT_wr_en_1),
-    .io_free_list_wr_en_2            (_WAW_handler_io_RAT_wr_en_2),
-    .io_free_list_wr_en_3            (_WAW_handler_io_RAT_wr_en_3),
-    .io_free_list_RD_0               (_WAW_handler_io_FL_RD_values_0),
-    .io_free_list_RD_1               (_WAW_handler_io_FL_RD_values_1),
-    .io_free_list_RD_2               (_WAW_handler_io_FL_RD_values_2),
-    .io_free_list_RD_3               (_WAW_handler_io_FL_RD_values_3),
-    .io_partial_commit_valid_0       (io_partial_commit_valid_0),
-    .io_partial_commit_valid_1       (io_partial_commit_valid_1),
-    .io_partial_commit_valid_2       (io_partial_commit_valid_2),
-    .io_partial_commit_valid_3       (io_partial_commit_valid_3),
-    .io_commit_valid                 (io_commit_valid),
-    .io_commit_bits_is_misprediction (io_commit_bits_is_misprediction),
-    .io_commit_bits_RD_0             (io_commit_bits_RD_0),
-    .io_commit_bits_RD_1             (io_commit_bits_RD_1),
-    .io_commit_bits_RD_2             (io_commit_bits_RD_2),
-    .io_commit_bits_RD_3             (io_commit_bits_RD_3),
-    .io_commit_bits_PRD_0            (io_commit_bits_PRD_0),
-    .io_commit_bits_PRD_1            (io_commit_bits_PRD_1),
-    .io_commit_bits_PRD_2            (io_commit_bits_PRD_2),
-    .io_commit_bits_PRD_3            (io_commit_bits_PRD_3),
-    .io_commit_bits_RD_valid_0       (io_commit_bits_RD_valid_0),
-    .io_commit_bits_RD_valid_1       (io_commit_bits_RD_valid_1),
-    .io_commit_bits_RD_valid_2       (io_commit_bits_RD_valid_2),
-    .io_commit_bits_RD_valid_3       (io_commit_bits_RD_valid_3),
+    .io_instruction_RD_0       (_WAW_handler_io_RAT_RD_values_0),
+    .io_instruction_RD_1       (_WAW_handler_io_RAT_RD_values_1),
+    .io_instruction_RD_2       (_WAW_handler_io_RAT_RD_values_2),
+    .io_instruction_RD_3       (_WAW_handler_io_RAT_RD_values_3),
+    .io_free_list_wr_en_0      (_WAW_handler_io_RAT_wr_en_0),
+    .io_free_list_wr_en_1      (_WAW_handler_io_RAT_wr_en_1),
+    .io_free_list_wr_en_2      (_WAW_handler_io_RAT_wr_en_2),
+    .io_free_list_wr_en_3      (_WAW_handler_io_RAT_wr_en_3),
+    .io_free_list_RD_0         (_WAW_handler_io_FL_RD_values_0),
+    .io_free_list_RD_1         (_WAW_handler_io_FL_RD_values_1),
+    .io_free_list_RD_2         (_WAW_handler_io_FL_RD_values_2),
+    .io_free_list_RD_3         (_WAW_handler_io_FL_RD_values_3),
+    .io_flush_valid            (io_flush_valid),
+    .io_partial_commit_valid_0 (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1 (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2 (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3 (io_partial_commit_valid_3),
+    .io_commit_bits_RD_0       (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1       (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2       (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3       (io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0      (io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1      (io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2      (io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3      (io_commit_bits_PRD_3),
+    .io_commit_bits_RD_valid_0 (io_commit_bits_RD_valid_0),
+    .io_commit_bits_RD_valid_1 (io_commit_bits_RD_valid_1),
+    .io_commit_bits_RD_valid_2 (io_commit_bits_RD_valid_2),
+    .io_commit_bits_RD_valid_3 (io_commit_bits_RD_valid_3),
     .io_RAT_PRDold_0
       (renamed_decoded_fetch_packet_bits_decoded_instruction_0_PRDold),
-    .io_RAT_PRDold_1                 (_RAT_io_RAT_PRDold_1),
-    .io_RAT_PRDold_2                 (_RAT_io_RAT_PRDold_2),
-    .io_RAT_PRDold_3                 (_RAT_io_RAT_PRDold_3),
+    .io_RAT_PRDold_1           (_RAT_io_RAT_PRDold_1),
+    .io_RAT_PRDold_2           (_RAT_io_RAT_PRDold_2),
+    .io_RAT_PRDold_3           (_RAT_io_RAT_PRDold_3),
     .io_RAT_RS1_0
       (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1),
-    .io_RAT_RS1_1                    (_RAT_io_RAT_RS1_1),
-    .io_RAT_RS1_2                    (_RAT_io_RAT_RS1_2),
-    .io_RAT_RS1_3                    (_RAT_io_RAT_RS1_3),
+    .io_RAT_RS1_1              (_RAT_io_RAT_RS1_1),
+    .io_RAT_RS1_2              (_RAT_io_RAT_RS1_2),
+    .io_RAT_RS1_3              (_RAT_io_RAT_RS1_3),
     .io_RAT_RS2_0
       (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2),
-    .io_RAT_RS2_1                    (_RAT_io_RAT_RS2_1),
-    .io_RAT_RS2_2                    (_RAT_io_RAT_RS2_2),
-    .io_RAT_RS2_3                    (_RAT_io_RAT_RS2_3)
+    .io_RAT_RS2_1              (_RAT_io_RAT_RS2_1),
+    .io_RAT_RS2_2              (_RAT_io_RAT_RS2_2),
+    .io_RAT_RS2_3              (_RAT_io_RAT_RS2_3)
   );
   Queue2_decoded_fetch_packet renamed_decoded_fetch_packet_Q (
     .clock                                                  (clock),
