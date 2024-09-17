@@ -26,14 +26,14 @@ async def test_reset(dut):
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/vec_add.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/if.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin")     # construct TB
-    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/bubble_sort.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/bubble_sort.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/printf.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/multiply.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/test.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/branch_test.bin")     # construct TB
 
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/beq.bin")     # construct TB
-    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/instret.bin")     # construct TB
+    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/instret.bin")     # construct TB
 
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/riscv-tests/isa/rv32ui-p-srai")     # construct TB
     await SOC.reset()                      # Reset
