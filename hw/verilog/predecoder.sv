@@ -263,7 +263,7 @@ module predecoder(
              dominant_instruction[30:21],
              1'h0}
           : dominant_instruction[6:0] == 7'h13 | dominant_instruction[6:0] == 7'h3
-            | dominant_instruction[6:0] == 7'h67
+            | dominant_instruction[6:0] == 7'h67 | dominant_instruction[6:0] == 7'h73
               ? {_GEN_2, dominant_instruction[31:20]}
               : dominant_instruction[6:0] == 7'h23
                   ? {_GEN_2, dominant_instruction[31:25], dominant_instruction[11:7]}

@@ -609,28 +609,37 @@ module ROB(
   wire [31:0]      expected_PC =
     has_taken_branch ? _GEN_5[earliest_taken_index] : ROB_output_fetch_PC + 32'h10;
   wire             is_completed = ROB_output_complete_0 & ROB_output_ROB_entries_0_valid;
-  wire             pre_mispred_0 = commit_valid | ~has_taken_branch;
-  wire             commit_row_complete_0 =
+  wire             commit_row_complete_0;
+  wire             pre_mispred_0 = commit_row_complete_0 | ~has_taken_branch;
+  assign commit_row_complete_0 =
     (is_completed | ~ROB_output_ROB_entries_0_valid) & ROB_output_row_valid;
   wire             is_completed_1 =
     ROB_output_complete_1 & ROB_output_ROB_entries_1_valid;
+  wire             commit_row_complete_1;
+  wire             allPreviousComplete = commit_row_complete_0 & commit_row_complete_1;
   wire             pre_mispred_1 =
-    (|earliest_taken_index) & commit_valid | ~has_taken_branch;
-  wire             commit_row_complete_1 =
-    (is_completed_1 | ~ROB_output_ROB_entries_1_valid) & ROB_output_row_valid;
+    (|earliest_taken_index) & allPreviousComplete | ~has_taken_branch;
+  assign commit_row_complete_1 =
+    (is_completed_1 | ~ROB_output_ROB_entries_1_valid | earliest_taken_index == 2'h0
+     & has_taken_branch) & ROB_output_row_valid;
   wire             is_completed_2 =
     ROB_output_complete_2 & ROB_output_ROB_entries_2_valid;
+  wire             commit_row_complete_2;
   wire             pre_mispred_2 =
-    earliest_taken_index[1] & commit_valid | ~has_taken_branch;
-  wire             commit_row_complete_2 =
-    (is_completed_2 | ~ROB_output_ROB_entries_2_valid) & ROB_output_row_valid;
-  wire             allPreviousComplete = commit_row_complete_0 & commit_row_complete_1;
+    earliest_taken_index[1] & allPreviousComplete & commit_row_complete_2
+    | ~has_taken_branch;
+  assign commit_row_complete_2 =
+    (is_completed_2 | ~ROB_output_ROB_entries_2_valid | ~(earliest_taken_index[1])
+     & has_taken_branch) & ROB_output_row_valid;
   wire             is_completed_3 =
     ROB_output_complete_3 & ROB_output_ROB_entries_3_valid;
+  wire             commit_row_complete_3;
   wire             pre_mispred_3 =
-    (&earliest_taken_index) & commit_valid | ~has_taken_branch;
-  wire             commit_row_complete_3 =
-    (is_completed_3 | ~ROB_output_ROB_entries_3_valid) & ROB_output_row_valid;
+    (&earliest_taken_index) & allPreviousComplete & commit_row_complete_2
+    & commit_row_complete_3 | ~has_taken_branch;
+  assign commit_row_complete_3 =
+    (is_completed_3 | ~ROB_output_ROB_entries_3_valid | earliest_taken_index != 2'h3
+     & has_taken_branch) & ROB_output_row_valid;
   assign commit_valid =
     allPreviousComplete & commit_row_complete_2 & commit_row_complete_3;
   wire [3:0]       _enc_T_3 = {has_taken_branch_vec_3, 3'h0};

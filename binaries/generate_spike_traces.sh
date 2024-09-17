@@ -18,7 +18,7 @@ fi
 echo "Generating spike trace for $name"
 
 # Run spike with a 10-second timeout
-timeout 10s spike -m0x80000000:0x90000000,0x80000:0x90000 --log=spike_traces/$name.log --log-commits --isa=rv32im "$elffile"
+timeout 10s spike -m0x80000000:0x90000000,0x80000:0x90000 --log=spike_traces/$name.log --log-commits --isa=rv32im_zicntr "$elffile"
 
 # Check if spike was terminated by timeout
 if [ $? -eq 124 ]; then
