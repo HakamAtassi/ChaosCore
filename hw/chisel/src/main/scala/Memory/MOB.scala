@@ -52,7 +52,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush               =     Flipped(ValidIO(new flush(coreParameters)))
+        val flush                   =     Flipped(ValidIO(new flush(coreParameters)))
 
         // ALLOCATE //
         val reserve                 =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))         // reserve entry (rename)

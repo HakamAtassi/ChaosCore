@@ -43,7 +43,8 @@ class predecoder(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH
-        val flush               = Input(Bool())
+        val flush = Flipped(ValidIO(new flush(coreParameters)))
+
         val revert              = ValidIO(new revert(coreParameters))
 
         // inputs
@@ -178,16 +179,16 @@ class predecoder(coreParameters:CoreParameters) extends Module{
 
     input_valid                    :=  io.fetch_packet.fire    && 
                                        io.prediction.fire      && 
-                                       !io.flush
+                                       !io.flush.valid
 
     output_ready                    := io.final_fetch_packet.ready
     
-    input_fetch_packet_valid        := (io.fetch_packet.fire && (io.prediction.fire || !io.prediction.valid)) && PC_match && !io.flush
+    input_fetch_packet_valid        := (io.fetch_packet.fire && (io.prediction.fire || !io.prediction.valid)) && PC_match && !io.flush.valid
 
     final_fetch_packet_out.valid    := input_fetch_packet_valid
     when(input_fetch_packet_valid && final_fetch_packet_out_Q.io.enq.ready){expected_next_PC := target_address}
     // FIXME: this should be a global signal...
-    when(io.commit.valid && (io.commit.bits.is_misprediction)){expected_next_PC := io.commit.bits.expected_PC}
+    when(io.flush.valid){expected_next_PC := io.flush.bits.redirect_PC}
 
     ////////////
     // REVERT //
@@ -205,7 +206,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
         io.GHR := (GHR << 1) | T_NT.reduce(_ || _)
     }
     GHR := io.GHR
-    when(io.commit.bits.is_misprediction){
+    when(io.flush.valid){
         GHR := io.commit.bits.GHR
     }
 
@@ -251,7 +252,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     final_fetch_packet_out_Q.io.enq           <> final_fetch_packet_out
     final_fetch_packet_out_Q.io.deq           <> io.final_fetch_packet
     final_fetch_packet_out_Q.io.deq.ready     := output_ready
-    final_fetch_packet_out_Q.io.flush.get     := io.flush
+    final_fetch_packet_out_Q.io.flush.get     := io.flush.valid
 
     io.prediction.ready                       := RegNext(output_ready)
     io.fetch_packet.ready                     := RegNext(output_ready)

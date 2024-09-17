@@ -84,7 +84,7 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     //////////////
     // PC ARBIT //
     //////////////
-    PC_gen.io.flush            <> io.flush
+    PC_gen.io.flush             <> io.flush
     PC_gen.io.prediction        <> bp.io.prediction
     PC_gen.io.RAS_read          <> bp.io.RAS_read
     PC_gen.io.revert            <> predecoder.io.revert
@@ -120,7 +120,7 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     PC_Q.io.flush.get                 :=  io.flush.valid || io.revert.valid
     instruction_Q.io.flush.get        :=  io.flush.valid || io.revert.valid
     bp.io.flush                       :=  io.flush.valid || io.revert.valid
-    predecoder.io.flush               :=  io.flush.valid // NO REVERT HERE 
+    predecoder.io.flush               :=  io.flush // NO REVERT HERE 
 
     /////////////
     // OUTPUTS //

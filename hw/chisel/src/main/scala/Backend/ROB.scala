@@ -219,7 +219,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // commit (connect all ports)
         ROB_WB_banks(i).io.addrG         := front_index + commit_valid
     
-        ROB_WB_banks(i).io.flush         := io.commit.valid && io.commit.bits.is_misprediction
+        ROB_WB_banks(i).io.flush         := io.flush.valid
     }
 
 
@@ -581,6 +581,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
                     flush.is_fence              := 0.B
                     flush.is_CSR                := 0.B
+                    flush.flushing_PC           := commit.fetch_PC + (i*4).U
 
                     commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
                     flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
@@ -592,12 +593,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
                     flush.is_fence              := 0.B
                     flush.is_CSR                := 0.B
+                    flush.flushing_PC           := commit.fetch_PC + (i*4).U
 
                     commit.expected_PC := commit_resolved(i).target
                     flush.redirect_PC  := commit_resolved(i).target
                 }
 
-            }.elsewhen(has_flushing_instr_vec(i) && is_branch){
+            }.elsewhen(has_flushing_instr_vec(i) && is_valid){
                 commit.is_misprediction      := 0.B
                 commit.br_type               := br_type_t.NONE
                 commit.fetch_packet_index    := 0.U
@@ -606,6 +608,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
                 //FIXME: ditto
                 flush.is_fence              := 1.B
                 flush.is_CSR                := 1.B
+                flush.flushing_PC           := commit.fetch_PC + (i*4).U
 
                 commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
                 flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
@@ -636,7 +639,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         row_valid_mem(commit.ROB_index) := 0.B
     }
 
-    when(commit_valid && commit.is_misprediction){
+    when(flush.is_valid()){
         row_valid_mem := Seq.fill(ROBEntries)(0.B)
         front_pointer := 0.U
         back_pointer  := 0.U
@@ -659,6 +662,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     io.ROB_packet.ready := !full
 
+
+    dontTouch(flush)
 
 
 
