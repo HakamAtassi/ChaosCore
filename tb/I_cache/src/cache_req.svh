@@ -149,7 +149,12 @@ class base_sequence extends uvm_sequence#(cache_req, cache_rsp);
     repeat(1) begin
       req = new();
       start_item(req);
-      assert(req.randomize());
+      req.reset = 0;
+      req.io_CPU_request_valid = 1;
+      req.io_CPU_request_bits_addr = 0;
+      req.io_kill = 0;
+      req.io_CPU_response_ready = 1;
+      //assert(req.randomize());
       `uvm_info("test_seq",{"Sending transaction ",req.convert2string()}, UVM_MEDIUM);
       finish_item(req);
       get_response(rsp);

@@ -30,10 +30,11 @@ class cpu_io_driver extends uvm_driver #(cache_req, cache_rsp);
             seq_item_port.try_next_item(req);
             if (req!=null) begin
                 seq_item_port.item_done();
+                cache_vif.reset = req.reset;
                 cache_vif.io_CPU_request_valid = req.io_CPU_request_valid;
                 cache_vif.io_CPU_request_bits_addr = req.io_CPU_request_bits_addr;
-                cache_vif.io_CPU_request_bits_wr_data = req.io_CPU_request_bits_wr_data;
-                cache_vif.io_CPU_request_bits_wr_en = req.io_CPU_request_bits_wr_en;
+                //cache_vif.io_CPU_request_bits_wr_data = req.io_CPU_request_bits_wr_data;
+                //cache_vif.io_CPU_request_bits_wr_en = req.io_CPU_request_bits_wr_en;
                 cache_vif.io_CPU_response_ready = req.io_CPU_response_ready;
                 cache_vif.io_kill = req.io_kill;
             end

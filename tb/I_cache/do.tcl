@@ -6,6 +6,7 @@ if {[file exists work]} {
 vlib work
 
 vlog ../../hw/verilog/*.sv
+vlog ../../hw/chisel/src/main/resources/verilog-axi/rtl/axi_ram.v
 vlog src/*.sv
 
 view wave

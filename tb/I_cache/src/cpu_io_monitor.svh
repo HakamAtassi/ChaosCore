@@ -35,17 +35,21 @@ class cpu_io_monitor extends uvm_monitor;
             @(posedge cache_vif.clock);
             #1;
 
-            rsp_port.write(rsp);
-            req_port.write(req);
+            if (cache_vif.io_CPU_response_valid == 1 && cache_vif.io_CPU_response_bits_valid_bits_0 == 1) begin
 
-            `uvm_info("run",
-                 $psprintf("Monitor got req %s",
-                 req.convert2string()), 
-                 UVM_LOW);
-            `uvm_info("run",
-                 $psprintf("Monitor got %s",
-                 rsp.convert2string()), 
-                 UVM_LOW);
+                rsp_port.write(rsp);
+                req_port.write(req);
+
+                `uvm_info("run",
+                    $psprintf("Monitor got req %s",
+                    req.convert2string()), 
+                    UVM_LOW);
+                `uvm_info("run",
+                    $psprintf("Monitor got %s",
+                    rsp.convert2string()), 
+                    UVM_LOW);
+
+            end
 
         end
 
