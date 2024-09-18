@@ -439,13 +439,14 @@ class ROB(coreParameters:CoreParameters) extends Module{
         commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
     }
 
-    commit_valid := commit_row_complete.reduce(_ && _)
 
 
     for(i <- 0 until fetchWidth){   // only commit if all previous instructions are valid, complete, not a misprediction, and not an exception, or just invalid
         partial_commit_is_complete(i)               := commit_row_complete(i) 
         partial_commit_is_valid(i)                  := ROB_output.ROB_entries(i).valid
     }
+
+    val can_commit_vec = Wire(Vec(fetchWidth, Bool()))
 
     for(i <- 0 until fetchWidth){
         val partial_commit_all_prev_complete_val        = if (i == 0) true.B else commit_row_complete.take(i).reduce(_ && _)
@@ -455,7 +456,12 @@ class ROB(coreParameters:CoreParameters) extends Module{
         partial_commit_all_prev_complete(i)        := partial_commit_all_prev_complete_val
         partial_commit_is_after_taken_branch(i)    := partial_commit_is_after_taken_branch_val
         partial_commit_is_after_flushing_event(i)  := partial_commit_is_after_flushing_event_val
+
+        // is each instruction complete or after a taken branch
+        // note for an instruction to commit, all prev instructions must be complete (or invalid)
+        can_commit_vec(i) := commit_row_complete(i) || partial_commit_is_after_taken_branch_val || partial_commit_is_after_flushing_event_val
     }
+    commit_valid := can_commit_vec.reduce(_ && _)
 
     dontTouch(partial_commit_all_prev_complete)
     dontTouch(partial_commit_is_after_taken_branch)
