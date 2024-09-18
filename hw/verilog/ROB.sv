@@ -650,14 +650,19 @@ module ROB(
      | ~ROB_output_ROB_entries_3_valid) & ROB_output_row_valid;
   wire             partial_commit_all_prev_complete_2 =
     commit_row_complete_0 & commit_row_complete_1;
-  assign commit_valid =
-    partial_commit_all_prev_complete_2 & commit_row_complete_2 & commit_row_complete_3;
   wire             partial_commit_all_prev_complete_3 =
     partial_commit_all_prev_complete_2 & commit_row_complete_2;
   wire             partial_commit_is_after_taken_branch_3 =
     partial_commit_is_after_taken_branch_2 | has_taken_branch_vec_2;
   wire             partial_commit_is_after_flushing_event_3 =
     partial_commit_is_after_flushing_event_2 | has_flushing_instr_vec_2;
+  assign commit_valid =
+    commit_row_complete_0
+    & (commit_row_complete_1 | has_taken_branch_vec_0 | has_flushing_instr_vec_0)
+    & (commit_row_complete_2 | partial_commit_is_after_taken_branch_2
+       | partial_commit_is_after_flushing_event_2)
+    & (commit_row_complete_3 | partial_commit_is_after_taken_branch_3
+       | partial_commit_is_after_flushing_event_3);
   wire [3:0]       enc =
     has_taken_branch_vec_0
       ? 4'h1
