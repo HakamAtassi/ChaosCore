@@ -39,6 +39,7 @@ case class FUParams(
     supportsMult: Boolean = false,
     supportsDiv: Boolean = false,
     supportsBranch: Boolean = false,
+    supportsCSRs: Boolean = false,
     supportsAddressGeneration: Boolean = false,
 
     INTRS_MEMRS_port:Int=0,             // RS index

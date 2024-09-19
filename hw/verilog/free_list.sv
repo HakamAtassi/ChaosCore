@@ -100,12 +100,18 @@ module free_list(
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
+                io_flush_valid,
+                io_flush_bits_is_misprediction,
+                io_flush_bits_is_exception,
+                io_flush_bits_is_fence,
+                io_flush_bits_is_CSR,
+  input  [31:0] io_flush_bits_flushing_PC,
+                io_flush_bits_redirect_PC,
   output [6:0]  io_free_list_front_pointer,
   output        io_can_allocate
 );
 
   wire [4:0]  _available_entries_6to2;
-  wire        flush = io_commit_valid & io_commit_bits_is_misprediction;
   reg         free_list_buffer_0;
   reg         free_list_buffer_1;
   reg         free_list_buffer_2;
@@ -1016,19 +1022,19 @@ module free_list(
                                                                                                                                                                                                                                                                & _selectedPRDs_T_5[62]
                                                                                                                                                                                                                                                                & _selectedPRDs_T_8[62])};
   wire        io_renamed_valid_0_0 =
-    io_rename_valid_0 & ~flush & (|_available_entries_6to2);
+    io_rename_valid_0 & ~io_flush_valid & (|_available_entries_6to2);
   wire [6:0]  io_renamed_values_0_0 =
     io_rename_valid_0 ? {1'h0, selectedPRDs_0} + 7'h1 : 7'h0;
   wire        io_renamed_valid_1_0 =
-    io_rename_valid_1 & ~flush & (|_available_entries_6to2);
+    io_rename_valid_1 & ~io_flush_valid & (|_available_entries_6to2);
   wire [6:0]  io_renamed_values_1_0 =
     io_rename_valid_1 ? {1'h0, selectedPRDs_1} + 7'h1 : 7'h0;
   wire        io_renamed_valid_2_0 =
-    io_rename_valid_2 & ~flush & (|_available_entries_6to2);
+    io_rename_valid_2 & ~io_flush_valid & (|_available_entries_6to2);
   wire [6:0]  io_renamed_values_2_0 =
     io_rename_valid_2 ? {1'h0, selectedPRDs_2} + 7'h1 : 7'h0;
   wire        io_renamed_valid_3_0 =
-    io_rename_valid_3 & ~flush & (|_available_entries_6to2);
+    io_rename_valid_3 & ~io_flush_valid & (|_available_entries_6to2);
   wire [6:0]  io_renamed_values_3_0 =
     io_rename_valid_3 ? {1'h0, selectedPRDs_3} + 7'h1 : 7'h0;
   wire [6:0]  available_entries =
@@ -1867,7 +1873,7 @@ module free_list(
       _GEN_322 = _commit_PRDold_T_11[5:0] == 6'h3C;
       _GEN_323 = _commit_PRDold_T_11[5:0] == 6'h3D;
       _GEN_324 = _commit_PRDold_T_11[5:0] == 6'h3E;
-      if (flush) begin
+      if (io_flush_valid) begin
         automatic logic [5:0] _commit_PRD_T_12 = io_partial_commit_PRD_0[5:0] - 6'h1;
         automatic logic [5:0] _commit_PRDold_T_12 =
           io_partial_commit_PRDold_0[5:0] - 6'h1;

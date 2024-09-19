@@ -44,7 +44,8 @@ class frontend(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                           =   Input(Bool())
+        val flush = Flipped(ValidIO(new flush(coreParameters)))
+
 
         // DRAM CHANNELS //
         val memory_request                  =   Decoupled(new frontend_memory_request(coreParameters))
@@ -124,7 +125,7 @@ class frontend(coreParameters:CoreParameters) extends Module{
     ///////////////////////
     instruction_queue.io.enq         <> decoders.io.decoded_fetch_packet
     instruction_queue.io.enq.valid   := decoders.io.decoded_fetch_packet.valid 
-    instruction_queue.io.flush.get   <> io.flush
+    instruction_queue.io.flush.get   <> io.flush.valid
 
 
     rename.io.decoded_fetch_packet <> instruction_queue.io.deq

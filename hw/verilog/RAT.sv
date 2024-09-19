@@ -51,12 +51,11 @@ module RAT(
                io_free_list_RD_1,
                io_free_list_RD_2,
                io_free_list_RD_3,
-  input        io_partial_commit_valid_0,
+  input        io_flush_valid,
+               io_partial_commit_valid_0,
                io_partial_commit_valid_1,
                io_partial_commit_valid_2,
                io_partial_commit_valid_3,
-               io_commit_valid,
-               io_commit_bits_is_misprediction,
   input  [4:0] io_commit_bits_RD_0,
                io_commit_bits_RD_1,
                io_commit_bits_RD_2,
@@ -764,7 +763,7 @@ module RAT(
         commit_RAT_31 <= io_commit_bits_PRD_1;
       else if (_GEN_32)
         commit_RAT_31 <= io_commit_bits_PRD_0;
-      if (io_commit_valid & io_commit_bits_is_misprediction) begin
+      if (io_flush_valid) begin
         speculative_RAT_0 <=
           _GEN_100
             ? io_commit_bits_PRD_3

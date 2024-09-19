@@ -31,7 +31,13 @@
 module backend(
   input         clock,
                 reset,
-                io_flush,
+                io_flush_valid,
+                io_flush_bits_is_misprediction,
+                io_flush_bits_is_exception,
+                io_flush_bits_is_fence,
+                io_flush_bits_is_CSR,
+  input  [31:0] io_flush_bits_flushing_PC,
+                io_flush_bits_redirect_PC,
   output        io_reserved_pointers_0_valid,
   output [3:0]  io_reserved_pointers_0_bits,
   output        io_reserved_pointers_1_valid,
@@ -142,8 +148,10 @@ module backend(
   input         io_backend_packet_0_bits_needs_ALU,
                 io_backend_packet_0_bits_needs_branch_unit,
                 io_backend_packet_0_bits_needs_CSRs,
+                io_backend_packet_0_bits_needs_memory,
                 io_backend_packet_0_bits_SUBTRACT,
                 io_backend_packet_0_bits_MULTIPLY,
+                io_backend_packet_0_bits_FENCE,
                 io_backend_packet_0_bits_IS_IMM,
                 io_backend_packet_0_bits_mem_signed,
   input  [1:0]  io_backend_packet_0_bits_memory_type,
@@ -171,8 +179,10 @@ module backend(
   input         io_backend_packet_1_bits_needs_ALU,
                 io_backend_packet_1_bits_needs_branch_unit,
                 io_backend_packet_1_bits_needs_CSRs,
+                io_backend_packet_1_bits_needs_memory,
                 io_backend_packet_1_bits_SUBTRACT,
                 io_backend_packet_1_bits_MULTIPLY,
+                io_backend_packet_1_bits_FENCE,
                 io_backend_packet_1_bits_IS_IMM,
                 io_backend_packet_1_bits_mem_signed,
   input  [1:0]  io_backend_packet_1_bits_memory_type,
@@ -200,8 +210,10 @@ module backend(
   input         io_backend_packet_2_bits_needs_ALU,
                 io_backend_packet_2_bits_needs_branch_unit,
                 io_backend_packet_2_bits_needs_CSRs,
+                io_backend_packet_2_bits_needs_memory,
                 io_backend_packet_2_bits_SUBTRACT,
                 io_backend_packet_2_bits_MULTIPLY,
+                io_backend_packet_2_bits_FENCE,
                 io_backend_packet_2_bits_IS_IMM,
                 io_backend_packet_2_bits_mem_signed,
   input  [1:0]  io_backend_packet_2_bits_memory_type,
@@ -229,8 +241,10 @@ module backend(
   input         io_backend_packet_3_bits_needs_ALU,
                 io_backend_packet_3_bits_needs_branch_unit,
                 io_backend_packet_3_bits_needs_CSRs,
+                io_backend_packet_3_bits_needs_memory,
                 io_backend_packet_3_bits_SUBTRACT,
                 io_backend_packet_3_bits_MULTIPLY,
+                io_backend_packet_3_bits_FENCE,
                 io_backend_packet_3_bits_IS_IMM,
                 io_backend_packet_3_bits_mem_signed,
   input  [1:0]  io_backend_packet_3_bits_memory_type,
@@ -442,8 +456,10 @@ module backend(
   wire        _MEM_RS_io_RF_inputs_0_bits_needs_ALU;
   wire        _MEM_RS_io_RF_inputs_0_bits_needs_branch_unit;
   wire        _MEM_RS_io_RF_inputs_0_bits_needs_CSRs;
+  wire        _MEM_RS_io_RF_inputs_0_bits_needs_memory;
   wire        _MEM_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _MEM_RS_io_RF_inputs_0_bits_MULTIPLY;
+  wire        _MEM_RS_io_RF_inputs_0_bits_FENCE;
   wire        _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
   wire        _MEM_RS_io_RF_inputs_0_bits_mem_signed;
   wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_memory_type;
@@ -474,8 +490,10 @@ module backend(
   wire        _INT_RS_io_RF_inputs_0_bits_needs_ALU;
   wire        _INT_RS_io_RF_inputs_0_bits_needs_branch_unit;
   wire        _INT_RS_io_RF_inputs_0_bits_needs_CSRs;
+  wire        _INT_RS_io_RF_inputs_0_bits_needs_memory;
   wire        _INT_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_0_bits_MULTIPLY;
+  wire        _INT_RS_io_RF_inputs_0_bits_FENCE;
   wire        _INT_RS_io_RF_inputs_0_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_0_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_memory_type;
@@ -502,8 +520,10 @@ module backend(
   wire        _INT_RS_io_RF_inputs_1_bits_needs_ALU;
   wire        _INT_RS_io_RF_inputs_1_bits_needs_branch_unit;
   wire        _INT_RS_io_RF_inputs_1_bits_needs_CSRs;
+  wire        _INT_RS_io_RF_inputs_1_bits_needs_memory;
   wire        _INT_RS_io_RF_inputs_1_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_1_bits_MULTIPLY;
+  wire        _INT_RS_io_RF_inputs_1_bits_FENCE;
   wire        _INT_RS_io_RF_inputs_1_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_1_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_memory_type;
@@ -530,8 +550,10 @@ module backend(
   wire        _INT_RS_io_RF_inputs_2_bits_needs_ALU;
   wire        _INT_RS_io_RF_inputs_2_bits_needs_branch_unit;
   wire        _INT_RS_io_RF_inputs_2_bits_needs_CSRs;
+  wire        _INT_RS_io_RF_inputs_2_bits_needs_memory;
   wire        _INT_RS_io_RF_inputs_2_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_2_bits_MULTIPLY;
+  wire        _INT_RS_io_RF_inputs_2_bits_FENCE;
   wire        _INT_RS_io_RF_inputs_2_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_2_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_memory_type;
@@ -568,8 +590,10 @@ module backend(
   reg         read_decoded_instructions_0_decoded_instruction_REG_needs_ALU;
   reg         read_decoded_instructions_0_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_0_decoded_instruction_REG_needs_CSRs;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_needs_memory;
   reg         read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_FENCE;
   reg         read_decoded_instructions_0_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_0_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_memory_type;
@@ -596,8 +620,10 @@ module backend(
   reg         read_decoded_instructions_1_decoded_instruction_REG_needs_ALU;
   reg         read_decoded_instructions_1_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_1_decoded_instruction_REG_needs_CSRs;
+  reg         read_decoded_instructions_1_decoded_instruction_REG_needs_memory;
   reg         read_decoded_instructions_1_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY;
+  reg         read_decoded_instructions_1_decoded_instruction_REG_FENCE;
   reg         read_decoded_instructions_1_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_1_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_memory_type;
@@ -624,8 +650,10 @@ module backend(
   reg         read_decoded_instructions_2_decoded_instruction_REG_needs_ALU;
   reg         read_decoded_instructions_2_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_2_decoded_instruction_REG_needs_CSRs;
+  reg         read_decoded_instructions_2_decoded_instruction_REG_needs_memory;
   reg         read_decoded_instructions_2_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY;
+  reg         read_decoded_instructions_2_decoded_instruction_REG_FENCE;
   reg         read_decoded_instructions_2_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_2_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_memory_type;
@@ -652,8 +680,10 @@ module backend(
   reg         read_decoded_instructions_3_decoded_instruction_REG_needs_ALU;
   reg         read_decoded_instructions_3_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_3_decoded_instruction_REG_needs_CSRs;
+  reg         read_decoded_instructions_3_decoded_instruction_REG_needs_memory;
   reg         read_decoded_instructions_3_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY;
+  reg         read_decoded_instructions_3_decoded_instruction_REG_FENCE;
   reg         read_decoded_instructions_3_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_3_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_memory_type;
@@ -702,10 +732,14 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_needs_branch_unit;
     read_decoded_instructions_0_decoded_instruction_REG_needs_CSRs <=
       _INT_RS_io_RF_inputs_0_bits_needs_CSRs;
+    read_decoded_instructions_0_decoded_instruction_REG_needs_memory <=
+      _INT_RS_io_RF_inputs_0_bits_needs_memory;
     read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT <=
       _INT_RS_io_RF_inputs_0_bits_SUBTRACT;
     read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY <=
       _INT_RS_io_RF_inputs_0_bits_MULTIPLY;
+    read_decoded_instructions_0_decoded_instruction_REG_FENCE <=
+      _INT_RS_io_RF_inputs_0_bits_FENCE;
     read_decoded_instructions_0_decoded_instruction_REG_IS_IMM <=
       _INT_RS_io_RF_inputs_0_bits_IS_IMM;
     read_decoded_instructions_0_decoded_instruction_REG_mem_signed <=
@@ -757,10 +791,14 @@ module backend(
       _INT_RS_io_RF_inputs_1_bits_needs_branch_unit;
     read_decoded_instructions_1_decoded_instruction_REG_needs_CSRs <=
       _INT_RS_io_RF_inputs_1_bits_needs_CSRs;
+    read_decoded_instructions_1_decoded_instruction_REG_needs_memory <=
+      _INT_RS_io_RF_inputs_1_bits_needs_memory;
     read_decoded_instructions_1_decoded_instruction_REG_SUBTRACT <=
       _INT_RS_io_RF_inputs_1_bits_SUBTRACT;
     read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY <=
       _INT_RS_io_RF_inputs_1_bits_MULTIPLY;
+    read_decoded_instructions_1_decoded_instruction_REG_FENCE <=
+      _INT_RS_io_RF_inputs_1_bits_FENCE;
     read_decoded_instructions_1_decoded_instruction_REG_IS_IMM <=
       _INT_RS_io_RF_inputs_1_bits_IS_IMM;
     read_decoded_instructions_1_decoded_instruction_REG_mem_signed <=
@@ -812,10 +850,14 @@ module backend(
       _INT_RS_io_RF_inputs_2_bits_needs_branch_unit;
     read_decoded_instructions_2_decoded_instruction_REG_needs_CSRs <=
       _INT_RS_io_RF_inputs_2_bits_needs_CSRs;
+    read_decoded_instructions_2_decoded_instruction_REG_needs_memory <=
+      _INT_RS_io_RF_inputs_2_bits_needs_memory;
     read_decoded_instructions_2_decoded_instruction_REG_SUBTRACT <=
       _INT_RS_io_RF_inputs_2_bits_SUBTRACT;
     read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY <=
       _INT_RS_io_RF_inputs_2_bits_MULTIPLY;
+    read_decoded_instructions_2_decoded_instruction_REG_FENCE <=
+      _INT_RS_io_RF_inputs_2_bits_FENCE;
     read_decoded_instructions_2_decoded_instruction_REG_IS_IMM <=
       _INT_RS_io_RF_inputs_2_bits_IS_IMM;
     read_decoded_instructions_2_decoded_instruction_REG_mem_signed <=
@@ -867,10 +909,14 @@ module backend(
       _MEM_RS_io_RF_inputs_0_bits_needs_branch_unit;
     read_decoded_instructions_3_decoded_instruction_REG_needs_CSRs <=
       _MEM_RS_io_RF_inputs_0_bits_needs_CSRs;
+    read_decoded_instructions_3_decoded_instruction_REG_needs_memory <=
+      _MEM_RS_io_RF_inputs_0_bits_needs_memory;
     read_decoded_instructions_3_decoded_instruction_REG_SUBTRACT <=
       _MEM_RS_io_RF_inputs_0_bits_SUBTRACT;
     read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY <=
       _MEM_RS_io_RF_inputs_0_bits_MULTIPLY;
+    read_decoded_instructions_3_decoded_instruction_REG_FENCE <=
+      _MEM_RS_io_RF_inputs_0_bits_FENCE;
     read_decoded_instructions_3_decoded_instruction_REG_IS_IMM <=
       _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
     read_decoded_instructions_3_decoded_instruction_REG_mem_signed <=
@@ -884,7 +930,13 @@ module backend(
   RS INT_RS (
     .clock                                         (clock),
     .reset                                         (reset),
-    .io_flush                                      (io_flush),
+    .io_flush_valid                                (io_flush_valid),
+    .io_flush_bits_is_misprediction                (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception                    (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                        (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                          (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC                     (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC                     (io_flush_bits_redirect_PC),
     .io_backend_packet_0_ready                     (_INT_RS_io_backend_packet_0_ready),
     .io_backend_packet_0_valid
       (io_backend_packet_0_bits_RS_type == 2'h0 & io_backend_packet_0_valid),
@@ -914,8 +966,11 @@ module backend(
     .io_backend_packet_0_bits_needs_branch_unit
       (io_backend_packet_0_bits_needs_branch_unit),
     .io_backend_packet_0_bits_needs_CSRs           (io_backend_packet_0_bits_needs_CSRs),
+    .io_backend_packet_0_bits_needs_memory
+      (io_backend_packet_0_bits_needs_memory),
     .io_backend_packet_0_bits_SUBTRACT             (io_backend_packet_0_bits_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY             (io_backend_packet_0_bits_MULTIPLY),
+    .io_backend_packet_0_bits_FENCE                (io_backend_packet_0_bits_FENCE),
     .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
     .io_backend_packet_0_bits_mem_signed           (io_backend_packet_0_bits_mem_signed),
     .io_backend_packet_0_bits_memory_type          (io_backend_packet_0_bits_memory_type),
@@ -950,8 +1005,11 @@ module backend(
     .io_backend_packet_1_bits_needs_branch_unit
       (io_backend_packet_1_bits_needs_branch_unit),
     .io_backend_packet_1_bits_needs_CSRs           (io_backend_packet_1_bits_needs_CSRs),
+    .io_backend_packet_1_bits_needs_memory
+      (io_backend_packet_1_bits_needs_memory),
     .io_backend_packet_1_bits_SUBTRACT             (io_backend_packet_1_bits_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY             (io_backend_packet_1_bits_MULTIPLY),
+    .io_backend_packet_1_bits_FENCE                (io_backend_packet_1_bits_FENCE),
     .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
     .io_backend_packet_1_bits_mem_signed           (io_backend_packet_1_bits_mem_signed),
     .io_backend_packet_1_bits_memory_type          (io_backend_packet_1_bits_memory_type),
@@ -986,8 +1044,11 @@ module backend(
     .io_backend_packet_2_bits_needs_branch_unit
       (io_backend_packet_2_bits_needs_branch_unit),
     .io_backend_packet_2_bits_needs_CSRs           (io_backend_packet_2_bits_needs_CSRs),
+    .io_backend_packet_2_bits_needs_memory
+      (io_backend_packet_2_bits_needs_memory),
     .io_backend_packet_2_bits_SUBTRACT             (io_backend_packet_2_bits_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY             (io_backend_packet_2_bits_MULTIPLY),
+    .io_backend_packet_2_bits_FENCE                (io_backend_packet_2_bits_FENCE),
     .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
     .io_backend_packet_2_bits_mem_signed           (io_backend_packet_2_bits_mem_signed),
     .io_backend_packet_2_bits_memory_type          (io_backend_packet_2_bits_memory_type),
@@ -1022,8 +1083,11 @@ module backend(
     .io_backend_packet_3_bits_needs_branch_unit
       (io_backend_packet_3_bits_needs_branch_unit),
     .io_backend_packet_3_bits_needs_CSRs           (io_backend_packet_3_bits_needs_CSRs),
+    .io_backend_packet_3_bits_needs_memory
+      (io_backend_packet_3_bits_needs_memory),
     .io_backend_packet_3_bits_SUBTRACT             (io_backend_packet_3_bits_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY             (io_backend_packet_3_bits_MULTIPLY),
+    .io_backend_packet_3_bits_FENCE                (io_backend_packet_3_bits_FENCE),
     .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
     .io_backend_packet_3_bits_mem_signed           (io_backend_packet_3_bits_mem_signed),
     .io_backend_packet_3_bits_memory_type          (io_backend_packet_3_bits_memory_type),
@@ -1178,8 +1242,11 @@ module backend(
       (_INT_RS_io_RF_inputs_0_bits_needs_branch_unit),
     .io_RF_inputs_0_bits_needs_CSRs
       (_INT_RS_io_RF_inputs_0_bits_needs_CSRs),
+    .io_RF_inputs_0_bits_needs_memory
+      (_INT_RS_io_RF_inputs_0_bits_needs_memory),
     .io_RF_inputs_0_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_0_bits_SUBTRACT),
     .io_RF_inputs_0_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_0_bits_MULTIPLY),
+    .io_RF_inputs_0_bits_FENCE                     (_INT_RS_io_RF_inputs_0_bits_FENCE),
     .io_RF_inputs_0_bits_IS_IMM                    (_INT_RS_io_RF_inputs_0_bits_IS_IMM),
     .io_RF_inputs_0_bits_mem_signed
       (_INT_RS_io_RF_inputs_0_bits_mem_signed),
@@ -1222,8 +1289,11 @@ module backend(
       (_INT_RS_io_RF_inputs_1_bits_needs_branch_unit),
     .io_RF_inputs_1_bits_needs_CSRs
       (_INT_RS_io_RF_inputs_1_bits_needs_CSRs),
+    .io_RF_inputs_1_bits_needs_memory
+      (_INT_RS_io_RF_inputs_1_bits_needs_memory),
     .io_RF_inputs_1_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_1_bits_SUBTRACT),
     .io_RF_inputs_1_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_1_bits_MULTIPLY),
+    .io_RF_inputs_1_bits_FENCE                     (_INT_RS_io_RF_inputs_1_bits_FENCE),
     .io_RF_inputs_1_bits_IS_IMM                    (_INT_RS_io_RF_inputs_1_bits_IS_IMM),
     .io_RF_inputs_1_bits_mem_signed
       (_INT_RS_io_RF_inputs_1_bits_mem_signed),
@@ -1266,8 +1336,11 @@ module backend(
       (_INT_RS_io_RF_inputs_2_bits_needs_branch_unit),
     .io_RF_inputs_2_bits_needs_CSRs
       (_INT_RS_io_RF_inputs_2_bits_needs_CSRs),
+    .io_RF_inputs_2_bits_needs_memory
+      (_INT_RS_io_RF_inputs_2_bits_needs_memory),
     .io_RF_inputs_2_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_2_bits_SUBTRACT),
     .io_RF_inputs_2_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_2_bits_MULTIPLY),
+    .io_RF_inputs_2_bits_FENCE                     (_INT_RS_io_RF_inputs_2_bits_FENCE),
     .io_RF_inputs_2_bits_IS_IMM                    (_INT_RS_io_RF_inputs_2_bits_IS_IMM),
     .io_RF_inputs_2_bits_mem_signed
       (_INT_RS_io_RF_inputs_2_bits_mem_signed),
@@ -1279,7 +1352,13 @@ module backend(
   RS_1 MEM_RS (
     .clock                                         (clock),
     .reset                                         (reset),
-    .io_flush                                      (io_flush),
+    .io_flush_valid                                (io_flush_valid),
+    .io_flush_bits_is_misprediction                (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception                    (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                        (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                          (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC                     (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC                     (io_flush_bits_redirect_PC),
     .io_backend_packet_0_ready                     (_MEM_RS_io_backend_packet_0_ready),
     .io_backend_packet_0_valid
       (_MOB_io_reserve_0_valid_T_2 & io_backend_packet_0_valid),
@@ -1309,8 +1388,11 @@ module backend(
     .io_backend_packet_0_bits_needs_branch_unit
       (io_backend_packet_0_bits_needs_branch_unit),
     .io_backend_packet_0_bits_needs_CSRs           (io_backend_packet_0_bits_needs_CSRs),
+    .io_backend_packet_0_bits_needs_memory
+      (io_backend_packet_0_bits_needs_memory),
     .io_backend_packet_0_bits_SUBTRACT             (io_backend_packet_0_bits_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY             (io_backend_packet_0_bits_MULTIPLY),
+    .io_backend_packet_0_bits_FENCE                (io_backend_packet_0_bits_FENCE),
     .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
     .io_backend_packet_0_bits_mem_signed           (io_backend_packet_0_bits_mem_signed),
     .io_backend_packet_0_bits_memory_type          (io_backend_packet_0_bits_memory_type),
@@ -1345,8 +1427,11 @@ module backend(
     .io_backend_packet_1_bits_needs_branch_unit
       (io_backend_packet_1_bits_needs_branch_unit),
     .io_backend_packet_1_bits_needs_CSRs           (io_backend_packet_1_bits_needs_CSRs),
+    .io_backend_packet_1_bits_needs_memory
+      (io_backend_packet_1_bits_needs_memory),
     .io_backend_packet_1_bits_SUBTRACT             (io_backend_packet_1_bits_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY             (io_backend_packet_1_bits_MULTIPLY),
+    .io_backend_packet_1_bits_FENCE                (io_backend_packet_1_bits_FENCE),
     .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
     .io_backend_packet_1_bits_mem_signed           (io_backend_packet_1_bits_mem_signed),
     .io_backend_packet_1_bits_memory_type          (io_backend_packet_1_bits_memory_type),
@@ -1381,8 +1466,11 @@ module backend(
     .io_backend_packet_2_bits_needs_branch_unit
       (io_backend_packet_2_bits_needs_branch_unit),
     .io_backend_packet_2_bits_needs_CSRs           (io_backend_packet_2_bits_needs_CSRs),
+    .io_backend_packet_2_bits_needs_memory
+      (io_backend_packet_2_bits_needs_memory),
     .io_backend_packet_2_bits_SUBTRACT             (io_backend_packet_2_bits_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY             (io_backend_packet_2_bits_MULTIPLY),
+    .io_backend_packet_2_bits_FENCE                (io_backend_packet_2_bits_FENCE),
     .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
     .io_backend_packet_2_bits_mem_signed           (io_backend_packet_2_bits_mem_signed),
     .io_backend_packet_2_bits_memory_type          (io_backend_packet_2_bits_memory_type),
@@ -1417,8 +1505,11 @@ module backend(
     .io_backend_packet_3_bits_needs_branch_unit
       (io_backend_packet_3_bits_needs_branch_unit),
     .io_backend_packet_3_bits_needs_CSRs           (io_backend_packet_3_bits_needs_CSRs),
+    .io_backend_packet_3_bits_needs_memory
+      (io_backend_packet_3_bits_needs_memory),
     .io_backend_packet_3_bits_SUBTRACT             (io_backend_packet_3_bits_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY             (io_backend_packet_3_bits_MULTIPLY),
+    .io_backend_packet_3_bits_FENCE                (io_backend_packet_3_bits_FENCE),
     .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
     .io_backend_packet_3_bits_mem_signed           (io_backend_packet_3_bits_mem_signed),
     .io_backend_packet_3_bits_memory_type          (io_backend_packet_3_bits_memory_type),
@@ -1573,8 +1664,11 @@ module backend(
       (_MEM_RS_io_RF_inputs_0_bits_needs_branch_unit),
     .io_RF_inputs_0_bits_needs_CSRs
       (_MEM_RS_io_RF_inputs_0_bits_needs_CSRs),
+    .io_RF_inputs_0_bits_needs_memory
+      (_MEM_RS_io_RF_inputs_0_bits_needs_memory),
     .io_RF_inputs_0_bits_SUBTRACT                  (_MEM_RS_io_RF_inputs_0_bits_SUBTRACT),
     .io_RF_inputs_0_bits_MULTIPLY                  (_MEM_RS_io_RF_inputs_0_bits_MULTIPLY),
+    .io_RF_inputs_0_bits_FENCE                     (_MEM_RS_io_RF_inputs_0_bits_FENCE),
     .io_RF_inputs_0_bits_IS_IMM                    (_MEM_RS_io_RF_inputs_0_bits_IS_IMM),
     .io_RF_inputs_0_bits_mem_signed
       (_MEM_RS_io_RF_inputs_0_bits_mem_signed),
@@ -1586,7 +1680,13 @@ module backend(
   simple_MOB MOB (
     .clock                                              (clock),
     .reset                                              (reset),
-    .io_flush                                           (io_flush),
+    .io_flush_valid                                     (io_flush_valid),
+    .io_flush_bits_is_misprediction                     (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception                         (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                             (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                               (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC                          (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC                          (io_flush_bits_redirect_PC),
     .io_reserve_0_ready                                 (_MOB_io_reserve_0_ready),
     .io_reserve_0_valid
       (_MOB_io_reserve_0_valid_T_2 & io_backend_packet_0_valid),
@@ -1624,10 +1724,13 @@ module backend(
       (io_backend_packet_0_bits_needs_branch_unit),
     .io_reserve_0_bits_needs_CSRs
       (io_backend_packet_0_bits_needs_CSRs),
+    .io_reserve_0_bits_needs_memory
+      (io_backend_packet_0_bits_needs_memory),
     .io_reserve_0_bits_SUBTRACT
       (io_backend_packet_0_bits_SUBTRACT),
     .io_reserve_0_bits_MULTIPLY
       (io_backend_packet_0_bits_MULTIPLY),
+    .io_reserve_0_bits_FENCE                            (io_backend_packet_0_bits_FENCE),
     .io_reserve_0_bits_IS_IMM                           (io_backend_packet_0_bits_IS_IMM),
     .io_reserve_0_bits_mem_signed
       (io_backend_packet_0_bits_mem_signed),
@@ -1672,10 +1775,13 @@ module backend(
       (io_backend_packet_1_bits_needs_branch_unit),
     .io_reserve_1_bits_needs_CSRs
       (io_backend_packet_1_bits_needs_CSRs),
+    .io_reserve_1_bits_needs_memory
+      (io_backend_packet_1_bits_needs_memory),
     .io_reserve_1_bits_SUBTRACT
       (io_backend_packet_1_bits_SUBTRACT),
     .io_reserve_1_bits_MULTIPLY
       (io_backend_packet_1_bits_MULTIPLY),
+    .io_reserve_1_bits_FENCE                            (io_backend_packet_1_bits_FENCE),
     .io_reserve_1_bits_IS_IMM                           (io_backend_packet_1_bits_IS_IMM),
     .io_reserve_1_bits_mem_signed
       (io_backend_packet_1_bits_mem_signed),
@@ -1720,10 +1826,13 @@ module backend(
       (io_backend_packet_2_bits_needs_branch_unit),
     .io_reserve_2_bits_needs_CSRs
       (io_backend_packet_2_bits_needs_CSRs),
+    .io_reserve_2_bits_needs_memory
+      (io_backend_packet_2_bits_needs_memory),
     .io_reserve_2_bits_SUBTRACT
       (io_backend_packet_2_bits_SUBTRACT),
     .io_reserve_2_bits_MULTIPLY
       (io_backend_packet_2_bits_MULTIPLY),
+    .io_reserve_2_bits_FENCE                            (io_backend_packet_2_bits_FENCE),
     .io_reserve_2_bits_IS_IMM                           (io_backend_packet_2_bits_IS_IMM),
     .io_reserve_2_bits_mem_signed
       (io_backend_packet_2_bits_mem_signed),
@@ -1768,10 +1877,13 @@ module backend(
       (io_backend_packet_3_bits_needs_branch_unit),
     .io_reserve_3_bits_needs_CSRs
       (io_backend_packet_3_bits_needs_CSRs),
+    .io_reserve_3_bits_needs_memory
+      (io_backend_packet_3_bits_needs_memory),
     .io_reserve_3_bits_SUBTRACT
       (io_backend_packet_3_bits_SUBTRACT),
     .io_reserve_3_bits_MULTIPLY
       (io_backend_packet_3_bits_MULTIPLY),
+    .io_reserve_3_bits_FENCE                            (io_backend_packet_3_bits_FENCE),
     .io_reserve_3_bits_IS_IMM                           (io_backend_packet_3_bits_IS_IMM),
     .io_reserve_3_bits_mem_signed
       (io_backend_packet_3_bits_mem_signed),
@@ -1987,7 +2099,71 @@ module backend(
   execution_engine execution_engine (
     .clock                                                       (clock),
     .reset                                                       (reset),
-    .io_flush                                                    (io_flush),
+    .io_flush_valid                                              (io_flush_valid),
+    .io_flush_bits_is_misprediction
+      (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception
+      (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence                                      (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR                                        (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC
+      (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC
+      (io_flush_bits_redirect_PC),
+    .io_partial_commit_valid_0
+      (io_partial_commit_valid_0),
+    .io_partial_commit_valid_1
+      (io_partial_commit_valid_1),
+    .io_partial_commit_valid_2
+      (io_partial_commit_valid_2),
+    .io_partial_commit_valid_3
+      (io_partial_commit_valid_3),
+    .io_partial_commit_ROB_index
+      (io_partial_commit_ROB_index),
+    .io_partial_commit_MOB_index_0
+      (io_partial_commit_MOB_index_0),
+    .io_partial_commit_MOB_index_1
+      (io_partial_commit_MOB_index_1),
+    .io_partial_commit_MOB_index_2
+      (io_partial_commit_MOB_index_2),
+    .io_partial_commit_MOB_index_3
+      (io_partial_commit_MOB_index_3),
+    .io_partial_commit_MOB_valid_0
+      (io_partial_commit_MOB_valid_0),
+    .io_partial_commit_MOB_valid_1
+      (io_partial_commit_MOB_valid_1),
+    .io_partial_commit_MOB_valid_2
+      (io_partial_commit_MOB_valid_2),
+    .io_partial_commit_MOB_valid_3
+      (io_partial_commit_MOB_valid_3),
+    .io_partial_commit_RD_0                                      (io_partial_commit_RD_0),
+    .io_partial_commit_RD_1                                      (io_partial_commit_RD_1),
+    .io_partial_commit_RD_2                                      (io_partial_commit_RD_2),
+    .io_partial_commit_RD_3                                      (io_partial_commit_RD_3),
+    .io_partial_commit_RD_valid_0
+      (io_partial_commit_RD_valid_0),
+    .io_partial_commit_RD_valid_1
+      (io_partial_commit_RD_valid_1),
+    .io_partial_commit_RD_valid_2
+      (io_partial_commit_RD_valid_2),
+    .io_partial_commit_RD_valid_3
+      (io_partial_commit_RD_valid_3),
+    .io_partial_commit_PRD_0
+      (io_partial_commit_PRD_0),
+    .io_partial_commit_PRD_1
+      (io_partial_commit_PRD_1),
+    .io_partial_commit_PRD_2
+      (io_partial_commit_PRD_2),
+    .io_partial_commit_PRD_3
+      (io_partial_commit_PRD_3),
+    .io_partial_commit_PRDold_0
+      (io_partial_commit_PRDold_0),
+    .io_partial_commit_PRDold_1
+      (io_partial_commit_PRDold_1),
+    .io_partial_commit_PRDold_2
+      (io_partial_commit_PRDold_2),
+    .io_partial_commit_PRDold_3
+      (io_partial_commit_PRDold_3),
     .io_FU_input_0_ready
       (_execution_engine_io_FU_input_0_ready),
     .io_FU_input_0_valid
@@ -2034,10 +2210,14 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_needs_branch_unit),
     .io_FU_input_0_bits_decoded_instruction_needs_CSRs
       (read_decoded_instructions_0_decoded_instruction_REG_needs_CSRs),
+    .io_FU_input_0_bits_decoded_instruction_needs_memory
+      (read_decoded_instructions_0_decoded_instruction_REG_needs_memory),
     .io_FU_input_0_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_0_bits_decoded_instruction_MULTIPLY
       (read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY),
+    .io_FU_input_0_bits_decoded_instruction_FENCE
+      (read_decoded_instructions_0_decoded_instruction_REG_FENCE),
     .io_FU_input_0_bits_decoded_instruction_IS_IMM
       (read_decoded_instructions_0_decoded_instruction_REG_IS_IMM),
     .io_FU_input_0_bits_decoded_instruction_mem_signed
@@ -2095,10 +2275,14 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_needs_branch_unit),
     .io_FU_input_1_bits_decoded_instruction_needs_CSRs
       (read_decoded_instructions_1_decoded_instruction_REG_needs_CSRs),
+    .io_FU_input_1_bits_decoded_instruction_needs_memory
+      (read_decoded_instructions_1_decoded_instruction_REG_needs_memory),
     .io_FU_input_1_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_1_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_1_bits_decoded_instruction_MULTIPLY
       (read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY),
+    .io_FU_input_1_bits_decoded_instruction_FENCE
+      (read_decoded_instructions_1_decoded_instruction_REG_FENCE),
     .io_FU_input_1_bits_decoded_instruction_IS_IMM
       (read_decoded_instructions_1_decoded_instruction_REG_IS_IMM),
     .io_FU_input_1_bits_decoded_instruction_mem_signed
@@ -2156,10 +2340,14 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_needs_branch_unit),
     .io_FU_input_2_bits_decoded_instruction_needs_CSRs
       (read_decoded_instructions_2_decoded_instruction_REG_needs_CSRs),
+    .io_FU_input_2_bits_decoded_instruction_needs_memory
+      (read_decoded_instructions_2_decoded_instruction_REG_needs_memory),
     .io_FU_input_2_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_2_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_2_bits_decoded_instruction_MULTIPLY
       (read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY),
+    .io_FU_input_2_bits_decoded_instruction_FENCE
+      (read_decoded_instructions_2_decoded_instruction_REG_FENCE),
     .io_FU_input_2_bits_decoded_instruction_IS_IMM
       (read_decoded_instructions_2_decoded_instruction_REG_IS_IMM),
     .io_FU_input_2_bits_decoded_instruction_mem_signed
@@ -2215,10 +2403,14 @@ module backend(
       (read_decoded_instructions_3_decoded_instruction_REG_needs_branch_unit),
     .io_FU_input_3_bits_decoded_instruction_needs_CSRs
       (read_decoded_instructions_3_decoded_instruction_REG_needs_CSRs),
+    .io_FU_input_3_bits_decoded_instruction_needs_memory
+      (read_decoded_instructions_3_decoded_instruction_REG_needs_memory),
     .io_FU_input_3_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_3_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_3_bits_decoded_instruction_MULTIPLY
       (read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY),
+    .io_FU_input_3_bits_decoded_instruction_FENCE
+      (read_decoded_instructions_3_decoded_instruction_REG_FENCE),
     .io_FU_input_3_bits_decoded_instruction_IS_IMM
       (read_decoded_instructions_3_decoded_instruction_REG_IS_IMM),
     .io_FU_input_3_bits_decoded_instruction_mem_signed

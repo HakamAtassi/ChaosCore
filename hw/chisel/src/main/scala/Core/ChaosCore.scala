@@ -43,7 +43,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     val io = IO(new Bundle{
 
         val commit                              =   ValidIO(new commit(coreParameters))
-        val kill                               =   Output(Bool())
+        val flush                               =   ValidIO(new flush(coreParameters))
 
         val revert                              =   ValidIO(new revert(coreParameters))
 
@@ -78,10 +78,9 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     val ROB         = Module(new ROB(coreParameters))
 
 
-    val flush       = Wire(Bool())
 
 
-    io.kill := flush
+    io.flush <> ROB.io.flush
 
     io.revert <> frontend.io.revert
 
@@ -133,11 +132,9 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ///////////
     // FLUSH //
     ///////////
-    flush := ROB.io.commit.valid && (ROB.io.commit.bits.is_misprediction)
 
-    frontend.io.flush   <>  flush
-    backend.io.flush    <>  flush
-    ROB.io.flush        <>  flush
+    frontend.io.flush   <>  ROB.io.flush
+    backend.io.flush    <>  ROB.io.flush
 
 
     //////////////////////

@@ -50,7 +50,7 @@ class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush             =   Input(Bool())
+        val flush             =      Flipped(ValidIO(new flush(coreParameters)))
 
         // ALLOCATE //
         val backend_packet    =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
@@ -146,7 +146,7 @@ class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
     //////////////
 
     for(i <- 0 until RSEntries){
-        when(io.flush){
+        when(io.flush.valid){
             reservation_station(i) := 0.U.asTypeOf(new RS_entry(coreParameters))
         }
     }
@@ -187,7 +187,7 @@ class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
     }
 
 
-    when(io.flush){
+    when(io.flush.valid){
         for(port <- 0 until RSPortCount){
             io.RF_inputs(port).bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
             io.RF_inputs(port).valid := 0.B

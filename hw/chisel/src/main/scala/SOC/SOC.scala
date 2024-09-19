@@ -46,7 +46,6 @@ class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NO
     // CHAOSCORE //
     ///////////////
     val ChaosCore_tile = Module(new ChaosCore_tile(coreParameters, addressMap, nocParameters))
-    //val flush               = ChaosCore.io.commit.valid && ChaosCore.io.commit.bits.is_misprediction
 
 
 

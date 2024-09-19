@@ -4,3 +4,6 @@
 [submodule "syn/bdf"]
 	path = syn/bdf
 	url = https://github.com/Avnet/bdf.git
+[submodule "binaries/riscv-tests"]
+	path = binaries/riscv-tests
+	url = https://github.com/riscv-software-src/riscv-tests.git

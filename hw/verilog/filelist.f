@@ -21,10 +21,10 @@ ram_16x40.sv
 Queue16_prediction.sv
 instruction_fetch.sv
 decoder.sv
-ram_2x490.sv
+ram_2x498.sv
 Queue2_decoded_fetch_packet.sv
 fetch_packet_decoder.sv
-ram_16x490.sv
+ram_16x498.sv
 Queue16_decoded_fetch_packet.sv
 free_list.sv
 WAW_handler.sv
@@ -40,6 +40,7 @@ ALU.sv
 branch_unit.sv
 FU.sv
 mul_unit.sv
+CSRs.sv
 FU_1.sv
 FU_2.sv
 AGU.sv
@@ -49,7 +50,7 @@ backend.sv
 mem_64x70.sv
 ROB_shared_mem.sv
 ROB_WB_mem.sv
-mem_64x28.sv
+mem_64x29.sv
 ROB_entry_mem.sv
 fetch_prediction_bank_64x40.sv
 fetch_resolved_banks_64x37.sv

@@ -137,6 +137,26 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	}); dontTouch(io)
 
+	// total consumed KB = sets*ways* (width of line + width of tag + valid bits + plru bits) / (1024*8)
+	val consumedKB 	   = L1_DataCacheWays*L1_DataCacheSets*(L1_cacheLineSizeBytes*8+L1_DataCacheTagBits+1+1)/1024.0/8.0
+	val consumedKBData = L1_DataCacheWays*L1_DataCacheSets*(L1_cacheLineSizeBytes*8)/1024.0/8.0
+
+
+	println("========================================")
+    println("========== BUILDING L1 D-CACHE =========")
+    println("===========================-============")
+    println("Parameters:")
+    println("-----------------------------------------")
+    println(f"Ways            : ${L1_DataCacheWays}%-10d")
+    println(f"Sets            : ${L1_DataCacheSets}%-10d")
+    println(f"Block Size      : ${L1_cacheLineSizeBytes} B")
+    println("-----------------------------------------")
+    println(f"Total Consumed Memory (data) : ${consumedKBData}%.2f KB")
+    println(f"Total Consumed Memory : ${consumedKB}%.2f KB")
+    println("========================================")
+	println("")
+
+
 	io.CPU_response.bits.addr := 0.U
 
 	val DATA_CACHE_STATE 			= RegInit(DATA_CACHE_STATES(), DATA_CACHE_STATES.ACTIVE)

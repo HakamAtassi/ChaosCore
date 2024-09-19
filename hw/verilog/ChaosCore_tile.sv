@@ -158,7 +158,7 @@ module ChaosCore_tile(
   wire [15:0] _instruction_cache_io_CPU_response_bits_GHR;
   wire [6:0]  _instruction_cache_io_CPU_response_bits_NEXT;
   wire [6:0]  _instruction_cache_io_CPU_response_bits_TOS;
-  wire        _ChaosCore_io_kill;
+  wire        _ChaosCore_io_flush_valid;
   wire        _ChaosCore_io_frontend_memory_request_valid;
   wire [31:0] _ChaosCore_io_frontend_memory_request_bits_addr;
   wire [31:0] _ChaosCore_io_frontend_memory_request_bits_wr_data;
@@ -206,7 +206,14 @@ module ChaosCore_tile(
     .io_commit_bits_RD_valid_1                                    (/* unused */),
     .io_commit_bits_RD_valid_2                                    (/* unused */),
     .io_commit_bits_RD_valid_3                                    (/* unused */),
-    .io_kill                                                      (_ChaosCore_io_kill),
+    .io_flush_valid
+      (_ChaosCore_io_flush_valid),
+    .io_flush_bits_is_misprediction                               (/* unused */),
+    .io_flush_bits_is_exception                                   (/* unused */),
+    .io_flush_bits_is_fence                                       (/* unused */),
+    .io_flush_bits_is_CSR                                         (/* unused */),
+    .io_flush_bits_flushing_PC                                    (/* unused */),
+    .io_flush_bits_redirect_PC                                    (/* unused */),
     .io_revert_valid                                              (/* unused */),
     .io_revert_bits_PC                                            (/* unused */),
     .io_frontend_memory_request_ready
@@ -475,7 +482,7 @@ module ChaosCore_tile(
       (_instruction_cache_io_CPU_response_bits_NEXT),
     .io_CPU_response_bits_TOS
       (_instruction_cache_io_CPU_response_bits_TOS),
-    .io_kill                                          (_ChaosCore_io_kill)
+    .io_flush_valid                                   (_ChaosCore_io_flush_valid)
   );
   L1_data_cache data_cache (
     .clock                                   (clock),
@@ -556,7 +563,7 @@ module ChaosCore_tile(
     .io_CPU_response_bits_ROB_index          (_data_cache_io_CPU_response_bits_ROB_index),
     .io_CPU_response_bits_data               (_data_cache_io_CPU_response_bits_data),
     .io_CPU_response_bits_MOB_index          (_data_cache_io_CPU_response_bits_MOB_index),
-    .io_kill                                 (_ChaosCore_io_kill)
+    .io_kill                                 (1'h0)
   );
 endmodule
 
