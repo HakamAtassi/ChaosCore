@@ -130,6 +130,7 @@ object helperFunctions {
         input >> shiftAmount
     }
 
+    // FIXME: this function can be cleaned up
     def getImm(instruction:UInt): UInt = {
 
         val opcode = instruction(6,0)
@@ -139,7 +140,7 @@ object helperFunctions {
         val B      = (opcode === "b1100011".U)
         val S      = (opcode === "b0100011".U)
         val R      = (opcode === "b0110011".U)
-        val I      = (opcode === "b0010011".U) || (opcode === "b0000011".U) || (opcode === "b1100111".U)
+        val I      = (opcode === "b0010011".U) || (opcode === "b0000011".U) || (opcode === "b1100111".U) || (opcode === "b1110011".U)
 
         val imm = Wire(UInt(21.W))
 

@@ -50,7 +50,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                       =   Input(Bool())
+        val flush                       =   Flipped(ValidIO(new flush(coreParameters)))
 
         // pointers to MOB entries for updating later
         val reserved_pointers           =   Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry
@@ -220,6 +220,8 @@ class backend(coreParameters:CoreParameters) extends Module{
 
         io.FU_outputs(i) <> execution_engine.io.FU_output(i)
     }
+
+    execution_engine.io.partial_commit           <> io.partial_commit
 
 
     //io.FU_outputs(3) <> MOB.io.MOB_output

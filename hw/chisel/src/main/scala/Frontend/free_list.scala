@@ -52,12 +52,14 @@ class free_list(coreParameters:CoreParameters) extends Module{
         val partial_commit          = Input(new partial_commit(coreParameters))                                         // commit mem op
         val commit                  = Flipped(ValidIO(new commit(coreParameters)))                          // Free regs on commit
 
+        val flush                   = Flipped(ValidIO(new flush(coreParameters)))
+
         val free_list_front_pointer = Output(UInt(ptr_width.W))                  // To ROB
 
         val can_allocate            = Output(Bool())
     }); dontTouch(io)
 
-    val flush = io.commit.valid && io.commit.bits.is_misprediction
+    val flush = io.flush.valid
 
     // Pointers
 
@@ -121,7 +123,7 @@ class free_list(coreParameters:CoreParameters) extends Module{
     ///////////////////
 
     //FIXME: does the order of these matter?
-    when(io.commit.valid && io.commit.bits.is_misprediction){
+    when(flush){
         free_list_buffer := commit_free_list_buffer
         for(i <- 0 until fetchWidth){
             when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i)){

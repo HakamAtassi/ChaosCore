@@ -52,7 +52,6 @@ class ChaosCore_tile(coreParameters:CoreParameters, addressMap:AddressMap, nocPa
     // CHAOSCORE //
     ///////////////
     val ChaosCore           = Module(new ChaosCore(coreParameters))
-    //val flush               = ChaosCore.io.commit.valid && ChaosCore.io.commit.bits.is_misprediction
 
     ////////////
     // CACHES //
@@ -60,8 +59,8 @@ class ChaosCore_tile(coreParameters:CoreParameters, addressMap:AddressMap, nocPa
     val instruction_cache   = Module(new L1_instruction_cache(coreParameters, nocParameters))
     val data_cache          = Module(new L1_data_cache(coreParameters, nocParameters))
 
-    instruction_cache.io.kill         := ChaosCore.io.kill
-    data_cache.io.kill                := ChaosCore.io.kill
+    instruction_cache.io.flush         := ChaosCore.io.flush
+    data_cache.io.kill                := 0.B//ChaosCore.io.kill
 
 
     

@@ -1,7 +1,7 @@
 // See LICENSE for license details.
 
 
-#define DATA_SIZE 2048 
+#define DATA_SIZE 32
 #define type int
 
 type input_data[DATA_SIZE] = 

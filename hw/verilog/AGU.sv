@@ -30,8 +30,7 @@
 
 module AGU(
   input         clock,
-                reset,
-                io_flush,
+                io_flush_valid,
                 io_FU_input_valid,
   input  [6:0]  io_FU_input_bits_decoded_instruction_PRD,
   input  [20:0] io_FU_input_bits_decoded_instruction_IMM,
@@ -39,10 +38,15 @@ module AGU(
   input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_bits_decoded_instruction_MOB_index,
+  input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
+  input         io_FU_input_bits_decoded_instruction_needs_ALU,
+                io_FU_input_bits_decoded_instruction_needs_branch_unit,
+                io_FU_input_bits_decoded_instruction_MULTIPLY,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
+                io_FU_input_bits_fetch_PC,
   output        io_FU_output_valid,
   output [6:0]  io_FU_output_bits_PRD,
   output [31:0] io_FU_output_bits_address,
@@ -55,11 +59,19 @@ module AGU(
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
-  wire        _is_store_T = io_FU_input_bits_decoded_instruction_memory_type == 2'h2;
-  wire        _LB_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
-  wire        _LH_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1;
-  wire        _LW_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2;
-  reg         io_FU_output_valid_REG;
+  wire [31:0] instruction_PC =
+    io_FU_input_bits_fetch_PC
+    + {28'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0};
+  wire        AUIPC =
+    io_FU_input_bits_decoded_instruction_instructionType == 5'h5
+    & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
+  wire        ALU_input_valid =
+    io_FU_input_valid & io_FU_input_bits_decoded_instruction_needs_ALU;
+  wire        branch_unit_input_valid =
+    io_FU_input_valid & io_FU_input_bits_decoded_instruction_needs_branch_unit;
+  wire        mult_unit_input_valid =
+    io_FU_input_valid & io_FU_input_bits_decoded_instruction_MULTIPLY;
+  reg         io_FU_output_valid_REG_1;
   reg  [6:0]  io_FU_output_bits_PRD_REG;
   reg         io_FU_output_bits_is_unsigned_REG;
   reg  [31:0] io_FU_output_bits_address_REG;
@@ -69,43 +81,26 @@ module AGU(
   reg  [1:0]  io_FU_output_bits_fetch_packet_index_REG;
   reg  [1:0]  io_FU_output_bits_memory_type_REG;
   reg  [1:0]  io_FU_output_bits_access_width_REG;
-  reg         hasBeenResetReg;
-  initial
-    hasBeenResetReg = 1'b0;
-  wire        hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;
-  assert property (@(posedge clock) disable iff (~hasBeenReset) io_flush
-                   |=> ~io_FU_output_valid_REG);
-  assert property (@(posedge clock) disable iff (~hasBeenReset)
-                   io_FU_input_valid & ~io_flush |=> io_FU_output_valid_REG);
-  assert property (@(posedge clock) disable iff (~hasBeenReset)
-                   io_FU_input_valid & _LB_T & _is_store_T
-                   |=> io_FU_output_bits_wr_data_REG < 32'h100);
-  assert property (@(posedge clock) disable iff (~hasBeenReset)
-                   io_FU_input_valid & _LH_T & _is_store_T
-                   |=> io_FU_output_bits_wr_data_REG < 32'h10000);
-  assert property (@(posedge clock) disable iff (~hasBeenReset)
-                   io_FU_input_valid & _LW_T & _is_store_T |=> 1'h1);
   always @(posedge clock) begin
     automatic logic is_load =
       io_FU_input_bits_decoded_instruction_memory_type == 2'h1 & io_FU_input_valid;
-    automatic logic is_store = _is_store_T & io_FU_input_valid;
-    if (reset)
-      hasBeenResetReg <= 1'h1;
-    io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;
+    automatic logic is_store =
+      io_FU_input_bits_decoded_instruction_memory_type == 2'h2 & io_FU_input_valid;
+    io_FU_output_valid_REG_1 <= io_FU_input_valid & ~io_flush_valid;
     io_FU_output_bits_PRD_REG <= io_FU_input_bits_decoded_instruction_PRD;
     io_FU_output_bits_is_unsigned_REG <=
       is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4 & io_FU_input_valid
       | is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5 & io_FU_input_valid;
     io_FU_output_bits_address_REG <=
-      io_FU_input_bits_RS1_data
-      + {{11{io_FU_input_bits_decoded_instruction_IMM[20]}},
-         io_FU_input_bits_decoded_instruction_IMM};
+      io_FU_input_bits_RS1_data + {11'h0, io_FU_input_bits_decoded_instruction_IMM};
     io_FU_output_bits_wr_data_REG <=
-      is_store & _LW_T & io_FU_input_valid
+      is_store & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2 & io_FU_input_valid
         ? io_FU_input_bits_RS2_data
-        : is_store & _LH_T & io_FU_input_valid
+        : is_store & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1
+          & io_FU_input_valid
             ? {16'h0, io_FU_input_bits_RS2_data[15:0]}
-            : is_store & _LB_T & io_FU_input_valid
+            : is_store & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0
+              & io_FU_input_valid
                 ? {24'h0, io_FU_input_bits_RS2_data[7:0]}
                 : 32'h0;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
@@ -116,7 +111,7 @@ module AGU(
     io_FU_output_bits_access_width_REG <=
       io_FU_input_bits_decoded_instruction_access_width;
   end // always @(posedge)
-  assign io_FU_output_valid = io_FU_output_valid_REG;
+  assign io_FU_output_valid = io_FU_output_valid_REG_1;
   assign io_FU_output_bits_PRD = io_FU_output_bits_PRD_REG;
   assign io_FU_output_bits_address = io_FU_output_bits_address_REG;
   assign io_FU_output_bits_memory_type = io_FU_output_bits_memory_type_REG;

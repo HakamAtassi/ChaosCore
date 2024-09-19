@@ -95,6 +95,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
         // Exception/Commit
         //val exception                   =   Input(Bool())
 
+        val flush                       =   Flipped(ValidIO(new flush(coreParameters)))
         val partial_commit              =   Input(new partial_commit(coreParameters))
         val commit                      =   Input(ValidIO(new commit(coreParameters)))
 
@@ -136,7 +137,6 @@ class RAT(coreParameters:CoreParameters) extends Module{
     // write RAT
     for (i <- 0 until fetchWidth){
         //FIXME: use global flush signal and do not reconstruct
-        //when(io.commit.valid && (io.commit.bits.RD_valid(i) && !(io.commit.valid && io.commit.bits.is_misprediction))){
         when(io.partial_commit.valid(i) && io.commit.bits.RD_valid(i)){
             commit_RAT(io.commit.bits.RD(i)) := io.commit.bits.PRD(i)
         }
@@ -145,7 +145,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     ////////////
     // REVERT //
     ////////////
-    when(io.commit.valid && (io.commit.bits.is_misprediction)){
+    when(io.flush.valid){
         speculative_RAT := commit_RAT
         for(i <- 0 until fetchWidth){
             when(io.partial_commit.valid(i) && io.commit.bits.RD_valid(i)){
@@ -174,7 +174,7 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH
-        val flush                           =   Input(Bool())
+        val flush = Flipped(ValidIO(new flush(coreParameters)))
 
         // CHECKPOINT 
         val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
@@ -209,7 +209,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     // HELPER WIRES //
     //////////////////
     
-    val fire = io.decoded_fetch_packet.fire && !(io.commit.valid && io.commit.bits.is_misprediction) 
+    val fire = io.decoded_fetch_packet.fire && !(io.flush.valid) 
 
     ////////////////////
     // OUTPUT BUNDLES //
@@ -254,6 +254,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     RAT.io.free_list_wr_en                         :=  WAW_handler.io.RAT_wr_en 
     RAT.io.free_list_RD                            :=  WAW_handler.io.FL_RD_values
     RAT.io.commit                                  <> io.commit
+    RAT.io.flush                                  <> io.flush
     RAT.io.partial_commit                          <> io.partial_commit
     
     // Assign read ports
@@ -332,7 +333,8 @@ class rename(coreParameters:CoreParameters) extends Module{
 
 
 
-    free_list.io.partial_commit                    <> io.partial_commit
+    free_list.io.partial_commit           <> io.partial_commit
+    free_list.io.flush                    <> io.flush
 
     // x0 as a dest or source is never remapped
     // x0 always ready
@@ -343,7 +345,7 @@ class rename(coreParameters:CoreParameters) extends Module{
         ready_memory := comb_ready_bits
     }
 
-    when(io.commit.valid && io.commit.bits.is_misprediction){
+    when(io.flush.valid){
         ready_memory := Seq.fill(physicalRegCount)(1.B)
     }
 
@@ -362,10 +364,10 @@ class rename(coreParameters:CoreParameters) extends Module{
     dontTouch(renamed_decoded_fetch_packet)
 
     renamed_decoded_fetch_packet_Q.io.enq                   <> renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_Q.io.enq.valid             := (renamed_decoded_fetch_packet.valid) && !io.flush
+    renamed_decoded_fetch_packet_Q.io.enq.valid             := (renamed_decoded_fetch_packet.valid) && !io.flush.valid
 
     renamed_decoded_fetch_packet_Q.io.deq                   <> io.renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_Q.io.flush.get             := io.flush
+    renamed_decoded_fetch_packet_Q.io.flush.get             := io.flush.valid
 
 
 
@@ -420,7 +422,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     formal_RAT_comb := formal_RAT
 
     val no_flush: Sequence = !(io.commit.valid && io.commit.bits.is_misprediction)
-    val no_flush2: Sequence = !io.flush
+    val no_flush2: Sequence = !io.flush.valid
     val always_ready: Sequence = (io.renamed_decoded_fetch_packet.ready === 1.B)    // FIXME: bug likely in backpressure
 
     AssumeProperty(no_flush2)

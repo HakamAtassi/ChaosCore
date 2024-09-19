@@ -31,7 +31,13 @@
 module predecoder(
   input         clock,
                 reset,
-                io_flush,
+                io_flush_valid,
+                io_flush_bits_is_misprediction,
+                io_flush_bits_is_exception,
+                io_flush_bits_is_fence,
+                io_flush_bits_is_CSR,
+  input  [31:0] io_flush_bits_flushing_PC,
+                io_flush_bits_redirect_PC,
   output        io_revert_valid,
   output [31:0] io_revert_bits_PC,
   output        io_prediction_ready,
@@ -263,7 +269,7 @@ module predecoder(
              dominant_instruction[30:21],
              1'h0}
           : dominant_instruction[6:0] == 7'h13 | dominant_instruction[6:0] == 7'h3
-            | dominant_instruction[6:0] == 7'h67
+            | dominant_instruction[6:0] == 7'h67 | dominant_instruction[6:0] == 7'h73
               ? {_GEN_2, dominant_instruction[31:20]}
               : dominant_instruction[6:0] == 7'h23
                   ? {_GEN_2, dominant_instruction[31:25], dominant_instruction[11:7]}
@@ -290,7 +296,7 @@ module predecoder(
     io_prediction_ready_REG & io_prediction_valid;
   wire             input_fetch_packet_valid =
     _input_fetch_packet_valid_T & (_input_fetch_packet_valid_T_1 | ~io_prediction_valid)
-    & expected_next_PC == io_fetch_packet_bits_fetch_PC & ~io_flush;
+    & expected_next_PC == io_fetch_packet_bits_fetch_PC & ~io_flush_valid;
   reg  [15:0]      GHR;
   wire             _GEN_4 =
     curr_is_BRANCH_3 | curr_is_JAL_3 | curr_is_JALR_3 | curr_is_BRANCH_2 | curr_is_JAL_2
@@ -302,14 +308,14 @@ module predecoder(
       expected_next_PC <= 32'h80000000;
       GHR <= 16'h0;
     end
+    else if (io_flush_valid) begin
+      expected_next_PC <= io_flush_bits_redirect_PC;
+      GHR <= io_commit_bits_GHR;
+    end
     else begin
-      if (io_commit_valid & io_commit_bits_is_misprediction)
-        expected_next_PC <= io_commit_bits_expected_PC;
-      else if (input_fetch_packet_valid & _final_fetch_packet_out_Q_io_enq_ready)
+      if (input_fetch_packet_valid & _final_fetch_packet_out_Q_io_enq_ready)
         expected_next_PC <= target_address;
-      if (io_commit_bits_is_misprediction)
-        GHR <= io_commit_bits_GHR;
-      else if (_GEN_4)
+      if (_GEN_4)
         GHR <= _GEN_5;
     end
     io_prediction_ready_REG <= io_final_fetch_packet_ready;
@@ -414,10 +420,10 @@ module predecoder(
     .io_deq_bits_GHR                         (io_final_fetch_packet_bits_GHR),
     .io_deq_bits_NEXT                        (io_final_fetch_packet_bits_NEXT),
     .io_deq_bits_TOS                         (io_final_fetch_packet_bits_TOS),
-    .io_flush                                (io_flush)
+    .io_flush                                (io_flush_valid)
   );
   assign io_revert_valid =
-    _input_fetch_packet_valid_T & _input_fetch_packet_valid_T_1 & ~io_flush
+    _input_fetch_packet_valid_T & _input_fetch_packet_valid_T_1 & ~io_flush_valid
     & expected_next_PC != io_fetch_packet_bits_fetch_PC;
   assign io_revert_bits_PC = expected_next_PC;
   assign io_prediction_ready = io_prediction_ready_REG;

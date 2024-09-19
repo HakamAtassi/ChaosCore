@@ -31,7 +31,7 @@
 module branch_unit(
   input         clock,
                 reset,
-                io_flush,
+                io_flush_valid,
                 io_FU_input_valid,
   input  [6:0]  io_FU_input_bits_decoded_instruction_PRD,
   input         io_FU_input_bits_decoded_instruction_RD_valid,
@@ -126,7 +126,7 @@ module branch_unit(
         EQ | NE | LT | GE | LTU | GEU | JAL | JALR | ~AUIPC
           ? _arithmetic_result_T
           : instruction_PC + {io_FU_input_bits_decoded_instruction_IMM[19:0], 12'h0};
-    io_FU_output_valid_REG <= branch_unit_input_valid & ~io_flush;
+    io_FU_output_valid_REG <= branch_unit_input_valid & ~io_flush_valid;
     io_FU_output_bits_fetch_PC_REG <= io_FU_input_bits_fetch_PC;
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;
@@ -159,7 +159,7 @@ module branch_unit(
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
   end // always @(posedge)
-  assign io_FU_output_valid = io_FU_output_valid_REG & ~io_flush;
+  assign io_FU_output_valid = io_FU_output_valid_REG & ~io_flush_valid;
   assign io_FU_output_bits_PRD = io_FU_output_bits_PRD_REG;
   assign io_FU_output_bits_RD_data = arithmetic_result;
   assign io_FU_output_bits_RD_valid = io_FU_output_bits_RD_valid_REG;

@@ -46,7 +46,10 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                   =      Input(Bool())
+
+        val flush               =     Flipped(ValidIO(new flush(coreParameters)))
+
+
 
         // ALLOCATE //
         val reserve                 =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))         // reserve entry (rename)
@@ -171,7 +174,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
     dontTouch(committed_entries)
 
-    when(io.flush){
+    when(io.flush.valid){
         for(i <- 0 until MOBEntries){
             val clear = !comb_committed(i) && MOB(i).valid
             when(clear){
@@ -239,7 +242,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     val availalbe_MOB_entries = PopCount(~Cat(MOB.map(_.valid)))
     
     for (i <- 0 until fetchWidth){
-        io.reserve(i).ready := (availalbe_MOB_entries >= fetchWidth.U) && !io.flush
+        io.reserve(i).ready := (availalbe_MOB_entries >= fetchWidth.U) && !io.flush.valid
     }
 
 }

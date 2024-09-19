@@ -13,7 +13,7 @@ do
     echo "Building C File: $name"
 
     # Compile the C file to ELF using the linker script
-    ${rvdir}/riscv32-unknown-elf-gcc -march=rv32im -nostartfiles -std=gnu99 startup.S "C/$name.c"  -O2 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf"  -T $linker_script -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wpedantic -Wcast-qual -g -pedantic  -ffreestanding 
+    ${rvdir}/riscv32-unknown-elf-gcc -march=rv32im_zicsr -nostartfiles -std=gnu99 startup.S "C/$name.c"  -O2 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf"  -T $linker_script -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wpedantic -Wcast-qual -g -pedantic  -ffreestanding -Wcast-qual 
 
 
     # Disassemble the ELF file to TXT
@@ -42,7 +42,7 @@ do
     fi
 
     # Compile the C file to ELF using the linker script
-    ${rvdir}/riscv32-unknown-elf-gcc -march=rv32im -nostartfiles  -std=gnu99 startup.S "C/$name/$name.c"  -O2 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf"  -T $linker_script -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wpedantic -Wcast-qual -g -pedantic  -ffreestanding 
+    ${rvdir}/riscv32-unknown-elf-gcc -march=rv32im_zicsr -nostartfiles  -std=gnu99 startup.S "C/$name/$name.c"  -O2 -ffreestanding -Wl,-Bstatic -o "elf/$name.elf"  -T $linker_script -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wpedantic -Wcast-qual -g -pedantic  -ffreestanding 
 
     # Disassemble the ELF file to TXT
     ${rvdir}/riscv32-unknown-elf-objdump -d -Mnumeric "elf/$name.elf" > "txt/$name.txt"

@@ -31,7 +31,13 @@
 module simple_MOB(
   input         clock,
                 reset,
-                io_flush,
+                io_flush_valid,
+                io_flush_bits_is_misprediction,
+                io_flush_bits_is_exception,
+                io_flush_bits_is_fence,
+                io_flush_bits_is_CSR,
+  input  [31:0] io_flush_bits_flushing_PC,
+                io_flush_bits_redirect_PC,
   output        io_reserve_0_ready,
   input         io_reserve_0_valid,
                 io_reserve_0_bits_ready_bits_RS1_ready,
@@ -55,8 +61,10 @@ module simple_MOB(
   input         io_reserve_0_bits_needs_ALU,
                 io_reserve_0_bits_needs_branch_unit,
                 io_reserve_0_bits_needs_CSRs,
+                io_reserve_0_bits_needs_memory,
                 io_reserve_0_bits_SUBTRACT,
                 io_reserve_0_bits_MULTIPLY,
+                io_reserve_0_bits_FENCE,
                 io_reserve_0_bits_IS_IMM,
                 io_reserve_0_bits_mem_signed,
   input  [1:0]  io_reserve_0_bits_memory_type,
@@ -84,8 +92,10 @@ module simple_MOB(
   input         io_reserve_1_bits_needs_ALU,
                 io_reserve_1_bits_needs_branch_unit,
                 io_reserve_1_bits_needs_CSRs,
+                io_reserve_1_bits_needs_memory,
                 io_reserve_1_bits_SUBTRACT,
                 io_reserve_1_bits_MULTIPLY,
+                io_reserve_1_bits_FENCE,
                 io_reserve_1_bits_IS_IMM,
                 io_reserve_1_bits_mem_signed,
   input  [1:0]  io_reserve_1_bits_memory_type,
@@ -113,8 +123,10 @@ module simple_MOB(
   input         io_reserve_2_bits_needs_ALU,
                 io_reserve_2_bits_needs_branch_unit,
                 io_reserve_2_bits_needs_CSRs,
+                io_reserve_2_bits_needs_memory,
                 io_reserve_2_bits_SUBTRACT,
                 io_reserve_2_bits_MULTIPLY,
+                io_reserve_2_bits_FENCE,
                 io_reserve_2_bits_IS_IMM,
                 io_reserve_2_bits_mem_signed,
   input  [1:0]  io_reserve_2_bits_memory_type,
@@ -142,8 +154,10 @@ module simple_MOB(
   input         io_reserve_3_bits_needs_ALU,
                 io_reserve_3_bits_needs_branch_unit,
                 io_reserve_3_bits_needs_CSRs,
+                io_reserve_3_bits_needs_memory,
                 io_reserve_3_bits_SUBTRACT,
                 io_reserve_3_bits_MULTIPLY,
+                io_reserve_3_bits_FENCE,
                 io_reserve_3_bits_IS_IMM,
                 io_reserve_3_bits_mem_signed,
   input  [1:0]  io_reserve_3_bits_memory_type,
@@ -903,10 +917,10 @@ module simple_MOB(
               + {1'h0,
                  {1'h0, _availalbe_MOB_entries_T_1[14]}
                    + {1'h0, _availalbe_MOB_entries_T_1[15]}}}};
-  assign io_reserve_0_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush;
-  assign io_reserve_1_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush;
-  assign io_reserve_2_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush;
-  assign io_reserve_3_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush;
+  assign io_reserve_0_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush_valid;
+  assign io_reserve_1_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush_valid;
+  assign io_reserve_2_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush_valid;
+  assign io_reserve_3_ready_0 = (|(availalbe_MOB_entries[4:2])) & ~io_flush_valid;
   always @(posedge clock) begin
     if (reset) begin
       MOB_0_valid <= 1'h0;
@@ -1663,22 +1677,22 @@ module simple_MOB(
       _GEN_285 = _GEN_269 | (written_vec_3 ? ~_GEN_243 & _GEN_151 : ~_GEN_174 & _GEN_151);
       _GEN_286 = _GEN_270 | (written_vec_3 ? ~_GEN_248 & _GEN_156 : ~_GEN_175 & _GEN_156);
       _GEN_287 = _GEN_271 | (written_vec_3 ? ~_GEN_252 & _GEN_160 : ~_GEN_176 & _GEN_160);
-      _GEN_288 = io_flush & ~comb_committed_0 & MOB_0_valid;
-      _GEN_289 = io_flush & ~comb_committed_1 & MOB_1_valid;
-      _GEN_290 = io_flush & ~comb_committed_2 & MOB_2_valid;
-      _GEN_291 = io_flush & ~comb_committed_3 & MOB_3_valid;
-      _GEN_292 = io_flush & ~comb_committed_4 & MOB_4_valid;
-      _GEN_293 = io_flush & ~comb_committed_5 & MOB_5_valid;
-      _GEN_294 = io_flush & ~comb_committed_6 & MOB_6_valid;
-      _GEN_295 = io_flush & ~comb_committed_7 & MOB_7_valid;
-      _GEN_296 = io_flush & ~comb_committed_8 & MOB_8_valid;
-      _GEN_297 = io_flush & ~comb_committed_9 & MOB_9_valid;
-      _GEN_298 = io_flush & ~comb_committed_10 & MOB_10_valid;
-      _GEN_299 = io_flush & ~comb_committed_11 & MOB_11_valid;
-      _GEN_300 = io_flush & ~comb_committed_12 & MOB_12_valid;
-      _GEN_301 = io_flush & ~comb_committed_13 & MOB_13_valid;
-      _GEN_302 = io_flush & ~comb_committed_14 & MOB_14_valid;
-      _GEN_303 = io_flush & ~comb_committed_15 & MOB_15_valid;
+      _GEN_288 = io_flush_valid & ~comb_committed_0 & MOB_0_valid;
+      _GEN_289 = io_flush_valid & ~comb_committed_1 & MOB_1_valid;
+      _GEN_290 = io_flush_valid & ~comb_committed_2 & MOB_2_valid;
+      _GEN_291 = io_flush_valid & ~comb_committed_3 & MOB_3_valid;
+      _GEN_292 = io_flush_valid & ~comb_committed_4 & MOB_4_valid;
+      _GEN_293 = io_flush_valid & ~comb_committed_5 & MOB_5_valid;
+      _GEN_294 = io_flush_valid & ~comb_committed_6 & MOB_6_valid;
+      _GEN_295 = io_flush_valid & ~comb_committed_7 & MOB_7_valid;
+      _GEN_296 = io_flush_valid & ~comb_committed_8 & MOB_8_valid;
+      _GEN_297 = io_flush_valid & ~comb_committed_9 & MOB_9_valid;
+      _GEN_298 = io_flush_valid & ~comb_committed_10 & MOB_10_valid;
+      _GEN_299 = io_flush_valid & ~comb_committed_11 & MOB_11_valid;
+      _GEN_300 = io_flush_valid & ~comb_committed_12 & MOB_12_valid;
+      _GEN_301 = io_flush_valid & ~comb_committed_13 & MOB_13_valid;
+      _GEN_302 = io_flush_valid & ~comb_committed_14 & MOB_14_valid;
+      _GEN_303 = io_flush_valid & ~comb_committed_15 & MOB_15_valid;
       _GEN_305 = front_index == 4'h0;
       _GEN_306 = front_index == 4'h1;
       _GEN_307 = front_index == 4'h2;
@@ -2803,7 +2817,7 @@ module simple_MOB(
         else if (_GEN_367)
           MOB_15_data <= 32'h0;
       end
-      if (io_flush)
+      if (io_flush_valid)
         back_pointer <= front_pointer + committed_entries;
       else
         back_pointer <=

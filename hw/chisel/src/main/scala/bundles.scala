@@ -145,6 +145,22 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val RD_valid                = Vec(fetchWidth, Bool())
 }
 
+
+class flush(coreParameters:CoreParameters) extends Bundle{
+    val is_misprediction    = Bool()
+    val is_exception        = Bool()
+    
+    val is_fence            = Bool()
+    val is_CSR              = Bool()
+
+    def is_valid(): Bool = {
+        is_misprediction || is_exception || is_fence || is_CSR
+    }
+
+    val flushing_PC         = UInt(32.W)    // PC of the instruciton causing the flush
+    val redirect_PC         = UInt(32.W)    // PC the instruction should redirect to
+}
+
 class partial_commit(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val valid                   = Vec(fetchWidth, Bool())
@@ -249,14 +265,17 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val needs_ALU           =  Bool()
     val needs_branch_unit   =  Bool()
     val needs_CSRs          =  Bool()
+    val needs_memory        =  Bool()
 
     val SUBTRACT            =  Bool()
     val MULTIPLY            =  Bool()
+    val FENCE               =  Bool()
+    //val CSR                 =  Bool()
 
     val IS_IMM              =  Bool() 
 
 
-    val mem_signed          = Bool()
+    val mem_signed          =  Bool()
     val memory_type         =  memory_type_t()   // LOAD/STORE
     val access_width        =  access_width_t()  // B/HW/W
 
@@ -425,6 +444,8 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
 
     val valid       = Bool()  // is this particular instruction valid?
     val is_branch   = Bool()
+
+    val is_flushing = Bool()       // currently is flushing means fence or CSR access
 
     val memory_type = memory_type_t()
 
