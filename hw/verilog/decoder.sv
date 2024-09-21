@@ -85,23 +85,27 @@ module decoder(
               | instructionType == 5'h16 | _is_INT_T_5 | _is_INT_T_9 | _is_INT_T_7
               | _is_INT_T | instructionType == 5'h1E)) begin
         if (`ASSERT_VERBOSE_COND_)
-          $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
-                 instructionType);
+          $error("Assertion failed: Enum state must be valid, got %x!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%x!\",instruction)\n",
+                 io_instruction_bits_instruction);
         if (`STOP_COND_)
           $fatal;
       end
     end // always @(posedge)
   `endif // not def SYNTHESIS
   wire       _needs_ALU_T_1 = io_instruction_bits_instruction[31:25] == 7'h20;
+  wire       _needs_CSRs_T_6 = io_instruction_bits_instruction[14:12] == 3'h5;
+  wire       _needs_CSRs_T_8 = io_instruction_bits_instruction[14:12] == 3'h6;
+  wire       IS_IMM =
+    _is_INT_T_3 | _is_INT_T_11 | _is_INT_T_13 | _is_MEM_T_1 | _is_MEM_T | _is_INT_T_5
+    | _is_INT_T_7 | _is_INT_T_9 | _is_INT_T
+    & (_needs_CSRs_T_6 | _needs_CSRs_T_8 | (&(io_instruction_bits_instruction[14:12])));
   wire       needs_branch_unit = _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9 | _is_INT_T_13;
   wire       _needs_CSRs_T_1 = io_instruction_bits_instruction[14:12] == 3'h1;
   wire       _needs_CSRs_T_2 = io_instruction_bits_instruction[14:12] == 3'h2;
-  wire       _needs_CSRs_T_6 = io_instruction_bits_instruction[14:12] == 3'h5;
   wire       needs_CSRs =
     _is_INT_T
     & (_needs_CSRs_T_1 | _needs_CSRs_T_2 | io_instruction_bits_instruction[14:12] == 3'h3
-       | _needs_CSRs_T_6 | io_instruction_bits_instruction[14:12] == 3'h6
-       | (&(io_instruction_bits_instruction[14:12])));
+       | _needs_CSRs_T_6 | _needs_CSRs_T_8 | (&(io_instruction_bits_instruction[14:12])));
   wire       needs_ALU =
     _is_INT_T_1 & (_needs_ALU_T_1 | io_instruction_bits_instruction[31:25] == 7'h0)
     | _is_INT_T_3 | _is_INT_T_11;
@@ -127,8 +131,8 @@ module decoder(
      | _is_INT_T_13 | _is_INT_T) & io_instruction_valid;
   assign io_decoded_instruction_bits_RS1 = {2'h0, io_instruction_bits_instruction[19:15]};
   assign io_decoded_instruction_bits_RS1_valid =
-    (_is_INT_T_1 | _is_INT_T_3 | _is_MEM_T | _is_MEM_T_1 | _is_INT_T_9 | _is_INT_T_5)
-    & io_instruction_valid;
+    (_is_INT_T_1 | _is_INT_T_3 | _is_MEM_T | _is_MEM_T_1 | _is_INT_T_9 | needs_CSRs
+     & ~IS_IMM | _is_INT_T_5) & io_instruction_valid;
   assign io_decoded_instruction_bits_RS2 = {2'h0, io_instruction_bits_instruction[24:20]};
   assign io_decoded_instruction_bits_RS2_valid =
     (_is_INT_T_1 | _is_MEM_T_1 | _is_INT_T_5) & io_instruction_valid;
@@ -179,14 +183,11 @@ module decoder(
   assign io_decoded_instruction_bits_needs_branch_unit = needs_branch_unit;
   assign io_decoded_instruction_bits_needs_CSRs = needs_CSRs;
   assign io_decoded_instruction_bits_needs_memory = _is_MEM_T_1 | _is_MEM_T;
-  assign io_decoded_instruction_bits_SUBTRACT =
-    (_is_INT_T_1 | _is_INT_T_3) & _needs_ALU_T_1;
+  assign io_decoded_instruction_bits_SUBTRACT = _is_INT_T_1 & _needs_ALU_T_1;
   assign io_decoded_instruction_bits_MULTIPLY =
     _is_INT_T_1 & io_instruction_bits_instruction[31:25] == 7'h1;
   assign io_decoded_instruction_bits_FENCE = _FENCE_T & _FENCE_T_1;
-  assign io_decoded_instruction_bits_IS_IMM =
-    _is_INT_T_3 | _is_INT_T_11 | _is_INT_T_13 | _is_MEM_T_1 | _is_MEM_T | _is_INT_T_5
-    | _is_INT_T_7 | _is_INT_T_9 | _is_INT_T;
+  assign io_decoded_instruction_bits_IS_IMM = IS_IMM;
   assign io_decoded_instruction_bits_mem_signed =
     _FENCE_T_1 | _needs_CSRs_T_1 | _needs_CSRs_T_2;
   assign io_decoded_instruction_bits_memory_type = _is_MEM_T ? 2'h1 : {_is_MEM_T_1, 1'h0};

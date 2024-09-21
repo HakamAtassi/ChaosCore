@@ -1,0 +1,7 @@
+BEGIN 3:dut_if:fast__2:work
+    reset :  1:dut:fast:work
+    addr :  1:dut:fast:work
+    clock :  1:dut:fast:work 1:top:fast:work
+    cmd :  1:dut:fast:work
+    data :  1:dut:fast:work
+END 

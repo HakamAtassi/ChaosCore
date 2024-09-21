@@ -48,6 +48,12 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
     or_result       := operand1_unsigned | operand2_unsigned
     and_result      := operand1_unsigned & operand2_unsigned
 
+    dontTouch(operand1_unsigned)
+    dontTouch(sub_result)
+    dontTouch(add_result)
+    dontTouch(ADD)
+    dontTouch(SUB)
+
     sll_result      := RS1_unsigned << shamt
     srl_result      := RS1_unsigned >> shamt
     sra_result      := RS1_signed   >> shamt

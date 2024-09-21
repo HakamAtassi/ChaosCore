@@ -51,6 +51,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
         // commit (for CSRs only)
         val partial_commit  =   Input(new partial_commit(coreParameters))
+        val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
     })
 
     // misaligned fetch exception ??
@@ -174,6 +175,10 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val SLTU     =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b011".U  && !MULTIPLY
     val LUI      =   (instructionType === InstructionType.LUI) && !MULTIPLY
     val AUIPC    =   (instructionType === InstructionType.AUIPC) && !MULTIPLY
+
+    dontTouch(SLL)
+    dontTouch(SRL)
+    dontTouch(SRA)
 
 
     dontTouch(instruction_PC)

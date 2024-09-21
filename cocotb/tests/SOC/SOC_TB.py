@@ -58,6 +58,10 @@ class SOC_TB:
         await self.clock()
         await self.clock()
         await self.clock()
+        await self.clock()
+        await self.clock()
+        await self.clock()
+        await self.clock()
         self.dut.reset.value = 0
         await self.clock()
 
@@ -67,10 +71,10 @@ class SOC_TB:
             #self.rename_monitor.monitor()
             #self.memory_monitor.monitor()
             #self.SOC_monitor.monitor()
-            ROB_commit_valid = int(self.dut.ChaosCore_tile.ChaosCore.ROB.commit_valid.value)
-            ROB_fetch_PC = int(self.dut.ChaosCore_tile.ChaosCore.ROB.commit_fetch_PC.value)
-            if(ROB_commit_valid == 1  and ROB_fetch_PC == 0x800004c0):
-                sim_time = cocotb.utils.get_sim_time("ns")
+            #ROB_commit_valid = int(self.dut.ChaosCore_tile.ChaosCore.ROB.commit_valid.value)
+            #ROB_fetch_PC = int(self.dut.ChaosCore_tile.ChaosCore.ROB.commit_fetch_PC.value)
+            #if(ROB_commit_valid == 1  and ROB_fetch_PC == 0x800004c0):
+                #sim_time = cocotb.utils.get_sim_time("ns")
                 #print(f"found @ {sim_time}")
             await RisingEdge(self.dut.clock)
         except(AssertionError):

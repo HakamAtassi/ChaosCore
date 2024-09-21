@@ -116,7 +116,35 @@ module FU_1(
                 io_partial_commit_PRDold_0,
                 io_partial_commit_PRDold_1,
                 io_partial_commit_PRDold_2,
-                io_partial_commit_PRDold_3
+                io_partial_commit_PRDold_3,
+  input         io_commit_valid,
+  input  [31:0] io_commit_bits_fetch_PC,
+  input         io_commit_bits_T_NT,
+  input  [5:0]  io_commit_bits_ROB_index,
+  input  [2:0]  io_commit_bits_br_type,
+  input         io_commit_bits_br_mask_0,
+                io_commit_bits_br_mask_1,
+                io_commit_bits_br_mask_2,
+                io_commit_bits_br_mask_3,
+  input  [1:0]  io_commit_bits_fetch_packet_index,
+  input         io_commit_bits_is_misprediction,
+  input  [31:0] io_commit_bits_expected_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [7:0]  io_commit_bits_free_list_front_pointer,
+  input  [4:0]  io_commit_bits_RD_0,
+                io_commit_bits_RD_1,
+                io_commit_bits_RD_2,
+                io_commit_bits_RD_3,
+  input  [6:0]  io_commit_bits_PRD_0,
+                io_commit_bits_PRD_1,
+                io_commit_bits_PRD_2,
+                io_commit_bits_PRD_3,
+  input         io_commit_bits_RD_valid_0,
+                io_commit_bits_RD_valid_1,
+                io_commit_bits_RD_valid_2,
+                io_commit_bits_RD_valid_3
 );
 
   wire        _CSR_io_FU_output_valid;
@@ -217,6 +245,8 @@ module FU_1(
       (io_FU_input_bits_decoded_instruction_needs_ALU),
     .io_FU_input_bits_decoded_instruction_needs_branch_unit
       (io_FU_input_bits_decoded_instruction_needs_branch_unit),
+    .io_FU_input_bits_decoded_instruction_SUBTRACT
+      (io_FU_input_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_IS_IMM
@@ -239,7 +269,7 @@ module FU_1(
     .io_FU_output_bits_fetch_packet_index
       (_mul_io_FU_output_bits_fetch_packet_index)
   );
-  CSRs CSR (
+  CSR_FU CSR (
     .clock                                                  (clock),
     .reset                                                  (reset),
     .io_flush_valid                                         (io_flush_valid),
@@ -248,8 +278,12 @@ module FU_1(
       (io_FU_input_bits_decoded_instruction_PRD),
     .io_FU_input_bits_decoded_instruction_RD_valid
       (io_FU_input_bits_decoded_instruction_RD_valid),
+    .io_FU_input_bits_decoded_instruction_RS1
+      (io_FU_input_bits_decoded_instruction_RS1),
     .io_FU_input_bits_decoded_instruction_IMM
       (io_FU_input_bits_decoded_instruction_IMM),
+    .io_FU_input_bits_decoded_instruction_FUNCT3
+      (io_FU_input_bits_decoded_instruction_FUNCT3),
     .io_FU_input_bits_decoded_instruction_packet_index
       (io_FU_input_bits_decoded_instruction_packet_index),
     .io_FU_input_bits_decoded_instruction_ROB_index
@@ -264,8 +298,11 @@ module FU_1(
       (io_FU_input_bits_decoded_instruction_needs_branch_unit),
     .io_FU_input_bits_decoded_instruction_needs_CSRs
       (io_FU_input_bits_decoded_instruction_needs_CSRs),
+    .io_FU_input_bits_decoded_instruction_SUBTRACT
+      (io_FU_input_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),
     .io_FU_input_bits_fetch_PC                              (io_FU_input_bits_fetch_PC),
     .io_FU_output_valid                                     (_CSR_io_FU_output_valid),
     .io_FU_output_bits_PRD                                  (_CSR_io_FU_output_bits_PRD),
@@ -284,7 +321,8 @@ module FU_1(
     .io_partial_commit_valid_0                              (io_partial_commit_valid_0),
     .io_partial_commit_valid_1                              (io_partial_commit_valid_1),
     .io_partial_commit_valid_2                              (io_partial_commit_valid_2),
-    .io_partial_commit_valid_3                              (io_partial_commit_valid_3)
+    .io_partial_commit_valid_3                              (io_partial_commit_valid_3),
+    .io_commit_valid                                        (io_commit_valid)
   );
   assign io_FU_input_ready = 1'h1;
   assign io_FU_output_valid =

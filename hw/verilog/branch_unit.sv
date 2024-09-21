@@ -43,6 +43,7 @@ module branch_unit(
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
   input         io_FU_input_bits_decoded_instruction_needs_ALU,
                 io_FU_input_bits_decoded_instruction_needs_branch_unit,
+                io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
@@ -64,6 +65,18 @@ module branch_unit(
     io_FU_input_bits_fetch_PC
     + {28'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0};
   reg  [31:0] arithmetic_result;
+  wire        _REMU_T = io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
+  wire        _SLTU_T_1 = io_FU_input_bits_decoded_instruction_instructionType == 5'h4;
+  wire        _BNE_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1;
+  wire        SLL =
+    (_REMU_T | _SLTU_T_1) & _BNE_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
+  wire        _BGE_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
+  wire        SRL =
+    (_REMU_T | _SLTU_T_1) & _BGE_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+    & ~io_FU_input_bits_decoded_instruction_SUBTRACT;
+  wire        SRA =
+    (_REMU_T | _SLTU_T_1) & _BGE_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+    & io_FU_input_bits_decoded_instruction_SUBTRACT;
   wire        AUIPC =
     io_FU_input_bits_decoded_instruction_instructionType == 5'h5
     & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
@@ -101,15 +114,13 @@ module branch_unit(
     EQ =
       io_FU_input_bits_RS1_data == io_FU_input_bits_RS2_data & BRANCH
       & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
-    NE =
-      io_FU_input_bits_RS1_data != io_FU_input_bits_RS2_data & BRANCH
-      & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1;
+    NE = io_FU_input_bits_RS1_data != io_FU_input_bits_RS2_data & BRANCH & _BNE_T;
     LT =
       $signed(io_FU_input_bits_RS1_data) < $signed(io_FU_input_bits_RS2_data) & BRANCH
       & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4;
     GE =
       $signed(io_FU_input_bits_RS1_data) >= $signed(io_FU_input_bits_RS2_data) & BRANCH
-      & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
+      & _BGE_T;
     LTU =
       io_FU_input_bits_RS1_data < io_FU_input_bits_RS2_data & BRANCH
       & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h6;
