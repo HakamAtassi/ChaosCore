@@ -407,3 +407,24 @@ object generateFUPorts {
     }
   }
 }
+
+
+/** Function to determine if a CSR is Read-Write (RW) or Read-Only (RO) */
+
+object get_CSR_access{
+  def apply(csrAddr: UInt): ACCESS.Type = {
+    val roBit = csrAddr(9)
+    Mux(roBit === 0.U, ACCESS.RW, ACCESS.RO)
+  }
+}
+
+/** Function to get the lowest privilege level allowed to access a CSR */
+object get_CSR_lowest_priv{
+  def apply(csrAddr: UInt): PRIVILAGE.Type = {
+    val priv_bits = csrAddr(11, 10)
+    val (priv, valid) = PRIVILAGE.safe(priv_bits)
+    assert(valid, "PRIVILIGE MUST BE VALID")
+
+    priv
+  }
+}

@@ -55,7 +55,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val opcode      = instruction(6, 0)
     val RS1         = instruction(19, 15)
     val RS2         = instruction(24, 20)
-    val PRD          = instruction(11, 7)
+    val PRD         = instruction(11, 7)
     val IMM         = getImm(instruction)
 
     val FUNCT3      = instruction(14, 12)
@@ -63,7 +63,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
 
     val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
-    assert(valid, "Enum state must be valid, got %d!", opcode(6,2))
+    assert(valid, "Enum state must be valid, got %x!",instruction)
 
 
     dontTouch(instructionType)
@@ -72,7 +72,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
 
 
-    val SUBTRACT    =   ((instructionType === OP        ||  instructionType === OP_IMM) && FUNCT7 === 0x20.U)
+    val SUBTRACT    =   ((instructionType === OP) && FUNCT7 === 0x20.U)
     val IS_IMM   =      (instructionType === OP_IMM)    || 
                         (instructionType === LUI)       || 
                         (instructionType === AUIPC)     || 
@@ -81,7 +81,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                         (instructionType === BRANCH)    || 
                         (instructionType === JAL)       || 
                         (instructionType === JALR)      ||
-                        (instructionType === SYSTEM)
+                        ((instructionType === SYSTEM) && (FUNCT3 === 5.U || FUNCT3 === 6.U || FUNCT3 === 7.U))
 
     val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_mul            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
@@ -124,6 +124,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                                                         instructionType === LOAD        || 
                                                         instructionType === STORE       || 
                                                         instructionType === JALR        || 
+                                                        (needs_CSRs && !IS_IMM) ||
                                                         instructionType === BRANCH)     && 
                                                         io.instruction.valid
 

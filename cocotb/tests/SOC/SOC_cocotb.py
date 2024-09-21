@@ -36,9 +36,10 @@ async def test_reset(dut):
     SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/instret.bin")     # construct TB
 
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/riscv-tests/isa/rv32ui-p-srai")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/rv32ui-p-srai.bin")     # construct TB
     await SOC.reset()                      # Reset
 
-    for _ in range(150000):
+    for _ in range(15000):
     #while 1:
         await SOC.clock()
 

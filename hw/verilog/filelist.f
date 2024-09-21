@@ -40,7 +40,7 @@ ALU.sv
 branch_unit.sv
 FU.sv
 mul_unit.sv
-CSRs.sv
+CSR_FU.sv
 FU_1.sv
 FU_2.sv
 AGU.sv
