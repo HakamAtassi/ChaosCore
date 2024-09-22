@@ -51,7 +51,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
         // commit (for CSRs only)
         val partial_commit  =   Input(new partial_commit(coreParameters))
-        val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
+        val commit          =   Flipped(ValidIO(new commit(coreParameters)))
     })
 
     // misaligned fetch exception ??
@@ -149,7 +149,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val shamt = Wire(UInt(5.W))
 
     // FIXME: saturate to 31 or 32?
-    when(operand2_unsigned >= 32.U){
+    when(operand2_unsigned(4, 0).asUInt >= 32.U){
         shamt := 31.U
     }.otherwise{
         shamt := operand2_unsigned(4, 0).asUInt
@@ -171,16 +171,15 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val SLL      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b001".U  && !MULTIPLY
     val SRL      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && !SUBTRACT
     val SRA      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && SUBTRACT
+
     val SLT      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b010".U  && !MULTIPLY
     val SLTU     =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b011".U  && !MULTIPLY
-    val LUI      =   (instructionType === InstructionType.LUI) && !MULTIPLY
+    val LUI      =   (instructionType === InstructionType.LUI)   && !MULTIPLY
     val AUIPC    =   (instructionType === InstructionType.AUIPC) && !MULTIPLY
 
     dontTouch(SLL)
     dontTouch(SRL)
     dontTouch(SRA)
-
-
     dontTouch(instruction_PC)
     dontTouch(AUIPC)
     

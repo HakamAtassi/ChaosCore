@@ -37,7 +37,7 @@ import chisel3.util._
 
 case class CoreParameters(
 
-    DEBUG: Boolean = false,
+    DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
     coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)
@@ -104,8 +104,8 @@ case class CoreParameters(
     // FIXME: check that there is only 1 CSRs, etc...
     // Add other requirements here
     FUParamSeq: Seq[FUParams] = Seq(
-        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=true, supportsCSRs=false,   supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsMult=true, supportsDiv=true, supportsBranch=false, supportsCSRs=true,    supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=true, supportsCSRs=true,   supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=true, supportsDiv=true, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
         FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
         FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=true),
     )

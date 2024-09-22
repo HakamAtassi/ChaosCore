@@ -345,7 +345,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     val is_CSR    =  io.FU_input.bits.decoded_instruction.needs_CSRs
 
-    val RS1    =  io.FU_input.bits.decoded_instruction.RS1
+    val RS1       =  io.FU_input.bits.decoded_instruction.RS1
 
     val is_CSRRW  =  is_CSR && FUNCT3 === 0x1.U
     val is_CSRRS  =  is_CSR && FUNCT3 === 0x2.U
@@ -362,14 +362,6 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val input_CSR_privilage    = get_CSR_lowest_priv(input_CSR_address)
     val input_CSR_access       = get_CSR_access(input_CSR_address)      // What is the minimum required privilage required for the requested CSR? (this is encoded in the address)
 
-    // from spec
-    // For both CSRRS and CSRRC, if rs1=x0, then the instruction will not write to the CSR at all, and so shall
-    // not cause any of the side effects that might otherwise occur on a CSR write, nor raise illegal-
-    // instruction exceptions on accesses to read-only CSRs. Both CSRRS and CSRRC always read the
-    // addressed CSR and cause any read side effects regardless of rs1 and rd fields. Note that if rs1 specifies a
-    // register other than x0, and that register holds a zero value, the instruction will not action any
-    // attendant per-field side effects, but will action any side effects caused by writing to the entire CSR.
-    // A CSRRW with rs1=x0 will attempt to write zero to the destination CSR.
 
     val input_CSR_read_request       = !(io.FU_input.bits.decoded_instruction.PRD === 0.U)  // when PRD == x0, the read is discarded, so dont read at all.
     val input_CSR_write_request      = (is_CSRRW || is_CSRRWI) || (is_CSR && RS1 =/= 0.U)
@@ -380,8 +372,6 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     dontTouch(input_CSR_read_request)
     dontTouch(input_CSR_write_request)
 
-
-
     ////////////////////
     // USER MODE CSRs //
     ////////////////////
@@ -391,27 +381,33 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // PERFORMANCE COUNTERS 
     //-----------------------
 
-    val cycle_reg    = RegInit(new TimerCSR(0xC00), 0.U.asTypeOf(new TimerCSR(0)))
-    val time_reg     = RegInit(new TimerCSR(0xC01), 0.U.asTypeOf(new TimerCSR(0)))
-    val instret_reg  = RegInit(new TimerCSR(0xC02), 0.U.asTypeOf(new TimerCSR(0)))
+    val cycle_reg     = RegInit(UInt(32.W), 0.U)
+    val time_reg      = RegInit(UInt(32.W), 0.U)
+    val instret_reg   = RegInit(UInt(32.W), 0.U)
+
+    val cycleh_reg    = RegInit(UInt(32.W), 0.U)
+    val timeh_reg     = RegInit(UInt(32.W), 0.U)
+    val instreth_reg  = RegInit(UInt(32.W), 0.U)
 
 
 
     // PERFORMANCE COUNTER UPDATES
 
-    cycle_reg.reg   := cycle_reg.reg   + 1.U
-    time_reg.reg    := time_reg.reg    + 1.U
-    when(io.commit.valid){
-      instret_reg.reg := instret_reg.reg + PopCount(io.partial_commit.valid)
-    }
+    val (new_cycleh_reg, new_cycle_reg) = increment_perf_counter(cycleh_reg, cycle_reg, 1.U)
+    cycleh_reg := new_cycleh_reg
+    cycle_reg := new_cycle_reg
 
+
+    when(io.commit.valid){
+        val (new_instret_reg, new_instreth_reg) = increment_perf_counter(instreth_reg, instret_reg, PopCount(io.partial_commit.valid))
+        instret_reg := new_instret_reg
+        instreth_reg := new_instreth_reg
+    }
 
     // SUPERVISOR //
     // N/A
-
     // HYPERVISOR //
     // N/A
-
 
     //---------------------
     // CREATE CSR MAPPING 
@@ -419,93 +415,79 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     // MAP of int -> CSR
     val user_mode_CSRs = Map(
-        CSRs.cycle      ->  cycle_reg.valuel,
-        CSRs.time       ->  time_reg.valuel,
-        CSRs.instret    ->  instret_reg.valuel,
+        CSRs.cycle      ->  cycle_reg,
+        CSRs.time       ->  time_reg,
+        CSRs.instret    ->  instret_reg,
 
-        CSRs.cycleh     ->  cycle_reg.valueh,
-        CSRs.timeh      ->  time_reg.valueh,
-        CSRs.instreth   ->  instret_reg.valueh, // FIXME: update so that this is AFTER the current commit takes place, if any
+        CSRs.cycleh     ->  cycleh_reg,
+        CSRs.timeh      ->  timeh_reg,
+        CSRs.instreth   ->  instreth_reg, // FIXME: update so that this is AFTER the current commit takes place, if any
     )
-
-
-
-    // Create the one-hot signal based on CSR address comparison
-    val user_mode_CSR_OH = user_mode_CSRs.map {case (addr, reg) => (addr.U === CSR_addr)}
-
-    // Use Mux1H to select the register value based on the one-hot signal
-    val user_mode_CSR_read_resp = Mux1H(user_mode_CSR_OH.zip(user_mode_CSRs.map(_._2)))
-
 
     
     ///////////////////////
     // MACHINE MODE CSRs //
     ///////////////////////
 
+    val mvendorid_reg   = RegInit(0.U.asTypeOf(new mvendorid))
+    val marchid_reg     = RegInit(0.U.asTypeOf(new marchid))
+    val mimpid_reg      = RegInit(UInt(32.W), 0.U)  // (implementation-defined)
+    val mhartid_reg     = RegInit(0.U.asTypeOf(new mhartid))
+    val mconfigptr_reg  = RegInit(0.U.asTypeOf(new mconfigptr))
 
-
-    //------------------------------
-    // MACHINE INFORMATION REGISTERS 
-    //------------------------------
-
-    val mvendorid_reg   = Reg(new DefaultCSR(0xF11)) 
-    val marchid_reg     = Reg(new DefaultCSR(0xF12)) 
-    val mimpid_reg      = Reg(new DefaultCSR(0xF13)) 
-    val mhartid_reg     = Reg(new DefaultCSR(0xF14)) 
-    val mconfigptr_reg  = Reg(new DefaultCSR(0xF15)) 
 
     //---------------------
     // MACHINE TRAP SETUP
     //---------------------
 
-    val mstatus_reg     = Reg(new DefaultCSR(0x300)) 
-    val misa_reg        = Reg(new DefaultCSR(0x301)) 
-    val medeleg_reg     = Reg(new DefaultCSR(0x302)) 
-    val mideleg_reg     = Reg(new DefaultCSR(0x303)) 
-    val mie_reg         = Reg(new DefaultCSR(0x304)) 
-    val mtvec_reg       = Reg(new DefaultCSR(0x305)) 
-    val mcounteren_reg  = Reg(new DefaultCSR(0x306)) 
-    val mstatush_reg    = Reg(new DefaultCSR(0x310)) 
-    val medelegh_reg    = Reg(new DefaultCSR(0x312)) 
+    val mstatus_reg     = RegInit(0.U.asTypeOf(new mstatus))
+    val misa_reg        = RegInit(0.U.asTypeOf(new misa))
+    val medeleg_reg     = RegInit(UInt(32.W), 0.U)  // (not present in RV32I)
+    val mideleg_reg     = RegInit(UInt(32.W), 0.U)  // (not present in RV32I)
+    val mie_reg         = RegInit(0.U.asTypeOf(new mie))
+    val mtvec_reg       = RegInit(0.U.asTypeOf(new mtvec))
+    val mcounteren_reg  = RegInit(UInt(32.W), 0.U)
+    val mstatush_reg    = RegInit(UInt(32.W), 0.U)  // RV32 only has mstatus; mstatush used in RV64
+    val medelegh_reg    = RegInit(UInt(32.W), 0.U)
 
 
     //-----------------------
     // MACHINE TRAP HANDLING
     //-----------------------
 
-    // Machine Trap Handling
-    val mscratch_reg   = Reg(new DefaultCSR(0x340)) 
-    val mepc_reg       = Reg(new DefaultCSR(0x341)) 
-    val mcause_reg     = Reg(new DefaultCSR(0x342)) 
-    val mtval_reg      = Reg(new DefaultCSR(0x343)) 
-    val mip_reg        = Reg(new DefaultCSR(0x344)) 
-    val mtinst_reg     = Reg(new DefaultCSR(0x34A)) 
-    val mtval2_reg     = Reg(new DefaultCSR(0x34B)) 
+    val mscratch_reg   = RegInit(0.U.asTypeOf(new mscratch))
+    val mepc_reg       = RegInit(0.U.asTypeOf(new mepc))
+    val mcause_reg     = RegInit(0.U.asTypeOf(new mcause))
+    val mtval_reg      = RegInit(0.U.asTypeOf(new mtval))
+    val mip_reg        = RegInit(0.U.asTypeOf(new mip))
+    val mtinst_reg     = RegInit(UInt(32.W), 0.U)
+    val mtval2_reg     = RegInit(UInt(32.W), 0.U)
 
 
     //-----------------------
     // MACHINE NMI HANDLING
     //-----------------------
 
-    val mnscratch_reg   = Reg(new DefaultCSR(0x740)) 
-    val mnepc_reg       = Reg(new DefaultCSR(0x741)) 
-    val mncause_reg     = Reg(new DefaultCSR(0x742)) 
-    val mnstatus_reg    = Reg(new DefaultCSR(0x744)) 
-
+    val mnscratch_reg   = RegInit(UInt(32.W), 0.U)
+    val mnepc_reg       = RegInit(UInt(32.W), 0.U)
+    val mncause_reg     = RegInit(UInt(32.W), 0.U)
+    val mnstatus_reg    = RegInit(UInt(32.W), 0.U)
 
 
     //-----------------------
     // PERFORMANCE COUNTERS 
     //-----------------------
 
+    val mcycle_reg    = RegInit(UInt(32.W), 0.U)
+    val minstret_reg  = RegInit(UInt(32.W), 0.U)
 
-    val mcycle_reg    = RegInit(new TimerCSR(CSRs.mcycle), 0.U.asTypeOf(new TimerCSR(0)))
-    val minstret_reg  = RegInit(new TimerCSR(CSRs.minstret), 0.U.asTypeOf(new TimerCSR(0)))
+    val mcycleh_reg    = RegInit(UInt(32.W), 0.U)
+    val minstreth_reg  = RegInit(UInt(32.W), 0.U)
 
 
     // PERFORMANCE COUNTER UPDATES
-    mcycle_reg.reg   := mcycle_reg.reg   + 1.U
-    minstret_reg.reg := minstret_reg.reg + PopCount(io.partial_commit.valid)
+    mcycle_reg   := mcycle_reg   + 1.U
+    minstret_reg := minstret_reg + PopCount(io.partial_commit.valid)
 
 
     //---------------------
@@ -562,44 +544,83 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         // PERFORMANCE COUNTERS 
         //-----------------------
 
-        //CSRs.mcycle      -> mcycle_reg,
-        //CSRs.minstret    -> minstret_reg,
-        //CSRs.minstreth   -> minstret_reg
+        CSRs.mcycle      -> mcycle_reg,
+        CSRs.minstret    -> minstret_reg,
+        CSRs.minstreth   -> minstret_reg
     )
 
 
-    // Create the one-hot signal based on CSR address comparison
-    val machine_mode_CSR_OH = machine_mode_CSRs.map { case (addr, reg) => (addr.U === CSR_addr) }
-
-    // Use Mux1H to select the register value based on the one-hot signal
-    val machine_mode_CSR_read_resp = Mux1H(machine_mode_CSR_OH.zip(machine_mode_CSRs.map(_._2))).reg
+    //////////////
+    // CSR READ //
+    //////////////
 
 
+    val user_mode_CSR_OH            = user_mode_CSRs.map {case (addr, reg) => (addr.U === CSR_addr)}
+    val user_mode_CSR_read_resp     = Mux1H(user_mode_CSR_OH.zip(user_mode_CSRs.map(_._2)))
+
+
+
+    val machine_mode_CSR_OH         = machine_mode_CSRs.map { case (addr, reg) => (addr.U === CSR_addr) }
+    val machine_mode_CSR_read_resp  = Mux1H(machine_mode_CSR_OH.zip(machine_mode_CSRs.map(_._2.asUInt)))
+
+    // this is placeholder until I implemement an actual CSR file
+    val CSR_out    = Reg(UInt(32.W))
+
+    when(input_CSR_privilage === PRIVILAGE.MACHINE){
+      CSR_out := user_mode_CSR_read_resp
+    }.elsewhen(input_CSR_privilage === PRIVILAGE.USER){
+      CSR_out := machine_mode_CSR_read_resp
+    }
 
     dontTouch(input_CSR_privilage)
-
     dontTouch(RS1_data)
     dontTouch(CSR_addr)
 
-    when(PRIVILAGE.MACHINE >= input_CSR_privilage  && PRIVILAGE_OK && input_CSR_write_request) {
-        for ((addr, reg) <- machine_mode_CSRs) {
-            //val ro = (addr == CSRs.mcycle) || (CSR_addr == CSRs.minstret) || (CSR_addr == CSRs.mcycleh) || (CSR_addr == CSRs.minstreth)
-            when(addr.U === CSR_addr && reg.ACCESS.U =/= ACCESS.RO.asUInt) {
-                reg.asUInt := RS1_data
+
+    ///////////////
+    // CSR WRITE //
+    ///////////////
+
+    // check write to machine mode regs
+    when(PRIVILAGE.MACHINE >= input_CSR_privilage && PRIVILAGE_OK && input_CSR_write_request) {
+        for ((addr, reg) <- machine_mode_CSRs) {    // FIXME: add read only, etc...
+            when(addr.U === CSR_addr) {
+                // FIXME: add proper write functions (ex, set, clear, etc...)
+                reg := RS1_data.asTypeOf(reg.cloneType) // Use cloneType to ensure the type matches
             }
         }
     }
 
 
 
+
+
+    ////////////////////
+    // BRANCH CONTROL //
+    ////////////////////
+
+
+    // Any instruction can cause an exception. When this happens, jump to vtvec
+
+    // mret/sret & Ecall/Ebreak
+    // mret/sret are simply a branch to mepc with a privilige update
+    // Ecall/Ebreak trigger exceptions
+
+    // If there is an Ecall instruction, you have to change mstatus, mcause, mepc (and mstatush for 32 bit) registers. 
+    // Then jump to the PC in mtvec. And the privilege is changed to M mode( medeleg value might say S mode) 
+    // (for exact changes, read the specifications, chapters on mstatus, mcause and mtvec) 
+
+
+    // FUs output a branch on MRET/SRET
+    // and an exception on ECALL/EBREAK
     
+    // mret/sret is a taken branch to MEPC
+    // FIXME: there are a bunch of side effects here I'm ignoring
+
+    // ECALL/EBREAK causes an exception 
 
 
-    
 
-    ///////////////
-    // CSR WRITE //
-    ///////////////
 
 
 
@@ -609,15 +630,6 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // SELECTION & OUTPUT //
     ////////////////////////
 
-    // this is placeholder until I implemement an actual CSR file
-    val CSR_out    = Reg(UInt(32.W))
-
-
-    when(input_CSR_privilage === PRIVILAGE.MACHINE){
-      CSR_out := user_mode_CSR_read_resp
-    }.elsewhen(input_CSR_privilage === PRIVILAGE.USER){
-      CSR_out := machine_mode_CSR_read_resp
-    }
 
     dontTouch(input_CSR_privilage)
     dontTouch(user_mode_CSR_read_resp)
@@ -625,6 +637,9 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
 
 
+    val mret      = instructionType === InstructionType.SYSTEM && RS1 === 0.U && PRD === 0.U && imm === 0x302.U && FUNCT3 === 0.U
+    val sret      = instructionType === InstructionType.SYSTEM && RS1 === 0.U && PRD === 0.U && imm === 0x102.U && FUNCT3 === 0.U
+    val mret_sret = mret || sret
 
 
 
@@ -632,8 +647,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // ALU pipelined; always ready
     io.FU_input.ready                       := 1.B    
 
-    // Not a branch unit (all FUs share the same output channel)
-    io.FU_output.bits.branch_valid          := 0.B
+    // mret/sret
+    io.FU_output.bits.branch_valid          := RegNext(mret_sret)
+    io.FU_output.bits.branch_taken          := RegNext(mret_sret)
+    io.FU_output.bits.target_address        := RegNext(mepc_reg.asUInt)
+
+
 
     io.FU_output.bits.fetch_PC              := RegNext(io.FU_input.bits.fetch_PC)
     io.FU_output.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
@@ -651,11 +670,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     input_valid                             := CSR_input_valid
 
+
+
+
     dontTouch(CSR_input_valid)
     dontTouch(input_valid)
 
 }
-
-
 
 
