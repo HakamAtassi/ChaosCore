@@ -36,7 +36,15 @@ module instruction_mem(
   output [15:0] io_CPU_response_bits_GHR,
   output [6:0]  io_CPU_response_bits_NEXT,
                 io_CPU_response_bits_TOS,
-  input         io_kill
+
+  input         io_flush_valid,
+                io_flush_bits_is_misprediction,
+                io_flush_bits_is_exception,
+                io_flush_bits_is_fence,
+                io_flush_bits_is_CSR,
+  input  [31:0] io_flush_bits_flushing_PC,
+                io_flush_bits_redirect_PC
+
 );
 
     wire [7:0]             axi_awid; 
@@ -121,6 +129,30 @@ module instruction_mem(
     L1_instruction_cache instruction_cache (
     .clock                                            (clock),
     .reset                                            (reset),
+    .io_CPU_response_bits_prediction_br_mask_3
+      (io_CPU_response_bits_prediction_br_mask_3),
+    .io_CPU_response_bits_prediction_br_mask_2
+      (io_CPU_response_bits_prediction_br_mask_2),
+    .io_CPU_response_bits_prediction_br_mask_1
+      (io_CPU_response_bits_prediction_br_mask_1),
+    .io_CPU_response_bits_prediction_br_mask_0
+      (io_CPU_response_bits_prediction_br_mask_0),
+    .io_CPU_response_bits_prediction_br_type
+      (io_CPU_response_bits_prediction_br_type),
+    .io_CPU_response_bits_prediction_target
+      (io_CPU_response_bits_prediction_target),
+    .io_CPU_response_bits_prediction_hit
+      (io_CPU_response_bits_prediction_hit),
+    .io_CPU_response_ready
+      (io_CPU_response_ready),
+    .io_CPU_request_bits_wr_en
+      (io_CPU_request_bits_wr_en),
+    .io_CPU_request_bits_wr_data
+      (io_CPU_request_bits_wr_data),
+    .io_CPU_request_bits_addr
+      (io_CPU_request_bits_addr),
+    .io_CPU_request_valid
+      (io_CPU_request_valid),
     .m_axi_awvalid
       (axi_awvalid),
     .m_axi_awready
@@ -212,7 +244,7 @@ module instruction_mem(
     .io_CPU_request_ready
       (io_CPU_request_ready),
     .io_CPU_response_valid
-      (io_CPU_request_valid),
+      (io_CPU_response_valid),
     .io_CPU_response_bits_fetch_PC
       (io_CPU_response_bits_fetch_PC),
     .io_CPU_response_bits_valid_bits_0
@@ -252,7 +284,22 @@ module instruction_mem(
     .io_CPU_response_bits_NEXT
       (io_CPU_response_bits_NEXT),
     .io_CPU_response_bits_TOS
-      (io_CPU_response_bits_TOS)
+      (io_CPU_response_bits_TOS),
+    .io_flush_valid
+      (io_flush_valid),
+    .io_flush_bits_is_misprediction
+      (io_flush_bits_is_misprediction),
+    .io_flush_bits_is_exception
+      (io_flush_bits_is_exception),
+    .io_flush_bits_is_fence
+      (io_flush_bits_is_fence),
+    .io_flush_bits_is_CSR
+      (io_flush_bits_is_CSR),
+    .io_flush_bits_flushing_PC
+      (io_flush_bits_flushing_PC),
+    .io_flush_bits_redirect_PC
+      (io_flush_bits_redirect_PC)
+
   );
 
 

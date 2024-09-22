@@ -12,9 +12,15 @@ class cache_req extends uvm_sequence_item;
   rand logic[31:0] io_CPU_request_bits_wr_data;
   rand logic io_CPU_request_bits_wr_en;
   rand logic io_CPU_response_ready;
-  rand logic io_kill;
 
-  constraint c_io_kill { io_kill == 0; }
+  rand logic io_flush_valid;
+  rand logic io_flush_bits_is_misprediction;
+  rand logic io_flush_bits_is_exception;
+  rand logic io_flush_bits_is_fence;
+  rand logic io_flush_bits_is_CSR;
+  rand logic [31:0] io_flush_bits_flushing_PC;
+  rand logic [31:0] io_flush_bits_redirect_PC;
+
   constraint c_wr_data { io_CPU_request_bits_wr_data == 0; }
   constraint c_wr_en { io_CPU_request_bits_wr_en == 0; }
   
@@ -30,7 +36,7 @@ class cache_req extends uvm_sequence_item;
                       "io_CPU_request_bits_wr_data: %2h\n", io_CPU_request_bits_addr,
                       "io_CPU_request_bits_wr_en: %2h\n", io_CPU_request_bits_wr_en,
                       "io_CPU_response_ready: %2h\n", io_CPU_response_ready,
-                      "io_kill: %2h\n", io_kill);
+                      "io_flush_valid: %2h\n", io_flush_valid);
   endfunction : convert2string
 
   function void do_copy(uvm_object rhs);
@@ -146,16 +152,31 @@ class base_sequence extends uvm_sequence#(cache_req, cache_rsp);
     get_response(rsp);
     `uvm_info("test_seq",{"Got back: ",rsp.convert2string()},UVM_MEDIUM);
 
-    repeat(1) begin
+    repeat(17) begin
       req = new();
       start_item(req);
       req.reset = 0;
       req.io_CPU_request_valid = 1;
       req.io_CPU_request_bits_addr = 0;
-      req.io_kill = 0;
       req.io_CPU_response_ready = 1;
+      req.io_flush_valid = 0;
       //assert(req.randomize());
-      `uvm_info("test_seq",{"Sending transaction ",req.convert2string()}, UVM_MEDIUM);
+      `uvm_info("test_seq",{"Sending transaction ",req.convert2string()}, UVM_LOW);
+      finish_item(req);
+      get_response(rsp);
+       `uvm_info("test_seq",{"Got back: ",rsp.convert2string()},UVM_MEDIUM);
+    end
+
+    repeat(17) begin
+      req = new();
+      start_item(req);
+      req.reset = 0;
+      req.io_CPU_request_valid = 1;
+      req.io_CPU_request_bits_addr = 32'h1f40;
+      req.io_CPU_response_ready = 1;
+      req.io_flush_valid = 0;
+      //assert(req.randomize());
+      `uvm_info("test_seq",{"Sending transaction ",req.convert2string()}, UVM_LOW);
       finish_item(req);
       get_response(rsp);
        `uvm_info("test_seq",{"Got back: ",rsp.convert2string()},UVM_MEDIUM);
