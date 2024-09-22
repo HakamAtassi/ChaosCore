@@ -428,3 +428,14 @@ object get_CSR_lowest_priv{
     priv
   }
 }
+
+
+object increment_perf_counter{
+  def apply(upper:UInt, lower:UInt, inc:UInt): (UInt, UInt) = {
+    val counter:UInt = Wire(UInt(64.W))
+    val counter_new:UInt = Wire(UInt(64.W))
+    counter := upper ## lower 
+    counter_new := counter + inc
+    (counter_new(63, 32), counter_new(31, 0))
+  }
+}

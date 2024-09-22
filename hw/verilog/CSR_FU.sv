@@ -54,6 +54,9 @@ module CSR_FU(
   output [31:0] io_FU_output_bits_RD_data,
   output        io_FU_output_bits_RD_valid,
   output [31:0] io_FU_output_bits_fetch_PC,
+  output        io_FU_output_bits_branch_taken,
+  output [31:0] io_FU_output_bits_target_address,
+  output        io_FU_output_bits_branch_valid,
   output [3:0]  io_FU_output_bits_MOB_index,
   output [5:0]  io_FU_output_bits_ROB_index,
   output [1:0]  io_FU_output_bits_fetch_packet_index,
@@ -101,78 +104,187 @@ module CSR_FU(
     | io_FU_input_bits_decoded_instruction_needs_CSRs & _is_CSRRWI_T
     | io_FU_input_bits_decoded_instruction_needs_CSRs
     & (|io_FU_input_bits_decoded_instruction_RS1);
-  reg  [63:0] cycle_reg_reg;
-  reg  [63:0] time_reg_reg;
-  reg  [63:0] instret_reg_reg;
+  reg  [31:0] cycle_reg;
+  reg  [31:0] instret_reg;
+  reg  [31:0] cycleh_reg;
+  reg  [31:0] instreth_reg;
+  reg  [6:0]  mvendorid_reg_Offset;
+  reg  [24:0] mvendorid_reg_Bank;
+  reg  [31:0] marchid_reg_archID;
+  reg  [31:0] mimpid_reg;
+  reg  [31:0] mhartid_reg_hartid;
+  reg  [31:0] mconfigptr_reg_ptr;
+  reg         mstatus_reg_SD;
+  reg  [6:0]  mstatus_reg_WPRI1;
+  reg         mstatus_reg_TSR;
+  reg         mstatus_reg_TW;
+  reg         mstatus_reg_TVM;
+  reg         mstatus_reg_MXR;
+  reg         mstatus_reg_SUM;
+  reg         mstatus_reg_MPRV;
+  reg  [1:0]  mstatus_reg_XS;
+  reg  [1:0]  mstatus_reg_FS;
+  reg  [1:0]  mstatus_reg_MPP;
+  reg         mstatus_reg_SPP;
+  reg         mstatus_reg_MPIE;
+  reg         mstatus_reg_UBE;
+  reg         mstatus_reg_SPIE;
+  reg         mstatus_reg_WPRI2;
+  reg         mstatus_reg_MIE;
+  reg         mstatus_reg_SIE;
+  reg  [25:0] misa_reg_Extensions;
+  reg  [3:0]  misa_reg_WPRI;
+  reg  [1:0]  misa_reg_MXL;
+  reg  [31:0] medeleg_reg;
+  reg  [31:0] mideleg_reg;
+  reg  [19:0] mie_reg_WPRI1;
+  reg         mie_reg_MEIE;
+  reg         mie_reg_SEIE;
+  reg         mie_reg_UEIE;
+  reg  [2:0]  mie_reg_WPRI2;
+  reg         mie_reg_MTIE;
+  reg         mie_reg_STIE;
+  reg         mie_reg_UTIE;
+  reg         mie_reg_MSIE;
+  reg         mie_reg_SSIE;
+  reg         mie_reg_USIE;
+  reg  [29:0] mtvec_reg_BASE;
+  reg  [1:0]  mtvec_reg_MODE;
+  reg  [31:0] mcounteren_reg;
+  reg  [31:0] mstatush_reg;
+  reg  [31:0] mscratch_reg_scratch;
+  reg  [31:0] mepc_reg_PC;
+  reg         mcause_reg_Interrupt;
+  reg  [30:0] mcause_reg_Code;
+  reg  [31:0] mtval_reg_badaddr;
+  reg  [19:0] mip_reg_WPRI1;
+  reg         mip_reg_MEIP;
+  reg         mip_reg_SEIP;
+  reg         mip_reg_UEIP;
+  reg  [2:0]  mip_reg_WPRI2;
+  reg         mip_reg_MTIP;
+  reg         mip_reg_STIP;
+  reg         mip_reg_UTIP;
+  reg         mip_reg_MSIP;
+  reg         mip_reg_SSIP;
+  reg         mip_reg_USIP;
+  reg  [31:0] mtinst_reg;
+  reg  [31:0] mtval2_reg;
+  reg  [31:0] mnscratch_reg;
+  reg  [31:0] mnepc_reg;
+  reg  [31:0] mncause_reg;
+  reg  [31:0] mnstatus_reg;
+  reg  [31:0] mcycle_reg;
+  reg  [31:0] minstret_reg;
   wire [31:0] user_mode_CSR_read_resp =
-    (CSR_addr == 12'hC00 ? cycle_reg_reg[31:0] : 32'h0)
-    | (CSR_addr == 12'hC01 ? time_reg_reg[31:0] : 32'h0)
-    | (CSR_addr == 12'hC82 ? instret_reg_reg[63:32] : 32'h0)
-    | (CSR_addr == 12'hC80 ? cycle_reg_reg[63:32] : 32'h0)
-    | (CSR_addr == 12'hC02 ? instret_reg_reg[31:0] : 32'h0)
-    | (CSR_addr == 12'hC81 ? time_reg_reg[63:32] : 32'h0);
-  reg  [31:0] mvendorid_reg_reg;
-  reg  [31:0] marchid_reg_reg;
-  reg  [31:0] mimpid_reg_reg;
-  reg  [31:0] mhartid_reg_reg;
-  reg  [31:0] mconfigptr_reg_reg;
-  reg  [31:0] mstatus_reg_reg;
-  reg  [31:0] misa_reg_reg;
-  reg  [31:0] medeleg_reg_reg;
-  reg  [31:0] mideleg_reg_reg;
-  reg  [31:0] mie_reg_reg;
-  reg  [31:0] mtvec_reg_reg;
-  reg  [31:0] mcounteren_reg_reg;
-  reg  [31:0] mstatush_reg_reg;
-  reg  [31:0] mscratch_reg_reg;
-  reg  [31:0] mepc_reg_reg;
-  reg  [31:0] mcause_reg_reg;
-  reg  [31:0] mtval_reg_reg;
-  reg  [31:0] mip_reg_reg;
-  reg  [31:0] mtinst_reg_reg;
-  reg  [31:0] mtval2_reg_reg;
+    (CSR_addr == 12'hC00 ? cycle_reg : 32'h0)
+    | (CSR_addr == 12'hC82 ? instreth_reg : 32'h0)
+    | (CSR_addr == 12'hC80 ? cycleh_reg : 32'h0)
+    | (CSR_addr == 12'hC02 ? instret_reg : 32'h0);
   wire        machine_mode_CSR_OH_0 = CSR_addr == 12'hF12;
+  wire        machine_mode_CSR_OH_1 = CSR_addr == 12'h744;
   wire        machine_mode_CSR_OH_2 = CSR_addr == 12'h302;
   wire        machine_mode_CSR_OH_3 = CSR_addr == 12'h306;
   wire        machine_mode_CSR_OH_4 = CSR_addr == 12'hF11;
   wire        machine_mode_CSR_OH_5 = CSR_addr == 12'h34A;
-  wire        machine_mode_CSR_OH_7 = CSR_addr == 12'h310;
-  wire        machine_mode_CSR_OH_8 = CSR_addr == 12'h300;
-  wire        machine_mode_CSR_OH_9 = CSR_addr == 12'h344;
-  wire        machine_mode_CSR_OH_10 = CSR_addr == 12'h303;
-  wire        machine_mode_CSR_OH_11 = CSR_addr == 12'hF13;
-  wire        machine_mode_CSR_OH_12 = CSR_addr == 12'h340;
-  wire        machine_mode_CSR_OH_13 = CSR_addr == 12'h342;
-  wire        machine_mode_CSR_OH_16 = CSR_addr == 12'h305;
-  wire        machine_mode_CSR_OH_17 = CSR_addr == 12'h34B;
-  wire        machine_mode_CSR_OH_18 = CSR_addr == 12'h304;
-  wire        machine_mode_CSR_OH_19 = CSR_addr == 12'h301;
-  wire        machine_mode_CSR_OH_20 = CSR_addr == 12'hF15;
-  wire        machine_mode_CSR_OH_21 = CSR_addr == 12'hF14;
-  wire        machine_mode_CSR_OH_22 = CSR_addr == 12'h341;
-  wire        machine_mode_CSR_OH_23 = CSR_addr == 12'h343;
-  wire [31:0] _machine_mode_CSR_read_resp_WIRE_reg =
-    (machine_mode_CSR_OH_0 ? marchid_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_2 ? medeleg_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_3 ? mcounteren_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_4 ? mvendorid_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_5 ? mtinst_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_7 ? mstatush_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_8 ? mstatus_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_9 ? mip_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_10 ? mideleg_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_11 ? mimpid_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_12 ? mscratch_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_13 ? mcause_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_16 ? mtvec_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_17 ? mtval2_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_18 ? mie_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_19 ? misa_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_20 ? mconfigptr_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_21 ? mhartid_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_22 ? mepc_reg_reg : 32'h0)
-    | (machine_mode_CSR_OH_23 ? mtval_reg_reg : 32'h0);
+  wire        machine_mode_CSR_OH_6 = CSR_addr == 12'h310;
+  wire        machine_mode_CSR_OH_7 = CSR_addr == 12'h300;
+  wire        machine_mode_CSR_OH_8 = CSR_addr == 12'hF13;
+  wire        machine_mode_CSR_OH_9 = CSR_addr == 12'h340;
+  wire        machine_mode_CSR_OH_10 = CSR_addr == 12'h342;
+  wire        machine_mode_CSR_OH_11 = CSR_addr == 12'h742;
+  wire        machine_mode_CSR_OH_12 = CSR_addr == 12'hB82;
+  wire        machine_mode_CSR_OH_13 = CSR_addr == 12'h740;
+  wire        machine_mode_CSR_OH_14 = CSR_addr == 12'h741;
+  wire        machine_mode_CSR_OH_15 = CSR_addr == 12'h305;
+  wire        machine_mode_CSR_OH_16 = CSR_addr == 12'h34B;
+  wire        machine_mode_CSR_OH_17 = CSR_addr == 12'h304;
+  wire        machine_mode_CSR_OH_18 = CSR_addr == 12'h301;
+  wire        machine_mode_CSR_OH_19 = CSR_addr == 12'hF15;
+  wire        machine_mode_CSR_OH_20 = CSR_addr == 12'hB00;
+  wire        machine_mode_CSR_OH_21 = CSR_addr == 12'h344;
+  wire        machine_mode_CSR_OH_22 = CSR_addr == 12'hB02;
+  wire        machine_mode_CSR_OH_23 = CSR_addr == 12'h303;
+  wire        machine_mode_CSR_OH_24 = CSR_addr == 12'hF14;
+  wire        machine_mode_CSR_OH_25 = CSR_addr == 12'h341;
+  wire        machine_mode_CSR_OH_26 = CSR_addr == 12'h343;
+  wire [31:0] _machine_mode_CSR_read_resp_T_39 =
+    (machine_mode_CSR_OH_0 ? marchid_reg_archID : 32'h0)
+    | (machine_mode_CSR_OH_1 ? mnstatus_reg : 32'h0)
+    | (machine_mode_CSR_OH_2 ? medeleg_reg : 32'h0)
+    | (machine_mode_CSR_OH_3 ? mcounteren_reg : 32'h0)
+    | (machine_mode_CSR_OH_4 ? {mvendorid_reg_Offset, mvendorid_reg_Bank} : 32'h0)
+    | (machine_mode_CSR_OH_5 ? mtinst_reg : 32'h0)
+    | (machine_mode_CSR_OH_6 ? mstatush_reg : 32'h0);
+  wire [31:0] machine_mode_CSR_read_resp =
+    {_machine_mode_CSR_read_resp_T_39[31:27],
+     _machine_mode_CSR_read_resp_T_39[26:0]
+       | (machine_mode_CSR_OH_7
+            ? {mstatus_reg_SD,
+               mstatus_reg_WPRI1,
+               mstatus_reg_TSR,
+               mstatus_reg_TW,
+               mstatus_reg_TVM,
+               mstatus_reg_MXR,
+               mstatus_reg_SUM,
+               mstatus_reg_MPRV,
+               mstatus_reg_XS,
+               mstatus_reg_FS,
+               mstatus_reg_MPP,
+               mstatus_reg_SPP,
+               mstatus_reg_MPIE,
+               mstatus_reg_UBE,
+               mstatus_reg_SPIE,
+               mstatus_reg_WPRI2,
+               mstatus_reg_MIE,
+               mstatus_reg_SIE}
+            : 27'h0)} | (machine_mode_CSR_OH_8 ? mimpid_reg : 32'h0)
+    | (machine_mode_CSR_OH_9 ? mscratch_reg_scratch : 32'h0)
+    | (machine_mode_CSR_OH_10 ? {mcause_reg_Interrupt, mcause_reg_Code} : 32'h0)
+    | (machine_mode_CSR_OH_11 ? mncause_reg : 32'h0)
+    | (machine_mode_CSR_OH_12 ? minstret_reg : 32'h0)
+    | (machine_mode_CSR_OH_13 ? mnscratch_reg : 32'h0)
+    | (machine_mode_CSR_OH_14 ? mnepc_reg : 32'h0)
+    | (machine_mode_CSR_OH_15 ? {mtvec_reg_BASE, mtvec_reg_MODE} : 32'h0)
+    | (machine_mode_CSR_OH_16 ? mtval2_reg : 32'h0)
+    | (machine_mode_CSR_OH_17
+         ? {mie_reg_WPRI1,
+            mie_reg_MEIE,
+            mie_reg_SEIE,
+            mie_reg_UEIE,
+            mie_reg_WPRI2,
+            mie_reg_MTIE,
+            mie_reg_STIE,
+            mie_reg_UTIE,
+            mie_reg_MSIE,
+            mie_reg_SSIE,
+            mie_reg_USIE}
+         : 32'h0)
+    | (machine_mode_CSR_OH_18
+         ? {misa_reg_Extensions, misa_reg_WPRI, misa_reg_MXL}
+         : 32'h0) | (machine_mode_CSR_OH_19 ? mconfigptr_reg_ptr : 32'h0)
+    | (machine_mode_CSR_OH_20 ? mcycle_reg : 32'h0)
+    | (machine_mode_CSR_OH_21
+         ? {mip_reg_WPRI1,
+            mip_reg_MEIP,
+            mip_reg_SEIP,
+            mip_reg_UEIP,
+            mip_reg_WPRI2,
+            mip_reg_MTIP,
+            mip_reg_STIP,
+            mip_reg_UTIP,
+            mip_reg_MSIP,
+            mip_reg_SSIP,
+            mip_reg_USIP}
+         : 32'h0) | (machine_mode_CSR_OH_22 ? minstret_reg : 32'h0)
+    | (machine_mode_CSR_OH_23 ? mideleg_reg : 32'h0)
+    | (machine_mode_CSR_OH_24 ? mhartid_reg_hartid : 32'h0)
+    | (machine_mode_CSR_OH_25 ? mepc_reg_PC : 32'h0)
+    | (machine_mode_CSR_OH_26 ? mtval_reg_badaddr : 32'h0);
   reg  [31:0] CSR_out;
+  reg         io_FU_output_bits_branch_valid_REG;
+  reg         io_FU_output_bits_branch_taken_REG;
+  reg  [31:0] io_FU_output_bits_target_address_REG;
   reg  [31:0] io_FU_output_bits_fetch_PC_REG;
   reg  [1:0]  io_FU_output_bits_fetch_packet_index_REG;
   reg  [6:0]  io_FU_output_bits_PRD_REG;
@@ -180,51 +292,23 @@ module CSR_FU(
   reg  [3:0]  io_FU_output_bits_MOB_index_REG;
   reg  [5:0]  io_FU_output_bits_ROB_index_REG;
   always @(posedge clock) begin
+    automatic logic _sret_T_7 = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
+    automatic logic _sret_T =
+      io_FU_input_bits_decoded_instruction_instructionType == 5'h1C;
+    automatic logic _sret_T_1 = io_FU_input_bits_decoded_instruction_RS1 == 7'h0;
+    automatic logic mret_sret =
+      _sret_T & _sret_T_1 & ~(|io_FU_input_bits_decoded_instruction_PRD)
+      & io_FU_input_bits_decoded_instruction_IMM == 21'h302 & _sret_T_7 | _sret_T
+      & _sret_T_1 & ~(|io_FU_input_bits_decoded_instruction_PRD)
+      & io_FU_input_bits_decoded_instruction_IMM == 21'h102 & _sret_T_7;
     io_FU_output_valid_REG <= input_valid & ~io_flush_valid;
-    if (input_CSR_write_request & machine_mode_CSR_OH_4)
-      mvendorid_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_0)
-      marchid_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_11)
-      mimpid_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_21)
-      mhartid_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_20)
-      mconfigptr_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_8)
-      mstatus_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_19)
-      misa_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_2)
-      medeleg_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_10)
-      mideleg_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_18)
-      mie_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_16)
-      mtvec_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_3)
-      mcounteren_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_7)
-      mstatush_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_12)
-      mscratch_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_22)
-      mepc_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_13)
-      mcause_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_23)
-      mtval_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_9)
-      mip_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_5)
-      mtinst_reg_reg <= io_FU_input_bits_RS1_data;
-    if (input_CSR_write_request & machine_mode_CSR_OH_17)
-      mtval2_reg_reg <= io_FU_input_bits_RS1_data;
     if (&input_CSR_privilage)
       CSR_out <= user_mode_CSR_read_resp;
     else if (input_CSR_privilage == 2'h0)
-      CSR_out <= _machine_mode_CSR_read_resp_WIRE_reg;
+      CSR_out <= machine_mode_CSR_read_resp;
+    io_FU_output_bits_branch_valid_REG <= mret_sret;
+    io_FU_output_bits_branch_taken_REG <= mret_sret;
+    io_FU_output_bits_target_address_REG <= mepc_reg_PC;
     io_FU_output_bits_fetch_PC_REG <= io_FU_input_bits_fetch_PC;
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;
@@ -233,20 +317,205 @@ module CSR_FU(
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
     if (reset) begin
-      cycle_reg_reg <= 64'h0;
-      time_reg_reg <= 64'h0;
-      instret_reg_reg <= 64'h0;
+      cycle_reg <= 32'h0;
+      instret_reg <= 32'h0;
+      cycleh_reg <= 32'h0;
+      instreth_reg <= 32'h0;
+      mvendorid_reg_Offset <= 7'h0;
+      mvendorid_reg_Bank <= 25'h0;
+      marchid_reg_archID <= 32'h0;
+      mimpid_reg <= 32'h0;
+      mhartid_reg_hartid <= 32'h0;
+      mconfigptr_reg_ptr <= 32'h0;
+      mstatus_reg_SD <= 1'h0;
+      mstatus_reg_WPRI1 <= 7'h0;
+      mstatus_reg_TSR <= 1'h0;
+      mstatus_reg_TW <= 1'h0;
+      mstatus_reg_TVM <= 1'h0;
+      mstatus_reg_MXR <= 1'h0;
+      mstatus_reg_SUM <= 1'h0;
+      mstatus_reg_MPRV <= 1'h0;
+      mstatus_reg_XS <= 2'h0;
+      mstatus_reg_FS <= 2'h0;
+      mstatus_reg_MPP <= 2'h0;
+      mstatus_reg_SPP <= 1'h0;
+      mstatus_reg_MPIE <= 1'h0;
+      mstatus_reg_UBE <= 1'h0;
+      mstatus_reg_SPIE <= 1'h0;
+      mstatus_reg_WPRI2 <= 1'h0;
+      mstatus_reg_MIE <= 1'h0;
+      mstatus_reg_SIE <= 1'h0;
+      misa_reg_Extensions <= 26'h0;
+      misa_reg_WPRI <= 4'h0;
+      misa_reg_MXL <= 2'h0;
+      medeleg_reg <= 32'h0;
+      mideleg_reg <= 32'h0;
+      mie_reg_WPRI1 <= 20'h0;
+      mie_reg_MEIE <= 1'h0;
+      mie_reg_SEIE <= 1'h0;
+      mie_reg_UEIE <= 1'h0;
+      mie_reg_WPRI2 <= 3'h0;
+      mie_reg_MTIE <= 1'h0;
+      mie_reg_STIE <= 1'h0;
+      mie_reg_UTIE <= 1'h0;
+      mie_reg_MSIE <= 1'h0;
+      mie_reg_SSIE <= 1'h0;
+      mie_reg_USIE <= 1'h0;
+      mtvec_reg_BASE <= 30'h0;
+      mtvec_reg_MODE <= 2'h0;
+      mcounteren_reg <= 32'h0;
+      mstatush_reg <= 32'h0;
+      mscratch_reg_scratch <= 32'h0;
+      mepc_reg_PC <= 32'h0;
+      mcause_reg_Interrupt <= 1'h0;
+      mcause_reg_Code <= 31'h0;
+      mtval_reg_badaddr <= 32'h0;
+      mip_reg_WPRI1 <= 20'h0;
+      mip_reg_MEIP <= 1'h0;
+      mip_reg_SEIP <= 1'h0;
+      mip_reg_UEIP <= 1'h0;
+      mip_reg_WPRI2 <= 3'h0;
+      mip_reg_MTIP <= 1'h0;
+      mip_reg_STIP <= 1'h0;
+      mip_reg_UTIP <= 1'h0;
+      mip_reg_MSIP <= 1'h0;
+      mip_reg_SSIP <= 1'h0;
+      mip_reg_USIP <= 1'h0;
+      mtinst_reg <= 32'h0;
+      mtval2_reg <= 32'h0;
+      mnscratch_reg <= 32'h0;
+      mnepc_reg <= 32'h0;
+      mncause_reg <= 32'h0;
+      mnstatus_reg <= 32'h0;
+      mcycle_reg <= 32'h0;
+      minstret_reg <= 32'h0;
     end
     else begin
-      cycle_reg_reg <= cycle_reg_reg + 64'h1;
-      time_reg_reg <= time_reg_reg + 64'h1;
-      if (io_commit_valid)
-        instret_reg_reg <=
-          instret_reg_reg
-          + {61'h0,
-             {1'h0, {1'h0, io_partial_commit_valid_0} + {1'h0, io_partial_commit_valid_1}}
-               + {1'h0,
-                  {1'h0, io_partial_commit_valid_2} + {1'h0, io_partial_commit_valid_3}}};
+      automatic logic [63:0] _counter_new_T = {cycleh_reg, cycle_reg} + 64'h1;
+      automatic logic [1:0]  _GEN;
+      automatic logic [1:0]  _GEN_0;
+      automatic logic [1:0]  _GEN_1;
+      automatic logic [1:0]  _GEN_2;
+      _GEN = {1'h0, io_partial_commit_valid_0};
+      _GEN_0 = {1'h0, io_partial_commit_valid_1};
+      _GEN_1 = {1'h0, io_partial_commit_valid_2};
+      _GEN_2 = {1'h0, io_partial_commit_valid_3};
+      cycle_reg <= _counter_new_T[31:0];
+      if (io_commit_valid) begin
+        automatic logic [63:0] _counter_new_T_2;
+        _counter_new_T_2 =
+          {instreth_reg, instret_reg}
+          + {61'h0, {1'h0, _GEN + _GEN_0} + {1'h0, _GEN_1 + _GEN_2}};
+        instret_reg <= _counter_new_T_2[63:32];
+        instreth_reg <= _counter_new_T_2[31:0];
+      end
+      cycleh_reg <= _counter_new_T[63:32];
+      if (input_CSR_write_request & machine_mode_CSR_OH_4) begin
+        mvendorid_reg_Offset <= io_FU_input_bits_RS1_data[31:25];
+        mvendorid_reg_Bank <= io_FU_input_bits_RS1_data[24:0];
+      end
+      if (input_CSR_write_request & machine_mode_CSR_OH_0)
+        marchid_reg_archID <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_8)
+        mimpid_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_24)
+        mhartid_reg_hartid <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_19)
+        mconfigptr_reg_ptr <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_7) begin
+        mstatus_reg_SD <= io_FU_input_bits_RS1_data[26];
+        mstatus_reg_WPRI1 <= io_FU_input_bits_RS1_data[25:19];
+        mstatus_reg_TSR <= io_FU_input_bits_RS1_data[18];
+        mstatus_reg_TW <= io_FU_input_bits_RS1_data[17];
+        mstatus_reg_TVM <= io_FU_input_bits_RS1_data[16];
+        mstatus_reg_MXR <= io_FU_input_bits_RS1_data[15];
+        mstatus_reg_SUM <= io_FU_input_bits_RS1_data[14];
+        mstatus_reg_MPRV <= io_FU_input_bits_RS1_data[13];
+        mstatus_reg_XS <= io_FU_input_bits_RS1_data[12:11];
+        mstatus_reg_FS <= io_FU_input_bits_RS1_data[10:9];
+        mstatus_reg_MPP <= io_FU_input_bits_RS1_data[8:7];
+        mstatus_reg_SPP <= io_FU_input_bits_RS1_data[6];
+        mstatus_reg_MPIE <= io_FU_input_bits_RS1_data[5];
+        mstatus_reg_UBE <= io_FU_input_bits_RS1_data[4];
+        mstatus_reg_SPIE <= io_FU_input_bits_RS1_data[3];
+        mstatus_reg_WPRI2 <= io_FU_input_bits_RS1_data[2];
+        mstatus_reg_MIE <= io_FU_input_bits_RS1_data[1];
+        mstatus_reg_SIE <= io_FU_input_bits_RS1_data[0];
+      end
+      if (input_CSR_write_request & machine_mode_CSR_OH_18) begin
+        misa_reg_Extensions <= io_FU_input_bits_RS1_data[31:6];
+        misa_reg_WPRI <= io_FU_input_bits_RS1_data[5:2];
+        misa_reg_MXL <= io_FU_input_bits_RS1_data[1:0];
+      end
+      if (input_CSR_write_request & machine_mode_CSR_OH_2)
+        medeleg_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_23)
+        mideleg_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_17) begin
+        mie_reg_WPRI1 <= io_FU_input_bits_RS1_data[31:12];
+        mie_reg_MEIE <= io_FU_input_bits_RS1_data[11];
+        mie_reg_SEIE <= io_FU_input_bits_RS1_data[10];
+        mie_reg_UEIE <= io_FU_input_bits_RS1_data[9];
+        mie_reg_WPRI2 <= io_FU_input_bits_RS1_data[8:6];
+        mie_reg_MTIE <= io_FU_input_bits_RS1_data[5];
+        mie_reg_STIE <= io_FU_input_bits_RS1_data[4];
+        mie_reg_UTIE <= io_FU_input_bits_RS1_data[3];
+        mie_reg_MSIE <= io_FU_input_bits_RS1_data[2];
+        mie_reg_SSIE <= io_FU_input_bits_RS1_data[1];
+        mie_reg_USIE <= io_FU_input_bits_RS1_data[0];
+      end
+      if (input_CSR_write_request & machine_mode_CSR_OH_15) begin
+        mtvec_reg_BASE <= io_FU_input_bits_RS1_data[31:2];
+        mtvec_reg_MODE <= io_FU_input_bits_RS1_data[1:0];
+      end
+      if (input_CSR_write_request & machine_mode_CSR_OH_3)
+        mcounteren_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_6)
+        mstatush_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_9)
+        mscratch_reg_scratch <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_25)
+        mepc_reg_PC <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_10) begin
+        mcause_reg_Interrupt <= io_FU_input_bits_RS1_data[31];
+        mcause_reg_Code <= io_FU_input_bits_RS1_data[30:0];
+      end
+      if (input_CSR_write_request & machine_mode_CSR_OH_26)
+        mtval_reg_badaddr <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_21) begin
+        mip_reg_WPRI1 <= io_FU_input_bits_RS1_data[31:12];
+        mip_reg_MEIP <= io_FU_input_bits_RS1_data[11];
+        mip_reg_SEIP <= io_FU_input_bits_RS1_data[10];
+        mip_reg_UEIP <= io_FU_input_bits_RS1_data[9];
+        mip_reg_WPRI2 <= io_FU_input_bits_RS1_data[8:6];
+        mip_reg_MTIP <= io_FU_input_bits_RS1_data[5];
+        mip_reg_STIP <= io_FU_input_bits_RS1_data[4];
+        mip_reg_UTIP <= io_FU_input_bits_RS1_data[3];
+        mip_reg_MSIP <= io_FU_input_bits_RS1_data[2];
+        mip_reg_SSIP <= io_FU_input_bits_RS1_data[1];
+        mip_reg_USIP <= io_FU_input_bits_RS1_data[0];
+      end
+      if (input_CSR_write_request & machine_mode_CSR_OH_5)
+        mtinst_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_16)
+        mtval2_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_13)
+        mnscratch_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_14)
+        mnepc_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_11)
+        mncause_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_1)
+        mnstatus_reg <= io_FU_input_bits_RS1_data;
+      if (input_CSR_write_request & machine_mode_CSR_OH_20)
+        mcycle_reg <= io_FU_input_bits_RS1_data;
+      else
+        mcycle_reg <= mcycle_reg + 32'h1;
+      if (input_CSR_write_request & (machine_mode_CSR_OH_22 | machine_mode_CSR_OH_12))
+        minstret_reg <= io_FU_input_bits_RS1_data;
+      else
+        minstret_reg <=
+          minstret_reg + {29'h0, {1'h0, _GEN + _GEN_0} + {1'h0, _GEN_1 + _GEN_2}};
     end
   end // always @(posedge)
   assign io_FU_output_valid = io_FU_output_valid_REG & ~io_flush_valid;
@@ -254,6 +523,9 @@ module CSR_FU(
   assign io_FU_output_bits_RD_data = CSR_out;
   assign io_FU_output_bits_RD_valid = io_FU_output_bits_RD_valid_REG;
   assign io_FU_output_bits_fetch_PC = io_FU_output_bits_fetch_PC_REG;
+  assign io_FU_output_bits_branch_taken = io_FU_output_bits_branch_taken_REG;
+  assign io_FU_output_bits_target_address = io_FU_output_bits_target_address_REG;
+  assign io_FU_output_bits_branch_valid = io_FU_output_bits_branch_valid_REG;
   assign io_FU_output_bits_MOB_index = io_FU_output_bits_MOB_index_REG;
   assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;
   assign io_FU_output_bits_fetch_packet_index = io_FU_output_bits_fetch_packet_index_REG;

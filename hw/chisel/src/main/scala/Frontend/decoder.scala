@@ -58,6 +58,9 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val PRD         = instruction(11, 7)
     val IMM         = getImm(instruction)
 
+    dontTouch(IMM)
+    
+
     val FUNCT3      = instruction(14, 12)
     val FUNCT7      = instruction(31, 25)
 
@@ -72,7 +75,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
 
 
-    val SUBTRACT    =   ((instructionType === OP) && FUNCT7 === 0x20.U)
+    val SUBTRACT    =   ((instructionType === OP || instructionType === OP_IMM) && FUNCT7 === 0x20.U)
     val IS_IMM   =      (instructionType === OP_IMM)    || 
                         (instructionType === LUI)       || 
                         (instructionType === AUIPC)     || 
@@ -86,7 +89,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_mul            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === AUIPC)
-    val needs_CSRs           =   (instructionType === SYSTEM) && (FUNCT3 === 0x1.U || FUNCT3 === 0x2.U || FUNCT3 === 0x3.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
+    val needs_CSRs           =   (instructionType === SYSTEM) && (FUNCT3 === 0x0.U || FUNCT3 === 0x1.U || FUNCT3 === 0x2.U || FUNCT3 === 0x3.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
     val needs_ALU            =   ((instructionType === OP) &&
                                  ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
                                  (instructionType === OP_IMM) || (instructionType === LUI)
@@ -215,7 +218,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     }.elsewhen(needs_branch_unit){
         io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
-        io.decoded_instruction.bits.portID := 1.U
+        io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_div || needs_mul){
         io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_memory){

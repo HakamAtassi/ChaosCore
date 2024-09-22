@@ -59,6 +59,7 @@ module ALU(
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
+  wire [31:0] RS1_signed = io_FU_input_bits_RS1_data;
   wire [31:0] RS1_unsigned = io_FU_input_bits_RS1_data;
   wire [31:0] instruction_PC =
     io_FU_input_bits_fetch_PC
@@ -69,7 +70,7 @@ module ALU(
      io_FU_input_bits_decoded_instruction_IMM[12:0]};
   wire [31:0] operand2_unsigned =
     io_FU_input_bits_decoded_instruction_IS_IMM ? IMM_signed : io_FU_input_bits_RS2_data;
-  wire [4:0]  shamt = (|(operand2_unsigned[31:5])) ? 5'h1F : operand2_unsigned[4:0];
+  wire [4:0]  shamt = operand2_unsigned[4:0];
   wire        _REMU_T = io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
   wire        _SLTU_T_1 = io_FU_input_bits_decoded_instruction_instructionType == 5'h4;
   wire        _BEQ_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
@@ -102,7 +103,7 @@ module ALU(
   wire [31:0] add_result = RS1_unsigned + operand2_unsigned;
   wire [31:0] sub_result = RS1_unsigned - operand2_unsigned;
   wire [31:0] _GEN = {27'h0, shamt};
-  wire [31:0] sra_result = $signed($signed(io_FU_input_bits_RS1_data) >>> _GEN);
+  wire [31:0] sra_result = $signed($signed(RS1_signed) >>> _GEN);
   reg  [31:0] io_FU_output_bits_fetch_PC_REG;
   reg  [1:0]  io_FU_output_bits_fetch_packet_index_REG;
   reg  [6:0]  io_FU_output_bits_PRD_REG;
@@ -141,9 +142,9 @@ module ALU(
                                         & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2
                                         & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                           ? {31'h0,
-                                             $signed(io_FU_input_bits_RS1_data) < $signed(io_FU_input_bits_decoded_instruction_IS_IMM
-                                                                                            ? IMM_signed
-                                                                                            : io_FU_input_bits_RS2_data)}
+                                             $signed(RS1_signed) < $signed(io_FU_input_bits_decoded_instruction_IS_IMM
+                                                                             ? IMM_signed
+                                                                             : io_FU_input_bits_RS2_data)}
                                           : (_REMU_T | _SLTU_T_1)
                                             & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h3
                                             & ~io_FU_input_bits_decoded_instruction_MULTIPLY

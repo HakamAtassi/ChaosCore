@@ -147,14 +147,6 @@ module FU_1(
                 io_commit_bits_RD_valid_3
 );
 
-  wire        _CSR_io_FU_output_valid;
-  wire [6:0]  _CSR_io_FU_output_bits_PRD;
-  wire [31:0] _CSR_io_FU_output_bits_RD_data;
-  wire        _CSR_io_FU_output_bits_RD_valid;
-  wire [31:0] _CSR_io_FU_output_bits_fetch_PC;
-  wire [3:0]  _CSR_io_FU_output_bits_MOB_index;
-  wire [5:0]  _CSR_io_FU_output_bits_ROB_index;
-  wire [1:0]  _CSR_io_FU_output_bits_fetch_packet_index;
   wire        _mul_io_FU_output_valid;
   wire [6:0]  _mul_io_FU_output_bits_PRD;
   wire [31:0] _mul_io_FU_output_bits_RD_data;
@@ -269,88 +261,23 @@ module FU_1(
     .io_FU_output_bits_fetch_packet_index
       (_mul_io_FU_output_bits_fetch_packet_index)
   );
-  CSR_FU CSR (
-    .clock                                                  (clock),
-    .reset                                                  (reset),
-    .io_flush_valid                                         (io_flush_valid),
-    .io_FU_input_valid                                      (io_FU_input_valid),
-    .io_FU_input_bits_decoded_instruction_PRD
-      (io_FU_input_bits_decoded_instruction_PRD),
-    .io_FU_input_bits_decoded_instruction_RD_valid
-      (io_FU_input_bits_decoded_instruction_RD_valid),
-    .io_FU_input_bits_decoded_instruction_RS1
-      (io_FU_input_bits_decoded_instruction_RS1),
-    .io_FU_input_bits_decoded_instruction_IMM
-      (io_FU_input_bits_decoded_instruction_IMM),
-    .io_FU_input_bits_decoded_instruction_FUNCT3
-      (io_FU_input_bits_decoded_instruction_FUNCT3),
-    .io_FU_input_bits_decoded_instruction_packet_index
-      (io_FU_input_bits_decoded_instruction_packet_index),
-    .io_FU_input_bits_decoded_instruction_ROB_index
-      (io_FU_input_bits_decoded_instruction_ROB_index),
-    .io_FU_input_bits_decoded_instruction_MOB_index
-      (io_FU_input_bits_decoded_instruction_MOB_index),
-    .io_FU_input_bits_decoded_instruction_instructionType
-      (io_FU_input_bits_decoded_instruction_instructionType),
-    .io_FU_input_bits_decoded_instruction_needs_ALU
-      (io_FU_input_bits_decoded_instruction_needs_ALU),
-    .io_FU_input_bits_decoded_instruction_needs_branch_unit
-      (io_FU_input_bits_decoded_instruction_needs_branch_unit),
-    .io_FU_input_bits_decoded_instruction_needs_CSRs
-      (io_FU_input_bits_decoded_instruction_needs_CSRs),
-    .io_FU_input_bits_decoded_instruction_SUBTRACT
-      (io_FU_input_bits_decoded_instruction_SUBTRACT),
-    .io_FU_input_bits_decoded_instruction_MULTIPLY
-      (io_FU_input_bits_decoded_instruction_MULTIPLY),
-    .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),
-    .io_FU_input_bits_fetch_PC                              (io_FU_input_bits_fetch_PC),
-    .io_FU_output_valid                                     (_CSR_io_FU_output_valid),
-    .io_FU_output_bits_PRD                                  (_CSR_io_FU_output_bits_PRD),
-    .io_FU_output_bits_RD_data
-      (_CSR_io_FU_output_bits_RD_data),
-    .io_FU_output_bits_RD_valid
-      (_CSR_io_FU_output_bits_RD_valid),
-    .io_FU_output_bits_fetch_PC
-      (_CSR_io_FU_output_bits_fetch_PC),
-    .io_FU_output_bits_MOB_index
-      (_CSR_io_FU_output_bits_MOB_index),
-    .io_FU_output_bits_ROB_index
-      (_CSR_io_FU_output_bits_ROB_index),
-    .io_FU_output_bits_fetch_packet_index
-      (_CSR_io_FU_output_bits_fetch_packet_index),
-    .io_partial_commit_valid_0                              (io_partial_commit_valid_0),
-    .io_partial_commit_valid_1                              (io_partial_commit_valid_1),
-    .io_partial_commit_valid_2                              (io_partial_commit_valid_2),
-    .io_partial_commit_valid_3                              (io_partial_commit_valid_3),
-    .io_commit_valid                                        (io_commit_valid)
-  );
   assign io_FU_input_ready = 1'h1;
   assign io_FU_output_valid =
-    _CSR_io_FU_output_valid
-      ? _CSR_io_FU_output_valid
-      : _mul_io_FU_output_valid ? _mul_io_FU_output_valid : _ALU_io_FU_output_valid;
+    _mul_io_FU_output_valid ? _mul_io_FU_output_valid : _ALU_io_FU_output_valid;
   assign io_FU_output_bits_PRD =
-    _CSR_io_FU_output_valid
-      ? _CSR_io_FU_output_bits_PRD
-      : _mul_io_FU_output_valid ? _mul_io_FU_output_bits_PRD : _ALU_io_FU_output_bits_PRD;
+    _mul_io_FU_output_valid ? _mul_io_FU_output_bits_PRD : _ALU_io_FU_output_bits_PRD;
   assign io_FU_output_bits_RD_data =
-    _CSR_io_FU_output_valid
-      ? _CSR_io_FU_output_bits_RD_data
-      : _mul_io_FU_output_valid
-          ? _mul_io_FU_output_bits_RD_data
-          : _ALU_io_FU_output_bits_RD_data;
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_RD_data
+      : _ALU_io_FU_output_bits_RD_data;
   assign io_FU_output_bits_RD_valid =
-    _CSR_io_FU_output_valid
-      ? _CSR_io_FU_output_bits_RD_valid
-      : _mul_io_FU_output_valid
-          ? _mul_io_FU_output_bits_RD_valid
-          : _ALU_io_FU_output_bits_RD_valid;
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_RD_valid
+      : _ALU_io_FU_output_bits_RD_valid;
   assign io_FU_output_bits_fetch_PC =
-    _CSR_io_FU_output_valid
-      ? _CSR_io_FU_output_bits_fetch_PC
-      : _mul_io_FU_output_valid
-          ? _mul_io_FU_output_bits_fetch_PC
-          : _ALU_io_FU_output_bits_fetch_PC;
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_fetch_PC
+      : _ALU_io_FU_output_bits_fetch_PC;
   assign io_FU_output_bits_branch_taken = 1'h0;
   assign io_FU_output_bits_target_address = 32'h0;
   assign io_FU_output_bits_branch_valid = 1'h0;
@@ -360,22 +287,16 @@ module FU_1(
   assign io_FU_output_bits_is_unsigned = 1'h0;
   assign io_FU_output_bits_wr_data = 32'h0;
   assign io_FU_output_bits_MOB_index =
-    _CSR_io_FU_output_valid
-      ? _CSR_io_FU_output_bits_MOB_index
-      : _mul_io_FU_output_valid
-          ? _mul_io_FU_output_bits_MOB_index
-          : _ALU_io_FU_output_bits_MOB_index;
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_MOB_index
+      : _ALU_io_FU_output_bits_MOB_index;
   assign io_FU_output_bits_ROB_index =
-    _CSR_io_FU_output_valid
-      ? _CSR_io_FU_output_bits_ROB_index
-      : _mul_io_FU_output_valid
-          ? _mul_io_FU_output_bits_ROB_index
-          : _ALU_io_FU_output_bits_ROB_index;
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_ROB_index
+      : _ALU_io_FU_output_bits_ROB_index;
   assign io_FU_output_bits_fetch_packet_index =
-    _CSR_io_FU_output_valid
-      ? _CSR_io_FU_output_bits_fetch_packet_index
-      : _mul_io_FU_output_valid
-          ? _mul_io_FU_output_bits_fetch_packet_index
-          : _ALU_io_FU_output_bits_fetch_packet_index;
+    _mul_io_FU_output_valid
+      ? _mul_io_FU_output_bits_fetch_packet_index
+      : _ALU_io_FU_output_bits_fetch_packet_index;
 endmodule
 
