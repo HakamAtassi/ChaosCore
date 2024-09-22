@@ -36,7 +36,15 @@ class cpu_io_driver extends uvm_driver #(cache_req, cache_rsp);
                 //cache_vif.io_CPU_request_bits_wr_data = req.io_CPU_request_bits_wr_data;
                 //cache_vif.io_CPU_request_bits_wr_en = req.io_CPU_request_bits_wr_en;
                 cache_vif.io_CPU_response_ready = req.io_CPU_response_ready;
-                cache_vif.io_kill = req.io_kill;
+
+
+                cache_vif.io_flush_bits_is_misprediction = req.io_flush_bits_is_misprediction;
+                cache_vif.io_flush_bits_is_exception = req.io_flush_bits_is_exception;
+                cache_vif.io_flush_bits_is_fence = req.io_flush_bits_is_fence;
+                cache_vif.io_flush_bits_is_CSR = req.io_flush_bits_is_CSR;
+                cache_vif.io_flush_bits_flushing_PC = req.io_flush_bits_flushing_PC;
+                cache_vif.io_flush_bits_redirect_PC = req.io_flush_bits_redirect_PC;
+                cache_vif.io_flush_valid = req.io_flush_valid;
             end
 
             @(posedge cache_vif.clock);
