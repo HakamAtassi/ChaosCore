@@ -210,7 +210,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     // FIXME: this whole section needs to be replaced with an actual scheduler based on the FU port types...
     val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
 
-    when(needs_ALU){
+    when(needs_ALU || FENCE){
         io.decoded_instruction.bits.portID := next_ALU_port(0)   // schedule to "random"
         next_ALU_port(0) := next_ALU_port(1)
         next_ALU_port(1) := next_ALU_port(2)
@@ -230,7 +230,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
     // Assign a reservation station
 
-    val is_INT   =   (instructionType === SYSTEM) || (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === LUI) || (instructionType === AUIPC)
+    val is_INT   =   (instructionType === SYSTEM) || (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === LUI) || (instructionType === AUIPC) || (instructionType === MISC_MEM)
     val is_MEM   =   (instructionType === LOAD) || (instructionType === STORE)
 
     when(is_INT){

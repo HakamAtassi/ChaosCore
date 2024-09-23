@@ -44,7 +44,7 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // Perform arithmetic operations
     add_result      := operand1_unsigned + operand2_unsigned
     sub_result      := operand1_unsigned - operand2_unsigned
-    xor_result      := operand1_unsigned ^ operand2_unsigned
+    xor_result      := operand1_unsigned ^ operand2_unsigned    // FIXME: riscv-test sanity check
     or_result       := operand1_unsigned | operand2_unsigned
     and_result      := operand1_unsigned & operand2_unsigned
 

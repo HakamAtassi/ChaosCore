@@ -47,6 +47,7 @@ module CSR_FU(
                 io_FU_input_bits_decoded_instruction_needs_CSRs,
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_bits_decoded_instruction_FENCE,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_fetch_PC,
   output        io_FU_output_valid,
@@ -301,7 +302,8 @@ module CSR_FU(
       & io_FU_input_bits_decoded_instruction_IMM == 21'h302 & _sret_T_7 | _sret_T
       & _sret_T_1 & ~(|io_FU_input_bits_decoded_instruction_PRD)
       & io_FU_input_bits_decoded_instruction_IMM == 21'h102 & _sret_T_7;
-    io_FU_output_valid_REG <= input_valid & ~io_flush_valid;
+    io_FU_output_valid_REG <=
+      input_valid & ~io_flush_valid | io_FU_input_bits_decoded_instruction_FENCE;
     if (&input_CSR_privilage)
       CSR_out <= user_mode_CSR_read_resp;
     else if (input_CSR_privilage == 2'h0)
