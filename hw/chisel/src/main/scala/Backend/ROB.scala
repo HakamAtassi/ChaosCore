@@ -365,6 +365,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_output.ROB_entries(i)       := ROB_entry_banks(i).io.readDataB
     }
 
+    dontTouch(ROB_output.ROB_entries)
+
     dontTouch(ROB_output)
 
     ////////////////////

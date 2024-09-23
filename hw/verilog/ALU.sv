@@ -45,6 +45,7 @@ module ALU(
                 io_FU_input_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_bits_decoded_instruction_FENCE,
                 io_FU_input_bits_decoded_instruction_IS_IMM,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
@@ -155,7 +156,8 @@ module ALU(
                                                      12'h0}
                                                   : 32'h0;
     end
-    io_FU_output_valid_REG <= ALU_input_valid & ~io_flush_valid;
+    io_FU_output_valid_REG <=
+      ALU_input_valid & ~io_flush_valid | io_FU_input_bits_decoded_instruction_FENCE;
     io_FU_output_bits_fetch_PC_REG <= io_FU_input_bits_fetch_PC;
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;

@@ -192,6 +192,8 @@ module FU_1(
       (io_FU_input_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_decoded_instruction_FENCE
+      (io_FU_input_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),
@@ -241,6 +243,8 @@ module FU_1(
       (io_FU_input_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (io_FU_input_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_decoded_instruction_FENCE
+      (io_FU_input_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),

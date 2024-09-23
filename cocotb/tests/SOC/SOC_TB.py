@@ -34,7 +34,7 @@ class SOC_TB:
             self.axi_ram.write(i, byte.to_bytes(1, byteorder='little'))
         
         # Optionally, dump a portion of memory to verify
-        self.axi_ram.hexdump(0x0000, len(binary_data), prefix="RAM")  # Dump up to 1KB or file size
+        #self.axi_ram.hexdump(0x0000, len(binary_data), prefix="RAM")  # Dump up to 1KB or file size
 
 
 
@@ -82,5 +82,19 @@ class SOC_TB:
             #await RisingEdge(self.dut.clock)
             #await RisingEdge(self.dut.clock)
             assert False
+
+    def get_RS_mapping(self, reg):
+        return int(getattr(self.dut, f"ChaosCore_tile.ChaosCore.frontend.rename.RAT.commit_RAT_{reg}"))
+
+    def get_RS_data(self, reg):
+        return int(self.dut.ChaosCore_tile.ChaosCore.backend.INT_PRF.mem_ext.Memory[reg])
+
+    def riscv_test_pass(self):
+        PRS_31 = self.get_RS_mapping(31)
+        x31_data = self.get_RS_data(PRS_31)
+        if(x31_data == 0x42424230):
+            return True
+        else: 
+            return False
 
 

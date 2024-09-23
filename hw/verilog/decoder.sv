@@ -89,7 +89,7 @@ module decoder(
                       : 21'h0;
   wire [4:0]  instructionType = io_instruction_bits_instruction[6:2];
   wire        _is_MEM_T = instructionType == 5'h0;
-  wire        _FENCE_T = instructionType == 5'h3;
+  wire        _is_INT_T_15 = instructionType == 5'h3;
   wire        _is_INT_T_3 = instructionType == 5'h4;
   wire        _is_INT_T_13 = instructionType == 5'h5;
   wire        _is_MEM_T_1 = instructionType == 5'h8;
@@ -102,7 +102,7 @@ module decoder(
   `ifndef SYNTHESIS
     always @(posedge clock) begin
       if (~reset
-          & ~(_is_MEM_T | instructionType == 5'h1 | instructionType == 5'h2 | _FENCE_T
+          & ~(_is_MEM_T | instructionType == 5'h1 | instructionType == 5'h2 | _is_INT_T_15
               | _is_INT_T_3 | _is_INT_T_13 | instructionType == 5'h6 | _is_MEM_T_1
               | instructionType == 5'h9 | instructionType == 5'hA
               | instructionType == 5'hB | _is_INT_T_1 | _is_INT_T_11
@@ -138,16 +138,18 @@ module decoder(
   wire        needs_ALU =
     _is_INT_T_1 & (_needs_ALU_T_1 | io_instruction_bits_instruction[31:25] == 7'h0)
     | _is_INT_T_3 | _is_INT_T_11;
+  wire        FENCE = _is_INT_T_15 & _FENCE_T_1;
   reg  [1:0]  next_ALU_port_0;
   reg  [1:0]  next_ALU_port_1;
   reg  [1:0]  next_ALU_port_2;
+  wire        _GEN_0 = needs_ALU | FENCE;
   always @(posedge clock) begin
     if (reset) begin
       next_ALU_port_0 <= 2'h0;
       next_ALU_port_1 <= 2'h1;
       next_ALU_port_2 <= 2'h2;
     end
-    else if (needs_ALU) begin
+    else if (_GEN_0) begin
       next_ALU_port_0 <= next_ALU_port_1;
       next_ALU_port_1 <= next_ALU_port_2;
       next_ALU_port_2 <= next_ALU_port_0;
@@ -169,7 +171,7 @@ module decoder(
   assign io_decoded_instruction_bits_packet_index = io_instruction_bits_packet_index[1:0];
   assign io_decoded_instruction_bits_instructionType = instructionType;
   assign io_decoded_instruction_bits_portID =
-    needs_ALU
+    _GEN_0
       ? next_ALU_port_0
       : needs_branch_unit | needs_CSRs
           ? 2'h0
@@ -178,7 +180,7 @@ module decoder(
                & io_instruction_bits_instruction[25]};
   assign io_decoded_instruction_bits_RS_type =
     _is_INT_T | _is_INT_T_1 | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
-    | _is_INT_T_11 | _is_INT_T_13
+    | _is_INT_T_11 | _is_INT_T_13 | _is_INT_T_15
       ? 2'h0
       : _is_MEM_T | _is_MEM_T_1 ? 2'h1 : 2'h2;
   assign io_decoded_instruction_bits_needs_ALU = needs_ALU;
@@ -189,7 +191,7 @@ module decoder(
     (_is_INT_T_1 | _is_INT_T_3) & _needs_ALU_T_1;
   assign io_decoded_instruction_bits_MULTIPLY =
     _is_INT_T_1 & io_instruction_bits_instruction[31:25] == 7'h1;
-  assign io_decoded_instruction_bits_FENCE = _FENCE_T & _FENCE_T_1;
+  assign io_decoded_instruction_bits_FENCE = FENCE;
   assign io_decoded_instruction_bits_IS_IMM = IS_IMM;
   assign io_decoded_instruction_bits_mem_signed =
     _FENCE_T_1 | _needs_CSRs_T_2 | _needs_CSRs_T_4;
