@@ -380,6 +380,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     // FIXME: critical path here...
     val CPU_response_skid_buffer         = Module(new Queue(new fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    dontTouch(CPU_response_skid_buffer.io)
 
     CPU_response_skid_buffer.io.enq                  <> CPU_response
     CPU_response_skid_buffer.io.flush.get            <> io.flush.valid

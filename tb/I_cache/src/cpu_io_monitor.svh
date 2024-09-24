@@ -43,11 +43,11 @@ class cpu_io_monitor extends uvm_monitor;
                 `uvm_info("run",
                     $psprintf("Monitor got req %s",
                     req.convert2string()), 
-                    UVM_LOW);
+                    UVM_MEDIUM);
                 `uvm_info("run",
                     $psprintf("Monitor got %s",
                     rsp.convert2string()), 
-                    UVM_LOW);
+                    UVM_MEDIUM);
 
             end
 

@@ -185,9 +185,27 @@ module Queue2_fetch_packet(
                 io_enq_bits_valid_bits_2,
                 io_enq_bits_valid_bits_3,
   input  [31:0] io_enq_bits_instructions_0_instruction,
-                io_enq_bits_instructions_1_instruction,
-                io_enq_bits_instructions_2_instruction,
-                io_enq_bits_instructions_3_instruction,
+  input  [3:0]  io_enq_bits_instructions_0_packet_index,
+  input  [5:0]  io_enq_bits_instructions_0_ROB_index,
+  input  [31:0] io_enq_bits_instructions_1_instruction,
+  input  [3:0]  io_enq_bits_instructions_1_packet_index,
+  input  [5:0]  io_enq_bits_instructions_1_ROB_index,
+  input  [31:0] io_enq_bits_instructions_2_instruction,
+  input  [3:0]  io_enq_bits_instructions_2_packet_index,
+  input  [5:0]  io_enq_bits_instructions_2_ROB_index,
+  input  [31:0] io_enq_bits_instructions_3_instruction,
+  input  [3:0]  io_enq_bits_instructions_3_packet_index,
+  input  [5:0]  io_enq_bits_instructions_3_ROB_index,
+  input         io_enq_bits_prediction_hit,
+  input  [31:0] io_enq_bits_prediction_target,
+  input  [2:0]  io_enq_bits_prediction_br_type,
+  input         io_enq_bits_prediction_br_mask_0,
+                io_enq_bits_prediction_br_mask_1,
+                io_enq_bits_prediction_br_mask_2,
+                io_enq_bits_prediction_br_mask_3,
+  input  [15:0] io_enq_bits_GHR,
+  input  [6:0]  io_enq_bits_NEXT,
+                io_enq_bits_TOS,
   input         io_deq_ready,
   output        io_deq_valid,
   output [31:0] io_deq_bits_fetch_PC,
@@ -217,6 +235,7 @@ module Queue2_fetch_packet(
   output [15:0] io_deq_bits_GHR,
   output [6:0]  io_deq_bits_NEXT,
                 io_deq_bits_TOS,
+  output [1:0]  io_count,
   input         io_flush
 );
 
@@ -250,13 +269,27 @@ module Queue2_fetch_packet(
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
-      ({80'h3,
+      ({io_enq_bits_TOS,
+        io_enq_bits_NEXT,
+        io_enq_bits_GHR,
+        io_enq_bits_prediction_br_mask_3,
+        io_enq_bits_prediction_br_mask_2,
+        io_enq_bits_prediction_br_mask_1,
+        io_enq_bits_prediction_br_mask_0,
+        io_enq_bits_prediction_br_type,
+        io_enq_bits_prediction_target,
+        io_enq_bits_prediction_hit,
+        io_enq_bits_instructions_3_ROB_index,
+        io_enq_bits_instructions_3_packet_index,
         io_enq_bits_instructions_3_instruction,
-        10'h2,
+        io_enq_bits_instructions_2_ROB_index,
+        io_enq_bits_instructions_2_packet_index,
         io_enq_bits_instructions_2_instruction,
-        10'h1,
+        io_enq_bits_instructions_1_ROB_index,
+        io_enq_bits_instructions_1_packet_index,
         io_enq_bits_instructions_1_instruction,
-        10'h0,
+        io_enq_bits_instructions_0_ROB_index,
+        io_enq_bits_instructions_0_packet_index,
         io_enq_bits_instructions_0_instruction,
         io_enq_bits_valid_bits_3,
         io_enq_bits_valid_bits_2,
@@ -293,6 +326,7 @@ module Queue2_fetch_packet(
   assign io_deq_bits_GHR = _ram_ext_R0_data[259:244];
   assign io_deq_bits_NEXT = _ram_ext_R0_data[266:260];
   assign io_deq_bits_TOS = _ram_ext_R0_data[273:267];
+  assign io_count = {maybe_full & ptr_match, wrap - wrap_1};
 endmodule
 
 module L1_instruction_cache(
@@ -1422,12 +1456,30 @@ module L1_instruction_cache(
       (_validator_io_instruction_output[0] & CPU_response_valid),
     .io_enq_bits_instructions_0_instruction
       (_GEN_27[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
+    .io_enq_bits_instructions_0_packet_index (4'h0),
+    .io_enq_bits_instructions_0_ROB_index    (6'h0),
     .io_enq_bits_instructions_1_instruction
       (_GEN_27[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
+    .io_enq_bits_instructions_1_packet_index (4'h1),
+    .io_enq_bits_instructions_1_ROB_index    (6'h0),
     .io_enq_bits_instructions_2_instruction
       (_GEN_27[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
+    .io_enq_bits_instructions_2_packet_index (4'h2),
+    .io_enq_bits_instructions_2_ROB_index    (6'h0),
     .io_enq_bits_instructions_3_instruction
       (_GEN_27[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
+    .io_enq_bits_instructions_3_packet_index (4'h3),
+    .io_enq_bits_instructions_3_ROB_index    (6'h0),
+    .io_enq_bits_prediction_hit              (1'h0),
+    .io_enq_bits_prediction_target           (32'h0),
+    .io_enq_bits_prediction_br_type          (3'h0),
+    .io_enq_bits_prediction_br_mask_0        (1'h0),
+    .io_enq_bits_prediction_br_mask_1        (1'h0),
+    .io_enq_bits_prediction_br_mask_2        (1'h0),
+    .io_enq_bits_prediction_br_mask_3        (1'h0),
+    .io_enq_bits_GHR                         (16'h0),
+    .io_enq_bits_NEXT                        (7'h0),
+    .io_enq_bits_TOS                         (7'h0),
     .io_deq_ready                            (io_CPU_response_ready),
     .io_deq_valid                            (io_CPU_response_valid),
     .io_deq_bits_fetch_PC                    (io_CPU_response_bits_fetch_PC),
@@ -1469,6 +1521,7 @@ module L1_instruction_cache(
     .io_deq_bits_GHR                         (io_CPU_response_bits_GHR),
     .io_deq_bits_NEXT                        (io_CPU_response_bits_NEXT),
     .io_deq_bits_TOS                         (io_CPU_response_bits_TOS),
+    .io_count                                (/* unused */),
     .io_flush                                (io_flush_valid)
   );
   assign m_axi_awvalid = 1'h0;
