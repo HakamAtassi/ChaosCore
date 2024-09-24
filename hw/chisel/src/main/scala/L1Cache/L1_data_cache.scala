@@ -944,6 +944,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 
 	dontTouch(output_address)
+
+	dontTouch(output_mem_signed)
 	
 	//FIXME: add sign extending here based on mem_signed
 	when(output_mem_signed){

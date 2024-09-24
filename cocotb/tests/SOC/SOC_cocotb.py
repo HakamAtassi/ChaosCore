@@ -98,7 +98,7 @@ async def test_jalr(dut):
 
 @cocotb.test()
 async def test_lb(dut):
-    await test_riscv_tests(dut, "rv32ui-p-lb.bin") # failed
+    await test_riscv_tests(dut, "rv32ui-p-lb.bin") # good
 
 @cocotb.test()
 async def test_lbu(dut):
@@ -106,7 +106,7 @@ async def test_lbu(dut):
 
 @cocotb.test()
 async def test_lh(dut):
-    await test_riscv_tests(dut, "rv32ui-p-lh.bin") # failed
+    await test_riscv_tests(dut, "rv32ui-p-lh.bin") # good
 
 @cocotb.test()
 async def test_lhu(dut):
@@ -134,11 +134,11 @@ async def test_ori(dut):
 
 @cocotb.test()
 async def test_sb(dut):
-    await test_riscv_tests(dut, "rv32ui-p-sb.bin") # failed
+    await test_riscv_tests(dut, "rv32ui-p-sb.bin") # good
 
 @cocotb.test()
 async def test_sh(dut):
-    await test_riscv_tests(dut, "rv32ui-p-sh.bin") # failed
+    await test_riscv_tests(dut, "rv32ui-p-sh.bin") # good
 
 @cocotb.test()
 async def test_simple(dut):
@@ -202,42 +202,36 @@ async def test_xori(dut):
 
 
 
-#@cocotb.test()
-#async def test_reset(dut):
-    ## Set seed
-    #random.seed(0x42)
+@cocotb.test()
+async def test_reset(dut):
+    # Set seed
+    random.seed(0x42)
 
-    ## Start lock
-    #await cocotb.start(generateClock(dut))
+    # Start lock
+    await cocotb.start(generateClock(dut))
 
-    ## Bring up TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/vec_add.bin")     # construct TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/if.bin")     # construct TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin")     # construct TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/bubble_sort.bin")     # construct TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/printf.bin")     # construct TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/multiply.bin")     # construct TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/test.bin")     # construct TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/branch_test.bin")     # construct TB
+    # Bring up TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/vec_add.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/if.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin")     # construct TB
+    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/bubble_sort.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/printf.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/multiply.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/test.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/branch_test.bin")     # construct TB
 
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/beq.bin")     # construct TB
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/instret.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/beq.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/instret.bin")     # construct TB
 
-    ##SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/rv32ui-p-srai.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/rv32ui-p-srai.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/rv32ui-p-xori.bin")     # construct TB
-    #await SOC.reset()                      # Reset
+    await SOC.reset()                      # Reset
 
-    #for _ in range(5000):
-    ##while 1:
-        #await SOC.clock()
+    for _ in range(150000):
+    #while 1:
+        await SOC.clock()
 
-    ## Check if the test passed and print result
-    #if SOC.riscv_test_pass():
-        #print("PASS")
-    #else:
-        #print("FAIL")
-
-    #assert False
+    assert False
 
     
 

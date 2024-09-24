@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1727051065" />
-    <testcase name="test_xori" classname="SOC_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/tests/SOC/SOC_cocotb.py" lineno="199" time="1.286327600479126" sim_time_ns="6017.001" ratio_time="4677.658317957892" />
-  </testsuite>
-</testsuites>

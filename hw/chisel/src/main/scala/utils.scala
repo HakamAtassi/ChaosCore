@@ -362,17 +362,24 @@ object sign_extend_var {
   def apply(data: UInt, from: Int, to:Int): UInt = {
     require(to >=  from,"Width for sign extension must be greater than or equal to the width of the data.")
 
+
+    val shortened = Wire(UInt(from.W))
+    shortened := data
+
     // Convert the data to a SInt to sign-extend it
-    val temp = Wire(SInt(from.W))
-    temp := data.asSInt
+    val temp = Wire(SInt(to.W))
+    temp := shortened.asSInt
 
     val temp2 = Wire(UInt(to.W))
     temp2 := temp.asUInt
 
+    //printf("Sign extended from 0x%x to 0x%x\n", data, temp2)
     // Convert back to UInt
     temp2
   }
 }
+
+
 
 object generateFUPorts {
   def apply(FUParamSeq: Seq[FUParams]): Seq[FUParams] = {

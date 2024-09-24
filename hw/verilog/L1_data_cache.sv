@@ -3559,6 +3559,7 @@ module L1_data_cache(
   wire [1:0]       output_operation = output_operation_r_1;
   reg              output_mem_signed_r;
   reg              output_mem_signed_r_1;
+  wire             output_mem_signed = output_mem_signed_r_1;
   reg  [6:0]       output_RD_r;
   reg  [6:0]       output_RD_r_1;
   reg  [5:0]       output_ROB_index_r;
@@ -3592,8 +3593,8 @@ module L1_data_cache(
     data_way >> {219'h0, _GEN_266 / 32'h4, 5'h0};
   wire [3:0][31:0] _GEN_273 =
     {{_output_data_access_word_T_2[31:0]},
-     {{16'h0, _GEN_272[output_operation][15:0]}},
-     {{24'h0, _GEN_270[output_operation][7:0]}},
+     {{{16{_GEN_272[output_operation][15]}}, _GEN_272[output_operation][15:0]}},
+     {{{24{_GEN_270[output_operation][7]}}, _GEN_270[output_operation][7:0]}},
      {_output_data_access_word_T_2[31:0]}};
   wire [255:0]     _output_data_access_word_T_3 =
     data_way >> {219'h0, _GEN_266 / 32'h4, 5'h0};
@@ -3606,7 +3607,7 @@ module L1_data_cache(
      {{24'h0, _output_data_result_T_18[7:0]}},
      {_output_data_access_word_T_3[31:0]}};
   wire [31:0]      output_data =
-    output_mem_signed_r_1 ? _GEN_273[output_operation] : _GEN_275[output_operation];
+    output_mem_signed ? _GEN_273[output_operation] : _GEN_275[output_operation];
   reg              output_valid_r;
   wire             output_valid = output_valid_r;
   reg  [3:0]       output_MOB_index_r;

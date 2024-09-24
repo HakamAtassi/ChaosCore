@@ -139,17 +139,21 @@ module decoder(
     _is_INT_T_1 & (_needs_ALU_T_1 | io_instruction_bits_instruction[31:25] == 7'h0)
     | _is_INT_T_3 | _is_INT_T_11;
   wire        FENCE = _is_INT_T_15 & _FENCE_T_1;
+  wire        needs_memory = _is_MEM_T_1 | _is_MEM_T;
+  wire        _GEN_0 = _FENCE_T_1 & needs_memory;
+  wire        _GEN_1 = _needs_CSRs_T_2 & needs_memory;
+  wire        _GEN_2 = _needs_CSRs_T_4 & needs_memory;
   reg  [1:0]  next_ALU_port_0;
   reg  [1:0]  next_ALU_port_1;
   reg  [1:0]  next_ALU_port_2;
-  wire        _GEN_0 = needs_ALU | FENCE;
+  wire        _GEN_3 = needs_ALU | FENCE;
   always @(posedge clock) begin
     if (reset) begin
       next_ALU_port_0 <= 2'h0;
       next_ALU_port_1 <= 2'h1;
       next_ALU_port_2 <= 2'h2;
     end
-    else if (_GEN_0) begin
+    else if (_GEN_3) begin
       next_ALU_port_0 <= next_ALU_port_1;
       next_ALU_port_1 <= next_ALU_port_2;
       next_ALU_port_2 <= next_ALU_port_0;
@@ -171,7 +175,7 @@ module decoder(
   assign io_decoded_instruction_bits_packet_index = io_instruction_bits_packet_index[1:0];
   assign io_decoded_instruction_bits_instructionType = instructionType;
   assign io_decoded_instruction_bits_portID =
-    _GEN_0
+    _GEN_3
       ? next_ALU_port_0
       : needs_branch_unit | needs_CSRs
           ? 2'h0
@@ -186,25 +190,24 @@ module decoder(
   assign io_decoded_instruction_bits_needs_ALU = needs_ALU;
   assign io_decoded_instruction_bits_needs_branch_unit = needs_branch_unit;
   assign io_decoded_instruction_bits_needs_CSRs = needs_CSRs;
-  assign io_decoded_instruction_bits_needs_memory = _is_MEM_T_1 | _is_MEM_T;
+  assign io_decoded_instruction_bits_needs_memory = needs_memory;
   assign io_decoded_instruction_bits_SUBTRACT =
     (_is_INT_T_1 | _is_INT_T_3) & _needs_ALU_T_1;
   assign io_decoded_instruction_bits_MULTIPLY =
     _is_INT_T_1 & io_instruction_bits_instruction[31:25] == 7'h1;
   assign io_decoded_instruction_bits_FENCE = FENCE;
   assign io_decoded_instruction_bits_IS_IMM = IS_IMM;
-  assign io_decoded_instruction_bits_mem_signed =
-    _FENCE_T_1 | _needs_CSRs_T_2 | _needs_CSRs_T_4;
+  assign io_decoded_instruction_bits_mem_signed = _GEN_0 | _GEN_1 | _GEN_2;
   assign io_decoded_instruction_bits_memory_type = _is_MEM_T ? 2'h1 : {_is_MEM_T_1, 1'h0};
   assign io_decoded_instruction_bits_access_width =
-    _FENCE_T_1
+    _GEN_0
       ? 2'h1
-      : _needs_CSRs_T_2
+      : _GEN_1
           ? 2'h2
-          : _needs_CSRs_T_4
+          : _GEN_2
               ? 2'h3
-              : io_instruction_bits_instruction[14:12] == 3'h4
+              : io_instruction_bits_instruction[14:12] == 3'h4 & needs_memory
                   ? 2'h1
-                  : {_needs_CSRs_T_8, 1'h0};
+                  : {_needs_CSRs_T_8 & needs_memory, 1'h0};
 endmodule
 
