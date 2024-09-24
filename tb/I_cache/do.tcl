@@ -24,15 +24,17 @@ add wave -r /top/DUT/dut/instruction_cache/axi_response
 add wave -r /top/DUT/dut/instruction_cache/axi_response_valid
 add wave -r /top/DUT/dut/instruction_cache/allocate_way
 add wave -r /top/DUT/dut/instruction_cache/current_packet_set
-add wave -r /top/DUT/dut/instruction_cache/LRU_memory/*
+#add wave -r /top/DUT/dut/instruction_cache/LRU_memory/*
 add wave -r /top/DUT/dut/instruction_cache/valid_mem_0_0
 add wave -r /top/DUT/dut/instruction_cache/valid_mem_0_1
-add wave -r /top/DUT/dut/instruction_cache/_data_memory_*
-add wave -r /top/DUT/dut/instruction_cache/data_memory_0/*
-add wave -r /top/DUT/dut/instruction_cache/data_memory_1/*
-add wave -r /top/DUT/dut/instruction_cache/io_flush*
+#add wave -r /top/DUT/dut/instruction_cache/_data_memory_*
+#add wave -r /top/DUT/dut/instruction_cache/data_memory_0/*
+#add wave -r /top/DUT/dut/instruction_cache/data_memory_1/*
+#add wave -r /top/DUT/dut/instruction_cache/io_flush*
+add wave -r /top/DUT/dut/instruction_cache/CPU_response_skid_buffer/*
 add wave -r /top/DUT/dut/instruction_cache/io_CPU_response*
 add wave -r /top/DUT/dut/instruction_cache/io_CPU_request*
+add wave -r /top/DUT/dut/instruction_cache/validator/*
 #add wave -r /top/DUT/dut/instruction_cache/*
 # Run the simulation
 run -all

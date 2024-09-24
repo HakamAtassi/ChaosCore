@@ -16,6 +16,7 @@ class cache_env extends uvm_env;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
+        `uvm_info("TEST", $psprintf("io_CPU_request_ready: %8h\n", $urandom()), UVM_LOW)
         `uvm_info("ENV","Creating Environment...",UVM_MEDIUM);
 
         if(!uvm_config_db #(virtual instruction_cache_if)::get(this, "", "cache_vif", cache_vif)) begin 
