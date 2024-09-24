@@ -51,6 +51,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
         // commit (for CSRs only)
         val partial_commit  =   Input(new partial_commit(coreParameters))
+        val commit          =   Flipped(ValidIO(new commit(coreParameters)))
     })
 
     // misaligned fetch exception ??
@@ -70,6 +71,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     // Op select
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
+    val FENCE               =   io.FU_input.bits.decoded_instruction.FENCE
     val IS_IMM              =   io.FU_input.bits.decoded_instruction.IS_IMM
     val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
     val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
@@ -148,7 +150,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val shamt = Wire(UInt(5.W))
 
     // FIXME: saturate to 31 or 32?
-    when(operand2_unsigned >= 32.U){
+    when(operand2_unsigned(4, 0).asUInt >= 32.U){
         shamt := 31.U
     }.otherwise{
         shamt := operand2_unsigned(4, 0).asUInt
@@ -170,12 +172,15 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val SLL      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b001".U  && !MULTIPLY
     val SRL      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && !SUBTRACT
     val SRA      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && SUBTRACT
+
     val SLT      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b010".U  && !MULTIPLY
     val SLTU     =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b011".U  && !MULTIPLY
-    val LUI      =   (instructionType === InstructionType.LUI) && !MULTIPLY
+    val LUI      =   (instructionType === InstructionType.LUI)   && !MULTIPLY
     val AUIPC    =   (instructionType === InstructionType.AUIPC) && !MULTIPLY
 
-
+    dontTouch(SLL)
+    dontTouch(SRL)
+    dontTouch(SRA)
     dontTouch(instruction_PC)
     dontTouch(AUIPC)
     
@@ -223,7 +228,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     // ALU pipelined; always ready
     io.FU_input.ready       :=  1.B    
     io.FU_output            :=  DontCare
-    io.FU_output.valid      :=  RegNext(input_valid && !io.flush.valid) && !io.flush.valid
+    io.FU_output.valid      :=  RegNext(input_valid && !io.flush.valid || FENCE) && !io.flush.valid
 
 }
 

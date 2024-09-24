@@ -24,7 +24,7 @@ class SOC_mon:
         self.log = SimLog("test")
         self.log.setLevel(logging.DEBUG)
 
-        self.log.info("Hello from SOC mon")
+        #self.log.info("Hello from SOC mon")
 
         self.ROB_map = {}   # ROB index to fetch packet map
 

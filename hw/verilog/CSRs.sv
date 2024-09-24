@@ -88,18 +88,20 @@ module CSRs(
   reg  [5:0]  io_FU_output_bits_ROB_index_REG;
   always @(posedge clock) begin
     io_FU_output_valid_REG <= input_valid & ~io_flush_valid;
-    if (io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC00)
-      CSR_out <= cycle_reg[31:0];
-    else if (io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC01)
-      CSR_out <= time_reg[31:0];
-    else if (io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC02)
-      CSR_out <= instret_reg[31:0];
-    else if (io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC80)
-      CSR_out <= time_reg[31:0];
-    else if (io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC81)
-      CSR_out <= cycle_reg[63:32];
-    else if (io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC82)
-      CSR_out <= instret_reg[63:32];
+    CSR_out <=
+      io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC82
+        ? instret_reg[63:32]
+        : io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC81
+            ? time_reg[63:32]
+            : io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC80
+                ? cycle_reg[63:32]
+                : io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC02
+                    ? instret_reg[31:0]
+                    : io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC01
+                        ? time_reg[31:0]
+                        : io_FU_input_bits_decoded_instruction_IMM[11:0] == 12'hC00
+                            ? cycle_reg[31:0]
+                            : 32'h0;
     io_FU_output_bits_fetch_PC_REG <= io_FU_input_bits_fetch_PC;
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;

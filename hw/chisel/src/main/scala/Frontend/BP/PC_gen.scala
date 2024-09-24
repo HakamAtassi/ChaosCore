@@ -117,6 +117,6 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
 
     io.prediction.ready := io.PC_next.ready
 
-
-
 }
+
+// for this module to work, the output needs to be a reg that has a valid value on boot

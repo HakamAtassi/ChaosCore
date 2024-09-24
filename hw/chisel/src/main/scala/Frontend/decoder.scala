@@ -55,15 +55,18 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val opcode      = instruction(6, 0)
     val RS1         = instruction(19, 15)
     val RS2         = instruction(24, 20)
-    val PRD          = instruction(11, 7)
+    val PRD         = instruction(11, 7)
     val IMM         = getImm(instruction)
+
+    dontTouch(IMM)
+    
 
     val FUNCT3      = instruction(14, 12)
     val FUNCT7      = instruction(31, 25)
 
 
     val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
-    assert(valid, "Enum state must be valid, got %d!", opcode(6,2))
+    assert(valid, "Enum state must be valid, got %x!",instruction)
 
 
     dontTouch(instructionType)
@@ -72,7 +75,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
 
 
-    val SUBTRACT    =   ((instructionType === OP        ||  instructionType === OP_IMM) && FUNCT7 === 0x20.U)
+    val SUBTRACT    =   ((instructionType === OP || instructionType === OP_IMM) && FUNCT7 === 0x20.U)
     val IS_IMM   =      (instructionType === OP_IMM)    || 
                         (instructionType === LUI)       || 
                         (instructionType === AUIPC)     || 
@@ -81,12 +84,12 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                         (instructionType === BRANCH)    || 
                         (instructionType === JAL)       || 
                         (instructionType === JALR)      ||
-                        (instructionType === SYSTEM)
+                        ((instructionType === SYSTEM) && (FUNCT3 === 5.U || FUNCT3 === 6.U || FUNCT3 === 7.U))
 
     val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_mul            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === AUIPC)
-    val needs_CSRs           =   (instructionType === SYSTEM) && (FUNCT3 === 0x1.U || FUNCT3 === 0x2.U || FUNCT3 === 0x3.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
+    val needs_CSRs           =   (instructionType === SYSTEM) && (FUNCT3 === 0x0.U || FUNCT3 === 0x1.U || FUNCT3 === 0x2.U || FUNCT3 === 0x3.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
     val needs_ALU            =   ((instructionType === OP) &&
                                  ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
                                  (instructionType === OP_IMM) || (instructionType === LUI)
@@ -124,6 +127,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                                                         instructionType === LOAD        || 
                                                         instructionType === STORE       || 
                                                         instructionType === JALR        || 
+                                                        (needs_CSRs && !IS_IMM) ||
                                                         instructionType === BRANCH)     && 
                                                         io.instruction.valid
 
@@ -206,7 +210,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     // FIXME: this whole section needs to be replaced with an actual scheduler based on the FU port types...
     val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
 
-    when(needs_ALU){
+    when(needs_ALU || FENCE){
         io.decoded_instruction.bits.portID := next_ALU_port(0)   // schedule to "random"
         next_ALU_port(0) := next_ALU_port(1)
         next_ALU_port(1) := next_ALU_port(2)
@@ -214,7 +218,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     }.elsewhen(needs_branch_unit){
         io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
-        io.decoded_instruction.bits.portID := 1.U
+        io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_div || needs_mul){
         io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_memory){
@@ -226,7 +230,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
     // Assign a reservation station
 
-    val is_INT   =   (instructionType === SYSTEM) || (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === LUI) || (instructionType === AUIPC)
+    val is_INT   =   (instructionType === SYSTEM) || (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === LUI) || (instructionType === AUIPC) || (instructionType === MISC_MEM)
     val is_MEM   =   (instructionType === LOAD) || (instructionType === STORE)
 
     when(is_INT){

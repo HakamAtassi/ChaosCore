@@ -41,6 +41,7 @@ module AGU(
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
   input         io_FU_input_bits_decoded_instruction_needs_ALU,
                 io_FU_input_bits_decoded_instruction_needs_branch_unit,
+                io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
@@ -62,6 +63,18 @@ module AGU(
   wire [31:0] instruction_PC =
     io_FU_input_bits_fetch_PC
     + {28'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0};
+  wire        _REMU_T = io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
+  wire        _SLTU_T_1 = io_FU_input_bits_decoded_instruction_instructionType == 5'h4;
+  wire        _LH_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1;
+  wire        SLL =
+    (_REMU_T | _SLTU_T_1) & _LH_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
+  wire        _LHU_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
+  wire        SRL =
+    (_REMU_T | _SLTU_T_1) & _LHU_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+    & ~io_FU_input_bits_decoded_instruction_SUBTRACT;
+  wire        SRA =
+    (_REMU_T | _SLTU_T_1) & _LHU_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+    & io_FU_input_bits_decoded_instruction_SUBTRACT;
   wire        AUIPC =
     io_FU_input_bits_decoded_instruction_instructionType == 5'h5
     & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
@@ -90,14 +103,13 @@ module AGU(
     io_FU_output_bits_PRD_REG <= io_FU_input_bits_decoded_instruction_PRD;
     io_FU_output_bits_is_unsigned_REG <=
       is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4 & io_FU_input_valid
-      | is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5 & io_FU_input_valid;
+      | is_load & _LHU_T & io_FU_input_valid;
     io_FU_output_bits_address_REG <=
       io_FU_input_bits_RS1_data + {11'h0, io_FU_input_bits_decoded_instruction_IMM};
     io_FU_output_bits_wr_data_REG <=
       is_store & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2 & io_FU_input_valid
         ? io_FU_input_bits_RS2_data
-        : is_store & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1
-          & io_FU_input_valid
+        : is_store & _LH_T & io_FU_input_valid
             ? {16'h0, io_FU_input_bits_RS2_data[15:0]}
             : is_store & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0
               & io_FU_input_valid

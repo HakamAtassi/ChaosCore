@@ -50,6 +50,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
 
         // partial_commit (for CSRs)
         val partial_commit  =   Input(new partial_commit(coreParameters))
+        val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
     }); dontTouch(io)
 
 
@@ -57,7 +58,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     val branch_unit     = if (supportsBranch)               Some(Module(new branch_unit(coreParameters))) else None
     val AGU             = if (supportsAddressGeneration)    Some(Module(new AGU(coreParameters))) else None
     val mul             = if (supportsMult || supportsDiv)  Some(Module(new mul_unit(coreParameters))) else None    // FIXME: for now, mult or div each generate support for both (cant have one without the other)
-    val CSR             = if (supportsCSRs)                 Some(Module(new CSRs(coreParameters))) else None    // FIXME: for now, mult or div each generate support for both (cant have one without the other)
+    val CSR             = if (supportsCSRs)                 Some(Module(new CSR_FU(coreParameters))) else None    // FIXME: for now, mult or div each generate support for both (cant have one without the other)
 
     // assign inputs
     ALU.foreach         {ALU => ALU.io.FU_input                     <> io.FU_input }
@@ -72,6 +73,13 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     AGU.foreach         { AGU => AGU.io.partial_commit                    <> io.partial_commit }
     mul.foreach         { mul => mul.io.partial_commit                    <> io.partial_commit }
     CSR.foreach         { CSR => CSR.io.partial_commit                    <> io.partial_commit }
+
+
+    ALU.foreach         {ALU => ALU.io.commit                     <> io.commit }
+    branch_unit.foreach {branch_unit => branch_unit.io.commit     <> io.commit }
+    AGU.foreach         { AGU => AGU.io.commit                    <> io.commit }
+    mul.foreach         { mul => mul.io.commit                    <> io.commit }
+    CSR.foreach         { CSR => CSR.io.commit                    <> io.commit }
     
 
     // route outputs
