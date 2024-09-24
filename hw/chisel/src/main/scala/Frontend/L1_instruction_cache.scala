@@ -172,6 +172,9 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     val already_requested = RegInit(Bool(), 0.B)
 
+    val valid_mem = RegInit(VecInit.tabulate(sets, ways){ (x, y) => 0.B })
+    val current_set = Wire(UInt(setBits.W))
+
 
     switch(cache_state){
 
@@ -260,14 +263,25 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     LRU := LRU_memory.io.data_out
 
-    LRU_next := Mux((LRU | hit_oh).andR, hit_oh, LRU | hit_oh)
-
-    allocate_way := 0.U
-    for(i <- 0 until ways){
-        when(LRU(i) === 0.U){
-            allocate_way := (1.U<<i)
+    when (valid_mem(current_set)(0) | valid_mem(current_set)(1)){
+        LRU_next := Mux((LRU | hit_oh).andR, hit_oh, LRU | hit_oh)
+        for(way <- 0 until ways){
+            when(!valid_mem(current_set)(way)){
+                LRU_next := (1.U << way)
+            }
         }
+
+        allocate_way := 0.U
+        for(i <- 0 until ways){
+            when(LRU(i) === 0.U){
+                allocate_way := (1.U<<i)
+            }
+        }
+    }.otherwise {
+        allocate_way := 2.U
+        LRU_next := 1.U
     }
+
 
     ///////////////////
     // DATA MEMORIES //
@@ -276,6 +290,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     current_data.valid  := 1.B
     current_data.tag    := get_decomposed_icache_address(coreParameters, replay_address.addr).tag
     current_data.data   := axi_response
+    current_set := get_decomposed_icache_address(coreParameters, replay_address.addr).set
 
     ///////////////////////////////
     // ASSIGN DATA MEMORY READS //
@@ -300,6 +315,11 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     for (way <- 0 until ways) {
       hit_oh_vec(way) := (data_way(way).tag === RegNext(current_packet.tag)) && data_way(way).valid
+      valid_mem(current_set)(way) := (allocate_way(way) & data_memory(way).io.wr_en) | valid_mem(current_set)(way)
+      data_way(way).valid := (allocate_way(way) & data_memory(way).io.wr_en) | valid_mem(current_set)(way)
+
+    //   valid_mem(current_set)(way) := cache_state === cacheState.Replay
+    //   data_way(way).valid := cache_state === cacheState.Replay
     }
 
     hit_oh := hit_oh_vec.reverse.reduce(_ ## _)
@@ -308,8 +328,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val replay_valid = Wire(Bool())
     replay_valid := cache_state === cacheState.Replay
 
-    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)
-    miss    := (~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)
+    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush.valid) & !RegNext(reset.asBool) & (RegNext(valid_mem(current_set)(0)) | RegNext(valid_mem(current_set)(1)))
+    miss    := ((~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)) | !(RegNext(valid_mem(current_set)(0)) | RegNext(valid_mem(current_set)(1)))
 
     /////////////////////////////////////
     // Fetch Packet Selecting & Output //
@@ -360,6 +380,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     // FIXME: critical path here...
     val CPU_response_skid_buffer         = Module(new Queue(new fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    dontTouch(CPU_response_skid_buffer.io)
 
     CPU_response_skid_buffer.io.enq                  <> CPU_response
     CPU_response_skid_buffer.io.flush.get            <> io.flush.valid

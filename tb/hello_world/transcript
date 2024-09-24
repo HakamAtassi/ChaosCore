@@ -1,41 +1,3 @@
-# //  Questa Intel Starter FPGA Edition-64
-# //  Version 2024.1 linux_x86_64 Apr 19 2024
-# //
-# // Unpublished work. Copyright 2024 Siemens
-# //
-# // This material contains trade secrets or otherwise confidential information
-# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
-# // "SISW"), or its licensors. Access to and use of this information is strictly
-# // limited as set forth in the Customer's applicable agreements with SISW.
-# //
-# // This material may not be copied, distributed, or otherwise disclosed outside
-# // of the Customer's facilities without the express written permission of SISW,
-# // and may not be used in any way not expressly authorized by SISW.
-# //
-# vsim -voptargs="+acc" work.counter_tb 
-# Start time: 10:41:19 on Sep 19,2024
-# ** Note: (vsim-3812) Design is being optimized...
-# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
-# ** Error: (vopt-13130) Failed to find design unit 'counter_tb'.
-#         Searched libraries:
-#             work
-# Optimization failed
-# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=1, Warnings=1.
-# Error loading design
-# End time: 10:41:19 on Sep 19,2024, Elapsed time: 0:00:00
-# Errors: 1, Warnings: 1
-run -all
-# No Design Loaded!
-rm work
-# /usr/bin/rm: cannot remove 'work': Is a directory
-rm -rf work
-vlib work
-vlog *.sv
-# Questa Intel Starter FPGA Edition-64 vlog 2024.1 Compiler 2024.04 Apr 19 2024
-# Start time: 10:42:21 on Sep 19,2024
-# vlog -reportprogress 300 design.sv testbench.sv 
-# -- Compiling interface dut_if
-# ** Note: (vlog-2286) design.sv(10): Using implicit +incdir+/questa/questa_fse/uvm-1.1d/../verilog_src/uvm-1.1d/src from import uvm_pkg
 # -- Compiling module dut
 # -- Importing package mtiUvm.uvm_pkg (uvm-1.1d Built-in)
 # -- Compiling package testbench_sv_unit
@@ -45,32 +7,6 @@ vlog *.sv
 # 
 # Top level modules:
 # 	top
-# End time: 10:42:21 on Sep 19,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-run -all
-# No Design Loaded!
-vsim -voptargs=+acc work.dut
-# vsim -voptargs="+acc" work.dut 
-# Start time: 10:43:05 on Sep 19,2024
-# ** Note: (vsim-3812) Design is being optimized...
-# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
-# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
-# Loading sv_std.std
-# Loading mtiUvm.uvm_pkg(fast)
-# Loading mtiUvm.questa_uvm_pkg(fast)
-# Loading work.dut(fast)
-# ** Fatal: (vsim-3695) The interface port 'dif' must be passed an actual interface.
-#    Time: 0 ns  Iteration: 0  Instance: /dut File: design.sv Line: 16
-# FATAL ERROR while loading design
-# Error loading design
-# End time: 10:43:08 on Sep 19,2024, Elapsed time: 0:00:03
-# Errors: 1, Warnings: 1
-vsim -voptargs=+acc work.top
-# vsim -voptargs="+acc" work.top 
-# Start time: 10:44:20 on Sep 19,2024
-# ** Note: (vsim-3812) Design is being optimized...
-# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
-# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
 # Loading sv_std.std
 # Loading work.dut_if(fast)
 # Loading mtiUvm.uvm_pkg(fast)
@@ -80,77 +16,6 @@ vsim -voptargs=+acc work.top
 # Loading work.top(fast)
 # Loading work.dut_if(fast__2)
 # Loading work.dut(fast)
-# Loading /questa/questa_fse/uvm-1.1d/linux_x86_64/uvm_dpi.so
-run -all
-# ----------------------------------------------------------------
-# UVM-1.1d
-# (C) 2007-2013 Mentor Graphics Corporation
-# (C) 2007-2013 Cadence Design Systems, Inc.
-# (C) 2006-2013 Synopsys, Inc.
-# (C) 2011-2013 Cypress Semiconductor Corp.
-# ----------------------------------------------------------------
-# 
-#   ***********       IMPORTANT RELEASE NOTES         ************
-# 
-#   You are using a version of the UVM library that has been compiled
-#   with `UVM_NO_DEPRECATED undefined.
-#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
-# 
-#   You are using a version of the UVM library that has been compiled
-#   with `UVM_OBJECT_MUST_HAVE_CONSTRUCTOR undefined.
-#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
-# 
-#       (Specify +UVM_NO_RELNOTES to turn off this notice)
-# 
-# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
-# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(278) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
-# UVM_INFO @ 0: reporter [RNTST] Running test my_test...
-# ** Error: Failure to checkout svverification license feature.
-# ** Fatal: (vsim-7099) Unable to check out a verification license for the randomize() feature.
-# 
-#    Time: 6 ns  Iteration: 2  Process: /uvm_pkg::uvm_sequence_base::start/#FORK#294_7fefe826180 File: my_sequence.svh Line: 34
-# Fatal error in Task my_testbench_pkg/my_sequence::body at my_sequence.svh line 34
-# 
-# HDL call sequence:
-# Stopped at my_sequence.svh 34 Task my_testbench_pkg/my_sequence::body
-# called from  /questa/questa_fse/linux_x86_64/../verilog_src/uvm-1.1d/src/seq/uvm_sequence_base.svh 314 Task uvm_pkg/uvm_sequence_base::start
-# 
-vlog *.sv
-# Questa Intel Starter FPGA Edition-64 vlog 2024.1 Compiler 2024.04 Apr 19 2024
-# Start time: 10:47:17 on Sep 19,2024
-# vlog -reportprogress 300 design.sv testbench.sv 
-# -- Compiling interface dut_if
-# ** Note: (vlog-2286) design.sv(10): Using implicit +incdir+/questa/questa_fse/uvm-1.1d/../verilog_src/uvm-1.1d/src from import uvm_pkg
-# -- Compiling module dut
-# -- Importing package mtiUvm.uvm_pkg (uvm-1.1d Built-in)
-# -- Compiling package testbench_sv_unit
-# -- Compiling package my_testbench_pkg
-# -- Compiling module top
-# -- Importing package my_testbench_pkg
-# 
-# Top level modules:
-# 	top
-# End time: 10:47:17 on Sep 19,2024, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-vsim -voptargs=+acc work.top
-# End time: 10:47:28 on Sep 19,2024, Elapsed time: 0:03:08
-# Errors: 2, Warnings: 1
-# vsim -voptargs="+acc" work.top 
-# Start time: 10:47:28 on Sep 19,2024
-# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
-# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
-# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
-# Loading sv_std.std
-# Loading work.dut_if(fast)
-# Loading mtiUvm.uvm_pkg(fast)
-# Loading work.my_testbench_pkg(fast)
-# Loading work.testbench_sv_unit(fast)
-# Loading mtiUvm.questa_uvm_pkg(fast)
-# Loading work.top(fast)
-# Loading work.dut_if(fast__2)
-# Loading work.dut(fast)
-# Loading /questa/questa_fse/uvm-1.1d/linux_x86_64/uvm_dpi.so
-run -all
 # ----------------------------------------------------------------
 # UVM-1.1d
 # (C) 2007-2013 Mentor Graphics Corporation
@@ -175,14 +40,7 @@ run -all
 # UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(278) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
 # UVM_INFO @ 0: reporter [RNTST] Running test my_test...
 # UVM_WARNING my_testbench_pkg.svh(80) @ 10: uvm_test_top [] Hello World!
-# UVM_INFO design.sv(20) @ 15: reporter [DUT] Received cmd=1, addr=0x81, data=0x33
-# UVM_INFO design.sv(20) @ 25: reporter [DUT] Received cmd=0, addr=0xf5, data=0x00
-# UVM_INFO design.sv(20) @ 35: reporter [DUT] Received cmd=0, addr=0x46, data=0x38
-# UVM_INFO design.sv(20) @ 45: reporter [DUT] Received cmd=0, addr=0x1d, data=0xe4
-# UVM_INFO design.sv(20) @ 55: reporter [DUT] Received cmd=0, addr=0x2d, data=0x88
-# UVM_INFO design.sv(20) @ 65: reporter [DUT] Received cmd=0, addr=0x00, data=0x08
-# UVM_INFO design.sv(20) @ 75: reporter [DUT] Received cmd=1, addr=0x5e, data=0xc4
-# UVM_INFO design.sv(20) @ 85: reporter [DUT] Received cmd=0, addr=0x71, data=0x71
+
 # UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 85: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
 # 
 # --- UVM Report Summary ---
@@ -198,7 +56,3 @@ run -all
 # [Questa UVM]     2
 # [RNTST]     1
 # [TEST_DONE]     1
-# ** Note: $finish    : /questa/questa_fse/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
-#    Time: 85 ns  Iteration: 63  Instance: /top
-# 1
-# Break in Task uvm_pkg/uvm_root::run_test at /questa/questa_fse/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh line 430

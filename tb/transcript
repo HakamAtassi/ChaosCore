@@ -1,0 +1,7 @@
+# vsim -c top_vhdl_cfg 
+# Start time: 20:05:24 on Sep 03,2024
+# ** Error (suppressible): (vsim-19) Failed to access library 'work' at "work".
+# No such file or directory. (errno = ENOENT)
+# Error loading design
+# End time: 20:05:24 on Sep 03,2024, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
