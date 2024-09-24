@@ -38,9 +38,9 @@ mem_65x32.sv
 sim_nReadmWrite.sv
 ALU.sv
 branch_unit.sv
+CSR_FU.sv
 FU.sv
 mul_unit.sv
-CSRs.sv
 FU_1.sv
 FU_2.sv
 AGU.sv

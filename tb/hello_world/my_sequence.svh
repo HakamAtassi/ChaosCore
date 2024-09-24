@@ -31,15 +31,15 @@ class my_sequence extends uvm_sequence#(my_transaction);
       req = my_transaction::type_id::create("req");
       start_item(req);
 
-      if (!req.randomize()) begin
-        `uvm_error("MY_SEQUENCE", "Randomize failed.");
-      end
+      //if (!req.randomize()) begin
+        //`uvm_error("MY_SEQUENCE", "Randomize failed.");
+      //end
 
       // If using ModelSim, which does not support randomize(),
       // we must randomize item using traditional methods, like
-      // req.cmd = $urandom;
-      // req.addr = $urandom_range(0, 255);
-      // req.data = $urandom_range(0, 255);
+      req.cmd = $urandom;
+      req.addr = $urandom_range(0, 255);
+      req.data = $urandom_range(0, 255);
 
       finish_item(req);
     end

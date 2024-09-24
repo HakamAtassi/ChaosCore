@@ -727,3 +727,16 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
 
 
 // AXI_slave_port is the Flipped() of an AXI master port
+
+
+
+
+
+object PRIVILAGE extends ChiselEnum{
+    val USER, SUPERVISOR, RESERVED, MACHINE = Value
+}
+
+object ACCESS extends ChiselEnum{
+    val RW, RO = Value
+}
+

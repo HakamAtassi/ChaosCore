@@ -222,6 +222,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
     execution_engine.io.partial_commit           <> io.partial_commit
+    execution_engine.io.commit           <> io.commit
 
 
     //io.FU_outputs(3) <> MOB.io.MOB_output
