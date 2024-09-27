@@ -105,7 +105,9 @@ module AGU(
       is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4 & io_FU_input_valid
       | is_load & _LHU_T & io_FU_input_valid;
     io_FU_output_bits_address_REG <=
-      io_FU_input_bits_RS1_data + {11'h0, io_FU_input_bits_decoded_instruction_IMM};
+      io_FU_input_bits_RS1_data
+      + {{11{io_FU_input_bits_decoded_instruction_IMM[20]}},
+         io_FU_input_bits_decoded_instruction_IMM};
     io_FU_output_bits_wr_data_REG <=
       is_store & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2 & io_FU_input_valid
         ? io_FU_input_bits_RS2_data

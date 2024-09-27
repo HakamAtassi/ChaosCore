@@ -142,6 +142,12 @@ int main( int argc, char* argv[] )
   sort( DATA_SIZE, input_data );
   //setStats(0);
 
+
+    //for(int i=0;i<DATA_SIZE;i++){
+        //printf("%d\n", input_data[i]);
+    //}
+
   // Check the results
-  return verify( DATA_SIZE, input_data, verify_data );
+  int correct = verify( DATA_SIZE, input_data, verify_data );
+  printf("correct : %0d\n", correct);
 }

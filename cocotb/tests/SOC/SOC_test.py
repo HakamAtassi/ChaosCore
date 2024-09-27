@@ -189,6 +189,10 @@ def test_xori():
         configs["testcase"] = "test_xori"
         run(**configs)
 
+def test_riscv_tests():
+        configs["testcase"] = "test_riscv_tests"
+        run(**configs)
+
 def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)

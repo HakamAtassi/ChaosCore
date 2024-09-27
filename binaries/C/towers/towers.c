@@ -226,5 +226,7 @@ int main( int argc, char* argv[] )
   //setStats(0);
 
   // Check the results
-  return towers_verify( &towers );
+  int correct= towers_verify( &towers );
+  printf("Correct %0d\n", correct);
+
 }

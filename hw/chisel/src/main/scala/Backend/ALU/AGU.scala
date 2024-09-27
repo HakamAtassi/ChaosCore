@@ -82,11 +82,11 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val address         = Wire(UInt(32.W))
 
     unsigned        := LBU || LHU
-    address         := RS1_data + imm
+    address         := RS1_data + sign_extend_var(imm, 21, 32)
 
     // Everything needed to perform the memory request (LSQ request)    
     io.FU_output.valid              := RegNext(io.FU_input.valid && !io.flush.valid)
-    io.FU_output.bits.PRD            := RegNext(PRD)              // LOAD DEST
+    io.FU_output.bits.PRD           := RegNext(PRD)             // LOAD DEST
     io.FU_output.bits.is_unsigned   := RegNext(unsigned)        // SIGNED/UNSIGNED
     io.FU_output.bits.address       := RegNext(address)         // ADDRESS
     io.FU_output.bits.wr_data       := RegNext(wr_data)         // WR DATA

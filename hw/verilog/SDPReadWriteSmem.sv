@@ -28,28 +28,39 @@
   `endif // STOP_COND
 `endif // not def STOP_COND_
 
-module icache_ReadWriteSmem(
-  input          clock,
-                 io_wr_en,
-  input  [5:0]   io_addr,
-  input  [20:0]  io_data_in_tag,
-  input  [255:0] io_data_in_data,
-  output [20:0]  io_data_out_tag,
-  output [255:0] io_data_out_data
+module SDPReadWriteSmem(
+  input         clock,
+                reset,
+  input  [6:0]  io_rd_addr,
+  output [38:0] io_data_out,
+  input  [6:0]  io_wr_addr,
+  input         io_wr_en,
+  input  [38:0] io_data_in
 );
 
-  wire [277:0] _mem_ext_R0_data;
-  mem_64x278 mem_ext (
-    .R0_addr (io_addr),
+  wire [38:0] _mem_ext_R0_data;
+  reg         hazard_reg;
+  reg  [38:0] din_buff;
+  always @(posedge clock) begin
+    if (reset) begin
+      hazard_reg <= 1'h0;
+      din_buff <= 39'h0;
+    end
+    else begin
+      hazard_reg <= io_rd_addr == io_wr_addr & io_wr_en;
+      din_buff <= io_data_in;
+    end
+  end // always @(posedge)
+  mem_128x39 mem_ext (
+    .R0_addr (io_rd_addr),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_mem_ext_R0_data),
-    .W0_addr (io_addr),
+    .W0_addr (io_wr_addr),
     .W0_en   (io_wr_en),
     .W0_clk  (clock),
-    .W0_data ({io_data_in_data, io_data_in_tag, 1'h1})
+    .W0_data (io_data_in)
   );
-  assign io_data_out_tag = _mem_ext_R0_data[21:1];
-  assign io_data_out_data = _mem_ext_R0_data[277:22];
+  assign io_data_out = hazard_reg ? din_buff : _mem_ext_R0_data;
 endmodule
 
