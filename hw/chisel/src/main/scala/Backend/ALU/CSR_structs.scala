@@ -136,8 +136,8 @@ class mepc extends Bundle {
 
 // Machine cause register (mcause) - 32 bits
 class mcause extends Bundle {
-  val Interrupt = UInt(1.W)    // Interrupt flag
-  val Code      = UInt(31.W)   // Trap cause code
+  val INTERRUPT = UInt(1.W)    // Interrupt flag
+  val CODE      = UInt(31.W)   // Trap cause code
 }
 
 // Machine bad address register (mtval) - 32 bits

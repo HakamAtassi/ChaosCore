@@ -72,18 +72,6 @@ do
     ${rvdir}/riscv32-unknown-elf-objcopy -O binary "elf/$name.elf" "bin/$name.bin"
 done
 
-## Build ASM files
-#for test_file in riscv-tests/isa/;    # fix this so that it only runs for files WITHOUT a file extension
-#do
-    #filename=$(basename -- "$test_file")
-    #name="${filename%.*}"
-    #echo "Building ASM File: $name"
-
-    ## Assemble the ELF file to binary
-    #${rvdir}/riscv32-unknown-elf-objcopy -O binary "riscv-tests/isa/$name" "bin/$name.bin"
-#done
-
-##
 # Find files in the directory without an extension and process each
 find riscv-tests/isa/ -type f ! -name "*.*" | while read test_file; do
     filename=$(basename -- "$test_file")
@@ -92,9 +80,6 @@ find riscv-tests/isa/ -type f ! -name "*.*" | while read test_file; do
     # Assemble the ELF file to binary
     ${rvdir}/riscv32-unknown-elf-objcopy -O binary "$test_file" "bin/${filename}.bin"
 done
-
-
-
 
 
 echo "Build process completed"

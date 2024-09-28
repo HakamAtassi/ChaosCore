@@ -53,7 +53,9 @@ module decoder(
                 io_decoded_instruction_bits_SUBTRACT,
                 io_decoded_instruction_bits_MULTIPLY,
                 io_decoded_instruction_bits_FENCE,
+                io_decoded_instruction_bits_MRET,
                 io_decoded_instruction_bits_IS_IMM,
+                io_decoded_instruction_bits_ECALL,
                 io_decoded_instruction_bits_mem_signed,
   output [1:0]  io_decoded_instruction_bits_memory_type,
                 io_decoded_instruction_bits_access_width
@@ -162,7 +164,8 @@ module decoder(
   assign io_decoded_instruction_bits_RD = io_instruction_bits_instruction[11:7];
   assign io_decoded_instruction_bits_RD_valid =
     (_is_INT_T_1 | _is_INT_T_3 | _is_MEM_T | _is_INT_T_7 | _is_INT_T_9 | _is_INT_T_11
-     | _is_INT_T_13 | _is_INT_T) & io_instruction_valid;
+     | _is_INT_T_13 | _is_INT_T & (|(io_instruction_bits_instruction[14:12])))
+    & io_instruction_valid;
   assign io_decoded_instruction_bits_RS1 = {2'h0, io_instruction_bits_instruction[19:15]};
   assign io_decoded_instruction_bits_RS1_valid =
     (_is_INT_T_1 | _is_INT_T_3 | _is_MEM_T | _is_MEM_T_1 | _is_INT_T_9 | needs_CSRs
@@ -196,7 +199,10 @@ module decoder(
   assign io_decoded_instruction_bits_MULTIPLY =
     _is_INT_T_1 & io_instruction_bits_instruction[31:25] == 7'h1;
   assign io_decoded_instruction_bits_FENCE = FENCE;
+  assign io_decoded_instruction_bits_MRET =
+    io_instruction_bits_instruction == 32'h30200073;
   assign io_decoded_instruction_bits_IS_IMM = IS_IMM;
+  assign io_decoded_instruction_bits_ECALL = io_instruction_bits_instruction == 32'h73;
   assign io_decoded_instruction_bits_mem_signed = _GEN_0 | _GEN_1 | _GEN_2;
   assign io_decoded_instruction_bits_memory_type = _is_MEM_T ? 2'h1 : {_is_MEM_T_1, 1'h0};
   assign io_decoded_instruction_bits_access_width =

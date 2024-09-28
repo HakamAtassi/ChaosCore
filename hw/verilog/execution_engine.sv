@@ -36,6 +36,7 @@ module execution_engine(
                 io_flush_bits_is_exception,
                 io_flush_bits_is_fence,
                 io_flush_bits_is_CSR,
+  input  [4:0]  io_flush_bits_exception_cause,
   input  [31:0] io_flush_bits_flushing_PC,
                 io_flush_bits_redirect_PC,
   input         io_partial_commit_valid_0,
@@ -122,7 +123,9 @@ module execution_engine(
                 io_FU_input_0_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_0_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_0_bits_decoded_instruction_FENCE,
+                io_FU_input_0_bits_decoded_instruction_MRET,
                 io_FU_input_0_bits_decoded_instruction_IS_IMM,
+                io_FU_input_0_bits_decoded_instruction_ECALL,
                 io_FU_input_0_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_0_bits_decoded_instruction_memory_type,
                 io_FU_input_0_bits_decoded_instruction_access_width,
@@ -156,7 +159,9 @@ module execution_engine(
                 io_FU_input_1_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_1_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_1_bits_decoded_instruction_FENCE,
+                io_FU_input_1_bits_decoded_instruction_MRET,
                 io_FU_input_1_bits_decoded_instruction_IS_IMM,
+                io_FU_input_1_bits_decoded_instruction_ECALL,
                 io_FU_input_1_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_1_bits_decoded_instruction_memory_type,
                 io_FU_input_1_bits_decoded_instruction_access_width,
@@ -190,7 +195,9 @@ module execution_engine(
                 io_FU_input_2_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_2_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_2_bits_decoded_instruction_FENCE,
+                io_FU_input_2_bits_decoded_instruction_MRET,
                 io_FU_input_2_bits_decoded_instruction_IS_IMM,
+                io_FU_input_2_bits_decoded_instruction_ECALL,
                 io_FU_input_2_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_2_bits_decoded_instruction_memory_type,
                 io_FU_input_2_bits_decoded_instruction_access_width,
@@ -223,7 +230,9 @@ module execution_engine(
                 io_FU_input_3_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_3_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_3_bits_decoded_instruction_FENCE,
+                io_FU_input_3_bits_decoded_instruction_MRET,
                 io_FU_input_3_bits_decoded_instruction_IS_IMM,
+                io_FU_input_3_bits_decoded_instruction_ECALL,
                 io_FU_input_3_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_3_bits_decoded_instruction_memory_type,
                 io_FU_input_3_bits_decoded_instruction_access_width,
@@ -238,6 +247,8 @@ module execution_engine(
   output        io_FU_output_0_bits_branch_taken,
   output [31:0] io_FU_output_0_bits_target_address,
   output        io_FU_output_0_bits_branch_valid,
+                io_FU_output_0_bits_exception,
+  output [4:0]  io_FU_output_0_bits_exception_cause,
   output [31:0] io_FU_output_0_bits_address,
   output [1:0]  io_FU_output_0_bits_memory_type,
                 io_FU_output_0_bits_access_width,
@@ -254,6 +265,8 @@ module execution_engine(
   output        io_FU_output_1_bits_branch_taken,
   output [31:0] io_FU_output_1_bits_target_address,
   output        io_FU_output_1_bits_branch_valid,
+                io_FU_output_1_bits_exception,
+  output [4:0]  io_FU_output_1_bits_exception_cause,
   output [31:0] io_FU_output_1_bits_address,
   output [1:0]  io_FU_output_1_bits_memory_type,
                 io_FU_output_1_bits_access_width,
@@ -270,6 +283,8 @@ module execution_engine(
   output        io_FU_output_2_bits_branch_taken,
   output [31:0] io_FU_output_2_bits_target_address,
   output        io_FU_output_2_bits_branch_valid,
+                io_FU_output_2_bits_exception,
+  output [4:0]  io_FU_output_2_bits_exception_cause,
   output [31:0] io_FU_output_2_bits_address,
   output [1:0]  io_FU_output_2_bits_memory_type,
                 io_FU_output_2_bits_access_width,
@@ -286,6 +301,8 @@ module execution_engine(
   output        io_FU_output_3_bits_branch_taken,
   output [31:0] io_FU_output_3_bits_target_address,
   output        io_FU_output_3_bits_branch_valid,
+                io_FU_output_3_bits_exception,
+  output [4:0]  io_FU_output_3_bits_exception_cause,
   output [31:0] io_FU_output_3_bits_address,
   output [1:0]  io_FU_output_3_bits_memory_type,
                 io_FU_output_3_bits_access_width,
@@ -293,7 +310,9 @@ module execution_engine(
   output [31:0] io_FU_output_3_bits_wr_data,
   output [3:0]  io_FU_output_3_bits_MOB_index,
   output [5:0]  io_FU_output_3_bits_ROB_index,
-  output [1:0]  io_FU_output_3_bits_fetch_packet_index
+  output [1:0]  io_FU_output_3_bits_fetch_packet_index,
+  output [29:0] CSR_port_mtvec_BASE,
+  output [1:0]  CSR_port_mtvec_MODE
 );
 
   FU FUs_0 (
@@ -306,6 +325,8 @@ module execution_engine(
       (io_flush_bits_is_exception),
     .io_flush_bits_is_fence                                    (io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                                      (io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause
+      (io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC
       (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC
@@ -362,8 +383,12 @@ module execution_engine(
       (io_FU_input_0_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_0_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_MRET
+      (io_FU_input_0_bits_decoded_instruction_MRET),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_0_bits_decoded_instruction_IS_IMM),
+    .io_FU_input_bits_decoded_instruction_ECALL
+      (io_FU_input_0_bits_decoded_instruction_ECALL),
     .io_FU_input_bits_decoded_instruction_mem_signed
       (io_FU_input_0_bits_decoded_instruction_mem_signed),
     .io_FU_input_bits_decoded_instruction_memory_type
@@ -390,6 +415,10 @@ module execution_engine(
       (io_FU_output_0_bits_target_address),
     .io_FU_output_bits_branch_valid
       (io_FU_output_0_bits_branch_valid),
+    .io_FU_output_bits_exception
+      (io_FU_output_0_bits_exception),
+    .io_FU_output_bits_exception_cause
+      (io_FU_output_0_bits_exception_cause),
     .io_FU_output_bits_address
       (io_FU_output_0_bits_address),
     .io_FU_output_bits_memory_type
@@ -490,7 +519,10 @@ module execution_engine(
       (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2
       (io_commit_bits_RD_valid_2),
-    .io_commit_bits_RD_valid_3                                 (io_commit_bits_RD_valid_3)
+    .io_commit_bits_RD_valid_3
+      (io_commit_bits_RD_valid_3),
+    .CSR_port_mtvec_BASE                                       (CSR_port_mtvec_BASE),
+    .CSR_port_mtvec_MODE                                       (CSR_port_mtvec_MODE)
   );
   FU_1 FUs_1 (
     .clock                                                     (clock),
@@ -502,6 +534,8 @@ module execution_engine(
       (io_flush_bits_is_exception),
     .io_flush_bits_is_fence                                    (io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                                      (io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause
+      (io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC
       (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC
@@ -558,8 +592,12 @@ module execution_engine(
       (io_FU_input_1_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_1_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_MRET
+      (io_FU_input_1_bits_decoded_instruction_MRET),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_1_bits_decoded_instruction_IS_IMM),
+    .io_FU_input_bits_decoded_instruction_ECALL
+      (io_FU_input_1_bits_decoded_instruction_ECALL),
     .io_FU_input_bits_decoded_instruction_mem_signed
       (io_FU_input_1_bits_decoded_instruction_mem_signed),
     .io_FU_input_bits_decoded_instruction_memory_type
@@ -586,6 +624,10 @@ module execution_engine(
       (io_FU_output_1_bits_target_address),
     .io_FU_output_bits_branch_valid
       (io_FU_output_1_bits_branch_valid),
+    .io_FU_output_bits_exception
+      (io_FU_output_1_bits_exception),
+    .io_FU_output_bits_exception_cause
+      (io_FU_output_1_bits_exception_cause),
     .io_FU_output_bits_address
       (io_FU_output_1_bits_address),
     .io_FU_output_bits_memory_type
@@ -698,6 +740,8 @@ module execution_engine(
       (io_flush_bits_is_exception),
     .io_flush_bits_is_fence                                    (io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                                      (io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause
+      (io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC
       (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC
@@ -754,8 +798,12 @@ module execution_engine(
       (io_FU_input_2_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_2_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_MRET
+      (io_FU_input_2_bits_decoded_instruction_MRET),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_2_bits_decoded_instruction_IS_IMM),
+    .io_FU_input_bits_decoded_instruction_ECALL
+      (io_FU_input_2_bits_decoded_instruction_ECALL),
     .io_FU_input_bits_decoded_instruction_mem_signed
       (io_FU_input_2_bits_decoded_instruction_mem_signed),
     .io_FU_input_bits_decoded_instruction_memory_type
@@ -782,6 +830,10 @@ module execution_engine(
       (io_FU_output_2_bits_target_address),
     .io_FU_output_bits_branch_valid
       (io_FU_output_2_bits_branch_valid),
+    .io_FU_output_bits_exception
+      (io_FU_output_2_bits_exception),
+    .io_FU_output_bits_exception_cause
+      (io_FU_output_2_bits_exception_cause),
     .io_FU_output_bits_address
       (io_FU_output_2_bits_address),
     .io_FU_output_bits_memory_type
@@ -893,6 +945,8 @@ module execution_engine(
       (io_flush_bits_is_exception),
     .io_flush_bits_is_fence                                    (io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                                      (io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause
+      (io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC
       (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC
@@ -949,8 +1003,12 @@ module execution_engine(
       (io_FU_input_3_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_3_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_MRET
+      (io_FU_input_3_bits_decoded_instruction_MRET),
     .io_FU_input_bits_decoded_instruction_IS_IMM
       (io_FU_input_3_bits_decoded_instruction_IS_IMM),
+    .io_FU_input_bits_decoded_instruction_ECALL
+      (io_FU_input_3_bits_decoded_instruction_ECALL),
     .io_FU_input_bits_decoded_instruction_mem_signed
       (io_FU_input_3_bits_decoded_instruction_mem_signed),
     .io_FU_input_bits_decoded_instruction_memory_type
@@ -977,6 +1035,10 @@ module execution_engine(
       (io_FU_output_3_bits_target_address),
     .io_FU_output_bits_branch_valid
       (io_FU_output_3_bits_branch_valid),
+    .io_FU_output_bits_exception
+      (io_FU_output_3_bits_exception),
+    .io_FU_output_bits_exception_cause
+      (io_FU_output_3_bits_exception_cause),
     .io_FU_output_bits_address
       (io_FU_output_3_bits_address),
     .io_FU_output_bits_memory_type

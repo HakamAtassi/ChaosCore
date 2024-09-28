@@ -36,6 +36,7 @@ module backend(
                 io_flush_bits_is_exception,
                 io_flush_bits_is_fence,
                 io_flush_bits_is_CSR,
+  input  [4:0]  io_flush_bits_exception_cause,
   input  [31:0] io_flush_bits_flushing_PC,
                 io_flush_bits_redirect_PC,
   output        io_reserved_pointers_0_valid,
@@ -152,7 +153,9 @@ module backend(
                 io_backend_packet_0_bits_SUBTRACT,
                 io_backend_packet_0_bits_MULTIPLY,
                 io_backend_packet_0_bits_FENCE,
+                io_backend_packet_0_bits_MRET,
                 io_backend_packet_0_bits_IS_IMM,
+                io_backend_packet_0_bits_ECALL,
                 io_backend_packet_0_bits_mem_signed,
   input  [1:0]  io_backend_packet_0_bits_memory_type,
                 io_backend_packet_0_bits_access_width,
@@ -183,7 +186,9 @@ module backend(
                 io_backend_packet_1_bits_SUBTRACT,
                 io_backend_packet_1_bits_MULTIPLY,
                 io_backend_packet_1_bits_FENCE,
+                io_backend_packet_1_bits_MRET,
                 io_backend_packet_1_bits_IS_IMM,
+                io_backend_packet_1_bits_ECALL,
                 io_backend_packet_1_bits_mem_signed,
   input  [1:0]  io_backend_packet_1_bits_memory_type,
                 io_backend_packet_1_bits_access_width,
@@ -214,7 +219,9 @@ module backend(
                 io_backend_packet_2_bits_SUBTRACT,
                 io_backend_packet_2_bits_MULTIPLY,
                 io_backend_packet_2_bits_FENCE,
+                io_backend_packet_2_bits_MRET,
                 io_backend_packet_2_bits_IS_IMM,
+                io_backend_packet_2_bits_ECALL,
                 io_backend_packet_2_bits_mem_signed,
   input  [1:0]  io_backend_packet_2_bits_memory_type,
                 io_backend_packet_2_bits_access_width,
@@ -245,7 +252,9 @@ module backend(
                 io_backend_packet_3_bits_SUBTRACT,
                 io_backend_packet_3_bits_MULTIPLY,
                 io_backend_packet_3_bits_FENCE,
+                io_backend_packet_3_bits_MRET,
                 io_backend_packet_3_bits_IS_IMM,
+                io_backend_packet_3_bits_ECALL,
                 io_backend_packet_3_bits_mem_signed,
   input  [1:0]  io_backend_packet_3_bits_memory_type,
                 io_backend_packet_3_bits_access_width,
@@ -257,6 +266,8 @@ module backend(
   output        io_MOB_output_bits_branch_taken,
   output [31:0] io_MOB_output_bits_target_address,
   output        io_MOB_output_bits_branch_valid,
+                io_MOB_output_bits_exception,
+  output [4:0]  io_MOB_output_bits_exception_cause,
   output [31:0] io_MOB_output_bits_address,
   output [1:0]  io_MOB_output_bits_memory_type,
                 io_MOB_output_bits_access_width,
@@ -273,6 +284,8 @@ module backend(
   output        io_FU_outputs_0_bits_branch_taken,
   output [31:0] io_FU_outputs_0_bits_target_address,
   output        io_FU_outputs_0_bits_branch_valid,
+                io_FU_outputs_0_bits_exception,
+  output [4:0]  io_FU_outputs_0_bits_exception_cause,
   output [31:0] io_FU_outputs_0_bits_address,
   output [1:0]  io_FU_outputs_0_bits_memory_type,
                 io_FU_outputs_0_bits_access_width,
@@ -289,6 +302,8 @@ module backend(
   output        io_FU_outputs_1_bits_branch_taken,
   output [31:0] io_FU_outputs_1_bits_target_address,
   output        io_FU_outputs_1_bits_branch_valid,
+                io_FU_outputs_1_bits_exception,
+  output [4:0]  io_FU_outputs_1_bits_exception_cause,
   output [31:0] io_FU_outputs_1_bits_address,
   output [1:0]  io_FU_outputs_1_bits_memory_type,
                 io_FU_outputs_1_bits_access_width,
@@ -305,6 +320,8 @@ module backend(
   output        io_FU_outputs_2_bits_branch_taken,
   output [31:0] io_FU_outputs_2_bits_target_address,
   output        io_FU_outputs_2_bits_branch_valid,
+                io_FU_outputs_2_bits_exception,
+  output [4:0]  io_FU_outputs_2_bits_exception_cause,
   output [31:0] io_FU_outputs_2_bits_address,
   output [1:0]  io_FU_outputs_2_bits_memory_type,
                 io_FU_outputs_2_bits_access_width,
@@ -321,6 +338,8 @@ module backend(
   output        io_FU_outputs_3_bits_branch_taken,
   output [31:0] io_FU_outputs_3_bits_target_address,
   output        io_FU_outputs_3_bits_branch_valid,
+                io_FU_outputs_3_bits_exception,
+  output [4:0]  io_FU_outputs_3_bits_exception_cause,
   output [31:0] io_FU_outputs_3_bits_address,
   output [1:0]  io_FU_outputs_3_bits_memory_type,
                 io_FU_outputs_3_bits_access_width,
@@ -328,7 +347,9 @@ module backend(
   output [31:0] io_FU_outputs_3_bits_wr_data,
   output [3:0]  io_FU_outputs_3_bits_MOB_index,
   output [5:0]  io_FU_outputs_3_bits_ROB_index,
-  output [1:0]  io_FU_outputs_3_bits_fetch_packet_index
+  output [1:0]  io_FU_outputs_3_bits_fetch_packet_index,
+  output [29:0] CSR_port_mtvec_BASE,
+  output [1:0]  CSR_port_mtvec_MODE
 );
 
   wire        _execution_engine_io_FU_input_0_ready;
@@ -342,6 +363,8 @@ module backend(
   wire        _execution_engine_io_FU_output_0_bits_branch_taken;
   wire [31:0] _execution_engine_io_FU_output_0_bits_target_address;
   wire        _execution_engine_io_FU_output_0_bits_branch_valid;
+  wire        _execution_engine_io_FU_output_0_bits_exception;
+  wire [4:0]  _execution_engine_io_FU_output_0_bits_exception_cause;
   wire [31:0] _execution_engine_io_FU_output_0_bits_address;
   wire [1:0]  _execution_engine_io_FU_output_0_bits_memory_type;
   wire [1:0]  _execution_engine_io_FU_output_0_bits_access_width;
@@ -358,6 +381,8 @@ module backend(
   wire        _execution_engine_io_FU_output_1_bits_branch_taken;
   wire [31:0] _execution_engine_io_FU_output_1_bits_target_address;
   wire        _execution_engine_io_FU_output_1_bits_branch_valid;
+  wire        _execution_engine_io_FU_output_1_bits_exception;
+  wire [4:0]  _execution_engine_io_FU_output_1_bits_exception_cause;
   wire [31:0] _execution_engine_io_FU_output_1_bits_address;
   wire [1:0]  _execution_engine_io_FU_output_1_bits_memory_type;
   wire [1:0]  _execution_engine_io_FU_output_1_bits_access_width;
@@ -374,6 +399,8 @@ module backend(
   wire        _execution_engine_io_FU_output_2_bits_branch_taken;
   wire [31:0] _execution_engine_io_FU_output_2_bits_target_address;
   wire        _execution_engine_io_FU_output_2_bits_branch_valid;
+  wire        _execution_engine_io_FU_output_2_bits_exception;
+  wire [4:0]  _execution_engine_io_FU_output_2_bits_exception_cause;
   wire [31:0] _execution_engine_io_FU_output_2_bits_address;
   wire [1:0]  _execution_engine_io_FU_output_2_bits_memory_type;
   wire [1:0]  _execution_engine_io_FU_output_2_bits_access_width;
@@ -390,6 +417,8 @@ module backend(
   wire        _execution_engine_io_FU_output_3_bits_branch_taken;
   wire [31:0] _execution_engine_io_FU_output_3_bits_target_address;
   wire        _execution_engine_io_FU_output_3_bits_branch_valid;
+  wire        _execution_engine_io_FU_output_3_bits_exception;
+  wire [4:0]  _execution_engine_io_FU_output_3_bits_exception_cause;
   wire [31:0] _execution_engine_io_FU_output_3_bits_address;
   wire [1:0]  _execution_engine_io_FU_output_3_bits_memory_type;
   wire [1:0]  _execution_engine_io_FU_output_3_bits_access_width;
@@ -422,6 +451,8 @@ module backend(
   wire        _MOB_io_MOB_output_bits_branch_taken;
   wire [31:0] _MOB_io_MOB_output_bits_target_address;
   wire        _MOB_io_MOB_output_bits_branch_valid;
+  wire        _MOB_io_MOB_output_bits_exception;
+  wire [4:0]  _MOB_io_MOB_output_bits_exception_cause;
   wire [31:0] _MOB_io_MOB_output_bits_address;
   wire [1:0]  _MOB_io_MOB_output_bits_memory_type;
   wire [1:0]  _MOB_io_MOB_output_bits_access_width;
@@ -460,7 +491,9 @@ module backend(
   wire        _MEM_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _MEM_RS_io_RF_inputs_0_bits_MULTIPLY;
   wire        _MEM_RS_io_RF_inputs_0_bits_FENCE;
+  wire        _MEM_RS_io_RF_inputs_0_bits_MRET;
   wire        _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
+  wire        _MEM_RS_io_RF_inputs_0_bits_ECALL;
   wire        _MEM_RS_io_RF_inputs_0_bits_mem_signed;
   wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_memory_type;
   wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_access_width;
@@ -494,7 +527,9 @@ module backend(
   wire        _INT_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_0_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_0_bits_FENCE;
+  wire        _INT_RS_io_RF_inputs_0_bits_MRET;
   wire        _INT_RS_io_RF_inputs_0_bits_IS_IMM;
+  wire        _INT_RS_io_RF_inputs_0_bits_ECALL;
   wire        _INT_RS_io_RF_inputs_0_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_access_width;
@@ -524,7 +559,9 @@ module backend(
   wire        _INT_RS_io_RF_inputs_1_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_1_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_1_bits_FENCE;
+  wire        _INT_RS_io_RF_inputs_1_bits_MRET;
   wire        _INT_RS_io_RF_inputs_1_bits_IS_IMM;
+  wire        _INT_RS_io_RF_inputs_1_bits_ECALL;
   wire        _INT_RS_io_RF_inputs_1_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_access_width;
@@ -554,7 +591,9 @@ module backend(
   wire        _INT_RS_io_RF_inputs_2_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_2_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_2_bits_FENCE;
+  wire        _INT_RS_io_RF_inputs_2_bits_MRET;
   wire        _INT_RS_io_RF_inputs_2_bits_IS_IMM;
+  wire        _INT_RS_io_RF_inputs_2_bits_ECALL;
   wire        _INT_RS_io_RF_inputs_2_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_access_width;
@@ -594,7 +633,9 @@ module backend(
   reg         read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_0_decoded_instruction_REG_FENCE;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_MRET;
   reg         read_decoded_instructions_0_decoded_instruction_REG_IS_IMM;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_ECALL;
   reg         read_decoded_instructions_0_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_access_width;
@@ -624,7 +665,9 @@ module backend(
   reg         read_decoded_instructions_1_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_1_decoded_instruction_REG_FENCE;
+  reg         read_decoded_instructions_1_decoded_instruction_REG_MRET;
   reg         read_decoded_instructions_1_decoded_instruction_REG_IS_IMM;
+  reg         read_decoded_instructions_1_decoded_instruction_REG_ECALL;
   reg         read_decoded_instructions_1_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_access_width;
@@ -654,7 +697,9 @@ module backend(
   reg         read_decoded_instructions_2_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_2_decoded_instruction_REG_FENCE;
+  reg         read_decoded_instructions_2_decoded_instruction_REG_MRET;
   reg         read_decoded_instructions_2_decoded_instruction_REG_IS_IMM;
+  reg         read_decoded_instructions_2_decoded_instruction_REG_ECALL;
   reg         read_decoded_instructions_2_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_access_width;
@@ -684,7 +729,9 @@ module backend(
   reg         read_decoded_instructions_3_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_3_decoded_instruction_REG_FENCE;
+  reg         read_decoded_instructions_3_decoded_instruction_REG_MRET;
   reg         read_decoded_instructions_3_decoded_instruction_REG_IS_IMM;
+  reg         read_decoded_instructions_3_decoded_instruction_REG_ECALL;
   reg         read_decoded_instructions_3_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_access_width;
@@ -740,8 +787,12 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_MULTIPLY;
     read_decoded_instructions_0_decoded_instruction_REG_FENCE <=
       _INT_RS_io_RF_inputs_0_bits_FENCE;
+    read_decoded_instructions_0_decoded_instruction_REG_MRET <=
+      _INT_RS_io_RF_inputs_0_bits_MRET;
     read_decoded_instructions_0_decoded_instruction_REG_IS_IMM <=
       _INT_RS_io_RF_inputs_0_bits_IS_IMM;
+    read_decoded_instructions_0_decoded_instruction_REG_ECALL <=
+      _INT_RS_io_RF_inputs_0_bits_ECALL;
     read_decoded_instructions_0_decoded_instruction_REG_mem_signed <=
       _INT_RS_io_RF_inputs_0_bits_mem_signed;
     read_decoded_instructions_0_decoded_instruction_REG_memory_type <=
@@ -799,8 +850,12 @@ module backend(
       _INT_RS_io_RF_inputs_1_bits_MULTIPLY;
     read_decoded_instructions_1_decoded_instruction_REG_FENCE <=
       _INT_RS_io_RF_inputs_1_bits_FENCE;
+    read_decoded_instructions_1_decoded_instruction_REG_MRET <=
+      _INT_RS_io_RF_inputs_1_bits_MRET;
     read_decoded_instructions_1_decoded_instruction_REG_IS_IMM <=
       _INT_RS_io_RF_inputs_1_bits_IS_IMM;
+    read_decoded_instructions_1_decoded_instruction_REG_ECALL <=
+      _INT_RS_io_RF_inputs_1_bits_ECALL;
     read_decoded_instructions_1_decoded_instruction_REG_mem_signed <=
       _INT_RS_io_RF_inputs_1_bits_mem_signed;
     read_decoded_instructions_1_decoded_instruction_REG_memory_type <=
@@ -858,8 +913,12 @@ module backend(
       _INT_RS_io_RF_inputs_2_bits_MULTIPLY;
     read_decoded_instructions_2_decoded_instruction_REG_FENCE <=
       _INT_RS_io_RF_inputs_2_bits_FENCE;
+    read_decoded_instructions_2_decoded_instruction_REG_MRET <=
+      _INT_RS_io_RF_inputs_2_bits_MRET;
     read_decoded_instructions_2_decoded_instruction_REG_IS_IMM <=
       _INT_RS_io_RF_inputs_2_bits_IS_IMM;
+    read_decoded_instructions_2_decoded_instruction_REG_ECALL <=
+      _INT_RS_io_RF_inputs_2_bits_ECALL;
     read_decoded_instructions_2_decoded_instruction_REG_mem_signed <=
       _INT_RS_io_RF_inputs_2_bits_mem_signed;
     read_decoded_instructions_2_decoded_instruction_REG_memory_type <=
@@ -917,8 +976,12 @@ module backend(
       _MEM_RS_io_RF_inputs_0_bits_MULTIPLY;
     read_decoded_instructions_3_decoded_instruction_REG_FENCE <=
       _MEM_RS_io_RF_inputs_0_bits_FENCE;
+    read_decoded_instructions_3_decoded_instruction_REG_MRET <=
+      _MEM_RS_io_RF_inputs_0_bits_MRET;
     read_decoded_instructions_3_decoded_instruction_REG_IS_IMM <=
       _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
+    read_decoded_instructions_3_decoded_instruction_REG_ECALL <=
+      _MEM_RS_io_RF_inputs_0_bits_ECALL;
     read_decoded_instructions_3_decoded_instruction_REG_mem_signed <=
       _MEM_RS_io_RF_inputs_0_bits_mem_signed;
     read_decoded_instructions_3_decoded_instruction_REG_memory_type <=
@@ -935,6 +998,7 @@ module backend(
     .io_flush_bits_is_exception                    (io_flush_bits_is_exception),
     .io_flush_bits_is_fence                        (io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                          (io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause                 (io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC                     (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC                     (io_flush_bits_redirect_PC),
     .io_backend_packet_0_ready                     (_INT_RS_io_backend_packet_0_ready),
@@ -971,7 +1035,9 @@ module backend(
     .io_backend_packet_0_bits_SUBTRACT             (io_backend_packet_0_bits_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY             (io_backend_packet_0_bits_MULTIPLY),
     .io_backend_packet_0_bits_FENCE                (io_backend_packet_0_bits_FENCE),
+    .io_backend_packet_0_bits_MRET                 (io_backend_packet_0_bits_MRET),
     .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
+    .io_backend_packet_0_bits_ECALL                (io_backend_packet_0_bits_ECALL),
     .io_backend_packet_0_bits_mem_signed           (io_backend_packet_0_bits_mem_signed),
     .io_backend_packet_0_bits_memory_type          (io_backend_packet_0_bits_memory_type),
     .io_backend_packet_0_bits_access_width
@@ -1010,7 +1076,9 @@ module backend(
     .io_backend_packet_1_bits_SUBTRACT             (io_backend_packet_1_bits_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY             (io_backend_packet_1_bits_MULTIPLY),
     .io_backend_packet_1_bits_FENCE                (io_backend_packet_1_bits_FENCE),
+    .io_backend_packet_1_bits_MRET                 (io_backend_packet_1_bits_MRET),
     .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
+    .io_backend_packet_1_bits_ECALL                (io_backend_packet_1_bits_ECALL),
     .io_backend_packet_1_bits_mem_signed           (io_backend_packet_1_bits_mem_signed),
     .io_backend_packet_1_bits_memory_type          (io_backend_packet_1_bits_memory_type),
     .io_backend_packet_1_bits_access_width
@@ -1049,7 +1117,9 @@ module backend(
     .io_backend_packet_2_bits_SUBTRACT             (io_backend_packet_2_bits_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY             (io_backend_packet_2_bits_MULTIPLY),
     .io_backend_packet_2_bits_FENCE                (io_backend_packet_2_bits_FENCE),
+    .io_backend_packet_2_bits_MRET                 (io_backend_packet_2_bits_MRET),
     .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
+    .io_backend_packet_2_bits_ECALL                (io_backend_packet_2_bits_ECALL),
     .io_backend_packet_2_bits_mem_signed           (io_backend_packet_2_bits_mem_signed),
     .io_backend_packet_2_bits_memory_type          (io_backend_packet_2_bits_memory_type),
     .io_backend_packet_2_bits_access_width
@@ -1088,7 +1158,9 @@ module backend(
     .io_backend_packet_3_bits_SUBTRACT             (io_backend_packet_3_bits_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY             (io_backend_packet_3_bits_MULTIPLY),
     .io_backend_packet_3_bits_FENCE                (io_backend_packet_3_bits_FENCE),
+    .io_backend_packet_3_bits_MRET                 (io_backend_packet_3_bits_MRET),
     .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
+    .io_backend_packet_3_bits_ECALL                (io_backend_packet_3_bits_ECALL),
     .io_backend_packet_3_bits_mem_signed           (io_backend_packet_3_bits_mem_signed),
     .io_backend_packet_3_bits_memory_type          (io_backend_packet_3_bits_memory_type),
     .io_backend_packet_3_bits_access_width
@@ -1109,6 +1181,10 @@ module backend(
       (_execution_engine_io_FU_output_0_bits_target_address),
     .io_FU_outputs_0_bits_branch_valid
       (_execution_engine_io_FU_output_0_bits_branch_valid),
+    .io_FU_outputs_0_bits_exception
+      (_execution_engine_io_FU_output_0_bits_exception),
+    .io_FU_outputs_0_bits_exception_cause
+      (_execution_engine_io_FU_output_0_bits_exception_cause),
     .io_FU_outputs_0_bits_address
       (_execution_engine_io_FU_output_0_bits_address),
     .io_FU_outputs_0_bits_memory_type
@@ -1141,6 +1217,10 @@ module backend(
       (_execution_engine_io_FU_output_1_bits_target_address),
     .io_FU_outputs_1_bits_branch_valid
       (_execution_engine_io_FU_output_1_bits_branch_valid),
+    .io_FU_outputs_1_bits_exception
+      (_execution_engine_io_FU_output_1_bits_exception),
+    .io_FU_outputs_1_bits_exception_cause
+      (_execution_engine_io_FU_output_1_bits_exception_cause),
     .io_FU_outputs_1_bits_address
       (_execution_engine_io_FU_output_1_bits_address),
     .io_FU_outputs_1_bits_memory_type
@@ -1173,6 +1253,10 @@ module backend(
       (_execution_engine_io_FU_output_2_bits_target_address),
     .io_FU_outputs_2_bits_branch_valid
       (_execution_engine_io_FU_output_2_bits_branch_valid),
+    .io_FU_outputs_2_bits_exception
+      (_execution_engine_io_FU_output_2_bits_exception),
+    .io_FU_outputs_2_bits_exception_cause
+      (_execution_engine_io_FU_output_2_bits_exception_cause),
     .io_FU_outputs_2_bits_address
       (_execution_engine_io_FU_output_2_bits_address),
     .io_FU_outputs_2_bits_memory_type
@@ -1198,6 +1282,9 @@ module backend(
     .io_FU_outputs_3_bits_target_address
       (_MOB_io_MOB_output_bits_target_address),
     .io_FU_outputs_3_bits_branch_valid             (_MOB_io_MOB_output_bits_branch_valid),
+    .io_FU_outputs_3_bits_exception                (_MOB_io_MOB_output_bits_exception),
+    .io_FU_outputs_3_bits_exception_cause
+      (_MOB_io_MOB_output_bits_exception_cause),
     .io_FU_outputs_3_bits_address                  (_MOB_io_MOB_output_bits_address),
     .io_FU_outputs_3_bits_memory_type              (_MOB_io_MOB_output_bits_memory_type),
     .io_FU_outputs_3_bits_access_width             (_MOB_io_MOB_output_bits_access_width),
@@ -1247,7 +1334,9 @@ module backend(
     .io_RF_inputs_0_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_0_bits_SUBTRACT),
     .io_RF_inputs_0_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_0_bits_MULTIPLY),
     .io_RF_inputs_0_bits_FENCE                     (_INT_RS_io_RF_inputs_0_bits_FENCE),
+    .io_RF_inputs_0_bits_MRET                      (_INT_RS_io_RF_inputs_0_bits_MRET),
     .io_RF_inputs_0_bits_IS_IMM                    (_INT_RS_io_RF_inputs_0_bits_IS_IMM),
+    .io_RF_inputs_0_bits_ECALL                     (_INT_RS_io_RF_inputs_0_bits_ECALL),
     .io_RF_inputs_0_bits_mem_signed
       (_INT_RS_io_RF_inputs_0_bits_mem_signed),
     .io_RF_inputs_0_bits_memory_type
@@ -1294,7 +1383,9 @@ module backend(
     .io_RF_inputs_1_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_1_bits_SUBTRACT),
     .io_RF_inputs_1_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_1_bits_MULTIPLY),
     .io_RF_inputs_1_bits_FENCE                     (_INT_RS_io_RF_inputs_1_bits_FENCE),
+    .io_RF_inputs_1_bits_MRET                      (_INT_RS_io_RF_inputs_1_bits_MRET),
     .io_RF_inputs_1_bits_IS_IMM                    (_INT_RS_io_RF_inputs_1_bits_IS_IMM),
+    .io_RF_inputs_1_bits_ECALL                     (_INT_RS_io_RF_inputs_1_bits_ECALL),
     .io_RF_inputs_1_bits_mem_signed
       (_INT_RS_io_RF_inputs_1_bits_mem_signed),
     .io_RF_inputs_1_bits_memory_type
@@ -1341,7 +1432,9 @@ module backend(
     .io_RF_inputs_2_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_2_bits_SUBTRACT),
     .io_RF_inputs_2_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_2_bits_MULTIPLY),
     .io_RF_inputs_2_bits_FENCE                     (_INT_RS_io_RF_inputs_2_bits_FENCE),
+    .io_RF_inputs_2_bits_MRET                      (_INT_RS_io_RF_inputs_2_bits_MRET),
     .io_RF_inputs_2_bits_IS_IMM                    (_INT_RS_io_RF_inputs_2_bits_IS_IMM),
+    .io_RF_inputs_2_bits_ECALL                     (_INT_RS_io_RF_inputs_2_bits_ECALL),
     .io_RF_inputs_2_bits_mem_signed
       (_INT_RS_io_RF_inputs_2_bits_mem_signed),
     .io_RF_inputs_2_bits_memory_type
@@ -1357,6 +1450,7 @@ module backend(
     .io_flush_bits_is_exception                    (io_flush_bits_is_exception),
     .io_flush_bits_is_fence                        (io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                          (io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause                 (io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC                     (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC                     (io_flush_bits_redirect_PC),
     .io_backend_packet_0_ready                     (_MEM_RS_io_backend_packet_0_ready),
@@ -1393,7 +1487,9 @@ module backend(
     .io_backend_packet_0_bits_SUBTRACT             (io_backend_packet_0_bits_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY             (io_backend_packet_0_bits_MULTIPLY),
     .io_backend_packet_0_bits_FENCE                (io_backend_packet_0_bits_FENCE),
+    .io_backend_packet_0_bits_MRET                 (io_backend_packet_0_bits_MRET),
     .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
+    .io_backend_packet_0_bits_ECALL                (io_backend_packet_0_bits_ECALL),
     .io_backend_packet_0_bits_mem_signed           (io_backend_packet_0_bits_mem_signed),
     .io_backend_packet_0_bits_memory_type          (io_backend_packet_0_bits_memory_type),
     .io_backend_packet_0_bits_access_width
@@ -1432,7 +1528,9 @@ module backend(
     .io_backend_packet_1_bits_SUBTRACT             (io_backend_packet_1_bits_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY             (io_backend_packet_1_bits_MULTIPLY),
     .io_backend_packet_1_bits_FENCE                (io_backend_packet_1_bits_FENCE),
+    .io_backend_packet_1_bits_MRET                 (io_backend_packet_1_bits_MRET),
     .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
+    .io_backend_packet_1_bits_ECALL                (io_backend_packet_1_bits_ECALL),
     .io_backend_packet_1_bits_mem_signed           (io_backend_packet_1_bits_mem_signed),
     .io_backend_packet_1_bits_memory_type          (io_backend_packet_1_bits_memory_type),
     .io_backend_packet_1_bits_access_width
@@ -1471,7 +1569,9 @@ module backend(
     .io_backend_packet_2_bits_SUBTRACT             (io_backend_packet_2_bits_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY             (io_backend_packet_2_bits_MULTIPLY),
     .io_backend_packet_2_bits_FENCE                (io_backend_packet_2_bits_FENCE),
+    .io_backend_packet_2_bits_MRET                 (io_backend_packet_2_bits_MRET),
     .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
+    .io_backend_packet_2_bits_ECALL                (io_backend_packet_2_bits_ECALL),
     .io_backend_packet_2_bits_mem_signed           (io_backend_packet_2_bits_mem_signed),
     .io_backend_packet_2_bits_memory_type          (io_backend_packet_2_bits_memory_type),
     .io_backend_packet_2_bits_access_width
@@ -1510,7 +1610,9 @@ module backend(
     .io_backend_packet_3_bits_SUBTRACT             (io_backend_packet_3_bits_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY             (io_backend_packet_3_bits_MULTIPLY),
     .io_backend_packet_3_bits_FENCE                (io_backend_packet_3_bits_FENCE),
+    .io_backend_packet_3_bits_MRET                 (io_backend_packet_3_bits_MRET),
     .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
+    .io_backend_packet_3_bits_ECALL                (io_backend_packet_3_bits_ECALL),
     .io_backend_packet_3_bits_mem_signed           (io_backend_packet_3_bits_mem_signed),
     .io_backend_packet_3_bits_memory_type          (io_backend_packet_3_bits_memory_type),
     .io_backend_packet_3_bits_access_width
@@ -1531,6 +1633,10 @@ module backend(
       (_execution_engine_io_FU_output_0_bits_target_address),
     .io_FU_outputs_0_bits_branch_valid
       (_execution_engine_io_FU_output_0_bits_branch_valid),
+    .io_FU_outputs_0_bits_exception
+      (_execution_engine_io_FU_output_0_bits_exception),
+    .io_FU_outputs_0_bits_exception_cause
+      (_execution_engine_io_FU_output_0_bits_exception_cause),
     .io_FU_outputs_0_bits_address
       (_execution_engine_io_FU_output_0_bits_address),
     .io_FU_outputs_0_bits_memory_type
@@ -1563,6 +1669,10 @@ module backend(
       (_execution_engine_io_FU_output_1_bits_target_address),
     .io_FU_outputs_1_bits_branch_valid
       (_execution_engine_io_FU_output_1_bits_branch_valid),
+    .io_FU_outputs_1_bits_exception
+      (_execution_engine_io_FU_output_1_bits_exception),
+    .io_FU_outputs_1_bits_exception_cause
+      (_execution_engine_io_FU_output_1_bits_exception_cause),
     .io_FU_outputs_1_bits_address
       (_execution_engine_io_FU_output_1_bits_address),
     .io_FU_outputs_1_bits_memory_type
@@ -1595,6 +1705,10 @@ module backend(
       (_execution_engine_io_FU_output_2_bits_target_address),
     .io_FU_outputs_2_bits_branch_valid
       (_execution_engine_io_FU_output_2_bits_branch_valid),
+    .io_FU_outputs_2_bits_exception
+      (_execution_engine_io_FU_output_2_bits_exception),
+    .io_FU_outputs_2_bits_exception_cause
+      (_execution_engine_io_FU_output_2_bits_exception_cause),
     .io_FU_outputs_2_bits_address
       (_execution_engine_io_FU_output_2_bits_address),
     .io_FU_outputs_2_bits_memory_type
@@ -1620,6 +1734,9 @@ module backend(
     .io_FU_outputs_3_bits_target_address
       (_MOB_io_MOB_output_bits_target_address),
     .io_FU_outputs_3_bits_branch_valid             (_MOB_io_MOB_output_bits_branch_valid),
+    .io_FU_outputs_3_bits_exception                (_MOB_io_MOB_output_bits_exception),
+    .io_FU_outputs_3_bits_exception_cause
+      (_MOB_io_MOB_output_bits_exception_cause),
     .io_FU_outputs_3_bits_address                  (_MOB_io_MOB_output_bits_address),
     .io_FU_outputs_3_bits_memory_type              (_MOB_io_MOB_output_bits_memory_type),
     .io_FU_outputs_3_bits_access_width             (_MOB_io_MOB_output_bits_access_width),
@@ -1669,7 +1786,9 @@ module backend(
     .io_RF_inputs_0_bits_SUBTRACT                  (_MEM_RS_io_RF_inputs_0_bits_SUBTRACT),
     .io_RF_inputs_0_bits_MULTIPLY                  (_MEM_RS_io_RF_inputs_0_bits_MULTIPLY),
     .io_RF_inputs_0_bits_FENCE                     (_MEM_RS_io_RF_inputs_0_bits_FENCE),
+    .io_RF_inputs_0_bits_MRET                      (_MEM_RS_io_RF_inputs_0_bits_MRET),
     .io_RF_inputs_0_bits_IS_IMM                    (_MEM_RS_io_RF_inputs_0_bits_IS_IMM),
+    .io_RF_inputs_0_bits_ECALL                     (_MEM_RS_io_RF_inputs_0_bits_ECALL),
     .io_RF_inputs_0_bits_mem_signed
       (_MEM_RS_io_RF_inputs_0_bits_mem_signed),
     .io_RF_inputs_0_bits_memory_type
@@ -1685,6 +1804,7 @@ module backend(
     .io_flush_bits_is_exception                         (io_flush_bits_is_exception),
     .io_flush_bits_is_fence                             (io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                               (io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause                      (io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC                          (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC                          (io_flush_bits_redirect_PC),
     .io_reserve_0_ready                                 (_MOB_io_reserve_0_ready),
@@ -1731,7 +1851,9 @@ module backend(
     .io_reserve_0_bits_MULTIPLY
       (io_backend_packet_0_bits_MULTIPLY),
     .io_reserve_0_bits_FENCE                            (io_backend_packet_0_bits_FENCE),
+    .io_reserve_0_bits_MRET                             (io_backend_packet_0_bits_MRET),
     .io_reserve_0_bits_IS_IMM                           (io_backend_packet_0_bits_IS_IMM),
+    .io_reserve_0_bits_ECALL                            (io_backend_packet_0_bits_ECALL),
     .io_reserve_0_bits_mem_signed
       (io_backend_packet_0_bits_mem_signed),
     .io_reserve_0_bits_memory_type
@@ -1782,7 +1904,9 @@ module backend(
     .io_reserve_1_bits_MULTIPLY
       (io_backend_packet_1_bits_MULTIPLY),
     .io_reserve_1_bits_FENCE                            (io_backend_packet_1_bits_FENCE),
+    .io_reserve_1_bits_MRET                             (io_backend_packet_1_bits_MRET),
     .io_reserve_1_bits_IS_IMM                           (io_backend_packet_1_bits_IS_IMM),
+    .io_reserve_1_bits_ECALL                            (io_backend_packet_1_bits_ECALL),
     .io_reserve_1_bits_mem_signed
       (io_backend_packet_1_bits_mem_signed),
     .io_reserve_1_bits_memory_type
@@ -1833,7 +1957,9 @@ module backend(
     .io_reserve_2_bits_MULTIPLY
       (io_backend_packet_2_bits_MULTIPLY),
     .io_reserve_2_bits_FENCE                            (io_backend_packet_2_bits_FENCE),
+    .io_reserve_2_bits_MRET                             (io_backend_packet_2_bits_MRET),
     .io_reserve_2_bits_IS_IMM                           (io_backend_packet_2_bits_IS_IMM),
+    .io_reserve_2_bits_ECALL                            (io_backend_packet_2_bits_ECALL),
     .io_reserve_2_bits_mem_signed
       (io_backend_packet_2_bits_mem_signed),
     .io_reserve_2_bits_memory_type
@@ -1884,7 +2010,9 @@ module backend(
     .io_reserve_3_bits_MULTIPLY
       (io_backend_packet_3_bits_MULTIPLY),
     .io_reserve_3_bits_FENCE                            (io_backend_packet_3_bits_FENCE),
+    .io_reserve_3_bits_MRET                             (io_backend_packet_3_bits_MRET),
     .io_reserve_3_bits_IS_IMM                           (io_backend_packet_3_bits_IS_IMM),
+    .io_reserve_3_bits_ECALL                            (io_backend_packet_3_bits_ECALL),
     .io_reserve_3_bits_mem_signed
       (io_backend_packet_3_bits_mem_signed),
     .io_reserve_3_bits_memory_type
@@ -1920,6 +2048,10 @@ module backend(
       (_execution_engine_io_FU_output_3_bits_target_address),
     .io_AGU_output_bits_branch_valid
       (_execution_engine_io_FU_output_3_bits_branch_valid),
+    .io_AGU_output_bits_exception
+      (_execution_engine_io_FU_output_3_bits_exception),
+    .io_AGU_output_bits_exception_cause
+      (_execution_engine_io_FU_output_3_bits_exception_cause),
     .io_AGU_output_bits_address
       (_execution_engine_io_FU_output_3_bits_address),
     .io_AGU_output_bits_memory_type
@@ -1949,6 +2081,10 @@ module backend(
       (_MOB_io_MOB_output_bits_target_address),
     .io_MOB_output_bits_branch_valid
       (_MOB_io_MOB_output_bits_branch_valid),
+    .io_MOB_output_bits_exception
+      (_MOB_io_MOB_output_bits_exception),
+    .io_MOB_output_bits_exception_cause
+      (_MOB_io_MOB_output_bits_exception_cause),
     .io_MOB_output_bits_address                         (_MOB_io_MOB_output_bits_address),
     .io_MOB_output_bits_memory_type
       (_MOB_io_MOB_output_bits_memory_type),
@@ -2106,6 +2242,8 @@ module backend(
       (io_flush_bits_is_exception),
     .io_flush_bits_is_fence                                      (io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                                        (io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause
+      (io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC
       (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC
@@ -2260,8 +2398,12 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_0_bits_decoded_instruction_FENCE
       (read_decoded_instructions_0_decoded_instruction_REG_FENCE),
+    .io_FU_input_0_bits_decoded_instruction_MRET
+      (read_decoded_instructions_0_decoded_instruction_REG_MRET),
     .io_FU_input_0_bits_decoded_instruction_IS_IMM
       (read_decoded_instructions_0_decoded_instruction_REG_IS_IMM),
+    .io_FU_input_0_bits_decoded_instruction_ECALL
+      (read_decoded_instructions_0_decoded_instruction_REG_ECALL),
     .io_FU_input_0_bits_decoded_instruction_mem_signed
       (read_decoded_instructions_0_decoded_instruction_REG_mem_signed),
     .io_FU_input_0_bits_decoded_instruction_memory_type
@@ -2325,8 +2467,12 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_1_bits_decoded_instruction_FENCE
       (read_decoded_instructions_1_decoded_instruction_REG_FENCE),
+    .io_FU_input_1_bits_decoded_instruction_MRET
+      (read_decoded_instructions_1_decoded_instruction_REG_MRET),
     .io_FU_input_1_bits_decoded_instruction_IS_IMM
       (read_decoded_instructions_1_decoded_instruction_REG_IS_IMM),
+    .io_FU_input_1_bits_decoded_instruction_ECALL
+      (read_decoded_instructions_1_decoded_instruction_REG_ECALL),
     .io_FU_input_1_bits_decoded_instruction_mem_signed
       (read_decoded_instructions_1_decoded_instruction_REG_mem_signed),
     .io_FU_input_1_bits_decoded_instruction_memory_type
@@ -2390,8 +2536,12 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_2_bits_decoded_instruction_FENCE
       (read_decoded_instructions_2_decoded_instruction_REG_FENCE),
+    .io_FU_input_2_bits_decoded_instruction_MRET
+      (read_decoded_instructions_2_decoded_instruction_REG_MRET),
     .io_FU_input_2_bits_decoded_instruction_IS_IMM
       (read_decoded_instructions_2_decoded_instruction_REG_IS_IMM),
+    .io_FU_input_2_bits_decoded_instruction_ECALL
+      (read_decoded_instructions_2_decoded_instruction_REG_ECALL),
     .io_FU_input_2_bits_decoded_instruction_mem_signed
       (read_decoded_instructions_2_decoded_instruction_REG_mem_signed),
     .io_FU_input_2_bits_decoded_instruction_memory_type
@@ -2453,8 +2603,12 @@ module backend(
       (read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_3_bits_decoded_instruction_FENCE
       (read_decoded_instructions_3_decoded_instruction_REG_FENCE),
+    .io_FU_input_3_bits_decoded_instruction_MRET
+      (read_decoded_instructions_3_decoded_instruction_REG_MRET),
     .io_FU_input_3_bits_decoded_instruction_IS_IMM
       (read_decoded_instructions_3_decoded_instruction_REG_IS_IMM),
+    .io_FU_input_3_bits_decoded_instruction_ECALL
+      (read_decoded_instructions_3_decoded_instruction_REG_ECALL),
     .io_FU_input_3_bits_decoded_instruction_mem_signed
       (read_decoded_instructions_3_decoded_instruction_REG_mem_signed),
     .io_FU_input_3_bits_decoded_instruction_memory_type
@@ -2480,6 +2634,10 @@ module backend(
       (_execution_engine_io_FU_output_0_bits_target_address),
     .io_FU_output_0_bits_branch_valid
       (_execution_engine_io_FU_output_0_bits_branch_valid),
+    .io_FU_output_0_bits_exception
+      (_execution_engine_io_FU_output_0_bits_exception),
+    .io_FU_output_0_bits_exception_cause
+      (_execution_engine_io_FU_output_0_bits_exception_cause),
     .io_FU_output_0_bits_address
       (_execution_engine_io_FU_output_0_bits_address),
     .io_FU_output_0_bits_memory_type
@@ -2512,6 +2670,10 @@ module backend(
       (_execution_engine_io_FU_output_1_bits_target_address),
     .io_FU_output_1_bits_branch_valid
       (_execution_engine_io_FU_output_1_bits_branch_valid),
+    .io_FU_output_1_bits_exception
+      (_execution_engine_io_FU_output_1_bits_exception),
+    .io_FU_output_1_bits_exception_cause
+      (_execution_engine_io_FU_output_1_bits_exception_cause),
     .io_FU_output_1_bits_address
       (_execution_engine_io_FU_output_1_bits_address),
     .io_FU_output_1_bits_memory_type
@@ -2544,6 +2706,10 @@ module backend(
       (_execution_engine_io_FU_output_2_bits_target_address),
     .io_FU_output_2_bits_branch_valid
       (_execution_engine_io_FU_output_2_bits_branch_valid),
+    .io_FU_output_2_bits_exception
+      (_execution_engine_io_FU_output_2_bits_exception),
+    .io_FU_output_2_bits_exception_cause
+      (_execution_engine_io_FU_output_2_bits_exception_cause),
     .io_FU_output_2_bits_address
       (_execution_engine_io_FU_output_2_bits_address),
     .io_FU_output_2_bits_memory_type
@@ -2576,6 +2742,10 @@ module backend(
       (_execution_engine_io_FU_output_3_bits_target_address),
     .io_FU_output_3_bits_branch_valid
       (_execution_engine_io_FU_output_3_bits_branch_valid),
+    .io_FU_output_3_bits_exception
+      (_execution_engine_io_FU_output_3_bits_exception),
+    .io_FU_output_3_bits_exception_cause
+      (_execution_engine_io_FU_output_3_bits_exception_cause),
     .io_FU_output_3_bits_address
       (_execution_engine_io_FU_output_3_bits_address),
     .io_FU_output_3_bits_memory_type
@@ -2591,7 +2761,9 @@ module backend(
     .io_FU_output_3_bits_ROB_index
       (_execution_engine_io_FU_output_3_bits_ROB_index),
     .io_FU_output_3_bits_fetch_packet_index
-      (_execution_engine_io_FU_output_3_bits_fetch_packet_index)
+      (_execution_engine_io_FU_output_3_bits_fetch_packet_index),
+    .CSR_port_mtvec_BASE                                         (CSR_port_mtvec_BASE),
+    .CSR_port_mtvec_MODE                                         (CSR_port_mtvec_MODE)
   );
   assign io_reserved_pointers_0_bits = _MOB_io_reserved_pointers_0_bits;
   assign io_reserved_pointers_1_bits = _MOB_io_reserved_pointers_1_bits;
@@ -2610,6 +2782,8 @@ module backend(
   assign io_MOB_output_bits_branch_taken = _MOB_io_MOB_output_bits_branch_taken;
   assign io_MOB_output_bits_target_address = _MOB_io_MOB_output_bits_target_address;
   assign io_MOB_output_bits_branch_valid = _MOB_io_MOB_output_bits_branch_valid;
+  assign io_MOB_output_bits_exception = _MOB_io_MOB_output_bits_exception;
+  assign io_MOB_output_bits_exception_cause = _MOB_io_MOB_output_bits_exception_cause;
   assign io_MOB_output_bits_address = _MOB_io_MOB_output_bits_address;
   assign io_MOB_output_bits_memory_type = _MOB_io_MOB_output_bits_memory_type;
   assign io_MOB_output_bits_access_width = _MOB_io_MOB_output_bits_access_width;
@@ -2630,6 +2804,9 @@ module backend(
     _execution_engine_io_FU_output_0_bits_target_address;
   assign io_FU_outputs_0_bits_branch_valid =
     _execution_engine_io_FU_output_0_bits_branch_valid;
+  assign io_FU_outputs_0_bits_exception = _execution_engine_io_FU_output_0_bits_exception;
+  assign io_FU_outputs_0_bits_exception_cause =
+    _execution_engine_io_FU_output_0_bits_exception_cause;
   assign io_FU_outputs_0_bits_address = _execution_engine_io_FU_output_0_bits_address;
   assign io_FU_outputs_0_bits_memory_type =
     _execution_engine_io_FU_output_0_bits_memory_type;
@@ -2653,6 +2830,9 @@ module backend(
     _execution_engine_io_FU_output_1_bits_target_address;
   assign io_FU_outputs_1_bits_branch_valid =
     _execution_engine_io_FU_output_1_bits_branch_valid;
+  assign io_FU_outputs_1_bits_exception = _execution_engine_io_FU_output_1_bits_exception;
+  assign io_FU_outputs_1_bits_exception_cause =
+    _execution_engine_io_FU_output_1_bits_exception_cause;
   assign io_FU_outputs_1_bits_address = _execution_engine_io_FU_output_1_bits_address;
   assign io_FU_outputs_1_bits_memory_type =
     _execution_engine_io_FU_output_1_bits_memory_type;
@@ -2676,6 +2856,9 @@ module backend(
     _execution_engine_io_FU_output_2_bits_target_address;
   assign io_FU_outputs_2_bits_branch_valid =
     _execution_engine_io_FU_output_2_bits_branch_valid;
+  assign io_FU_outputs_2_bits_exception = _execution_engine_io_FU_output_2_bits_exception;
+  assign io_FU_outputs_2_bits_exception_cause =
+    _execution_engine_io_FU_output_2_bits_exception_cause;
   assign io_FU_outputs_2_bits_address = _execution_engine_io_FU_output_2_bits_address;
   assign io_FU_outputs_2_bits_memory_type =
     _execution_engine_io_FU_output_2_bits_memory_type;
@@ -2699,6 +2882,9 @@ module backend(
     _execution_engine_io_FU_output_3_bits_target_address;
   assign io_FU_outputs_3_bits_branch_valid =
     _execution_engine_io_FU_output_3_bits_branch_valid;
+  assign io_FU_outputs_3_bits_exception = _execution_engine_io_FU_output_3_bits_exception;
+  assign io_FU_outputs_3_bits_exception_cause =
+    _execution_engine_io_FU_output_3_bits_exception_cause;
   assign io_FU_outputs_3_bits_address = _execution_engine_io_FU_output_3_bits_address;
   assign io_FU_outputs_3_bits_memory_type =
     _execution_engine_io_FU_output_3_bits_memory_type;

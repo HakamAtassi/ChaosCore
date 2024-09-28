@@ -94,8 +94,12 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                                  ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
                                  (instructionType === OP_IMM) || (instructionType === LUI)
 
+    val ECALL               =   instruction === "b00000000000000000000000001110011".U 
+    val MRET                =   instruction === "b00110000001000000000000001110011".U 
+    //instruciton === "b00110000001000000000000001110011".U //(instructionType === SYSTEM) && (FUNCT3 === 0x0.U)
 
-    val FENCE    =   ((instructionType === MISC_MEM) && FUNCT3 === 0x0.U)
+
+    val FENCE               =   ((instructionType === MISC_MEM) && FUNCT3 === 0x0.U)
 
 
 
@@ -119,7 +123,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                                             instructionType === JALR        || 
                                             instructionType === LUI         || 
                                             instructionType === AUIPC       || 
-                                            instructionType === SYSTEM)     && 
+                                            (instructionType === SYSTEM &&  FUNCT3=/=0.U))     && 
                                             io.instruction.valid
 
     io.decoded_instruction.bits.RS1_valid            := (instructionType === OP         || 
@@ -147,6 +151,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
     io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
     io.decoded_instruction.bits.FENCE                := FENCE       // FLUSH of ANY TYPE    (they all do the same thing)
+    io.decoded_instruction.bits.MRET                 := MRET       // FLUSH of ANY TYPE    (they all do the same thing)
     io.decoded_instruction.bits.IS_IMM               := IS_IMM   // subtract or arithmetic shift...
 
 
@@ -179,6 +184,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     io.decoded_instruction.bits.needs_memory         := needs_memory
     io.decoded_instruction.bits.needs_branch_unit    := needs_branch_unit
     io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
+    io.decoded_instruction.bits.ECALL                := ECALL
 
     io.decoded_instruction.bits.access_width                 := access_width_t.NONE
     io.decoded_instruction.bits.mem_signed  := 0.B

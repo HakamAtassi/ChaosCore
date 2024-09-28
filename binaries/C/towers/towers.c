@@ -19,7 +19,7 @@
 
 // This is the number of discs in the puzzle.
 
-#define NUM_DISCS  7
+#define NUM_DISCS  1
 
 //--------------------------------------------------------------------------
 // List data structure and functions
@@ -220,13 +220,14 @@ int main( int argc, char* argv[] )
 
   // Solve it
 
-  towers_clear( &towers );
+  //towers_clear( &towers );
   //setStats(1);
   towers_solve( &towers );
   //setStats(0);
 
   // Check the results
   int correct= towers_verify( &towers );
+
   printf("Correct %0d\n", correct);
 
 }

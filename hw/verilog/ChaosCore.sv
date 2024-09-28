@@ -64,6 +64,7 @@ module ChaosCore(
                 io_flush_bits_is_exception,
                 io_flush_bits_is_fence,
                 io_flush_bits_is_CSR,
+  output [4:0]  io_flush_bits_exception_cause,
   output [31:0] io_flush_bits_flushing_PC,
                 io_flush_bits_redirect_PC,
   output        io_revert_valid,
@@ -187,6 +188,7 @@ module ChaosCore(
   wire        _ROB_io_flush_bits_is_exception;
   wire        _ROB_io_flush_bits_is_fence;
   wire        _ROB_io_flush_bits_is_CSR;
+  wire [4:0]  _ROB_io_flush_bits_exception_cause;
   wire [31:0] _ROB_io_flush_bits_flushing_PC;
   wire [31:0] _ROB_io_flush_bits_redirect_PC;
   wire [31:0] _ROB_io_PC_file_exec_data;
@@ -207,6 +209,8 @@ module ChaosCore(
   wire        _backend_io_MOB_output_bits_branch_taken;
   wire [31:0] _backend_io_MOB_output_bits_target_address;
   wire        _backend_io_MOB_output_bits_branch_valid;
+  wire        _backend_io_MOB_output_bits_exception;
+  wire [4:0]  _backend_io_MOB_output_bits_exception_cause;
   wire [31:0] _backend_io_MOB_output_bits_address;
   wire [1:0]  _backend_io_MOB_output_bits_memory_type;
   wire [1:0]  _backend_io_MOB_output_bits_access_width;
@@ -223,6 +227,8 @@ module ChaosCore(
   wire        _backend_io_FU_outputs_0_bits_branch_taken;
   wire [31:0] _backend_io_FU_outputs_0_bits_target_address;
   wire        _backend_io_FU_outputs_0_bits_branch_valid;
+  wire        _backend_io_FU_outputs_0_bits_exception;
+  wire [4:0]  _backend_io_FU_outputs_0_bits_exception_cause;
   wire [31:0] _backend_io_FU_outputs_0_bits_address;
   wire [1:0]  _backend_io_FU_outputs_0_bits_memory_type;
   wire [1:0]  _backend_io_FU_outputs_0_bits_access_width;
@@ -239,6 +245,8 @@ module ChaosCore(
   wire        _backend_io_FU_outputs_1_bits_branch_taken;
   wire [31:0] _backend_io_FU_outputs_1_bits_target_address;
   wire        _backend_io_FU_outputs_1_bits_branch_valid;
+  wire        _backend_io_FU_outputs_1_bits_exception;
+  wire [4:0]  _backend_io_FU_outputs_1_bits_exception_cause;
   wire [31:0] _backend_io_FU_outputs_1_bits_address;
   wire [1:0]  _backend_io_FU_outputs_1_bits_memory_type;
   wire [1:0]  _backend_io_FU_outputs_1_bits_access_width;
@@ -255,6 +263,8 @@ module ChaosCore(
   wire        _backend_io_FU_outputs_2_bits_branch_taken;
   wire [31:0] _backend_io_FU_outputs_2_bits_target_address;
   wire        _backend_io_FU_outputs_2_bits_branch_valid;
+  wire        _backend_io_FU_outputs_2_bits_exception;
+  wire [4:0]  _backend_io_FU_outputs_2_bits_exception_cause;
   wire [31:0] _backend_io_FU_outputs_2_bits_address;
   wire [1:0]  _backend_io_FU_outputs_2_bits_memory_type;
   wire [1:0]  _backend_io_FU_outputs_2_bits_access_width;
@@ -271,6 +281,8 @@ module ChaosCore(
   wire        _backend_io_FU_outputs_3_bits_branch_taken;
   wire [31:0] _backend_io_FU_outputs_3_bits_target_address;
   wire        _backend_io_FU_outputs_3_bits_branch_valid;
+  wire        _backend_io_FU_outputs_3_bits_exception;
+  wire [4:0]  _backend_io_FU_outputs_3_bits_exception_cause;
   wire [31:0] _backend_io_FU_outputs_3_bits_address;
   wire [1:0]  _backend_io_FU_outputs_3_bits_memory_type;
   wire [1:0]  _backend_io_FU_outputs_3_bits_access_width;
@@ -279,6 +291,8 @@ module ChaosCore(
   wire [3:0]  _backend_io_FU_outputs_3_bits_MOB_index;
   wire [5:0]  _backend_io_FU_outputs_3_bits_ROB_index;
   wire [1:0]  _backend_io_FU_outputs_3_bits_fetch_packet_index;
+  wire [29:0] _backend_CSR_port_mtvec_BASE;
+  wire [1:0]  _backend_CSR_port_mtvec_MODE;
   wire        _frontend_io_renamed_decoded_fetch_packet_valid;
   wire [31:0] _frontend_io_renamed_decoded_fetch_packet_bits_fetch_PC;
   wire
@@ -322,7 +336,9 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed;
   wire [1:0]
@@ -370,7 +386,9 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed;
   wire [1:0]
@@ -418,7 +436,9 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed;
   wire [1:0]
@@ -466,7 +486,9 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed;
   wire [1:0]
@@ -507,6 +529,8 @@ module ChaosCore(
       (_ROB_io_flush_bits_is_fence),
     .io_flush_bits_is_CSR
       (_ROB_io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause
+      (_ROB_io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC
       (_ROB_io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC
@@ -749,8 +773,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type
@@ -807,8 +835,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type
@@ -865,8 +897,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type
@@ -923,8 +959,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type
@@ -977,6 +1017,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_0_bits_target_address),
     .io_FU_outputs_0_bits_branch_valid
       (_backend_io_FU_outputs_0_bits_branch_valid),
+    .io_FU_outputs_0_bits_exception
+      (_backend_io_FU_outputs_0_bits_exception),
+    .io_FU_outputs_0_bits_exception_cause
+      (_backend_io_FU_outputs_0_bits_exception_cause),
     .io_FU_outputs_0_bits_address
       (_backend_io_FU_outputs_0_bits_address),
     .io_FU_outputs_0_bits_memory_type
@@ -1009,6 +1053,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_1_bits_target_address),
     .io_FU_outputs_1_bits_branch_valid
       (_backend_io_FU_outputs_1_bits_branch_valid),
+    .io_FU_outputs_1_bits_exception
+      (_backend_io_FU_outputs_1_bits_exception),
+    .io_FU_outputs_1_bits_exception_cause
+      (_backend_io_FU_outputs_1_bits_exception_cause),
     .io_FU_outputs_1_bits_address
       (_backend_io_FU_outputs_1_bits_address),
     .io_FU_outputs_1_bits_memory_type
@@ -1041,6 +1089,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_2_bits_target_address),
     .io_FU_outputs_2_bits_branch_valid
       (_backend_io_FU_outputs_2_bits_branch_valid),
+    .io_FU_outputs_2_bits_exception
+      (_backend_io_FU_outputs_2_bits_exception),
+    .io_FU_outputs_2_bits_exception_cause
+      (_backend_io_FU_outputs_2_bits_exception_cause),
     .io_FU_outputs_2_bits_address
       (_backend_io_FU_outputs_2_bits_address),
     .io_FU_outputs_2_bits_memory_type
@@ -1073,6 +1125,10 @@ module ChaosCore(
       (_backend_io_MOB_output_bits_target_address),
     .io_FU_outputs_3_bits_branch_valid
       (_backend_io_MOB_output_bits_branch_valid),
+    .io_FU_outputs_3_bits_exception
+      (_backend_io_MOB_output_bits_exception),
+    .io_FU_outputs_3_bits_exception_cause
+      (_backend_io_MOB_output_bits_exception_cause),
     .io_FU_outputs_3_bits_address
       (_backend_io_MOB_output_bits_address),
     .io_FU_outputs_3_bits_memory_type
@@ -1103,6 +1159,8 @@ module ChaosCore(
     .io_flush_bits_is_exception                         (_ROB_io_flush_bits_is_exception),
     .io_flush_bits_is_fence                             (_ROB_io_flush_bits_is_fence),
     .io_flush_bits_is_CSR                               (_ROB_io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause
+      (_ROB_io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC                          (_ROB_io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC                          (_ROB_io_flush_bits_redirect_PC),
     .io_reserved_pointers_0_valid                       (/* unused */),
@@ -1285,8 +1343,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_backend_packet_0_bits_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
+    .io_backend_packet_0_bits_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
     .io_backend_packet_0_bits_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
+    .io_backend_packet_0_bits_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL),
     .io_backend_packet_0_bits_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_backend_packet_0_bits_memory_type
@@ -1348,8 +1410,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_backend_packet_1_bits_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
+    .io_backend_packet_1_bits_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
     .io_backend_packet_1_bits_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
+    .io_backend_packet_1_bits_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL),
     .io_backend_packet_1_bits_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_backend_packet_1_bits_memory_type
@@ -1411,8 +1477,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_backend_packet_2_bits_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
+    .io_backend_packet_2_bits_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
     .io_backend_packet_2_bits_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
+    .io_backend_packet_2_bits_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL),
     .io_backend_packet_2_bits_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_backend_packet_2_bits_memory_type
@@ -1474,8 +1544,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_backend_packet_3_bits_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
+    .io_backend_packet_3_bits_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
     .io_backend_packet_3_bits_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
+    .io_backend_packet_3_bits_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL),
     .io_backend_packet_3_bits_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_backend_packet_3_bits_memory_type
@@ -1496,6 +1570,10 @@ module ChaosCore(
       (_backend_io_MOB_output_bits_target_address),
     .io_MOB_output_bits_branch_valid
       (_backend_io_MOB_output_bits_branch_valid),
+    .io_MOB_output_bits_exception
+      (_backend_io_MOB_output_bits_exception),
+    .io_MOB_output_bits_exception_cause
+      (_backend_io_MOB_output_bits_exception_cause),
     .io_MOB_output_bits_address
       (_backend_io_MOB_output_bits_address),
     .io_MOB_output_bits_memory_type
@@ -1527,6 +1605,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_0_bits_target_address),
     .io_FU_outputs_0_bits_branch_valid
       (_backend_io_FU_outputs_0_bits_branch_valid),
+    .io_FU_outputs_0_bits_exception
+      (_backend_io_FU_outputs_0_bits_exception),
+    .io_FU_outputs_0_bits_exception_cause
+      (_backend_io_FU_outputs_0_bits_exception_cause),
     .io_FU_outputs_0_bits_address
       (_backend_io_FU_outputs_0_bits_address),
     .io_FU_outputs_0_bits_memory_type
@@ -1558,6 +1640,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_1_bits_target_address),
     .io_FU_outputs_1_bits_branch_valid
       (_backend_io_FU_outputs_1_bits_branch_valid),
+    .io_FU_outputs_1_bits_exception
+      (_backend_io_FU_outputs_1_bits_exception),
+    .io_FU_outputs_1_bits_exception_cause
+      (_backend_io_FU_outputs_1_bits_exception_cause),
     .io_FU_outputs_1_bits_address
       (_backend_io_FU_outputs_1_bits_address),
     .io_FU_outputs_1_bits_memory_type
@@ -1589,6 +1675,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_2_bits_target_address),
     .io_FU_outputs_2_bits_branch_valid
       (_backend_io_FU_outputs_2_bits_branch_valid),
+    .io_FU_outputs_2_bits_exception
+      (_backend_io_FU_outputs_2_bits_exception),
+    .io_FU_outputs_2_bits_exception_cause
+      (_backend_io_FU_outputs_2_bits_exception_cause),
     .io_FU_outputs_2_bits_address
       (_backend_io_FU_outputs_2_bits_address),
     .io_FU_outputs_2_bits_memory_type
@@ -1620,6 +1710,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_3_bits_target_address),
     .io_FU_outputs_3_bits_branch_valid
       (_backend_io_FU_outputs_3_bits_branch_valid),
+    .io_FU_outputs_3_bits_exception
+      (_backend_io_FU_outputs_3_bits_exception),
+    .io_FU_outputs_3_bits_exception_cause
+      (_backend_io_FU_outputs_3_bits_exception_cause),
     .io_FU_outputs_3_bits_address
       (_backend_io_FU_outputs_3_bits_address),
     .io_FU_outputs_3_bits_memory_type
@@ -1635,7 +1729,9 @@ module ChaosCore(
     .io_FU_outputs_3_bits_ROB_index
       (_backend_io_FU_outputs_3_bits_ROB_index),
     .io_FU_outputs_3_bits_fetch_packet_index
-      (_backend_io_FU_outputs_3_bits_fetch_packet_index)
+      (_backend_io_FU_outputs_3_bits_fetch_packet_index),
+    .CSR_port_mtvec_BASE                                (_backend_CSR_port_mtvec_BASE),
+    .CSR_port_mtvec_MODE                                (_backend_CSR_port_mtvec_MODE)
   );
   ROB ROB (
     .clock                                                         (clock),
@@ -1696,8 +1792,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_0_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
+    .io_ROB_packet_bits_decoded_instruction_0_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
     .io_ROB_packet_bits_decoded_instruction_0_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
+    .io_ROB_packet_bits_decoded_instruction_0_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL),
     .io_ROB_packet_bits_decoded_instruction_0_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_0_memory_type
@@ -1754,8 +1854,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_1_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
+    .io_ROB_packet_bits_decoded_instruction_1_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
     .io_ROB_packet_bits_decoded_instruction_1_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
+    .io_ROB_packet_bits_decoded_instruction_1_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL),
     .io_ROB_packet_bits_decoded_instruction_1_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_1_memory_type
@@ -1812,8 +1916,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_2_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
+    .io_ROB_packet_bits_decoded_instruction_2_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
     .io_ROB_packet_bits_decoded_instruction_2_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
+    .io_ROB_packet_bits_decoded_instruction_2_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL),
     .io_ROB_packet_bits_decoded_instruction_2_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_2_memory_type
@@ -1870,8 +1978,12 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_3_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
+    .io_ROB_packet_bits_decoded_instruction_3_MRET
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
     .io_ROB_packet_bits_decoded_instruction_3_IS_IMM
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
+    .io_ROB_packet_bits_decoded_instruction_3_ECALL
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL),
     .io_ROB_packet_bits_decoded_instruction_3_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_3_memory_type
@@ -1924,6 +2036,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_0_bits_target_address),
     .io_FU_outputs_0_bits_branch_valid
       (_backend_io_FU_outputs_0_bits_branch_valid),
+    .io_FU_outputs_0_bits_exception
+      (_backend_io_FU_outputs_0_bits_exception),
+    .io_FU_outputs_0_bits_exception_cause
+      (_backend_io_FU_outputs_0_bits_exception_cause),
     .io_FU_outputs_0_bits_address
       (_backend_io_FU_outputs_0_bits_address),
     .io_FU_outputs_0_bits_memory_type
@@ -1956,6 +2072,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_1_bits_target_address),
     .io_FU_outputs_1_bits_branch_valid
       (_backend_io_FU_outputs_1_bits_branch_valid),
+    .io_FU_outputs_1_bits_exception
+      (_backend_io_FU_outputs_1_bits_exception),
+    .io_FU_outputs_1_bits_exception_cause
+      (_backend_io_FU_outputs_1_bits_exception_cause),
     .io_FU_outputs_1_bits_address
       (_backend_io_FU_outputs_1_bits_address),
     .io_FU_outputs_1_bits_memory_type
@@ -1988,6 +2108,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_2_bits_target_address),
     .io_FU_outputs_2_bits_branch_valid
       (_backend_io_FU_outputs_2_bits_branch_valid),
+    .io_FU_outputs_2_bits_exception
+      (_backend_io_FU_outputs_2_bits_exception),
+    .io_FU_outputs_2_bits_exception_cause
+      (_backend_io_FU_outputs_2_bits_exception_cause),
     .io_FU_outputs_2_bits_address
       (_backend_io_FU_outputs_2_bits_address),
     .io_FU_outputs_2_bits_memory_type
@@ -2020,6 +2144,10 @@ module ChaosCore(
       (_backend_io_FU_outputs_3_bits_target_address),
     .io_FU_outputs_3_bits_branch_valid
       (_backend_io_FU_outputs_3_bits_branch_valid),
+    .io_FU_outputs_3_bits_exception
+      (_backend_io_FU_outputs_3_bits_exception),
+    .io_FU_outputs_3_bits_exception_cause
+      (_backend_io_FU_outputs_3_bits_exception_cause),
     .io_FU_outputs_3_bits_address
       (_backend_io_FU_outputs_3_bits_address),
     .io_FU_outputs_3_bits_memory_type
@@ -2159,6 +2287,8 @@ module ChaosCore(
       (_ROB_io_flush_bits_is_fence),
     .io_flush_bits_is_CSR
       (_ROB_io_flush_bits_is_CSR),
+    .io_flush_bits_exception_cause
+      (_ROB_io_flush_bits_exception_cause),
     .io_flush_bits_flushing_PC
       (_ROB_io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC
@@ -2166,7 +2296,11 @@ module ChaosCore(
     .io_PC_file_exec_addr
       (_backend_io_PC_file_exec_addr),
     .io_PC_file_exec_data
-      (_ROB_io_PC_file_exec_data)
+      (_ROB_io_PC_file_exec_data),
+    .CSR_port_mtvec_BASE
+      (_backend_CSR_port_mtvec_BASE),
+    .CSR_port_mtvec_MODE
+      (_backend_CSR_port_mtvec_MODE)
   );
   assign io_commit_valid = _ROB_io_commit_valid;
   assign io_commit_bits_fetch_PC = _ROB_io_commit_bits_fetch_PC;
@@ -2202,6 +2336,7 @@ module ChaosCore(
   assign io_flush_bits_is_exception = _ROB_io_flush_bits_is_exception;
   assign io_flush_bits_is_fence = _ROB_io_flush_bits_is_fence;
   assign io_flush_bits_is_CSR = _ROB_io_flush_bits_is_CSR;
+  assign io_flush_bits_exception_cause = _ROB_io_flush_bits_exception_cause;
   assign io_flush_bits_flushing_PC = _ROB_io_flush_bits_flushing_PC;
   assign io_flush_bits_redirect_PC = _ROB_io_flush_bits_redirect_PC;
 endmodule

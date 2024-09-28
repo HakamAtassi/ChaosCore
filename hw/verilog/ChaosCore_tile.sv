@@ -212,6 +212,7 @@ module ChaosCore_tile(
     .io_flush_bits_is_exception                                   (/* unused */),
     .io_flush_bits_is_fence                                       (/* unused */),
     .io_flush_bits_is_CSR                                         (/* unused */),
+    .io_flush_bits_exception_cause                                (/* unused */),
     .io_flush_bits_flushing_PC                                    (/* unused */),
     .io_flush_bits_redirect_PC                                    (/* unused */),
     .io_revert_valid                                              (/* unused */),

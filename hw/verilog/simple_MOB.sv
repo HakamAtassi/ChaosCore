@@ -36,6 +36,7 @@ module simple_MOB(
                 io_flush_bits_is_exception,
                 io_flush_bits_is_fence,
                 io_flush_bits_is_CSR,
+  input  [4:0]  io_flush_bits_exception_cause,
   input  [31:0] io_flush_bits_flushing_PC,
                 io_flush_bits_redirect_PC,
   output        io_reserve_0_ready,
@@ -65,7 +66,9 @@ module simple_MOB(
                 io_reserve_0_bits_SUBTRACT,
                 io_reserve_0_bits_MULTIPLY,
                 io_reserve_0_bits_FENCE,
+                io_reserve_0_bits_MRET,
                 io_reserve_0_bits_IS_IMM,
+                io_reserve_0_bits_ECALL,
                 io_reserve_0_bits_mem_signed,
   input  [1:0]  io_reserve_0_bits_memory_type,
                 io_reserve_0_bits_access_width,
@@ -96,7 +99,9 @@ module simple_MOB(
                 io_reserve_1_bits_SUBTRACT,
                 io_reserve_1_bits_MULTIPLY,
                 io_reserve_1_bits_FENCE,
+                io_reserve_1_bits_MRET,
                 io_reserve_1_bits_IS_IMM,
+                io_reserve_1_bits_ECALL,
                 io_reserve_1_bits_mem_signed,
   input  [1:0]  io_reserve_1_bits_memory_type,
                 io_reserve_1_bits_access_width,
@@ -127,7 +132,9 @@ module simple_MOB(
                 io_reserve_2_bits_SUBTRACT,
                 io_reserve_2_bits_MULTIPLY,
                 io_reserve_2_bits_FENCE,
+                io_reserve_2_bits_MRET,
                 io_reserve_2_bits_IS_IMM,
+                io_reserve_2_bits_ECALL,
                 io_reserve_2_bits_mem_signed,
   input  [1:0]  io_reserve_2_bits_memory_type,
                 io_reserve_2_bits_access_width,
@@ -158,7 +165,9 @@ module simple_MOB(
                 io_reserve_3_bits_SUBTRACT,
                 io_reserve_3_bits_MULTIPLY,
                 io_reserve_3_bits_FENCE,
+                io_reserve_3_bits_MRET,
                 io_reserve_3_bits_IS_IMM,
+                io_reserve_3_bits_ECALL,
                 io_reserve_3_bits_mem_signed,
   input  [1:0]  io_reserve_3_bits_memory_type,
                 io_reserve_3_bits_access_width,
@@ -179,6 +188,8 @@ module simple_MOB(
   input         io_AGU_output_bits_branch_taken,
   input  [31:0] io_AGU_output_bits_target_address,
   input         io_AGU_output_bits_branch_valid,
+                io_AGU_output_bits_exception,
+  input  [4:0]  io_AGU_output_bits_exception_cause,
   input  [31:0] io_AGU_output_bits_address,
   input  [1:0]  io_AGU_output_bits_memory_type,
                 io_AGU_output_bits_access_width,
@@ -195,6 +206,8 @@ module simple_MOB(
   output        io_MOB_output_bits_branch_taken,
   output [31:0] io_MOB_output_bits_target_address,
   output        io_MOB_output_bits_branch_valid,
+                io_MOB_output_bits_exception,
+  output [4:0]  io_MOB_output_bits_exception_cause,
   output [31:0] io_MOB_output_bits_address,
   output [1:0]  io_MOB_output_bits_memory_type,
                 io_MOB_output_bits_access_width,
@@ -2848,6 +2861,8 @@ module simple_MOB(
   assign io_MOB_output_bits_branch_taken = 1'h0;
   assign io_MOB_output_bits_target_address = 32'h0;
   assign io_MOB_output_bits_branch_valid = 1'h0;
+  assign io_MOB_output_bits_exception = 1'h0;
+  assign io_MOB_output_bits_exception_cause = 5'h0;
   assign io_MOB_output_bits_address = io_backend_memory_response_bits_addr;
   assign io_MOB_output_bits_memory_type = 2'h0;
   assign io_MOB_output_bits_access_width = 2'h0;

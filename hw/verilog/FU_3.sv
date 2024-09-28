@@ -35,6 +35,7 @@ module FU_3(
                 io_flush_bits_is_exception,
                 io_flush_bits_is_fence,
                 io_flush_bits_is_CSR,
+  input  [4:0]  io_flush_bits_exception_cause,
   input  [31:0] io_flush_bits_flushing_PC,
                 io_flush_bits_redirect_PC,
   output        io_FU_input_ready,
@@ -64,7 +65,9 @@ module FU_3(
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_bits_decoded_instruction_FENCE,
+                io_FU_input_bits_decoded_instruction_MRET,
                 io_FU_input_bits_decoded_instruction_IS_IMM,
+                io_FU_input_bits_decoded_instruction_ECALL,
                 io_FU_input_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
@@ -79,6 +82,8 @@ module FU_3(
   output        io_FU_output_bits_branch_taken,
   output [31:0] io_FU_output_bits_target_address,
   output        io_FU_output_bits_branch_valid,
+                io_FU_output_bits_exception,
+  output [4:0]  io_FU_output_bits_exception_cause,
   output [31:0] io_FU_output_bits_address,
   output [1:0]  io_FU_output_bits_memory_type,
                 io_FU_output_bits_access_width,
@@ -201,5 +206,7 @@ module FU_3(
   assign io_FU_output_bits_branch_taken = 1'h0;
   assign io_FU_output_bits_target_address = 32'h0;
   assign io_FU_output_bits_branch_valid = 1'h0;
+  assign io_FU_output_bits_exception = 1'h0;
+  assign io_FU_output_bits_exception_cause = 5'h0;
 endmodule
 

@@ -49,9 +49,13 @@ class GALU(coreParameters:CoreParameters) extends Module{
         // Output
         val FU_output     =   ValidIO(new FU_output(coreParameters))
 
+
         // commit (for CSRs only)
         val partial_commit  =   Input(new partial_commit(coreParameters))
         val commit          =   Flipped(ValidIO(new commit(coreParameters)))
+
+
+
     })
 
     // misaligned fetch exception ??
@@ -76,9 +80,14 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
     val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 
+
+    val ECALL               =   io.FU_input.bits.decoded_instruction.ECALL
+
     //////////////////////////
     //////////////////////////
     //////////////////////////
+
+
 
 
     val arithmetic_result = RegInit(UInt(32.W), 0.U)
@@ -225,10 +234,14 @@ class GALU(coreParameters:CoreParameters) extends Module{
     // CSR INSTRUCTIONS //
     //////////////////////
 
+
+    //io.mtvec := DontCare
+
     // ALU pipelined; always ready
-    io.FU_input.ready       :=  1.B    
-    io.FU_output            :=  DontCare
-    io.FU_output.valid      :=  RegNext(input_valid && !io.flush.valid || FENCE) && !io.flush.valid
+    io.FU_input.ready               :=  1.B    
+    io.FU_output                    :=  DontCare
+    io.FU_output.bits.exception     :=  0.B
+    io.FU_output.valid              :=  RegNext(input_valid && !io.flush.valid || FENCE) && !io.flush.valid
 
 }
 

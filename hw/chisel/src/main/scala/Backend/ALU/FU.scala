@@ -50,8 +50,15 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
 
         // partial_commit (for CSRs)
         val partial_commit  =   Input(new partial_commit(coreParameters))
-        val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
+        val commit          =   Flipped(ValidIO(new commit(coreParameters)))
+
+        //val CSR_out = if (FUParam.supportsCSRs) Some(Output(new CSR_out)) else None
+
     }); dontTouch(io)
+
+
+    val CSR_port = if (FUParam.supportsCSRs) Some(IO(Output(new CSR_out))) else None
+
 
 
     val ALU             = if (supportsInt)                  Some(Module(new ALU(coreParameters))) else None
@@ -113,8 +120,12 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     if(CSR.isDefined){
         when(CSR.get.io.FU_output.valid){
             io.FU_output <> CSR.get.io.FU_output
+            //io.mtvec <> CSR.get.io.mtvec
+
         }
+        CSR_port.get  <> CSR.get.CSR_port
     }
+
 
 
     //////////////////

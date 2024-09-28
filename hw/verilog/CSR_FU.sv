@@ -32,7 +32,10 @@ module CSR_FU(
   input         clock,
                 reset,
                 io_flush_valid,
-                io_FU_input_valid,
+                io_flush_bits_is_exception,
+  input  [4:0]  io_flush_bits_exception_cause,
+  input  [31:0] io_flush_bits_flushing_PC,
+  input         io_FU_input_valid,
   input  [6:0]  io_FU_input_bits_decoded_instruction_PRD,
   input         io_FU_input_bits_decoded_instruction_RD_valid,
   input  [6:0]  io_FU_input_bits_decoded_instruction_RS1,
@@ -48,6 +51,7 @@ module CSR_FU(
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_bits_decoded_instruction_FENCE,
+                io_FU_input_bits_decoded_instruction_ECALL,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_fetch_PC,
   output        io_FU_output_valid,
@@ -58,6 +62,8 @@ module CSR_FU(
   output        io_FU_output_bits_branch_taken,
   output [31:0] io_FU_output_bits_target_address,
   output        io_FU_output_bits_branch_valid,
+                io_FU_output_bits_exception,
+  output [4:0]  io_FU_output_bits_exception_cause,
   output [3:0]  io_FU_output_bits_MOB_index,
   output [5:0]  io_FU_output_bits_ROB_index,
   output [1:0]  io_FU_output_bits_fetch_packet_index,
@@ -65,7 +71,9 @@ module CSR_FU(
                 io_partial_commit_valid_1,
                 io_partial_commit_valid_2,
                 io_partial_commit_valid_3,
-                io_commit_valid
+                io_commit_valid,
+  output [29:0] CSR_port_mtvec_BASE,
+  output [1:0]  CSR_port_mtvec_MODE
 );
 
   wire        CSR_input_valid;
@@ -155,8 +163,8 @@ module CSR_FU(
   reg  [31:0] mstatush_reg;
   reg  [31:0] mscratch_reg_scratch;
   reg  [31:0] mepc_reg_PC;
-  reg         mcause_reg_Interrupt;
-  reg  [30:0] mcause_reg_Code;
+  reg         mcause_reg_INTERRUPT;
+  reg  [30:0] mcause_reg_CODE;
   reg  [31:0] mtval_reg_badaddr;
   reg  [19:0] mip_reg_WPRI1;
   reg         mip_reg_MEIP;
@@ -241,7 +249,7 @@ module CSR_FU(
                mstatus_reg_SIE}
             : 27'h0)} | (machine_mode_CSR_OH_8 ? mimpid_reg : 32'h0)
     | (machine_mode_CSR_OH_9 ? mscratch_reg_scratch : 32'h0)
-    | (machine_mode_CSR_OH_10 ? {mcause_reg_Interrupt, mcause_reg_Code} : 32'h0)
+    | (machine_mode_CSR_OH_10 ? {mcause_reg_INTERRUPT, mcause_reg_CODE} : 32'h0)
     | (machine_mode_CSR_OH_11 ? mncause_reg : 32'h0)
     | (machine_mode_CSR_OH_12 ? minstret_reg : 32'h0)
     | (machine_mode_CSR_OH_13 ? mnscratch_reg : 32'h0)
@@ -292,6 +300,8 @@ module CSR_FU(
   reg         io_FU_output_bits_RD_valid_REG;
   reg  [3:0]  io_FU_output_bits_MOB_index_REG;
   reg  [5:0]  io_FU_output_bits_ROB_index_REG;
+  reg         io_FU_output_bits_exception_REG;
+  reg  [4:0]  io_FU_output_bits_exception_cause_REG;
   always @(posedge clock) begin
     automatic logic _sret_T_7 = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
     automatic logic _sret_T =
@@ -318,6 +328,9 @@ module CSR_FU(
     io_FU_output_bits_RD_valid_REG <= io_FU_input_bits_decoded_instruction_RD_valid;
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
+    io_FU_output_bits_exception_REG <= io_FU_input_bits_decoded_instruction_ECALL;
+    io_FU_output_bits_exception_cause_REG <=
+      io_FU_input_bits_decoded_instruction_ECALL ? 5'hB : 5'h0;
     if (reset) begin
       cycle_reg <= 32'h0;
       instret_reg <= 32'h0;
@@ -369,8 +382,8 @@ module CSR_FU(
       mstatush_reg <= 32'h0;
       mscratch_reg_scratch <= 32'h0;
       mepc_reg_PC <= 32'h0;
-      mcause_reg_Interrupt <= 1'h0;
-      mcause_reg_Code <= 31'h0;
+      mcause_reg_INTERRUPT <= 1'h0;
+      mcause_reg_CODE <= 31'h0;
       mtval_reg_badaddr <= 32'h0;
       mip_reg_WPRI1 <= 20'h0;
       mip_reg_MEIP <= 1'h0;
@@ -398,10 +411,12 @@ module CSR_FU(
       automatic logic [1:0]  _GEN_0;
       automatic logic [1:0]  _GEN_1;
       automatic logic [1:0]  _GEN_2;
+      automatic logic        _GEN_3;
       _GEN = {1'h0, io_partial_commit_valid_0};
       _GEN_0 = {1'h0, io_partial_commit_valid_1};
       _GEN_1 = {1'h0, io_partial_commit_valid_2};
       _GEN_2 = {1'h0, io_partial_commit_valid_3};
+      _GEN_3 = input_CSR_write_request & machine_mode_CSR_OH_10;
       cycle_reg <= _counter_new_T[31:0];
       if (io_commit_valid) begin
         automatic logic [63:0] _counter_new_T_2;
@@ -476,12 +491,18 @@ module CSR_FU(
         mstatush_reg <= io_FU_input_bits_RS1_data;
       if (input_CSR_write_request & machine_mode_CSR_OH_9)
         mscratch_reg_scratch <= io_FU_input_bits_RS1_data;
-      if (input_CSR_write_request & machine_mode_CSR_OH_25)
-        mepc_reg_PC <= io_FU_input_bits_RS1_data;
-      if (input_CSR_write_request & machine_mode_CSR_OH_10) begin
-        mcause_reg_Interrupt <= io_FU_input_bits_RS1_data[31];
-        mcause_reg_Code <= io_FU_input_bits_RS1_data[30:0];
+      if (io_flush_bits_is_exception) begin
+        mepc_reg_PC <= io_flush_bits_flushing_PC;
+        mcause_reg_CODE <= {26'h0, io_flush_bits_exception_cause};
       end
+      else begin
+        if (input_CSR_write_request & machine_mode_CSR_OH_25)
+          mepc_reg_PC <= io_FU_input_bits_RS1_data;
+        if (_GEN_3)
+          mcause_reg_CODE <= io_FU_input_bits_RS1_data[30:0];
+      end
+      if (_GEN_3)
+        mcause_reg_INTERRUPT <= io_FU_input_bits_RS1_data[31];
       if (input_CSR_write_request & machine_mode_CSR_OH_26)
         mtval_reg_badaddr <= io_FU_input_bits_RS1_data;
       if (input_CSR_write_request & machine_mode_CSR_OH_21) begin
@@ -528,8 +549,12 @@ module CSR_FU(
   assign io_FU_output_bits_branch_taken = io_FU_output_bits_branch_taken_REG;
   assign io_FU_output_bits_target_address = io_FU_output_bits_target_address_REG;
   assign io_FU_output_bits_branch_valid = io_FU_output_bits_branch_valid_REG;
+  assign io_FU_output_bits_exception = io_FU_output_bits_exception_REG;
+  assign io_FU_output_bits_exception_cause = io_FU_output_bits_exception_cause_REG;
   assign io_FU_output_bits_MOB_index = io_FU_output_bits_MOB_index_REG;
   assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;
   assign io_FU_output_bits_fetch_packet_index = io_FU_output_bits_fetch_packet_index_REG;
+  assign CSR_port_mtvec_BASE = mtvec_reg_BASE;
+  assign CSR_port_mtvec_MODE = mtvec_reg_MODE;
 endmodule
 

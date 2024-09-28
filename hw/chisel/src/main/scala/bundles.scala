@@ -157,6 +157,9 @@ class flush(coreParameters:CoreParameters) extends Bundle{
         is_misprediction || is_exception || is_fence || is_CSR
     }
 
+
+    val exception_cause     = EX_CAUSE()
+
     val flushing_PC         = UInt(32.W)    // PC of the instruciton causing the flush
     val redirect_PC         = UInt(32.W)    // PC the instruction should redirect to
 }
@@ -270,9 +273,13 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val SUBTRACT            =  Bool()
     val MULTIPLY            =  Bool()
     val FENCE               =  Bool()
+    val MRET                =  Bool()
     //val CSR                 =  Bool()
 
     val IS_IMM              =  Bool() 
+
+
+    val ECALL               =  Bool() 
 
 
     val mem_signed          =  Bool()
@@ -424,6 +431,9 @@ class ROB_output(coreParameters:CoreParameters) extends Bundle{
     // N per row 
     val ROB_entries             = Vec(fetchWidth, new ROB_entry(coreParameters))    // "static" instruction data
     val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
+    val exception               = Vec(fetchWidth, Bool())                       
+    val exception_cause         = Vec(fetchWidth, EX_CAUSE())                       
+
 }
 
 class ROB_shared(coreParameters:CoreParameters) extends Bundle{
@@ -445,22 +455,24 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
     val valid       = Bool()  // is this particular instruction valid?
     val is_branch   = Bool()
 
-    val is_flushing = Bool()       // currently is flushing means fence or CSR access
+    val is_fence    = Bool()       // currently is flushing means fence or CSR access
+    val is_CSR      = Bool()       // currently is flushing means fence or CSR access
 
     val memory_type = memory_type_t()
 
-    val MOB_index   =   UInt(log2Ceil(MOBEntries).W)
+    val MOB_index   = UInt(log2Ceil(MOBEntries).W)
 
-    val RD_valid    =   Bool()
-    val RD          =   UInt(architecturalRegBits.W)
-    val PRDold      =   UInt(physicalRegBits.W)
-    val PRD         =   UInt(physicalRegBits.W)
+    val RD_valid    = Bool()
+    val RD          = UInt(architecturalRegBits.W)
+    val PRDold      = UInt(physicalRegBits.W)
+    val PRD         = UInt(physicalRegBits.W)
 }
 
 class ROB_WB(coreParameters:CoreParameters) extends Bundle{
     val RD_data = if (coreParameters.DEBUG) Some(UInt(32.W)) else None
     val busy                = Bool()
-    //val exception           = Bool()
+    val exception           = Bool()
+    val exception_cause     = EX_CAUSE()
 }
 
 class sources_ready extends Bundle{
@@ -500,6 +512,12 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
     val target_address      =   UInt(32.W)
     val branch_valid        =   Bool()
 
+    // Exception 
+    val exception           =   Bool()          // does the instruction cause an exception?
+    val exception_cause     =   EX_CAUSE()
+    //val mstat               =   PRIVILAGE()     // What privilige was this instruction executed in?
+
+
     // MEM
     val address             =   UInt(32.W)
     val memory_type         =   memory_type_t()   // LOAD/STORE
@@ -509,7 +527,6 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
 
     // MOB
     val MOB_index           =   UInt(log2Ceil(MOBEntries).W)
-
 
     val ROB_index           =   UInt(log2Ceil(ROBEntries).W)
     
@@ -647,13 +664,13 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
     val mem_signed              = Bool()
     val access_width            = access_width_t()  // B/HW/W
 
-    val PRD                      = UInt(physicalRegBits.W) // dest reg
+    val PRD                     = UInt(physicalRegBits.W) // dest reg
     val data                    = UInt(32.W)              
     val data_valid              = Bool()
 
 
-    val fwd_valid              = Vec(4, Bool())
-    val fwd_data               = Vec(4, UInt(8.W))
+    val fwd_valid               = Vec(4, Bool())
+    val fwd_data                = Vec(4, UInt(8.W))
 
     val committed               = Bool()
     val resolved                = Bool()    // all previous stores resolved?
@@ -736,7 +753,45 @@ object PRIVILAGE extends ChiselEnum{
     val USER, SUPERVISOR, RESERVED, MACHINE = Value
 }
 
+object EX_CAUSE extends ChiselEnum {
+  val INSTRUCTION_ADDRESS_MISALIGNED  = Value(0.U)
+  val INSTRUCTION_ACCESS_FAULT        = Value(1.U)
+  val ILLEGAL_INSTRUCTION             = Value(2.U)
+  val BREAKPOINT                      = Value(3.U)
+  val LOAD_ADDRESS_MISALIGNED         = Value(4.U)
+  val LOAD_ACCESS_FAULT               = Value(5.U)
+  val STORE_AMO_ADDRESS_MISALIGNED    = Value(6.U)
+  val STORE_AMO_ACCESS_FAULT          = Value(7.U)
+  val ECALL_FROM_U_MODE               = Value(8.U)
+  val ECALL_FROM_S_MODE               = Value(9.U)
+  val RESERVED_10                     = Value(10.U)
+  val ECALL_FROM_M_MODE               = Value(11.U)
+  val INSTRUCTION_PAGE_FAULT          = Value(12.U)
+  val LOAD_PAGE_FAULT                 = Value(13.U)
+  val RESERVED_14                     = Value(14.U)
+  val STORE_AMO_PAGE_FAULT            = Value(15.U)
+  val RESERVED_16_17                  = Value(16.U)
+  val COUNTER_OVERFLOW_INTERRUPT      = Value(18.U)
+  val HARDWARE_ERROR                  = Value(19.U)
+  //val RESERVED_20_23                  = Value(20)
+  //val RESERVED_24_31                  = Value(24)
+  //val RESERVED_32_47                  = Value(32)
+  //val RESERVED_48_63                  = Value(48)
+  //val PLATFORM_USE                    = Value(64)
+}
+
+
+
+
 object ACCESS extends ChiselEnum{
     val RW, RO = Value
 }
 
+
+
+class CSR_out extends Bundle{
+    // globally viewable CSR
+
+    val mtvec = new mtvec()
+
+}

@@ -36,6 +36,7 @@ module FU(
                 io_flush_bits_is_exception,
                 io_flush_bits_is_fence,
                 io_flush_bits_is_CSR,
+  input  [4:0]  io_flush_bits_exception_cause,
   input  [31:0] io_flush_bits_flushing_PC,
                 io_flush_bits_redirect_PC,
   output        io_FU_input_ready,
@@ -65,7 +66,9 @@ module FU(
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_bits_decoded_instruction_FENCE,
+                io_FU_input_bits_decoded_instruction_MRET,
                 io_FU_input_bits_decoded_instruction_IS_IMM,
+                io_FU_input_bits_decoded_instruction_ECALL,
                 io_FU_input_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,
                 io_FU_input_bits_decoded_instruction_access_width,
@@ -80,6 +83,8 @@ module FU(
   output        io_FU_output_bits_branch_taken,
   output [31:0] io_FU_output_bits_target_address,
   output        io_FU_output_bits_branch_valid,
+                io_FU_output_bits_exception,
+  output [4:0]  io_FU_output_bits_exception_cause,
   output [31:0] io_FU_output_bits_address,
   output [1:0]  io_FU_output_bits_memory_type,
                 io_FU_output_bits_access_width,
@@ -144,7 +149,9 @@ module FU(
   input         io_commit_bits_RD_valid_0,
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
-                io_commit_bits_RD_valid_3
+                io_commit_bits_RD_valid_3,
+  output [29:0] CSR_port_mtvec_BASE,
+  output [1:0]  CSR_port_mtvec_MODE
 );
 
   wire        _CSR_io_FU_output_valid;
@@ -155,6 +162,8 @@ module FU(
   wire        _CSR_io_FU_output_bits_branch_taken;
   wire [31:0] _CSR_io_FU_output_bits_target_address;
   wire        _CSR_io_FU_output_bits_branch_valid;
+  wire        _CSR_io_FU_output_bits_exception;
+  wire [4:0]  _CSR_io_FU_output_bits_exception_cause;
   wire [3:0]  _CSR_io_FU_output_bits_MOB_index;
   wire [5:0]  _CSR_io_FU_output_bits_ROB_index;
   wire [1:0]  _CSR_io_FU_output_bits_fetch_packet_index;
@@ -289,6 +298,10 @@ module FU(
     .clock                                                  (clock),
     .reset                                                  (reset),
     .io_flush_valid                                         (io_flush_valid),
+    .io_flush_bits_is_exception                             (io_flush_bits_is_exception),
+    .io_flush_bits_exception_cause
+      (io_flush_bits_exception_cause),
+    .io_flush_bits_flushing_PC                              (io_flush_bits_flushing_PC),
     .io_FU_input_valid                                      (io_FU_input_valid),
     .io_FU_input_bits_decoded_instruction_PRD
       (io_FU_input_bits_decoded_instruction_PRD),
@@ -320,6 +333,8 @@ module FU(
       (io_FU_input_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_ECALL
+      (io_FU_input_bits_decoded_instruction_ECALL),
     .io_FU_input_bits_RS1_data                              (io_FU_input_bits_RS1_data),
     .io_FU_input_bits_fetch_PC                              (io_FU_input_bits_fetch_PC),
     .io_FU_output_valid                                     (_CSR_io_FU_output_valid),
@@ -336,6 +351,10 @@ module FU(
       (_CSR_io_FU_output_bits_target_address),
     .io_FU_output_bits_branch_valid
       (_CSR_io_FU_output_bits_branch_valid),
+    .io_FU_output_bits_exception
+      (_CSR_io_FU_output_bits_exception),
+    .io_FU_output_bits_exception_cause
+      (_CSR_io_FU_output_bits_exception_cause),
     .io_FU_output_bits_MOB_index
       (_CSR_io_FU_output_bits_MOB_index),
     .io_FU_output_bits_ROB_index
@@ -346,7 +365,9 @@ module FU(
     .io_partial_commit_valid_1                              (io_partial_commit_valid_1),
     .io_partial_commit_valid_2                              (io_partial_commit_valid_2),
     .io_partial_commit_valid_3                              (io_partial_commit_valid_3),
-    .io_commit_valid                                        (io_commit_valid)
+    .io_commit_valid                                        (io_commit_valid),
+    .CSR_port_mtvec_BASE                                    (CSR_port_mtvec_BASE),
+    .CSR_port_mtvec_MODE                                    (CSR_port_mtvec_MODE)
   );
   assign io_FU_input_ready = 1'h1;
   assign io_FU_output_valid =
@@ -393,6 +414,10 @@ module FU(
     _CSR_io_FU_output_valid
       ? _CSR_io_FU_output_bits_branch_valid
       : _branch_unit_io_FU_output_valid & _branch_unit_io_FU_output_bits_branch_valid;
+  assign io_FU_output_bits_exception =
+    _CSR_io_FU_output_valid & _CSR_io_FU_output_bits_exception;
+  assign io_FU_output_bits_exception_cause =
+    _CSR_io_FU_output_valid ? _CSR_io_FU_output_bits_exception_cause : 5'h0;
   assign io_FU_output_bits_address = 32'h0;
   assign io_FU_output_bits_memory_type = 2'h0;
   assign io_FU_output_bits_access_width = 2'h0;

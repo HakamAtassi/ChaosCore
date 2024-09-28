@@ -5,6 +5,13 @@
 #include <limits.h>
 #include <sys/signal.h>
 
+#define read_csr(csr) ({ \
+    unsigned long result; \
+    asm volatile ("csrr %0, " #csr : "=r"(result)); \
+    result; \
+})
+
+
 
 int putchar(int ASCII)
 {
@@ -254,5 +261,4 @@ void* memset(void* dest, int byte, size_t len)
   }
   return dest;
 }
-
 

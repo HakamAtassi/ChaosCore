@@ -61,11 +61,17 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val flush = ValidIO(new flush(coreParameters)) 
 
 
+        //val mtvec = Input(UInt(32.W))
+
+
         // PC FILE //
         // Read port (Exec)
         val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntries).W))
         val PC_file_exec_data           =   Output(UInt(32.W))
     }); dontTouch(io)
+
+
+    val CSR_port = IO(Input(new CSR_out))
 
     //////////////
     // POINTERS // 
@@ -174,6 +180,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         val ROB_WB_data = Wire(new ROB_WB(coreParameters))
         ROB_WB_data.busy := 0.B
+        ROB_WB_data.exception := 0.B
+        ROB_WB_data.exception_cause := 0.U.asTypeOf(EX_CAUSE())
         ROB_WB_data.RD_data.foreach(_:= 0.U)
 
         dontTouch(ROB_WB_data)
@@ -187,6 +195,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU0
         val ROB_WB_data_FU0 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU0.busy             :=  io.FU_outputs(0).valid
+        ROB_WB_data_FU0.exception        :=  io.FU_outputs(0).bits.exception
+        ROB_WB_data_FU0.exception_cause  := io.FU_outputs(0).bits.exception_cause
         ROB_WB_data_FU0.RD_data.foreach(_:= io.FU_outputs(0).bits.RD_data)
         ROB_WB_banks(i).io.addrB         :=  io.FU_outputs(0).bits.ROB_index
         ROB_WB_banks(i).io.writeDataB    :=  ROB_WB_data_FU0
@@ -195,7 +205,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU1
         val ROB_WB_data_FU1 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU1.busy             :=  io.FU_outputs(1).valid
-        ROB_WB_data_FU1.RD_data.foreach(_:= io.FU_outputs(1).bits.RD_data)
+        ROB_WB_data_FU1.exception        :=  io.FU_outputs(1).bits.exception
+        ROB_WB_data_FU1.exception_cause  :=  io.FU_outputs(1).bits.exception_cause
+        ROB_WB_data_FU1.RD_data.foreach(_:=  io.FU_outputs(1).bits.RD_data)
         ROB_WB_banks(i).io.addrC         :=  io.FU_outputs(1).bits.ROB_index
         ROB_WB_banks(i).io.writeDataC    :=  ROB_WB_data_FU1
         ROB_WB_banks(i).io.writeEnableC  :=  io.FU_outputs(1).valid && (io.FU_outputs(1).bits.fetch_packet_index === i.U)
@@ -203,6 +215,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU2
         val ROB_WB_data_FU2 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU2.busy             :=  io.FU_outputs(2).valid
+        ROB_WB_data_FU2.exception        :=  io.FU_outputs(2).bits.exception
+        ROB_WB_data_FU2.exception_cause  :=  io.FU_outputs(2).bits.exception_cause
         ROB_WB_data_FU2.RD_data.foreach(_:=  io.FU_outputs(2).bits.RD_data)
         ROB_WB_banks(i).io.addrD         :=  io.FU_outputs(2).bits.ROB_index
         ROB_WB_banks(i).io.writeDataD    :=  ROB_WB_data_FU2
@@ -211,6 +225,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // FU3
         val ROB_WB_data_FU3 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU3.busy             :=  io.FU_outputs(3).valid
+        ROB_WB_data_FU3.exception        :=  io.FU_outputs(3).bits.exception
+        ROB_WB_data_FU3.exception_cause  :=  io.FU_outputs(3).bits.exception_cause
         ROB_WB_data_FU3.RD_data.foreach(_:=  io.FU_outputs(3).bits.RD_data)
         ROB_WB_banks(i).io.addrE         :=  io.FU_outputs(3).bits.ROB_index
         ROB_WB_banks(i).io.writeDataE    :=  ROB_WB_data_FU3
@@ -243,9 +259,11 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // The decoder is a mess right no
         ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.BRANCH || 
                                                 io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.JALR   || 
-                                                io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.JAL
+                                                io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.JAL    || 
+                                                io.ROB_packet.bits.decoded_instruction(i).MRET
         
-        ROB_entry_data.is_flushing           := io.ROB_packet.bits.decoded_instruction(i).needs_CSRs  || io.ROB_packet.bits.decoded_instruction(i).FENCE 
+        ROB_entry_data.is_fence              := io.ROB_packet.bits.decoded_instruction(i).FENCE
+        ROB_entry_data.is_CSR                := io.ROB_packet.bits.decoded_instruction(i).needs_CSRs
         ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
         ROB_entry_data.MOB_index             := io.ROB_packet.bits.decoded_instruction(i).MOB_index
 
@@ -361,6 +379,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until fetchWidth){
         ROB_output.complete(i)          := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
+        ROB_output.exception(i)         := ROB_WB_banks(i).io.readDataG.exception    // Rename busy to complete
+        ROB_output.exception_cause(i)   := ROB_WB_banks(i).io.readDataG.exception_cause    // Rename busy to complete
         ROB_output.RD_data.foreach(rd => rd(i) := ROB_WB_banks(i).io.readDataG.RD_data.getOrElse(0.U))
         ROB_output.ROB_entries(i)       := ROB_entry_banks(i).io.readDataB
     }
@@ -404,14 +424,15 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
 
     // FIXME: these should be named something like "taken_branch_OH"
-    val has_taken_branch_vec    = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
+    val has_taken_branch_vec        = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
+    val has_exception_vec           = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_output.complete(i)})
     
-    val has_flushing_instr_vec      = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && (ROB_entry_banks(i).io.readDataB.is_flushing)})
+    val has_flushing_instr_vec      = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && (ROB_entry_banks(i).io.readDataB.is_fence || ROB_entry_banks(i).io.readDataB.is_CSR)})
 
-    val has_taken_branch        = has_taken_branch_vec.reduce(_ || _)
-    val has_flushing_instr      = has_flushing_instr_vec.reduce(_ || _)
-    val earliest_taken_index    = PriorityEncoder(has_taken_branch_vec.asUInt) 
-    val expected_PC             = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + (fetchWidth*4).U)
+    val has_taken_branch            = has_taken_branch_vec.reduce(_ || _)
+    val has_flushing_instr          = has_flushing_instr_vec.reduce(_ || _)
+    val earliest_taken_index        = PriorityEncoder(has_taken_branch_vec.asUInt) 
+    val expected_PC                 = Mux(has_taken_branch, commit_resolved(earliest_taken_index).target, ROB_output.fetch_PC + (fetchWidth*4).U)
 
     dontTouch(has_taken_branch_vec)
 
@@ -542,6 +563,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     flush.is_misprediction    := 0.B
     flush.is_exception        := 0.B
+    flush.exception_cause     := 0.U.asTypeOf(EX_CAUSE())
     flush.is_fence            := 0.B
     flush.is_CSR              := 0.B
     flush.flushing_PC         := 0.U
@@ -561,11 +583,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
         for(i <- fetchWidth-1 to 0 by - 1){
 
-            val is_valid  = ROB_output.ROB_entries(i).valid
-            val is_branch = ROB_entry_banks(i).io.readDataB.is_branch
             // FIXME: seperate these correctly, currently indistinguishable...
-            val is_fence  = ROB_entry_banks(i).io.readDataB.is_flushing
-            val is_CSR    = ROB_entry_banks(i).io.readDataB.is_flushing
+            val is_valid        = ROB_output.ROB_entries(i).valid
+            val is_exception    = ROB_output.exception(i)
+            val exception_cause = ROB_output.exception_cause(i)
+            val is_branch       = ROB_entry_banks(i).io.readDataB.is_branch
+            val is_fence        = ROB_entry_banks(i).io.readDataB.is_fence
+            val is_CSR          = ROB_entry_banks(i).io.readDataB.is_CSR
             when(is_branch && is_valid){
 
 
@@ -575,6 +599,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
                     commit.fetch_packet_index    := i.U
                     flush.is_misprediction       := 1.B
 
+                    flush.is_exception          := 0.B
+                flush.exception_cause       := 0.U.asTypeOf(EX_CAUSE())
                     flush.is_fence              := 0.B
                     flush.is_CSR                := 0.B
 
@@ -587,6 +613,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
                     commit.fetch_packet_index    := i.U
                     flush.is_misprediction       := 1.B
 
+                    flush.is_exception          := 0.B
+                    flush.exception_cause       := 0.U.asTypeOf(EX_CAUSE())
                     flush.is_fence              := 0.B
                     flush.is_CSR                := 0.B
                     flush.flushing_PC           := commit.fetch_PC + (i*4).U
@@ -599,6 +627,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
                     commit.fetch_packet_index    := i.U
                     flush.is_misprediction       := 1.B
 
+                    flush.is_exception          := 0.B
+                    flush.exception_cause       := 0.U.asTypeOf(EX_CAUSE())
                     flush.is_fence              := 0.B
                     flush.is_CSR                := 0.B
                     flush.flushing_PC           := commit.fetch_PC + (i*4).U
@@ -614,12 +644,20 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
                 flush.is_misprediction      := 0.B
                 //FIXME: ditto
-                flush.is_fence              := 1.B
-                flush.is_CSR                := 1.B
+                flush.is_exception          := is_exception
+                flush.exception_cause       := exception_cause
+                flush.is_fence              := is_fence
+                flush.is_CSR                := is_CSR
                 flush.flushing_PC           := commit.fetch_PC + (i*4).U
 
                 commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
-                flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
+
+                when(is_exception){
+                    // FIXME: this should be MTVEC
+                    flush.redirect_PC  := CSR_port.mtvec.asUInt
+                }.otherwise{
+                    flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
+                }
             }
         }
     }

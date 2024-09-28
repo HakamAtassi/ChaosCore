@@ -6,6 +6,7 @@
 //#include "../utils/test_utils.c"
 
 #include "dhrystone.h"
+#include "../utils/CSR.h"
 
 
 #ifndef REG
@@ -184,6 +185,3 @@ Enumeration Enum_Par_Val;
     return (false);
 } /* Func_3 */
 
-void debug_printf(const char* str, ...)
-{
-}

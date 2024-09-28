@@ -125,6 +125,8 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // ROB <> BACKEND //
     ////////////////////
     ROB.io.FU_outputs <> backend.io.FU_outputs 
+    //ROB.io.mtvec <> backend.io.mtvec
+    ROB.CSR_port <> backend.CSR_port
 
     ROB.io.partial_commit <> backend.io.partial_commit
 

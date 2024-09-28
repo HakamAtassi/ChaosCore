@@ -73,10 +73,15 @@ class backend(coreParameters:CoreParameters) extends Module{
 
         val MOB_output                  =   ValidIO(new FU_output(coreParameters))                                               // broadcast load data
 
+        //val mtvec = Output(UInt(32.W))
+
 
         // UPDATE //
         val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
     }); dontTouch(io)
+
+
+    val CSR_port = IO(Output(new CSR_out))
 
 
 
@@ -224,8 +229,10 @@ class backend(coreParameters:CoreParameters) extends Module{
     execution_engine.io.partial_commit           <> io.partial_commit
     execution_engine.io.commit           <> io.commit
 
+    
 
-    //io.FU_outputs(3) <> MOB.io.MOB_output
+    // Output CSR_port values
+    execution_engine.CSR_port <> CSR_port
 
 
 
@@ -243,6 +250,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     ////////////////
     MOB.io.fetch_PC <> io.fetch_PC
     io.MOB_output   <> MOB.io.MOB_output   // this updates reg status etc...
+
 
     ///////////
     // FLUSH //

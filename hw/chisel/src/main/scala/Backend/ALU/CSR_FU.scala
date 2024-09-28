@@ -338,6 +338,8 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     import coreParameters._
 
+    val CSR_port = IO(Output(new CSR_out))
+
 
     ////////////////////////
     // DECODE CSR REQUEST //
@@ -595,9 +597,48 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
 
 
+
+    ///////////////
+    // EXCEPTION //
+    ///////////////
+
+    // Exceptions: 
+    // Write to MEPC
+    // Write to MCAUSE
+    // Write to MSTATUS
+
+    when(io.flush.bits.is_exception){
+        //mepc_reg := io.flush.bits.flushing_PC
+
+        mepc_reg := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
+        mcause_reg.CODE := io.flush.bits.exception_cause.asUInt
+        //mstatus_reg := ???
+    }
+
+
+
+    ///////////////////////////
+    // RETURN FROM EXCEPTION //
+    ///////////////////////////
+
+    // MPP from mstatus
+    // MIE from MPIE
+    // branch to MEPC
+
+
+    /////////////////////
+    // ASSIGN CSR PORT //
+    /////////////////////
+
+    CSR_port.mtvec := mtvec_reg
+
+
     ////////////////////
     // BRANCH CONTROL //
     ////////////////////
+
+
+
 
 
     // Any instruction can cause an exception. When this happens, jump to vtvec
@@ -642,6 +683,21 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val mret_sret = mret || sret
 
 
+    // FIXME: add more robust exception generation...
+    // ie, make it its own section
+    val EXCEPTION_CAUSE = Wire(EX_CAUSE())
+
+    // FIXME: add mstatus
+    // Then add mstatus check when outputting excause
+
+    EXCEPTION_CAUSE := EX_CAUSE.INSTRUCTION_ADDRESS_MISALIGNED  // default doesnt matter
+    when(ECALL){
+        EXCEPTION_CAUSE := EX_CAUSE.ECALL_FROM_M_MODE
+    }
+
+
+    //io.mtvec := mtvec_reg.asUInt
+
 
 
     // ALU pipelined; always ready
@@ -668,10 +724,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     io.FU_output.bits.ROB_index             := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
 
+    io.FU_output.bits.exception             := RegNext(ECALL)   //FIXME: currently only ECALL causes an exception
+    io.FU_output.bits.exception_cause       := RegNext(EXCEPTION_CAUSE)   //FIXME: currently only ECALL causes an exception
+
+
+
     input_valid                             := CSR_input_valid
-
-
-
 
     dontTouch(CSR_input_valid)
     dontTouch(input_valid)

@@ -355,6 +355,8 @@
 
 /* variables for time measurement: */
 
+#include "../utils/CSR.h"
+
 #ifdef TIME
 
 #define CLOCK_TYPE "time()"
@@ -384,8 +386,8 @@ extern clock_t	clock();
 #define HZ 1000000
 #define Too_Small_Time 1
 #define CLOCK_TYPE "rdcycle()"
-#define Start_Timer() Begin_Time = read_csr(mcycle)
-#define Stop_Timer() End_Time = read_csr(mcycle)
+#define Start_Timer() Begin_Time = read_csr(MCYCLE)
+#define Stop_Timer() End_Time = read_csr(MCYCLE)
 
 #else
                 /* Use times(2) time function unless    */
@@ -413,7 +415,7 @@ struct tms      time_info;
 
 
 #define Mic_secs_Per_Second     1000000
-#define NUMBER_OF_RUNS		500 /* Default number of runs */
+#define NUMBER_OF_RUNS		100 /* Default number of runs */
 
 #ifdef  NOSTRUCTASSIGN
 #define structassign(d, s)      memcpy(&(d), &(s), sizeof(d))
@@ -438,6 +440,7 @@ struct tms      time_info;
 
 #include <stdio.h>
 #include <string.h>
+#include "../utils/CSR.h"
                 /* for strcpy, strcmp */
 
 #define Null 0 

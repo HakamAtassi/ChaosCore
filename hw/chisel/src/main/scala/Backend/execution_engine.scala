@@ -42,12 +42,18 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
         val flush           =   Flipped(ValidIO(new flush(coreParameters)))
 
         val partial_commit  =   Input(new partial_commit(coreParameters))
-        val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
+        val commit          =   Flipped(ValidIO(new commit(coreParameters)))
 
         val FU_input        =   Vec(portCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
         
         val FU_output       =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+
+
+        //val mtvec = Output(UInt(32.W))
     })
+
+
+    val CSR_port = IO(Output(new CSR_out))
 
     // FUs
     val FUs: Seq[FU] = Seq.tabulate(FUParamSeq.length) { i => Module(new FU(FUParamSeq(i))(coreParameters))}
@@ -59,9 +65,15 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
         FUs(i).io.commit    <> io.commit
         FUs(i).io.FU_input  <> io.FU_input(i)
         FUs(i).io.FU_output <> io.FU_output(i)
+
+        FUs(i).CSR_port.foreach { _ =>
+            FUs(i).CSR_port.get <> CSR_port
+        }
     }
 
 
+   
+    //io.mtvec :=  FUs(0).io.mtvec
 
 
 }

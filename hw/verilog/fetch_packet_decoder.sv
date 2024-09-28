@@ -85,7 +85,9 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_FENCE,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_MRET,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_ECALL,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_access_width,
@@ -114,7 +116,9 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_FENCE,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_MRET,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_ECALL,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_access_width,
@@ -143,7 +147,9 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_FENCE,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_MRET,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_ECALL,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_access_width,
@@ -172,7 +178,9 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_FENCE,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_MRET,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_ECALL,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_access_width,
@@ -213,7 +221,9 @@ module fetch_packet_decoder(
   wire        _decoders_3_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_3_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_3_io_decoded_instruction_bits_FENCE;
+  wire        _decoders_3_io_decoded_instruction_bits_MRET;
   wire        _decoders_3_io_decoded_instruction_bits_IS_IMM;
+  wire        _decoders_3_io_decoded_instruction_bits_ECALL;
   wire        _decoders_3_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_3_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_3_io_decoded_instruction_bits_access_width;
@@ -236,7 +246,9 @@ module fetch_packet_decoder(
   wire        _decoders_2_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_2_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_2_io_decoded_instruction_bits_FENCE;
+  wire        _decoders_2_io_decoded_instruction_bits_MRET;
   wire        _decoders_2_io_decoded_instruction_bits_IS_IMM;
+  wire        _decoders_2_io_decoded_instruction_bits_ECALL;
   wire        _decoders_2_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_2_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_2_io_decoded_instruction_bits_access_width;
@@ -259,7 +271,9 @@ module fetch_packet_decoder(
   wire        _decoders_1_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_1_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_1_io_decoded_instruction_bits_FENCE;
+  wire        _decoders_1_io_decoded_instruction_bits_MRET;
   wire        _decoders_1_io_decoded_instruction_bits_IS_IMM;
+  wire        _decoders_1_io_decoded_instruction_bits_ECALL;
   wire        _decoders_1_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_1_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_1_io_decoded_instruction_bits_access_width;
@@ -282,7 +296,9 @@ module fetch_packet_decoder(
   wire        _decoders_0_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_0_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_0_io_decoded_instruction_bits_FENCE;
+  wire        _decoders_0_io_decoded_instruction_bits_MRET;
   wire        _decoders_0_io_decoded_instruction_bits_IS_IMM;
+  wire        _decoders_0_io_decoded_instruction_bits_ECALL;
   wire        _decoders_0_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;
@@ -335,8 +351,12 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_MULTIPLY),
     .io_decoded_instruction_bits_FENCE
       (_decoders_0_io_decoded_instruction_bits_FENCE),
+    .io_decoded_instruction_bits_MRET
+      (_decoders_0_io_decoded_instruction_bits_MRET),
     .io_decoded_instruction_bits_IS_IMM
       (_decoders_0_io_decoded_instruction_bits_IS_IMM),
+    .io_decoded_instruction_bits_ECALL
+      (_decoders_0_io_decoded_instruction_bits_ECALL),
     .io_decoded_instruction_bits_mem_signed
       (_decoders_0_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
@@ -391,8 +411,12 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_MULTIPLY),
     .io_decoded_instruction_bits_FENCE
       (_decoders_1_io_decoded_instruction_bits_FENCE),
+    .io_decoded_instruction_bits_MRET
+      (_decoders_1_io_decoded_instruction_bits_MRET),
     .io_decoded_instruction_bits_IS_IMM
       (_decoders_1_io_decoded_instruction_bits_IS_IMM),
+    .io_decoded_instruction_bits_ECALL
+      (_decoders_1_io_decoded_instruction_bits_ECALL),
     .io_decoded_instruction_bits_mem_signed
       (_decoders_1_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
@@ -447,8 +471,12 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_MULTIPLY),
     .io_decoded_instruction_bits_FENCE
       (_decoders_2_io_decoded_instruction_bits_FENCE),
+    .io_decoded_instruction_bits_MRET
+      (_decoders_2_io_decoded_instruction_bits_MRET),
     .io_decoded_instruction_bits_IS_IMM
       (_decoders_2_io_decoded_instruction_bits_IS_IMM),
+    .io_decoded_instruction_bits_ECALL
+      (_decoders_2_io_decoded_instruction_bits_ECALL),
     .io_decoded_instruction_bits_mem_signed
       (_decoders_2_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
@@ -503,8 +531,12 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_MULTIPLY),
     .io_decoded_instruction_bits_FENCE
       (_decoders_3_io_decoded_instruction_bits_FENCE),
+    .io_decoded_instruction_bits_MRET
+      (_decoders_3_io_decoded_instruction_bits_MRET),
     .io_decoded_instruction_bits_IS_IMM
       (_decoders_3_io_decoded_instruction_bits_IS_IMM),
+    .io_decoded_instruction_bits_ECALL
+      (_decoders_3_io_decoded_instruction_bits_ECALL),
     .io_decoded_instruction_bits_mem_signed
       (_decoders_3_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
@@ -564,8 +596,12 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_0_FENCE
       (_decoders_0_io_decoded_instruction_bits_FENCE),
+    .io_enq_bits_decoded_instruction_0_MRET
+      (_decoders_0_io_decoded_instruction_bits_MRET),
     .io_enq_bits_decoded_instruction_0_IS_IMM
       (_decoders_0_io_decoded_instruction_bits_IS_IMM),
+    .io_enq_bits_decoded_instruction_0_ECALL
+      (_decoders_0_io_decoded_instruction_bits_ECALL),
     .io_enq_bits_decoded_instruction_0_mem_signed
       (_decoders_0_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_0_memory_type
@@ -616,8 +652,12 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_1_FENCE
       (_decoders_1_io_decoded_instruction_bits_FENCE),
+    .io_enq_bits_decoded_instruction_1_MRET
+      (_decoders_1_io_decoded_instruction_bits_MRET),
     .io_enq_bits_decoded_instruction_1_IS_IMM
       (_decoders_1_io_decoded_instruction_bits_IS_IMM),
+    .io_enq_bits_decoded_instruction_1_ECALL
+      (_decoders_1_io_decoded_instruction_bits_ECALL),
     .io_enq_bits_decoded_instruction_1_mem_signed
       (_decoders_1_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_1_memory_type
@@ -668,8 +708,12 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_2_FENCE
       (_decoders_2_io_decoded_instruction_bits_FENCE),
+    .io_enq_bits_decoded_instruction_2_MRET
+      (_decoders_2_io_decoded_instruction_bits_MRET),
     .io_enq_bits_decoded_instruction_2_IS_IMM
       (_decoders_2_io_decoded_instruction_bits_IS_IMM),
+    .io_enq_bits_decoded_instruction_2_ECALL
+      (_decoders_2_io_decoded_instruction_bits_ECALL),
     .io_enq_bits_decoded_instruction_2_mem_signed
       (_decoders_2_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_2_memory_type
@@ -720,8 +764,12 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_3_FENCE
       (_decoders_3_io_decoded_instruction_bits_FENCE),
+    .io_enq_bits_decoded_instruction_3_MRET
+      (_decoders_3_io_decoded_instruction_bits_MRET),
     .io_enq_bits_decoded_instruction_3_IS_IMM
       (_decoders_3_io_decoded_instruction_bits_IS_IMM),
+    .io_enq_bits_decoded_instruction_3_ECALL
+      (_decoders_3_io_decoded_instruction_bits_ECALL),
     .io_enq_bits_decoded_instruction_3_mem_signed
       (_decoders_3_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_3_memory_type
@@ -810,8 +858,12 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_deq_bits_decoded_instruction_0_FENCE
       (io_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
+    .io_deq_bits_decoded_instruction_0_MRET
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
     .io_deq_bits_decoded_instruction_0_IS_IMM
       (io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
+    .io_deq_bits_decoded_instruction_0_ECALL
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_ECALL),
     .io_deq_bits_decoded_instruction_0_mem_signed
       (io_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_deq_bits_decoded_instruction_0_memory_type
@@ -868,8 +920,12 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_deq_bits_decoded_instruction_1_FENCE
       (io_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
+    .io_deq_bits_decoded_instruction_1_MRET
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
     .io_deq_bits_decoded_instruction_1_IS_IMM
       (io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
+    .io_deq_bits_decoded_instruction_1_ECALL
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_ECALL),
     .io_deq_bits_decoded_instruction_1_mem_signed
       (io_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_deq_bits_decoded_instruction_1_memory_type
@@ -926,8 +982,12 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_deq_bits_decoded_instruction_2_FENCE
       (io_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
+    .io_deq_bits_decoded_instruction_2_MRET
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
     .io_deq_bits_decoded_instruction_2_IS_IMM
       (io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
+    .io_deq_bits_decoded_instruction_2_ECALL
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_ECALL),
     .io_deq_bits_decoded_instruction_2_mem_signed
       (io_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_deq_bits_decoded_instruction_2_memory_type
@@ -984,8 +1044,12 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_deq_bits_decoded_instruction_3_FENCE
       (io_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
+    .io_deq_bits_decoded_instruction_3_MRET
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
     .io_deq_bits_decoded_instruction_3_IS_IMM
       (io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
+    .io_deq_bits_decoded_instruction_3_ECALL
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_ECALL),
     .io_deq_bits_decoded_instruction_3_mem_signed
       (io_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_deq_bits_decoded_instruction_3_memory_type
