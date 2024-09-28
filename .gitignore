@@ -45,3 +45,6 @@ syn/.log
 
 
 binaries/spike_traces/
+
+
+*.log
