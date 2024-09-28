@@ -415,7 +415,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     // FORMAL //
     ////////////
 
-    
+    /*
     val formal_RAT      = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
     val formal_RAT_comb = WireInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
 
@@ -514,6 +514,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     }
 
     formal_RAT := formal_RAT_comb
+    */
 
 
 

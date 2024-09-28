@@ -29,6 +29,11 @@ configs = {
 
 # DO NOT MODIFY ANYTHING INCLUDING AND AFTER THIS LINE #
 
-def test_reset():
-        configs["testcase"] = "test_reset"
+def test_addi():
+        configs["testcase"] = "test_addi"
         run(**configs)
+
+def test_xori():
+        configs["testcase"] = "test_xori"
+        run(**configs)
+

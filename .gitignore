@@ -28,7 +28,7 @@ pipelined_non_restoring.c
 *.bsp
 *.metals
 *.scala-build
-
+*.wlf
 
 assets/
 

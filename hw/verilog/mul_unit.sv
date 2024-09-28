@@ -43,7 +43,9 @@ module mul_unit(
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
   input         io_FU_input_bits_decoded_instruction_needs_ALU,
                 io_FU_input_bits_decoded_instruction_needs_branch_unit,
+                io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_bits_decoded_instruction_FENCE,
                 io_FU_input_bits_decoded_instruction_IS_IMM,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
@@ -63,15 +65,24 @@ module mul_unit(
     + {28'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0};
   reg  [31:0] arithmetic_result;
   wire        _REMU_T = io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
+  wire        _SLTU_T_1 = io_FU_input_bits_decoded_instruction_instructionType == 5'h4;
+  wire        _BNE_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1;
+  wire        SLL =
+    (_REMU_T | _SLTU_T_1) & _BNE_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
+  wire        _BGE_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
+  wire        SRL =
+    (_REMU_T | _SLTU_T_1) & _BGE_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+    & ~io_FU_input_bits_decoded_instruction_SUBTRACT;
+  wire        SRA =
+    (_REMU_T | _SLTU_T_1) & _BGE_T & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+    & io_FU_input_bits_decoded_instruction_SUBTRACT;
   wire        AUIPC =
     io_FU_input_bits_decoded_instruction_instructionType == 5'h5
     & ~io_FU_input_bits_decoded_instruction_MULTIPLY;
   wire        MUL =
     _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0
     & io_FU_input_bits_decoded_instruction_MULTIPLY;
-  wire        MULH =
-    _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1
-    & io_FU_input_bits_decoded_instruction_MULTIPLY;
+  wire        MULH = _REMU_T & _BNE_T & io_FU_input_bits_decoded_instruction_MULTIPLY;
   wire        MULSU =
     _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2
     & io_FU_input_bits_decoded_instruction_MULTIPLY;
@@ -126,8 +137,7 @@ module mul_unit(
         else if (_REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4
                  & io_FU_input_bits_decoded_instruction_MULTIPLY)
           arithmetic_result <= io_FU_input_bits_RS1_data / operand2_signed;
-        else if (_REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5
-                 & io_FU_input_bits_decoded_instruction_MULTIPLY)
+        else if (_REMU_T & _BGE_T & io_FU_input_bits_decoded_instruction_MULTIPLY)
           arithmetic_result <= io_FU_input_bits_RS1_data / operand2_unsigned;
         else if (_REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h6
                  & io_FU_input_bits_decoded_instruction_MULTIPLY)
@@ -137,7 +147,9 @@ module mul_unit(
           arithmetic_result <= io_FU_input_bits_RS1_data % operand2_unsigned;
       end
     end
-    io_FU_output_valid_REG <= mult_unit_input_valid & ~io_flush_valid;
+    io_FU_output_valid_REG <=
+      mult_unit_input_valid & ~io_flush_valid
+      | io_FU_input_bits_decoded_instruction_FENCE;
     io_FU_output_bits_fetch_PC_REG <= io_FU_input_bits_fetch_PC;
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;

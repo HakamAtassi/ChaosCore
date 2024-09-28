@@ -2164,6 +2164,48 @@ module backend(
       (io_partial_commit_PRDold_2),
     .io_partial_commit_PRDold_3
       (io_partial_commit_PRDold_3),
+    .io_commit_valid                                             (io_commit_valid),
+    .io_commit_bits_fetch_PC
+      (io_commit_bits_fetch_PC),
+    .io_commit_bits_T_NT                                         (io_commit_bits_T_NT),
+    .io_commit_bits_ROB_index
+      (io_commit_bits_ROB_index),
+    .io_commit_bits_br_type                                      (io_commit_bits_br_type),
+    .io_commit_bits_br_mask_0
+      (io_commit_bits_br_mask_0),
+    .io_commit_bits_br_mask_1
+      (io_commit_bits_br_mask_1),
+    .io_commit_bits_br_mask_2
+      (io_commit_bits_br_mask_2),
+    .io_commit_bits_br_mask_3
+      (io_commit_bits_br_mask_3),
+    .io_commit_bits_fetch_packet_index
+      (io_commit_bits_fetch_packet_index),
+    .io_commit_bits_is_misprediction
+      (io_commit_bits_is_misprediction),
+    .io_commit_bits_expected_PC
+      (io_commit_bits_expected_PC),
+    .io_commit_bits_GHR                                          (io_commit_bits_GHR),
+    .io_commit_bits_TOS                                          (io_commit_bits_TOS),
+    .io_commit_bits_NEXT                                         (io_commit_bits_NEXT),
+    .io_commit_bits_free_list_front_pointer
+      (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RD_0                                         (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1                                         (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2                                         (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3                                         (io_commit_bits_RD_3),
+    .io_commit_bits_PRD_0                                        (io_commit_bits_PRD_0),
+    .io_commit_bits_PRD_1                                        (io_commit_bits_PRD_1),
+    .io_commit_bits_PRD_2                                        (io_commit_bits_PRD_2),
+    .io_commit_bits_PRD_3                                        (io_commit_bits_PRD_3),
+    .io_commit_bits_RD_valid_0
+      (io_commit_bits_RD_valid_0),
+    .io_commit_bits_RD_valid_1
+      (io_commit_bits_RD_valid_1),
+    .io_commit_bits_RD_valid_2
+      (io_commit_bits_RD_valid_2),
+    .io_commit_bits_RD_valid_3
+      (io_commit_bits_RD_valid_3),
     .io_FU_input_0_ready
       (_execution_engine_io_FU_input_0_ready),
     .io_FU_input_0_valid
