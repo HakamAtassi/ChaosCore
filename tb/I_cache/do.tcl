@@ -12,7 +12,7 @@ vlog src/*.sv
 view wave
 
 # Run the simulation
-vsim -work work -stats=none -voptargs="+acc" top +UVM_TESTNAME=cache_base_test +UVM_NO_RELNOTES +UVM_VERBOSITY=UVM_MEDIUM  
+vsim -work work -stats=none -voptargs="+acc" top +UVM_TESTNAME=cache_base_test +UVM_NO_RELNOTES +UVM_VERBOSITY=UVM_LOW  
 #+UVM_CONFIG_DB_TRACE
 #vsim -voptargs=+acc work.counter_tb
 
@@ -35,8 +35,17 @@ add wave -r /top/DUT/dut/instruction_cache/valid_mem_0_1
 #add wave -r /top/DUT/dut/instruction_cache/data_memory_1/*
 #add wave -r /top/DUT/dut/instruction_cache/io_flush*
 #add wave -r /top/DUT/dut/instruction_cache/CPU_response_skid_buffer/*
-add wave -r /top/DUT/dut/instruction_cache/io_CPU_response*
-add wave -r /top/DUT/dut/instruction_cache/io_CPU_request*
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_response_bits_instructions_0_instruction
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_response_bits_instructions_1_instruction
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_response_bits_instructions_2_instruction
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_response_bits_instructions_3_instruction
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_response_bits_fetch_PC
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_response_bits_valid_bits_*
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_request_bits_addr
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_response_valid
+add wave -r /top/DUT/dut/instruction_cache/io_CPU_request_ready
+#add wave -r /top/DUT/dut/instruction_cache/io_CPU_request*
+#add wave -r /top/DUT/dut/instruction_cache/io_CPU_response*
 #add wave -r /top/DUT/dut/instruction_cache/validator/*
 #add wave -r /top/DUT/dut/instruction_cache/*
 #add wave -r /top/DUT/dut/axi_ram/mem

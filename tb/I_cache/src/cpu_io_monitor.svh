@@ -17,8 +17,7 @@ class cpu_io_monitor extends uvm_monitor;
 
     memory reference_mem;
 
-    uvm_analysis_port #(cache_rsp) rsp_port;
-    uvm_analysis_port #(cache_req) req_port;
+    uvm_analysis_port #(cache_transaction) transaction_port;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -28,57 +27,44 @@ class cpu_io_monitor extends uvm_monitor;
         `uvm_info("MONITOR","Creating CPU IO Monitor...",500);
         super.build_phase(phase);
         if(!uvm_config_db #(virtual instruction_cache_if)::get(this, "", "cache_vif", cache_vif)) begin 
-            `uvm_error("ENV", "Failed to get cache interface") 
+            `uvm_error("MONITOR", "Failed to get cache interface") 
         end
-        if(!uvm_config_db #(memory)::get(this, "", "reference_mem", reference_mem)) begin 
-            `uvm_error("TEST", "Failed to get reference_mem") 
-        end
-        rsp_port = new("rsp_port", this);
-        req_port = new("req_port", this);
+        transaction_port = new("transaction_port", this);
     endfunction
 
     task run_phase(uvm_phase phase);
 
-        cache_rsp rsp = new();
-        cache_req req = new();
+        cache_transaction transaction = cache_transaction::type_id::create("cache_transaction", this);
 
         @(negedge cache_vif.reset);
         forever begin
             @(posedge cache_vif.clock);
             #1;
 
-            if (cache_vif.io_CPU_response_valid == 1 && cache_vif.io_CPU_response_bits_valid_bits_0 == 1) begin
-
-                rsp_port.write(rsp);
-                req_port.write(req);
-
-                addr = cache_vif.io_CPU_request_bits_addr >> 2;
-                `uvm_info("MON", $psprintf("Address: %2h", addr), UVM_MEDIUM)
-
-                instr0 = reference_mem.mem[addr];
-                instr1 = reference_mem.mem[addr + 1];
-                instr2 = reference_mem.mem[addr + 2];
-                instr3 = reference_mem.mem[addr + 3];
-
-                `uvm_info("MON",
-                $psprintf(
-                        "\nCache Response 0: %2h, Reference 0: %2h \n", cache_vif.io_CPU_response_bits_instructions_0_instruction, instr0,
-                        "Cache Response 1: %2h, Reference 1: %2h \n", cache_vif.io_CPU_response_bits_instructions_1_instruction, instr1,
-                        "Cache Response 2: %2h, Reference 2: %2h \n", cache_vif.io_CPU_response_bits_instructions_2_instruction, instr2,
-                        "Cache Response 3: %2h, Reference 3: %2h \n", cache_vif.io_CPU_response_bits_instructions_3_instruction, instr3)
-                , UVM_MEDIUM);
-
-                assert(instr0 == cache_vif.io_CPU_response_bits_instructions_0_instruction);
+            if (cache_vif.io_CPU_response_valid == 1) begin
 
 
-                // `uvm_info("run",
-                //     $psprintf("Monitor got req %s",
-                //     req.convert2string()), 
-                //     UVM_MEDIUM);
-                // `uvm_info("run",
-                //     $psprintf("Monitor got %s",
-                //     rsp.convert2string()), 
-                //     UVM_MEDIUM);
+                transaction.io_CPU_request_bits_addr = cache_vif.io_CPU_request_bits_addr;
+                transaction.io_CPU_response_bits_valid_bits_0 = cache_vif.io_CPU_response_bits_valid_bits_0;
+                transaction.io_CPU_response_bits_valid_bits_1 = cache_vif.io_CPU_response_bits_valid_bits_1;
+                transaction.io_CPU_response_bits_valid_bits_2 = cache_vif.io_CPU_response_bits_valid_bits_2;
+                transaction.io_CPU_response_bits_valid_bits_3 = cache_vif.io_CPU_response_bits_valid_bits_3;
+
+
+                if (cache_vif.io_CPU_response_bits_valid_bits_0) begin
+                    transaction.io_CPU_response_bits_instructions_0_instruction = cache_vif.io_CPU_response_bits_instructions_0_instruction;
+                end 
+                if (cache_vif.io_CPU_response_bits_valid_bits_1) begin
+                    transaction.io_CPU_response_bits_instructions_1_instruction = cache_vif.io_CPU_response_bits_instructions_1_instruction;
+                end 
+                if (cache_vif.io_CPU_response_bits_valid_bits_2) begin
+                    transaction.io_CPU_response_bits_instructions_2_instruction = cache_vif.io_CPU_response_bits_instructions_2_instruction;
+                end 
+                if (cache_vif.io_CPU_response_bits_valid_bits_3) begin
+                    transaction.io_CPU_response_bits_instructions_3_instruction = cache_vif.io_CPU_response_bits_instructions_3_instruction;
+                end 
+
+                transaction_port.write(transaction);
 
             end
 

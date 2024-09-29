@@ -123,11 +123,14 @@ class cache_rsp extends uvm_sequence_item;
       return $psprintf("io_CPU_request_ready: %2h\n", io_CPU_request_ready,
                         "io_CPU_response_valid: %2h\n", io_CPU_response_valid,
                         "io_CPU_response_bits_fetch_PC: %2h\n", io_CPU_response_bits_fetch_PC,
-                        "io_CPU_response_bits_valid_bits_0123: %2h\n", io_CPU_response_bits_valid_bits_0 | io_CPU_response_bits_valid_bits_1 | io_CPU_response_bits_valid_bits_2 | io_CPU_response_bits_valid_bits_3,
+                        "io_CPU_response_bits_valid_bits_0: %b\n", io_CPU_response_bits_valid_bits_0,
+                        "io_CPU_response_bits_valid_bits_1: %b\n", io_CPU_response_bits_valid_bits_1,
+                        "io_CPU_response_bits_valid_bits_2: %b\n", io_CPU_response_bits_valid_bits_2,
+                        "io_CPU_response_bits_valid_bits_3: %b\n", io_CPU_response_bits_valid_bits_3,
                         "io_CPU_response_bits_instructions_0_instruction: %2h\n", io_CPU_response_bits_instructions_0_instruction,
                         "io_CPU_response_bits_instructions_1_instruction: %2h\n", io_CPU_response_bits_instructions_1_instruction,
                         "io_CPU_response_bits_instructions_2_instruction: %2h\n", io_CPU_response_bits_instructions_2_instruction,
-                        "io_CPU_response_bits_instructions_3_instruction: %2h\n", io_CPU_response_bits_instructions_3_instruction,
+                        "io_CPU_response_bits_instructions_3_instruction: %2h\n", io_CPU_response_bits_instructions_3_instruction
                         /*
                         "io_CPU_response_bits_prediction_hit: %2h\n", io_CPU_response_bits_prediction_hit,
                         "io_CPU_response_bits_prediction_target: %2h\n", io_CPU_response_bits_prediction_target,
@@ -158,39 +161,49 @@ class cache_rsp extends uvm_sequence_item;
 endclass : cache_rsp
 
 
-class base_sequence extends uvm_sequence#(cache_req, cache_rsp);
+class cache_transaction extends cache_rsp;
+  `uvm_object_utils(cache_transaction)   
 
-  `uvm_object_utils(base_sequence)
+  rand logic reset;
+  rand logic io_CPU_request_valid;
+  rand logic[31:0] io_CPU_request_bits_addr;
+  rand logic[31:0] io_CPU_request_bits_wr_data;
+  rand logic io_CPU_request_bits_wr_en;
+  rand logic io_CPU_response_ready;
 
-  cache_req req;
+  rand logic io_flush_valid;
+  rand logic io_flush_bits_is_misprediction;
+  rand logic io_flush_bits_is_exception;
+  rand logic io_flush_bits_is_fence;
+  rand logic io_flush_bits_is_CSR;
+  rand logic [31:0] io_flush_bits_flushing_PC;
+  rand logic [31:0] io_flush_bits_redirect_PC;
 
   function new(string name = "");
     super.new(name);
   endfunction : new
 
-  task body;
+  function string convert2string();
+    return $psprintf("Request:\n ",
+                    "reset: %1b\n", reset ,
+                    "io_CPU_request_valid: %2h\n", io_CPU_request_valid,
+                    "io_CPU_request_bits_addr: %2h\n", io_CPU_request_bits_addr,
+                    "io_CPU_request_bits_wr_data: %2h\n", io_CPU_request_bits_addr,
+                    "io_CPU_request_bits_wr_en: %2h\n", io_CPU_request_bits_wr_en,
+                    "io_CPU_response_ready: %2h\n", io_CPU_response_ready,
+                    "io_flush_valid: %2h\n", io_flush_valid,
+                    "Response: \n%s\n",super.convert2string()
+                    );
+  endfunction
 
-    req = new();
-    start_item(req);
-    req.reset = 1;
-    `uvm_info("test_seq","Sent Reset", UVM_HIGH);
-    finish_item(req);
 
-    repeat(8) begin
-      req = new();
-      start_item(req);
-      req.reset = 0;
-      req.io_CPU_request_valid = 1;
-      req.io_CPU_request_bits_addr = ($urandom_range(0,16383) / 4) * 4;
-      req.io_CPU_response_ready = 1;
-      req.io_flush_valid = 0;
-      //assert(req.randomize());
-      `uvm_info("test_seq",{"Sending transaction:\n ",req.convert2string()}, UVM_HIGH);
-      finish_item(req);
-      get_response(rsp);
-       `uvm_info("test_seq",{"Got back:\n ",rsp.convert2string()},UVM_HIGH);
-    end
-  endtask
-
-endclass
+  function bit comp(uvm_object rhs);
+    cache_transaction RHS;
+    $cast(RHS,rhs);
+    return (io_CPU_response_bits_instructions_0_instruction === RHS.io_CPU_response_bits_instructions_0_instruction) && 
+                  (io_CPU_response_bits_instructions_1_instruction === RHS.io_CPU_response_bits_instructions_1_instruction) &&
+                  (io_CPU_response_bits_instructions_2_instruction === RHS.io_CPU_response_bits_instructions_2_instruction) && 
+                  (io_CPU_response_bits_instructions_3_instruction === RHS.io_CPU_response_bits_instructions_3_instruction);
+  endfunction : comp
+endclass 
 `endif

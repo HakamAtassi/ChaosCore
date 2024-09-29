@@ -16,9 +16,7 @@ module top;
             DUT.dut.axi_ram.mem[index] = mem_data;
             reference_mem.mem[index] = mem_data;
         end
-        $display("mem: %2h", reference_mem.mem[0]);
-        $display("mem: %2h", DUT.dut.axi_ram.mem[0]);
-        uvm_config_db#(memory)::set(null, "uvm_test_top.env.cpu_io_agnt.monitor", "reference_mem", reference_mem);
+        uvm_config_db#(memory)::set(null, "uvm_test_top.env.scoreboard", "reference_mem", reference_mem);
         uvm_config_db#(virtual instruction_cache_if)::set(null, "*", "cache_vif", cache_if);
         run_test();
     end
