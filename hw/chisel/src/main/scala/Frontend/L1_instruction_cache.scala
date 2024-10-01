@@ -155,7 +155,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     /////////
 
     val request_valid   = RegInit(Bool(), 0.B)
-    val request_addr    = RegInit(UInt(32.W), 0.B)
+    val request_addr    = Wire(UInt(32.W))
     val request_data    = RegInit(UInt(32.W), 0.B)
     val request_wr_en   = RegInit(Bool(), 0.B)
     val resp_ready      = RegInit(Bool(), 0.B)
@@ -175,11 +175,15 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val valid_mem = RegInit(VecInit.tabulate(sets, ways){ (x, y) => 0.B })
     val current_set = Wire(UInt(setBits.W))
 
+    request_addr   := io.CPU_request.bits.addr & dram_addr_mask
+
 
     switch(cache_state){
 
         is(cacheState.Active){  // Wait for request
 
+            replay_address := io.CPU_request.bits  // if miss, buffer address
+            fetch_PC_buf   := io.CPU_request.bits
             when(miss===1.B && io.flush.valid === 0.U){           // Buffer current request, stall cache, go to wait state
 		        val read_accepted = AXI_read_request(request_addr, 0.U, L1_cacheLineSizeBytes.U)
                 when(read_accepted){
@@ -187,10 +191,6 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
                 }.otherwise{
                     cache_state              := cacheState.Request
                 }
-            }.otherwise{
-                request_addr   := io.CPU_request.bits.addr & dram_addr_mask
-                replay_address := io.CPU_request.bits  // if miss, buffer address
-                fetch_PC_buf   := io.CPU_request.bits
             }
         }
 
@@ -273,7 +273,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
         allocate_way := 0.U
         for(i <- 0 until ways){
-            when(LRU(i) === 0.U){
+            when(LRU(i) === 1.U){
                 allocate_way := (1.U<<i)
             }
         }
@@ -315,11 +315,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     for (way <- 0 until ways) {
       hit_oh_vec(way) := (data_way(way).tag === RegNext(current_packet.tag)) && data_way(way).valid
-      valid_mem(current_set)(way) := (allocate_way(way) & data_memory(way).io.wr_en) | valid_mem(current_set)(way)
-      data_way(way).valid := (allocate_way(way) & data_memory(way).io.wr_en) | valid_mem(current_set)(way)
-
-    //   valid_mem(current_set)(way) := cache_state === cacheState.Replay
-    //   data_way(way).valid := cache_state === cacheState.Replay
+      valid_mem(current_set)(way) := (allocate_way(way) && data_memory(way).io.wr_en) || valid_mem(current_set)(way)
+      data_way(way).valid := (allocate_way(way) && data_memory(way).io.wr_en) || valid_mem(current_set)(way)
     }
 
     hit_oh := hit_oh_vec.reverse.reduce(_ ## _)
@@ -328,8 +325,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val replay_valid = Wire(Bool())
     replay_valid := cache_state === cacheState.Replay
 
-    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush.valid) & !RegNext(reset.asBool) & (RegNext(valid_mem(current_set)(0)) | RegNext(valid_mem(current_set)(1)))
-    miss    := ((~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)) | !(RegNext(valid_mem(current_set)(0)) | RegNext(valid_mem(current_set)(1)))
+    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush.valid) & !RegNext(reset.asBool) & (RegNext(valid_mem(current_set)(0)) | RegNext(valid_mem(current_set)(1))) & (io.CPU_request.bits.addr === RegNext(io.CPU_request.bits.addr))
+    miss    := ((~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)) | !(RegNext(valid_mem(current_set)(0)) | RegNext(valid_mem(current_set)(1))) | !(io.CPU_request.bits.addr === RegNext(io.CPU_request.bits.addr))
 
     /////////////////////////////////////
     // Fetch Packet Selecting & Output //

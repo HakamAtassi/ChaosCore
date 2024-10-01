@@ -45,42 +45,42 @@ class cpu_io_driver extends uvm_driver #(cache_req, cache_rsp);
                 cache_vif.io_flush_bits_flushing_PC = req.io_flush_bits_flushing_PC;
                 cache_vif.io_flush_bits_redirect_PC = req.io_flush_bits_redirect_PC;
                 cache_vif.io_flush_valid = req.io_flush_valid;
+
+                rsp = new;
+                rsp.set_id_info(req);
             end
 
             @(posedge cache_vif.clock);
             #1;
-            cache_vif.io_CPU_response_ready = 1;
-            rsp = new;
-            rsp.io_CPU_request_ready = cache_vif.io_CPU_request_ready;
-            rsp.io_CPU_response_valid = cache_vif.io_CPU_response_valid;
-            rsp.io_CPU_response_bits_fetch_PC = cache_vif.io_CPU_response_bits_fetch_PC;
-            rsp.io_CPU_response_bits_valid_bits_0 = cache_vif.io_CPU_response_bits_valid_bits_0;
-            rsp.io_CPU_response_bits_valid_bits_1 = cache_vif.io_CPU_response_bits_valid_bits_1;
-            rsp.io_CPU_response_bits_valid_bits_2 = cache_vif.io_CPU_response_bits_valid_bits_2;
-            rsp.io_CPU_response_bits_valid_bits_3 = cache_vif.io_CPU_response_bits_valid_bits_3;
-            rsp.io_CPU_response_bits_instructions_0_instruction = cache_vif.io_CPU_response_bits_instructions_0_instruction;
-            rsp.io_CPU_response_bits_instructions_0_packet_index = cache_vif.io_CPU_response_bits_instructions_0_packet_index;
-            rsp.io_CPU_response_bits_instructions_0_ROB_index = cache_vif.io_CPU_response_bits_instructions_0_ROB_index;
-            rsp.io_CPU_response_bits_instructions_1_instruction = cache_vif.io_CPU_response_bits_instructions_1_instruction;
-            rsp.io_CPU_response_bits_instructions_1_packet_index = cache_vif.io_CPU_response_bits_instructions_1_packet_index;
-            rsp.io_CPU_response_bits_instructions_1_ROB_index = cache_vif.io_CPU_response_bits_instructions_1_ROB_index;
-            rsp.io_CPU_response_bits_instructions_2_instruction = cache_vif.io_CPU_response_bits_instructions_2_instruction;
-            rsp.io_CPU_response_bits_instructions_2_packet_index = cache_vif.io_CPU_response_bits_instructions_2_packet_index;
-            rsp.io_CPU_response_bits_instructions_2_ROB_index = cache_vif.io_CPU_response_bits_instructions_2_ROB_index;
-            rsp.io_CPU_response_bits_instructions_3_instruction = cache_vif.io_CPU_response_bits_instructions_3_instruction;
-            rsp.io_CPU_response_bits_instructions_3_packet_index = cache_vif.io_CPU_response_bits_instructions_3_packet_index;
-            rsp.io_CPU_response_bits_instructions_3_ROB_index = cache_vif.io_CPU_response_bits_instructions_3_ROB_index;
-            rsp.io_CPU_response_bits_prediction_hit = cache_vif.io_CPU_response_bits_prediction_hit;
-            rsp.io_CPU_response_bits_prediction_target = cache_vif.io_CPU_response_bits_prediction_target;
-            rsp.io_CPU_response_bits_prediction_br_type = cache_vif.io_CPU_response_bits_prediction_br_type;
-            rsp.io_CPU_response_bits_prediction_T_NT = cache_vif.io_CPU_response_bits_prediction_T_NT;
-            rsp.io_CPU_response_bits_GHR = cache_vif.io_CPU_response_bits_GHR;
-            rsp.io_CPU_response_bits_NEXT = cache_vif.io_CPU_response_bits_NEXT;
-            rsp.io_CPU_response_bits_TOS = cache_vif.io_CPU_response_bits_TOS;
-
-
-            rsp.set_id_info(req);
-            seq_item_port.put_response(rsp);
+            if (cache_vif.io_CPU_response_valid) begin
+                rsp.io_CPU_request_ready = cache_vif.io_CPU_request_ready;
+                rsp.io_CPU_response_valid = cache_vif.io_CPU_response_valid;
+                rsp.io_CPU_response_bits_fetch_PC = cache_vif.io_CPU_response_bits_fetch_PC;
+                rsp.io_CPU_response_bits_valid_bits_0 = cache_vif.io_CPU_response_bits_valid_bits_0;
+                rsp.io_CPU_response_bits_valid_bits_1 = cache_vif.io_CPU_response_bits_valid_bits_1;
+                rsp.io_CPU_response_bits_valid_bits_2 = cache_vif.io_CPU_response_bits_valid_bits_2;
+                rsp.io_CPU_response_bits_valid_bits_3 = cache_vif.io_CPU_response_bits_valid_bits_3;
+                rsp.io_CPU_response_bits_instructions_0_instruction = cache_vif.io_CPU_response_bits_instructions_0_instruction;
+                rsp.io_CPU_response_bits_instructions_0_packet_index = cache_vif.io_CPU_response_bits_instructions_0_packet_index;
+                rsp.io_CPU_response_bits_instructions_0_ROB_index = cache_vif.io_CPU_response_bits_instructions_0_ROB_index;
+                rsp.io_CPU_response_bits_instructions_1_instruction = cache_vif.io_CPU_response_bits_instructions_1_instruction;
+                rsp.io_CPU_response_bits_instructions_1_packet_index = cache_vif.io_CPU_response_bits_instructions_1_packet_index;
+                rsp.io_CPU_response_bits_instructions_1_ROB_index = cache_vif.io_CPU_response_bits_instructions_1_ROB_index;
+                rsp.io_CPU_response_bits_instructions_2_instruction = cache_vif.io_CPU_response_bits_instructions_2_instruction;
+                rsp.io_CPU_response_bits_instructions_2_packet_index = cache_vif.io_CPU_response_bits_instructions_2_packet_index;
+                rsp.io_CPU_response_bits_instructions_2_ROB_index = cache_vif.io_CPU_response_bits_instructions_2_ROB_index;
+                rsp.io_CPU_response_bits_instructions_3_instruction = cache_vif.io_CPU_response_bits_instructions_3_instruction;
+                rsp.io_CPU_response_bits_instructions_3_packet_index = cache_vif.io_CPU_response_bits_instructions_3_packet_index;
+                rsp.io_CPU_response_bits_instructions_3_ROB_index = cache_vif.io_CPU_response_bits_instructions_3_ROB_index;
+                rsp.io_CPU_response_bits_prediction_hit = cache_vif.io_CPU_response_bits_prediction_hit;
+                rsp.io_CPU_response_bits_prediction_target = cache_vif.io_CPU_response_bits_prediction_target;
+                rsp.io_CPU_response_bits_prediction_br_type = cache_vif.io_CPU_response_bits_prediction_br_type;
+                rsp.io_CPU_response_bits_prediction_T_NT = cache_vif.io_CPU_response_bits_prediction_T_NT;
+                rsp.io_CPU_response_bits_GHR = cache_vif.io_CPU_response_bits_GHR;
+                rsp.io_CPU_response_bits_NEXT = cache_vif.io_CPU_response_bits_NEXT;
+                rsp.io_CPU_response_bits_TOS = cache_vif.io_CPU_response_bits_TOS;
+                seq_item_port.put_response(rsp);
+            end
 
         end
     endtask

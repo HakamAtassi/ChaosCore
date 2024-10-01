@@ -1,7 +1,7 @@
 package instruction_cache_pkg;
     import uvm_pkg::*;
 
-
+//`include "reference_mem.svh"
 `include "cache_env.svh"
 `include "cache_base_test.svh"
 
