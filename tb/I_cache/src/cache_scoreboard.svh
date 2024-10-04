@@ -63,13 +63,13 @@ class cache_scoreboard extends uvm_scoreboard;
         reference_trans.io_CPU_response_bits_instructions_3_instruction = instr3;
 
         //if invalid just match the actual response
-        if (!transaction.io_CPU_response_bits_valid_bits_0) 
+        if (!reference_trans.io_CPU_response_bits_valid_bits_0) 
             reference_trans.io_CPU_response_bits_instructions_0_instruction = transaction.io_CPU_response_bits_instructions_0_instruction;
-        if (!transaction.io_CPU_response_bits_valid_bits_1) 
+        if (!reference_trans.io_CPU_response_bits_valid_bits_1) 
             reference_trans.io_CPU_response_bits_instructions_1_instruction = transaction.io_CPU_response_bits_instructions_1_instruction;
-        if (!transaction.io_CPU_response_bits_valid_bits_2) 
+        if (!reference_trans.io_CPU_response_bits_valid_bits_2) 
             reference_trans.io_CPU_response_bits_instructions_2_instruction = transaction.io_CPU_response_bits_instructions_2_instruction;
-        if (!transaction.io_CPU_response_bits_valid_bits_3)
+        if (!reference_trans.io_CPU_response_bits_valid_bits_3)
             reference_trans.io_CPU_response_bits_instructions_3_instruction = transaction.io_CPU_response_bits_instructions_3_instruction;
 
         `uvm_info("SCORE",

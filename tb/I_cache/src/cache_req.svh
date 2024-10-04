@@ -203,7 +203,11 @@ class cache_transaction extends cache_rsp;
     return (io_CPU_response_bits_instructions_0_instruction === RHS.io_CPU_response_bits_instructions_0_instruction) && 
                   (io_CPU_response_bits_instructions_1_instruction === RHS.io_CPU_response_bits_instructions_1_instruction) &&
                   (io_CPU_response_bits_instructions_2_instruction === RHS.io_CPU_response_bits_instructions_2_instruction) && 
-                  (io_CPU_response_bits_instructions_3_instruction === RHS.io_CPU_response_bits_instructions_3_instruction);
+                  (io_CPU_response_bits_instructions_3_instruction === RHS.io_CPU_response_bits_instructions_3_instruction) &&
+                  (io_CPU_response_bits_valid_bits_0 === RHS.io_CPU_response_bits_valid_bits_0) && 
+                  (io_CPU_response_bits_valid_bits_1 === RHS.io_CPU_response_bits_valid_bits_1) &&
+                  (io_CPU_response_bits_valid_bits_2 === RHS.io_CPU_response_bits_valid_bits_2) && 
+                  (io_CPU_response_bits_valid_bits_3 === RHS.io_CPU_response_bits_valid_bits_3);
   endfunction : comp
 endclass 
 `endif

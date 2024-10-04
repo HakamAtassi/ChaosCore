@@ -173,6 +173,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val already_requested = RegInit(Bool(), 0.B)
 
     val valid_mem = RegInit(VecInit.tabulate(sets, ways){ (x, y) => 0.B })
+    val valid_oh_vec  = Wire(Vec(ways, UInt(1.W)))
+    val valid_oh          = Wire(UInt(ways.W))
     val current_set = Wire(UInt(setBits.W))
 
     request_addr   := io.CPU_request.bits.addr & dram_addr_mask
@@ -263,7 +265,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     LRU := LRU_memory.io.data_out
 
-    when (valid_mem(current_set)(0) | valid_mem(current_set)(1)){
+    when (valid_oh.orR){
         LRU_next := Mux((LRU | hit_oh).andR, hit_oh, LRU | hit_oh)
         for(way <- 0 until ways){
             when(!valid_mem(current_set)(way)){
@@ -291,6 +293,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     current_data.tag    := get_decomposed_icache_address(coreParameters, replay_address.addr).tag
     current_data.data   := axi_response
     current_set := get_decomposed_icache_address(coreParameters, replay_address.addr).set
+    valid_oh_vec := RegNext(valid_mem(current_set))
+    valid_oh := valid_oh_vec.reverse.reduce(_ ## _)
 
     ///////////////////////////////
     // ASSIGN DATA MEMORY READS //
@@ -325,8 +329,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val replay_valid = Wire(Bool())
     replay_valid := cache_state === cacheState.Replay
 
-    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush.valid) & !RegNext(reset.asBool) & (RegNext(valid_mem(current_set)(0)) | RegNext(valid_mem(current_set)(1))) & (io.CPU_request.bits.addr === RegNext(io.CPU_request.bits.addr))
-    miss    := ((~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)) | !(RegNext(valid_mem(current_set)(0)) | RegNext(valid_mem(current_set)(1))) | !(io.CPU_request.bits.addr === RegNext(io.CPU_request.bits.addr))
+    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush.valid) & !RegNext(reset.asBool) & (valid_oh.orR) & (io.CPU_request.bits.addr === RegNext(io.CPU_request.bits.addr))
+    miss    := ((~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.flush.valid) & !RegNext(reset.asBool)) | !(valid_oh.orR) | !(io.CPU_request.bits.addr === RegNext(io.CPU_request.bits.addr))
 
     /////////////////////////////////////
     // Fetch Packet Selecting & Output //
