@@ -21,6 +21,8 @@ class cache_req extends uvm_sequence_item;
   rand logic [31:0] io_flush_bits_flushing_PC;
   rand logic [31:0] io_flush_bits_redirect_PC;
 
+  rand logic [5:0] added_delay;
+
   constraint c_wr_data { io_CPU_request_bits_wr_data == 0; }
   constraint c_wr_en { io_CPU_request_bits_wr_en == 0; }
   
@@ -33,10 +35,9 @@ class cache_req extends uvm_sequence_item;
                       "reset: %1b\n", reset ,
                       "io_CPU_request_valid: %2h\n", io_CPU_request_valid,
                       "io_CPU_request_bits_addr: %2h\n", io_CPU_request_bits_addr,
-                      "io_CPU_request_bits_wr_data: %2h\n", io_CPU_request_bits_addr,
-                      "io_CPU_request_bits_wr_en: %2h\n", io_CPU_request_bits_wr_en,
                       "io_CPU_response_ready: %2h\n", io_CPU_response_ready,
-                      "io_flush_valid: %2h\n", io_flush_valid);
+                      "io_flush_valid: %2h\n", io_flush_valid,
+                      "added_delay: %2h\n", added_delay);
   endfunction : convert2string
 
   function void do_copy(uvm_object rhs);

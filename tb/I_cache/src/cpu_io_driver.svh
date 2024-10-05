@@ -46,6 +46,8 @@ class cpu_io_driver extends uvm_driver #(cache_req, cache_rsp);
                 cache_vif.io_flush_bits_redirect_PC = req.io_flush_bits_redirect_PC;
                 cache_vif.io_flush_valid = req.io_flush_valid;
 
+                cache_vif.added_delay = req.added_delay;
+
                 rsp = new;
                 rsp.set_id_info(req);
             end

@@ -16,6 +16,7 @@ class base_sequence extends uvm_sequence#(cache_req, cache_rsp);
   task generate_instruction(integer address);
     req = new();
     start_item(req);
+    req.added_delay = $urandom_range(0,63);
     req.reset = 0;
     req.io_CPU_request_valid = 1;
     req.io_CPU_request_bits_addr = address;

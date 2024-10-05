@@ -6,7 +6,7 @@ if {[file exists work]} {
 vlib work
 
 vlog ../../hw/verilog/*.sv
-vlog ../../hw/chisel/src/main/resources/verilog-axi/rtl/axi_ram.v
+vlog ../../hw/chisel/src/main/resources/verilog-axi/rtl/axi_ram_rdelay.v
 vlog src/*.sv
 
 view wave
@@ -27,8 +27,13 @@ add wave -r /top/DUT/dut/instruction_cache/axi_response_valid
 #add wave -r /top/DUT/dut/instruction_cache/request_addr
 #add wave -r /top/DUT/dut/instruction_cache/AXI_AR_buf_araddr
 add wave -r /top/DUT/dut/instruction_cache/replay_address_addr
-#add wave -r /top/DUT/dut/axi_ram/s_axi_araddr
-#add wave -r /top/DUT/dut/axi_ram/s_axi_araddr_valid
+add wave -r /top/cache_if/added_delay
+add wave -r /top/DUT/dut/added_delay
+add wave -r /top/DUT/dut/axi_ram/s_axi_araddr
+add wave -r /top/DUT/dut/axi_ram/s_axi_araddr_valid
+add wave -r /top/DUT/dut/axi_ram/read_state_reg
+add wave -r /top/DUT/dut/axi_ram/cycles2stall
+add wave -r /top/DUT/dut/axi_ram/cycles_stalled
 add wave -r /top/DUT/dut/instruction_cache/allocate_way
 add wave -r /top/DUT/dut/instruction_cache/valid_oh
 add wave -r /top/DUT/dut/instruction_cache/REG_0
@@ -36,8 +41,8 @@ add wave -r /top/DUT/dut/instruction_cache/REG_1
 add wave -r /top/DUT/dut/instruction_cache/current_packet_set
 add wave -r /top/DUT/dut/instruction_cache/current_packet_tag
 #add wave -r /top/DUT/dut/instruction_cache/LRU_memory/*
-add wave -r /top/DUT/dut/instruction_cache/valid_mem_16_0
-add wave -r /top/DUT/dut/instruction_cache/valid_mem_16_1
+#add wave -r /top/DUT/dut/instruction_cache/valid_mem_16_0
+#add wave -r /top/DUT/dut/instruction_cache/valid_mem_16_1
 #add wave -r /top/DUT/dut/instruction_cache/_data_memory_*
 #add wave -r /top/DUT/dut/instruction_cache/data_memory_0/*
 #add wave -r /top/DUT/dut/instruction_cache/data_memory_1/*
