@@ -1,61 +1,61 @@
-# this workflow uses actions that are not certified by github.
-# they are provided by a third-party and are governed by
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
 
-# sample workflow for building and deploying a jekyll site to github pages
-name: deploy jekyll site to pages
-
+# Sample workflow for building and deploying a Jekyll site to GitHub Pages
+name: Deploy Jekyll site to Pages
 
 on:
   push:
-    branches:
-      - "main"
-    paths:
-      - "docs/**"
+    branches: ["main"]
 
-# sets permissions of the github_token to allow deployment to github pages
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# allow one concurrent deployment
+# Allow one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  # build job
+  # Build job
   build:
     runs-on: ubuntu-latest
   defaults:
     run:
       working-directory: docs
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1' # Not needed with a .ruby-version file
+          ruby-version: '3.3' # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           cache-version: 0 # Increment this number if you need to re-download cached gems
-      - name: setup pages
+          working-directory: '${{ github.workspace }}/docs'
+      - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v3
-      - name: build with jekyll
-        # outputs to the './_site' directory by default
+        uses: actions/configure-pages@v5
+      - name: Build with Jekyll
+        # Outputs to the './_site' directory by default
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
-          jekyll_env: production
+          JEKYLL_ENV: production
       - name: Upload artifact
         # Automatically uploads an artifact from the './_site' directory by default
-        uses: actions/upload-pages-artifact@v1
-    with:
-      path: "docs/_site/"
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "docs/_site/"
 
-
-  # deployment job
+  # Deployment job
   deploy:
     environment:
       name: github-pages
@@ -63,6 +63,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: deploy to github pages
+      - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
