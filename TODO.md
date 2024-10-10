@@ -68,14 +68,3 @@ eventually
 9) idk ???
 
 
-
-
-# Timeline
-
-## Non-negotionable
-
-Core must work by July 30th
-
-Semester 1: Core + Accelerator working + game "beta" working + possible core optimization
-Semester 2: Integration, CTF game mode stuff + possible core optimization
-
