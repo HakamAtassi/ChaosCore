@@ -8,7 +8,7 @@
   z-index: 0;
   display: flex;
   flex-wrap: wrap;
-  background-color: #282c34ff;
+  background-color: #21252b;
 }
 @media (min-width: 50rem) {
   .side-bar {
@@ -32,4 +32,9 @@
   .main {
     margin-left: max(16.5rem, (70% - 66.5rem) / 2 + 16.5rem);
   }
+}
+
+
+body {
+  background-color: #21252b; /* Replace with the desired color */
 }

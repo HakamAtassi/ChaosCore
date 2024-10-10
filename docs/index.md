@@ -5,7 +5,7 @@ nav_order: 1
 ---
 
 
-# ChaosCore (name subject to change)
+# ChaosCore
 
 
 
@@ -18,6 +18,8 @@ List everything that is important here
 
 
 ## What ChaosCore? 
+
+
 
 
 

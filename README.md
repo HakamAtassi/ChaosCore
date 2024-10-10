@@ -3,7 +3,7 @@
 
 ### What is ChaosCore?
 
-ChaosCore is an Out-of-Order RV32G core aimed at exploring the tradeoffs resulting from various security and performance considerations. ChaosCore is also designed to run out of the box and includes a slew of benchmarks and tests for demonstration and analysis. 
+ChaosCore is a synthesizable Out-of-Order RV32GC core aimed at exploring the tradeoffs resulting from various security and performance considerations. This repository is set up to run with very minimal overhead. In just a few commands, ChaosCore can be benchmarked locally to generate interesting results and visualize tradeoffs. 
 
 ### Directories
 
