@@ -4,11 +4,11 @@ theme: just-the-docs
 
 # Set the base URL to match your repository name
 baseurl: "/ChaosCore" # The subpath of your site, e.g., /repository-name
-url: "https://hakatassi.github.io" # The base hostname & protocol for your site
+url: "https://hakamtassi.github.io" # The base hostname & protocol for your site
 
 # Auxiliary links for your site (update or remove as needed)
 aux_links:
-  Project Repository: https://github.com/hakatassi/ChaosCore
+  Project Repository: https://github.com/hakamtassi/ChaosCore
 
 color_scheme: dark
 
