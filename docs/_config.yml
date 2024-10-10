@@ -1,14 +1,14 @@
 title: ChaosCore
-description: A security oriented Chess playing SoC.
+description: A security-oriented Chess playing SoC.
 theme: just-the-docs
 
 # Set the base URL to match your repository name
-baseurl: "/ChaosCoredocs" # The subpath of your site, e.g., /repository-name
+baseurl: "/ChaosCore" # The subpath of your site, e.g., /repository-name
 url: "https://hakatassi.github.io" # The base hostname & protocol for your site
 
-# Auxiliary links for your site
+# Auxiliary links for your site (update or remove as needed)
 aux_links:
-  Template Repository: https://github.com/just-the-docs/just-the-docs-template
+  Project Repository: https://github.com/hakatassi/ChaosCore
 
 color_scheme: dark
 
