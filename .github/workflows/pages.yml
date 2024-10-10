@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      - name: setup ruby
+      - name: setup Ruby
           uses: ruby/setup-ruby@v1
           with:
             ruby-version: '3.1'
