@@ -259,8 +259,8 @@ async def test_reset(dut):
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/rv32ui-p-xori.bin")     # construct TB
 
 
-    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/ecall.bin")     # construct TB
-    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/dhrystone_main.bin")     # construct TB
+    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/ecall.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/dhrystone_main.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/qsort.bin")     # construct TB
     await SOC.reset()                      # Reset
 
