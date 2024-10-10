@@ -17,9 +17,9 @@ build:
     with:
       path: "docs/_site/"
 
-on:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "docs/**"
+#on:
+  #push:
+    #branches:
+      #- "main"
+    #paths:
+      #- "docs/**"
