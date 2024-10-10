@@ -6,12 +6,13 @@
 # sample workflow for building and deploying a jekyll site to github pages
 name: deploy jekyll site to pages
 
+
 on:
   push:
-    branches: ["main"]
-
-  # allows you to run this workflow manually from the actions tab
-  workflow_dispatch:
+    branches:
+      - "main"
+    paths:
+      - "docs/**"
 
 # sets permissions of the github_token to allow deployment to github pages
 permissions:
@@ -50,6 +51,9 @@ jobs:
       - name: Upload artifact
         # Automatically uploads an artifact from the './_site' directory by default
         uses: actions/upload-pages-artifact@v1
+    with:
+      path: "docs/_site/"
+
 
   # deployment job
   deploy:
