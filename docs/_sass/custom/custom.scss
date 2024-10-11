@@ -1,15 +1,16 @@
 //.side-bar {
-    //@include mq(lg) {
-      //width: calc((70% - #{$nav-width + $content-width}) / 2 + #{$nav-width});
-    //}
-  //}
+//@include mq(lg) {
+//width: calc((70% - #{$nav-width + $content-width}) / 2 + #{$nav-width});
+//}
+//}
 
 .side-bar {
   z-index: 0;
   display: flex;
   flex-wrap: wrap;
-  background-color: #21252b;
+  background-color: #1F2430;
 }
+
 @media (min-width: 50rem) {
   .side-bar {
     flex-flow: column nowrap;
@@ -20,6 +21,7 @@
     align-items: flex-end;
   }
 }
+
 @media (min-width: 66.5rem) {
   .side-bar {
     width: calc((70% - 66.5rem) / 2 + 16.5rem);
@@ -32,9 +34,23 @@
   .main {
     margin-left: max(16.5rem, (70% - 66.5rem) / 2 + 16.5rem);
   }
+
 }
 
 
 body {
-  background-color: #21252b; /* Replace with the desired color */
+  background-color: #1F2430;
+}
+
+
+
+
+/* Change the color of all headers */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #ffad66;
 }

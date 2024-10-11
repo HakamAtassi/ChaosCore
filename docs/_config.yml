@@ -1,6 +1,6 @@
 title: ChaosCore
-description: A security-oriented Chess playing SoC.
 theme: just-the-docs
+
 
 # Set the base URL to match your repository name
 baseurl: "/ChaosCore" # The subpath of your site, e.g., /repository-name
@@ -16,7 +16,5 @@ color_scheme: dark
 include:
   - _pages
   - Core Architecture
-  - DTA
-  - verification
-  - extensions
+  - Regression
   - building
