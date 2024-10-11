@@ -78,6 +78,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  ffi (~> 1.15, >= 1.15.5)
   jekyll (~> 4.3.4)
   just-the-docs (= 0.10.0)
 
