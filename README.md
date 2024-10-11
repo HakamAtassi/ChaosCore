@@ -1,5 +1,6 @@
 # ChaosCore
 
+https://hakamatassi.github.io/ChaosCore/
 
 ### What is ChaosCore?
 
@@ -45,6 +46,7 @@ python3 -m venv venv
 Then install the required libraries in this venv:
 
 ```
+source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
