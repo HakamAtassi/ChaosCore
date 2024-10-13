@@ -9,6 +9,9 @@ __pycache__/
 
 .Xil/
 
+#Python Virtual Env
+venv/
+
 # verilator files
 sim_build/
 *.vvp
