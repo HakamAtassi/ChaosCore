@@ -41,6 +41,7 @@ case class CoreParameters(
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
     coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)
+    hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
 
@@ -79,6 +80,7 @@ case class CoreParameters(
     ALUportCount:Int = 3,
     MEMportCount:Int = 1,
     FPUportCount:Int = 0,  // not used if not "F"
+
 
 
 
