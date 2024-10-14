@@ -46,6 +46,8 @@ interface instruction_cache_if;
     logic  [31:0]   io_flush_bits_flushing_PC,
                     io_flush_bits_redirect_PC;
 
+    logic   [5:0]   added_delay;
+
     modport cache_mp (
         input         clock,
         input         reset,
@@ -90,7 +92,8 @@ interface instruction_cache_if;
         input            io_flush_bits_is_fence,
         input            io_flush_bits_is_CSR,
         input            io_flush_bits_flushing_PC,
-        input                io_flush_bits_redirect_PC
+        input                io_flush_bits_redirect_PC,
+        input              added_delay
     );
 
     initial begin : clock_gen
@@ -101,9 +104,6 @@ interface instruction_cache_if;
 endinterface : instruction_cache_if
 
 module instruction_cache(instruction_cache_if.cache_mp i);
-
-    // always @(posedge i.clock)
-    //     `uvm_info("ICACHE", "Clock", UVM_LOW)
 
     instruction_mem dut (
         .clock (i.clock),
@@ -149,7 +149,9 @@ module instruction_cache(instruction_cache_if.cache_mp i);
         .io_flush_bits_is_fence (i.io_flush_bits_is_fence),
         .io_flush_bits_is_CSR (i.io_flush_bits_is_CSR),
         .io_flush_bits_flushing_PC (i.io_flush_bits_flushing_PC),
-        .io_flush_bits_redirect_PC (i.io_flush_bits_redirect_PC)
+        .io_flush_bits_redirect_PC (i.io_flush_bits_redirect_PC),
+
+        .added_delay (i.added_delay)
     );
 
 

@@ -3,7 +3,7 @@
 
 
 `include "cache_env.svh"
-
+`include "reference_mem.svh"
 class cache_base_test extends uvm_test;
 
     `uvm_component_utils(cache_base_test)
@@ -17,6 +17,7 @@ class cache_base_test extends uvm_test;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
+
         if(!uvm_config_db #(virtual instruction_cache_if)::get(this, "", "cache_vif", cache_vif)) begin 
             `uvm_error("TEST", "Failed to get cache interface") 
         end

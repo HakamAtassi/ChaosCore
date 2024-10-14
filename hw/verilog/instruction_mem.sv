@@ -43,7 +43,9 @@ module instruction_mem(
                 io_flush_bits_is_fence,
                 io_flush_bits_is_CSR,
   input  [31:0] io_flush_bits_flushing_PC,
-                io_flush_bits_redirect_PC
+                io_flush_bits_redirect_PC,
+
+  input [5:0] added_delay
 
 );
 
@@ -83,7 +85,7 @@ module instruction_mem(
     wire                   axi_rvalid;
     wire                   axi_rready;
 
-    axi_ram axi_ram(
+    axi_ram_rdelay axi_ram(
         .clk   (clock),
         .rst   (reset),
 
@@ -121,7 +123,8 @@ module instruction_mem(
         .s_axi_rresp   (axi_rresp),
         .s_axi_rlast   (axi_rlast),
         .s_axi_rvalid   (axi_rvalid),
-        .s_axi_rready   (axi_rready)
+        .s_axi_rready   (axi_rready),
+        .added_delay    (added_delay)
 
 
     );
