@@ -269,14 +269,14 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
 
-
-
     ////////////////////////
     // VERIFICATION HOOKS //
     // DO NOT TOUCH ///////
     ////////////////////////
 
     //val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+
+
 
 
 

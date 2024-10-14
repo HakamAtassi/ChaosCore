@@ -44,7 +44,7 @@ import Thermometor._
 // Ex: memrs needs only 1 port. its ID is arbitrary, stuff like that
 
 // FIXME: the number of ports the RS has should be based on the number of INT/MEM FUs
-class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
+class RS(coreParameters:CoreParameters, RSPortCount:Int) extends Module{
     import coreParameters._
 
 
@@ -134,7 +134,6 @@ class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
 
     // to this (more functional)
     for(i <- 0 until RSEntries){
-
         schedulable_instructions(i) :=  ((reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid) &&
                                         ((reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid) && 
                                         reservation_station(i).valid
@@ -160,7 +159,7 @@ class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
 
     for (i <- 0 until RSPortCount){
         io.RF_inputs(i).valid := 0.B
-        io.RF_inputs(i).bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+        io.RF_inputs(i).bits  := 0.U.asTypeOf(new decoded_instruction(coreParameters))
     }
 
     val port_RS_index  = Wire(Vec(RSPortCount, UInt(log2Ceil(RSEntries).W)))
@@ -171,7 +170,6 @@ class RS(coreParameters:CoreParameters,RSPortCount:Int) extends Module{
     // FIXME: convert these to "PriorityMux"
 
     for(port <- 0 until RSPortCount){
-        // port 0 //
         for(i <- 0 until RSEntries){
             val current_instruction = reservation_station(i)
             when((current_instruction.decoded_instruction.portID === port.U) && schedulable_instructions(i)){

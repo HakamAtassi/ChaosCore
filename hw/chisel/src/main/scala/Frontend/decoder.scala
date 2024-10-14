@@ -166,14 +166,6 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
         io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
     }
 
-    
-
-    //FIXME: 
-    //add LBU, LHU...
-
-
-
-
     val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
 
     io.decoded_instruction.bits.packet_index         := io.instruction.bits.packet_index 

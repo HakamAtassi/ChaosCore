@@ -239,9 +239,9 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // ~30 bits
     val ready_bits          =  new sources_ready()
 
-    val RD                  =  UInt(architecturalRegBits.W) // Actual dest
-    val PRD                 =  UInt(physicalRegBits.W) // Actual dest
-    val PRDold              =  UInt(physicalRegBits.W) // Actual dest
+    val RD                  =  UInt(architecturalRegBits.W) 
+    val PRD                 =  UInt(physicalRegBits.W)
+    val PRDold              =  UInt(physicalRegBits.W)
 
 
 
@@ -269,6 +269,7 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val needs_branch_unit   =  Bool()
     val needs_CSRs          =  Bool()
     val needs_memory        =  Bool()
+    
 
     val SUBTRACT            =  Bool()
     val MULTIPLY            =  Bool()
