@@ -227,6 +227,13 @@ class Instruction(coreParameters:CoreParameters) extends Bundle{
     val ROB_index       =   UInt(log2Ceil(ROBEntries).W)
 }
 
+class compressed_instruction(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+    val instruction     =   UInt(16.W)
+    val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
+    val ROB_index       =   UInt(log2Ceil(ROBEntries).W)
+}
+
 object RS_types extends ChiselEnum{
     val INT, MEM, FP = Value
 }
@@ -367,6 +374,15 @@ object InstructionType extends ChiselEnum {
     val CUSTOM_3    = Value("b11110".U)
 }
 
+class expanded_instruction(coreParameters:CoreParameters) extends Bundle{
+    val rs1        =   UInt(5.W)
+    val rs2        =   UInt(5.W)
+    val rd         =   UInt(5.W)
+    val funct3     =   UInt(3.W)
+    val funct7     =   UInt(7.W)
+    val imm        =   UInt(32.W)
+    val opcode     =   UInt(7.W)
+}
 
 
 class misprediction(coreParameters:CoreParameters) extends Bundle{
