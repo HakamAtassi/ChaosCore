@@ -6,4 +6,5 @@ py/cocotb_utils
 jinja2
 pytest
 coloredlogs
+cocotb-test
 

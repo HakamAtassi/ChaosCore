@@ -209,7 +209,7 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
         decoded_instr.funct7 := 0x20.U
     }
 
-    val rd_rs1 = Mux(CR || CI, instruction(11,7), Cat(0x1.U(2.W), instruction(11,7)))
+    val rd_rs1 = Mux(CR || CI, instruction(11,7), Cat(0x1.U(2.W), instruction(9,7)))
     val rd_rs2 = Mux(CR || CSS, instruction(6,2), Cat(0x1.U(2.W), instruction(4,2)))
 
     //LI and LUI only RD
