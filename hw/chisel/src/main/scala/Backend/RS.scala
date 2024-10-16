@@ -44,7 +44,7 @@ import Thermometor._
 // Ex: memrs needs only 1 port. its ID is arbitrary, stuff like that
 
 // FIXME: the number of ports the RS has should be based on the number of INT/MEM FUs
-class RS(coreParameters:CoreParameters, RSPortCount:Int) extends Module{
+class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends Module{
     import coreParameters._
 
 
@@ -115,31 +115,6 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int) extends Module{
 
 
 
-    ////////////////////////////
-    // INSTRUCTION SCHEDULING //
-    ////////////////////////////
-
-    // Scheduling involves 2 parts
-    // 1) Determining which instructions are schedulable (Ready RS1/RS2)
-    // 2) Selecting which instructions to actually schedule
-    //    a) This first involves ensuring the uOp's port is ready and that a previous scheduled instruction does not expect to use it (avoid conflict)
-    //    b) Then, determine arbitrarily, or based on age, expected latecy, instruction type, etc ... which instruction to actually schedule
-    //    b) Note that it is very important to ensure port collision does not occur at this stage.
-    //       This means that if the first scheduled instruction is a div, no other scheduled instructions can be a div (because there is only 1 div port), etc...
-
-    // which instructions can be schedueld this cycle...
-    val schedulable_instructions = Wire(Vec(RSEntries, Bool()))    // what instructions have both inputs ready?
-
-    dontTouch(schedulable_instructions)
-
-    // to this (more functional)
-    for(i <- 0 until RSEntries){
-        schedulable_instructions(i) :=  ((reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid) &&
-                                        ((reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid) && 
-                                        reservation_station(i).valid
-    }
-     
-
     //////////////
     // FLUSH RS //
     //////////////
@@ -157,6 +132,13 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int) extends Module{
     // for each port, select an input and place it
     // if it was found that the instruction was accepted, free it from the RS
 
+
+    // instruction scheduling is a 3 step process
+    // ...
+    // set schedulable bit for all instructions that match FU requirements and are ready to execute
+    // select 1 instruction based on this bit vector
+    // Set that instruction as scheduled such that following ports do not reschedule it
+
     for (i <- 0 until RSPortCount){
         io.RF_inputs(i).valid := 0.B
         io.RF_inputs(i).bits  := 0.U.asTypeOf(new decoded_instruction(coreParameters))
@@ -169,20 +151,91 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int) extends Module{
 
     // FIXME: convert these to "PriorityMux"
 
+    // FIXME: there is actually a performance issue here. 
+    // you essentially "virtually" assign each instruction to a port, then overwrite it due to the priority
+    // since you are scheduling instructions anyway, you might aswell place them in a queue or something so that the RS is free...
+
+
+  	val schedulable_instructions = WireInit(VecInit.tabulate(RSPortCount, RSEntries){ (x, y) => 0.B })
+    val scheduled                = WireInit(VecInit.tabulate(RSEntries, RSPortCount){ (x, y) => 0.B })
+    
+    
+    dontTouch(schedulable_instructions)
+
+
+    // the scheduling logic is as follows:
+    // first, create a bit vector of what instructions are ready to execute
+    // second, create a bit vector for each instrctuction of the form [0,1,1,0] that maps its port support
+    // third, in a loop (for each port), select an instruction based on the above vector (and with ~not scheduled) via a priority encoder and schedule the instruction
+    // Last, then mark scheduled.
+
+    // step 1
     for(port <- 0 until RSPortCount){
         for(i <- 0 until RSEntries){
-            val current_instruction = reservation_station(i)
-            when((current_instruction.decoded_instruction.portID === port.U) && schedulable_instructions(i)){
-                io.RF_inputs(port).bits := RegNext(reservation_station(i.U).decoded_instruction)
-                io.RF_inputs(port).valid := RegNext(reservation_station(i.U).valid)
-                port_RS_index(port) := i.U
-            }
-        }
 
+            val current_instruction = reservation_station(i).decoded_instruction
+
+            val current_port_support     = FUParamSeq(port)
+
+            val fireable                =  ((reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid) &&
+                                            ((reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid) && 
+                                            reservation_station(i).valid
+                val supported = (
+                (current_instruction.needs_ALU && current_port_support.supportsInt.B) ||
+                (current_instruction.needs_branch_unit && current_port_support.supportsBranch.B) ||
+                (current_instruction.needs_CSRs && current_port_support.supportsCSRs.B) ||
+                (current_instruction.needs_div && current_port_support.supportsDiv.B) ||
+                (current_instruction.needs_mul && current_port_support.supportsMult.B) ||
+                (current_instruction.needs_memory && current_port_support.supportsAddressGeneration.B)
+                )
+
+                // FIXME: another problem is that the FUParamSeq is "mixed" intems of RS
+                // so the first port for the MEMRS may be the Nth entry of the param seq. 
+                // this is a bit anoying to abstract
+
+            if(RS_type == "MEM"){   //FIXME: Why can this not be more abstract. why is the RS required to be passed an RS type?
+                schedulable_instructions(port)(i) := fireable
+            }else{
+                schedulable_instructions(port)(i) := fireable && supported
+            }
+
+        }
+    }
+
+
+    for (port <- 0 until RSPortCount) {
+        val scheduled_index = PriorityEncoder(schedulable_instructions(port))
+        io.RF_inputs(port).valid := 0.B
+        when(schedulable_instructions(port).reduce(_ || _) && !scheduled(scheduled_index).take(port).fold(0.B)(_ || _)) {
+
+            // Schedule instruction
+            io.RF_inputs(port).bits := reservation_station(scheduled_index).decoded_instruction
+            io.RF_inputs(port).valid := 1.B
+
+            // Mark as scheduled
+            scheduled(scheduled_index)(port) := 1.B
+            port_RS_index(port)   := scheduled_index
+        }
+    }
+
+
+    for (port <- 0 until RSPortCount) {
         when(io.RF_inputs(port).fire){
             reservation_station(port_RS_index(port)) := 0.U.asTypeOf(new RS_entry(coreParameters))
         }
     }
+
+    dontTouch(port_RS_index)
+
+    // ADD RS entry freeing logic
+
+
+
+    // iterate over RS
+    // find instructions that are ready to be dispatched
+    // dispatch them to corresponding port
+
+    // what if instruction fits into several FUs? How do you choose where it does?
 
 
     when(io.flush.valid){

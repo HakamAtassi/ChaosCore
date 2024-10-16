@@ -320,9 +320,6 @@ module ChaosCore(
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index;
   wire [4:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType;
-  wire [1:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID;
-  wire [1:0]
-    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU;
   wire
@@ -332,13 +329,17 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_memory;
   wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_mul;
+  wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_div;
+  wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET;
-  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed;
   wire [1:0]
@@ -370,9 +371,6 @@ module ChaosCore(
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index;
   wire [4:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType;
-  wire [1:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID;
-  wire [1:0]
-    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU;
   wire
@@ -382,13 +380,17 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_memory;
   wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_mul;
+  wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_div;
+  wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET;
-  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed;
   wire [1:0]
@@ -420,9 +422,6 @@ module ChaosCore(
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index;
   wire [4:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType;
-  wire [1:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID;
-  wire [1:0]
-    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU;
   wire
@@ -432,13 +431,17 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_memory;
   wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_mul;
+  wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_div;
+  wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET;
-  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed;
   wire [1:0]
@@ -470,9 +473,6 @@ module ChaosCore(
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index;
   wire [4:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType;
-  wire [1:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID;
-  wire [1:0]
-    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU;
   wire
@@ -482,13 +482,17 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_memory;
   wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_mul;
+  wire
+    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_div;
+  wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET;
-  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed;
   wire [1:0]
@@ -755,10 +759,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit
@@ -767,6 +767,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_memory),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_mul),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_div),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY
@@ -775,10 +779,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type
@@ -817,10 +821,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit
@@ -829,6 +829,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_memory),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_mul),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_div),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY
@@ -837,10 +841,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type
@@ -879,10 +883,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit
@@ -891,6 +891,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_memory),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_mul),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_div),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY
@@ -899,10 +903,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type
@@ -941,10 +945,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit
@@ -953,6 +953,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_memory),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_mul),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_div),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY
@@ -961,10 +965,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type
@@ -1325,10 +1329,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index),
     .io_backend_packet_0_bits_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),
-    .io_backend_packet_0_bits_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID),
-    .io_backend_packet_0_bits_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),
     .io_backend_packet_0_bits_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
     .io_backend_packet_0_bits_needs_branch_unit
@@ -1337,6 +1337,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs),
     .io_backend_packet_0_bits_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_memory),
+    .io_backend_packet_0_bits_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_mul),
+    .io_backend_packet_0_bits_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_div),
     .io_backend_packet_0_bits_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY
@@ -1345,10 +1349,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
     .io_backend_packet_0_bits_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
-    .io_backend_packet_0_bits_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
     .io_backend_packet_0_bits_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL),
+    .io_backend_packet_0_bits_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
     .io_backend_packet_0_bits_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_backend_packet_0_bits_memory_type
@@ -1392,10 +1396,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index),
     .io_backend_packet_1_bits_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),
-    .io_backend_packet_1_bits_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID),
-    .io_backend_packet_1_bits_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),
     .io_backend_packet_1_bits_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
     .io_backend_packet_1_bits_needs_branch_unit
@@ -1404,6 +1404,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs),
     .io_backend_packet_1_bits_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_memory),
+    .io_backend_packet_1_bits_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_mul),
+    .io_backend_packet_1_bits_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_div),
     .io_backend_packet_1_bits_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY
@@ -1412,10 +1416,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
     .io_backend_packet_1_bits_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
-    .io_backend_packet_1_bits_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
     .io_backend_packet_1_bits_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL),
+    .io_backend_packet_1_bits_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
     .io_backend_packet_1_bits_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_backend_packet_1_bits_memory_type
@@ -1459,10 +1463,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index),
     .io_backend_packet_2_bits_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),
-    .io_backend_packet_2_bits_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID),
-    .io_backend_packet_2_bits_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),
     .io_backend_packet_2_bits_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
     .io_backend_packet_2_bits_needs_branch_unit
@@ -1471,6 +1471,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs),
     .io_backend_packet_2_bits_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_memory),
+    .io_backend_packet_2_bits_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_mul),
+    .io_backend_packet_2_bits_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_div),
     .io_backend_packet_2_bits_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY
@@ -1479,10 +1483,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
     .io_backend_packet_2_bits_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
-    .io_backend_packet_2_bits_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
     .io_backend_packet_2_bits_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL),
+    .io_backend_packet_2_bits_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
     .io_backend_packet_2_bits_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_backend_packet_2_bits_memory_type
@@ -1526,10 +1530,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index),
     .io_backend_packet_3_bits_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),
-    .io_backend_packet_3_bits_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID),
-    .io_backend_packet_3_bits_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),
     .io_backend_packet_3_bits_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
     .io_backend_packet_3_bits_needs_branch_unit
@@ -1538,6 +1538,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs),
     .io_backend_packet_3_bits_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_memory),
+    .io_backend_packet_3_bits_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_mul),
+    .io_backend_packet_3_bits_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_div),
     .io_backend_packet_3_bits_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY
@@ -1546,10 +1550,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
     .io_backend_packet_3_bits_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
-    .io_backend_packet_3_bits_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
     .io_backend_packet_3_bits_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL),
+    .io_backend_packet_3_bits_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
     .io_backend_packet_3_bits_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_backend_packet_3_bits_memory_type
@@ -1774,10 +1778,6 @@ module ChaosCore(
       (_backend_io_reserved_pointers_0_bits),
     .io_ROB_packet_bits_decoded_instruction_0_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),
-    .io_ROB_packet_bits_decoded_instruction_0_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID),
-    .io_ROB_packet_bits_decoded_instruction_0_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),
     .io_ROB_packet_bits_decoded_instruction_0_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
     .io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit
@@ -1786,6 +1786,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs),
     .io_ROB_packet_bits_decoded_instruction_0_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_memory),
+    .io_ROB_packet_bits_decoded_instruction_0_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_mul),
+    .io_ROB_packet_bits_decoded_instruction_0_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_div),
     .io_ROB_packet_bits_decoded_instruction_0_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),
     .io_ROB_packet_bits_decoded_instruction_0_MULTIPLY
@@ -1794,10 +1798,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
     .io_ROB_packet_bits_decoded_instruction_0_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
-    .io_ROB_packet_bits_decoded_instruction_0_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
     .io_ROB_packet_bits_decoded_instruction_0_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL),
+    .io_ROB_packet_bits_decoded_instruction_0_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
     .io_ROB_packet_bits_decoded_instruction_0_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_0_memory_type
@@ -1836,10 +1840,6 @@ module ChaosCore(
       (_backend_io_reserved_pointers_1_bits),
     .io_ROB_packet_bits_decoded_instruction_1_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),
-    .io_ROB_packet_bits_decoded_instruction_1_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID),
-    .io_ROB_packet_bits_decoded_instruction_1_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),
     .io_ROB_packet_bits_decoded_instruction_1_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
     .io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit
@@ -1848,6 +1848,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs),
     .io_ROB_packet_bits_decoded_instruction_1_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_memory),
+    .io_ROB_packet_bits_decoded_instruction_1_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_mul),
+    .io_ROB_packet_bits_decoded_instruction_1_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_div),
     .io_ROB_packet_bits_decoded_instruction_1_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),
     .io_ROB_packet_bits_decoded_instruction_1_MULTIPLY
@@ -1856,10 +1860,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
     .io_ROB_packet_bits_decoded_instruction_1_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
-    .io_ROB_packet_bits_decoded_instruction_1_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
     .io_ROB_packet_bits_decoded_instruction_1_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL),
+    .io_ROB_packet_bits_decoded_instruction_1_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
     .io_ROB_packet_bits_decoded_instruction_1_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_1_memory_type
@@ -1898,10 +1902,6 @@ module ChaosCore(
       (_backend_io_reserved_pointers_2_bits),
     .io_ROB_packet_bits_decoded_instruction_2_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),
-    .io_ROB_packet_bits_decoded_instruction_2_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID),
-    .io_ROB_packet_bits_decoded_instruction_2_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),
     .io_ROB_packet_bits_decoded_instruction_2_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
     .io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit
@@ -1910,6 +1910,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs),
     .io_ROB_packet_bits_decoded_instruction_2_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_memory),
+    .io_ROB_packet_bits_decoded_instruction_2_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_mul),
+    .io_ROB_packet_bits_decoded_instruction_2_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_div),
     .io_ROB_packet_bits_decoded_instruction_2_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),
     .io_ROB_packet_bits_decoded_instruction_2_MULTIPLY
@@ -1918,10 +1922,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
     .io_ROB_packet_bits_decoded_instruction_2_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
-    .io_ROB_packet_bits_decoded_instruction_2_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
     .io_ROB_packet_bits_decoded_instruction_2_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL),
+    .io_ROB_packet_bits_decoded_instruction_2_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
     .io_ROB_packet_bits_decoded_instruction_2_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_2_memory_type
@@ -1960,10 +1964,6 @@ module ChaosCore(
       (_backend_io_reserved_pointers_3_bits),
     .io_ROB_packet_bits_decoded_instruction_3_instructionType
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),
-    .io_ROB_packet_bits_decoded_instruction_3_portID
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID),
-    .io_ROB_packet_bits_decoded_instruction_3_RS_type
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),
     .io_ROB_packet_bits_decoded_instruction_3_needs_ALU
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
     .io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit
@@ -1972,6 +1972,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs),
     .io_ROB_packet_bits_decoded_instruction_3_needs_memory
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_memory),
+    .io_ROB_packet_bits_decoded_instruction_3_needs_mul
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_mul),
+    .io_ROB_packet_bits_decoded_instruction_3_needs_div
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_div),
     .io_ROB_packet_bits_decoded_instruction_3_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),
     .io_ROB_packet_bits_decoded_instruction_3_MULTIPLY
@@ -1980,10 +1984,10 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
     .io_ROB_packet_bits_decoded_instruction_3_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
-    .io_ROB_packet_bits_decoded_instruction_3_IS_IMM
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
     .io_ROB_packet_bits_decoded_instruction_3_ECALL
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL),
+    .io_ROB_packet_bits_decoded_instruction_3_IS_IMM
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
     .io_ROB_packet_bits_decoded_instruction_3_mem_signed
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_ROB_packet_bits_decoded_instruction_3_memory_type
