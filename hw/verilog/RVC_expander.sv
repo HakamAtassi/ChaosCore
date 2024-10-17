@@ -14,9 +14,9 @@ module RVC_expander(
   output [5:0]  io_instruction_bits_ROB_index
 );
 
+  wire [4:0]  decoded_instr_rs1;
   wire [4:0]  decoded_instr_rd;
   wire [4:0]  decoded_instr_rs2;
-  wire [4:0]  decoded_instr_rs1;
   wire        _GEN;
   wire [2:0]  decoded_instr_funct3;
   wire [6:0]  decoded_instr_opcode;
@@ -53,10 +53,12 @@ module RVC_expander(
     & ~(io_compressed_instr_bits_instruction[12]);
   wire        _ADD_T = io_compressed_instr_bits_instruction[15:13] == 3'h4;
   wire        ANDI = _ADD_T & io_compressed_instr_bits_instruction[11:10] == 2'h2 & Q1;
-  wire        SUB = io_compressed_instr_bits_instruction[15:10] == 6'h13 & Q1;
-  wire        XOR = _AND_T & Q1;
-  wire        OR = _AND_T & Q1;
-  wire        AND = _AND_T & Q1;
+  wire        SUB =
+    io_compressed_instr_bits_instruction[15:10] == 6'h13 & Q1
+    & io_compressed_instr_bits_instruction[6:5] == 2'h0;
+  wire        XOR = _AND_T & Q1 & io_compressed_instr_bits_instruction[6:5] == 2'h1;
+  wire        OR = _AND_T & Q1 & io_compressed_instr_bits_instruction[6:5] == 2'h2;
+  wire        AND = _AND_T & Q1 & (&(io_compressed_instr_bits_instruction[6:5]));
   wire        J = io_compressed_instr_bits_instruction[15:13] == 3'h5 & Q1;
   wire        BEQZ = _SWSP_T & Q1;
   wire        BNEZ = (&(io_compressed_instr_bits_instruction[15:13])) & Q1;
@@ -151,7 +153,7 @@ module RVC_expander(
   wire        _GEN_3 = SW | SWSP;
   wire        _GEN_4 = JAL | J;
   wire        _GEN_5 = JALR | JR;
-  wire        _GEN_6 = SUB | XOR | OR | AND | ADD;
+  wire        _GEN_6 = SUB | XOR | OR | AND | ADD | MV;
   assign decoded_instr_opcode =
     _GEN_2
       ? 7'h3
@@ -170,7 +172,7 @@ module RVC_expander(
                               : _GEN_6
                                   ? 7'h33
                                   : ADDI4SPN | NOP | ADDI | LI | ADDI16SP | SRLI | SRAI
-                                    | ANDI | SLLI | MV
+                                    | ANDI | SLLI
                                       ? 7'h13
                                       : 7'h0;
   assign decoded_instr_funct3 =
@@ -189,15 +191,22 @@ module RVC_expander(
       ? io_compressed_instr_bits_instruction[6:2]
       : {2'h1, io_compressed_instr_bits_instruction[4:2]};
   wire        _GEN_7 = _rd_rs1_T | CA | _CB_T | SRLI | SRAI | ANDI;
-  assign decoded_instr_rs1 = _GEN_7 | _GEN_0 ? rd_rs1 : 5'h0;
   wire        _GEN_8 = _rd_rs2_T | SW | CA;
   assign decoded_instr_rs2 = _GEN_8 ? rd_rs2 : 5'h0;
-  assign decoded_instr_rd = _GEN_8 | ~(ADDI4SPN | LW) ? (_GEN_7 ? rd_rs1 : 5'h0) : rd_rs2;
+  assign decoded_instr_rd =
+    ADDI16SP
+      ? 5'h2
+      : JAL | JALR | JR
+          ? 5'h1
+          : _GEN_8 | ~(ADDI4SPN | LW) ? (_GEN_7 ? rd_rs1 : 5'h0) : rd_rs2;
+  assign decoded_instr_rs1 =
+    LI | MV
+      ? 5'h0
+      : LWSP | SWSP | ADDI4SPN | ADDI16SP ? 5'h2 : _GEN_7 | _GEN_0 ? rd_rs1 : 5'h0;
   assign io_compressed_instr_ready = 1'h1;
   assign io_instruction_valid = 1'h1;
   assign io_instruction_bits_instruction =
-    _GEN_2 | ADDI4SPN | NOP | ADDI | LI | ADDI16SP | SRLI | SRAI | ANDI | SLLI | MV
-    | EBREAK
+    _GEN_2 | ADDI4SPN | NOP | ADDI | LI | ADDI16SP | SRLI | SRAI | ANDI | SLLI | EBREAK
       ? {decoded_instr_imm[11:0],
          decoded_instr_rs1,
          decoded_instr_funct3,

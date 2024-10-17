@@ -47,7 +47,7 @@ def concat(concat_list:list, bits_list:list):
     return (binaryDec(c, final_size))
 
 def bit_slice(num:int, msb:int, lsb:int):
-    mask = (0x1 << (msb-lsb)) - 1
+    mask = (0x1 << (msb-lsb+1)) - 1
     return (num >> lsb) & mask
 
 class expander_model:
@@ -86,9 +86,9 @@ class expander_model:
         self.Q2 = s(x,1,0) == 2
 
     def expand(self):
-        ADDI4SPN = self.FUNCT3 == 0b000 and self.Q0 and bit_slice(self.instruction,12,5) != 0
-        LW = self.FUNCT3 == 0b010 and self.Q0
-        SW = self.FUNCT3 == 0b110 and self.Q0
+        ADDI4SPN   = self.FUNCT3 == 0b000 and self.Q0 and bit_slice(self.instruction,12,5) != 0
+        LW         = self.FUNCT3 == 0b010 and self.Q0
+        SW         = self.FUNCT3 == 0b110 and self.Q0
 
         NOP        = self.FUNCT3 == 0b000 and self.Q1 and (self.RD == 0) and (concat([self.imm_5, self.lower_imm],[1,5]) != 0)
         ADDI       = self.FUNCT3 == 0b000 and self.Q1 and (self.RD != 0) and (concat([self.imm_5, self.lower_imm],[1,5]) != 0)
@@ -175,12 +175,12 @@ class expander_model:
         if (CR or CI):
             rd_rs1 = bit_slice(self.instruction,11,7)
         else:
-            rd_rs1 = concat([0, bit_slice(self.instruction,9,7)],[2,3])
+            rd_rs1 = concat([1, bit_slice(self.instruction,9,7)],[2,3])
 
         if (CR or CSS):
             rd_rs2 = bit_slice(self.instruction,6,2)
         else:
-            rd_rs2 = concat([0, bit_slice(self.instruction,4,2)],[2,3])
+            rd_rs2 = concat([1, bit_slice(self.instruction,4,2)],[2,3])
 
         rd = 0
         rs1 = 0

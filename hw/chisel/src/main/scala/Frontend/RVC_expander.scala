@@ -81,10 +81,10 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
     val SRLI       = FUNCT6 === "b10000".U && Q1 && (lower_imm =/= 0.U) && (imm_5 === 0.U) 
     val SRAI       = FUNCT6 === "b10001".U && Q1 && (lower_imm =/= 0.U) && (imm_5 === 0.U) 
     val ANDI       = FUNCT3 === "b100".U && instruction(11,10) === "b10".U && Q1
-    val SUB        = FUNCT6 === "b10011".U && Q1
-    val XOR        = FUNCT6 === "b10001".U && Q1
-    val OR         = FUNCT6 === "b10001".U && Q1
-    val AND        = FUNCT6 === "b10001".U && Q1
+    val SUB        = FUNCT6 === "b10011".U && Q1 && (instruction(6,5) === 0.U)
+    val XOR        = FUNCT6 === "b10001".U && Q1 && (instruction(6,5) === 1.U)
+    val OR         = FUNCT6 === "b10001".U && Q1 && (instruction(6,5) === 2.U)
+    val AND        = FUNCT6 === "b10001".U && Q1 && (instruction(6,5) === 3.U)
 
     val J          = FUNCT3 === "b101".U && Q1
 
@@ -182,10 +182,10 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
         expanded_instruction := Cat(decoded_instr.imm(31,12), decoded_instr.rd, decoded_instr.opcode)
     }.elsewhen (EBREAK) {
         decoded_instr.opcode := "b1110011".U
-    }.elsewhen (SUB || XOR || OR || AND || ADD) {
+    }.elsewhen (SUB || XOR || OR || AND || ADD || MV) {
         decoded_instr.opcode := "b0110011".U
         expanded_instruction := Cat(decoded_instr.funct7, decoded_instr.rs2, decoded_instr.rs1, decoded_instr.funct3, decoded_instr.rd, decoded_instr.opcode)
-    }.elsewhen (ADDI4SPN || NOP || ADDI || LI || ADDI16SP || SRLI || SRAI || ANDI || SLLI || MV) {
+    }.elsewhen (ADDI4SPN || NOP || ADDI || LI || ADDI16SP || SRLI || SRAI || ANDI || SLLI) {
         decoded_instr.opcode := "b0010011".U
     }
 
@@ -228,8 +228,24 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
         decoded_instr.rd := rd_rs2
     }
 
+    when(JAL || JALR || JR){
+        decoded_instr.rd := 1.U
+    }
+
+    when(LWSP || SWSP || ADDI4SPN || ADDI16SP){
+        decoded_instr.rs1 := 2.U
+    }
+
+    when(ADDI16SP){
+        decoded_instr.rd := 2.U
+    }
+
+    when(LI || MV){
+        decoded_instr.rs1 := 0.U
+    }
+
     //Contruct Expanded Instruction
-    when(LW || LWSP || ADDI4SPN || NOP || ADDI || LI || ADDI16SP || SRLI || SRAI || ANDI || SLLI || MV || EBREAK){
+    when(LW || LWSP || ADDI4SPN || NOP || ADDI || LI || ADDI16SP || SRLI || SRAI || ANDI || SLLI || EBREAK){
         expanded_instruction := Cat(decoded_instr.imm(11,0), decoded_instr.rs1, decoded_instr.funct3, decoded_instr.rd, decoded_instr.opcode)
     }
 
