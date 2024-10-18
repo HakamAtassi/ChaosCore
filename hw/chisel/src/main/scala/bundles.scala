@@ -243,14 +243,29 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
 
+    def needs_MEM_RS = {
+        needs_memory
+    }
+
+    //def needs_FPU_RS = {
+    //}
+
+    def needs_INT_RS = {
+        needs_ALU  || 
+        needs_CSRs || 
+        needs_div  || 
+        needs_mul  || 
+        FENCE  || 
+        needs_branch_unit
+    }
+
+
     // ~30 bits
     val ready_bits          =  new sources_ready()
 
-    val RD                  =  UInt(architecturalRegBits.W) // Actual dest
-    val PRD                 =  UInt(physicalRegBits.W) // Actual dest
-    val PRDold              =  UInt(physicalRegBits.W) // Actual dest
-
-
+    val RD                  =  UInt(architecturalRegBits.W) 
+    val PRD                 =  UInt(physicalRegBits.W)
+    val PRDold              =  UInt(physicalRegBits.W)
 
     val RD_valid            =  Bool()
     val RS1                 =  UInt(physicalRegBits.W)
@@ -267,36 +282,28 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 
     // uOp info ~20 bits
     val instructionType     =  InstructionType()
-
-    val portID              =  UInt(log2Ceil(4).W)  // Decoder assings port ID
     
-    val RS_type             =  RS_types()
 
     val needs_ALU           =  Bool()
+    //val needs_FPU           =  Bool() // TODO
     val needs_branch_unit   =  Bool()
     val needs_CSRs          =  Bool()
     val needs_memory        =  Bool()
+    val needs_mul           =  Bool()
+    val needs_div           =  Bool()
 
     val SUBTRACT            =  Bool()
     val MULTIPLY            =  Bool()
     val FENCE               =  Bool()
     val MRET                =  Bool()
-    //val CSR                 =  Bool()
-
-    val IS_IMM              =  Bool() 
-
-
     val ECALL               =  Bool() 
 
+    val IS_IMM              =  Bool() 
 
     val mem_signed          =  Bool()
     val memory_type         =  memory_type_t()   // LOAD/STORE
     val access_width        =  access_width_t()  // B/HW/W
 
-
-    //val instruction_ID          = UInt(64.W)    // for debug only
-
-    // ADD atomic instructions
 }
 
 

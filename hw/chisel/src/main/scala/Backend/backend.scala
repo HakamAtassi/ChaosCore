@@ -90,8 +90,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     // RESERVATION STATIONS //
     //////////////////////////
 
-    val INT_RS   =  Module(new RS(coreParameters, INTRSPortCount))
-    val MEM_RS   =  Module(new RS(coreParameters, MEMRSPortCount))
+    val INT_RS   =  Module(new RS(coreParameters, INTRSPortCount, "INT"))
+    val MEM_RS   =  Module(new RS(coreParameters, MEMRSPortCount, "MEM"))
 
 
     /////////
@@ -111,20 +111,29 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // INT RS //
     for (i <- 0 until fetchWidth){
+
+
         INT_RS.io.backend_packet(i).bits     := io.backend_packet(i).bits  // pass data along
-        INT_RS.io.backend_packet(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.INT) && io.backend_packet(i).valid
+        INT_RS.io.backend_packet(i).valid    :=  io.backend_packet(i).bits.needs_INT_RS && io.backend_packet(i).valid
     }
 
+    dontTouch(io)
+    dontTouch(io.backend_packet)
+
+
+
     for (i <- 0 until fetchWidth){
+        val needs_MEM_RS = io.backend_packet(i).bits.needs_memory
+
         MEM_RS.io.backend_packet(i).bits     := io.backend_packet(i).bits  // pass data along
-        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM) && io.backend_packet(i).valid
+        MEM_RS.io.backend_packet(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
     }
 
     MOB.io.commit <> io.commit
     MOB.io.partial_commit <> io.partial_commit
     for (i <- 0 until fetchWidth){
         MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
-        MOB.io.reserve(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM) && io.backend_packet(i).valid
+        MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
     }
     
 
@@ -240,7 +249,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     MOB.io.partial_commit <> io.partial_commit
     for (i <- 0 until fetchWidth){
         MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
-        MOB.io.reserve(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM) && io.backend_packet(i).valid
+        MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
     }
     
     io.PC_file_exec_addr := INT_RS.io.RF_inputs(0).bits.ROB_index
@@ -269,14 +278,14 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
 
-
-
     ////////////////////////
     // VERIFICATION HOOKS //
     // DO NOT TOUCH ///////
     ////////////////////////
 
     //val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+
+
 
 
 

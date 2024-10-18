@@ -35,12 +35,73 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
+
+object validate_backend{
+    def apply(coreConfig:String)(FUParamSeq: Seq[FUParams]): Boolean = {
+
+        val expects_mul = coreConfig.contains("M") || coreConfig.contains("G")
+
+        // There can only be 1 CSR
+        val csrUnits = FUParamSeq.count(_.supportsCSRs)
+        if (csrUnits != 1) {
+            println(s"There must be exactly 1 CSR unit, found $csrUnits.")
+            return false
+        }
+
+        // There can only be 1 AGU
+        val aguUnits = FUParamSeq.count(_.supportsAddressGeneration)
+        if (aguUnits != 1) {
+            println(s"There must be exactly 1 AGU unit, found $aguUnits.")
+            return false
+        }
+
+        // There must be at least 1 Branch Unit
+        val branchUnits = FUParamSeq.count(_.supportsBranch)
+        if (branchUnits < 1) {
+            println(s"There must be at least 1 Branch unit, found $branchUnits.")
+            return false
+        }
+
+        // There must be at least 1 INT
+        val intUnits = FUParamSeq.count(_.supportsInt)
+        if (intUnits < 1) {
+            println(s"There must be at least 1 INT unit, found $intUnits.")
+            return false
+        }
+
+        // There must be at least 1 MUL
+        val mulUnits = FUParamSeq.count(_.supportsMult)
+        if(expects_mul){
+            if (mulUnits < 1) {
+                println(s"There must be at least 1 MUL unit, found $mulUnits.")
+                return false
+            }
+        }
+
+        // There must be at least 1 FPU (if enabled)
+        //val isFpuEnabled = true // Replace with actual condition
+        //if (isFpuEnabled) {
+            //val fpuUnits = FUParamSeq.count(_.supportsFPU) // Assuming supportsFPU exists
+            //if (fpuUnits < 1) {
+                //println(s"FPU is enabled, but no FPU units were found.")
+                //return false
+            //}
+        //}
+
+        // All checks passed
+        true
+    }
+}
+
+
+
 case class CoreParameters(
 
     DEBUG: Boolean = false,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
     coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)
+    hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
 
@@ -79,6 +140,7 @@ case class CoreParameters(
     ALUportCount:Int = 3,
     MEMportCount:Int = 1,
     FPUportCount:Int = 0,  // not used if not "F"
+
 
 
 
@@ -172,10 +234,14 @@ case class CoreParameters(
     // REQUIREMENTS //
     //////////////////
 
-    val supportedExtensions = Seq("I", "IM", "IMA", "32G")
+    val supportedExtensions = Seq("I", "IM", "IMA", "32G")  // FIXME: coreConfig should just be a case class
 
     require(supportedExtensions.contains(userExtensions), 
     s"Invalid extensions: $userExtensions. Supported extensions are: ${supportedExtensions.mkString(", ")}")
+
+    require(validate_backend(coreConfig)(FUParamSeq))   // Ensure minimal required functional units
+
+
 
 
 

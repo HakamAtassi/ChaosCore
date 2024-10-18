@@ -231,7 +231,7 @@ async def test_riscv_tests(dut):
 
 
 @cocotb.test()
-async def test_reset(dut):
+async def test_dhrystone(dut):
     # Set seed
     random.seed(0x42)
 
@@ -259,8 +259,8 @@ async def test_reset(dut):
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/rv32ui-p-xori.bin")     # construct TB
 
 
-    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/ecall.bin")     # construct TB
-    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/dhrystone_main.bin")     # construct TB
+    #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/ecall.bin")     # construct TB
+    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/dhrystone_main.bin")     # construct TB
     #SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/qsort.bin")     # construct TB
     await SOC.reset()                      # Reset
 
@@ -271,3 +271,43 @@ async def test_reset(dut):
 
     
 
+
+@cocotb.test()
+async def test_basic(dut):
+    # Set seed
+    random.seed(0x42)
+
+    # Start lock
+    await cocotb.start(generateClock(dut))
+
+    # Bring up TB
+    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/if.bin")     # construct TB
+
+    await SOC.reset()                      # Reset
+
+    for _ in range(1_000_000):
+        await SOC.clock()
+
+    assert False
+
+    
+
+@cocotb.test()
+async def test_bubble_sort(dut):
+    # Set seed
+    random.seed(0x42)
+
+    # Start lock
+    await cocotb.start(generateClock(dut))
+
+    # Bring up TB
+    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/bubble_sort.bin")     # construct TB
+
+    await SOC.reset()                      # Reset
+
+    for _ in range(1_000_000):
+        await SOC.clock()
+
+    assert False
+
+    

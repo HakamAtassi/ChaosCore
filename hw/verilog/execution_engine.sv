@@ -114,18 +114,18 @@ module execution_engine(
   input  [5:0]  io_FU_input_0_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_0_bits_decoded_instruction_MOB_index,
   input  [4:0]  io_FU_input_0_bits_decoded_instruction_instructionType,
-  input  [1:0]  io_FU_input_0_bits_decoded_instruction_portID,
-                io_FU_input_0_bits_decoded_instruction_RS_type,
   input         io_FU_input_0_bits_decoded_instruction_needs_ALU,
                 io_FU_input_0_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_0_bits_decoded_instruction_needs_CSRs,
                 io_FU_input_0_bits_decoded_instruction_needs_memory,
+                io_FU_input_0_bits_decoded_instruction_needs_mul,
+                io_FU_input_0_bits_decoded_instruction_needs_div,
                 io_FU_input_0_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_0_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_0_bits_decoded_instruction_FENCE,
                 io_FU_input_0_bits_decoded_instruction_MRET,
-                io_FU_input_0_bits_decoded_instruction_IS_IMM,
                 io_FU_input_0_bits_decoded_instruction_ECALL,
+                io_FU_input_0_bits_decoded_instruction_IS_IMM,
                 io_FU_input_0_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_0_bits_decoded_instruction_memory_type,
                 io_FU_input_0_bits_decoded_instruction_access_width,
@@ -150,18 +150,18 @@ module execution_engine(
   input  [5:0]  io_FU_input_1_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_1_bits_decoded_instruction_MOB_index,
   input  [4:0]  io_FU_input_1_bits_decoded_instruction_instructionType,
-  input  [1:0]  io_FU_input_1_bits_decoded_instruction_portID,
-                io_FU_input_1_bits_decoded_instruction_RS_type,
   input         io_FU_input_1_bits_decoded_instruction_needs_ALU,
                 io_FU_input_1_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_1_bits_decoded_instruction_needs_CSRs,
                 io_FU_input_1_bits_decoded_instruction_needs_memory,
+                io_FU_input_1_bits_decoded_instruction_needs_mul,
+                io_FU_input_1_bits_decoded_instruction_needs_div,
                 io_FU_input_1_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_1_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_1_bits_decoded_instruction_FENCE,
                 io_FU_input_1_bits_decoded_instruction_MRET,
-                io_FU_input_1_bits_decoded_instruction_IS_IMM,
                 io_FU_input_1_bits_decoded_instruction_ECALL,
+                io_FU_input_1_bits_decoded_instruction_IS_IMM,
                 io_FU_input_1_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_1_bits_decoded_instruction_memory_type,
                 io_FU_input_1_bits_decoded_instruction_access_width,
@@ -186,18 +186,18 @@ module execution_engine(
   input  [5:0]  io_FU_input_2_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_2_bits_decoded_instruction_MOB_index,
   input  [4:0]  io_FU_input_2_bits_decoded_instruction_instructionType,
-  input  [1:0]  io_FU_input_2_bits_decoded_instruction_portID,
-                io_FU_input_2_bits_decoded_instruction_RS_type,
   input         io_FU_input_2_bits_decoded_instruction_needs_ALU,
                 io_FU_input_2_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_2_bits_decoded_instruction_needs_CSRs,
                 io_FU_input_2_bits_decoded_instruction_needs_memory,
+                io_FU_input_2_bits_decoded_instruction_needs_mul,
+                io_FU_input_2_bits_decoded_instruction_needs_div,
                 io_FU_input_2_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_2_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_2_bits_decoded_instruction_FENCE,
                 io_FU_input_2_bits_decoded_instruction_MRET,
-                io_FU_input_2_bits_decoded_instruction_IS_IMM,
                 io_FU_input_2_bits_decoded_instruction_ECALL,
+                io_FU_input_2_bits_decoded_instruction_IS_IMM,
                 io_FU_input_2_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_2_bits_decoded_instruction_memory_type,
                 io_FU_input_2_bits_decoded_instruction_access_width,
@@ -221,18 +221,18 @@ module execution_engine(
   input  [5:0]  io_FU_input_3_bits_decoded_instruction_ROB_index,
   input  [3:0]  io_FU_input_3_bits_decoded_instruction_MOB_index,
   input  [4:0]  io_FU_input_3_bits_decoded_instruction_instructionType,
-  input  [1:0]  io_FU_input_3_bits_decoded_instruction_portID,
-                io_FU_input_3_bits_decoded_instruction_RS_type,
   input         io_FU_input_3_bits_decoded_instruction_needs_ALU,
                 io_FU_input_3_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_3_bits_decoded_instruction_needs_CSRs,
                 io_FU_input_3_bits_decoded_instruction_needs_memory,
+                io_FU_input_3_bits_decoded_instruction_needs_mul,
+                io_FU_input_3_bits_decoded_instruction_needs_div,
                 io_FU_input_3_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_3_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_3_bits_decoded_instruction_FENCE,
                 io_FU_input_3_bits_decoded_instruction_MRET,
-                io_FU_input_3_bits_decoded_instruction_IS_IMM,
                 io_FU_input_3_bits_decoded_instruction_ECALL,
+                io_FU_input_3_bits_decoded_instruction_IS_IMM,
                 io_FU_input_3_bits_decoded_instruction_mem_signed,
   input  [1:0]  io_FU_input_3_bits_decoded_instruction_memory_type,
                 io_FU_input_3_bits_decoded_instruction_access_width,
@@ -365,10 +365,6 @@ module execution_engine(
       (io_FU_input_0_bits_decoded_instruction_MOB_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_0_bits_decoded_instruction_instructionType),
-    .io_FU_input_bits_decoded_instruction_portID
-      (io_FU_input_0_bits_decoded_instruction_portID),
-    .io_FU_input_bits_decoded_instruction_RS_type
-      (io_FU_input_0_bits_decoded_instruction_RS_type),
     .io_FU_input_bits_decoded_instruction_needs_ALU
       (io_FU_input_0_bits_decoded_instruction_needs_ALU),
     .io_FU_input_bits_decoded_instruction_needs_branch_unit
@@ -377,6 +373,10 @@ module execution_engine(
       (io_FU_input_0_bits_decoded_instruction_needs_CSRs),
     .io_FU_input_bits_decoded_instruction_needs_memory
       (io_FU_input_0_bits_decoded_instruction_needs_memory),
+    .io_FU_input_bits_decoded_instruction_needs_mul
+      (io_FU_input_0_bits_decoded_instruction_needs_mul),
+    .io_FU_input_bits_decoded_instruction_needs_div
+      (io_FU_input_0_bits_decoded_instruction_needs_div),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_0_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
@@ -385,10 +385,10 @@ module execution_engine(
       (io_FU_input_0_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_MRET
       (io_FU_input_0_bits_decoded_instruction_MRET),
-    .io_FU_input_bits_decoded_instruction_IS_IMM
-      (io_FU_input_0_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_ECALL
       (io_FU_input_0_bits_decoded_instruction_ECALL),
+    .io_FU_input_bits_decoded_instruction_IS_IMM
+      (io_FU_input_0_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_mem_signed
       (io_FU_input_0_bits_decoded_instruction_mem_signed),
     .io_FU_input_bits_decoded_instruction_memory_type
@@ -574,10 +574,6 @@ module execution_engine(
       (io_FU_input_1_bits_decoded_instruction_MOB_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_1_bits_decoded_instruction_instructionType),
-    .io_FU_input_bits_decoded_instruction_portID
-      (io_FU_input_1_bits_decoded_instruction_portID),
-    .io_FU_input_bits_decoded_instruction_RS_type
-      (io_FU_input_1_bits_decoded_instruction_RS_type),
     .io_FU_input_bits_decoded_instruction_needs_ALU
       (io_FU_input_1_bits_decoded_instruction_needs_ALU),
     .io_FU_input_bits_decoded_instruction_needs_branch_unit
@@ -586,6 +582,10 @@ module execution_engine(
       (io_FU_input_1_bits_decoded_instruction_needs_CSRs),
     .io_FU_input_bits_decoded_instruction_needs_memory
       (io_FU_input_1_bits_decoded_instruction_needs_memory),
+    .io_FU_input_bits_decoded_instruction_needs_mul
+      (io_FU_input_1_bits_decoded_instruction_needs_mul),
+    .io_FU_input_bits_decoded_instruction_needs_div
+      (io_FU_input_1_bits_decoded_instruction_needs_div),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_1_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
@@ -594,10 +594,10 @@ module execution_engine(
       (io_FU_input_1_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_MRET
       (io_FU_input_1_bits_decoded_instruction_MRET),
-    .io_FU_input_bits_decoded_instruction_IS_IMM
-      (io_FU_input_1_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_ECALL
       (io_FU_input_1_bits_decoded_instruction_ECALL),
+    .io_FU_input_bits_decoded_instruction_IS_IMM
+      (io_FU_input_1_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_mem_signed
       (io_FU_input_1_bits_decoded_instruction_mem_signed),
     .io_FU_input_bits_decoded_instruction_memory_type
@@ -780,10 +780,6 @@ module execution_engine(
       (io_FU_input_2_bits_decoded_instruction_MOB_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_2_bits_decoded_instruction_instructionType),
-    .io_FU_input_bits_decoded_instruction_portID
-      (io_FU_input_2_bits_decoded_instruction_portID),
-    .io_FU_input_bits_decoded_instruction_RS_type
-      (io_FU_input_2_bits_decoded_instruction_RS_type),
     .io_FU_input_bits_decoded_instruction_needs_ALU
       (io_FU_input_2_bits_decoded_instruction_needs_ALU),
     .io_FU_input_bits_decoded_instruction_needs_branch_unit
@@ -792,6 +788,10 @@ module execution_engine(
       (io_FU_input_2_bits_decoded_instruction_needs_CSRs),
     .io_FU_input_bits_decoded_instruction_needs_memory
       (io_FU_input_2_bits_decoded_instruction_needs_memory),
+    .io_FU_input_bits_decoded_instruction_needs_mul
+      (io_FU_input_2_bits_decoded_instruction_needs_mul),
+    .io_FU_input_bits_decoded_instruction_needs_div
+      (io_FU_input_2_bits_decoded_instruction_needs_div),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_2_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
@@ -800,10 +800,10 @@ module execution_engine(
       (io_FU_input_2_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_MRET
       (io_FU_input_2_bits_decoded_instruction_MRET),
-    .io_FU_input_bits_decoded_instruction_IS_IMM
-      (io_FU_input_2_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_ECALL
       (io_FU_input_2_bits_decoded_instruction_ECALL),
+    .io_FU_input_bits_decoded_instruction_IS_IMM
+      (io_FU_input_2_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_mem_signed
       (io_FU_input_2_bits_decoded_instruction_mem_signed),
     .io_FU_input_bits_decoded_instruction_memory_type
@@ -985,10 +985,6 @@ module execution_engine(
       (io_FU_input_3_bits_decoded_instruction_MOB_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_3_bits_decoded_instruction_instructionType),
-    .io_FU_input_bits_decoded_instruction_portID
-      (io_FU_input_3_bits_decoded_instruction_portID),
-    .io_FU_input_bits_decoded_instruction_RS_type
-      (io_FU_input_3_bits_decoded_instruction_RS_type),
     .io_FU_input_bits_decoded_instruction_needs_ALU
       (io_FU_input_3_bits_decoded_instruction_needs_ALU),
     .io_FU_input_bits_decoded_instruction_needs_branch_unit
@@ -997,6 +993,10 @@ module execution_engine(
       (io_FU_input_3_bits_decoded_instruction_needs_CSRs),
     .io_FU_input_bits_decoded_instruction_needs_memory
       (io_FU_input_3_bits_decoded_instruction_needs_memory),
+    .io_FU_input_bits_decoded_instruction_needs_mul
+      (io_FU_input_3_bits_decoded_instruction_needs_mul),
+    .io_FU_input_bits_decoded_instruction_needs_div
+      (io_FU_input_3_bits_decoded_instruction_needs_div),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (io_FU_input_3_bits_decoded_instruction_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
@@ -1005,10 +1005,10 @@ module execution_engine(
       (io_FU_input_3_bits_decoded_instruction_FENCE),
     .io_FU_input_bits_decoded_instruction_MRET
       (io_FU_input_3_bits_decoded_instruction_MRET),
-    .io_FU_input_bits_decoded_instruction_IS_IMM
-      (io_FU_input_3_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_ECALL
       (io_FU_input_3_bits_decoded_instruction_ECALL),
+    .io_FU_input_bits_decoded_instruction_IS_IMM
+      (io_FU_input_3_bits_decoded_instruction_IS_IMM),
     .io_FU_input_bits_decoded_instruction_mem_signed
       (io_FU_input_3_bits_decoded_instruction_mem_signed),
     .io_FU_input_bits_decoded_instruction_memory_type

@@ -144,18 +144,18 @@ module backend(
   input  [5:0]  io_backend_packet_0_bits_ROB_index,
   input  [3:0]  io_backend_packet_0_bits_MOB_index,
   input  [4:0]  io_backend_packet_0_bits_instructionType,
-  input  [1:0]  io_backend_packet_0_bits_portID,
-                io_backend_packet_0_bits_RS_type,
   input         io_backend_packet_0_bits_needs_ALU,
                 io_backend_packet_0_bits_needs_branch_unit,
                 io_backend_packet_0_bits_needs_CSRs,
                 io_backend_packet_0_bits_needs_memory,
+                io_backend_packet_0_bits_needs_mul,
+                io_backend_packet_0_bits_needs_div,
                 io_backend_packet_0_bits_SUBTRACT,
                 io_backend_packet_0_bits_MULTIPLY,
                 io_backend_packet_0_bits_FENCE,
                 io_backend_packet_0_bits_MRET,
-                io_backend_packet_0_bits_IS_IMM,
                 io_backend_packet_0_bits_ECALL,
+                io_backend_packet_0_bits_IS_IMM,
                 io_backend_packet_0_bits_mem_signed,
   input  [1:0]  io_backend_packet_0_bits_memory_type,
                 io_backend_packet_0_bits_access_width,
@@ -177,18 +177,18 @@ module backend(
   input  [5:0]  io_backend_packet_1_bits_ROB_index,
   input  [3:0]  io_backend_packet_1_bits_MOB_index,
   input  [4:0]  io_backend_packet_1_bits_instructionType,
-  input  [1:0]  io_backend_packet_1_bits_portID,
-                io_backend_packet_1_bits_RS_type,
   input         io_backend_packet_1_bits_needs_ALU,
                 io_backend_packet_1_bits_needs_branch_unit,
                 io_backend_packet_1_bits_needs_CSRs,
                 io_backend_packet_1_bits_needs_memory,
+                io_backend_packet_1_bits_needs_mul,
+                io_backend_packet_1_bits_needs_div,
                 io_backend_packet_1_bits_SUBTRACT,
                 io_backend_packet_1_bits_MULTIPLY,
                 io_backend_packet_1_bits_FENCE,
                 io_backend_packet_1_bits_MRET,
-                io_backend_packet_1_bits_IS_IMM,
                 io_backend_packet_1_bits_ECALL,
+                io_backend_packet_1_bits_IS_IMM,
                 io_backend_packet_1_bits_mem_signed,
   input  [1:0]  io_backend_packet_1_bits_memory_type,
                 io_backend_packet_1_bits_access_width,
@@ -210,18 +210,18 @@ module backend(
   input  [5:0]  io_backend_packet_2_bits_ROB_index,
   input  [3:0]  io_backend_packet_2_bits_MOB_index,
   input  [4:0]  io_backend_packet_2_bits_instructionType,
-  input  [1:0]  io_backend_packet_2_bits_portID,
-                io_backend_packet_2_bits_RS_type,
   input         io_backend_packet_2_bits_needs_ALU,
                 io_backend_packet_2_bits_needs_branch_unit,
                 io_backend_packet_2_bits_needs_CSRs,
                 io_backend_packet_2_bits_needs_memory,
+                io_backend_packet_2_bits_needs_mul,
+                io_backend_packet_2_bits_needs_div,
                 io_backend_packet_2_bits_SUBTRACT,
                 io_backend_packet_2_bits_MULTIPLY,
                 io_backend_packet_2_bits_FENCE,
                 io_backend_packet_2_bits_MRET,
-                io_backend_packet_2_bits_IS_IMM,
                 io_backend_packet_2_bits_ECALL,
+                io_backend_packet_2_bits_IS_IMM,
                 io_backend_packet_2_bits_mem_signed,
   input  [1:0]  io_backend_packet_2_bits_memory_type,
                 io_backend_packet_2_bits_access_width,
@@ -243,18 +243,18 @@ module backend(
   input  [5:0]  io_backend_packet_3_bits_ROB_index,
   input  [3:0]  io_backend_packet_3_bits_MOB_index,
   input  [4:0]  io_backend_packet_3_bits_instructionType,
-  input  [1:0]  io_backend_packet_3_bits_portID,
-                io_backend_packet_3_bits_RS_type,
   input         io_backend_packet_3_bits_needs_ALU,
                 io_backend_packet_3_bits_needs_branch_unit,
                 io_backend_packet_3_bits_needs_CSRs,
                 io_backend_packet_3_bits_needs_memory,
+                io_backend_packet_3_bits_needs_mul,
+                io_backend_packet_3_bits_needs_div,
                 io_backend_packet_3_bits_SUBTRACT,
                 io_backend_packet_3_bits_MULTIPLY,
                 io_backend_packet_3_bits_FENCE,
                 io_backend_packet_3_bits_MRET,
-                io_backend_packet_3_bits_IS_IMM,
                 io_backend_packet_3_bits_ECALL,
+                io_backend_packet_3_bits_IS_IMM,
                 io_backend_packet_3_bits_mem_signed,
   input  [1:0]  io_backend_packet_3_bits_memory_type,
                 io_backend_packet_3_bits_access_width,
@@ -482,18 +482,18 @@ module backend(
   wire [5:0]  _MEM_RS_io_RF_inputs_0_bits_ROB_index;
   wire [3:0]  _MEM_RS_io_RF_inputs_0_bits_MOB_index;
   wire [4:0]  _MEM_RS_io_RF_inputs_0_bits_instructionType;
-  wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_portID;
-  wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_RS_type;
   wire        _MEM_RS_io_RF_inputs_0_bits_needs_ALU;
   wire        _MEM_RS_io_RF_inputs_0_bits_needs_branch_unit;
   wire        _MEM_RS_io_RF_inputs_0_bits_needs_CSRs;
   wire        _MEM_RS_io_RF_inputs_0_bits_needs_memory;
+  wire        _MEM_RS_io_RF_inputs_0_bits_needs_mul;
+  wire        _MEM_RS_io_RF_inputs_0_bits_needs_div;
   wire        _MEM_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _MEM_RS_io_RF_inputs_0_bits_MULTIPLY;
   wire        _MEM_RS_io_RF_inputs_0_bits_FENCE;
   wire        _MEM_RS_io_RF_inputs_0_bits_MRET;
-  wire        _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
   wire        _MEM_RS_io_RF_inputs_0_bits_ECALL;
+  wire        _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
   wire        _MEM_RS_io_RF_inputs_0_bits_mem_signed;
   wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_memory_type;
   wire [1:0]  _MEM_RS_io_RF_inputs_0_bits_access_width;
@@ -518,18 +518,18 @@ module backend(
   wire [5:0]  _INT_RS_io_RF_inputs_0_bits_ROB_index;
   wire [3:0]  _INT_RS_io_RF_inputs_0_bits_MOB_index;
   wire [4:0]  _INT_RS_io_RF_inputs_0_bits_instructionType;
-  wire [1:0]  _INT_RS_io_RF_inputs_0_bits_portID;
-  wire [1:0]  _INT_RS_io_RF_inputs_0_bits_RS_type;
   wire        _INT_RS_io_RF_inputs_0_bits_needs_ALU;
   wire        _INT_RS_io_RF_inputs_0_bits_needs_branch_unit;
   wire        _INT_RS_io_RF_inputs_0_bits_needs_CSRs;
   wire        _INT_RS_io_RF_inputs_0_bits_needs_memory;
+  wire        _INT_RS_io_RF_inputs_0_bits_needs_mul;
+  wire        _INT_RS_io_RF_inputs_0_bits_needs_div;
   wire        _INT_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_0_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_0_bits_FENCE;
   wire        _INT_RS_io_RF_inputs_0_bits_MRET;
-  wire        _INT_RS_io_RF_inputs_0_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_0_bits_ECALL;
+  wire        _INT_RS_io_RF_inputs_0_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_0_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_0_bits_access_width;
@@ -550,18 +550,18 @@ module backend(
   wire [5:0]  _INT_RS_io_RF_inputs_1_bits_ROB_index;
   wire [3:0]  _INT_RS_io_RF_inputs_1_bits_MOB_index;
   wire [4:0]  _INT_RS_io_RF_inputs_1_bits_instructionType;
-  wire [1:0]  _INT_RS_io_RF_inputs_1_bits_portID;
-  wire [1:0]  _INT_RS_io_RF_inputs_1_bits_RS_type;
   wire        _INT_RS_io_RF_inputs_1_bits_needs_ALU;
   wire        _INT_RS_io_RF_inputs_1_bits_needs_branch_unit;
   wire        _INT_RS_io_RF_inputs_1_bits_needs_CSRs;
   wire        _INT_RS_io_RF_inputs_1_bits_needs_memory;
+  wire        _INT_RS_io_RF_inputs_1_bits_needs_mul;
+  wire        _INT_RS_io_RF_inputs_1_bits_needs_div;
   wire        _INT_RS_io_RF_inputs_1_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_1_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_1_bits_FENCE;
   wire        _INT_RS_io_RF_inputs_1_bits_MRET;
-  wire        _INT_RS_io_RF_inputs_1_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_1_bits_ECALL;
+  wire        _INT_RS_io_RF_inputs_1_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_1_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_1_bits_access_width;
@@ -582,18 +582,18 @@ module backend(
   wire [5:0]  _INT_RS_io_RF_inputs_2_bits_ROB_index;
   wire [3:0]  _INT_RS_io_RF_inputs_2_bits_MOB_index;
   wire [4:0]  _INT_RS_io_RF_inputs_2_bits_instructionType;
-  wire [1:0]  _INT_RS_io_RF_inputs_2_bits_portID;
-  wire [1:0]  _INT_RS_io_RF_inputs_2_bits_RS_type;
   wire        _INT_RS_io_RF_inputs_2_bits_needs_ALU;
   wire        _INT_RS_io_RF_inputs_2_bits_needs_branch_unit;
   wire        _INT_RS_io_RF_inputs_2_bits_needs_CSRs;
   wire        _INT_RS_io_RF_inputs_2_bits_needs_memory;
+  wire        _INT_RS_io_RF_inputs_2_bits_needs_mul;
+  wire        _INT_RS_io_RF_inputs_2_bits_needs_div;
   wire        _INT_RS_io_RF_inputs_2_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_2_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_2_bits_FENCE;
   wire        _INT_RS_io_RF_inputs_2_bits_MRET;
-  wire        _INT_RS_io_RF_inputs_2_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_2_bits_ECALL;
+  wire        _INT_RS_io_RF_inputs_2_bits_IS_IMM;
   wire        _INT_RS_io_RF_inputs_2_bits_mem_signed;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_memory_type;
   wire [1:0]  _INT_RS_io_RF_inputs_2_bits_access_width;
@@ -604,10 +604,14 @@ module backend(
     & _INT_RS_io_backend_packet_2_ready & _INT_RS_io_backend_packet_3_ready
     & _MOB_io_reserve_0_ready & _MOB_io_reserve_1_ready & _MOB_io_reserve_2_ready
     & _MOB_io_reserve_3_ready;
-  wire        _MOB_io_reserve_0_valid_T_2 = io_backend_packet_0_bits_RS_type == 2'h1;
-  wire        _MOB_io_reserve_1_valid_T_2 = io_backend_packet_1_bits_RS_type == 2'h1;
-  wire        _MOB_io_reserve_2_valid_T_2 = io_backend_packet_2_bits_RS_type == 2'h1;
-  wire        _MOB_io_reserve_3_valid_T_2 = io_backend_packet_3_bits_RS_type == 2'h1;
+  wire        _MOB_io_reserve_0_valid_T_1 =
+    io_backend_packet_0_bits_needs_memory & io_backend_packet_0_valid;
+  wire        _MOB_io_reserve_1_valid_T_1 =
+    io_backend_packet_1_bits_needs_memory & io_backend_packet_1_valid;
+  wire        _MOB_io_reserve_2_valid_T_1 =
+    io_backend_packet_2_bits_needs_memory & io_backend_packet_2_valid;
+  wire        _MOB_io_reserve_3_valid_T_1 =
+    io_backend_packet_3_bits_needs_memory & io_backend_packet_3_valid;
   reg         read_decoded_instructions_0_decoded_instruction_REG_ready_bits_RS1_ready;
   reg         read_decoded_instructions_0_decoded_instruction_REG_ready_bits_RS2_ready;
   reg  [4:0]  read_decoded_instructions_0_decoded_instruction_REG_RD;
@@ -624,18 +628,18 @@ module backend(
   reg  [5:0]  read_decoded_instructions_0_decoded_instruction_REG_ROB_index;
   reg  [3:0]  read_decoded_instructions_0_decoded_instruction_REG_MOB_index;
   reg  [4:0]  read_decoded_instructions_0_decoded_instruction_REG_instructionType;
-  reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_portID;
-  reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_RS_type;
   reg         read_decoded_instructions_0_decoded_instruction_REG_needs_ALU;
   reg         read_decoded_instructions_0_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_0_decoded_instruction_REG_needs_CSRs;
   reg         read_decoded_instructions_0_decoded_instruction_REG_needs_memory;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_needs_mul;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_needs_div;
   reg         read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_0_decoded_instruction_REG_FENCE;
   reg         read_decoded_instructions_0_decoded_instruction_REG_MRET;
-  reg         read_decoded_instructions_0_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_0_decoded_instruction_REG_ECALL;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_0_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_0_decoded_instruction_REG_access_width;
@@ -656,18 +660,18 @@ module backend(
   reg  [5:0]  read_decoded_instructions_1_decoded_instruction_REG_ROB_index;
   reg  [3:0]  read_decoded_instructions_1_decoded_instruction_REG_MOB_index;
   reg  [4:0]  read_decoded_instructions_1_decoded_instruction_REG_instructionType;
-  reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_portID;
-  reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_RS_type;
   reg         read_decoded_instructions_1_decoded_instruction_REG_needs_ALU;
   reg         read_decoded_instructions_1_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_1_decoded_instruction_REG_needs_CSRs;
   reg         read_decoded_instructions_1_decoded_instruction_REG_needs_memory;
+  reg         read_decoded_instructions_1_decoded_instruction_REG_needs_mul;
+  reg         read_decoded_instructions_1_decoded_instruction_REG_needs_div;
   reg         read_decoded_instructions_1_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_1_decoded_instruction_REG_FENCE;
   reg         read_decoded_instructions_1_decoded_instruction_REG_MRET;
-  reg         read_decoded_instructions_1_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_1_decoded_instruction_REG_ECALL;
+  reg         read_decoded_instructions_1_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_1_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_1_decoded_instruction_REG_access_width;
@@ -688,18 +692,18 @@ module backend(
   reg  [5:0]  read_decoded_instructions_2_decoded_instruction_REG_ROB_index;
   reg  [3:0]  read_decoded_instructions_2_decoded_instruction_REG_MOB_index;
   reg  [4:0]  read_decoded_instructions_2_decoded_instruction_REG_instructionType;
-  reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_portID;
-  reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_RS_type;
   reg         read_decoded_instructions_2_decoded_instruction_REG_needs_ALU;
   reg         read_decoded_instructions_2_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_2_decoded_instruction_REG_needs_CSRs;
   reg         read_decoded_instructions_2_decoded_instruction_REG_needs_memory;
+  reg         read_decoded_instructions_2_decoded_instruction_REG_needs_mul;
+  reg         read_decoded_instructions_2_decoded_instruction_REG_needs_div;
   reg         read_decoded_instructions_2_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_2_decoded_instruction_REG_FENCE;
   reg         read_decoded_instructions_2_decoded_instruction_REG_MRET;
-  reg         read_decoded_instructions_2_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_2_decoded_instruction_REG_ECALL;
+  reg         read_decoded_instructions_2_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_2_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_2_decoded_instruction_REG_access_width;
@@ -720,18 +724,18 @@ module backend(
   reg  [5:0]  read_decoded_instructions_3_decoded_instruction_REG_ROB_index;
   reg  [3:0]  read_decoded_instructions_3_decoded_instruction_REG_MOB_index;
   reg  [4:0]  read_decoded_instructions_3_decoded_instruction_REG_instructionType;
-  reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_portID;
-  reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_RS_type;
   reg         read_decoded_instructions_3_decoded_instruction_REG_needs_ALU;
   reg         read_decoded_instructions_3_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_3_decoded_instruction_REG_needs_CSRs;
   reg         read_decoded_instructions_3_decoded_instruction_REG_needs_memory;
+  reg         read_decoded_instructions_3_decoded_instruction_REG_needs_mul;
+  reg         read_decoded_instructions_3_decoded_instruction_REG_needs_div;
   reg         read_decoded_instructions_3_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_3_decoded_instruction_REG_FENCE;
   reg         read_decoded_instructions_3_decoded_instruction_REG_MRET;
-  reg         read_decoded_instructions_3_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_3_decoded_instruction_REG_ECALL;
+  reg         read_decoded_instructions_3_decoded_instruction_REG_IS_IMM;
   reg         read_decoded_instructions_3_decoded_instruction_REG_mem_signed;
   reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_memory_type;
   reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_access_width;
@@ -769,10 +773,6 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_MOB_index;
     read_decoded_instructions_0_decoded_instruction_REG_instructionType <=
       _INT_RS_io_RF_inputs_0_bits_instructionType;
-    read_decoded_instructions_0_decoded_instruction_REG_portID <=
-      _INT_RS_io_RF_inputs_0_bits_portID;
-    read_decoded_instructions_0_decoded_instruction_REG_RS_type <=
-      _INT_RS_io_RF_inputs_0_bits_RS_type;
     read_decoded_instructions_0_decoded_instruction_REG_needs_ALU <=
       _INT_RS_io_RF_inputs_0_bits_needs_ALU;
     read_decoded_instructions_0_decoded_instruction_REG_needs_branch_unit <=
@@ -781,6 +781,10 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_needs_CSRs;
     read_decoded_instructions_0_decoded_instruction_REG_needs_memory <=
       _INT_RS_io_RF_inputs_0_bits_needs_memory;
+    read_decoded_instructions_0_decoded_instruction_REG_needs_mul <=
+      _INT_RS_io_RF_inputs_0_bits_needs_mul;
+    read_decoded_instructions_0_decoded_instruction_REG_needs_div <=
+      _INT_RS_io_RF_inputs_0_bits_needs_div;
     read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT <=
       _INT_RS_io_RF_inputs_0_bits_SUBTRACT;
     read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY <=
@@ -789,10 +793,10 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_FENCE;
     read_decoded_instructions_0_decoded_instruction_REG_MRET <=
       _INT_RS_io_RF_inputs_0_bits_MRET;
-    read_decoded_instructions_0_decoded_instruction_REG_IS_IMM <=
-      _INT_RS_io_RF_inputs_0_bits_IS_IMM;
     read_decoded_instructions_0_decoded_instruction_REG_ECALL <=
       _INT_RS_io_RF_inputs_0_bits_ECALL;
+    read_decoded_instructions_0_decoded_instruction_REG_IS_IMM <=
+      _INT_RS_io_RF_inputs_0_bits_IS_IMM;
     read_decoded_instructions_0_decoded_instruction_REG_mem_signed <=
       _INT_RS_io_RF_inputs_0_bits_mem_signed;
     read_decoded_instructions_0_decoded_instruction_REG_memory_type <=
@@ -832,10 +836,6 @@ module backend(
       _INT_RS_io_RF_inputs_1_bits_MOB_index;
     read_decoded_instructions_1_decoded_instruction_REG_instructionType <=
       _INT_RS_io_RF_inputs_1_bits_instructionType;
-    read_decoded_instructions_1_decoded_instruction_REG_portID <=
-      _INT_RS_io_RF_inputs_1_bits_portID;
-    read_decoded_instructions_1_decoded_instruction_REG_RS_type <=
-      _INT_RS_io_RF_inputs_1_bits_RS_type;
     read_decoded_instructions_1_decoded_instruction_REG_needs_ALU <=
       _INT_RS_io_RF_inputs_1_bits_needs_ALU;
     read_decoded_instructions_1_decoded_instruction_REG_needs_branch_unit <=
@@ -844,6 +844,10 @@ module backend(
       _INT_RS_io_RF_inputs_1_bits_needs_CSRs;
     read_decoded_instructions_1_decoded_instruction_REG_needs_memory <=
       _INT_RS_io_RF_inputs_1_bits_needs_memory;
+    read_decoded_instructions_1_decoded_instruction_REG_needs_mul <=
+      _INT_RS_io_RF_inputs_1_bits_needs_mul;
+    read_decoded_instructions_1_decoded_instruction_REG_needs_div <=
+      _INT_RS_io_RF_inputs_1_bits_needs_div;
     read_decoded_instructions_1_decoded_instruction_REG_SUBTRACT <=
       _INT_RS_io_RF_inputs_1_bits_SUBTRACT;
     read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY <=
@@ -852,10 +856,10 @@ module backend(
       _INT_RS_io_RF_inputs_1_bits_FENCE;
     read_decoded_instructions_1_decoded_instruction_REG_MRET <=
       _INT_RS_io_RF_inputs_1_bits_MRET;
-    read_decoded_instructions_1_decoded_instruction_REG_IS_IMM <=
-      _INT_RS_io_RF_inputs_1_bits_IS_IMM;
     read_decoded_instructions_1_decoded_instruction_REG_ECALL <=
       _INT_RS_io_RF_inputs_1_bits_ECALL;
+    read_decoded_instructions_1_decoded_instruction_REG_IS_IMM <=
+      _INT_RS_io_RF_inputs_1_bits_IS_IMM;
     read_decoded_instructions_1_decoded_instruction_REG_mem_signed <=
       _INT_RS_io_RF_inputs_1_bits_mem_signed;
     read_decoded_instructions_1_decoded_instruction_REG_memory_type <=
@@ -895,10 +899,6 @@ module backend(
       _INT_RS_io_RF_inputs_2_bits_MOB_index;
     read_decoded_instructions_2_decoded_instruction_REG_instructionType <=
       _INT_RS_io_RF_inputs_2_bits_instructionType;
-    read_decoded_instructions_2_decoded_instruction_REG_portID <=
-      _INT_RS_io_RF_inputs_2_bits_portID;
-    read_decoded_instructions_2_decoded_instruction_REG_RS_type <=
-      _INT_RS_io_RF_inputs_2_bits_RS_type;
     read_decoded_instructions_2_decoded_instruction_REG_needs_ALU <=
       _INT_RS_io_RF_inputs_2_bits_needs_ALU;
     read_decoded_instructions_2_decoded_instruction_REG_needs_branch_unit <=
@@ -907,6 +907,10 @@ module backend(
       _INT_RS_io_RF_inputs_2_bits_needs_CSRs;
     read_decoded_instructions_2_decoded_instruction_REG_needs_memory <=
       _INT_RS_io_RF_inputs_2_bits_needs_memory;
+    read_decoded_instructions_2_decoded_instruction_REG_needs_mul <=
+      _INT_RS_io_RF_inputs_2_bits_needs_mul;
+    read_decoded_instructions_2_decoded_instruction_REG_needs_div <=
+      _INT_RS_io_RF_inputs_2_bits_needs_div;
     read_decoded_instructions_2_decoded_instruction_REG_SUBTRACT <=
       _INT_RS_io_RF_inputs_2_bits_SUBTRACT;
     read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY <=
@@ -915,10 +919,10 @@ module backend(
       _INT_RS_io_RF_inputs_2_bits_FENCE;
     read_decoded_instructions_2_decoded_instruction_REG_MRET <=
       _INT_RS_io_RF_inputs_2_bits_MRET;
-    read_decoded_instructions_2_decoded_instruction_REG_IS_IMM <=
-      _INT_RS_io_RF_inputs_2_bits_IS_IMM;
     read_decoded_instructions_2_decoded_instruction_REG_ECALL <=
       _INT_RS_io_RF_inputs_2_bits_ECALL;
+    read_decoded_instructions_2_decoded_instruction_REG_IS_IMM <=
+      _INT_RS_io_RF_inputs_2_bits_IS_IMM;
     read_decoded_instructions_2_decoded_instruction_REG_mem_signed <=
       _INT_RS_io_RF_inputs_2_bits_mem_signed;
     read_decoded_instructions_2_decoded_instruction_REG_memory_type <=
@@ -958,10 +962,6 @@ module backend(
       _MEM_RS_io_RF_inputs_0_bits_MOB_index;
     read_decoded_instructions_3_decoded_instruction_REG_instructionType <=
       _MEM_RS_io_RF_inputs_0_bits_instructionType;
-    read_decoded_instructions_3_decoded_instruction_REG_portID <=
-      _MEM_RS_io_RF_inputs_0_bits_portID;
-    read_decoded_instructions_3_decoded_instruction_REG_RS_type <=
-      _MEM_RS_io_RF_inputs_0_bits_RS_type;
     read_decoded_instructions_3_decoded_instruction_REG_needs_ALU <=
       _MEM_RS_io_RF_inputs_0_bits_needs_ALU;
     read_decoded_instructions_3_decoded_instruction_REG_needs_branch_unit <=
@@ -970,6 +970,10 @@ module backend(
       _MEM_RS_io_RF_inputs_0_bits_needs_CSRs;
     read_decoded_instructions_3_decoded_instruction_REG_needs_memory <=
       _MEM_RS_io_RF_inputs_0_bits_needs_memory;
+    read_decoded_instructions_3_decoded_instruction_REG_needs_mul <=
+      _MEM_RS_io_RF_inputs_0_bits_needs_mul;
+    read_decoded_instructions_3_decoded_instruction_REG_needs_div <=
+      _MEM_RS_io_RF_inputs_0_bits_needs_div;
     read_decoded_instructions_3_decoded_instruction_REG_SUBTRACT <=
       _MEM_RS_io_RF_inputs_0_bits_SUBTRACT;
     read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY <=
@@ -978,10 +982,10 @@ module backend(
       _MEM_RS_io_RF_inputs_0_bits_FENCE;
     read_decoded_instructions_3_decoded_instruction_REG_MRET <=
       _MEM_RS_io_RF_inputs_0_bits_MRET;
-    read_decoded_instructions_3_decoded_instruction_REG_IS_IMM <=
-      _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
     read_decoded_instructions_3_decoded_instruction_REG_ECALL <=
       _MEM_RS_io_RF_inputs_0_bits_ECALL;
+    read_decoded_instructions_3_decoded_instruction_REG_IS_IMM <=
+      _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
     read_decoded_instructions_3_decoded_instruction_REG_mem_signed <=
       _MEM_RS_io_RF_inputs_0_bits_mem_signed;
     read_decoded_instructions_3_decoded_instruction_REG_memory_type <=
@@ -1003,7 +1007,10 @@ module backend(
     .io_flush_bits_redirect_PC                     (io_flush_bits_redirect_PC),
     .io_backend_packet_0_ready                     (_INT_RS_io_backend_packet_0_ready),
     .io_backend_packet_0_valid
-      (io_backend_packet_0_bits_RS_type == 2'h0 & io_backend_packet_0_valid),
+      ((io_backend_packet_0_bits_needs_ALU | io_backend_packet_0_bits_needs_CSRs
+        | io_backend_packet_0_bits_needs_div | io_backend_packet_0_bits_needs_mul
+        | io_backend_packet_0_bits_FENCE | io_backend_packet_0_bits_needs_branch_unit)
+       & io_backend_packet_0_valid),
     .io_backend_packet_0_bits_ready_bits_RS1_ready
       (io_backend_packet_0_bits_ready_bits_RS1_ready),
     .io_backend_packet_0_bits_ready_bits_RS2_ready
@@ -1024,27 +1031,30 @@ module backend(
     .io_backend_packet_0_bits_MOB_index            (io_backend_packet_0_bits_MOB_index),
     .io_backend_packet_0_bits_instructionType
       (io_backend_packet_0_bits_instructionType),
-    .io_backend_packet_0_bits_portID               (io_backend_packet_0_bits_portID),
-    .io_backend_packet_0_bits_RS_type              (io_backend_packet_0_bits_RS_type),
     .io_backend_packet_0_bits_needs_ALU            (io_backend_packet_0_bits_needs_ALU),
     .io_backend_packet_0_bits_needs_branch_unit
       (io_backend_packet_0_bits_needs_branch_unit),
     .io_backend_packet_0_bits_needs_CSRs           (io_backend_packet_0_bits_needs_CSRs),
     .io_backend_packet_0_bits_needs_memory
       (io_backend_packet_0_bits_needs_memory),
+    .io_backend_packet_0_bits_needs_mul            (io_backend_packet_0_bits_needs_mul),
+    .io_backend_packet_0_bits_needs_div            (io_backend_packet_0_bits_needs_div),
     .io_backend_packet_0_bits_SUBTRACT             (io_backend_packet_0_bits_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY             (io_backend_packet_0_bits_MULTIPLY),
     .io_backend_packet_0_bits_FENCE                (io_backend_packet_0_bits_FENCE),
     .io_backend_packet_0_bits_MRET                 (io_backend_packet_0_bits_MRET),
-    .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
     .io_backend_packet_0_bits_ECALL                (io_backend_packet_0_bits_ECALL),
+    .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
     .io_backend_packet_0_bits_mem_signed           (io_backend_packet_0_bits_mem_signed),
     .io_backend_packet_0_bits_memory_type          (io_backend_packet_0_bits_memory_type),
     .io_backend_packet_0_bits_access_width
       (io_backend_packet_0_bits_access_width),
     .io_backend_packet_1_ready                     (_INT_RS_io_backend_packet_1_ready),
     .io_backend_packet_1_valid
-      (io_backend_packet_1_bits_RS_type == 2'h0 & io_backend_packet_1_valid),
+      ((io_backend_packet_1_bits_needs_ALU | io_backend_packet_1_bits_needs_CSRs
+        | io_backend_packet_1_bits_needs_div | io_backend_packet_1_bits_needs_mul
+        | io_backend_packet_1_bits_FENCE | io_backend_packet_1_bits_needs_branch_unit)
+       & io_backend_packet_1_valid),
     .io_backend_packet_1_bits_ready_bits_RS1_ready
       (io_backend_packet_1_bits_ready_bits_RS1_ready),
     .io_backend_packet_1_bits_ready_bits_RS2_ready
@@ -1065,27 +1075,30 @@ module backend(
     .io_backend_packet_1_bits_MOB_index            (io_backend_packet_1_bits_MOB_index),
     .io_backend_packet_1_bits_instructionType
       (io_backend_packet_1_bits_instructionType),
-    .io_backend_packet_1_bits_portID               (io_backend_packet_1_bits_portID),
-    .io_backend_packet_1_bits_RS_type              (io_backend_packet_1_bits_RS_type),
     .io_backend_packet_1_bits_needs_ALU            (io_backend_packet_1_bits_needs_ALU),
     .io_backend_packet_1_bits_needs_branch_unit
       (io_backend_packet_1_bits_needs_branch_unit),
     .io_backend_packet_1_bits_needs_CSRs           (io_backend_packet_1_bits_needs_CSRs),
     .io_backend_packet_1_bits_needs_memory
       (io_backend_packet_1_bits_needs_memory),
+    .io_backend_packet_1_bits_needs_mul            (io_backend_packet_1_bits_needs_mul),
+    .io_backend_packet_1_bits_needs_div            (io_backend_packet_1_bits_needs_div),
     .io_backend_packet_1_bits_SUBTRACT             (io_backend_packet_1_bits_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY             (io_backend_packet_1_bits_MULTIPLY),
     .io_backend_packet_1_bits_FENCE                (io_backend_packet_1_bits_FENCE),
     .io_backend_packet_1_bits_MRET                 (io_backend_packet_1_bits_MRET),
-    .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
     .io_backend_packet_1_bits_ECALL                (io_backend_packet_1_bits_ECALL),
+    .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
     .io_backend_packet_1_bits_mem_signed           (io_backend_packet_1_bits_mem_signed),
     .io_backend_packet_1_bits_memory_type          (io_backend_packet_1_bits_memory_type),
     .io_backend_packet_1_bits_access_width
       (io_backend_packet_1_bits_access_width),
     .io_backend_packet_2_ready                     (_INT_RS_io_backend_packet_2_ready),
     .io_backend_packet_2_valid
-      (io_backend_packet_2_bits_RS_type == 2'h0 & io_backend_packet_2_valid),
+      ((io_backend_packet_2_bits_needs_ALU | io_backend_packet_2_bits_needs_CSRs
+        | io_backend_packet_2_bits_needs_div | io_backend_packet_2_bits_needs_mul
+        | io_backend_packet_2_bits_FENCE | io_backend_packet_2_bits_needs_branch_unit)
+       & io_backend_packet_2_valid),
     .io_backend_packet_2_bits_ready_bits_RS1_ready
       (io_backend_packet_2_bits_ready_bits_RS1_ready),
     .io_backend_packet_2_bits_ready_bits_RS2_ready
@@ -1106,27 +1119,30 @@ module backend(
     .io_backend_packet_2_bits_MOB_index            (io_backend_packet_2_bits_MOB_index),
     .io_backend_packet_2_bits_instructionType
       (io_backend_packet_2_bits_instructionType),
-    .io_backend_packet_2_bits_portID               (io_backend_packet_2_bits_portID),
-    .io_backend_packet_2_bits_RS_type              (io_backend_packet_2_bits_RS_type),
     .io_backend_packet_2_bits_needs_ALU            (io_backend_packet_2_bits_needs_ALU),
     .io_backend_packet_2_bits_needs_branch_unit
       (io_backend_packet_2_bits_needs_branch_unit),
     .io_backend_packet_2_bits_needs_CSRs           (io_backend_packet_2_bits_needs_CSRs),
     .io_backend_packet_2_bits_needs_memory
       (io_backend_packet_2_bits_needs_memory),
+    .io_backend_packet_2_bits_needs_mul            (io_backend_packet_2_bits_needs_mul),
+    .io_backend_packet_2_bits_needs_div            (io_backend_packet_2_bits_needs_div),
     .io_backend_packet_2_bits_SUBTRACT             (io_backend_packet_2_bits_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY             (io_backend_packet_2_bits_MULTIPLY),
     .io_backend_packet_2_bits_FENCE                (io_backend_packet_2_bits_FENCE),
     .io_backend_packet_2_bits_MRET                 (io_backend_packet_2_bits_MRET),
-    .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
     .io_backend_packet_2_bits_ECALL                (io_backend_packet_2_bits_ECALL),
+    .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
     .io_backend_packet_2_bits_mem_signed           (io_backend_packet_2_bits_mem_signed),
     .io_backend_packet_2_bits_memory_type          (io_backend_packet_2_bits_memory_type),
     .io_backend_packet_2_bits_access_width
       (io_backend_packet_2_bits_access_width),
     .io_backend_packet_3_ready                     (_INT_RS_io_backend_packet_3_ready),
     .io_backend_packet_3_valid
-      (io_backend_packet_3_bits_RS_type == 2'h0 & io_backend_packet_3_valid),
+      ((io_backend_packet_3_bits_needs_ALU | io_backend_packet_3_bits_needs_CSRs
+        | io_backend_packet_3_bits_needs_div | io_backend_packet_3_bits_needs_mul
+        | io_backend_packet_3_bits_FENCE | io_backend_packet_3_bits_needs_branch_unit)
+       & io_backend_packet_3_valid),
     .io_backend_packet_3_bits_ready_bits_RS1_ready
       (io_backend_packet_3_bits_ready_bits_RS1_ready),
     .io_backend_packet_3_bits_ready_bits_RS2_ready
@@ -1147,20 +1163,20 @@ module backend(
     .io_backend_packet_3_bits_MOB_index            (io_backend_packet_3_bits_MOB_index),
     .io_backend_packet_3_bits_instructionType
       (io_backend_packet_3_bits_instructionType),
-    .io_backend_packet_3_bits_portID               (io_backend_packet_3_bits_portID),
-    .io_backend_packet_3_bits_RS_type              (io_backend_packet_3_bits_RS_type),
     .io_backend_packet_3_bits_needs_ALU            (io_backend_packet_3_bits_needs_ALU),
     .io_backend_packet_3_bits_needs_branch_unit
       (io_backend_packet_3_bits_needs_branch_unit),
     .io_backend_packet_3_bits_needs_CSRs           (io_backend_packet_3_bits_needs_CSRs),
     .io_backend_packet_3_bits_needs_memory
       (io_backend_packet_3_bits_needs_memory),
+    .io_backend_packet_3_bits_needs_mul            (io_backend_packet_3_bits_needs_mul),
+    .io_backend_packet_3_bits_needs_div            (io_backend_packet_3_bits_needs_div),
     .io_backend_packet_3_bits_SUBTRACT             (io_backend_packet_3_bits_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY             (io_backend_packet_3_bits_MULTIPLY),
     .io_backend_packet_3_bits_FENCE                (io_backend_packet_3_bits_FENCE),
     .io_backend_packet_3_bits_MRET                 (io_backend_packet_3_bits_MRET),
-    .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
     .io_backend_packet_3_bits_ECALL                (io_backend_packet_3_bits_ECALL),
+    .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
     .io_backend_packet_3_bits_mem_signed           (io_backend_packet_3_bits_mem_signed),
     .io_backend_packet_3_bits_memory_type          (io_backend_packet_3_bits_memory_type),
     .io_backend_packet_3_bits_access_width
@@ -1321,8 +1337,6 @@ module backend(
       (_INT_RS_io_RF_inputs_0_bits_MOB_index),
     .io_RF_inputs_0_bits_instructionType
       (_INT_RS_io_RF_inputs_0_bits_instructionType),
-    .io_RF_inputs_0_bits_portID                    (_INT_RS_io_RF_inputs_0_bits_portID),
-    .io_RF_inputs_0_bits_RS_type                   (_INT_RS_io_RF_inputs_0_bits_RS_type),
     .io_RF_inputs_0_bits_needs_ALU
       (_INT_RS_io_RF_inputs_0_bits_needs_ALU),
     .io_RF_inputs_0_bits_needs_branch_unit
@@ -1331,12 +1345,16 @@ module backend(
       (_INT_RS_io_RF_inputs_0_bits_needs_CSRs),
     .io_RF_inputs_0_bits_needs_memory
       (_INT_RS_io_RF_inputs_0_bits_needs_memory),
+    .io_RF_inputs_0_bits_needs_mul
+      (_INT_RS_io_RF_inputs_0_bits_needs_mul),
+    .io_RF_inputs_0_bits_needs_div
+      (_INT_RS_io_RF_inputs_0_bits_needs_div),
     .io_RF_inputs_0_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_0_bits_SUBTRACT),
     .io_RF_inputs_0_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_0_bits_MULTIPLY),
     .io_RF_inputs_0_bits_FENCE                     (_INT_RS_io_RF_inputs_0_bits_FENCE),
     .io_RF_inputs_0_bits_MRET                      (_INT_RS_io_RF_inputs_0_bits_MRET),
-    .io_RF_inputs_0_bits_IS_IMM                    (_INT_RS_io_RF_inputs_0_bits_IS_IMM),
     .io_RF_inputs_0_bits_ECALL                     (_INT_RS_io_RF_inputs_0_bits_ECALL),
+    .io_RF_inputs_0_bits_IS_IMM                    (_INT_RS_io_RF_inputs_0_bits_IS_IMM),
     .io_RF_inputs_0_bits_mem_signed
       (_INT_RS_io_RF_inputs_0_bits_mem_signed),
     .io_RF_inputs_0_bits_memory_type
@@ -1370,8 +1388,6 @@ module backend(
       (_INT_RS_io_RF_inputs_1_bits_MOB_index),
     .io_RF_inputs_1_bits_instructionType
       (_INT_RS_io_RF_inputs_1_bits_instructionType),
-    .io_RF_inputs_1_bits_portID                    (_INT_RS_io_RF_inputs_1_bits_portID),
-    .io_RF_inputs_1_bits_RS_type                   (_INT_RS_io_RF_inputs_1_bits_RS_type),
     .io_RF_inputs_1_bits_needs_ALU
       (_INT_RS_io_RF_inputs_1_bits_needs_ALU),
     .io_RF_inputs_1_bits_needs_branch_unit
@@ -1380,12 +1396,16 @@ module backend(
       (_INT_RS_io_RF_inputs_1_bits_needs_CSRs),
     .io_RF_inputs_1_bits_needs_memory
       (_INT_RS_io_RF_inputs_1_bits_needs_memory),
+    .io_RF_inputs_1_bits_needs_mul
+      (_INT_RS_io_RF_inputs_1_bits_needs_mul),
+    .io_RF_inputs_1_bits_needs_div
+      (_INT_RS_io_RF_inputs_1_bits_needs_div),
     .io_RF_inputs_1_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_1_bits_SUBTRACT),
     .io_RF_inputs_1_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_1_bits_MULTIPLY),
     .io_RF_inputs_1_bits_FENCE                     (_INT_RS_io_RF_inputs_1_bits_FENCE),
     .io_RF_inputs_1_bits_MRET                      (_INT_RS_io_RF_inputs_1_bits_MRET),
-    .io_RF_inputs_1_bits_IS_IMM                    (_INT_RS_io_RF_inputs_1_bits_IS_IMM),
     .io_RF_inputs_1_bits_ECALL                     (_INT_RS_io_RF_inputs_1_bits_ECALL),
+    .io_RF_inputs_1_bits_IS_IMM                    (_INT_RS_io_RF_inputs_1_bits_IS_IMM),
     .io_RF_inputs_1_bits_mem_signed
       (_INT_RS_io_RF_inputs_1_bits_mem_signed),
     .io_RF_inputs_1_bits_memory_type
@@ -1419,8 +1439,6 @@ module backend(
       (_INT_RS_io_RF_inputs_2_bits_MOB_index),
     .io_RF_inputs_2_bits_instructionType
       (_INT_RS_io_RF_inputs_2_bits_instructionType),
-    .io_RF_inputs_2_bits_portID                    (_INT_RS_io_RF_inputs_2_bits_portID),
-    .io_RF_inputs_2_bits_RS_type                   (_INT_RS_io_RF_inputs_2_bits_RS_type),
     .io_RF_inputs_2_bits_needs_ALU
       (_INT_RS_io_RF_inputs_2_bits_needs_ALU),
     .io_RF_inputs_2_bits_needs_branch_unit
@@ -1429,12 +1447,16 @@ module backend(
       (_INT_RS_io_RF_inputs_2_bits_needs_CSRs),
     .io_RF_inputs_2_bits_needs_memory
       (_INT_RS_io_RF_inputs_2_bits_needs_memory),
+    .io_RF_inputs_2_bits_needs_mul
+      (_INT_RS_io_RF_inputs_2_bits_needs_mul),
+    .io_RF_inputs_2_bits_needs_div
+      (_INT_RS_io_RF_inputs_2_bits_needs_div),
     .io_RF_inputs_2_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_2_bits_SUBTRACT),
     .io_RF_inputs_2_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_2_bits_MULTIPLY),
     .io_RF_inputs_2_bits_FENCE                     (_INT_RS_io_RF_inputs_2_bits_FENCE),
     .io_RF_inputs_2_bits_MRET                      (_INT_RS_io_RF_inputs_2_bits_MRET),
-    .io_RF_inputs_2_bits_IS_IMM                    (_INT_RS_io_RF_inputs_2_bits_IS_IMM),
     .io_RF_inputs_2_bits_ECALL                     (_INT_RS_io_RF_inputs_2_bits_ECALL),
+    .io_RF_inputs_2_bits_IS_IMM                    (_INT_RS_io_RF_inputs_2_bits_IS_IMM),
     .io_RF_inputs_2_bits_mem_signed
       (_INT_RS_io_RF_inputs_2_bits_mem_signed),
     .io_RF_inputs_2_bits_memory_type
@@ -1454,8 +1476,7 @@ module backend(
     .io_flush_bits_flushing_PC                     (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC                     (io_flush_bits_redirect_PC),
     .io_backend_packet_0_ready                     (_MEM_RS_io_backend_packet_0_ready),
-    .io_backend_packet_0_valid
-      (_MOB_io_reserve_0_valid_T_2 & io_backend_packet_0_valid),
+    .io_backend_packet_0_valid                     (_MOB_io_reserve_0_valid_T_1),
     .io_backend_packet_0_bits_ready_bits_RS1_ready
       (io_backend_packet_0_bits_ready_bits_RS1_ready),
     .io_backend_packet_0_bits_ready_bits_RS2_ready
@@ -1476,27 +1497,26 @@ module backend(
     .io_backend_packet_0_bits_MOB_index            (_MOB_io_reserved_pointers_0_bits),
     .io_backend_packet_0_bits_instructionType
       (io_backend_packet_0_bits_instructionType),
-    .io_backend_packet_0_bits_portID               (io_backend_packet_0_bits_portID),
-    .io_backend_packet_0_bits_RS_type              (io_backend_packet_0_bits_RS_type),
     .io_backend_packet_0_bits_needs_ALU            (io_backend_packet_0_bits_needs_ALU),
     .io_backend_packet_0_bits_needs_branch_unit
       (io_backend_packet_0_bits_needs_branch_unit),
     .io_backend_packet_0_bits_needs_CSRs           (io_backend_packet_0_bits_needs_CSRs),
     .io_backend_packet_0_bits_needs_memory
       (io_backend_packet_0_bits_needs_memory),
+    .io_backend_packet_0_bits_needs_mul            (io_backend_packet_0_bits_needs_mul),
+    .io_backend_packet_0_bits_needs_div            (io_backend_packet_0_bits_needs_div),
     .io_backend_packet_0_bits_SUBTRACT             (io_backend_packet_0_bits_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY             (io_backend_packet_0_bits_MULTIPLY),
     .io_backend_packet_0_bits_FENCE                (io_backend_packet_0_bits_FENCE),
     .io_backend_packet_0_bits_MRET                 (io_backend_packet_0_bits_MRET),
-    .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
     .io_backend_packet_0_bits_ECALL                (io_backend_packet_0_bits_ECALL),
+    .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
     .io_backend_packet_0_bits_mem_signed           (io_backend_packet_0_bits_mem_signed),
     .io_backend_packet_0_bits_memory_type          (io_backend_packet_0_bits_memory_type),
     .io_backend_packet_0_bits_access_width
       (io_backend_packet_0_bits_access_width),
     .io_backend_packet_1_ready                     (_MEM_RS_io_backend_packet_1_ready),
-    .io_backend_packet_1_valid
-      (_MOB_io_reserve_1_valid_T_2 & io_backend_packet_1_valid),
+    .io_backend_packet_1_valid                     (_MOB_io_reserve_1_valid_T_1),
     .io_backend_packet_1_bits_ready_bits_RS1_ready
       (io_backend_packet_1_bits_ready_bits_RS1_ready),
     .io_backend_packet_1_bits_ready_bits_RS2_ready
@@ -1517,27 +1537,26 @@ module backend(
     .io_backend_packet_1_bits_MOB_index            (_MOB_io_reserved_pointers_1_bits),
     .io_backend_packet_1_bits_instructionType
       (io_backend_packet_1_bits_instructionType),
-    .io_backend_packet_1_bits_portID               (io_backend_packet_1_bits_portID),
-    .io_backend_packet_1_bits_RS_type              (io_backend_packet_1_bits_RS_type),
     .io_backend_packet_1_bits_needs_ALU            (io_backend_packet_1_bits_needs_ALU),
     .io_backend_packet_1_bits_needs_branch_unit
       (io_backend_packet_1_bits_needs_branch_unit),
     .io_backend_packet_1_bits_needs_CSRs           (io_backend_packet_1_bits_needs_CSRs),
     .io_backend_packet_1_bits_needs_memory
       (io_backend_packet_1_bits_needs_memory),
+    .io_backend_packet_1_bits_needs_mul            (io_backend_packet_1_bits_needs_mul),
+    .io_backend_packet_1_bits_needs_div            (io_backend_packet_1_bits_needs_div),
     .io_backend_packet_1_bits_SUBTRACT             (io_backend_packet_1_bits_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY             (io_backend_packet_1_bits_MULTIPLY),
     .io_backend_packet_1_bits_FENCE                (io_backend_packet_1_bits_FENCE),
     .io_backend_packet_1_bits_MRET                 (io_backend_packet_1_bits_MRET),
-    .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
     .io_backend_packet_1_bits_ECALL                (io_backend_packet_1_bits_ECALL),
+    .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
     .io_backend_packet_1_bits_mem_signed           (io_backend_packet_1_bits_mem_signed),
     .io_backend_packet_1_bits_memory_type          (io_backend_packet_1_bits_memory_type),
     .io_backend_packet_1_bits_access_width
       (io_backend_packet_1_bits_access_width),
     .io_backend_packet_2_ready                     (_MEM_RS_io_backend_packet_2_ready),
-    .io_backend_packet_2_valid
-      (_MOB_io_reserve_2_valid_T_2 & io_backend_packet_2_valid),
+    .io_backend_packet_2_valid                     (_MOB_io_reserve_2_valid_T_1),
     .io_backend_packet_2_bits_ready_bits_RS1_ready
       (io_backend_packet_2_bits_ready_bits_RS1_ready),
     .io_backend_packet_2_bits_ready_bits_RS2_ready
@@ -1558,27 +1577,26 @@ module backend(
     .io_backend_packet_2_bits_MOB_index            (_MOB_io_reserved_pointers_2_bits),
     .io_backend_packet_2_bits_instructionType
       (io_backend_packet_2_bits_instructionType),
-    .io_backend_packet_2_bits_portID               (io_backend_packet_2_bits_portID),
-    .io_backend_packet_2_bits_RS_type              (io_backend_packet_2_bits_RS_type),
     .io_backend_packet_2_bits_needs_ALU            (io_backend_packet_2_bits_needs_ALU),
     .io_backend_packet_2_bits_needs_branch_unit
       (io_backend_packet_2_bits_needs_branch_unit),
     .io_backend_packet_2_bits_needs_CSRs           (io_backend_packet_2_bits_needs_CSRs),
     .io_backend_packet_2_bits_needs_memory
       (io_backend_packet_2_bits_needs_memory),
+    .io_backend_packet_2_bits_needs_mul            (io_backend_packet_2_bits_needs_mul),
+    .io_backend_packet_2_bits_needs_div            (io_backend_packet_2_bits_needs_div),
     .io_backend_packet_2_bits_SUBTRACT             (io_backend_packet_2_bits_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY             (io_backend_packet_2_bits_MULTIPLY),
     .io_backend_packet_2_bits_FENCE                (io_backend_packet_2_bits_FENCE),
     .io_backend_packet_2_bits_MRET                 (io_backend_packet_2_bits_MRET),
-    .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
     .io_backend_packet_2_bits_ECALL                (io_backend_packet_2_bits_ECALL),
+    .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
     .io_backend_packet_2_bits_mem_signed           (io_backend_packet_2_bits_mem_signed),
     .io_backend_packet_2_bits_memory_type          (io_backend_packet_2_bits_memory_type),
     .io_backend_packet_2_bits_access_width
       (io_backend_packet_2_bits_access_width),
     .io_backend_packet_3_ready                     (_MEM_RS_io_backend_packet_3_ready),
-    .io_backend_packet_3_valid
-      (_MOB_io_reserve_3_valid_T_2 & io_backend_packet_3_valid),
+    .io_backend_packet_3_valid                     (_MOB_io_reserve_3_valid_T_1),
     .io_backend_packet_3_bits_ready_bits_RS1_ready
       (io_backend_packet_3_bits_ready_bits_RS1_ready),
     .io_backend_packet_3_bits_ready_bits_RS2_ready
@@ -1599,20 +1617,20 @@ module backend(
     .io_backend_packet_3_bits_MOB_index            (_MOB_io_reserved_pointers_3_bits),
     .io_backend_packet_3_bits_instructionType
       (io_backend_packet_3_bits_instructionType),
-    .io_backend_packet_3_bits_portID               (io_backend_packet_3_bits_portID),
-    .io_backend_packet_3_bits_RS_type              (io_backend_packet_3_bits_RS_type),
     .io_backend_packet_3_bits_needs_ALU            (io_backend_packet_3_bits_needs_ALU),
     .io_backend_packet_3_bits_needs_branch_unit
       (io_backend_packet_3_bits_needs_branch_unit),
     .io_backend_packet_3_bits_needs_CSRs           (io_backend_packet_3_bits_needs_CSRs),
     .io_backend_packet_3_bits_needs_memory
       (io_backend_packet_3_bits_needs_memory),
+    .io_backend_packet_3_bits_needs_mul            (io_backend_packet_3_bits_needs_mul),
+    .io_backend_packet_3_bits_needs_div            (io_backend_packet_3_bits_needs_div),
     .io_backend_packet_3_bits_SUBTRACT             (io_backend_packet_3_bits_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY             (io_backend_packet_3_bits_MULTIPLY),
     .io_backend_packet_3_bits_FENCE                (io_backend_packet_3_bits_FENCE),
     .io_backend_packet_3_bits_MRET                 (io_backend_packet_3_bits_MRET),
-    .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
     .io_backend_packet_3_bits_ECALL                (io_backend_packet_3_bits_ECALL),
+    .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
     .io_backend_packet_3_bits_mem_signed           (io_backend_packet_3_bits_mem_signed),
     .io_backend_packet_3_bits_memory_type          (io_backend_packet_3_bits_memory_type),
     .io_backend_packet_3_bits_access_width
@@ -1773,8 +1791,6 @@ module backend(
       (_MEM_RS_io_RF_inputs_0_bits_MOB_index),
     .io_RF_inputs_0_bits_instructionType
       (_MEM_RS_io_RF_inputs_0_bits_instructionType),
-    .io_RF_inputs_0_bits_portID                    (_MEM_RS_io_RF_inputs_0_bits_portID),
-    .io_RF_inputs_0_bits_RS_type                   (_MEM_RS_io_RF_inputs_0_bits_RS_type),
     .io_RF_inputs_0_bits_needs_ALU
       (_MEM_RS_io_RF_inputs_0_bits_needs_ALU),
     .io_RF_inputs_0_bits_needs_branch_unit
@@ -1783,12 +1799,16 @@ module backend(
       (_MEM_RS_io_RF_inputs_0_bits_needs_CSRs),
     .io_RF_inputs_0_bits_needs_memory
       (_MEM_RS_io_RF_inputs_0_bits_needs_memory),
+    .io_RF_inputs_0_bits_needs_mul
+      (_MEM_RS_io_RF_inputs_0_bits_needs_mul),
+    .io_RF_inputs_0_bits_needs_div
+      (_MEM_RS_io_RF_inputs_0_bits_needs_div),
     .io_RF_inputs_0_bits_SUBTRACT                  (_MEM_RS_io_RF_inputs_0_bits_SUBTRACT),
     .io_RF_inputs_0_bits_MULTIPLY                  (_MEM_RS_io_RF_inputs_0_bits_MULTIPLY),
     .io_RF_inputs_0_bits_FENCE                     (_MEM_RS_io_RF_inputs_0_bits_FENCE),
     .io_RF_inputs_0_bits_MRET                      (_MEM_RS_io_RF_inputs_0_bits_MRET),
-    .io_RF_inputs_0_bits_IS_IMM                    (_MEM_RS_io_RF_inputs_0_bits_IS_IMM),
     .io_RF_inputs_0_bits_ECALL                     (_MEM_RS_io_RF_inputs_0_bits_ECALL),
+    .io_RF_inputs_0_bits_IS_IMM                    (_MEM_RS_io_RF_inputs_0_bits_IS_IMM),
     .io_RF_inputs_0_bits_mem_signed
       (_MEM_RS_io_RF_inputs_0_bits_mem_signed),
     .io_RF_inputs_0_bits_memory_type
@@ -1808,8 +1828,7 @@ module backend(
     .io_flush_bits_flushing_PC                          (io_flush_bits_flushing_PC),
     .io_flush_bits_redirect_PC                          (io_flush_bits_redirect_PC),
     .io_reserve_0_ready                                 (_MOB_io_reserve_0_ready),
-    .io_reserve_0_valid
-      (_MOB_io_reserve_0_valid_T_2 & io_backend_packet_0_valid),
+    .io_reserve_0_valid                                 (_MOB_io_reserve_0_valid_T_1),
     .io_reserve_0_bits_ready_bits_RS1_ready
       (io_backend_packet_0_bits_ready_bits_RS1_ready),
     .io_reserve_0_bits_ready_bits_RS2_ready
@@ -1835,9 +1854,6 @@ module backend(
       (io_backend_packet_0_bits_MOB_index),
     .io_reserve_0_bits_instructionType
       (io_backend_packet_0_bits_instructionType),
-    .io_reserve_0_bits_portID                           (io_backend_packet_0_bits_portID),
-    .io_reserve_0_bits_RS_type
-      (io_backend_packet_0_bits_RS_type),
     .io_reserve_0_bits_needs_ALU
       (io_backend_packet_0_bits_needs_ALU),
     .io_reserve_0_bits_needs_branch_unit
@@ -1846,14 +1862,18 @@ module backend(
       (io_backend_packet_0_bits_needs_CSRs),
     .io_reserve_0_bits_needs_memory
       (io_backend_packet_0_bits_needs_memory),
+    .io_reserve_0_bits_needs_mul
+      (io_backend_packet_0_bits_needs_mul),
+    .io_reserve_0_bits_needs_div
+      (io_backend_packet_0_bits_needs_div),
     .io_reserve_0_bits_SUBTRACT
       (io_backend_packet_0_bits_SUBTRACT),
     .io_reserve_0_bits_MULTIPLY
       (io_backend_packet_0_bits_MULTIPLY),
     .io_reserve_0_bits_FENCE                            (io_backend_packet_0_bits_FENCE),
     .io_reserve_0_bits_MRET                             (io_backend_packet_0_bits_MRET),
-    .io_reserve_0_bits_IS_IMM                           (io_backend_packet_0_bits_IS_IMM),
     .io_reserve_0_bits_ECALL                            (io_backend_packet_0_bits_ECALL),
+    .io_reserve_0_bits_IS_IMM                           (io_backend_packet_0_bits_IS_IMM),
     .io_reserve_0_bits_mem_signed
       (io_backend_packet_0_bits_mem_signed),
     .io_reserve_0_bits_memory_type
@@ -1861,8 +1881,7 @@ module backend(
     .io_reserve_0_bits_access_width
       (io_backend_packet_0_bits_access_width),
     .io_reserve_1_ready                                 (_MOB_io_reserve_1_ready),
-    .io_reserve_1_valid
-      (_MOB_io_reserve_1_valid_T_2 & io_backend_packet_1_valid),
+    .io_reserve_1_valid                                 (_MOB_io_reserve_1_valid_T_1),
     .io_reserve_1_bits_ready_bits_RS1_ready
       (io_backend_packet_1_bits_ready_bits_RS1_ready),
     .io_reserve_1_bits_ready_bits_RS2_ready
@@ -1888,9 +1907,6 @@ module backend(
       (io_backend_packet_1_bits_MOB_index),
     .io_reserve_1_bits_instructionType
       (io_backend_packet_1_bits_instructionType),
-    .io_reserve_1_bits_portID                           (io_backend_packet_1_bits_portID),
-    .io_reserve_1_bits_RS_type
-      (io_backend_packet_1_bits_RS_type),
     .io_reserve_1_bits_needs_ALU
       (io_backend_packet_1_bits_needs_ALU),
     .io_reserve_1_bits_needs_branch_unit
@@ -1899,14 +1915,18 @@ module backend(
       (io_backend_packet_1_bits_needs_CSRs),
     .io_reserve_1_bits_needs_memory
       (io_backend_packet_1_bits_needs_memory),
+    .io_reserve_1_bits_needs_mul
+      (io_backend_packet_1_bits_needs_mul),
+    .io_reserve_1_bits_needs_div
+      (io_backend_packet_1_bits_needs_div),
     .io_reserve_1_bits_SUBTRACT
       (io_backend_packet_1_bits_SUBTRACT),
     .io_reserve_1_bits_MULTIPLY
       (io_backend_packet_1_bits_MULTIPLY),
     .io_reserve_1_bits_FENCE                            (io_backend_packet_1_bits_FENCE),
     .io_reserve_1_bits_MRET                             (io_backend_packet_1_bits_MRET),
-    .io_reserve_1_bits_IS_IMM                           (io_backend_packet_1_bits_IS_IMM),
     .io_reserve_1_bits_ECALL                            (io_backend_packet_1_bits_ECALL),
+    .io_reserve_1_bits_IS_IMM                           (io_backend_packet_1_bits_IS_IMM),
     .io_reserve_1_bits_mem_signed
       (io_backend_packet_1_bits_mem_signed),
     .io_reserve_1_bits_memory_type
@@ -1914,8 +1934,7 @@ module backend(
     .io_reserve_1_bits_access_width
       (io_backend_packet_1_bits_access_width),
     .io_reserve_2_ready                                 (_MOB_io_reserve_2_ready),
-    .io_reserve_2_valid
-      (_MOB_io_reserve_2_valid_T_2 & io_backend_packet_2_valid),
+    .io_reserve_2_valid                                 (_MOB_io_reserve_2_valid_T_1),
     .io_reserve_2_bits_ready_bits_RS1_ready
       (io_backend_packet_2_bits_ready_bits_RS1_ready),
     .io_reserve_2_bits_ready_bits_RS2_ready
@@ -1941,9 +1960,6 @@ module backend(
       (io_backend_packet_2_bits_MOB_index),
     .io_reserve_2_bits_instructionType
       (io_backend_packet_2_bits_instructionType),
-    .io_reserve_2_bits_portID                           (io_backend_packet_2_bits_portID),
-    .io_reserve_2_bits_RS_type
-      (io_backend_packet_2_bits_RS_type),
     .io_reserve_2_bits_needs_ALU
       (io_backend_packet_2_bits_needs_ALU),
     .io_reserve_2_bits_needs_branch_unit
@@ -1952,14 +1968,18 @@ module backend(
       (io_backend_packet_2_bits_needs_CSRs),
     .io_reserve_2_bits_needs_memory
       (io_backend_packet_2_bits_needs_memory),
+    .io_reserve_2_bits_needs_mul
+      (io_backend_packet_2_bits_needs_mul),
+    .io_reserve_2_bits_needs_div
+      (io_backend_packet_2_bits_needs_div),
     .io_reserve_2_bits_SUBTRACT
       (io_backend_packet_2_bits_SUBTRACT),
     .io_reserve_2_bits_MULTIPLY
       (io_backend_packet_2_bits_MULTIPLY),
     .io_reserve_2_bits_FENCE                            (io_backend_packet_2_bits_FENCE),
     .io_reserve_2_bits_MRET                             (io_backend_packet_2_bits_MRET),
-    .io_reserve_2_bits_IS_IMM                           (io_backend_packet_2_bits_IS_IMM),
     .io_reserve_2_bits_ECALL                            (io_backend_packet_2_bits_ECALL),
+    .io_reserve_2_bits_IS_IMM                           (io_backend_packet_2_bits_IS_IMM),
     .io_reserve_2_bits_mem_signed
       (io_backend_packet_2_bits_mem_signed),
     .io_reserve_2_bits_memory_type
@@ -1967,8 +1987,7 @@ module backend(
     .io_reserve_2_bits_access_width
       (io_backend_packet_2_bits_access_width),
     .io_reserve_3_ready                                 (_MOB_io_reserve_3_ready),
-    .io_reserve_3_valid
-      (_MOB_io_reserve_3_valid_T_2 & io_backend_packet_3_valid),
+    .io_reserve_3_valid                                 (_MOB_io_reserve_3_valid_T_1),
     .io_reserve_3_bits_ready_bits_RS1_ready
       (io_backend_packet_3_bits_ready_bits_RS1_ready),
     .io_reserve_3_bits_ready_bits_RS2_ready
@@ -1994,9 +2013,6 @@ module backend(
       (io_backend_packet_3_bits_MOB_index),
     .io_reserve_3_bits_instructionType
       (io_backend_packet_3_bits_instructionType),
-    .io_reserve_3_bits_portID                           (io_backend_packet_3_bits_portID),
-    .io_reserve_3_bits_RS_type
-      (io_backend_packet_3_bits_RS_type),
     .io_reserve_3_bits_needs_ALU
       (io_backend_packet_3_bits_needs_ALU),
     .io_reserve_3_bits_needs_branch_unit
@@ -2005,14 +2021,18 @@ module backend(
       (io_backend_packet_3_bits_needs_CSRs),
     .io_reserve_3_bits_needs_memory
       (io_backend_packet_3_bits_needs_memory),
+    .io_reserve_3_bits_needs_mul
+      (io_backend_packet_3_bits_needs_mul),
+    .io_reserve_3_bits_needs_div
+      (io_backend_packet_3_bits_needs_div),
     .io_reserve_3_bits_SUBTRACT
       (io_backend_packet_3_bits_SUBTRACT),
     .io_reserve_3_bits_MULTIPLY
       (io_backend_packet_3_bits_MULTIPLY),
     .io_reserve_3_bits_FENCE                            (io_backend_packet_3_bits_FENCE),
     .io_reserve_3_bits_MRET                             (io_backend_packet_3_bits_MRET),
-    .io_reserve_3_bits_IS_IMM                           (io_backend_packet_3_bits_IS_IMM),
     .io_reserve_3_bits_ECALL                            (io_backend_packet_3_bits_ECALL),
+    .io_reserve_3_bits_IS_IMM                           (io_backend_packet_3_bits_IS_IMM),
     .io_reserve_3_bits_mem_signed
       (io_backend_packet_3_bits_mem_signed),
     .io_reserve_3_bits_memory_type
@@ -2380,10 +2400,6 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_MOB_index),
     .io_FU_input_0_bits_decoded_instruction_instructionType
       (read_decoded_instructions_0_decoded_instruction_REG_instructionType),
-    .io_FU_input_0_bits_decoded_instruction_portID
-      (read_decoded_instructions_0_decoded_instruction_REG_portID),
-    .io_FU_input_0_bits_decoded_instruction_RS_type
-      (read_decoded_instructions_0_decoded_instruction_REG_RS_type),
     .io_FU_input_0_bits_decoded_instruction_needs_ALU
       (read_decoded_instructions_0_decoded_instruction_REG_needs_ALU),
     .io_FU_input_0_bits_decoded_instruction_needs_branch_unit
@@ -2392,6 +2408,10 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_needs_CSRs),
     .io_FU_input_0_bits_decoded_instruction_needs_memory
       (read_decoded_instructions_0_decoded_instruction_REG_needs_memory),
+    .io_FU_input_0_bits_decoded_instruction_needs_mul
+      (read_decoded_instructions_0_decoded_instruction_REG_needs_mul),
+    .io_FU_input_0_bits_decoded_instruction_needs_div
+      (read_decoded_instructions_0_decoded_instruction_REG_needs_div),
     .io_FU_input_0_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_0_bits_decoded_instruction_MULTIPLY
@@ -2400,10 +2420,10 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_FENCE),
     .io_FU_input_0_bits_decoded_instruction_MRET
       (read_decoded_instructions_0_decoded_instruction_REG_MRET),
-    .io_FU_input_0_bits_decoded_instruction_IS_IMM
-      (read_decoded_instructions_0_decoded_instruction_REG_IS_IMM),
     .io_FU_input_0_bits_decoded_instruction_ECALL
       (read_decoded_instructions_0_decoded_instruction_REG_ECALL),
+    .io_FU_input_0_bits_decoded_instruction_IS_IMM
+      (read_decoded_instructions_0_decoded_instruction_REG_IS_IMM),
     .io_FU_input_0_bits_decoded_instruction_mem_signed
       (read_decoded_instructions_0_decoded_instruction_REG_mem_signed),
     .io_FU_input_0_bits_decoded_instruction_memory_type
@@ -2449,10 +2469,6 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_MOB_index),
     .io_FU_input_1_bits_decoded_instruction_instructionType
       (read_decoded_instructions_1_decoded_instruction_REG_instructionType),
-    .io_FU_input_1_bits_decoded_instruction_portID
-      (read_decoded_instructions_1_decoded_instruction_REG_portID),
-    .io_FU_input_1_bits_decoded_instruction_RS_type
-      (read_decoded_instructions_1_decoded_instruction_REG_RS_type),
     .io_FU_input_1_bits_decoded_instruction_needs_ALU
       (read_decoded_instructions_1_decoded_instruction_REG_needs_ALU),
     .io_FU_input_1_bits_decoded_instruction_needs_branch_unit
@@ -2461,6 +2477,10 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_needs_CSRs),
     .io_FU_input_1_bits_decoded_instruction_needs_memory
       (read_decoded_instructions_1_decoded_instruction_REG_needs_memory),
+    .io_FU_input_1_bits_decoded_instruction_needs_mul
+      (read_decoded_instructions_1_decoded_instruction_REG_needs_mul),
+    .io_FU_input_1_bits_decoded_instruction_needs_div
+      (read_decoded_instructions_1_decoded_instruction_REG_needs_div),
     .io_FU_input_1_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_1_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_1_bits_decoded_instruction_MULTIPLY
@@ -2469,10 +2489,10 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_FENCE),
     .io_FU_input_1_bits_decoded_instruction_MRET
       (read_decoded_instructions_1_decoded_instruction_REG_MRET),
-    .io_FU_input_1_bits_decoded_instruction_IS_IMM
-      (read_decoded_instructions_1_decoded_instruction_REG_IS_IMM),
     .io_FU_input_1_bits_decoded_instruction_ECALL
       (read_decoded_instructions_1_decoded_instruction_REG_ECALL),
+    .io_FU_input_1_bits_decoded_instruction_IS_IMM
+      (read_decoded_instructions_1_decoded_instruction_REG_IS_IMM),
     .io_FU_input_1_bits_decoded_instruction_mem_signed
       (read_decoded_instructions_1_decoded_instruction_REG_mem_signed),
     .io_FU_input_1_bits_decoded_instruction_memory_type
@@ -2518,10 +2538,6 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_MOB_index),
     .io_FU_input_2_bits_decoded_instruction_instructionType
       (read_decoded_instructions_2_decoded_instruction_REG_instructionType),
-    .io_FU_input_2_bits_decoded_instruction_portID
-      (read_decoded_instructions_2_decoded_instruction_REG_portID),
-    .io_FU_input_2_bits_decoded_instruction_RS_type
-      (read_decoded_instructions_2_decoded_instruction_REG_RS_type),
     .io_FU_input_2_bits_decoded_instruction_needs_ALU
       (read_decoded_instructions_2_decoded_instruction_REG_needs_ALU),
     .io_FU_input_2_bits_decoded_instruction_needs_branch_unit
@@ -2530,6 +2546,10 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_needs_CSRs),
     .io_FU_input_2_bits_decoded_instruction_needs_memory
       (read_decoded_instructions_2_decoded_instruction_REG_needs_memory),
+    .io_FU_input_2_bits_decoded_instruction_needs_mul
+      (read_decoded_instructions_2_decoded_instruction_REG_needs_mul),
+    .io_FU_input_2_bits_decoded_instruction_needs_div
+      (read_decoded_instructions_2_decoded_instruction_REG_needs_div),
     .io_FU_input_2_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_2_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_2_bits_decoded_instruction_MULTIPLY
@@ -2538,10 +2558,10 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_FENCE),
     .io_FU_input_2_bits_decoded_instruction_MRET
       (read_decoded_instructions_2_decoded_instruction_REG_MRET),
-    .io_FU_input_2_bits_decoded_instruction_IS_IMM
-      (read_decoded_instructions_2_decoded_instruction_REG_IS_IMM),
     .io_FU_input_2_bits_decoded_instruction_ECALL
       (read_decoded_instructions_2_decoded_instruction_REG_ECALL),
+    .io_FU_input_2_bits_decoded_instruction_IS_IMM
+      (read_decoded_instructions_2_decoded_instruction_REG_IS_IMM),
     .io_FU_input_2_bits_decoded_instruction_mem_signed
       (read_decoded_instructions_2_decoded_instruction_REG_mem_signed),
     .io_FU_input_2_bits_decoded_instruction_memory_type
@@ -2585,10 +2605,6 @@ module backend(
       (read_decoded_instructions_3_decoded_instruction_REG_MOB_index),
     .io_FU_input_3_bits_decoded_instruction_instructionType
       (read_decoded_instructions_3_decoded_instruction_REG_instructionType),
-    .io_FU_input_3_bits_decoded_instruction_portID
-      (read_decoded_instructions_3_decoded_instruction_REG_portID),
-    .io_FU_input_3_bits_decoded_instruction_RS_type
-      (read_decoded_instructions_3_decoded_instruction_REG_RS_type),
     .io_FU_input_3_bits_decoded_instruction_needs_ALU
       (read_decoded_instructions_3_decoded_instruction_REG_needs_ALU),
     .io_FU_input_3_bits_decoded_instruction_needs_branch_unit
@@ -2597,6 +2613,10 @@ module backend(
       (read_decoded_instructions_3_decoded_instruction_REG_needs_CSRs),
     .io_FU_input_3_bits_decoded_instruction_needs_memory
       (read_decoded_instructions_3_decoded_instruction_REG_needs_memory),
+    .io_FU_input_3_bits_decoded_instruction_needs_mul
+      (read_decoded_instructions_3_decoded_instruction_REG_needs_mul),
+    .io_FU_input_3_bits_decoded_instruction_needs_div
+      (read_decoded_instructions_3_decoded_instruction_REG_needs_div),
     .io_FU_input_3_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_3_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_3_bits_decoded_instruction_MULTIPLY
@@ -2605,10 +2625,10 @@ module backend(
       (read_decoded_instructions_3_decoded_instruction_REG_FENCE),
     .io_FU_input_3_bits_decoded_instruction_MRET
       (read_decoded_instructions_3_decoded_instruction_REG_MRET),
-    .io_FU_input_3_bits_decoded_instruction_IS_IMM
-      (read_decoded_instructions_3_decoded_instruction_REG_IS_IMM),
     .io_FU_input_3_bits_decoded_instruction_ECALL
       (read_decoded_instructions_3_decoded_instruction_REG_ECALL),
+    .io_FU_input_3_bits_decoded_instruction_IS_IMM
+      (read_decoded_instructions_3_decoded_instruction_REG_IS_IMM),
     .io_FU_input_3_bits_decoded_instruction_mem_signed
       (read_decoded_instructions_3_decoded_instruction_REG_mem_signed),
     .io_FU_input_3_bits_decoded_instruction_memory_type

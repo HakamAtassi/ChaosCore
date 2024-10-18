@@ -75,7 +75,9 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
 
 
-    val SUBTRACT    =   ((instructionType === OP || instructionType === OP_IMM) && FUNCT7 === 0x20.U)
+    val SUBTRACT    =   (instructionType === OP && FUNCT7 === 0x20.U) || (instructionType === OP_IMM && FUNCT3 === 0x5.U && FUNCT7 === 0x20.U)
+
+
     val IS_IMM   =      (instructionType === OP_IMM)    || 
                         (instructionType === LUI)       || 
                         (instructionType === AUIPC)     || 
@@ -93,6 +95,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     val needs_ALU            =   ((instructionType === OP) &&
                                  ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
                                  (instructionType === OP_IMM) || (instructionType === LUI)
+
+
 
     val ECALL               =   instruction === "b00000000000000000000000001110011".U 
     val MRET                =   instruction === "b00110000001000000000000001110011".U 
@@ -166,14 +170,6 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
         io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
     }
 
-    
-
-    //FIXME: 
-    //add LBU, LHU...
-
-
-
-
     val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
 
     io.decoded_instruction.bits.packet_index         := io.instruction.bits.packet_index 
@@ -184,6 +180,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
     io.decoded_instruction.bits.needs_memory         := needs_memory
     io.decoded_instruction.bits.needs_branch_unit    := needs_branch_unit
     io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
+    io.decoded_instruction.bits.needs_mul            := needs_mul
+    io.decoded_instruction.bits.needs_div            := needs_div
     io.decoded_instruction.bits.ECALL                := ECALL
 
     io.decoded_instruction.bits.access_width                 := access_width_t.NONE
@@ -205,50 +203,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
         io.decoded_instruction.bits.mem_signed  := 0.B
     }
 
-
     //io.decoded_instruction.bits.instruction_ID           := DontCare
-
-
-    // TODO: ECALL / EBREAK
-
-    // There is currently only 1 branch unit, 1 div unit, and 1 CSR unit. 
-    // ALU instructions can be scheduled to any of the ALU ports. 
-    // The port it is scheduled to is random. 
-
-    // FIXME: this whole section needs to be replaced with an actual scheduler based on the FU port types...
-    val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
-
-    when(needs_ALU || FENCE){
-        io.decoded_instruction.bits.portID := next_ALU_port(0)   // schedule to "random"
-        next_ALU_port(0) := next_ALU_port(1)
-        next_ALU_port(1) := next_ALU_port(2)
-        next_ALU_port(2) := next_ALU_port(0)  // shift register didnt appear in verilog before
-    }.elsewhen(needs_branch_unit){
-        io.decoded_instruction.bits.portID := 0.U
-    }.elsewhen(needs_CSRs){
-        io.decoded_instruction.bits.portID := 0.U
-    }.elsewhen(needs_div || needs_mul){
-        io.decoded_instruction.bits.portID := 1.U
-    }.elsewhen(needs_memory){
-        io.decoded_instruction.bits.portID := 0.U
-    }.otherwise{
-        io.decoded_instruction.bits.portID := 0.U
-    }
-
-
-    // Assign a reservation station
-
-    val is_INT   =   (instructionType === SYSTEM) || (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === LUI) || (instructionType === AUIPC) || (instructionType === MISC_MEM)
-    val is_MEM   =   (instructionType === LOAD) || (instructionType === STORE)
-
-    when(is_INT){
-        io.decoded_instruction.bits.RS_type  :=   RS_types.INT
-    }.elsewhen(is_MEM){
-        io.decoded_instruction.bits.RS_type  :=   RS_types.MEM
-    }.otherwise{    // is_FP
-        io.decoded_instruction.bits.RS_type  :=   RS_types.FP
-    }
-
 
 
 

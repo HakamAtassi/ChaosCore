@@ -12,7 +12,7 @@ has_children: true
   <div style="flex: 1; padding-right: 20px;">
     <p>ChoasCore is a security oriented RV32GC core implemented in Chisel. It is aggressively parameterizeable, Out-of-Order, superscalar, and synthesizeable.  ChaosCore can be parametrized to generate verilog targeting either FPGAs or ASICs.</p>
 
-    <p>Beyond being able to vary basic core parameters such as the core's fetch width, execution engine, and branch predictors, ChaosCore more importantly places an emphasis on demonstrating the impacts security features may have on the performance of a real Out-of-Order processor.</p>
+    <p>Beyond being able to adjust basic core parameters such as the core's fetch width, execution engine, and branch predictors, ChaosCore more importantly places an emphasis on demonstrating the impacts security features may have on the performance of a real Out-of-Order processor.</p>
 
     <h3>What is done:</h3>
     <ul>
@@ -39,7 +39,7 @@ has_children: true
 
 
 # Setup
-The ChaosCore repository attempts to be as lean as possible to keep the setup process smooth. As part of this effort, this repository provides two streams for new users:
+The ChaosCore repository attempts to be as lean as possible to keep the setup process smooth. As part of this effort, this repository provides three streams for new users:
 
 1. Profile Pre-built configurations.
 2. Build, simulate, and synthesize custom configurations.

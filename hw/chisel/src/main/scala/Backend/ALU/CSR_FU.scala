@@ -431,10 +431,10 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // MACHINE MODE CSRs //
     ///////////////////////
 
-    val mvendorid_reg   = RegInit(0.U.asTypeOf(new mvendorid))
-    val marchid_reg     = RegInit(0.U.asTypeOf(new marchid))
-    val mimpid_reg      = RegInit(UInt(32.W), 0.U)  // (implementation-defined)
-    val mhartid_reg     = RegInit(0.U.asTypeOf(new mhartid))
+    val mvendorid_reg   = RegInit(0.U.asTypeOf(new mvendorid))                  // JEDEC ID. KEEP 0. READ ONLY.
+    val marchid_reg     = RegInit(0.U.asTypeOf(new marchid))                    // architecture ID. keep 0. arbitrary
+    val mimpid_reg      = RegInit(UInt(32.W), 0.U)                              // Processor version. Keep 0.  arbitrary
+    val mhartid_reg     = RegInit(hartID.U.asTypeOf(new mhartid))               //
     val mconfigptr_reg  = RegInit(0.U.asTypeOf(new mconfigptr))
 
 
@@ -443,7 +443,9 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     //---------------------
 
     val mstatus_reg     = RegInit(0.U.asTypeOf(new mstatus))
-    val misa_reg        = RegInit(0.U.asTypeOf(new misa))
+    val misa_reg        = RegInit(initMisa(coreParameters).asTypeOf(new misa))  // writeable if isa is modifiable at runtime. 
+
+    
     val medeleg_reg     = RegInit(UInt(32.W), 0.U)  // (not present in RV32I)
     val mideleg_reg     = RegInit(UInt(32.W), 0.U)  // (not present in RV32I)
     val mie_reg         = RegInit(0.U.asTypeOf(new mie))
@@ -466,6 +468,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val mtval2_reg     = RegInit(UInt(32.W), 0.U)
 
 
+    // missing env 
+    // missing pmp
+    // missing mstateen0...
+
+
+
     //-----------------------
     // MACHINE NMI HANDLING
     //-----------------------
@@ -482,9 +490,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     val mcycle_reg    = RegInit(UInt(32.W), 0.U)
     val minstret_reg  = RegInit(UInt(32.W), 0.U)
-
     val mcycleh_reg    = RegInit(UInt(32.W), 0.U)
     val minstreth_reg  = RegInit(UInt(32.W), 0.U)
+
+    // missing mcounterinhibit etc..
+    // missing tsel tdata debug
+    // missing debug
 
 
     // PERFORMANCE COUNTER UPDATES

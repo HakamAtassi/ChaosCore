@@ -76,18 +76,18 @@ module fetch_packet_decoder(
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index,
   output [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index,
   output [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,
-  output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_portID,
-                io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,
   output        io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_needs_memory,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_needs_mul,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_needs_div,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_FENCE,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MRET,
-                io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_ECALL,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_access_width,
@@ -107,18 +107,18 @@ module fetch_packet_decoder(
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index,
   output [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index,
   output [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,
-  output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_portID,
-                io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,
   output        io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_needs_memory,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_needs_mul,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_needs_div,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_FENCE,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MRET,
-                io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_ECALL,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_access_width,
@@ -138,18 +138,18 @@ module fetch_packet_decoder(
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index,
   output [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index,
   output [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,
-  output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_portID,
-                io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,
   output        io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_needs_memory,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_needs_mul,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_needs_div,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_FENCE,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MRET,
-                io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_ECALL,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_access_width,
@@ -169,18 +169,18 @@ module fetch_packet_decoder(
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index,
   output [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index,
   output [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,
-  output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_portID,
-                io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,
   output        io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_needs_memory,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_needs_mul,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_needs_div,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_FENCE,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MRET,
-                io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_ECALL,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed,
   output [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_access_width,
@@ -212,18 +212,18 @@ module fetch_packet_decoder(
   wire [2:0]  _decoders_3_io_decoded_instruction_bits_FUNCT3;
   wire [1:0]  _decoders_3_io_decoded_instruction_bits_packet_index;
   wire [4:0]  _decoders_3_io_decoded_instruction_bits_instructionType;
-  wire [1:0]  _decoders_3_io_decoded_instruction_bits_portID;
-  wire [1:0]  _decoders_3_io_decoded_instruction_bits_RS_type;
   wire        _decoders_3_io_decoded_instruction_bits_needs_ALU;
   wire        _decoders_3_io_decoded_instruction_bits_needs_branch_unit;
   wire        _decoders_3_io_decoded_instruction_bits_needs_CSRs;
   wire        _decoders_3_io_decoded_instruction_bits_needs_memory;
+  wire        _decoders_3_io_decoded_instruction_bits_needs_mul;
+  wire        _decoders_3_io_decoded_instruction_bits_needs_div;
   wire        _decoders_3_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_3_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_3_io_decoded_instruction_bits_FENCE;
   wire        _decoders_3_io_decoded_instruction_bits_MRET;
-  wire        _decoders_3_io_decoded_instruction_bits_IS_IMM;
   wire        _decoders_3_io_decoded_instruction_bits_ECALL;
+  wire        _decoders_3_io_decoded_instruction_bits_IS_IMM;
   wire        _decoders_3_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_3_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_3_io_decoded_instruction_bits_access_width;
@@ -237,18 +237,18 @@ module fetch_packet_decoder(
   wire [2:0]  _decoders_2_io_decoded_instruction_bits_FUNCT3;
   wire [1:0]  _decoders_2_io_decoded_instruction_bits_packet_index;
   wire [4:0]  _decoders_2_io_decoded_instruction_bits_instructionType;
-  wire [1:0]  _decoders_2_io_decoded_instruction_bits_portID;
-  wire [1:0]  _decoders_2_io_decoded_instruction_bits_RS_type;
   wire        _decoders_2_io_decoded_instruction_bits_needs_ALU;
   wire        _decoders_2_io_decoded_instruction_bits_needs_branch_unit;
   wire        _decoders_2_io_decoded_instruction_bits_needs_CSRs;
   wire        _decoders_2_io_decoded_instruction_bits_needs_memory;
+  wire        _decoders_2_io_decoded_instruction_bits_needs_mul;
+  wire        _decoders_2_io_decoded_instruction_bits_needs_div;
   wire        _decoders_2_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_2_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_2_io_decoded_instruction_bits_FENCE;
   wire        _decoders_2_io_decoded_instruction_bits_MRET;
-  wire        _decoders_2_io_decoded_instruction_bits_IS_IMM;
   wire        _decoders_2_io_decoded_instruction_bits_ECALL;
+  wire        _decoders_2_io_decoded_instruction_bits_IS_IMM;
   wire        _decoders_2_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_2_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_2_io_decoded_instruction_bits_access_width;
@@ -262,18 +262,18 @@ module fetch_packet_decoder(
   wire [2:0]  _decoders_1_io_decoded_instruction_bits_FUNCT3;
   wire [1:0]  _decoders_1_io_decoded_instruction_bits_packet_index;
   wire [4:0]  _decoders_1_io_decoded_instruction_bits_instructionType;
-  wire [1:0]  _decoders_1_io_decoded_instruction_bits_portID;
-  wire [1:0]  _decoders_1_io_decoded_instruction_bits_RS_type;
   wire        _decoders_1_io_decoded_instruction_bits_needs_ALU;
   wire        _decoders_1_io_decoded_instruction_bits_needs_branch_unit;
   wire        _decoders_1_io_decoded_instruction_bits_needs_CSRs;
   wire        _decoders_1_io_decoded_instruction_bits_needs_memory;
+  wire        _decoders_1_io_decoded_instruction_bits_needs_mul;
+  wire        _decoders_1_io_decoded_instruction_bits_needs_div;
   wire        _decoders_1_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_1_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_1_io_decoded_instruction_bits_FENCE;
   wire        _decoders_1_io_decoded_instruction_bits_MRET;
-  wire        _decoders_1_io_decoded_instruction_bits_IS_IMM;
   wire        _decoders_1_io_decoded_instruction_bits_ECALL;
+  wire        _decoders_1_io_decoded_instruction_bits_IS_IMM;
   wire        _decoders_1_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_1_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_1_io_decoded_instruction_bits_access_width;
@@ -287,18 +287,18 @@ module fetch_packet_decoder(
   wire [2:0]  _decoders_0_io_decoded_instruction_bits_FUNCT3;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_packet_index;
   wire [4:0]  _decoders_0_io_decoded_instruction_bits_instructionType;
-  wire [1:0]  _decoders_0_io_decoded_instruction_bits_portID;
-  wire [1:0]  _decoders_0_io_decoded_instruction_bits_RS_type;
   wire        _decoders_0_io_decoded_instruction_bits_needs_ALU;
   wire        _decoders_0_io_decoded_instruction_bits_needs_branch_unit;
   wire        _decoders_0_io_decoded_instruction_bits_needs_CSRs;
   wire        _decoders_0_io_decoded_instruction_bits_needs_memory;
+  wire        _decoders_0_io_decoded_instruction_bits_needs_mul;
+  wire        _decoders_0_io_decoded_instruction_bits_needs_div;
   wire        _decoders_0_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_0_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_0_io_decoded_instruction_bits_FENCE;
   wire        _decoders_0_io_decoded_instruction_bits_MRET;
-  wire        _decoders_0_io_decoded_instruction_bits_IS_IMM;
   wire        _decoders_0_io_decoded_instruction_bits_ECALL;
+  wire        _decoders_0_io_decoded_instruction_bits_IS_IMM;
   wire        _decoders_0_io_decoded_instruction_bits_mem_signed;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;
@@ -333,10 +333,6 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_packet_index),
     .io_decoded_instruction_bits_instructionType
       (_decoders_0_io_decoded_instruction_bits_instructionType),
-    .io_decoded_instruction_bits_portID
-      (_decoders_0_io_decoded_instruction_bits_portID),
-    .io_decoded_instruction_bits_RS_type
-      (_decoders_0_io_decoded_instruction_bits_RS_type),
     .io_decoded_instruction_bits_needs_ALU
       (_decoders_0_io_decoded_instruction_bits_needs_ALU),
     .io_decoded_instruction_bits_needs_branch_unit
@@ -345,6 +341,10 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_needs_CSRs),
     .io_decoded_instruction_bits_needs_memory
       (_decoders_0_io_decoded_instruction_bits_needs_memory),
+    .io_decoded_instruction_bits_needs_mul
+      (_decoders_0_io_decoded_instruction_bits_needs_mul),
+    .io_decoded_instruction_bits_needs_div
+      (_decoders_0_io_decoded_instruction_bits_needs_div),
     .io_decoded_instruction_bits_SUBTRACT
       (_decoders_0_io_decoded_instruction_bits_SUBTRACT),
     .io_decoded_instruction_bits_MULTIPLY
@@ -353,10 +353,10 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_FENCE),
     .io_decoded_instruction_bits_MRET
       (_decoders_0_io_decoded_instruction_bits_MRET),
-    .io_decoded_instruction_bits_IS_IMM
-      (_decoders_0_io_decoded_instruction_bits_IS_IMM),
     .io_decoded_instruction_bits_ECALL
       (_decoders_0_io_decoded_instruction_bits_ECALL),
+    .io_decoded_instruction_bits_IS_IMM
+      (_decoders_0_io_decoded_instruction_bits_IS_IMM),
     .io_decoded_instruction_bits_mem_signed
       (_decoders_0_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
@@ -393,10 +393,6 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_packet_index),
     .io_decoded_instruction_bits_instructionType
       (_decoders_1_io_decoded_instruction_bits_instructionType),
-    .io_decoded_instruction_bits_portID
-      (_decoders_1_io_decoded_instruction_bits_portID),
-    .io_decoded_instruction_bits_RS_type
-      (_decoders_1_io_decoded_instruction_bits_RS_type),
     .io_decoded_instruction_bits_needs_ALU
       (_decoders_1_io_decoded_instruction_bits_needs_ALU),
     .io_decoded_instruction_bits_needs_branch_unit
@@ -405,6 +401,10 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_needs_CSRs),
     .io_decoded_instruction_bits_needs_memory
       (_decoders_1_io_decoded_instruction_bits_needs_memory),
+    .io_decoded_instruction_bits_needs_mul
+      (_decoders_1_io_decoded_instruction_bits_needs_mul),
+    .io_decoded_instruction_bits_needs_div
+      (_decoders_1_io_decoded_instruction_bits_needs_div),
     .io_decoded_instruction_bits_SUBTRACT
       (_decoders_1_io_decoded_instruction_bits_SUBTRACT),
     .io_decoded_instruction_bits_MULTIPLY
@@ -413,10 +413,10 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_FENCE),
     .io_decoded_instruction_bits_MRET
       (_decoders_1_io_decoded_instruction_bits_MRET),
-    .io_decoded_instruction_bits_IS_IMM
-      (_decoders_1_io_decoded_instruction_bits_IS_IMM),
     .io_decoded_instruction_bits_ECALL
       (_decoders_1_io_decoded_instruction_bits_ECALL),
+    .io_decoded_instruction_bits_IS_IMM
+      (_decoders_1_io_decoded_instruction_bits_IS_IMM),
     .io_decoded_instruction_bits_mem_signed
       (_decoders_1_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
@@ -453,10 +453,6 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_packet_index),
     .io_decoded_instruction_bits_instructionType
       (_decoders_2_io_decoded_instruction_bits_instructionType),
-    .io_decoded_instruction_bits_portID
-      (_decoders_2_io_decoded_instruction_bits_portID),
-    .io_decoded_instruction_bits_RS_type
-      (_decoders_2_io_decoded_instruction_bits_RS_type),
     .io_decoded_instruction_bits_needs_ALU
       (_decoders_2_io_decoded_instruction_bits_needs_ALU),
     .io_decoded_instruction_bits_needs_branch_unit
@@ -465,6 +461,10 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_needs_CSRs),
     .io_decoded_instruction_bits_needs_memory
       (_decoders_2_io_decoded_instruction_bits_needs_memory),
+    .io_decoded_instruction_bits_needs_mul
+      (_decoders_2_io_decoded_instruction_bits_needs_mul),
+    .io_decoded_instruction_bits_needs_div
+      (_decoders_2_io_decoded_instruction_bits_needs_div),
     .io_decoded_instruction_bits_SUBTRACT
       (_decoders_2_io_decoded_instruction_bits_SUBTRACT),
     .io_decoded_instruction_bits_MULTIPLY
@@ -473,10 +473,10 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_FENCE),
     .io_decoded_instruction_bits_MRET
       (_decoders_2_io_decoded_instruction_bits_MRET),
-    .io_decoded_instruction_bits_IS_IMM
-      (_decoders_2_io_decoded_instruction_bits_IS_IMM),
     .io_decoded_instruction_bits_ECALL
       (_decoders_2_io_decoded_instruction_bits_ECALL),
+    .io_decoded_instruction_bits_IS_IMM
+      (_decoders_2_io_decoded_instruction_bits_IS_IMM),
     .io_decoded_instruction_bits_mem_signed
       (_decoders_2_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
@@ -513,10 +513,6 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_packet_index),
     .io_decoded_instruction_bits_instructionType
       (_decoders_3_io_decoded_instruction_bits_instructionType),
-    .io_decoded_instruction_bits_portID
-      (_decoders_3_io_decoded_instruction_bits_portID),
-    .io_decoded_instruction_bits_RS_type
-      (_decoders_3_io_decoded_instruction_bits_RS_type),
     .io_decoded_instruction_bits_needs_ALU
       (_decoders_3_io_decoded_instruction_bits_needs_ALU),
     .io_decoded_instruction_bits_needs_branch_unit
@@ -525,6 +521,10 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_needs_CSRs),
     .io_decoded_instruction_bits_needs_memory
       (_decoders_3_io_decoded_instruction_bits_needs_memory),
+    .io_decoded_instruction_bits_needs_mul
+      (_decoders_3_io_decoded_instruction_bits_needs_mul),
+    .io_decoded_instruction_bits_needs_div
+      (_decoders_3_io_decoded_instruction_bits_needs_div),
     .io_decoded_instruction_bits_SUBTRACT
       (_decoders_3_io_decoded_instruction_bits_SUBTRACT),
     .io_decoded_instruction_bits_MULTIPLY
@@ -533,10 +533,10 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_FENCE),
     .io_decoded_instruction_bits_MRET
       (_decoders_3_io_decoded_instruction_bits_MRET),
-    .io_decoded_instruction_bits_IS_IMM
-      (_decoders_3_io_decoded_instruction_bits_IS_IMM),
     .io_decoded_instruction_bits_ECALL
       (_decoders_3_io_decoded_instruction_bits_ECALL),
+    .io_decoded_instruction_bits_IS_IMM
+      (_decoders_3_io_decoded_instruction_bits_IS_IMM),
     .io_decoded_instruction_bits_mem_signed
       (_decoders_3_io_decoded_instruction_bits_mem_signed),
     .io_decoded_instruction_bits_memory_type
@@ -578,10 +578,6 @@ module fetch_packet_decoder(
     .io_enq_bits_decoded_instruction_0_MOB_index            (4'h0),
     .io_enq_bits_decoded_instruction_0_instructionType
       (_decoders_0_io_decoded_instruction_bits_instructionType),
-    .io_enq_bits_decoded_instruction_0_portID
-      (_decoders_0_io_decoded_instruction_bits_portID),
-    .io_enq_bits_decoded_instruction_0_RS_type
-      (_decoders_0_io_decoded_instruction_bits_RS_type),
     .io_enq_bits_decoded_instruction_0_needs_ALU
       (_decoders_0_io_decoded_instruction_bits_needs_ALU),
     .io_enq_bits_decoded_instruction_0_needs_branch_unit
@@ -590,6 +586,10 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_needs_CSRs),
     .io_enq_bits_decoded_instruction_0_needs_memory
       (_decoders_0_io_decoded_instruction_bits_needs_memory),
+    .io_enq_bits_decoded_instruction_0_needs_mul
+      (_decoders_0_io_decoded_instruction_bits_needs_mul),
+    .io_enq_bits_decoded_instruction_0_needs_div
+      (_decoders_0_io_decoded_instruction_bits_needs_div),
     .io_enq_bits_decoded_instruction_0_SUBTRACT
       (_decoders_0_io_decoded_instruction_bits_SUBTRACT),
     .io_enq_bits_decoded_instruction_0_MULTIPLY
@@ -598,10 +598,10 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_FENCE),
     .io_enq_bits_decoded_instruction_0_MRET
       (_decoders_0_io_decoded_instruction_bits_MRET),
-    .io_enq_bits_decoded_instruction_0_IS_IMM
-      (_decoders_0_io_decoded_instruction_bits_IS_IMM),
     .io_enq_bits_decoded_instruction_0_ECALL
       (_decoders_0_io_decoded_instruction_bits_ECALL),
+    .io_enq_bits_decoded_instruction_0_IS_IMM
+      (_decoders_0_io_decoded_instruction_bits_IS_IMM),
     .io_enq_bits_decoded_instruction_0_mem_signed
       (_decoders_0_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_0_memory_type
@@ -634,10 +634,6 @@ module fetch_packet_decoder(
     .io_enq_bits_decoded_instruction_1_MOB_index            (4'h0),
     .io_enq_bits_decoded_instruction_1_instructionType
       (_decoders_1_io_decoded_instruction_bits_instructionType),
-    .io_enq_bits_decoded_instruction_1_portID
-      (_decoders_1_io_decoded_instruction_bits_portID),
-    .io_enq_bits_decoded_instruction_1_RS_type
-      (_decoders_1_io_decoded_instruction_bits_RS_type),
     .io_enq_bits_decoded_instruction_1_needs_ALU
       (_decoders_1_io_decoded_instruction_bits_needs_ALU),
     .io_enq_bits_decoded_instruction_1_needs_branch_unit
@@ -646,6 +642,10 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_needs_CSRs),
     .io_enq_bits_decoded_instruction_1_needs_memory
       (_decoders_1_io_decoded_instruction_bits_needs_memory),
+    .io_enq_bits_decoded_instruction_1_needs_mul
+      (_decoders_1_io_decoded_instruction_bits_needs_mul),
+    .io_enq_bits_decoded_instruction_1_needs_div
+      (_decoders_1_io_decoded_instruction_bits_needs_div),
     .io_enq_bits_decoded_instruction_1_SUBTRACT
       (_decoders_1_io_decoded_instruction_bits_SUBTRACT),
     .io_enq_bits_decoded_instruction_1_MULTIPLY
@@ -654,10 +654,10 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_FENCE),
     .io_enq_bits_decoded_instruction_1_MRET
       (_decoders_1_io_decoded_instruction_bits_MRET),
-    .io_enq_bits_decoded_instruction_1_IS_IMM
-      (_decoders_1_io_decoded_instruction_bits_IS_IMM),
     .io_enq_bits_decoded_instruction_1_ECALL
       (_decoders_1_io_decoded_instruction_bits_ECALL),
+    .io_enq_bits_decoded_instruction_1_IS_IMM
+      (_decoders_1_io_decoded_instruction_bits_IS_IMM),
     .io_enq_bits_decoded_instruction_1_mem_signed
       (_decoders_1_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_1_memory_type
@@ -690,10 +690,6 @@ module fetch_packet_decoder(
     .io_enq_bits_decoded_instruction_2_MOB_index            (4'h0),
     .io_enq_bits_decoded_instruction_2_instructionType
       (_decoders_2_io_decoded_instruction_bits_instructionType),
-    .io_enq_bits_decoded_instruction_2_portID
-      (_decoders_2_io_decoded_instruction_bits_portID),
-    .io_enq_bits_decoded_instruction_2_RS_type
-      (_decoders_2_io_decoded_instruction_bits_RS_type),
     .io_enq_bits_decoded_instruction_2_needs_ALU
       (_decoders_2_io_decoded_instruction_bits_needs_ALU),
     .io_enq_bits_decoded_instruction_2_needs_branch_unit
@@ -702,6 +698,10 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_needs_CSRs),
     .io_enq_bits_decoded_instruction_2_needs_memory
       (_decoders_2_io_decoded_instruction_bits_needs_memory),
+    .io_enq_bits_decoded_instruction_2_needs_mul
+      (_decoders_2_io_decoded_instruction_bits_needs_mul),
+    .io_enq_bits_decoded_instruction_2_needs_div
+      (_decoders_2_io_decoded_instruction_bits_needs_div),
     .io_enq_bits_decoded_instruction_2_SUBTRACT
       (_decoders_2_io_decoded_instruction_bits_SUBTRACT),
     .io_enq_bits_decoded_instruction_2_MULTIPLY
@@ -710,10 +710,10 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_FENCE),
     .io_enq_bits_decoded_instruction_2_MRET
       (_decoders_2_io_decoded_instruction_bits_MRET),
-    .io_enq_bits_decoded_instruction_2_IS_IMM
-      (_decoders_2_io_decoded_instruction_bits_IS_IMM),
     .io_enq_bits_decoded_instruction_2_ECALL
       (_decoders_2_io_decoded_instruction_bits_ECALL),
+    .io_enq_bits_decoded_instruction_2_IS_IMM
+      (_decoders_2_io_decoded_instruction_bits_IS_IMM),
     .io_enq_bits_decoded_instruction_2_mem_signed
       (_decoders_2_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_2_memory_type
@@ -746,10 +746,6 @@ module fetch_packet_decoder(
     .io_enq_bits_decoded_instruction_3_MOB_index            (4'h0),
     .io_enq_bits_decoded_instruction_3_instructionType
       (_decoders_3_io_decoded_instruction_bits_instructionType),
-    .io_enq_bits_decoded_instruction_3_portID
-      (_decoders_3_io_decoded_instruction_bits_portID),
-    .io_enq_bits_decoded_instruction_3_RS_type
-      (_decoders_3_io_decoded_instruction_bits_RS_type),
     .io_enq_bits_decoded_instruction_3_needs_ALU
       (_decoders_3_io_decoded_instruction_bits_needs_ALU),
     .io_enq_bits_decoded_instruction_3_needs_branch_unit
@@ -758,6 +754,10 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_needs_CSRs),
     .io_enq_bits_decoded_instruction_3_needs_memory
       (_decoders_3_io_decoded_instruction_bits_needs_memory),
+    .io_enq_bits_decoded_instruction_3_needs_mul
+      (_decoders_3_io_decoded_instruction_bits_needs_mul),
+    .io_enq_bits_decoded_instruction_3_needs_div
+      (_decoders_3_io_decoded_instruction_bits_needs_div),
     .io_enq_bits_decoded_instruction_3_SUBTRACT
       (_decoders_3_io_decoded_instruction_bits_SUBTRACT),
     .io_enq_bits_decoded_instruction_3_MULTIPLY
@@ -766,10 +766,10 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_FENCE),
     .io_enq_bits_decoded_instruction_3_MRET
       (_decoders_3_io_decoded_instruction_bits_MRET),
-    .io_enq_bits_decoded_instruction_3_IS_IMM
-      (_decoders_3_io_decoded_instruction_bits_IS_IMM),
     .io_enq_bits_decoded_instruction_3_ECALL
       (_decoders_3_io_decoded_instruction_bits_ECALL),
+    .io_enq_bits_decoded_instruction_3_IS_IMM
+      (_decoders_3_io_decoded_instruction_bits_IS_IMM),
     .io_enq_bits_decoded_instruction_3_mem_signed
       (_decoders_3_io_decoded_instruction_bits_mem_signed),
     .io_enq_bits_decoded_instruction_3_memory_type
@@ -840,10 +840,6 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index),
     .io_deq_bits_decoded_instruction_0_instructionType
       (io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),
-    .io_deq_bits_decoded_instruction_0_portID
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_portID),
-    .io_deq_bits_decoded_instruction_0_RS_type
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),
     .io_deq_bits_decoded_instruction_0_needs_ALU
       (io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
     .io_deq_bits_decoded_instruction_0_needs_branch_unit
@@ -852,6 +848,10 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs),
     .io_deq_bits_decoded_instruction_0_needs_memory
       (io_decoded_fetch_packet_bits_decoded_instruction_0_needs_memory),
+    .io_deq_bits_decoded_instruction_0_needs_mul
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_needs_mul),
+    .io_deq_bits_decoded_instruction_0_needs_div
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_needs_div),
     .io_deq_bits_decoded_instruction_0_SUBTRACT
       (io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),
     .io_deq_bits_decoded_instruction_0_MULTIPLY
@@ -860,10 +860,10 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
     .io_deq_bits_decoded_instruction_0_MRET
       (io_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
-    .io_deq_bits_decoded_instruction_0_IS_IMM
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
     .io_deq_bits_decoded_instruction_0_ECALL
       (io_decoded_fetch_packet_bits_decoded_instruction_0_ECALL),
+    .io_deq_bits_decoded_instruction_0_IS_IMM
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
     .io_deq_bits_decoded_instruction_0_mem_signed
       (io_decoded_fetch_packet_bits_decoded_instruction_0_mem_signed),
     .io_deq_bits_decoded_instruction_0_memory_type
@@ -902,10 +902,6 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index),
     .io_deq_bits_decoded_instruction_1_instructionType
       (io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),
-    .io_deq_bits_decoded_instruction_1_portID
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_portID),
-    .io_deq_bits_decoded_instruction_1_RS_type
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),
     .io_deq_bits_decoded_instruction_1_needs_ALU
       (io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
     .io_deq_bits_decoded_instruction_1_needs_branch_unit
@@ -914,6 +910,10 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs),
     .io_deq_bits_decoded_instruction_1_needs_memory
       (io_decoded_fetch_packet_bits_decoded_instruction_1_needs_memory),
+    .io_deq_bits_decoded_instruction_1_needs_mul
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_needs_mul),
+    .io_deq_bits_decoded_instruction_1_needs_div
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_needs_div),
     .io_deq_bits_decoded_instruction_1_SUBTRACT
       (io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),
     .io_deq_bits_decoded_instruction_1_MULTIPLY
@@ -922,10 +922,10 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
     .io_deq_bits_decoded_instruction_1_MRET
       (io_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
-    .io_deq_bits_decoded_instruction_1_IS_IMM
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
     .io_deq_bits_decoded_instruction_1_ECALL
       (io_decoded_fetch_packet_bits_decoded_instruction_1_ECALL),
+    .io_deq_bits_decoded_instruction_1_IS_IMM
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
     .io_deq_bits_decoded_instruction_1_mem_signed
       (io_decoded_fetch_packet_bits_decoded_instruction_1_mem_signed),
     .io_deq_bits_decoded_instruction_1_memory_type
@@ -964,10 +964,6 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index),
     .io_deq_bits_decoded_instruction_2_instructionType
       (io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),
-    .io_deq_bits_decoded_instruction_2_portID
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_portID),
-    .io_deq_bits_decoded_instruction_2_RS_type
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),
     .io_deq_bits_decoded_instruction_2_needs_ALU
       (io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
     .io_deq_bits_decoded_instruction_2_needs_branch_unit
@@ -976,6 +972,10 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs),
     .io_deq_bits_decoded_instruction_2_needs_memory
       (io_decoded_fetch_packet_bits_decoded_instruction_2_needs_memory),
+    .io_deq_bits_decoded_instruction_2_needs_mul
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_needs_mul),
+    .io_deq_bits_decoded_instruction_2_needs_div
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_needs_div),
     .io_deq_bits_decoded_instruction_2_SUBTRACT
       (io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),
     .io_deq_bits_decoded_instruction_2_MULTIPLY
@@ -984,10 +984,10 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
     .io_deq_bits_decoded_instruction_2_MRET
       (io_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
-    .io_deq_bits_decoded_instruction_2_IS_IMM
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
     .io_deq_bits_decoded_instruction_2_ECALL
       (io_decoded_fetch_packet_bits_decoded_instruction_2_ECALL),
+    .io_deq_bits_decoded_instruction_2_IS_IMM
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
     .io_deq_bits_decoded_instruction_2_mem_signed
       (io_decoded_fetch_packet_bits_decoded_instruction_2_mem_signed),
     .io_deq_bits_decoded_instruction_2_memory_type
@@ -1026,10 +1026,6 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index),
     .io_deq_bits_decoded_instruction_3_instructionType
       (io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),
-    .io_deq_bits_decoded_instruction_3_portID
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_portID),
-    .io_deq_bits_decoded_instruction_3_RS_type
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),
     .io_deq_bits_decoded_instruction_3_needs_ALU
       (io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
     .io_deq_bits_decoded_instruction_3_needs_branch_unit
@@ -1038,6 +1034,10 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs),
     .io_deq_bits_decoded_instruction_3_needs_memory
       (io_decoded_fetch_packet_bits_decoded_instruction_3_needs_memory),
+    .io_deq_bits_decoded_instruction_3_needs_mul
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_needs_mul),
+    .io_deq_bits_decoded_instruction_3_needs_div
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_needs_div),
     .io_deq_bits_decoded_instruction_3_SUBTRACT
       (io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),
     .io_deq_bits_decoded_instruction_3_MULTIPLY
@@ -1046,10 +1046,10 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
     .io_deq_bits_decoded_instruction_3_MRET
       (io_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
-    .io_deq_bits_decoded_instruction_3_IS_IMM
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
     .io_deq_bits_decoded_instruction_3_ECALL
       (io_decoded_fetch_packet_bits_decoded_instruction_3_ECALL),
+    .io_deq_bits_decoded_instruction_3_IS_IMM
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
     .io_deq_bits_decoded_instruction_3_mem_signed
       (io_decoded_fetch_packet_bits_decoded_instruction_3_mem_signed),
     .io_deq_bits_decoded_instruction_3_memory_type
