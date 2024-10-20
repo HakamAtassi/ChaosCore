@@ -10,17 +10,12 @@
   `endif // PRINTF_COND
 `endif // not def PRINTF_COND_
 
-module Queue2_fetch_packet(
+module Queue32_fetch_packet(
   input         clock,
                 reset,
-  output        io_enq_ready,
-  input         io_enq_valid,
+                io_enq_valid,
   input  [31:0] io_enq_bits_fetch_PC,
-  input         io_enq_bits_valid_bits_0,
-                io_enq_bits_valid_bits_1,
-                io_enq_bits_valid_bits_2,
-                io_enq_bits_valid_bits_3,
-  input  [31:0] io_enq_bits_instructions_0_instruction,
+                io_enq_bits_instructions_0_instruction,
   input  [3:0]  io_enq_bits_instructions_0_packet_index,
   input  [5:0]  io_enq_bits_instructions_0_ROB_index,
   input  [31:0] io_enq_bits_instructions_1_instruction,
@@ -71,37 +66,46 @@ module Queue2_fetch_packet(
   output [15:0] io_deq_bits_GHR,
   output [6:0]  io_deq_bits_NEXT,
                 io_deq_bits_TOS,
-  output [1:0]  io_count,
   input         io_flush
 );
 
+  wire         do_deq;
   wire [273:0] _ram_ext_R0_data;
-  reg          wrap;
-  reg          wrap_1;
+  reg  [4:0]   enq_ptr_value;
+  reg  [4:0]   deq_ptr_value;
   reg          maybe_full;
-  wire         ptr_match = wrap == wrap_1;
+  wire         ptr_match = enq_ptr_value == deq_ptr_value;
   wire         empty = ptr_match & ~maybe_full;
-  wire         full = ptr_match & maybe_full;
-  wire         do_enq = ~full & io_enq_valid;
+  wire         io_deq_valid_0 = io_enq_valid | ~empty;
+  assign do_deq = ~empty & io_deq_ready & io_deq_valid_0;
+  wire         do_enq =
+    ~(empty & io_deq_ready) & ~(ptr_match & maybe_full) & io_enq_valid;
   always @(posedge clock) begin
     if (reset) begin
-      wrap <= 1'h0;
-      wrap_1 <= 1'h0;
+      enq_ptr_value <= 5'h0;
+      deq_ptr_value <= 5'h0;
       maybe_full <= 1'h0;
     end
     else begin
-      automatic logic do_deq = io_deq_ready & ~empty;
-      wrap <= ~io_flush & (do_enq ? wrap - 1'h1 : wrap);
-      wrap_1 <= ~io_flush & (do_deq ? wrap_1 - 1'h1 : wrap_1);
+      if (io_flush) begin
+        enq_ptr_value <= 5'h0;
+        deq_ptr_value <= 5'h0;
+      end
+      else begin
+        if (do_enq)
+          enq_ptr_value <= enq_ptr_value + 5'h1;
+        if (do_deq)
+          deq_ptr_value <= deq_ptr_value + 5'h1;
+      end
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_2x274 ram_ext (
-    .R0_addr (wrap_1),
+  ram_32x274 ram_ext (
+    .R0_addr (do_deq ? ((&deq_ptr_value) ? 5'h0 : deq_ptr_value + 5'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),
-    .W0_addr (wrap),
+    .W0_addr (enq_ptr_value),
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
@@ -127,41 +131,55 @@ module Queue2_fetch_packet(
         io_enq_bits_instructions_0_ROB_index,
         io_enq_bits_instructions_0_packet_index,
         io_enq_bits_instructions_0_instruction,
-        io_enq_bits_valid_bits_3,
-        io_enq_bits_valid_bits_2,
-        io_enq_bits_valid_bits_1,
-        io_enq_bits_valid_bits_0,
+        4'hF,
         io_enq_bits_fetch_PC})
   );
-  assign io_enq_ready = ~full;
-  assign io_deq_valid = ~empty;
-  assign io_deq_bits_fetch_PC = _ram_ext_R0_data[31:0];
-  assign io_deq_bits_valid_bits_0 = _ram_ext_R0_data[32];
-  assign io_deq_bits_valid_bits_1 = _ram_ext_R0_data[33];
-  assign io_deq_bits_valid_bits_2 = _ram_ext_R0_data[34];
-  assign io_deq_bits_valid_bits_3 = _ram_ext_R0_data[35];
-  assign io_deq_bits_instructions_0_instruction = _ram_ext_R0_data[67:36];
-  assign io_deq_bits_instructions_0_packet_index = _ram_ext_R0_data[71:68];
-  assign io_deq_bits_instructions_0_ROB_index = _ram_ext_R0_data[77:72];
-  assign io_deq_bits_instructions_1_instruction = _ram_ext_R0_data[109:78];
-  assign io_deq_bits_instructions_1_packet_index = _ram_ext_R0_data[113:110];
-  assign io_deq_bits_instructions_1_ROB_index = _ram_ext_R0_data[119:114];
-  assign io_deq_bits_instructions_2_instruction = _ram_ext_R0_data[151:120];
-  assign io_deq_bits_instructions_2_packet_index = _ram_ext_R0_data[155:152];
-  assign io_deq_bits_instructions_2_ROB_index = _ram_ext_R0_data[161:156];
-  assign io_deq_bits_instructions_3_instruction = _ram_ext_R0_data[193:162];
-  assign io_deq_bits_instructions_3_packet_index = _ram_ext_R0_data[197:194];
-  assign io_deq_bits_instructions_3_ROB_index = _ram_ext_R0_data[203:198];
-  assign io_deq_bits_prediction_hit = _ram_ext_R0_data[204];
-  assign io_deq_bits_prediction_target = _ram_ext_R0_data[236:205];
-  assign io_deq_bits_prediction_br_type = _ram_ext_R0_data[239:237];
-  assign io_deq_bits_prediction_br_mask_0 = _ram_ext_R0_data[240];
-  assign io_deq_bits_prediction_br_mask_1 = _ram_ext_R0_data[241];
-  assign io_deq_bits_prediction_br_mask_2 = _ram_ext_R0_data[242];
-  assign io_deq_bits_prediction_br_mask_3 = _ram_ext_R0_data[243];
-  assign io_deq_bits_GHR = _ram_ext_R0_data[259:244];
-  assign io_deq_bits_NEXT = _ram_ext_R0_data[266:260];
-  assign io_deq_bits_TOS = _ram_ext_R0_data[273:267];
-  assign io_count = {maybe_full & ptr_match, wrap - wrap_1};
+  assign io_deq_valid = io_deq_valid_0;
+  assign io_deq_bits_fetch_PC = empty ? io_enq_bits_fetch_PC : _ram_ext_R0_data[31:0];
+  assign io_deq_bits_valid_bits_0 = empty | _ram_ext_R0_data[32];
+  assign io_deq_bits_valid_bits_1 = empty | _ram_ext_R0_data[33];
+  assign io_deq_bits_valid_bits_2 = empty | _ram_ext_R0_data[34];
+  assign io_deq_bits_valid_bits_3 = empty | _ram_ext_R0_data[35];
+  assign io_deq_bits_instructions_0_instruction =
+    empty ? io_enq_bits_instructions_0_instruction : _ram_ext_R0_data[67:36];
+  assign io_deq_bits_instructions_0_packet_index =
+    empty ? io_enq_bits_instructions_0_packet_index : _ram_ext_R0_data[71:68];
+  assign io_deq_bits_instructions_0_ROB_index =
+    empty ? io_enq_bits_instructions_0_ROB_index : _ram_ext_R0_data[77:72];
+  assign io_deq_bits_instructions_1_instruction =
+    empty ? io_enq_bits_instructions_1_instruction : _ram_ext_R0_data[109:78];
+  assign io_deq_bits_instructions_1_packet_index =
+    empty ? io_enq_bits_instructions_1_packet_index : _ram_ext_R0_data[113:110];
+  assign io_deq_bits_instructions_1_ROB_index =
+    empty ? io_enq_bits_instructions_1_ROB_index : _ram_ext_R0_data[119:114];
+  assign io_deq_bits_instructions_2_instruction =
+    empty ? io_enq_bits_instructions_2_instruction : _ram_ext_R0_data[151:120];
+  assign io_deq_bits_instructions_2_packet_index =
+    empty ? io_enq_bits_instructions_2_packet_index : _ram_ext_R0_data[155:152];
+  assign io_deq_bits_instructions_2_ROB_index =
+    empty ? io_enq_bits_instructions_2_ROB_index : _ram_ext_R0_data[161:156];
+  assign io_deq_bits_instructions_3_instruction =
+    empty ? io_enq_bits_instructions_3_instruction : _ram_ext_R0_data[193:162];
+  assign io_deq_bits_instructions_3_packet_index =
+    empty ? io_enq_bits_instructions_3_packet_index : _ram_ext_R0_data[197:194];
+  assign io_deq_bits_instructions_3_ROB_index =
+    empty ? io_enq_bits_instructions_3_ROB_index : _ram_ext_R0_data[203:198];
+  assign io_deq_bits_prediction_hit =
+    empty ? io_enq_bits_prediction_hit : _ram_ext_R0_data[204];
+  assign io_deq_bits_prediction_target =
+    empty ? io_enq_bits_prediction_target : _ram_ext_R0_data[236:205];
+  assign io_deq_bits_prediction_br_type =
+    empty ? io_enq_bits_prediction_br_type : _ram_ext_R0_data[239:237];
+  assign io_deq_bits_prediction_br_mask_0 =
+    empty ? io_enq_bits_prediction_br_mask_0 : _ram_ext_R0_data[240];
+  assign io_deq_bits_prediction_br_mask_1 =
+    empty ? io_enq_bits_prediction_br_mask_1 : _ram_ext_R0_data[241];
+  assign io_deq_bits_prediction_br_mask_2 =
+    empty ? io_enq_bits_prediction_br_mask_2 : _ram_ext_R0_data[242];
+  assign io_deq_bits_prediction_br_mask_3 =
+    empty ? io_enq_bits_prediction_br_mask_3 : _ram_ext_R0_data[243];
+  assign io_deq_bits_GHR = empty ? io_enq_bits_GHR : _ram_ext_R0_data[259:244];
+  assign io_deq_bits_NEXT = empty ? io_enq_bits_NEXT : _ram_ext_R0_data[266:260];
+  assign io_deq_bits_TOS = empty ? io_enq_bits_TOS : _ram_ext_R0_data[273:267];
 endmodule
 

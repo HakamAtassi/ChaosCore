@@ -37,12 +37,12 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     import InstructionType._
     val io = IO(new Bundle{
-        val compressed_instr = Flipped(Decoupled(new compressed_instruction(coreParameters)))
+        val compressed_instr = Input(UInt(16.W))
 
-        val instruction = Decoupled(new Instruction(coreParameters))
+        val instruction = Output(UInt(32.W))
     })
 
-    val instruction = io.compressed_instr.bits.instruction 
+    val instruction = io.compressed_instr
 
     val expanded_instruction = Wire(UInt(32.W))
     expanded_instruction := 0.U
@@ -249,10 +249,6 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
         expanded_instruction := Cat(decoded_instr.imm(11,0), decoded_instr.rs1, decoded_instr.funct3, decoded_instr.rd, decoded_instr.opcode)
     }
 
-    io.instruction.bits.instruction := expanded_instruction
-    io.instruction.bits.packet_index := io.compressed_instr.bits.packet_index
-    io.instruction.bits.ROB_index := io.compressed_instr.bits.ROB_index
-    io.compressed_instr.ready := 1.B
-    io.instruction.valid := 1.B
+    io.instruction := expanded_instruction
 
 }

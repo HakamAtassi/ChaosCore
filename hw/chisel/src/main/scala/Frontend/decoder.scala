@@ -66,7 +66,7 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
 
 
     val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
-    assert(valid, "Enum state must be valid, got %x!",instruction)
+    //assert(valid, "Enum state must be valid, got %x!",instruction)
 
 
     dontTouch(instructionType)

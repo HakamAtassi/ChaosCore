@@ -13,8 +13,11 @@ ram_2x274.sv
 Queue2_fetch_packet.sv
 predecoder.sv
 PC_gen.sv
-ram_16x274.sv
-Queue16_fetch_packet.sv
+ram_32x274.sv
+Queue32_fetch_packet.sv
+RVC_expander.sv
+instruction_aligner.sv
+fetch_queue.sv
 ram_16x65.sv
 Queue16_frontend_memory_request.sv
 ram_16x40.sv

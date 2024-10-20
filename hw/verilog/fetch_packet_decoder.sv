@@ -10,24 +10,6 @@
   `endif // PRINTF_COND
 `endif // not def PRINTF_COND_
 
-// Users can define 'ASSERT_VERBOSE_COND' to add an extra gate to assert error printing.
-`ifndef ASSERT_VERBOSE_COND_
-  `ifdef ASSERT_VERBOSE_COND
-    `define ASSERT_VERBOSE_COND_ (`ASSERT_VERBOSE_COND)
-  `else  // ASSERT_VERBOSE_COND
-    `define ASSERT_VERBOSE_COND_ 1
-  `endif // ASSERT_VERBOSE_COND
-`endif // not def ASSERT_VERBOSE_COND_
-
-// Users can define 'STOP_COND' to add an extra gate to stop conditions.
-`ifndef STOP_COND_
-  `ifdef STOP_COND
-    `define STOP_COND_ (`STOP_COND)
-  `else  // STOP_COND
-    `define STOP_COND_ 1
-  `endif // STOP_COND
-`endif // not def STOP_COND_
-
 module fetch_packet_decoder(
   input         clock,
                 reset,
@@ -305,8 +287,6 @@ module fetch_packet_decoder(
   always @(posedge clock)
     io_fetch_packet_ready_REG <= io_decoded_fetch_packet_ready;
   decoder decoders_0 (
-    .clock                                         (clock),
-    .reset                                         (reset),
     .io_instruction_valid
       (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_0),
     .io_instruction_bits_instruction
@@ -365,8 +345,6 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_access_width)
   );
   decoder decoders_1 (
-    .clock                                         (clock),
-    .reset                                         (reset),
     .io_instruction_valid
       (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_1),
     .io_instruction_bits_instruction
@@ -425,8 +403,6 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_access_width)
   );
   decoder decoders_2 (
-    .clock                                         (clock),
-    .reset                                         (reset),
     .io_instruction_valid
       (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_2),
     .io_instruction_bits_instruction
@@ -485,8 +461,6 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_access_width)
   );
   decoder decoders_3 (
-    .clock                                         (clock),
-    .reset                                         (reset),
     .io_instruction_valid
       (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_3),
     .io_instruction_bits_instruction

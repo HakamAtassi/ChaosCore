@@ -10,28 +10,8 @@
   `endif // PRINTF_COND
 `endif // not def PRINTF_COND_
 
-// Users can define 'ASSERT_VERBOSE_COND' to add an extra gate to assert error printing.
-`ifndef ASSERT_VERBOSE_COND_
-  `ifdef ASSERT_VERBOSE_COND
-    `define ASSERT_VERBOSE_COND_ (`ASSERT_VERBOSE_COND)
-  `else  // ASSERT_VERBOSE_COND
-    `define ASSERT_VERBOSE_COND_ 1
-  `endif // ASSERT_VERBOSE_COND
-`endif // not def ASSERT_VERBOSE_COND_
-
-// Users can define 'STOP_COND' to add an extra gate to stop conditions.
-`ifndef STOP_COND_
-  `ifdef STOP_COND
-    `define STOP_COND_ (`STOP_COND)
-  `else  // STOP_COND
-    `define STOP_COND_ 1
-  `endif // STOP_COND
-`endif // not def STOP_COND_
-
 module decoder(
-  input         clock,
-                reset,
-                io_instruction_valid,
+  input         io_instruction_valid,
   input  [31:0] io_instruction_bits_instruction,
   input  [3:0]  io_instruction_bits_packet_index,
   output [4:0]  io_decoded_instruction_bits_RD,
@@ -91,7 +71,6 @@ module decoder(
                       : 21'h0;
   wire [4:0]  instructionType = io_instruction_bits_instruction[6:2];
   wire        _needs_memory_T_1 = instructionType == 5'h0;
-  wire        _FENCE_T = instructionType == 5'h3;
   wire        _io_decoded_instruction_bits_RS1_valid_T_1 = instructionType == 5'h4;
   wire        _io_decoded_instruction_bits_RD_valid_T_11 = instructionType == 5'h5;
   wire        _needs_memory_T = instructionType == 5'h8;
@@ -101,31 +80,6 @@ module decoder(
   wire        _io_decoded_instruction_bits_RS1_valid_T_7 = instructionType == 5'h19;
   wire        _io_decoded_instruction_bits_RD_valid_T_5 = instructionType == 5'h1B;
   wire        _io_decoded_instruction_bits_RD_valid_T_13 = instructionType == 5'h1C;
-  `ifndef SYNTHESIS
-    always @(posedge clock) begin
-      if (~reset
-          & ~(_needs_memory_T_1 | instructionType == 5'h1 | instructionType == 5'h2
-              | _FENCE_T | _io_decoded_instruction_bits_RS1_valid_T_1
-              | _io_decoded_instruction_bits_RD_valid_T_11 | instructionType == 5'h6
-              | _needs_memory_T | instructionType == 5'h9 | instructionType == 5'hA
-              | instructionType == 5'hB | _io_decoded_instruction_bits_RS2_valid_T
-              | _io_decoded_instruction_bits_RD_valid_T_9 | instructionType == 5'hE
-              | instructionType == 5'h10 | instructionType == 5'h11
-              | instructionType == 5'h12 | instructionType == 5'h13
-              | instructionType == 5'h14 | instructionType == 5'h16
-              | _io_decoded_instruction_bits_RS2_valid_T_3
-              | _io_decoded_instruction_bits_RS1_valid_T_7
-              | _io_decoded_instruction_bits_RD_valid_T_5
-              | _io_decoded_instruction_bits_RD_valid_T_13
-              | instructionType == 5'h1E)) begin
-        if (`ASSERT_VERBOSE_COND_)
-          $error("Assertion failed: Enum state must be valid, got %x!\n    at decoder.scala:69 assert(valid, \"Enum state must be valid, got %%%%x!\",instruction)\n",
-                 io_instruction_bits_instruction);
-        if (`STOP_COND_)
-          $fatal;
-      end
-    end // always @(posedge)
-  `endif // not def SYNTHESIS
   wire        _needs_ALU_T_1 = io_instruction_bits_instruction[31:25] == 7'h20;
   wire        _needs_CSRs_T_8 = io_instruction_bits_instruction[14:12] == 3'h5;
   wire        _needs_CSRs_T_10 = io_instruction_bits_instruction[14:12] == 3'h6;
@@ -193,7 +147,7 @@ module decoder(
   assign io_decoded_instruction_bits_MULTIPLY =
     _io_decoded_instruction_bits_RS2_valid_T
     & io_instruction_bits_instruction[31:25] == 7'h1;
-  assign io_decoded_instruction_bits_FENCE = _FENCE_T & _FENCE_T_1;
+  assign io_decoded_instruction_bits_FENCE = instructionType == 5'h3 & _FENCE_T_1;
   assign io_decoded_instruction_bits_MRET =
     io_instruction_bits_instruction == 32'h30200073;
   assign io_decoded_instruction_bits_ECALL = io_instruction_bits_instruction == 32'h73;

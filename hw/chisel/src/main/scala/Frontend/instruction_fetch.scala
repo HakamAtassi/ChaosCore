@@ -60,7 +60,8 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     ////////////
     // Queues //
     ////////////
-    val instruction_Q   =   Module(new Queue(new fetch_packet(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    //val instruction_Q   =   Module(new Queue(new fetch_packet(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val instruction_Q   =   Module(new fetch_queue(coreParameters))
     val PC_Q            =   Module(new Queue(new frontend_memory_request(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
     val BTB_Q           =   Module(new Queue(new prediction(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
 
@@ -118,7 +119,7 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     /////////////
     BTB_Q.io.flush.get                :=  io.flush.valid || io.revert.valid
     PC_Q.io.flush.get                 :=  io.flush.valid || io.revert.valid
-    instruction_Q.io.flush.get        :=  io.flush.valid || io.revert.valid
+    instruction_Q.io.flush            :=  io.flush.valid || io.revert.valid
     bp.io.flush                       :=  io.flush.valid || io.revert.valid
     predecoder.io.flush               :=  io.flush // NO REVERT HERE 
 

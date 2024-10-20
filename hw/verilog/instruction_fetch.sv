@@ -10,24 +10,6 @@
   `endif // PRINTF_COND
 `endif // not def PRINTF_COND_
 
-// Users can define 'ASSERT_VERBOSE_COND' to add an extra gate to assert error printing.
-`ifndef ASSERT_VERBOSE_COND_
-  `ifdef ASSERT_VERBOSE_COND
-    `define ASSERT_VERBOSE_COND_ (`ASSERT_VERBOSE_COND)
-  `else  // ASSERT_VERBOSE_COND
-    `define ASSERT_VERBOSE_COND_ 1
-  `endif // ASSERT_VERBOSE_COND
-`endif // not def ASSERT_VERBOSE_COND_
-
-// Users can define 'STOP_COND' to add an extra gate to stop conditions.
-`ifndef STOP_COND_
-  `ifdef STOP_COND
-    `define STOP_COND_ (`STOP_COND)
-  `else  // STOP_COND
-    `define STOP_COND_ 1
-  `endif // STOP_COND
-`endif // not def STOP_COND_
-
 module instruction_fetch(
   input         clock,
                 reset,
@@ -455,9 +437,10 @@ module instruction_fetch(
     .io_PC_next_bits_wr_data        (_PC_gen_io_PC_next_bits_wr_data),
     .io_PC_next_bits_wr_en          (_PC_gen_io_PC_next_bits_wr_en)
   );
-  Queue16_fetch_packet instruction_Q (
+  fetch_queue instruction_Q (
     .clock                                   (clock),
     .reset                                   (reset),
+    .io_flush                                (_bp_io_flush_T),
     .io_enq_ready                            (io_memory_response_ready),
     .io_enq_valid                            (io_memory_response_valid),
     .io_enq_bits_fetch_PC                    (io_memory_response_bits_fetch_PC),
@@ -549,8 +532,7 @@ module instruction_fetch(
       (_instruction_Q_io_deq_bits_prediction_br_mask_3),
     .io_deq_bits_GHR                         (_instruction_Q_io_deq_bits_GHR),
     .io_deq_bits_NEXT                        (_instruction_Q_io_deq_bits_NEXT),
-    .io_deq_bits_TOS                         (_instruction_Q_io_deq_bits_TOS),
-    .io_flush                                (_bp_io_flush_T)
+    .io_deq_bits_TOS                         (_instruction_Q_io_deq_bits_TOS)
   );
   Queue16_frontend_memory_request PC_Q (
     .clock               (clock),
