@@ -52,7 +52,7 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     })
 
 
-    val CSR_port = IO(Output(new CSR_out))
+    val CSR_port = IO(Output(new CSR_out(coreParameters)))
 
     // FUs
     val FUs: Seq[FU] = Seq.tabulate(FUParamSeq.length) { i => Module(new FU(FUParamSeq(i))(coreParameters))}

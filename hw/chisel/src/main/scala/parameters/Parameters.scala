@@ -63,7 +63,7 @@ object validate_backend{
         }
 
         if (branchUnits > 1) {
-            println(s"Warning: You have allocated more than 1 Branch Unit. This is not suggested for FPGA builds")
+            println(s"[${Console.YELLOW}ChaosCore Warning${Console.RESET}] You have allocated more than 1 Branch Unit. This is not suggested for FPGA builds")
         }
 
 
@@ -72,7 +72,7 @@ object validate_backend{
         val csrPort = FUParamSeq.indexWhere(_.supportsCSRs)
         val csrBranchOnDifferentPorts = branchPort != csrPort && branchPort >= 0 && csrPort >= 0
         if (csrBranchOnDifferentPorts) {
-            println(s"Warning: The CSR file and Branch Unit are exist in different FUs. This is not suggested for FPGA builds.")
+            println(s"[${Console.YELLOW}ChaosCore Warning${Console.RESET}] The CSR file and Branch Unit are exist in different FUs. This is not suggested for FPGA builds.")
         }
 
 

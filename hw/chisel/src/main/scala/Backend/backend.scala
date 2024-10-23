@@ -81,7 +81,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     }); dontTouch(io)
 
 
-    val CSR_port = IO(Output(new CSR_out))
+    val CSR_port = IO(Output(new CSR_out(coreParameters)))
 
 
 

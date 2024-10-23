@@ -71,7 +71,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }); dontTouch(io)
 
 
-    val CSR_port = IO(Input(new CSR_out))
+    val CSR_port = IO(Input(new CSR_out(coreParameters)))
 
     //////////////
     // POINTERS // 
@@ -366,9 +366,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }
 
     dontTouch(ROB_output.ROB_entries)
-
     dontTouch(ROB_output)
-
 
     ////////////
     // COMMIT //
@@ -480,6 +478,34 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
 
 
+    ///////////////
+    // NEW STUFF //
+    ///////////////
+
+
+    val ROB_commit_row = Wire(new ROB_row(coreParameters))
+    ROB_commit_row := DontCare
+
+
+    ROB_commit_row.valid := row_valid
+
+    ROB_commit_row.fetch_PC := shared_mem.io.readDataB.fetch_PC
+    //ROB_commit_row.ROB_index  := ???
+    ROB_commit_row.prediction := commit_prediction
+
+
+    ROB_commit_row.GHR := shared_mem.io.readDataB.GHR
+    ROB_commit_row.NEXT := shared_mem.io.readDataB.NEXT
+    ROB_commit_row.TOS := shared_mem.io.readDataB.TOS
+    ROB_commit_row.free_list_front_pointer := shared_mem.io.readDataB.free_list_front_pointer
+
+
+    ROB_commit_row.resolved_branch         := commit_resolved
+    ROB_commit_row.WB                      := ROB_WB_banks.map(_.io.commitReadData)
+    ROB_commit_row.insn                    := ROB_entry_banks.map(_.io.readDataB)
+
+    ROB_commit_row.CSR_port                := CSR_port
+
 
     ////////////////////////////////
     // CONTROL FLOW REDIRECT LOOP //
@@ -499,14 +525,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
     dontTouch(has_branch)
 
 
-    // V2 //
-    // when current fetch packet has a branch or a flushing instr (fence, CSR)
-    // find the earliest violation (if any) and flush from that point onward
+    flush := 0.U.asTypeOf(new flush(coreParameters))
 
-
-    when((commit_valid && (has_branch || has_flushing_instr))) {
-        
-
+    when(commit_valid && (has_branch || has_flushing_instr)) {  
+        // TODO: make this a foldleft or something...
         for(i <- fetchWidth-1 to 0 by - 1){
 
             // FIXME: seperate these correctly, currently indistinguishable...
@@ -516,73 +538,34 @@ class ROB(coreParameters:CoreParameters) extends Module{
             val is_branch       = ROB_entry_banks(i).io.readDataB.is_branch
             val is_fence        = ROB_entry_banks(i).io.readDataB.is_fence
             val is_CSR          = ROB_entry_banks(i).io.readDataB.is_CSR
-            when(is_branch && is_valid){
+            when(ROB_commit_row.is_branch(i)){
 
-
-                when(commit_resolved(i).T_NT === 1.B && commit_prediction.br_mask(i) === 0.B && is_branch){
+                when(ROB_commit_row.is_misprediction(i)){
                     commit.is_misprediction      := 1.B
                     commit.br_type               := commit_resolved(i).br_type 
                     commit.fetch_packet_index    := i.U
                     flush.is_misprediction       := 1.B
 
-                    flush.is_exception          := 0.B
-                    flush.exception_cause       := 0.U.asTypeOf(EX_CAUSE())
-                    flush.is_fence              := 0.B
-                    flush.is_CSR                := 0.B
+                    flush.flushing_PC           := ROB_commit_row.instruction_PC(i)
 
-
-                    commit.expected_PC := commit_resolved(i).target
-                    flush.redirect_PC  := commit_resolved(i).target
-                }.elsewhen(commit_resolved(i).T_NT === 0.B && commit_prediction.br_mask(i) === 1.B && is_branch){
-                    commit.is_misprediction      := 1.B
-                    commit.br_type               := commit_resolved(i).br_type 
-                    commit.fetch_packet_index    := i.U
-                    flush.is_misprediction       := 1.B
-
-                    flush.is_exception          := 0.B
-                    flush.exception_cause       := 0.U.asTypeOf(EX_CAUSE())
-                    flush.is_fence              := 0.B
-                    flush.is_CSR                := 0.B
-                    flush.flushing_PC           := commit.fetch_PC + (i*4).U
-
-                    commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
-                    flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
-                }.elsewhen(commit_resolved(i).T_NT === 1.B && commit_prediction.br_mask(i) === 1.B && (commit_prediction.target =/= commit_resolved(i).target) && is_branch){
-                    commit.is_misprediction      := 1.B
-                    commit.br_type               := commit_resolved(i).br_type
-                    commit.fetch_packet_index    := i.U
-                    flush.is_misprediction       := 1.B
-
-                    flush.is_exception          := 0.B
-                    flush.exception_cause       := 0.U.asTypeOf(EX_CAUSE())
-                    flush.is_fence              := 0.B
-                    flush.is_CSR                := 0.B
-                    flush.flushing_PC           := commit.fetch_PC + (i*4).U
-
-                    commit.expected_PC := commit_resolved(i).target
-                    flush.redirect_PC  := commit_resolved(i).target
+                    commit.expected_PC := ROB_commit_row.get_next_PC(i)
+                    flush.redirect_PC  := ROB_commit_row.get_next_PC(i)
                 }
 
-            }.elsewhen(has_flushing_instr_vec(i) && is_valid){
+            }.elsewhen(ROB_commit_row.is_flush(i)){
                 commit.is_misprediction      := 0.B
                 commit.br_type               := br_type_t.NONE
                 commit.fetch_packet_index    := 0.U
 
-                flush.is_misprediction      := 0.B
                 flush.is_exception          := is_exception
                 flush.exception_cause       := exception_cause
                 flush.is_fence              := is_fence
                 flush.is_CSR                := is_CSR
-                flush.flushing_PC           := commit.fetch_PC + (i*4).U
+                flush.flushing_PC           := ROB_commit_row.instruction_PC(i) //commit.fetch_PC + (i*4).U
 
-                commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
+                commit.expected_PC := ROB_commit_row.get_next_PC(i) 
+                flush.redirect_PC  := ROB_commit_row.get_next_PC(i)
 
-                when(is_exception){
-                    // FIXME: this should be MTVEC
-                    flush.redirect_PC  := CSR_port.mtvec.asUInt
-                }.otherwise{
-                    flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
-                }
             }
         }
     }

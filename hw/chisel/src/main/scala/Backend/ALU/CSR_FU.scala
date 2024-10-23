@@ -338,7 +338,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     import coreParameters._
 
-    val CSR_port = IO(Output(new CSR_out))
+    val CSR_port = IO(Output(new CSR_out(coreParameters)))
 
 
     ////////////////////////
