@@ -2789,7 +2789,7 @@ module backend(
   assign io_reserved_pointers_1_bits = _MOB_io_reserved_pointers_1_bits;
   assign io_reserved_pointers_2_bits = _MOB_io_reserved_pointers_2_bits;
   assign io_reserved_pointers_3_bits = _MOB_io_reserved_pointers_3_bits;
-  assign io_PC_file_exec_addr = _INT_RS_io_RF_inputs_0_bits_ROB_index;
+  assign io_PC_file_exec_addr = _INT_RS_io_RF_inputs_1_bits_ROB_index;
   assign io_backend_packet_0_ready = backend_can_allocate;
   assign io_backend_packet_1_ready = backend_can_allocate;
   assign io_backend_packet_2_ready = backend_can_allocate;

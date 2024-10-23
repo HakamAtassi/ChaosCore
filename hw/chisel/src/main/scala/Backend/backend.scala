@@ -252,7 +252,11 @@ class backend(coreParameters:CoreParameters) extends Module{
         MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
     }
     
-    io.PC_file_exec_addr := INT_RS.io.RF_inputs(0).bits.ROB_index
+    for(i <- 0 until fetchWidth){
+        if(FUParamSeq(i).supportsBranch){
+            io.PC_file_exec_addr := INT_RS.io.RF_inputs(i).bits.ROB_index
+        }
+    }
 
     ////////////////
     // AGU <> MOB //

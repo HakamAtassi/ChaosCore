@@ -88,8 +88,8 @@ class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder 
                         (instructionType === JALR)      ||
                         ((instructionType === SYSTEM) && (FUNCT3 === 5.U || FUNCT3 === 6.U || FUNCT3 === 7.U))
 
-    val needs_div            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
-    val needs_mul            =   (instructionType === OP) && FUNCT7(0)  // FIXME: is this correct??
+    val needs_div            =   (instructionType === OP) && FUNCT7(0)
+    val needs_mul            =   (instructionType === OP) && FUNCT7(0)
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === AUIPC)
     val needs_CSRs           =   (instructionType === SYSTEM) && (FUNCT3 === 0x0.U || FUNCT3 === 0x1.U || FUNCT3 === 0x2.U || FUNCT3 === 0x3.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
     val needs_ALU            =   ((instructionType === OP) &&

@@ -360,7 +360,7 @@ module RS(
   reg  [5:0]        reservation_station_0_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_0_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_0_decoded_instruction_instructionType;
-  reg               supported_32;
+  reg               supported;
   reg               reservation_station_0_decoded_instruction_needs_branch_unit;
   reg               reservation_station_0_decoded_instruction_needs_CSRs;
   reg               reservation_station_0_decoded_instruction_needs_memory;
@@ -392,7 +392,7 @@ module RS(
   reg  [5:0]        reservation_station_1_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_1_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_1_decoded_instruction_instructionType;
-  reg               supported_33;
+  reg               supported_1;
   reg               reservation_station_1_decoded_instruction_needs_branch_unit;
   reg               reservation_station_1_decoded_instruction_needs_CSRs;
   reg               reservation_station_1_decoded_instruction_needs_memory;
@@ -424,7 +424,7 @@ module RS(
   reg  [5:0]        reservation_station_2_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_2_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_2_decoded_instruction_instructionType;
-  reg               supported_34;
+  reg               supported_2;
   reg               reservation_station_2_decoded_instruction_needs_branch_unit;
   reg               reservation_station_2_decoded_instruction_needs_CSRs;
   reg               reservation_station_2_decoded_instruction_needs_memory;
@@ -456,7 +456,7 @@ module RS(
   reg  [5:0]        reservation_station_3_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_3_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_3_decoded_instruction_instructionType;
-  reg               supported_35;
+  reg               supported_3;
   reg               reservation_station_3_decoded_instruction_needs_branch_unit;
   reg               reservation_station_3_decoded_instruction_needs_CSRs;
   reg               reservation_station_3_decoded_instruction_needs_memory;
@@ -488,7 +488,7 @@ module RS(
   reg  [5:0]        reservation_station_4_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_4_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_4_decoded_instruction_instructionType;
-  reg               supported_36;
+  reg               supported_4;
   reg               reservation_station_4_decoded_instruction_needs_branch_unit;
   reg               reservation_station_4_decoded_instruction_needs_CSRs;
   reg               reservation_station_4_decoded_instruction_needs_memory;
@@ -520,7 +520,7 @@ module RS(
   reg  [5:0]        reservation_station_5_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_5_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_5_decoded_instruction_instructionType;
-  reg               supported_37;
+  reg               supported_5;
   reg               reservation_station_5_decoded_instruction_needs_branch_unit;
   reg               reservation_station_5_decoded_instruction_needs_CSRs;
   reg               reservation_station_5_decoded_instruction_needs_memory;
@@ -552,7 +552,7 @@ module RS(
   reg  [5:0]        reservation_station_6_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_6_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_6_decoded_instruction_instructionType;
-  reg               supported_38;
+  reg               supported_6;
   reg               reservation_station_6_decoded_instruction_needs_branch_unit;
   reg               reservation_station_6_decoded_instruction_needs_CSRs;
   reg               reservation_station_6_decoded_instruction_needs_memory;
@@ -584,7 +584,7 @@ module RS(
   reg  [5:0]        reservation_station_7_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_7_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_7_decoded_instruction_instructionType;
-  reg               supported_39;
+  reg               supported_7;
   reg               reservation_station_7_decoded_instruction_needs_branch_unit;
   reg               reservation_station_7_decoded_instruction_needs_CSRs;
   reg               reservation_station_7_decoded_instruction_needs_memory;
@@ -616,7 +616,7 @@ module RS(
   reg  [5:0]        reservation_station_8_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_8_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_8_decoded_instruction_instructionType;
-  reg               supported_40;
+  reg               supported_8;
   reg               reservation_station_8_decoded_instruction_needs_branch_unit;
   reg               reservation_station_8_decoded_instruction_needs_CSRs;
   reg               reservation_station_8_decoded_instruction_needs_memory;
@@ -648,7 +648,7 @@ module RS(
   reg  [5:0]        reservation_station_9_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_9_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_9_decoded_instruction_instructionType;
-  reg               supported_41;
+  reg               supported_9;
   reg               reservation_station_9_decoded_instruction_needs_branch_unit;
   reg               reservation_station_9_decoded_instruction_needs_CSRs;
   reg               reservation_station_9_decoded_instruction_needs_memory;
@@ -680,7 +680,7 @@ module RS(
   reg  [5:0]        reservation_station_10_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_10_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_10_decoded_instruction_instructionType;
-  reg               supported_42;
+  reg               supported_10;
   reg               reservation_station_10_decoded_instruction_needs_branch_unit;
   reg               reservation_station_10_decoded_instruction_needs_CSRs;
   reg               reservation_station_10_decoded_instruction_needs_memory;
@@ -712,7 +712,7 @@ module RS(
   reg  [5:0]        reservation_station_11_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_11_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_11_decoded_instruction_instructionType;
-  reg               supported_43;
+  reg               supported_11;
   reg               reservation_station_11_decoded_instruction_needs_branch_unit;
   reg               reservation_station_11_decoded_instruction_needs_CSRs;
   reg               reservation_station_11_decoded_instruction_needs_memory;
@@ -744,7 +744,7 @@ module RS(
   reg  [5:0]        reservation_station_12_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_12_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_12_decoded_instruction_instructionType;
-  reg               supported_44;
+  reg               supported_12;
   reg               reservation_station_12_decoded_instruction_needs_branch_unit;
   reg               reservation_station_12_decoded_instruction_needs_CSRs;
   reg               reservation_station_12_decoded_instruction_needs_memory;
@@ -776,7 +776,7 @@ module RS(
   reg  [5:0]        reservation_station_13_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_13_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_13_decoded_instruction_instructionType;
-  reg               supported_45;
+  reg               supported_13;
   reg               reservation_station_13_decoded_instruction_needs_branch_unit;
   reg               reservation_station_13_decoded_instruction_needs_CSRs;
   reg               reservation_station_13_decoded_instruction_needs_memory;
@@ -808,7 +808,7 @@ module RS(
   reg  [5:0]        reservation_station_14_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_14_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_14_decoded_instruction_instructionType;
-  reg               supported_46;
+  reg               supported_14;
   reg               reservation_station_14_decoded_instruction_needs_branch_unit;
   reg               reservation_station_14_decoded_instruction_needs_CSRs;
   reg               reservation_station_14_decoded_instruction_needs_memory;
@@ -840,7 +840,7 @@ module RS(
   reg  [5:0]        reservation_station_15_decoded_instruction_ROB_index;
   reg  [3:0]        reservation_station_15_decoded_instruction_MOB_index;
   reg  [4:0]        reservation_station_15_decoded_instruction_instructionType;
-  reg               supported_47;
+  reg               supported_15;
   reg               reservation_station_15_decoded_instruction_needs_branch_unit;
   reg               reservation_station_15_decoded_instruction_needs_CSRs;
   reg               reservation_station_15_decoded_instruction_needs_memory;
@@ -1051,9 +1051,7 @@ module RS(
   wire              schedulable_instructions_0_0 =
     (_fireable_T_224 | ~reservation_station_0_decoded_instruction_RS1_valid)
     & (_fireable_T_227 | ~reservation_station_0_decoded_instruction_RS2_valid)
-    & reservation_station_0_valid
-    & (supported_32 | reservation_station_0_decoded_instruction_needs_branch_unit
-       | reservation_station_0_decoded_instruction_needs_CSRs);
+    & reservation_station_0_valid & supported;
   wire              _fireable_T_231 =
     reservation_station_1_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_1_decoded_instruction_RS1_valid;
@@ -1063,9 +1061,7 @@ module RS(
   wire              schedulable_instructions_0_1 =
     (_fireable_T_231 | ~reservation_station_1_decoded_instruction_RS1_valid)
     & (_fireable_T_234 | ~reservation_station_1_decoded_instruction_RS2_valid)
-    & reservation_station_1_valid
-    & (supported_33 | reservation_station_1_decoded_instruction_needs_branch_unit
-       | reservation_station_1_decoded_instruction_needs_CSRs);
+    & reservation_station_1_valid & supported_1;
   wire              _fireable_T_238 =
     reservation_station_2_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_2_decoded_instruction_RS1_valid;
@@ -1075,9 +1071,7 @@ module RS(
   wire              schedulable_instructions_0_2 =
     (_fireable_T_238 | ~reservation_station_2_decoded_instruction_RS1_valid)
     & (_fireable_T_241 | ~reservation_station_2_decoded_instruction_RS2_valid)
-    & reservation_station_2_valid
-    & (supported_34 | reservation_station_2_decoded_instruction_needs_branch_unit
-       | reservation_station_2_decoded_instruction_needs_CSRs);
+    & reservation_station_2_valid & supported_2;
   wire              _fireable_T_245 =
     reservation_station_3_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_3_decoded_instruction_RS1_valid;
@@ -1087,9 +1081,7 @@ module RS(
   wire              schedulable_instructions_0_3 =
     (_fireable_T_245 | ~reservation_station_3_decoded_instruction_RS1_valid)
     & (_fireable_T_248 | ~reservation_station_3_decoded_instruction_RS2_valid)
-    & reservation_station_3_valid
-    & (supported_35 | reservation_station_3_decoded_instruction_needs_branch_unit
-       | reservation_station_3_decoded_instruction_needs_CSRs);
+    & reservation_station_3_valid & supported_3;
   wire              _fireable_T_252 =
     reservation_station_4_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_4_decoded_instruction_RS1_valid;
@@ -1099,9 +1091,7 @@ module RS(
   wire              schedulable_instructions_0_4 =
     (_fireable_T_252 | ~reservation_station_4_decoded_instruction_RS1_valid)
     & (_fireable_T_255 | ~reservation_station_4_decoded_instruction_RS2_valid)
-    & reservation_station_4_valid
-    & (supported_36 | reservation_station_4_decoded_instruction_needs_branch_unit
-       | reservation_station_4_decoded_instruction_needs_CSRs);
+    & reservation_station_4_valid & supported_4;
   wire              _fireable_T_259 =
     reservation_station_5_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_5_decoded_instruction_RS1_valid;
@@ -1111,9 +1101,7 @@ module RS(
   wire              schedulable_instructions_0_5 =
     (_fireable_T_259 | ~reservation_station_5_decoded_instruction_RS1_valid)
     & (_fireable_T_262 | ~reservation_station_5_decoded_instruction_RS2_valid)
-    & reservation_station_5_valid
-    & (supported_37 | reservation_station_5_decoded_instruction_needs_branch_unit
-       | reservation_station_5_decoded_instruction_needs_CSRs);
+    & reservation_station_5_valid & supported_5;
   wire              _fireable_T_266 =
     reservation_station_6_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_6_decoded_instruction_RS1_valid;
@@ -1123,9 +1111,7 @@ module RS(
   wire              schedulable_instructions_0_6 =
     (_fireable_T_266 | ~reservation_station_6_decoded_instruction_RS1_valid)
     & (_fireable_T_269 | ~reservation_station_6_decoded_instruction_RS2_valid)
-    & reservation_station_6_valid
-    & (supported_38 | reservation_station_6_decoded_instruction_needs_branch_unit
-       | reservation_station_6_decoded_instruction_needs_CSRs);
+    & reservation_station_6_valid & supported_6;
   wire              _fireable_T_273 =
     reservation_station_7_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_7_decoded_instruction_RS1_valid;
@@ -1135,9 +1121,7 @@ module RS(
   wire              schedulable_instructions_0_7 =
     (_fireable_T_273 | ~reservation_station_7_decoded_instruction_RS1_valid)
     & (_fireable_T_276 | ~reservation_station_7_decoded_instruction_RS2_valid)
-    & reservation_station_7_valid
-    & (supported_39 | reservation_station_7_decoded_instruction_needs_branch_unit
-       | reservation_station_7_decoded_instruction_needs_CSRs);
+    & reservation_station_7_valid & supported_7;
   wire              _fireable_T_280 =
     reservation_station_8_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_8_decoded_instruction_RS1_valid;
@@ -1147,9 +1131,7 @@ module RS(
   wire              schedulable_instructions_0_8 =
     (_fireable_T_280 | ~reservation_station_8_decoded_instruction_RS1_valid)
     & (_fireable_T_283 | ~reservation_station_8_decoded_instruction_RS2_valid)
-    & reservation_station_8_valid
-    & (supported_40 | reservation_station_8_decoded_instruction_needs_branch_unit
-       | reservation_station_8_decoded_instruction_needs_CSRs);
+    & reservation_station_8_valid & supported_8;
   wire              _fireable_T_287 =
     reservation_station_9_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_9_decoded_instruction_RS1_valid;
@@ -1159,9 +1141,7 @@ module RS(
   wire              schedulable_instructions_0_9 =
     (_fireable_T_287 | ~reservation_station_9_decoded_instruction_RS1_valid)
     & (_fireable_T_290 | ~reservation_station_9_decoded_instruction_RS2_valid)
-    & reservation_station_9_valid
-    & (supported_41 | reservation_station_9_decoded_instruction_needs_branch_unit
-       | reservation_station_9_decoded_instruction_needs_CSRs);
+    & reservation_station_9_valid & supported_9;
   wire              _fireable_T_294 =
     reservation_station_10_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_10_decoded_instruction_RS1_valid;
@@ -1171,9 +1151,7 @@ module RS(
   wire              schedulable_instructions_0_10 =
     (_fireable_T_294 | ~reservation_station_10_decoded_instruction_RS1_valid)
     & (_fireable_T_297 | ~reservation_station_10_decoded_instruction_RS2_valid)
-    & reservation_station_10_valid
-    & (supported_42 | reservation_station_10_decoded_instruction_needs_branch_unit
-       | reservation_station_10_decoded_instruction_needs_CSRs);
+    & reservation_station_10_valid & supported_10;
   wire              _fireable_T_301 =
     reservation_station_11_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_11_decoded_instruction_RS1_valid;
@@ -1183,9 +1161,7 @@ module RS(
   wire              schedulable_instructions_0_11 =
     (_fireable_T_301 | ~reservation_station_11_decoded_instruction_RS1_valid)
     & (_fireable_T_304 | ~reservation_station_11_decoded_instruction_RS2_valid)
-    & reservation_station_11_valid
-    & (supported_43 | reservation_station_11_decoded_instruction_needs_branch_unit
-       | reservation_station_11_decoded_instruction_needs_CSRs);
+    & reservation_station_11_valid & supported_11;
   wire              _fireable_T_308 =
     reservation_station_12_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_12_decoded_instruction_RS1_valid;
@@ -1195,9 +1171,7 @@ module RS(
   wire              schedulable_instructions_0_12 =
     (_fireable_T_308 | ~reservation_station_12_decoded_instruction_RS1_valid)
     & (_fireable_T_311 | ~reservation_station_12_decoded_instruction_RS2_valid)
-    & reservation_station_12_valid
-    & (supported_44 | reservation_station_12_decoded_instruction_needs_branch_unit
-       | reservation_station_12_decoded_instruction_needs_CSRs);
+    & reservation_station_12_valid & supported_12;
   wire              _fireable_T_315 =
     reservation_station_13_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_13_decoded_instruction_RS1_valid;
@@ -1207,9 +1181,7 @@ module RS(
   wire              schedulable_instructions_0_13 =
     (_fireable_T_315 | ~reservation_station_13_decoded_instruction_RS1_valid)
     & (_fireable_T_318 | ~reservation_station_13_decoded_instruction_RS2_valid)
-    & reservation_station_13_valid
-    & (supported_45 | reservation_station_13_decoded_instruction_needs_branch_unit
-       | reservation_station_13_decoded_instruction_needs_CSRs);
+    & reservation_station_13_valid & supported_13;
   wire              _fireable_T_322 =
     reservation_station_14_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_14_decoded_instruction_RS1_valid;
@@ -1219,9 +1191,7 @@ module RS(
   wire              schedulable_instructions_0_14 =
     (_fireable_T_322 | ~reservation_station_14_decoded_instruction_RS1_valid)
     & (_fireable_T_325 | ~reservation_station_14_decoded_instruction_RS2_valid)
-    & reservation_station_14_valid
-    & (supported_46 | reservation_station_14_decoded_instruction_needs_branch_unit
-       | reservation_station_14_decoded_instruction_needs_CSRs);
+    & reservation_station_14_valid & supported_14;
   wire              _fireable_T_329 =
     reservation_station_15_decoded_instruction_ready_bits_RS1_ready
     & reservation_station_15_decoded_instruction_RS1_valid;
@@ -1231,169 +1201,199 @@ module RS(
   wire              schedulable_instructions_0_15 =
     (_fireable_T_329 | ~reservation_station_15_decoded_instruction_RS1_valid)
     & (_fireable_T_332 | ~reservation_station_15_decoded_instruction_RS2_valid)
-    & reservation_station_15_valid
-    & (supported_47 | reservation_station_15_decoded_instruction_needs_branch_unit
-       | reservation_station_15_decoded_instruction_needs_CSRs);
+    & reservation_station_15_valid & supported_15;
   wire              schedulable_instructions_1_0 =
     (_fireable_T_224 | ~reservation_station_0_decoded_instruction_RS1_valid)
     & (_fireable_T_227 | ~reservation_station_0_decoded_instruction_RS2_valid)
     & reservation_station_0_valid
-    & (supported_32 | reservation_station_0_decoded_instruction_needs_div
+    & (supported | reservation_station_0_decoded_instruction_needs_branch_unit
+       | reservation_station_0_decoded_instruction_needs_CSRs
+       | reservation_station_0_decoded_instruction_needs_div
        | reservation_station_0_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_1 =
     (_fireable_T_231 | ~reservation_station_1_decoded_instruction_RS1_valid)
     & (_fireable_T_234 | ~reservation_station_1_decoded_instruction_RS2_valid)
     & reservation_station_1_valid
-    & (supported_33 | reservation_station_1_decoded_instruction_needs_div
+    & (supported_1 | reservation_station_1_decoded_instruction_needs_branch_unit
+       | reservation_station_1_decoded_instruction_needs_CSRs
+       | reservation_station_1_decoded_instruction_needs_div
        | reservation_station_1_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_2 =
     (_fireable_T_238 | ~reservation_station_2_decoded_instruction_RS1_valid)
     & (_fireable_T_241 | ~reservation_station_2_decoded_instruction_RS2_valid)
     & reservation_station_2_valid
-    & (supported_34 | reservation_station_2_decoded_instruction_needs_div
+    & (supported_2 | reservation_station_2_decoded_instruction_needs_branch_unit
+       | reservation_station_2_decoded_instruction_needs_CSRs
+       | reservation_station_2_decoded_instruction_needs_div
        | reservation_station_2_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_3 =
     (_fireable_T_245 | ~reservation_station_3_decoded_instruction_RS1_valid)
     & (_fireable_T_248 | ~reservation_station_3_decoded_instruction_RS2_valid)
     & reservation_station_3_valid
-    & (supported_35 | reservation_station_3_decoded_instruction_needs_div
+    & (supported_3 | reservation_station_3_decoded_instruction_needs_branch_unit
+       | reservation_station_3_decoded_instruction_needs_CSRs
+       | reservation_station_3_decoded_instruction_needs_div
        | reservation_station_3_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_4 =
     (_fireable_T_252 | ~reservation_station_4_decoded_instruction_RS1_valid)
     & (_fireable_T_255 | ~reservation_station_4_decoded_instruction_RS2_valid)
     & reservation_station_4_valid
-    & (supported_36 | reservation_station_4_decoded_instruction_needs_div
+    & (supported_4 | reservation_station_4_decoded_instruction_needs_branch_unit
+       | reservation_station_4_decoded_instruction_needs_CSRs
+       | reservation_station_4_decoded_instruction_needs_div
        | reservation_station_4_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_5 =
     (_fireable_T_259 | ~reservation_station_5_decoded_instruction_RS1_valid)
     & (_fireable_T_262 | ~reservation_station_5_decoded_instruction_RS2_valid)
     & reservation_station_5_valid
-    & (supported_37 | reservation_station_5_decoded_instruction_needs_div
+    & (supported_5 | reservation_station_5_decoded_instruction_needs_branch_unit
+       | reservation_station_5_decoded_instruction_needs_CSRs
+       | reservation_station_5_decoded_instruction_needs_div
        | reservation_station_5_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_6 =
     (_fireable_T_266 | ~reservation_station_6_decoded_instruction_RS1_valid)
     & (_fireable_T_269 | ~reservation_station_6_decoded_instruction_RS2_valid)
     & reservation_station_6_valid
-    & (supported_38 | reservation_station_6_decoded_instruction_needs_div
+    & (supported_6 | reservation_station_6_decoded_instruction_needs_branch_unit
+       | reservation_station_6_decoded_instruction_needs_CSRs
+       | reservation_station_6_decoded_instruction_needs_div
        | reservation_station_6_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_7 =
     (_fireable_T_273 | ~reservation_station_7_decoded_instruction_RS1_valid)
     & (_fireable_T_276 | ~reservation_station_7_decoded_instruction_RS2_valid)
     & reservation_station_7_valid
-    & (supported_39 | reservation_station_7_decoded_instruction_needs_div
+    & (supported_7 | reservation_station_7_decoded_instruction_needs_branch_unit
+       | reservation_station_7_decoded_instruction_needs_CSRs
+       | reservation_station_7_decoded_instruction_needs_div
        | reservation_station_7_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_8 =
     (_fireable_T_280 | ~reservation_station_8_decoded_instruction_RS1_valid)
     & (_fireable_T_283 | ~reservation_station_8_decoded_instruction_RS2_valid)
     & reservation_station_8_valid
-    & (supported_40 | reservation_station_8_decoded_instruction_needs_div
+    & (supported_8 | reservation_station_8_decoded_instruction_needs_branch_unit
+       | reservation_station_8_decoded_instruction_needs_CSRs
+       | reservation_station_8_decoded_instruction_needs_div
        | reservation_station_8_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_9 =
     (_fireable_T_287 | ~reservation_station_9_decoded_instruction_RS1_valid)
     & (_fireable_T_290 | ~reservation_station_9_decoded_instruction_RS2_valid)
     & reservation_station_9_valid
-    & (supported_41 | reservation_station_9_decoded_instruction_needs_div
+    & (supported_9 | reservation_station_9_decoded_instruction_needs_branch_unit
+       | reservation_station_9_decoded_instruction_needs_CSRs
+       | reservation_station_9_decoded_instruction_needs_div
        | reservation_station_9_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_10 =
     (_fireable_T_294 | ~reservation_station_10_decoded_instruction_RS1_valid)
     & (_fireable_T_297 | ~reservation_station_10_decoded_instruction_RS2_valid)
     & reservation_station_10_valid
-    & (supported_42 | reservation_station_10_decoded_instruction_needs_div
+    & (supported_10 | reservation_station_10_decoded_instruction_needs_branch_unit
+       | reservation_station_10_decoded_instruction_needs_CSRs
+       | reservation_station_10_decoded_instruction_needs_div
        | reservation_station_10_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_11 =
     (_fireable_T_301 | ~reservation_station_11_decoded_instruction_RS1_valid)
     & (_fireable_T_304 | ~reservation_station_11_decoded_instruction_RS2_valid)
     & reservation_station_11_valid
-    & (supported_43 | reservation_station_11_decoded_instruction_needs_div
+    & (supported_11 | reservation_station_11_decoded_instruction_needs_branch_unit
+       | reservation_station_11_decoded_instruction_needs_CSRs
+       | reservation_station_11_decoded_instruction_needs_div
        | reservation_station_11_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_12 =
     (_fireable_T_308 | ~reservation_station_12_decoded_instruction_RS1_valid)
     & (_fireable_T_311 | ~reservation_station_12_decoded_instruction_RS2_valid)
     & reservation_station_12_valid
-    & (supported_44 | reservation_station_12_decoded_instruction_needs_div
+    & (supported_12 | reservation_station_12_decoded_instruction_needs_branch_unit
+       | reservation_station_12_decoded_instruction_needs_CSRs
+       | reservation_station_12_decoded_instruction_needs_div
        | reservation_station_12_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_13 =
     (_fireable_T_315 | ~reservation_station_13_decoded_instruction_RS1_valid)
     & (_fireable_T_318 | ~reservation_station_13_decoded_instruction_RS2_valid)
     & reservation_station_13_valid
-    & (supported_45 | reservation_station_13_decoded_instruction_needs_div
+    & (supported_13 | reservation_station_13_decoded_instruction_needs_branch_unit
+       | reservation_station_13_decoded_instruction_needs_CSRs
+       | reservation_station_13_decoded_instruction_needs_div
        | reservation_station_13_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_14 =
     (_fireable_T_322 | ~reservation_station_14_decoded_instruction_RS1_valid)
     & (_fireable_T_325 | ~reservation_station_14_decoded_instruction_RS2_valid)
     & reservation_station_14_valid
-    & (supported_46 | reservation_station_14_decoded_instruction_needs_div
+    & (supported_14 | reservation_station_14_decoded_instruction_needs_branch_unit
+       | reservation_station_14_decoded_instruction_needs_CSRs
+       | reservation_station_14_decoded_instruction_needs_div
        | reservation_station_14_decoded_instruction_needs_mul);
   wire              schedulable_instructions_1_15 =
     (_fireable_T_329 | ~reservation_station_15_decoded_instruction_RS1_valid)
     & (_fireable_T_332 | ~reservation_station_15_decoded_instruction_RS2_valid)
     & reservation_station_15_valid
-    & (supported_47 | reservation_station_15_decoded_instruction_needs_div
+    & (supported_15 | reservation_station_15_decoded_instruction_needs_branch_unit
+       | reservation_station_15_decoded_instruction_needs_CSRs
+       | reservation_station_15_decoded_instruction_needs_div
        | reservation_station_15_decoded_instruction_needs_mul);
   wire              schedulable_instructions_2_0 =
     (_fireable_T_224 | ~reservation_station_0_decoded_instruction_RS1_valid)
     & (_fireable_T_227 | ~reservation_station_0_decoded_instruction_RS2_valid)
-    & reservation_station_0_valid & supported_32;
+    & reservation_station_0_valid & supported;
   wire              schedulable_instructions_2_1 =
     (_fireable_T_231 | ~reservation_station_1_decoded_instruction_RS1_valid)
     & (_fireable_T_234 | ~reservation_station_1_decoded_instruction_RS2_valid)
-    & reservation_station_1_valid & supported_33;
+    & reservation_station_1_valid & supported_1;
   wire              schedulable_instructions_2_2 =
     (_fireable_T_238 | ~reservation_station_2_decoded_instruction_RS1_valid)
     & (_fireable_T_241 | ~reservation_station_2_decoded_instruction_RS2_valid)
-    & reservation_station_2_valid & supported_34;
+    & reservation_station_2_valid & supported_2;
   wire              schedulable_instructions_2_3 =
     (_fireable_T_245 | ~reservation_station_3_decoded_instruction_RS1_valid)
     & (_fireable_T_248 | ~reservation_station_3_decoded_instruction_RS2_valid)
-    & reservation_station_3_valid & supported_35;
+    & reservation_station_3_valid & supported_3;
   wire              schedulable_instructions_2_4 =
     (_fireable_T_252 | ~reservation_station_4_decoded_instruction_RS1_valid)
     & (_fireable_T_255 | ~reservation_station_4_decoded_instruction_RS2_valid)
-    & reservation_station_4_valid & supported_36;
+    & reservation_station_4_valid & supported_4;
   wire              schedulable_instructions_2_5 =
     (_fireable_T_259 | ~reservation_station_5_decoded_instruction_RS1_valid)
     & (_fireable_T_262 | ~reservation_station_5_decoded_instruction_RS2_valid)
-    & reservation_station_5_valid & supported_37;
+    & reservation_station_5_valid & supported_5;
   wire              schedulable_instructions_2_6 =
     (_fireable_T_266 | ~reservation_station_6_decoded_instruction_RS1_valid)
     & (_fireable_T_269 | ~reservation_station_6_decoded_instruction_RS2_valid)
-    & reservation_station_6_valid & supported_38;
+    & reservation_station_6_valid & supported_6;
   wire              schedulable_instructions_2_7 =
     (_fireable_T_273 | ~reservation_station_7_decoded_instruction_RS1_valid)
     & (_fireable_T_276 | ~reservation_station_7_decoded_instruction_RS2_valid)
-    & reservation_station_7_valid & supported_39;
+    & reservation_station_7_valid & supported_7;
   wire              schedulable_instructions_2_8 =
     (_fireable_T_280 | ~reservation_station_8_decoded_instruction_RS1_valid)
     & (_fireable_T_283 | ~reservation_station_8_decoded_instruction_RS2_valid)
-    & reservation_station_8_valid & supported_40;
+    & reservation_station_8_valid & supported_8;
   wire              schedulable_instructions_2_9 =
     (_fireable_T_287 | ~reservation_station_9_decoded_instruction_RS1_valid)
     & (_fireable_T_290 | ~reservation_station_9_decoded_instruction_RS2_valid)
-    & reservation_station_9_valid & supported_41;
+    & reservation_station_9_valid & supported_9;
   wire              schedulable_instructions_2_10 =
     (_fireable_T_294 | ~reservation_station_10_decoded_instruction_RS1_valid)
     & (_fireable_T_297 | ~reservation_station_10_decoded_instruction_RS2_valid)
-    & reservation_station_10_valid & supported_42;
+    & reservation_station_10_valid & supported_10;
   wire              schedulable_instructions_2_11 =
     (_fireable_T_301 | ~reservation_station_11_decoded_instruction_RS1_valid)
     & (_fireable_T_304 | ~reservation_station_11_decoded_instruction_RS2_valid)
-    & reservation_station_11_valid & supported_43;
+    & reservation_station_11_valid & supported_11;
   wire              schedulable_instructions_2_12 =
     (_fireable_T_308 | ~reservation_station_12_decoded_instruction_RS1_valid)
     & (_fireable_T_311 | ~reservation_station_12_decoded_instruction_RS2_valid)
-    & reservation_station_12_valid & supported_44;
+    & reservation_station_12_valid & supported_12;
   wire              schedulable_instructions_2_13 =
     (_fireable_T_315 | ~reservation_station_13_decoded_instruction_RS1_valid)
     & (_fireable_T_318 | ~reservation_station_13_decoded_instruction_RS2_valid)
-    & reservation_station_13_valid & supported_45;
+    & reservation_station_13_valid & supported_13;
   wire              schedulable_instructions_2_14 =
     (_fireable_T_322 | ~reservation_station_14_decoded_instruction_RS1_valid)
     & (_fireable_T_325 | ~reservation_station_14_decoded_instruction_RS2_valid)
-    & reservation_station_14_valid & supported_46;
+    & reservation_station_14_valid & supported_14;
   wire              schedulable_instructions_2_15 =
     (_fireable_T_329 | ~reservation_station_15_decoded_instruction_RS1_valid)
     & (_fireable_T_332 | ~reservation_station_15_decoded_instruction_RS2_valid)
-    & reservation_station_15_valid & supported_47;
+    & reservation_station_15_valid & supported_15;
   wire [3:0]        _scheduled_index_T_13 =
     schedulable_instructions_0_1
       ? 4'h1
@@ -1707,22 +1707,22 @@ module RS(
      {reservation_station_1_decoded_instruction_instructionType},
      {reservation_station_0_decoded_instruction_instructionType}};
   wire [15:0]       _GEN_32 =
-    {{supported_47},
-     {supported_46},
-     {supported_45},
-     {supported_44},
-     {supported_43},
-     {supported_42},
-     {supported_41},
-     {supported_40},
-     {supported_39},
-     {supported_38},
-     {supported_37},
-     {supported_36},
-     {supported_35},
-     {supported_34},
-     {supported_33},
-     {supported_32}};
+    {{supported_15},
+     {supported_14},
+     {supported_13},
+     {supported_12},
+     {supported_11},
+     {supported_10},
+     {supported_9},
+     {supported_8},
+     {supported_7},
+     {supported_6},
+     {supported_5},
+     {supported_4},
+     {supported_3},
+     {supported_2},
+     {supported_1},
+     {supported}};
   wire [15:0]       _GEN_33 =
     {{reservation_station_15_decoded_instruction_needs_branch_unit},
      {reservation_station_14_decoded_instruction_needs_branch_unit},
@@ -2150,7 +2150,7 @@ module RS(
       reservation_station_0_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_0_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_0_decoded_instruction_instructionType <= 5'h0;
-      supported_32 <= 1'h0;
+      supported <= 1'h0;
       reservation_station_0_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_0_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_0_decoded_instruction_needs_memory <= 1'h0;
@@ -2182,7 +2182,7 @@ module RS(
       reservation_station_1_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_1_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_1_decoded_instruction_instructionType <= 5'h0;
-      supported_33 <= 1'h0;
+      supported_1 <= 1'h0;
       reservation_station_1_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_1_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_1_decoded_instruction_needs_memory <= 1'h0;
@@ -2214,7 +2214,7 @@ module RS(
       reservation_station_2_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_2_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_2_decoded_instruction_instructionType <= 5'h0;
-      supported_34 <= 1'h0;
+      supported_2 <= 1'h0;
       reservation_station_2_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_2_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_2_decoded_instruction_needs_memory <= 1'h0;
@@ -2246,7 +2246,7 @@ module RS(
       reservation_station_3_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_3_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_3_decoded_instruction_instructionType <= 5'h0;
-      supported_35 <= 1'h0;
+      supported_3 <= 1'h0;
       reservation_station_3_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_3_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_3_decoded_instruction_needs_memory <= 1'h0;
@@ -2278,7 +2278,7 @@ module RS(
       reservation_station_4_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_4_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_4_decoded_instruction_instructionType <= 5'h0;
-      supported_36 <= 1'h0;
+      supported_4 <= 1'h0;
       reservation_station_4_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_4_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_4_decoded_instruction_needs_memory <= 1'h0;
@@ -2310,7 +2310,7 @@ module RS(
       reservation_station_5_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_5_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_5_decoded_instruction_instructionType <= 5'h0;
-      supported_37 <= 1'h0;
+      supported_5 <= 1'h0;
       reservation_station_5_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_5_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_5_decoded_instruction_needs_memory <= 1'h0;
@@ -2342,7 +2342,7 @@ module RS(
       reservation_station_6_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_6_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_6_decoded_instruction_instructionType <= 5'h0;
-      supported_38 <= 1'h0;
+      supported_6 <= 1'h0;
       reservation_station_6_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_6_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_6_decoded_instruction_needs_memory <= 1'h0;
@@ -2374,7 +2374,7 @@ module RS(
       reservation_station_7_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_7_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_7_decoded_instruction_instructionType <= 5'h0;
-      supported_39 <= 1'h0;
+      supported_7 <= 1'h0;
       reservation_station_7_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_7_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_7_decoded_instruction_needs_memory <= 1'h0;
@@ -2406,7 +2406,7 @@ module RS(
       reservation_station_8_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_8_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_8_decoded_instruction_instructionType <= 5'h0;
-      supported_40 <= 1'h0;
+      supported_8 <= 1'h0;
       reservation_station_8_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_8_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_8_decoded_instruction_needs_memory <= 1'h0;
@@ -2438,7 +2438,7 @@ module RS(
       reservation_station_9_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_9_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_9_decoded_instruction_instructionType <= 5'h0;
-      supported_41 <= 1'h0;
+      supported_9 <= 1'h0;
       reservation_station_9_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_9_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_9_decoded_instruction_needs_memory <= 1'h0;
@@ -2470,7 +2470,7 @@ module RS(
       reservation_station_10_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_10_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_10_decoded_instruction_instructionType <= 5'h0;
-      supported_42 <= 1'h0;
+      supported_10 <= 1'h0;
       reservation_station_10_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_10_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_10_decoded_instruction_needs_memory <= 1'h0;
@@ -2502,7 +2502,7 @@ module RS(
       reservation_station_11_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_11_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_11_decoded_instruction_instructionType <= 5'h0;
-      supported_43 <= 1'h0;
+      supported_11 <= 1'h0;
       reservation_station_11_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_11_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_11_decoded_instruction_needs_memory <= 1'h0;
@@ -2534,7 +2534,7 @@ module RS(
       reservation_station_12_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_12_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_12_decoded_instruction_instructionType <= 5'h0;
-      supported_44 <= 1'h0;
+      supported_12 <= 1'h0;
       reservation_station_12_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_12_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_12_decoded_instruction_needs_memory <= 1'h0;
@@ -2566,7 +2566,7 @@ module RS(
       reservation_station_13_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_13_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_13_decoded_instruction_instructionType <= 5'h0;
-      supported_45 <= 1'h0;
+      supported_13 <= 1'h0;
       reservation_station_13_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_13_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_13_decoded_instruction_needs_memory <= 1'h0;
@@ -2598,7 +2598,7 @@ module RS(
       reservation_station_14_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_14_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_14_decoded_instruction_instructionType <= 5'h0;
-      supported_46 <= 1'h0;
+      supported_14 <= 1'h0;
       reservation_station_14_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_14_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_14_decoded_instruction_needs_memory <= 1'h0;
@@ -2630,7 +2630,7 @@ module RS(
       reservation_station_15_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_15_decoded_instruction_MOB_index <= 4'h0;
       reservation_station_15_decoded_instruction_instructionType <= 5'h0;
-      supported_47 <= 1'h0;
+      supported_15 <= 1'h0;
       reservation_station_15_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_15_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_15_decoded_instruction_needs_memory <= 1'h0;
@@ -3982,7 +3982,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_73
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_55 ? io_backend_packet_0_bits_needs_ALU : supported_32;
+                  : _GEN_55 ? io_backend_packet_0_bits_needs_ALU : supported;
       _GEN_145 =
         _GEN_138
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -4161,7 +4161,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_75
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_56 ? io_backend_packet_0_bits_needs_ALU : supported_33;
+                  : _GEN_56 ? io_backend_packet_0_bits_needs_ALU : supported_1;
       _GEN_165 =
         _GEN_158
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -4340,7 +4340,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_77
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_57 ? io_backend_packet_0_bits_needs_ALU : supported_34;
+                  : _GEN_57 ? io_backend_packet_0_bits_needs_ALU : supported_2;
       _GEN_185 =
         _GEN_178
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -4519,7 +4519,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_79
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_58 ? io_backend_packet_0_bits_needs_ALU : supported_35;
+                  : _GEN_58 ? io_backend_packet_0_bits_needs_ALU : supported_3;
       _GEN_205 =
         _GEN_198
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -4698,7 +4698,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_81
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_59 ? io_backend_packet_0_bits_needs_ALU : supported_36;
+                  : _GEN_59 ? io_backend_packet_0_bits_needs_ALU : supported_4;
       _GEN_225 =
         _GEN_218
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -4877,7 +4877,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_83
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_60 ? io_backend_packet_0_bits_needs_ALU : supported_37;
+                  : _GEN_60 ? io_backend_packet_0_bits_needs_ALU : supported_5;
       _GEN_245 =
         _GEN_238
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -5056,7 +5056,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_85
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_61 ? io_backend_packet_0_bits_needs_ALU : supported_38;
+                  : _GEN_61 ? io_backend_packet_0_bits_needs_ALU : supported_6;
       _GEN_265 =
         _GEN_258
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -5235,7 +5235,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_87
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_62 ? io_backend_packet_0_bits_needs_ALU : supported_39;
+                  : _GEN_62 ? io_backend_packet_0_bits_needs_ALU : supported_7;
       _GEN_285 =
         _GEN_278
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -5414,7 +5414,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_89
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_63 ? io_backend_packet_0_bits_needs_ALU : supported_40;
+                  : _GEN_63 ? io_backend_packet_0_bits_needs_ALU : supported_8;
       _GEN_305 =
         _GEN_298
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -5593,7 +5593,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_91
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_64 ? io_backend_packet_0_bits_needs_ALU : supported_41;
+                  : _GEN_64 ? io_backend_packet_0_bits_needs_ALU : supported_9;
       _GEN_325 =
         _GEN_318
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -5772,7 +5772,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_93
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_65 ? io_backend_packet_0_bits_needs_ALU : supported_42;
+                  : _GEN_65 ? io_backend_packet_0_bits_needs_ALU : supported_10;
       _GEN_345 =
         _GEN_338
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -5951,7 +5951,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_95
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_66 ? io_backend_packet_0_bits_needs_ALU : supported_43;
+                  : _GEN_66 ? io_backend_packet_0_bits_needs_ALU : supported_11;
       _GEN_365 =
         _GEN_358
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -6130,7 +6130,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_97
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_67 ? io_backend_packet_0_bits_needs_ALU : supported_44;
+                  : _GEN_67 ? io_backend_packet_0_bits_needs_ALU : supported_12;
       _GEN_385 =
         _GEN_378
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -6309,7 +6309,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_99
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_68 ? io_backend_packet_0_bits_needs_ALU : supported_45;
+                  : _GEN_68 ? io_backend_packet_0_bits_needs_ALU : supported_13;
       _GEN_405 =
         _GEN_398
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -6488,7 +6488,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_101
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_69 ? io_backend_packet_0_bits_needs_ALU : supported_46;
+                  : _GEN_69 ? io_backend_packet_0_bits_needs_ALU : supported_14;
       _GEN_425 =
         _GEN_418
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -6667,7 +6667,7 @@ module RS(
               ? io_backend_packet_2_bits_needs_ALU
               : _GEN_102
                   ? io_backend_packet_1_bits_needs_ALU
-                  : _GEN_70 ? io_backend_packet_0_bits_needs_ALU : supported_47;
+                  : _GEN_70 ? io_backend_packet_0_bits_needs_ALU : supported_15;
       _GEN_444 =
         _GEN_437
           ? io_backend_packet_3_bits_needs_branch_unit
@@ -7469,7 +7469,7 @@ module RS(
         reservation_station_0_decoded_instruction_RD_valid <= ~_GEN_970 & _GEN_606;
         reservation_station_0_decoded_instruction_RS1_valid <= ~_GEN_970 & _GEN_607;
         reservation_station_0_decoded_instruction_RS2_valid <= ~_GEN_970 & _GEN_608;
-        supported_32 <= ~_GEN_970 & _GEN_609;
+        supported <= ~_GEN_970 & _GEN_609;
         reservation_station_0_decoded_instruction_needs_branch_unit <=
           ~_GEN_970 & _GEN_610;
         reservation_station_0_decoded_instruction_needs_CSRs <= ~_GEN_970 & _GEN_611;
@@ -7491,7 +7491,7 @@ module RS(
         reservation_station_1_decoded_instruction_RD_valid <= ~_GEN_971 & _GEN_628;
         reservation_station_1_decoded_instruction_RS1_valid <= ~_GEN_971 & _GEN_629;
         reservation_station_1_decoded_instruction_RS2_valid <= ~_GEN_971 & _GEN_630;
-        supported_33 <= ~_GEN_971 & _GEN_631;
+        supported_1 <= ~_GEN_971 & _GEN_631;
         reservation_station_1_decoded_instruction_needs_branch_unit <=
           ~_GEN_971 & _GEN_632;
         reservation_station_1_decoded_instruction_needs_CSRs <= ~_GEN_971 & _GEN_633;
@@ -7513,7 +7513,7 @@ module RS(
         reservation_station_2_decoded_instruction_RD_valid <= ~_GEN_972 & _GEN_650;
         reservation_station_2_decoded_instruction_RS1_valid <= ~_GEN_972 & _GEN_651;
         reservation_station_2_decoded_instruction_RS2_valid <= ~_GEN_972 & _GEN_652;
-        supported_34 <= ~_GEN_972 & _GEN_653;
+        supported_2 <= ~_GEN_972 & _GEN_653;
         reservation_station_2_decoded_instruction_needs_branch_unit <=
           ~_GEN_972 & _GEN_654;
         reservation_station_2_decoded_instruction_needs_CSRs <= ~_GEN_972 & _GEN_655;
@@ -7535,7 +7535,7 @@ module RS(
         reservation_station_3_decoded_instruction_RD_valid <= ~_GEN_973 & _GEN_672;
         reservation_station_3_decoded_instruction_RS1_valid <= ~_GEN_973 & _GEN_673;
         reservation_station_3_decoded_instruction_RS2_valid <= ~_GEN_973 & _GEN_674;
-        supported_35 <= ~_GEN_973 & _GEN_675;
+        supported_3 <= ~_GEN_973 & _GEN_675;
         reservation_station_3_decoded_instruction_needs_branch_unit <=
           ~_GEN_973 & _GEN_676;
         reservation_station_3_decoded_instruction_needs_CSRs <= ~_GEN_973 & _GEN_677;
@@ -7557,7 +7557,7 @@ module RS(
         reservation_station_4_decoded_instruction_RD_valid <= ~_GEN_974 & _GEN_694;
         reservation_station_4_decoded_instruction_RS1_valid <= ~_GEN_974 & _GEN_695;
         reservation_station_4_decoded_instruction_RS2_valid <= ~_GEN_974 & _GEN_696;
-        supported_36 <= ~_GEN_974 & _GEN_697;
+        supported_4 <= ~_GEN_974 & _GEN_697;
         reservation_station_4_decoded_instruction_needs_branch_unit <=
           ~_GEN_974 & _GEN_698;
         reservation_station_4_decoded_instruction_needs_CSRs <= ~_GEN_974 & _GEN_699;
@@ -7579,7 +7579,7 @@ module RS(
         reservation_station_5_decoded_instruction_RD_valid <= ~_GEN_975 & _GEN_716;
         reservation_station_5_decoded_instruction_RS1_valid <= ~_GEN_975 & _GEN_717;
         reservation_station_5_decoded_instruction_RS2_valid <= ~_GEN_975 & _GEN_718;
-        supported_37 <= ~_GEN_975 & _GEN_719;
+        supported_5 <= ~_GEN_975 & _GEN_719;
         reservation_station_5_decoded_instruction_needs_branch_unit <=
           ~_GEN_975 & _GEN_720;
         reservation_station_5_decoded_instruction_needs_CSRs <= ~_GEN_975 & _GEN_721;
@@ -7601,7 +7601,7 @@ module RS(
         reservation_station_6_decoded_instruction_RD_valid <= ~_GEN_976 & _GEN_738;
         reservation_station_6_decoded_instruction_RS1_valid <= ~_GEN_976 & _GEN_739;
         reservation_station_6_decoded_instruction_RS2_valid <= ~_GEN_976 & _GEN_740;
-        supported_38 <= ~_GEN_976 & _GEN_741;
+        supported_6 <= ~_GEN_976 & _GEN_741;
         reservation_station_6_decoded_instruction_needs_branch_unit <=
           ~_GEN_976 & _GEN_742;
         reservation_station_6_decoded_instruction_needs_CSRs <= ~_GEN_976 & _GEN_743;
@@ -7623,7 +7623,7 @@ module RS(
         reservation_station_7_decoded_instruction_RD_valid <= ~_GEN_977 & _GEN_760;
         reservation_station_7_decoded_instruction_RS1_valid <= ~_GEN_977 & _GEN_761;
         reservation_station_7_decoded_instruction_RS2_valid <= ~_GEN_977 & _GEN_762;
-        supported_39 <= ~_GEN_977 & _GEN_763;
+        supported_7 <= ~_GEN_977 & _GEN_763;
         reservation_station_7_decoded_instruction_needs_branch_unit <=
           ~_GEN_977 & _GEN_764;
         reservation_station_7_decoded_instruction_needs_CSRs <= ~_GEN_977 & _GEN_765;
@@ -7645,7 +7645,7 @@ module RS(
         reservation_station_8_decoded_instruction_RD_valid <= ~_GEN_978 & _GEN_782;
         reservation_station_8_decoded_instruction_RS1_valid <= ~_GEN_978 & _GEN_783;
         reservation_station_8_decoded_instruction_RS2_valid <= ~_GEN_978 & _GEN_784;
-        supported_40 <= ~_GEN_978 & _GEN_785;
+        supported_8 <= ~_GEN_978 & _GEN_785;
         reservation_station_8_decoded_instruction_needs_branch_unit <=
           ~_GEN_978 & _GEN_786;
         reservation_station_8_decoded_instruction_needs_CSRs <= ~_GEN_978 & _GEN_787;
@@ -7667,7 +7667,7 @@ module RS(
         reservation_station_9_decoded_instruction_RD_valid <= ~_GEN_979 & _GEN_804;
         reservation_station_9_decoded_instruction_RS1_valid <= ~_GEN_979 & _GEN_805;
         reservation_station_9_decoded_instruction_RS2_valid <= ~_GEN_979 & _GEN_806;
-        supported_41 <= ~_GEN_979 & _GEN_807;
+        supported_9 <= ~_GEN_979 & _GEN_807;
         reservation_station_9_decoded_instruction_needs_branch_unit <=
           ~_GEN_979 & _GEN_808;
         reservation_station_9_decoded_instruction_needs_CSRs <= ~_GEN_979 & _GEN_809;
@@ -7689,7 +7689,7 @@ module RS(
         reservation_station_10_decoded_instruction_RD_valid <= ~_GEN_980 & _GEN_826;
         reservation_station_10_decoded_instruction_RS1_valid <= ~_GEN_980 & _GEN_827;
         reservation_station_10_decoded_instruction_RS2_valid <= ~_GEN_980 & _GEN_828;
-        supported_42 <= ~_GEN_980 & _GEN_829;
+        supported_10 <= ~_GEN_980 & _GEN_829;
         reservation_station_10_decoded_instruction_needs_branch_unit <=
           ~_GEN_980 & _GEN_830;
         reservation_station_10_decoded_instruction_needs_CSRs <= ~_GEN_980 & _GEN_831;
@@ -7711,7 +7711,7 @@ module RS(
         reservation_station_11_decoded_instruction_RD_valid <= ~_GEN_981 & _GEN_848;
         reservation_station_11_decoded_instruction_RS1_valid <= ~_GEN_981 & _GEN_849;
         reservation_station_11_decoded_instruction_RS2_valid <= ~_GEN_981 & _GEN_850;
-        supported_43 <= ~_GEN_981 & _GEN_851;
+        supported_11 <= ~_GEN_981 & _GEN_851;
         reservation_station_11_decoded_instruction_needs_branch_unit <=
           ~_GEN_981 & _GEN_852;
         reservation_station_11_decoded_instruction_needs_CSRs <= ~_GEN_981 & _GEN_853;
@@ -7733,7 +7733,7 @@ module RS(
         reservation_station_12_decoded_instruction_RD_valid <= ~_GEN_982 & _GEN_870;
         reservation_station_12_decoded_instruction_RS1_valid <= ~_GEN_982 & _GEN_871;
         reservation_station_12_decoded_instruction_RS2_valid <= ~_GEN_982 & _GEN_872;
-        supported_44 <= ~_GEN_982 & _GEN_873;
+        supported_12 <= ~_GEN_982 & _GEN_873;
         reservation_station_12_decoded_instruction_needs_branch_unit <=
           ~_GEN_982 & _GEN_874;
         reservation_station_12_decoded_instruction_needs_CSRs <= ~_GEN_982 & _GEN_875;
@@ -7755,7 +7755,7 @@ module RS(
         reservation_station_13_decoded_instruction_RD_valid <= ~_GEN_983 & _GEN_892;
         reservation_station_13_decoded_instruction_RS1_valid <= ~_GEN_983 & _GEN_893;
         reservation_station_13_decoded_instruction_RS2_valid <= ~_GEN_983 & _GEN_894;
-        supported_45 <= ~_GEN_983 & _GEN_895;
+        supported_13 <= ~_GEN_983 & _GEN_895;
         reservation_station_13_decoded_instruction_needs_branch_unit <=
           ~_GEN_983 & _GEN_896;
         reservation_station_13_decoded_instruction_needs_CSRs <= ~_GEN_983 & _GEN_897;
@@ -7777,7 +7777,7 @@ module RS(
         reservation_station_14_decoded_instruction_RD_valid <= ~_GEN_984 & _GEN_914;
         reservation_station_14_decoded_instruction_RS1_valid <= ~_GEN_984 & _GEN_915;
         reservation_station_14_decoded_instruction_RS2_valid <= ~_GEN_984 & _GEN_916;
-        supported_46 <= ~_GEN_984 & _GEN_917;
+        supported_14 <= ~_GEN_984 & _GEN_917;
         reservation_station_14_decoded_instruction_needs_branch_unit <=
           ~_GEN_984 & _GEN_918;
         reservation_station_14_decoded_instruction_needs_CSRs <= ~_GEN_984 & _GEN_919;
@@ -7799,7 +7799,7 @@ module RS(
         reservation_station_15_decoded_instruction_RD_valid <= ~_GEN_985 & _GEN_935;
         reservation_station_15_decoded_instruction_RS1_valid <= ~_GEN_985 & _GEN_936;
         reservation_station_15_decoded_instruction_RS2_valid <= ~_GEN_985 & _GEN_937;
-        supported_47 <= ~_GEN_985 & _GEN_938;
+        supported_15 <= ~_GEN_985 & _GEN_938;
         reservation_station_15_decoded_instruction_needs_branch_unit <=
           ~_GEN_985 & _GEN_939;
         reservation_station_15_decoded_instruction_needs_CSRs <= ~_GEN_985 & _GEN_940;
@@ -7823,7 +7823,7 @@ module RS(
         reservation_station_0_decoded_instruction_RD_valid <= ~_GEN_953 & _GEN_606;
         reservation_station_0_decoded_instruction_RS1_valid <= ~_GEN_953 & _GEN_607;
         reservation_station_0_decoded_instruction_RS2_valid <= ~_GEN_953 & _GEN_608;
-        supported_32 <= ~_GEN_953 & _GEN_609;
+        supported <= ~_GEN_953 & _GEN_609;
         reservation_station_0_decoded_instruction_needs_branch_unit <=
           ~_GEN_953 & _GEN_610;
         reservation_station_0_decoded_instruction_needs_CSRs <= ~_GEN_953 & _GEN_611;
@@ -7845,7 +7845,7 @@ module RS(
         reservation_station_1_decoded_instruction_RD_valid <= ~_GEN_954 & _GEN_628;
         reservation_station_1_decoded_instruction_RS1_valid <= ~_GEN_954 & _GEN_629;
         reservation_station_1_decoded_instruction_RS2_valid <= ~_GEN_954 & _GEN_630;
-        supported_33 <= ~_GEN_954 & _GEN_631;
+        supported_1 <= ~_GEN_954 & _GEN_631;
         reservation_station_1_decoded_instruction_needs_branch_unit <=
           ~_GEN_954 & _GEN_632;
         reservation_station_1_decoded_instruction_needs_CSRs <= ~_GEN_954 & _GEN_633;
@@ -7867,7 +7867,7 @@ module RS(
         reservation_station_2_decoded_instruction_RD_valid <= ~_GEN_955 & _GEN_650;
         reservation_station_2_decoded_instruction_RS1_valid <= ~_GEN_955 & _GEN_651;
         reservation_station_2_decoded_instruction_RS2_valid <= ~_GEN_955 & _GEN_652;
-        supported_34 <= ~_GEN_955 & _GEN_653;
+        supported_2 <= ~_GEN_955 & _GEN_653;
         reservation_station_2_decoded_instruction_needs_branch_unit <=
           ~_GEN_955 & _GEN_654;
         reservation_station_2_decoded_instruction_needs_CSRs <= ~_GEN_955 & _GEN_655;
@@ -7889,7 +7889,7 @@ module RS(
         reservation_station_3_decoded_instruction_RD_valid <= ~_GEN_956 & _GEN_672;
         reservation_station_3_decoded_instruction_RS1_valid <= ~_GEN_956 & _GEN_673;
         reservation_station_3_decoded_instruction_RS2_valid <= ~_GEN_956 & _GEN_674;
-        supported_35 <= ~_GEN_956 & _GEN_675;
+        supported_3 <= ~_GEN_956 & _GEN_675;
         reservation_station_3_decoded_instruction_needs_branch_unit <=
           ~_GEN_956 & _GEN_676;
         reservation_station_3_decoded_instruction_needs_CSRs <= ~_GEN_956 & _GEN_677;
@@ -7911,7 +7911,7 @@ module RS(
         reservation_station_4_decoded_instruction_RD_valid <= ~_GEN_957 & _GEN_694;
         reservation_station_4_decoded_instruction_RS1_valid <= ~_GEN_957 & _GEN_695;
         reservation_station_4_decoded_instruction_RS2_valid <= ~_GEN_957 & _GEN_696;
-        supported_36 <= ~_GEN_957 & _GEN_697;
+        supported_4 <= ~_GEN_957 & _GEN_697;
         reservation_station_4_decoded_instruction_needs_branch_unit <=
           ~_GEN_957 & _GEN_698;
         reservation_station_4_decoded_instruction_needs_CSRs <= ~_GEN_957 & _GEN_699;
@@ -7933,7 +7933,7 @@ module RS(
         reservation_station_5_decoded_instruction_RD_valid <= ~_GEN_958 & _GEN_716;
         reservation_station_5_decoded_instruction_RS1_valid <= ~_GEN_958 & _GEN_717;
         reservation_station_5_decoded_instruction_RS2_valid <= ~_GEN_958 & _GEN_718;
-        supported_37 <= ~_GEN_958 & _GEN_719;
+        supported_5 <= ~_GEN_958 & _GEN_719;
         reservation_station_5_decoded_instruction_needs_branch_unit <=
           ~_GEN_958 & _GEN_720;
         reservation_station_5_decoded_instruction_needs_CSRs <= ~_GEN_958 & _GEN_721;
@@ -7955,7 +7955,7 @@ module RS(
         reservation_station_6_decoded_instruction_RD_valid <= ~_GEN_959 & _GEN_738;
         reservation_station_6_decoded_instruction_RS1_valid <= ~_GEN_959 & _GEN_739;
         reservation_station_6_decoded_instruction_RS2_valid <= ~_GEN_959 & _GEN_740;
-        supported_38 <= ~_GEN_959 & _GEN_741;
+        supported_6 <= ~_GEN_959 & _GEN_741;
         reservation_station_6_decoded_instruction_needs_branch_unit <=
           ~_GEN_959 & _GEN_742;
         reservation_station_6_decoded_instruction_needs_CSRs <= ~_GEN_959 & _GEN_743;
@@ -7977,7 +7977,7 @@ module RS(
         reservation_station_7_decoded_instruction_RD_valid <= ~_GEN_960 & _GEN_760;
         reservation_station_7_decoded_instruction_RS1_valid <= ~_GEN_960 & _GEN_761;
         reservation_station_7_decoded_instruction_RS2_valid <= ~_GEN_960 & _GEN_762;
-        supported_39 <= ~_GEN_960 & _GEN_763;
+        supported_7 <= ~_GEN_960 & _GEN_763;
         reservation_station_7_decoded_instruction_needs_branch_unit <=
           ~_GEN_960 & _GEN_764;
         reservation_station_7_decoded_instruction_needs_CSRs <= ~_GEN_960 & _GEN_765;
@@ -7999,7 +7999,7 @@ module RS(
         reservation_station_8_decoded_instruction_RD_valid <= ~_GEN_961 & _GEN_782;
         reservation_station_8_decoded_instruction_RS1_valid <= ~_GEN_961 & _GEN_783;
         reservation_station_8_decoded_instruction_RS2_valid <= ~_GEN_961 & _GEN_784;
-        supported_40 <= ~_GEN_961 & _GEN_785;
+        supported_8 <= ~_GEN_961 & _GEN_785;
         reservation_station_8_decoded_instruction_needs_branch_unit <=
           ~_GEN_961 & _GEN_786;
         reservation_station_8_decoded_instruction_needs_CSRs <= ~_GEN_961 & _GEN_787;
@@ -8021,7 +8021,7 @@ module RS(
         reservation_station_9_decoded_instruction_RD_valid <= ~_GEN_962 & _GEN_804;
         reservation_station_9_decoded_instruction_RS1_valid <= ~_GEN_962 & _GEN_805;
         reservation_station_9_decoded_instruction_RS2_valid <= ~_GEN_962 & _GEN_806;
-        supported_41 <= ~_GEN_962 & _GEN_807;
+        supported_9 <= ~_GEN_962 & _GEN_807;
         reservation_station_9_decoded_instruction_needs_branch_unit <=
           ~_GEN_962 & _GEN_808;
         reservation_station_9_decoded_instruction_needs_CSRs <= ~_GEN_962 & _GEN_809;
@@ -8043,7 +8043,7 @@ module RS(
         reservation_station_10_decoded_instruction_RD_valid <= ~_GEN_963 & _GEN_826;
         reservation_station_10_decoded_instruction_RS1_valid <= ~_GEN_963 & _GEN_827;
         reservation_station_10_decoded_instruction_RS2_valid <= ~_GEN_963 & _GEN_828;
-        supported_42 <= ~_GEN_963 & _GEN_829;
+        supported_10 <= ~_GEN_963 & _GEN_829;
         reservation_station_10_decoded_instruction_needs_branch_unit <=
           ~_GEN_963 & _GEN_830;
         reservation_station_10_decoded_instruction_needs_CSRs <= ~_GEN_963 & _GEN_831;
@@ -8065,7 +8065,7 @@ module RS(
         reservation_station_11_decoded_instruction_RD_valid <= ~_GEN_964 & _GEN_848;
         reservation_station_11_decoded_instruction_RS1_valid <= ~_GEN_964 & _GEN_849;
         reservation_station_11_decoded_instruction_RS2_valid <= ~_GEN_964 & _GEN_850;
-        supported_43 <= ~_GEN_964 & _GEN_851;
+        supported_11 <= ~_GEN_964 & _GEN_851;
         reservation_station_11_decoded_instruction_needs_branch_unit <=
           ~_GEN_964 & _GEN_852;
         reservation_station_11_decoded_instruction_needs_CSRs <= ~_GEN_964 & _GEN_853;
@@ -8087,7 +8087,7 @@ module RS(
         reservation_station_12_decoded_instruction_RD_valid <= ~_GEN_965 & _GEN_870;
         reservation_station_12_decoded_instruction_RS1_valid <= ~_GEN_965 & _GEN_871;
         reservation_station_12_decoded_instruction_RS2_valid <= ~_GEN_965 & _GEN_872;
-        supported_44 <= ~_GEN_965 & _GEN_873;
+        supported_12 <= ~_GEN_965 & _GEN_873;
         reservation_station_12_decoded_instruction_needs_branch_unit <=
           ~_GEN_965 & _GEN_874;
         reservation_station_12_decoded_instruction_needs_CSRs <= ~_GEN_965 & _GEN_875;
@@ -8109,7 +8109,7 @@ module RS(
         reservation_station_13_decoded_instruction_RD_valid <= ~_GEN_966 & _GEN_892;
         reservation_station_13_decoded_instruction_RS1_valid <= ~_GEN_966 & _GEN_893;
         reservation_station_13_decoded_instruction_RS2_valid <= ~_GEN_966 & _GEN_894;
-        supported_45 <= ~_GEN_966 & _GEN_895;
+        supported_13 <= ~_GEN_966 & _GEN_895;
         reservation_station_13_decoded_instruction_needs_branch_unit <=
           ~_GEN_966 & _GEN_896;
         reservation_station_13_decoded_instruction_needs_CSRs <= ~_GEN_966 & _GEN_897;
@@ -8131,7 +8131,7 @@ module RS(
         reservation_station_14_decoded_instruction_RD_valid <= ~_GEN_967 & _GEN_914;
         reservation_station_14_decoded_instruction_RS1_valid <= ~_GEN_967 & _GEN_915;
         reservation_station_14_decoded_instruction_RS2_valid <= ~_GEN_967 & _GEN_916;
-        supported_46 <= ~_GEN_967 & _GEN_917;
+        supported_14 <= ~_GEN_967 & _GEN_917;
         reservation_station_14_decoded_instruction_needs_branch_unit <=
           ~_GEN_967 & _GEN_918;
         reservation_station_14_decoded_instruction_needs_CSRs <= ~_GEN_967 & _GEN_919;
@@ -8153,7 +8153,7 @@ module RS(
         reservation_station_15_decoded_instruction_RD_valid <= ~_GEN_968 & _GEN_935;
         reservation_station_15_decoded_instruction_RS1_valid <= ~_GEN_968 & _GEN_936;
         reservation_station_15_decoded_instruction_RS2_valid <= ~_GEN_968 & _GEN_937;
-        supported_47 <= ~_GEN_968 & _GEN_938;
+        supported_15 <= ~_GEN_968 & _GEN_938;
         reservation_station_15_decoded_instruction_needs_branch_unit <=
           ~_GEN_968 & _GEN_939;
         reservation_station_15_decoded_instruction_needs_CSRs <= ~_GEN_968 & _GEN_940;

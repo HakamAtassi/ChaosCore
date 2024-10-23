@@ -519,10 +519,7 @@ module execution_engine(
       (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2
       (io_commit_bits_RD_valid_2),
-    .io_commit_bits_RD_valid_3
-      (io_commit_bits_RD_valid_3),
-    .CSR_port_mtvec_BASE                                       (CSR_port_mtvec_BASE),
-    .CSR_port_mtvec_MODE                                       (CSR_port_mtvec_MODE)
+    .io_commit_bits_RD_valid_3                                 (io_commit_bits_RD_valid_3)
   );
   FU_1 FUs_1 (
     .clock                                                     (clock),
@@ -728,9 +725,12 @@ module execution_engine(
       (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2
       (io_commit_bits_RD_valid_2),
-    .io_commit_bits_RD_valid_3                                 (io_commit_bits_RD_valid_3)
+    .io_commit_bits_RD_valid_3
+      (io_commit_bits_RD_valid_3),
+    .CSR_port_mtvec_BASE                                       (CSR_port_mtvec_BASE),
+    .CSR_port_mtvec_MODE                                       (CSR_port_mtvec_MODE)
   );
-  FU_2 FUs_2 (
+  FU FUs_2 (
     .clock                                                     (clock),
     .reset                                                     (reset),
     .io_flush_valid                                            (io_flush_valid),

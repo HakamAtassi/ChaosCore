@@ -203,6 +203,8 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
     }
 
 
+    // TODO: add RS ready check
+
     for (port <- 0 until RSPortCount) {
         val scheduled_index = PriorityEncoder(schedulable_instructions(port))
         io.RF_inputs(port).valid := 0.B
@@ -215,6 +217,7 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
             // Mark as scheduled
             scheduled(scheduled_index)(port) := 1.B
             port_RS_index(port)   := scheduled_index
+
         }
     }
 

@@ -37,12 +37,11 @@ simple_MOB.sv
 mem_65x32.sv
 sim_nReadmWrite.sv
 ALU.sv
-branch_unit.sv
-CSR_FU.sv
 FU.sv
+branch_unit.sv
 mul_unit.sv
+CSR_FU.sv
 FU_1.sv
-FU_2.sv
 AGU.sv
 FU_3.sv
 execution_engine.sv

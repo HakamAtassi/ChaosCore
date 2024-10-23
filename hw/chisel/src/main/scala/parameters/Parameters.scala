@@ -62,6 +62,22 @@ object validate_backend{
             return false
         }
 
+        if (branchUnits > 1) {
+            println(s"Warning: You have allocated more than 1 Branch Unit. This is not suggested for FPGA builds")
+        }
+
+
+
+        val branchPort = FUParamSeq.indexWhere(_.supportsBranch)
+        val csrPort = FUParamSeq.indexWhere(_.supportsCSRs)
+        val csrBranchOnDifferentPorts = branchPort != csrPort && branchPort >= 0 && csrPort >= 0
+        if (csrBranchOnDifferentPorts) {
+            println(s"Warning: The CSR file and Branch Unit are exist in different FUs. This is not suggested for FPGA builds.")
+        }
+
+
+
+
         // There must be at least 1 INT
         val intUnits = FUParamSeq.count(_.supportsInt)
         if (intUnits < 1) {
@@ -88,14 +104,15 @@ object validate_backend{
             //}
         //}
 
-        // All checks passed
         true
     }
+
 }
 
 
 
 case class CoreParameters(
+
 
     DEBUG: Boolean = false,
 
@@ -142,6 +159,9 @@ case class CoreParameters(
     FPUportCount:Int = 0,  // not used if not "F"
 
 
+    ALUStages: Int = 2, // latency of the ALU unit
+
+
 
 
     /////////
@@ -166,10 +186,10 @@ case class CoreParameters(
     // FIXME: check that there is only 1 CSRs, etc...
     // Add other requirements here
     FUParamSeq: Seq[FUParams] = Seq(
-        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=true, supportsCSRs=true,   supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsMult=true, supportsDiv=true, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
-        FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=true),
+        FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=true,   supportsDiv=true,  supportsBranch=true,  supportsCSRs=true,     supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
+        FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=true),
     )
 
     // TODO: 
@@ -177,6 +197,7 @@ case class CoreParameters(
     
 ){
 
+    println("Building ChaosCore parameters...")
 
     ///////////////////////////////////
     // DO NOT TOUCH THESE PARAMETERS //
@@ -244,7 +265,7 @@ case class CoreParameters(
 
 
 
-
+    println("ChaosCore configuration done.")
 
 }
 
