@@ -51,3 +51,6 @@ binaries/spike_traces/
 
 
 *.log
+
+
+*.hier
