@@ -91,7 +91,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // BACK POINTER CTRL / ALLOCATE //
     //////////////////////////////////
     
-    val allocate = Wire(Bool())
+    val allocate            = Wire(Bool())
     val commit_valid        = Wire(Bool())
 
 
@@ -184,56 +184,28 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_WB_data.exception_cause := 0.U.asTypeOf(EX_CAUSE())
         ROB_WB_data.RD_data.foreach(_:= 0.U)
 
-        dontTouch(ROB_WB_data)
 
         // commit (clear complete when done with the row)
-        ROB_WB_banks(i).io.addrA          := front_index
-        ROB_WB_banks(i).io.writeDataA     := ROB_WB_data
-        ROB_WB_banks(i).io.writeEnableA   := commit_valid
+        ROB_WB_banks(i).io.allocateAddr          := front_index
+        ROB_WB_banks(i).io.allocateData          := ROB_WB_data
+        ROB_WB_banks(i).io.allocateWriteEnable   := commit_valid
         // WB (connect all ports)
 
-        // FU0
-        val ROB_WB_data_FU0 = Wire(new ROB_WB(coreParameters))
-        ROB_WB_data_FU0.busy             :=  io.FU_outputs(0).valid
-        ROB_WB_data_FU0.exception        :=  io.FU_outputs(0).bits.exception
-        ROB_WB_data_FU0.exception_cause  := io.FU_outputs(0).bits.exception_cause
-        ROB_WB_data_FU0.RD_data.foreach(_:= io.FU_outputs(0).bits.RD_data)
-        ROB_WB_banks(i).io.addrB         :=  io.FU_outputs(0).bits.ROB_index
-        ROB_WB_banks(i).io.writeDataB    :=  ROB_WB_data_FU0
-        ROB_WB_banks(i).io.writeEnableB  :=  io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U)
-
-        // FU1
-        val ROB_WB_data_FU1 = Wire(new ROB_WB(coreParameters))
-        ROB_WB_data_FU1.busy             :=  io.FU_outputs(1).valid
-        ROB_WB_data_FU1.exception        :=  io.FU_outputs(1).bits.exception
-        ROB_WB_data_FU1.exception_cause  :=  io.FU_outputs(1).bits.exception_cause
-        ROB_WB_data_FU1.RD_data.foreach(_:=  io.FU_outputs(1).bits.RD_data)
-        ROB_WB_banks(i).io.addrC         :=  io.FU_outputs(1).bits.ROB_index
-        ROB_WB_banks(i).io.writeDataC    :=  ROB_WB_data_FU1
-        ROB_WB_banks(i).io.writeEnableC  :=  io.FU_outputs(1).valid && (io.FU_outputs(1).bits.fetch_packet_index === i.U)
-
-        // FU2
-        val ROB_WB_data_FU2 = Wire(new ROB_WB(coreParameters))
-        ROB_WB_data_FU2.busy             :=  io.FU_outputs(2).valid
-        ROB_WB_data_FU2.exception        :=  io.FU_outputs(2).bits.exception
-        ROB_WB_data_FU2.exception_cause  :=  io.FU_outputs(2).bits.exception_cause
-        ROB_WB_data_FU2.RD_data.foreach(_:=  io.FU_outputs(2).bits.RD_data)
-        ROB_WB_banks(i).io.addrD         :=  io.FU_outputs(2).bits.ROB_index
-        ROB_WB_banks(i).io.writeDataD    :=  ROB_WB_data_FU2
-        ROB_WB_banks(i).io.writeEnableD  :=  io.FU_outputs(2).valid && (io.FU_outputs(2).bits.fetch_packet_index === i.U)
-
-        // FU3
-        val ROB_WB_data_FU3 = Wire(new ROB_WB(coreParameters))
-        ROB_WB_data_FU3.busy             :=  io.FU_outputs(3).valid
-        ROB_WB_data_FU3.exception        :=  io.FU_outputs(3).bits.exception
-        ROB_WB_data_FU3.exception_cause  :=  io.FU_outputs(3).bits.exception_cause
-        ROB_WB_data_FU3.RD_data.foreach(_:=  io.FU_outputs(3).bits.RD_data)
-        ROB_WB_banks(i).io.addrE         :=  io.FU_outputs(3).bits.ROB_index
-        ROB_WB_banks(i).io.writeDataE    :=  ROB_WB_data_FU3
-        ROB_WB_banks(i).io.writeEnableE  :=  io.FU_outputs(3).valid && (io.FU_outputs(3).bits.fetch_packet_index === i.U)
+        // connect WB
+        for(port <- 0 until portCount){
+            val ROB_WB_data_FU = Wire(new ROB_WB(coreParameters))
+            ROB_WB_data := DontCare
+            ROB_WB_data_FU.busy             :=  io.FU_outputs(port).valid
+            ROB_WB_data_FU.exception        :=  io.FU_outputs(port).bits.exception
+            ROB_WB_data_FU.exception_cause  := io.FU_outputs(port).bits.exception_cause
+            ROB_WB_data_FU.RD_data.foreach(_:= io.FU_outputs(port).bits.RD_data)
+            ROB_WB_banks(i).io.WBAddr(port)        :=  io.FU_outputs(port).bits.ROB_index
+            ROB_WB_banks(i).io.WBData(port)   :=  ROB_WB_data_FU
+            ROB_WB_banks(i).io.WBWriteEnable(port) :=  io.FU_outputs(port).valid && (io.FU_outputs(port).bits.fetch_packet_index === i.U)
+        }
 
         // commit (connect all ports)
-        ROB_WB_banks(i).io.addrG         := front_index + commit_valid
+        ROB_WB_banks(i).io.commitAddr         := front_index + commit_valid
     
         ROB_WB_banks(i).io.flush         := io.flush.valid
     }
@@ -385,11 +357,11 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     ROB_output.free_list_front_pointer  := shared_mem.io.readDataB.free_list_front_pointer
 
-    for(i <- 0 until fetchWidth){
-        ROB_output.complete(i)          := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
-        ROB_output.exception(i)         := ROB_WB_banks(i).io.readDataG.exception    // Rename busy to complete
-        ROB_output.exception_cause(i)   := ROB_WB_banks(i).io.readDataG.exception_cause    // Rename busy to complete
-        ROB_output.RD_data.foreach(rd => rd(i) := ROB_WB_banks(i).io.readDataG.RD_data.getOrElse(0.U))
+    for(i <- 0 until portCount){
+        ROB_output.complete(i)          := ROB_WB_banks(i).io.commitReadData.busy    // Rename busy to complete
+        ROB_output.exception(i)         := ROB_WB_banks(i).io.commitReadData.exception    // Rename busy to complete
+        ROB_output.exception_cause(i)   := ROB_WB_banks(i).io.commitReadData.exception_cause    // Rename busy to complete
+        ROB_output.RD_data.foreach(rd => rd(i) := ROB_WB_banks(i).io.commitReadData.RD_data.getOrElse(0.U))
         ROB_output.ROB_entries(i)       := ROB_entry_banks(i).io.readDataB
     }
 
@@ -617,7 +589,30 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
 
 
-    dontTouch(has_flushing_instr_vec)
+
+
+
+    // Ideally, what you want is:
+
+    // from left to write 
+
+    // check for misprediction
+        // 
+    // check for exception
+        // check for other type of flush (CSR, fence, etc...)
+
+    // you want a structure for each instruction like
+    // ROB_entry.is_misprediction => ROB_entry.get_next_PC
+    // or
+    // ROB_entry.is_exception...
+
+    // Also, consider cleaning up the pointer bypass stuff. Its messy and not necessary. 
+
+
+    
+
+
+
 
     //////////////////
     // FLUSH SIGNAL //
@@ -661,6 +656,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     dontTouch(has_taken_branch)
     dontTouch(expected_PC)
     dontTouch(earliest_taken_index)
+    dontTouch(has_flushing_instr_vec)
 
 
 

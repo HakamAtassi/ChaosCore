@@ -358,18 +358,6 @@ module ROB(
   wire             _ROB_entry_banks_0_io_readDataB_is_branch;
   wire             _ROB_entry_banks_0_io_readDataB_is_fence;
   wire             _ROB_entry_banks_0_io_readDataB_is_CSR;
-  wire             ROB_WB_data_busy = 1'h0;
-  wire             ROB_WB_data_exception = 1'h0;
-  wire             ROB_WB_data_1_busy = 1'h0;
-  wire             ROB_WB_data_1_exception = 1'h0;
-  wire             ROB_WB_data_2_busy = 1'h0;
-  wire             ROB_WB_data_2_exception = 1'h0;
-  wire             ROB_WB_data_3_busy = 1'h0;
-  wire             ROB_WB_data_3_exception = 1'h0;
-  wire [4:0]       ROB_WB_data_exception_cause = 5'h0;
-  wire [4:0]       ROB_WB_data_1_exception_cause = 5'h0;
-  wire [4:0]       ROB_WB_data_2_exception_cause = 5'h0;
-  wire [4:0]       ROB_WB_data_3_exception_cause = 5'h0;
   reg  [6:0]       front_pointer;
   reg  [6:0]       back_pointer;
   wire [5:0]       ROB_output_ROB_index = front_index;
@@ -440,11 +428,11 @@ module ROB(
   reg              row_valid_mem_63;
   assign front_index = front_pointer[5:0];
   wire [5:0]       _commit_resolved_3_T = front_index + {5'h0, commit_valid};
-  wire             _ROB_WB_banks_0_io_writeEnableC_T =
+  wire             _ROB_WB_banks_0_io_WBWriteEnable_1_T =
     io_FU_outputs_1_bits_fetch_packet_index == 2'h0;
-  wire             _ROB_WB_banks_1_io_writeEnableC_T =
+  wire             _ROB_WB_banks_1_io_WBWriteEnable_1_T =
     io_FU_outputs_1_bits_fetch_packet_index == 2'h1;
-  wire             _ROB_WB_banks_2_io_writeEnableC_T =
+  wire             _ROB_WB_banks_2_io_WBWriteEnable_1_T =
     io_FU_outputs_1_bits_fetch_packet_index == 2'h2;
   wire             commit_prediction_hit = _fetch_prediction_bank_ext_R0_data[0];
   wire [31:0]      commit_prediction_target = _fetch_prediction_bank_ext_R0_data[32:1];
@@ -1742,15 +1730,15 @@ module ROB(
              ? ~((&commit_ROB_index) | io_flush_valid_REG | _GEN_196) & _GEN_132
              : ~(io_flush_valid_REG | _GEN_196) & _GEN_132);
     end
-    REG <= _GEN_68 & _ROB_WB_banks_0_io_writeEnableC_T;
+    REG <= _GEN_68 & _ROB_WB_banks_0_io_WBWriteEnable_1_T;
     REG_1 <= io_FU_outputs_1_valid;
     commit_resolved_0_REG_target <= io_FU_outputs_1_bits_target_address;
     commit_resolved_0_REG_T_NT <= io_FU_outputs_1_bits_branch_taken;
-    REG_2 <= _GEN_68 & _ROB_WB_banks_1_io_writeEnableC_T;
+    REG_2 <= _GEN_68 & _ROB_WB_banks_1_io_WBWriteEnable_1_T;
     REG_3 <= io_FU_outputs_1_valid;
     commit_resolved_1_REG_target <= io_FU_outputs_1_bits_target_address;
     commit_resolved_1_REG_T_NT <= io_FU_outputs_1_bits_branch_taken;
-    REG_4 <= _GEN_68 & _ROB_WB_banks_2_io_writeEnableC_T;
+    REG_4 <= _GEN_68 & _ROB_WB_banks_2_io_WBWriteEnable_1_T;
     REG_5 <= io_FU_outputs_1_valid;
     commit_resolved_2_REG_target <= io_FU_outputs_1_bits_target_address;
     commit_resolved_2_REG_T_NT <= io_FU_outputs_1_bits_branch_taken;
@@ -1851,156 +1839,144 @@ module ROB(
     .io_readDataC_fetch_PC                 (io_PC_file_exec_data)
   );
   ROB_WB_mem ROB_WB_banks_0 (
-    .clock                         (clock),
-    .reset                         (reset),
-    .io_addrA                      (front_index),
-    .io_writeDataA_busy            (ROB_WB_data_busy),
-    .io_writeDataA_exception       (ROB_WB_data_exception),
-    .io_writeDataA_exception_cause (ROB_WB_data_exception_cause),
-    .io_writeEnableA               (commit_valid),
-    .io_addrB                      (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy            (io_FU_outputs_0_valid),
-    .io_writeDataB_exception       (io_FU_outputs_0_bits_exception),
-    .io_writeDataB_exception_cause (io_FU_outputs_0_bits_exception_cause),
-    .io_writeEnableB
+    .clock                             (clock),
+    .reset                             (reset),
+    .io_allocateAddr                   (front_index),
+    .io_allocateWriteEnable            (commit_valid),
+    .io_WBAddr_0                       (io_FU_outputs_0_bits_ROB_index),
+    .io_WBAddr_1                       (io_FU_outputs_1_bits_ROB_index),
+    .io_WBAddr_2                       (io_FU_outputs_2_bits_ROB_index),
+    .io_WBAddr_3                       (io_FU_outputs_3_bits_ROB_index),
+    .io_WBData_0_busy                  (io_FU_outputs_0_valid),
+    .io_WBData_0_exception             (io_FU_outputs_0_bits_exception),
+    .io_WBData_0_exception_cause       (io_FU_outputs_0_bits_exception_cause),
+    .io_WBData_1_busy                  (io_FU_outputs_1_valid),
+    .io_WBData_1_exception             (io_FU_outputs_1_bits_exception),
+    .io_WBData_1_exception_cause       (io_FU_outputs_1_bits_exception_cause),
+    .io_WBData_2_busy                  (io_FU_outputs_2_valid),
+    .io_WBData_2_exception             (io_FU_outputs_2_bits_exception),
+    .io_WBData_2_exception_cause       (io_FU_outputs_2_bits_exception_cause),
+    .io_WBData_3_busy                  (io_FU_outputs_3_valid),
+    .io_WBData_3_exception             (io_FU_outputs_3_bits_exception),
+    .io_WBData_3_exception_cause       (io_FU_outputs_3_bits_exception_cause),
+    .io_WBWriteEnable_0
       (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h0),
-    .io_addrC                      (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy            (io_FU_outputs_1_valid),
-    .io_writeDataC_exception       (io_FU_outputs_1_bits_exception),
-    .io_writeDataC_exception_cause (io_FU_outputs_1_bits_exception_cause),
-    .io_writeEnableC
-      (io_FU_outputs_1_valid & _ROB_WB_banks_0_io_writeEnableC_T),
-    .io_addrD                      (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy            (io_FU_outputs_2_valid),
-    .io_writeDataD_exception       (io_FU_outputs_2_bits_exception),
-    .io_writeDataD_exception_cause (io_FU_outputs_2_bits_exception_cause),
-    .io_writeEnableD
+    .io_WBWriteEnable_1
+      (io_FU_outputs_1_valid & _ROB_WB_banks_0_io_WBWriteEnable_1_T),
+    .io_WBWriteEnable_2
       (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h0),
-    .io_addrE                      (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy            (io_FU_outputs_3_valid),
-    .io_writeDataE_exception       (io_FU_outputs_3_bits_exception),
-    .io_writeDataE_exception_cause (io_FU_outputs_3_bits_exception_cause),
-    .io_writeEnableE
+    .io_WBWriteEnable_3
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),
-    .io_addrG                      (_commit_resolved_3_T),
-    .io_readDataG_busy             (ROB_output_complete_0),
-    .io_readDataG_exception        (ROB_output_exception_0),
-    .io_readDataG_exception_cause  (ROB_output_exception_cause_0),
-    .io_flush                      (io_flush_valid_REG)
+    .io_commitAddr                     (_commit_resolved_3_T),
+    .io_commitReadData_busy            (ROB_output_complete_0),
+    .io_commitReadData_exception       (ROB_output_exception_0),
+    .io_commitReadData_exception_cause (ROB_output_exception_cause_0),
+    .io_flush                          (io_flush_valid_REG)
   );
   ROB_WB_mem ROB_WB_banks_1 (
-    .clock                         (clock),
-    .reset                         (reset),
-    .io_addrA                      (front_index),
-    .io_writeDataA_busy            (ROB_WB_data_1_busy),
-    .io_writeDataA_exception       (ROB_WB_data_1_exception),
-    .io_writeDataA_exception_cause (ROB_WB_data_1_exception_cause),
-    .io_writeEnableA               (commit_valid),
-    .io_addrB                      (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy            (io_FU_outputs_0_valid),
-    .io_writeDataB_exception       (io_FU_outputs_0_bits_exception),
-    .io_writeDataB_exception_cause (io_FU_outputs_0_bits_exception_cause),
-    .io_writeEnableB
+    .clock                             (clock),
+    .reset                             (reset),
+    .io_allocateAddr                   (front_index),
+    .io_allocateWriteEnable            (commit_valid),
+    .io_WBAddr_0                       (io_FU_outputs_0_bits_ROB_index),
+    .io_WBAddr_1                       (io_FU_outputs_1_bits_ROB_index),
+    .io_WBAddr_2                       (io_FU_outputs_2_bits_ROB_index),
+    .io_WBAddr_3                       (io_FU_outputs_3_bits_ROB_index),
+    .io_WBData_0_busy                  (io_FU_outputs_0_valid),
+    .io_WBData_0_exception             (io_FU_outputs_0_bits_exception),
+    .io_WBData_0_exception_cause       (io_FU_outputs_0_bits_exception_cause),
+    .io_WBData_1_busy                  (io_FU_outputs_1_valid),
+    .io_WBData_1_exception             (io_FU_outputs_1_bits_exception),
+    .io_WBData_1_exception_cause       (io_FU_outputs_1_bits_exception_cause),
+    .io_WBData_2_busy                  (io_FU_outputs_2_valid),
+    .io_WBData_2_exception             (io_FU_outputs_2_bits_exception),
+    .io_WBData_2_exception_cause       (io_FU_outputs_2_bits_exception_cause),
+    .io_WBData_3_busy                  (io_FU_outputs_3_valid),
+    .io_WBData_3_exception             (io_FU_outputs_3_bits_exception),
+    .io_WBData_3_exception_cause       (io_FU_outputs_3_bits_exception_cause),
+    .io_WBWriteEnable_0
       (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h1),
-    .io_addrC                      (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy            (io_FU_outputs_1_valid),
-    .io_writeDataC_exception       (io_FU_outputs_1_bits_exception),
-    .io_writeDataC_exception_cause (io_FU_outputs_1_bits_exception_cause),
-    .io_writeEnableC
-      (io_FU_outputs_1_valid & _ROB_WB_banks_1_io_writeEnableC_T),
-    .io_addrD                      (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy            (io_FU_outputs_2_valid),
-    .io_writeDataD_exception       (io_FU_outputs_2_bits_exception),
-    .io_writeDataD_exception_cause (io_FU_outputs_2_bits_exception_cause),
-    .io_writeEnableD
+    .io_WBWriteEnable_1
+      (io_FU_outputs_1_valid & _ROB_WB_banks_1_io_WBWriteEnable_1_T),
+    .io_WBWriteEnable_2
       (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h1),
-    .io_addrE                      (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy            (io_FU_outputs_3_valid),
-    .io_writeDataE_exception       (io_FU_outputs_3_bits_exception),
-    .io_writeDataE_exception_cause (io_FU_outputs_3_bits_exception_cause),
-    .io_writeEnableE
+    .io_WBWriteEnable_3
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),
-    .io_addrG                      (_commit_resolved_3_T),
-    .io_readDataG_busy             (ROB_output_complete_1),
-    .io_readDataG_exception        (ROB_output_exception_1),
-    .io_readDataG_exception_cause  (ROB_output_exception_cause_1),
-    .io_flush                      (io_flush_valid_REG)
+    .io_commitAddr                     (_commit_resolved_3_T),
+    .io_commitReadData_busy            (ROB_output_complete_1),
+    .io_commitReadData_exception       (ROB_output_exception_1),
+    .io_commitReadData_exception_cause (ROB_output_exception_cause_1),
+    .io_flush                          (io_flush_valid_REG)
   );
   ROB_WB_mem ROB_WB_banks_2 (
-    .clock                         (clock),
-    .reset                         (reset),
-    .io_addrA                      (front_index),
-    .io_writeDataA_busy            (ROB_WB_data_2_busy),
-    .io_writeDataA_exception       (ROB_WB_data_2_exception),
-    .io_writeDataA_exception_cause (ROB_WB_data_2_exception_cause),
-    .io_writeEnableA               (commit_valid),
-    .io_addrB                      (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy            (io_FU_outputs_0_valid),
-    .io_writeDataB_exception       (io_FU_outputs_0_bits_exception),
-    .io_writeDataB_exception_cause (io_FU_outputs_0_bits_exception_cause),
-    .io_writeEnableB
+    .clock                             (clock),
+    .reset                             (reset),
+    .io_allocateAddr                   (front_index),
+    .io_allocateWriteEnable            (commit_valid),
+    .io_WBAddr_0                       (io_FU_outputs_0_bits_ROB_index),
+    .io_WBAddr_1                       (io_FU_outputs_1_bits_ROB_index),
+    .io_WBAddr_2                       (io_FU_outputs_2_bits_ROB_index),
+    .io_WBAddr_3                       (io_FU_outputs_3_bits_ROB_index),
+    .io_WBData_0_busy                  (io_FU_outputs_0_valid),
+    .io_WBData_0_exception             (io_FU_outputs_0_bits_exception),
+    .io_WBData_0_exception_cause       (io_FU_outputs_0_bits_exception_cause),
+    .io_WBData_1_busy                  (io_FU_outputs_1_valid),
+    .io_WBData_1_exception             (io_FU_outputs_1_bits_exception),
+    .io_WBData_1_exception_cause       (io_FU_outputs_1_bits_exception_cause),
+    .io_WBData_2_busy                  (io_FU_outputs_2_valid),
+    .io_WBData_2_exception             (io_FU_outputs_2_bits_exception),
+    .io_WBData_2_exception_cause       (io_FU_outputs_2_bits_exception_cause),
+    .io_WBData_3_busy                  (io_FU_outputs_3_valid),
+    .io_WBData_3_exception             (io_FU_outputs_3_bits_exception),
+    .io_WBData_3_exception_cause       (io_FU_outputs_3_bits_exception_cause),
+    .io_WBWriteEnable_0
       (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h2),
-    .io_addrC                      (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy            (io_FU_outputs_1_valid),
-    .io_writeDataC_exception       (io_FU_outputs_1_bits_exception),
-    .io_writeDataC_exception_cause (io_FU_outputs_1_bits_exception_cause),
-    .io_writeEnableC
-      (io_FU_outputs_1_valid & _ROB_WB_banks_2_io_writeEnableC_T),
-    .io_addrD                      (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy            (io_FU_outputs_2_valid),
-    .io_writeDataD_exception       (io_FU_outputs_2_bits_exception),
-    .io_writeDataD_exception_cause (io_FU_outputs_2_bits_exception_cause),
-    .io_writeEnableD
+    .io_WBWriteEnable_1
+      (io_FU_outputs_1_valid & _ROB_WB_banks_2_io_WBWriteEnable_1_T),
+    .io_WBWriteEnable_2
       (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h2),
-    .io_addrE                      (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy            (io_FU_outputs_3_valid),
-    .io_writeDataE_exception       (io_FU_outputs_3_bits_exception),
-    .io_writeDataE_exception_cause (io_FU_outputs_3_bits_exception_cause),
-    .io_writeEnableE
+    .io_WBWriteEnable_3
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),
-    .io_addrG                      (_commit_resolved_3_T),
-    .io_readDataG_busy             (ROB_output_complete_2),
-    .io_readDataG_exception        (ROB_output_exception_2),
-    .io_readDataG_exception_cause  (ROB_output_exception_cause_2),
-    .io_flush                      (io_flush_valid_REG)
+    .io_commitAddr                     (_commit_resolved_3_T),
+    .io_commitReadData_busy            (ROB_output_complete_2),
+    .io_commitReadData_exception       (ROB_output_exception_2),
+    .io_commitReadData_exception_cause (ROB_output_exception_cause_2),
+    .io_flush                          (io_flush_valid_REG)
   );
   ROB_WB_mem ROB_WB_banks_3 (
-    .clock                         (clock),
-    .reset                         (reset),
-    .io_addrA                      (front_index),
-    .io_writeDataA_busy            (ROB_WB_data_3_busy),
-    .io_writeDataA_exception       (ROB_WB_data_3_exception),
-    .io_writeDataA_exception_cause (ROB_WB_data_3_exception_cause),
-    .io_writeEnableA               (commit_valid),
-    .io_addrB                      (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy            (io_FU_outputs_0_valid),
-    .io_writeDataB_exception       (io_FU_outputs_0_bits_exception),
-    .io_writeDataB_exception_cause (io_FU_outputs_0_bits_exception_cause),
-    .io_writeEnableB
+    .clock                             (clock),
+    .reset                             (reset),
+    .io_allocateAddr                   (front_index),
+    .io_allocateWriteEnable            (commit_valid),
+    .io_WBAddr_0                       (io_FU_outputs_0_bits_ROB_index),
+    .io_WBAddr_1                       (io_FU_outputs_1_bits_ROB_index),
+    .io_WBAddr_2                       (io_FU_outputs_2_bits_ROB_index),
+    .io_WBAddr_3                       (io_FU_outputs_3_bits_ROB_index),
+    .io_WBData_0_busy                  (io_FU_outputs_0_valid),
+    .io_WBData_0_exception             (io_FU_outputs_0_bits_exception),
+    .io_WBData_0_exception_cause       (io_FU_outputs_0_bits_exception_cause),
+    .io_WBData_1_busy                  (io_FU_outputs_1_valid),
+    .io_WBData_1_exception             (io_FU_outputs_1_bits_exception),
+    .io_WBData_1_exception_cause       (io_FU_outputs_1_bits_exception_cause),
+    .io_WBData_2_busy                  (io_FU_outputs_2_valid),
+    .io_WBData_2_exception             (io_FU_outputs_2_bits_exception),
+    .io_WBData_2_exception_cause       (io_FU_outputs_2_bits_exception_cause),
+    .io_WBData_3_busy                  (io_FU_outputs_3_valid),
+    .io_WBData_3_exception             (io_FU_outputs_3_bits_exception),
+    .io_WBData_3_exception_cause       (io_FU_outputs_3_bits_exception_cause),
+    .io_WBWriteEnable_0
       (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),
-    .io_addrC                      (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy            (io_FU_outputs_1_valid),
-    .io_writeDataC_exception       (io_FU_outputs_1_bits_exception),
-    .io_writeDataC_exception_cause (io_FU_outputs_1_bits_exception_cause),
-    .io_writeEnableC
+    .io_WBWriteEnable_1
       (io_FU_outputs_1_valid & (&io_FU_outputs_1_bits_fetch_packet_index)),
-    .io_addrD                      (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy            (io_FU_outputs_2_valid),
-    .io_writeDataD_exception       (io_FU_outputs_2_bits_exception),
-    .io_writeDataD_exception_cause (io_FU_outputs_2_bits_exception_cause),
-    .io_writeEnableD
+    .io_WBWriteEnable_2
       (io_FU_outputs_2_valid & (&io_FU_outputs_2_bits_fetch_packet_index)),
-    .io_addrE                      (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy            (io_FU_outputs_3_valid),
-    .io_writeDataE_exception       (io_FU_outputs_3_bits_exception),
-    .io_writeDataE_exception_cause (io_FU_outputs_3_bits_exception_cause),
-    .io_writeEnableE
+    .io_WBWriteEnable_3
       (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),
-    .io_addrG                      (_commit_resolved_3_T),
-    .io_readDataG_busy             (ROB_output_complete_3),
-    .io_readDataG_exception        (ROB_output_exception_3),
-    .io_readDataG_exception_cause  (ROB_output_exception_cause_3),
-    .io_flush                      (io_flush_valid_REG)
+    .io_commitAddr                     (_commit_resolved_3_T),
+    .io_commitReadData_busy            (ROB_output_complete_3),
+    .io_commitReadData_exception       (ROB_output_exception_3),
+    .io_commitReadData_exception_cause (ROB_output_exception_cause_3),
+    .io_flush                          (io_flush_valid_REG)
   );
   ROB_entry_mem ROB_entry_banks_0 (
     .clock                     (clock),
@@ -2169,7 +2145,7 @@ module ROB(
     .R0_clk  (clock),
     .R0_data (_fetch_resolved_banks_0_ext_R0_data),
     .W0_addr (io_FU_outputs_1_bits_ROB_index),
-    .W0_en   (io_FU_outputs_1_valid & _ROB_WB_banks_0_io_writeEnableC_T),
+    .W0_en   (io_FU_outputs_1_valid & _ROB_WB_banks_0_io_WBWriteEnable_1_T),
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
@@ -2179,7 +2155,7 @@ module ROB(
     .R0_clk  (clock),
     .R0_data (_fetch_resolved_banks_1_ext_R0_data),
     .W0_addr (io_FU_outputs_1_bits_ROB_index),
-    .W0_en   (io_FU_outputs_1_valid & _ROB_WB_banks_1_io_writeEnableC_T),
+    .W0_en   (io_FU_outputs_1_valid & _ROB_WB_banks_1_io_WBWriteEnable_1_T),
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
@@ -2189,7 +2165,7 @@ module ROB(
     .R0_clk  (clock),
     .R0_data (_fetch_resolved_banks_2_ext_R0_data),
     .W0_addr (io_FU_outputs_1_bits_ROB_index),
-    .W0_en   (io_FU_outputs_1_valid & _ROB_WB_banks_2_io_writeEnableC_T),
+    .W0_en   (io_FU_outputs_1_valid & _ROB_WB_banks_2_io_WBWriteEnable_1_T),
     .W0_clk  (clock),
     .W0_data (_GEN)
   );
