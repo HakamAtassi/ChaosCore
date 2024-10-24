@@ -92,13 +92,15 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
 
     val table = TruthTable(
         Map(    // (Hint: Scroll right to see mappings)
-            //                                                                                                                                                                                                                          RS2 valid         
-            //                                                                                                                                                                                                                          |   RS1 valid    
+            //                                                                                                                                                                                                                                                                     
+            //                                                                                                                                                                                                                                                                     
+            //                                                                                                                                                                                                                         RS2 Valid                               
+            //                                                                                                                                                                                                                          |   RS1 valid
             //                                                                                                                                                                                                                          |   |   needs ALU                                  LOAD
             //                                                                                                                                                                                                                          |   |   |   needs branch unit                      |   STORE
             //                                                                                                                                                                                                                          |   |   |   |   needs CSR                          |   |   FENCE
             //                                                                                                                                                                                                                          |   |   |   |   |   needs memory                   |   |   |   FLUSH
-            //                                                                                                                                                                                                                          |   |   |   |   |   |   needs mul                  |   |   |   |   RD valid
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   needs mul                  |   |   |   |   RD valid?
             //                                                                                                                                                                                                                          |   |   |   |   |   |   |   needs div              |   |   |   |   |
             //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   Unsigned?          |   |   |   |   |
             //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   |   IMM?           |   |   |   |   |
@@ -158,7 +160,7 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
             BitPat("b1"+ FUNCT7_NONE+ R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.AUIPC.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // AUIPC
 
             // MISC mem                                    
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.MISC_MEM.litValue.U(5.W))}")                                                                    -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N + N + N +    N + N + Y + Y + N),   // FENCE
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.MISC_MEM.litValue.U(5.W))}")                                                                    -> BitPat("b" + N + N + Y + N + N + N + N + N + N + N + N + N +    N + N + Y + Y + N),   // FENCE
 
             // CSR                                     
             BitPat("b1"+ IMM_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + Y + N + N + Y + N + N + N + N + N + N + N +    N + N + N + Y + N),   // CSRRW
@@ -215,9 +217,23 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
     io.decoded_instruction.bits.MOB_index            := 0.U
 
 
+//                                                                            needs ALU                                  LOAD
+//                                                                            |   needs branch unit                      |   STORE
+//                                                                            |   |   needs CSR                          |   |   FENCE
+//                                                                            |   |   |   needs memory                   |   |   |   FLUSH
+//                                                                            |   |   |   |   needs mul                  |   |   |   |   RD valid?
+//                                                                            |   |   |   |   |   needs div              |   |   |   |   |
+//                                                                            |   |   |   |   |   |   Unsigned?          |   |   |   |   |
+//                                                                            |   |   |   |   |   |   |   IMM?           |   |   |   |   |
+//                                                                            |   |   |   |   |   |   |   |   MRET       |   |   |   |   |
+//                                                                            |   |   |   |   |   |   |   |   |   ECALL  |   |   |   |   |
+//                                                                            |   |   |   |   |   |   |   |   |   |      |   |   |   |   |
+                                                                          //  14  13  12  11  10  9   8   7   6   5      4   3   2   1   0     
+
     io.decoded_instruction.bits.FENCE                := decode_pat(2)
     io.decoded_instruction.bits.FLUSH                := decode_pat(1)
     io.decoded_instruction.bits.RD_valid             := decode_pat(0)
+
     io.decoded_instruction.bits.needs_ALU            := decode_pat(14)
     io.decoded_instruction.bits.needs_branch_unit    := decode_pat(13)
     io.decoded_instruction.bits.needs_CSRs           := decode_pat(12)
@@ -225,33 +241,61 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
     io.decoded_instruction.bits.needs_mul            := decode_pat(10)
     io.decoded_instruction.bits.needs_div            := decode_pat(9)
     io.decoded_instruction.bits.SUBTRACT             := decode_pat(8)     // FIXME: change this to UNSIGNED
-    io.decoded_instruction.bits.IS_IMM               := decode_pat(7)
-    io.decoded_instruction.bits.MRET                 := decode_pat(6)
-    io.decoded_instruction.bits.ECALL                := decode_pat(5)
+
+    io.decoded_instruction.bits.IS_IMM               := decode_pat(7)     //
+    io.decoded_instruction.bits.MRET                 := decode_pat(6)     //
+    io.decoded_instruction.bits.ECALL                := decode_pat(5)     //
+
     io.decoded_instruction.bits.IMM                  := IMM
     io.decoded_instruction.bits.MULTIPLY             := decode_pat(10)
-   
 
-    when(decode_pat(4)){
+    when(decode_pat(10)){
         io.decoded_instruction.bits.memory_type              := memory_type_t.LOAD
-    }.elsewhen(decode_pat(3)){
+    }.elsewhen(decode_pat(11)){
         io.decoded_instruction.bits.memory_type              := memory_type_t.STORE
     }.otherwise{
         io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
     }
 
-    // FIXME: remove this and integrate it into the decoder
+    // FIXME: the current bit pattern subtract does not work correctly...
+    // this fix should also include fixing the ALUs and cleaning things up so that that dont carry unneeded info (why unsigned and subtract?)
     val SUBTRACT    =   (instructionType === OP && FUNCT7 === 0x20.U) || (instructionType === OP_IMM && FUNCT3 === 0x5.U && FUNCT7 === 0x20.U)
 
-    io.decoded_instruction.bits.SUBTRACT            := SUBTRACT
+    // FIXME: RS1 valid & RS2 valid need to be part of the bit pattern above!
 
-    io.decoded_instruction.bits.RS1_valid            := decode_pat(15)
-    io.decoded_instruction.bits.RS2_valid            := decode_pat(16)
+    io.decoded_instruction.bits.RS1_valid            := (instructionType === OP         || 
+                                                        instructionType === OP_IMM      || 
+                                                        instructionType === LOAD        || 
+                                                        instructionType === STORE       || 
+                                                        instructionType === JALR        || 
+                                                        (decode_pat(12) && !decode_pat(7)) ||
+                                                        instructionType === BRANCH)     && 
+                                                        io.instruction.valid
+
+    io.decoded_instruction.bits.RS2_valid            := (instructionType === OP         ||
+                                                        instructionType === STORE       || 
+                                                        instructionType === BRANCH)     && 
+                                                        io.instruction.valid
+
+
+
+    io.decoded_instruction.bits.RD_valid := decode_pat(0)
+
+
+
+    io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
+    io.decoded_instruction.bits.FLUSH                := 0.B       // FLUSH of ANY TYPE    (they all do the same thing)
+
+
+
+    io.decoded_instruction.bits.access_width                 := access_width_t.NONE
+    io.decoded_instruction.bits.mem_signed  := 0.B
+
 
     when(FUNCT3  === "b000".U){ // LB
         io.decoded_instruction.bits.access_width             := access_width_t.B
         io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b001".U ){   // LHW
+    }.elsewhen(FUNCT3  === "b001".U){   // LHW
         io.decoded_instruction.bits.access_width             := access_width_t.HW
         io.decoded_instruction.bits.mem_signed  := 1.B
     }.elsewhen(FUNCT3  === "b010".U){   // LW
@@ -264,7 +308,9 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
         io.decoded_instruction.bits.access_width             := access_width_t.HW
         io.decoded_instruction.bits.mem_signed  := 0.B
     }
+
     dontTouch(decode_pat)
+
 }
 
 

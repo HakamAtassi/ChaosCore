@@ -53,6 +53,7 @@ module improved_decoder(
                 io_decoded_instruction_bits_SUBTRACT,
                 io_decoded_instruction_bits_MULTIPLY,
                 io_decoded_instruction_bits_FENCE,
+                io_decoded_instruction_bits_FLUSH,
                 io_decoded_instruction_bits_MRET,
                 io_decoded_instruction_bits_ECALL,
                 io_decoded_instruction_bits_IS_IMM,
@@ -62,538 +63,574 @@ module improved_decoder(
 );
 
   wire [8:0]  _GEN = {9{io_instruction_bits_instruction[31]}};
-  wire [30:0] test_invInputs =
+  wire [30:0] decode_pat_invInputs =
     ~{io_instruction_valid, io_instruction_bits_instruction[31:2]};
-  wire [30:0] _test_andMatrixOutputs_T =
-    {test_invInputs[0],
-     test_invInputs[1],
+  wire [30:0] _decode_pat_andMatrixOutputs_T =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
      io_instruction_bits_instruction[5],
      io_instruction_bits_instruction[6],
-     test_invInputs[5],
-     test_invInputs[6],
-     test_invInputs[7],
-     test_invInputs[8],
-     test_invInputs[9],
-     test_invInputs[10],
-     test_invInputs[11],
-     test_invInputs[12],
-     test_invInputs[13],
-     test_invInputs[14],
-     test_invInputs[15],
-     test_invInputs[16],
+     decode_pat_invInputs[5],
+     decode_pat_invInputs[6],
+     decode_pat_invInputs[7],
+     decode_pat_invInputs[8],
+     decode_pat_invInputs[9],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[11],
+     decode_pat_invInputs[12],
+     decode_pat_invInputs[13],
+     decode_pat_invInputs[14],
+     decode_pat_invInputs[15],
+     decode_pat_invInputs[16],
      io_instruction_bits_instruction[19],
-     test_invInputs[18],
-     test_invInputs[19],
-     test_invInputs[20],
-     test_invInputs[21],
-     test_invInputs[22],
+     decode_pat_invInputs[18],
+     decode_pat_invInputs[19],
+     decode_pat_invInputs[20],
+     decode_pat_invInputs[21],
+     decode_pat_invInputs[22],
      io_instruction_bits_instruction[25],
-     test_invInputs[24],
-     test_invInputs[25],
+     decode_pat_invInputs[24],
+     decode_pat_invInputs[25],
      io_instruction_bits_instruction[28],
-     test_invInputs[27],
+     decode_pat_invInputs[27],
      io_instruction_bits_instruction[30],
-     test_invInputs[29],
-     test_invInputs[30]};
-  wire [6:0]  _test_andMatrixOutputs_T_1 =
-    {test_invInputs[0],
-     test_invInputs[1],
-     test_invInputs[2],
-     test_invInputs[3],
-     test_invInputs[4],
-     test_invInputs[11],
+     decode_pat_invInputs[29],
+     decode_pat_invInputs[30]};
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_1 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     decode_pat_invInputs[2],
+     decode_pat_invInputs[3],
+     decode_pat_invInputs[4],
+     decode_pat_invInputs[11],
      io_instruction_valid};
-  wire [6:0]  _test_andMatrixOutputs_T_2 =
-    {test_invInputs[0],
-     test_invInputs[1],
-     test_invInputs[3],
-     test_invInputs[4],
-     test_invInputs[10],
-     test_invInputs[11],
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_2 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     decode_pat_invInputs[3],
+     decode_pat_invInputs[4],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[11],
      io_instruction_valid};
-  wire [6:0]  _test_andMatrixOutputs_T_3 =
-    {test_invInputs[0],
-     test_invInputs[1],
-     test_invInputs[2],
-     test_invInputs[4],
-     test_invInputs[10],
-     test_invInputs[12],
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_3 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     decode_pat_invInputs[2],
+     decode_pat_invInputs[4],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[12],
      io_instruction_valid};
-  wire [6:0]  _test_andMatrixOutputs_T_6 =
-    {test_invInputs[0],
-     test_invInputs[1],
-     test_invInputs[2],
-     test_invInputs[4],
-     test_invInputs[11],
-     test_invInputs[12],
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_6 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     decode_pat_invInputs[2],
+     decode_pat_invInputs[4],
+     decode_pat_invInputs[11],
+     decode_pat_invInputs[12],
      io_instruction_valid};
-  wire [8:0]  _test_andMatrixOutputs_T_7 =
+  wire [8:0]  _decode_pat_andMatrixOutputs_T_7 =
     {io_instruction_bits_instruction[2],
      io_instruction_bits_instruction[3],
-     test_invInputs[2],
-     test_invInputs[3],
-     test_invInputs[4],
-     test_invInputs[10],
-     test_invInputs[11],
-     test_invInputs[12],
+     decode_pat_invInputs[2],
+     decode_pat_invInputs[3],
+     decode_pat_invInputs[4],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[11],
+     decode_pat_invInputs[12],
      io_instruction_valid};
-  wire [4:0]  _test_andMatrixOutputs_T_9 =
+  wire [4:0]  _decode_pat_andMatrixOutputs_T_9 =
     {io_instruction_bits_instruction[2],
-     test_invInputs[1],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
-     test_invInputs[4],
+     decode_pat_invInputs[4],
      io_instruction_valid};
-  wire [14:0] _test_andMatrixOutputs_T_13 =
-    {test_invInputs[0],
-     test_invInputs[1],
+  wire [7:0]  _decode_pat_andMatrixOutputs_T_11 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     decode_pat_invInputs[2],
+     io_instruction_bits_instruction[5],
+     decode_pat_invInputs[4],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[12],
+     io_instruction_valid};
+  wire [14:0] _decode_pat_andMatrixOutputs_T_14 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
      io_instruction_bits_instruction[5],
-     test_invInputs[4],
-     test_invInputs[10],
-     test_invInputs[11],
-     test_invInputs[12],
-     test_invInputs[23],
-     test_invInputs[24],
-     test_invInputs[25],
-     test_invInputs[26],
-     test_invInputs[27],
-     test_invInputs[29],
+     decode_pat_invInputs[4],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[11],
+     decode_pat_invInputs[12],
+     decode_pat_invInputs[23],
+     decode_pat_invInputs[24],
+     decode_pat_invInputs[25],
+     decode_pat_invInputs[26],
+     decode_pat_invInputs[27],
+     decode_pat_invInputs[29],
      io_instruction_valid};
-  wire [7:0]  _test_andMatrixOutputs_T_18 =
-    {test_invInputs[1],
-     test_invInputs[2],
+  wire [11:0] _decode_pat_andMatrixOutputs_T_15 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     io_instruction_bits_instruction[4],
+     io_instruction_bits_instruction[5],
+     decode_pat_invInputs[4],
+     decode_pat_invInputs[24],
+     decode_pat_invInputs[25],
+     decode_pat_invInputs[26],
+     decode_pat_invInputs[27],
+     decode_pat_invInputs[28],
+     decode_pat_invInputs[29],
+     io_instruction_valid};
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_18 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     decode_pat_invInputs[2],
      io_instruction_bits_instruction[5],
      io_instruction_bits_instruction[6],
-     test_invInputs[10],
-     test_invInputs[11],
-     test_invInputs[12],
+     decode_pat_invInputs[11],
      io_instruction_valid};
-  wire [5:0]  _test_andMatrixOutputs_T_20 =
+  wire [7:0]  _decode_pat_andMatrixOutputs_T_19 =
+    {decode_pat_invInputs[1],
+     decode_pat_invInputs[2],
+     io_instruction_bits_instruction[5],
+     io_instruction_bits_instruction[6],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[11],
+     decode_pat_invInputs[12],
+     io_instruction_valid};
+  wire [5:0]  _decode_pat_andMatrixOutputs_T_21 =
     {io_instruction_bits_instruction[2],
      io_instruction_bits_instruction[3],
-     test_invInputs[2],
+     decode_pat_invInputs[2],
      io_instruction_bits_instruction[5],
      io_instruction_bits_instruction[6],
      io_instruction_valid};
-  wire [30:0] _test_andMatrixOutputs_T_21 =
-    {test_invInputs[0],
-     test_invInputs[1],
+  wire [30:0] _decode_pat_andMatrixOutputs_T_22 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
      io_instruction_bits_instruction[5],
      io_instruction_bits_instruction[6],
-     test_invInputs[5],
-     test_invInputs[6],
-     test_invInputs[7],
-     test_invInputs[8],
-     test_invInputs[9],
-     test_invInputs[10],
-     test_invInputs[11],
-     test_invInputs[12],
-     test_invInputs[13],
-     test_invInputs[14],
-     test_invInputs[15],
-     test_invInputs[16],
-     test_invInputs[17],
-     test_invInputs[18],
-     test_invInputs[19],
-     test_invInputs[20],
-     test_invInputs[21],
-     test_invInputs[22],
-     test_invInputs[23],
-     test_invInputs[24],
-     test_invInputs[25],
-     test_invInputs[26],
-     test_invInputs[27],
-     test_invInputs[28],
-     test_invInputs[29],
+     decode_pat_invInputs[5],
+     decode_pat_invInputs[6],
+     decode_pat_invInputs[7],
+     decode_pat_invInputs[8],
+     decode_pat_invInputs[9],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[11],
+     decode_pat_invInputs[12],
+     decode_pat_invInputs[13],
+     decode_pat_invInputs[14],
+     decode_pat_invInputs[15],
+     decode_pat_invInputs[16],
+     decode_pat_invInputs[17],
+     decode_pat_invInputs[18],
+     decode_pat_invInputs[19],
+     decode_pat_invInputs[20],
+     decode_pat_invInputs[21],
+     decode_pat_invInputs[22],
+     decode_pat_invInputs[23],
+     decode_pat_invInputs[24],
+     decode_pat_invInputs[25],
+     decode_pat_invInputs[26],
+     decode_pat_invInputs[27],
+     decode_pat_invInputs[28],
+     decode_pat_invInputs[29],
      io_instruction_valid};
-  wire [13:0] _test_andMatrixOutputs_T_22 =
-    {test_invInputs[0],
-     test_invInputs[1],
+  wire [13:0] _decode_pat_andMatrixOutputs_T_23 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
-     test_invInputs[4],
+     decode_pat_invInputs[4],
      io_instruction_bits_instruction[12],
-     test_invInputs[11],
-     test_invInputs[23],
-     test_invInputs[24],
-     test_invInputs[25],
-     test_invInputs[26],
-     test_invInputs[27],
-     test_invInputs[28],
-     test_invInputs[29],
+     decode_pat_invInputs[11],
+     decode_pat_invInputs[23],
+     decode_pat_invInputs[24],
+     decode_pat_invInputs[25],
+     decode_pat_invInputs[26],
+     decode_pat_invInputs[27],
+     decode_pat_invInputs[28],
+     decode_pat_invInputs[29],
      io_instruction_valid};
-  wire [6:0]  _test_andMatrixOutputs_T_26 =
-    {test_invInputs[0],
-     test_invInputs[1],
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_26 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
-     test_invInputs[3],
-     test_invInputs[4],
+     io_instruction_bits_instruction[5],
+     io_instruction_bits_instruction[6],
+     io_instruction_bits_instruction[12],
+     io_instruction_valid};
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_27 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     io_instruction_bits_instruction[4],
+     decode_pat_invInputs[3],
+     decode_pat_invInputs[4],
      io_instruction_bits_instruction[13],
      io_instruction_valid};
-  wire [6:0]  _test_andMatrixOutputs_T_27 =
-    {test_invInputs[0],
-     test_invInputs[1],
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_28 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
      io_instruction_bits_instruction[5],
      io_instruction_bits_instruction[6],
      io_instruction_bits_instruction[13],
      io_instruction_valid};
-  wire [6:0]  _test_andMatrixOutputs_T_31 =
-    {test_invInputs[0],
-     test_invInputs[1],
-     test_invInputs[2],
+  wire [6:0]  _decode_pat_andMatrixOutputs_T_33 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
+     decode_pat_invInputs[2],
      io_instruction_bits_instruction[5],
      io_instruction_bits_instruction[6],
      io_instruction_bits_instruction[14],
      io_instruction_valid};
-  wire [13:0] _test_andMatrixOutputs_T_32 =
-    {test_invInputs[0],
-     test_invInputs[1],
+  wire [13:0] _decode_pat_andMatrixOutputs_T_34 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
-     test_invInputs[4],
+     decode_pat_invInputs[4],
      io_instruction_bits_instruction[12],
-     test_invInputs[11],
+     decode_pat_invInputs[11],
      io_instruction_bits_instruction[14],
-     test_invInputs[23],
-     test_invInputs[24],
-     test_invInputs[25],
-     test_invInputs[26],
-     test_invInputs[27],
-     test_invInputs[29],
+     decode_pat_invInputs[23],
+     decode_pat_invInputs[24],
+     decode_pat_invInputs[25],
+     decode_pat_invInputs[26],
+     decode_pat_invInputs[27],
+     decode_pat_invInputs[29],
      io_instruction_valid};
-  wire [30:0] _test_andMatrixOutputs_T_39 =
-    {test_invInputs[0],
-     test_invInputs[1],
+  wire [30:0] _decode_pat_andMatrixOutputs_T_42 =
+    {decode_pat_invInputs[0],
+     decode_pat_invInputs[1],
      io_instruction_bits_instruction[4],
      io_instruction_bits_instruction[5],
      io_instruction_bits_instruction[6],
-     test_invInputs[5],
-     test_invInputs[6],
-     test_invInputs[7],
-     test_invInputs[8],
-     test_invInputs[9],
-     test_invInputs[10],
-     test_invInputs[11],
-     test_invInputs[12],
-     test_invInputs[13],
-     test_invInputs[14],
-     test_invInputs[15],
-     test_invInputs[16],
-     test_invInputs[17],
-     test_invInputs[18],
+     decode_pat_invInputs[5],
+     decode_pat_invInputs[6],
+     decode_pat_invInputs[7],
+     decode_pat_invInputs[8],
+     decode_pat_invInputs[9],
+     decode_pat_invInputs[10],
+     decode_pat_invInputs[11],
+     decode_pat_invInputs[12],
+     decode_pat_invInputs[13],
+     decode_pat_invInputs[14],
+     decode_pat_invInputs[15],
+     decode_pat_invInputs[16],
+     decode_pat_invInputs[17],
+     decode_pat_invInputs[18],
      io_instruction_bits_instruction[21],
-     test_invInputs[20],
-     test_invInputs[21],
-     test_invInputs[22],
-     test_invInputs[23],
-     test_invInputs[24],
-     test_invInputs[25],
+     decode_pat_invInputs[20],
+     decode_pat_invInputs[21],
+     decode_pat_invInputs[22],
+     decode_pat_invInputs[23],
+     decode_pat_invInputs[24],
+     decode_pat_invInputs[25],
      io_instruction_bits_instruction[28],
-     test_invInputs[27],
-     test_invInputs[28],
-     test_invInputs[29],
+     decode_pat_invInputs[27],
+     decode_pat_invInputs[28],
+     decode_pat_invInputs[29],
      io_instruction_valid};
-  wire [14:0] test =
-    {|{&_test_andMatrixOutputs_T_7,
-       &{test_invInputs[0],
-         test_invInputs[1],
-         io_instruction_bits_instruction[4],
-         test_invInputs[3],
-         test_invInputs[4],
-         test_invInputs[10],
+  wire [16:0] decode_pat =
+    {|{&_decode_pat_andMatrixOutputs_T_11,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
+         decode_pat_invInputs[2],
+         io_instruction_bits_instruction[5],
+         decode_pat_invInputs[11],
+         decode_pat_invInputs[12],
          io_instruction_valid},
-       &_test_andMatrixOutputs_T_13,
-       &{test_invInputs[0],
-         test_invInputs[1],
+       &_decode_pat_andMatrixOutputs_T_14,
+       &_decode_pat_andMatrixOutputs_T_15,
+       &_decode_pat_andMatrixOutputs_T_33,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[4],
          io_instruction_bits_instruction[5],
-         test_invInputs[4],
-         test_invInputs[23],
-         test_invInputs[24],
-         test_invInputs[25],
-         test_invInputs[26],
-         test_invInputs[27],
-         test_invInputs[28],
-         test_invInputs[29],
-         io_instruction_valid},
-       &{io_instruction_bits_instruction[2],
-         test_invInputs[1],
-         io_instruction_bits_instruction[4],
-         io_instruction_bits_instruction[5],
-         test_invInputs[4],
-         io_instruction_valid},
-       &_test_andMatrixOutputs_T_22,
-       &_test_andMatrixOutputs_T_26,
-       &_test_andMatrixOutputs_T_32},
-     |{&{io_instruction_bits_instruction[2],
-         test_invInputs[1],
-         io_instruction_bits_instruction[4],
-         test_invInputs[3],
-         test_invInputs[4],
-         io_instruction_valid},
-       &{test_invInputs[0],
-         test_invInputs[1],
-         test_invInputs[2],
-         io_instruction_bits_instruction[5],
-         io_instruction_bits_instruction[6],
-         test_invInputs[11],
-         io_instruction_valid},
-       &_test_andMatrixOutputs_T_18,
-       &_test_andMatrixOutputs_T_20,
-       &_test_andMatrixOutputs_T_31},
-     |{&_test_andMatrixOutputs_T,
-       &_test_andMatrixOutputs_T_21,
-       &{test_invInputs[0],
-         test_invInputs[1],
-         io_instruction_bits_instruction[4],
+         decode_pat_invInputs[4],
+         io_instruction_bits_instruction[12],
+         decode_pat_invInputs[11],
+         io_instruction_bits_instruction[14],
+         decode_pat_invInputs[23],
+         decode_pat_invInputs[24],
+         decode_pat_invInputs[25],
+         decode_pat_invInputs[26],
+         decode_pat_invInputs[27],
+         decode_pat_invInputs[29],
+         io_instruction_valid}},
+     |{&_decode_pat_andMatrixOutputs_T_1,
+       &_decode_pat_andMatrixOutputs_T_2,
+       &_decode_pat_andMatrixOutputs_T_3,
+       &_decode_pat_andMatrixOutputs_T_6,
+       &_decode_pat_andMatrixOutputs_T_14,
+       &_decode_pat_andMatrixOutputs_T_15,
+       &_decode_pat_andMatrixOutputs_T_19,
+       &_decode_pat_andMatrixOutputs_T_23,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[5],
          io_instruction_bits_instruction[6],
          io_instruction_bits_instruction[12],
-         io_instruction_bits_instruction[14],
+         decode_pat_invInputs[11],
+         decode_pat_invInputs[12],
          io_instruction_valid},
-       &{test_invInputs[0],
-         test_invInputs[1],
+       &_decode_pat_andMatrixOutputs_T_27,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[4],
          io_instruction_bits_instruction[5],
          io_instruction_bits_instruction[6],
          io_instruction_bits_instruction[13],
-         io_instruction_bits_instruction[14],
+         decode_pat_invInputs[12],
          io_instruction_valid},
-       &_test_andMatrixOutputs_T_39},
-     |{&_test_andMatrixOutputs_T_1,
-       &_test_andMatrixOutputs_T_3,
-       &_test_andMatrixOutputs_T_6},
-     &{test_invInputs[0],
-       test_invInputs[1],
+       &_decode_pat_andMatrixOutputs_T_33,
+       &_decode_pat_andMatrixOutputs_T_34},
+     |{&{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
+         io_instruction_bits_instruction[4],
+         decode_pat_invInputs[3],
+         decode_pat_invInputs[4],
+         decode_pat_invInputs[10],
+         io_instruction_valid},
+       &_decode_pat_andMatrixOutputs_T_14,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
+         io_instruction_bits_instruction[4],
+         io_instruction_bits_instruction[5],
+         decode_pat_invInputs[4],
+         decode_pat_invInputs[23],
+         decode_pat_invInputs[24],
+         decode_pat_invInputs[25],
+         decode_pat_invInputs[26],
+         decode_pat_invInputs[27],
+         decode_pat_invInputs[28],
+         decode_pat_invInputs[29],
+         io_instruction_valid},
+       &{io_instruction_bits_instruction[2],
+         decode_pat_invInputs[1],
+         io_instruction_bits_instruction[4],
+         io_instruction_bits_instruction[5],
+         decode_pat_invInputs[4],
+         io_instruction_valid},
+       &_decode_pat_andMatrixOutputs_T_23,
+       &_decode_pat_andMatrixOutputs_T_27,
+       &_decode_pat_andMatrixOutputs_T_34},
+     |{&{io_instruction_bits_instruction[2],
+         decode_pat_invInputs[1],
+         io_instruction_bits_instruction[4],
+         decode_pat_invInputs[3],
+         decode_pat_invInputs[4],
+         io_instruction_valid},
+       &_decode_pat_andMatrixOutputs_T_18,
+       &_decode_pat_andMatrixOutputs_T_19,
+       &_decode_pat_andMatrixOutputs_T_21,
+       &_decode_pat_andMatrixOutputs_T_33},
+     |{&_decode_pat_andMatrixOutputs_T,
+       &_decode_pat_andMatrixOutputs_T_7,
+       &_decode_pat_andMatrixOutputs_T_22,
+       &_decode_pat_andMatrixOutputs_T_26,
+       &_decode_pat_andMatrixOutputs_T_28,
+       &_decode_pat_andMatrixOutputs_T_42},
+     |{&_decode_pat_andMatrixOutputs_T_1,
+       &_decode_pat_andMatrixOutputs_T_3,
+       &_decode_pat_andMatrixOutputs_T_6},
+     &{decode_pat_invInputs[0],
+       decode_pat_invInputs[1],
        io_instruction_bits_instruction[4],
        io_instruction_bits_instruction[5],
-       test_invInputs[4],
+       decode_pat_invInputs[4],
        io_instruction_bits_instruction[25],
-       test_invInputs[24],
-       test_invInputs[25],
-       test_invInputs[26],
-       test_invInputs[27],
-       test_invInputs[28],
-       test_invInputs[29],
+       decode_pat_invInputs[24],
+       decode_pat_invInputs[25],
+       decode_pat_invInputs[26],
+       decode_pat_invInputs[27],
+       decode_pat_invInputs[28],
+       decode_pat_invInputs[29],
        io_instruction_valid},
-     &{test_invInputs[0],
-       test_invInputs[1],
+     &{decode_pat_invInputs[0],
+       decode_pat_invInputs[1],
        io_instruction_bits_instruction[4],
        io_instruction_bits_instruction[5],
-       test_invInputs[4],
-       test_invInputs[11],
+       decode_pat_invInputs[4],
+       decode_pat_invInputs[11],
        io_instruction_bits_instruction[14],
        io_instruction_bits_instruction[25],
-       test_invInputs[24],
-       test_invInputs[25],
-       test_invInputs[26],
-       test_invInputs[27],
-       test_invInputs[28],
-       test_invInputs[29],
+       decode_pat_invInputs[24],
+       decode_pat_invInputs[25],
+       decode_pat_invInputs[26],
+       decode_pat_invInputs[27],
+       decode_pat_invInputs[28],
+       decode_pat_invInputs[29],
        io_instruction_valid},
-     |{&{test_invInputs[0],
-         test_invInputs[1],
+     |{&{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[4],
-         test_invInputs[3],
-         test_invInputs[4],
+         decode_pat_invInputs[3],
+         decode_pat_invInputs[4],
          io_instruction_bits_instruction[12],
          io_instruction_bits_instruction[13],
-         test_invInputs[12],
+         decode_pat_invInputs[12],
          io_instruction_valid},
-       &{test_invInputs[0],
-         test_invInputs[1],
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[4],
          io_instruction_bits_instruction[5],
-         test_invInputs[4],
+         decode_pat_invInputs[4],
          io_instruction_bits_instruction[12],
          io_instruction_bits_instruction[13],
-         test_invInputs[12],
-         test_invInputs[23],
-         test_invInputs[24],
-         test_invInputs[25],
-         test_invInputs[26],
-         test_invInputs[27],
-         test_invInputs[28],
-         test_invInputs[29],
+         decode_pat_invInputs[12],
+         decode_pat_invInputs[23],
+         decode_pat_invInputs[24],
+         decode_pat_invInputs[25],
+         decode_pat_invInputs[26],
+         decode_pat_invInputs[27],
+         decode_pat_invInputs[28],
+         decode_pat_invInputs[29],
          io_instruction_valid},
-       &{test_invInputs[0],
-         test_invInputs[1],
-         test_invInputs[2],
-         test_invInputs[3],
-         test_invInputs[4],
-         test_invInputs[11],
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
+         decode_pat_invInputs[2],
+         decode_pat_invInputs[3],
+         decode_pat_invInputs[4],
+         decode_pat_invInputs[11],
          io_instruction_bits_instruction[14],
          io_instruction_valid},
-       &{test_invInputs[0],
-         test_invInputs[1],
-         test_invInputs[2],
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
+         decode_pat_invInputs[2],
          io_instruction_bits_instruction[5],
          io_instruction_bits_instruction[6],
          io_instruction_bits_instruction[13],
          io_instruction_bits_instruction[14],
          io_instruction_valid}},
-     |{&_test_andMatrixOutputs_T,
-       &_test_andMatrixOutputs_T_1,
-       &_test_andMatrixOutputs_T_2,
-       &_test_andMatrixOutputs_T_3,
-       &_test_andMatrixOutputs_T_6,
-       &_test_andMatrixOutputs_T_7,
-       &_test_andMatrixOutputs_T_9,
-       &_test_andMatrixOutputs_T_18,
-       &_test_andMatrixOutputs_T_20,
-       &{test_invInputs[0],
-         test_invInputs[1],
+     |{&_decode_pat_andMatrixOutputs_T,
+       &_decode_pat_andMatrixOutputs_T_1,
+       &_decode_pat_andMatrixOutputs_T_2,
+       &_decode_pat_andMatrixOutputs_T_3,
+       &_decode_pat_andMatrixOutputs_T_6,
+       &_decode_pat_andMatrixOutputs_T_9,
+       &_decode_pat_andMatrixOutputs_T_18,
+       &_decode_pat_andMatrixOutputs_T_19,
+       &_decode_pat_andMatrixOutputs_T_21,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[4],
-         test_invInputs[3],
-         test_invInputs[4],
+         decode_pat_invInputs[3],
+         decode_pat_invInputs[4],
          io_instruction_bits_instruction[12],
-         test_invInputs[11],
-         test_invInputs[23],
-         test_invInputs[24],
-         test_invInputs[25],
-         test_invInputs[26],
-         test_invInputs[27],
-         test_invInputs[28],
-         test_invInputs[29],
+         decode_pat_invInputs[11],
+         decode_pat_invInputs[23],
+         decode_pat_invInputs[24],
+         decode_pat_invInputs[25],
+         decode_pat_invInputs[26],
+         decode_pat_invInputs[27],
+         decode_pat_invInputs[28],
+         decode_pat_invInputs[29],
          io_instruction_valid},
-       &{test_invInputs[0],
-         test_invInputs[1],
-         io_instruction_bits_instruction[5],
-         io_instruction_bits_instruction[6],
-         io_instruction_bits_instruction[12],
-         test_invInputs[11],
-         io_instruction_valid},
-       &_test_andMatrixOutputs_T_26,
-       &_test_andMatrixOutputs_T_27,
-       &_test_andMatrixOutputs_T_31,
-       &{test_invInputs[0],
-         test_invInputs[1],
+       &_decode_pat_andMatrixOutputs_T_27,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[4],
-         test_invInputs[3],
-         test_invInputs[4],
+         decode_pat_invInputs[3],
+         decode_pat_invInputs[4],
          io_instruction_bits_instruction[12],
-         test_invInputs[11],
+         decode_pat_invInputs[11],
          io_instruction_bits_instruction[14],
-         test_invInputs[23],
-         test_invInputs[24],
-         test_invInputs[25],
-         test_invInputs[26],
-         test_invInputs[27],
-         test_invInputs[29],
+         decode_pat_invInputs[23],
+         decode_pat_invInputs[24],
+         decode_pat_invInputs[25],
+         decode_pat_invInputs[26],
+         decode_pat_invInputs[27],
+         decode_pat_invInputs[29],
          io_instruction_valid},
-       &_test_andMatrixOutputs_T_39},
-     &_test_andMatrixOutputs_T,
-     &_test_andMatrixOutputs_T_21,
-     |{&_test_andMatrixOutputs_T_1,
-       &{test_invInputs[0],
-         test_invInputs[1],
-         test_invInputs[2],
-         test_invInputs[3],
-         test_invInputs[4],
-         test_invInputs[10],
-         test_invInputs[12],
-         io_instruction_valid}},
-     |{&{test_invInputs[0],
-         test_invInputs[1],
-         test_invInputs[2],
-         io_instruction_bits_instruction[5],
-         test_invInputs[4],
-         test_invInputs[10],
-         test_invInputs[12],
-         io_instruction_valid},
-       &{test_invInputs[0],
-         test_invInputs[1],
-         test_invInputs[2],
-         io_instruction_bits_instruction[5],
-         test_invInputs[4],
-         test_invInputs[11],
-         test_invInputs[12],
-         io_instruction_valid}},
-     |{&_test_andMatrixOutputs_T,
-       &_test_andMatrixOutputs_T_7,
-       &_test_andMatrixOutputs_T_21,
-       &_test_andMatrixOutputs_T_39},
-     |{&_test_andMatrixOutputs_T,
-       &_test_andMatrixOutputs_T_7,
-       &_test_andMatrixOutputs_T_21,
-       &{test_invInputs[0],
-         test_invInputs[1],
-         io_instruction_bits_instruction[4],
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[5],
          io_instruction_bits_instruction[6],
          io_instruction_bits_instruction[12],
+         io_instruction_bits_instruction[14],
          io_instruction_valid},
-       &_test_andMatrixOutputs_T_27,
-       &_test_andMatrixOutputs_T_39},
-     |{&_test_andMatrixOutputs_T_1,
-       &_test_andMatrixOutputs_T_2,
-       &{test_invInputs[0],
-         test_invInputs[1],
-         test_invInputs[3],
-         test_invInputs[4],
-         test_invInputs[10],
-         test_invInputs[12],
-         io_instruction_valid},
-       &_test_andMatrixOutputs_T_9,
-       &_test_andMatrixOutputs_T_13,
-       &{test_invInputs[0],
-         test_invInputs[1],
-         io_instruction_bits_instruction[4],
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
          io_instruction_bits_instruction[5],
-         test_invInputs[4],
-         test_invInputs[24],
-         test_invInputs[25],
-         test_invInputs[26],
-         test_invInputs[27],
-         test_invInputs[28],
-         test_invInputs[29],
+         io_instruction_bits_instruction[6],
+         io_instruction_bits_instruction[13],
+         io_instruction_bits_instruction[14],
          io_instruction_valid},
+       &_decode_pat_andMatrixOutputs_T_42},
+     &_decode_pat_andMatrixOutputs_T,
+     &_decode_pat_andMatrixOutputs_T_22,
+     |{&_decode_pat_andMatrixOutputs_T_1,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
+         decode_pat_invInputs[2],
+         decode_pat_invInputs[3],
+         decode_pat_invInputs[4],
+         decode_pat_invInputs[10],
+         decode_pat_invInputs[12],
+         io_instruction_valid}},
+     |{&_decode_pat_andMatrixOutputs_T_11,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
+         decode_pat_invInputs[2],
+         io_instruction_bits_instruction[5],
+         decode_pat_invInputs[4],
+         decode_pat_invInputs[11],
+         decode_pat_invInputs[12],
+         io_instruction_valid}},
+     |{&_decode_pat_andMatrixOutputs_T,
+       &_decode_pat_andMatrixOutputs_T_7,
+       &_decode_pat_andMatrixOutputs_T_22,
+       &_decode_pat_andMatrixOutputs_T_42},
+     |{&_decode_pat_andMatrixOutputs_T,
+       &_decode_pat_andMatrixOutputs_T_7,
+       &_decode_pat_andMatrixOutputs_T_22,
+       &_decode_pat_andMatrixOutputs_T_26,
+       &_decode_pat_andMatrixOutputs_T_28,
+       &_decode_pat_andMatrixOutputs_T_42},
+     |{&_decode_pat_andMatrixOutputs_T_1,
+       &_decode_pat_andMatrixOutputs_T_2,
+       &{decode_pat_invInputs[0],
+         decode_pat_invInputs[1],
+         decode_pat_invInputs[3],
+         decode_pat_invInputs[4],
+         decode_pat_invInputs[10],
+         decode_pat_invInputs[12],
+         io_instruction_valid},
+       &_decode_pat_andMatrixOutputs_T_9,
+       &_decode_pat_andMatrixOutputs_T_14,
+       &_decode_pat_andMatrixOutputs_T_15,
        &{io_instruction_bits_instruction[2],
-         test_invInputs[1],
-         test_invInputs[2],
+         decode_pat_invInputs[1],
+         decode_pat_invInputs[2],
          io_instruction_bits_instruction[5],
          io_instruction_bits_instruction[6],
-         test_invInputs[10],
-         test_invInputs[11],
-         test_invInputs[12],
+         decode_pat_invInputs[10],
+         decode_pat_invInputs[11],
+         decode_pat_invInputs[12],
          io_instruction_valid},
-       &_test_andMatrixOutputs_T_20,
-       &_test_andMatrixOutputs_T_22,
-       &_test_andMatrixOutputs_T_26,
-       &_test_andMatrixOutputs_T_32}};
-  wire        _needs_memory_T_1 = io_instruction_bits_instruction[6:2] == 5'h0;
-  wire        _io_decoded_instruction_bits_RS1_valid_T_1 =
-    io_instruction_bits_instruction[6:2] == 5'h4;
-  wire        _io_decoded_instruction_bits_RD_valid_T_12 =
-    io_instruction_bits_instruction[6:2] == 5'h5;
-  wire        _needs_memory_T = io_instruction_bits_instruction[6:2] == 5'h8;
-  wire        _io_decoded_instruction_bits_RS2_valid_T =
-    io_instruction_bits_instruction[6:2] == 5'hC;
-  wire        _io_decoded_instruction_bits_RD_valid_T_10 =
-    io_instruction_bits_instruction[6:2] == 5'hD;
-  wire        _io_decoded_instruction_bits_RS2_valid_T_3 =
-    io_instruction_bits_instruction[6:2] == 5'h18;
-  wire        _io_decoded_instruction_bits_RS1_valid_T_7 =
-    io_instruction_bits_instruction[6:2] == 5'h19;
-  wire        _io_decoded_instruction_bits_RD_valid_T_6 =
-    io_instruction_bits_instruction[6:2] == 5'h1B;
-  wire        _io_decoded_instruction_bits_RD_valid_T_14 =
-    io_instruction_bits_instruction[6:2] == 5'h1C;
+       &_decode_pat_andMatrixOutputs_T_21,
+       &_decode_pat_andMatrixOutputs_T_23,
+       &_decode_pat_andMatrixOutputs_T_27,
+       &_decode_pat_andMatrixOutputs_T_34}};
+  wire        _SUBTRACT_T_3 = io_instruction_bits_instruction[6:2] == 5'h4;
+  wire        _SUBTRACT_T = io_instruction_bits_instruction[6:2] == 5'hC;
   `ifndef SYNTHESIS
     always @(posedge clock) begin
       if (~reset
-          & ~(_needs_memory_T_1 | io_instruction_bits_instruction[6:2] == 5'h1
+          & ~(io_instruction_bits_instruction[6:2] == 5'h0
+              | io_instruction_bits_instruction[6:2] == 5'h1
               | io_instruction_bits_instruction[6:2] == 5'h2
-              | io_instruction_bits_instruction[6:2] == 5'h3
-              | _io_decoded_instruction_bits_RS1_valid_T_1
-              | _io_decoded_instruction_bits_RD_valid_T_12
-              | io_instruction_bits_instruction[6:2] == 5'h6 | _needs_memory_T
+              | io_instruction_bits_instruction[6:2] == 5'h3 | _SUBTRACT_T_3
+              | io_instruction_bits_instruction[6:2] == 5'h5
+              | io_instruction_bits_instruction[6:2] == 5'h6
+              | io_instruction_bits_instruction[6:2] == 5'h8
               | io_instruction_bits_instruction[6:2] == 5'h9
               | io_instruction_bits_instruction[6:2] == 5'hA
-              | io_instruction_bits_instruction[6:2] == 5'hB
-              | _io_decoded_instruction_bits_RS2_valid_T
-              | _io_decoded_instruction_bits_RD_valid_T_10
+              | io_instruction_bits_instruction[6:2] == 5'hB | _SUBTRACT_T
+              | io_instruction_bits_instruction[6:2] == 5'hD
               | io_instruction_bits_instruction[6:2] == 5'hE
               | io_instruction_bits_instruction[6:2] == 5'h10
               | io_instruction_bits_instruction[6:2] == 5'h11
@@ -601,60 +638,29 @@ module improved_decoder(
               | io_instruction_bits_instruction[6:2] == 5'h13
               | io_instruction_bits_instruction[6:2] == 5'h14
               | io_instruction_bits_instruction[6:2] == 5'h16
-              | _io_decoded_instruction_bits_RS2_valid_T_3
-              | _io_decoded_instruction_bits_RS1_valid_T_7
-              | _io_decoded_instruction_bits_RD_valid_T_6
-              | _io_decoded_instruction_bits_RD_valid_T_14
+              | io_instruction_bits_instruction[6:2] == 5'h18
+              | io_instruction_bits_instruction[6:2] == 5'h19
+              | io_instruction_bits_instruction[6:2] == 5'h1B
+              | io_instruction_bits_instruction[6:2] == 5'h1C
               | io_instruction_bits_instruction[6:2] == 5'h1E)) begin
         if (`ASSERT_VERBOSE_COND_)
-          $error("Assertion failed: Enum state must be valid, got %x!\n    at decoder.scala:363 assert(valid, \"Enum state must be valid, got %%%%x!\",instruction)\n",
+          $error("Assertion failed: Enum state must be valid, got %x!\n    at decoder.scala:202 assert(valid, \"Enum state must be valid, got %%%%x!\",instruction)\n",
                  io_instruction_bits_instruction);
         if (`STOP_COND_)
           $fatal;
       end
     end // always @(posedge)
   `endif // not def SYNTHESIS
-  wire        _FENCE_T_1 = io_instruction_bits_instruction[14:12] == 3'h0;
-  wire        _needs_ALU_T_1 = io_instruction_bits_instruction[31:25] == 7'h20;
-  wire        _needs_CSRs_T_8 = io_instruction_bits_instruction[14:12] == 3'h5;
-  wire        _needs_CSRs_T_10 = io_instruction_bits_instruction[14:12] == 3'h6;
-  wire        IS_IMM =
-    _io_decoded_instruction_bits_RS1_valid_T_1
-    | _io_decoded_instruction_bits_RD_valid_T_10
-    | _io_decoded_instruction_bits_RD_valid_T_12 | _needs_memory_T | _needs_memory_T_1
-    | _io_decoded_instruction_bits_RS2_valid_T_3
-    | _io_decoded_instruction_bits_RD_valid_T_6
-    | _io_decoded_instruction_bits_RS1_valid_T_7
-    | _io_decoded_instruction_bits_RD_valid_T_14
-    & (_needs_CSRs_T_8 | _needs_CSRs_T_10 | (&(io_instruction_bits_instruction[14:12])));
-  wire        _needs_CSRs_T_2 = io_instruction_bits_instruction[14:12] == 3'h1;
-  wire        _needs_CSRs_T_4 = io_instruction_bits_instruction[14:12] == 3'h2;
-  wire        needs_memory = _needs_memory_T | _needs_memory_T_1;
-  wire        _GEN_0 = _FENCE_T_1 & needs_memory;
-  wire        _GEN_1 = _needs_CSRs_T_2 & needs_memory;
-  wire        _GEN_2 = _needs_CSRs_T_4 & needs_memory;
+  wire        _SUBTRACT_T_6 = io_instruction_bits_instruction[31:25] == 7'h20;
+  wire        _GEN_0 = io_instruction_bits_instruction[14:12] == 3'h0;
+  wire        _GEN_1 = io_instruction_bits_instruction[14:12] == 3'h1;
+  wire        _GEN_2 = io_instruction_bits_instruction[14:12] == 3'h2;
   assign io_decoded_instruction_bits_RD = io_instruction_bits_instruction[11:7];
-  assign io_decoded_instruction_bits_RD_valid =
-    (_io_decoded_instruction_bits_RS2_valid_T | _io_decoded_instruction_bits_RS1_valid_T_1
-     | _needs_memory_T_1 | _io_decoded_instruction_bits_RD_valid_T_6
-     | _io_decoded_instruction_bits_RS1_valid_T_7
-     | _io_decoded_instruction_bits_RD_valid_T_10
-     | _io_decoded_instruction_bits_RD_valid_T_12
-     | _io_decoded_instruction_bits_RD_valid_T_14
-     & (|(io_instruction_bits_instruction[14:12]))) & io_instruction_valid;
+  assign io_decoded_instruction_bits_RD_valid = decode_pat[0];
   assign io_decoded_instruction_bits_RS1 = {2'h0, io_instruction_bits_instruction[19:15]};
-  assign io_decoded_instruction_bits_RS1_valid =
-    (_io_decoded_instruction_bits_RS2_valid_T | _io_decoded_instruction_bits_RS1_valid_T_1
-     | _needs_memory_T_1 | _needs_memory_T | _io_decoded_instruction_bits_RS1_valid_T_7
-     | _io_decoded_instruction_bits_RD_valid_T_14
-     & (_FENCE_T_1 | _needs_CSRs_T_2 | _needs_CSRs_T_4
-        | io_instruction_bits_instruction[14:12] == 3'h3 | _needs_CSRs_T_8
-        | _needs_CSRs_T_10 | (&(io_instruction_bits_instruction[14:12]))) & ~IS_IMM
-     | _io_decoded_instruction_bits_RS2_valid_T_3) & io_instruction_valid;
+  assign io_decoded_instruction_bits_RS1_valid = decode_pat[15];
   assign io_decoded_instruction_bits_RS2 = {2'h0, io_instruction_bits_instruction[24:20]};
-  assign io_decoded_instruction_bits_RS2_valid =
-    (_io_decoded_instruction_bits_RS2_valid_T | _needs_memory_T
-     | _io_decoded_instruction_bits_RS2_valid_T_3) & io_instruction_valid;
+  assign io_decoded_instruction_bits_RS2_valid = decode_pat[16];
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
       ? {{9{io_instruction_bits_instruction[31]}},
@@ -686,32 +692,29 @@ module improved_decoder(
   assign io_decoded_instruction_bits_packet_index = io_instruction_bits_packet_index[1:0];
   assign io_decoded_instruction_bits_instructionType =
     io_instruction_bits_instruction[6:2];
-  assign io_decoded_instruction_bits_needs_ALU = test[14];
-  assign io_decoded_instruction_bits_needs_branch_unit = test[13];
-  assign io_decoded_instruction_bits_needs_CSRs = test[12];
-  assign io_decoded_instruction_bits_needs_memory = test[11];
-  assign io_decoded_instruction_bits_needs_mul = test[10];
-  assign io_decoded_instruction_bits_needs_div = test[9];
+  assign io_decoded_instruction_bits_needs_ALU = decode_pat[14];
+  assign io_decoded_instruction_bits_needs_branch_unit = decode_pat[13];
+  assign io_decoded_instruction_bits_needs_CSRs = decode_pat[12];
+  assign io_decoded_instruction_bits_needs_memory = decode_pat[11];
+  assign io_decoded_instruction_bits_needs_mul = decode_pat[10];
+  assign io_decoded_instruction_bits_needs_div = decode_pat[9];
   assign io_decoded_instruction_bits_SUBTRACT =
-    _io_decoded_instruction_bits_RS2_valid_T & _needs_ALU_T_1
-    | _io_decoded_instruction_bits_RS1_valid_T_1 & _needs_CSRs_T_8 & _needs_ALU_T_1;
-  assign io_decoded_instruction_bits_MULTIPLY = test[10];
-  assign io_decoded_instruction_bits_FENCE = test[2];
-  assign io_decoded_instruction_bits_MRET = test[6];
-  assign io_decoded_instruction_bits_ECALL = test[5];
-  assign io_decoded_instruction_bits_IS_IMM = IS_IMM;
+    _SUBTRACT_T & _SUBTRACT_T_6 | _SUBTRACT_T_3
+    & io_instruction_bits_instruction[14:12] == 3'h5 & _SUBTRACT_T_6;
+  assign io_decoded_instruction_bits_MULTIPLY = decode_pat[10];
+  assign io_decoded_instruction_bits_FENCE = decode_pat[2];
+  assign io_decoded_instruction_bits_FLUSH = decode_pat[1];
+  assign io_decoded_instruction_bits_MRET = decode_pat[6];
+  assign io_decoded_instruction_bits_ECALL = decode_pat[5];
+  assign io_decoded_instruction_bits_IS_IMM = decode_pat[7];
   assign io_decoded_instruction_bits_mem_signed = _GEN_0 | _GEN_1 | _GEN_2;
   assign io_decoded_instruction_bits_memory_type =
-    _needs_memory_T_1 ? 2'h1 : {_needs_memory_T, 1'h0};
+    decode_pat[4] ? 2'h1 : {decode_pat[3], 1'h0};
   assign io_decoded_instruction_bits_access_width =
     _GEN_0
       ? 2'h1
       : _GEN_1
           ? 2'h2
-          : _GEN_2
-              ? 2'h3
-              : io_instruction_bits_instruction[14:12] == 3'h4 & needs_memory
-                  ? 2'h1
-                  : {_needs_CSRs_T_8 & needs_memory, 1'h0};
+          : _GEN_2 ? 2'h3 : io_instruction_bits_instruction[14:12] == 3'h4 ? 2'h1 : 2'h2;
 endmodule
 
