@@ -1,5 +1,6 @@
 # ChaosCore
 
+https://hakamatassi.github.io/ChaosCore/
 
 ### What is ChaosCore?
 
@@ -45,6 +46,7 @@ python3 -m venv venv
 Then install the required libraries in this venv:
 
 ```
+source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
@@ -69,7 +71,17 @@ to your .bashrc
 
 # Installing SPIKE
 
-TODO
+This assumes /opt/riscv/bin was added to path as mentione in the previous section.
+```
+sudo apt-get install device-tree-compiler libboost-regex-dev libboost-system-dev
+git clone https://github.com/riscv-software-src/riscv-isa-sim
+cd riscv-isa-sim
+mkdir build
+cd build
+../configure --prefix=$RISCV
+make -j16
+sudo make install
+```
 
 
 # Generating ChaosCore

@@ -12,9 +12,30 @@ aux_links:
 
 color_scheme: dark
 
+callouts_level: loud
+callouts:
+  highlight:
+    title: Highlight
+    color: yellow
+  important:
+    title: Important
+    color: blue
+  new:
+    title: New
+    color: green
+  note:
+    title: Note
+    color: purple
+  warning:
+    title: Warning
+    color: red
+
 # Include necessary folders
 include:
   - _pages
   - Core Architecture
   - Regression
   - building
+
+sass:
+  quiet_deps: true

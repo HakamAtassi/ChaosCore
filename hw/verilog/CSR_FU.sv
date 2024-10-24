@@ -141,7 +141,32 @@ module CSR_FU(
   reg         mstatus_reg_WPRI2;
   reg         mstatus_reg_MIE;
   reg         mstatus_reg_SIE;
-  reg  [25:0] misa_reg_Extensions;
+  reg         misa_reg_A;
+  reg         misa_reg_B;
+  reg         misa_reg_C;
+  reg         misa_reg_D;
+  reg         misa_reg_E;
+  reg         misa_reg_F;
+  reg         misa_reg_G;
+  reg         misa_reg_H;
+  reg         misa_reg_I;
+  reg         misa_reg_J;
+  reg         misa_reg_K;
+  reg         misa_reg_L;
+  reg         misa_reg_M;
+  reg         misa_reg_N;
+  reg         misa_reg_O;
+  reg         misa_reg_P;
+  reg         misa_reg_Q;
+  reg         misa_reg_R;
+  reg         misa_reg_S;
+  reg         misa_reg_T;
+  reg         misa_reg_U;
+  reg         misa_reg_V;
+  reg         misa_reg_W;
+  reg         misa_reg_X;
+  reg         misa_reg_Y;
+  reg         misa_reg_Z;
   reg  [3:0]  misa_reg_WPRI;
   reg  [1:0]  misa_reg_MXL;
   reg  [31:0] medeleg_reg;
@@ -270,7 +295,34 @@ module CSR_FU(
             mie_reg_USIE}
          : 32'h0)
     | (machine_mode_CSR_OH_18
-         ? {misa_reg_Extensions, misa_reg_WPRI, misa_reg_MXL}
+         ? {misa_reg_A,
+            misa_reg_B,
+            misa_reg_C,
+            misa_reg_D,
+            misa_reg_E,
+            misa_reg_F,
+            misa_reg_G,
+            misa_reg_H,
+            misa_reg_I,
+            misa_reg_J,
+            misa_reg_K,
+            misa_reg_L,
+            misa_reg_M,
+            misa_reg_N,
+            misa_reg_O,
+            misa_reg_P,
+            misa_reg_Q,
+            misa_reg_R,
+            misa_reg_S,
+            misa_reg_T,
+            misa_reg_U,
+            misa_reg_V,
+            misa_reg_W,
+            misa_reg_X,
+            misa_reg_Y,
+            misa_reg_Z,
+            misa_reg_WPRI,
+            misa_reg_MXL}
          : 32'h0) | (machine_mode_CSR_OH_19 ? mconfigptr_reg_ptr : 32'h0)
     | (machine_mode_CSR_OH_20 ? mcycle_reg : 32'h0)
     | (machine_mode_CSR_OH_21
@@ -360,9 +412,34 @@ module CSR_FU(
       mstatus_reg_WPRI2 <= 1'h0;
       mstatus_reg_MIE <= 1'h0;
       mstatus_reg_SIE <= 1'h0;
-      misa_reg_Extensions <= 26'h0;
+      misa_reg_A <= 1'h0;
+      misa_reg_B <= 1'h0;
+      misa_reg_C <= 1'h0;
+      misa_reg_D <= 1'h0;
+      misa_reg_E <= 1'h0;
+      misa_reg_F <= 1'h0;
+      misa_reg_G <= 1'h0;
+      misa_reg_H <= 1'h0;
+      misa_reg_I <= 1'h1;
+      misa_reg_J <= 1'h0;
+      misa_reg_K <= 1'h0;
+      misa_reg_L <= 1'h0;
+      misa_reg_M <= 1'h1;
+      misa_reg_N <= 1'h0;
+      misa_reg_O <= 1'h0;
+      misa_reg_P <= 1'h0;
+      misa_reg_Q <= 1'h0;
+      misa_reg_R <= 1'h0;
+      misa_reg_S <= 1'h0;
+      misa_reg_T <= 1'h0;
+      misa_reg_U <= 1'h0;
+      misa_reg_V <= 1'h1;
+      misa_reg_W <= 1'h0;
+      misa_reg_X <= 1'h0;
+      misa_reg_Y <= 1'h0;
+      misa_reg_Z <= 1'h0;
       misa_reg_WPRI <= 4'h0;
-      misa_reg_MXL <= 2'h0;
+      misa_reg_MXL <= 2'h1;
       medeleg_reg <= 32'h0;
       mideleg_reg <= 32'h0;
       mie_reg_WPRI1 <= 20'h0;
@@ -460,7 +537,32 @@ module CSR_FU(
         mstatus_reg_SIE <= io_FU_input_bits_RS1_data[0];
       end
       if (input_CSR_write_request & machine_mode_CSR_OH_18) begin
-        misa_reg_Extensions <= io_FU_input_bits_RS1_data[31:6];
+        misa_reg_A <= io_FU_input_bits_RS1_data[31];
+        misa_reg_B <= io_FU_input_bits_RS1_data[30];
+        misa_reg_C <= io_FU_input_bits_RS1_data[29];
+        misa_reg_D <= io_FU_input_bits_RS1_data[28];
+        misa_reg_E <= io_FU_input_bits_RS1_data[27];
+        misa_reg_F <= io_FU_input_bits_RS1_data[26];
+        misa_reg_G <= io_FU_input_bits_RS1_data[25];
+        misa_reg_H <= io_FU_input_bits_RS1_data[24];
+        misa_reg_I <= io_FU_input_bits_RS1_data[23];
+        misa_reg_J <= io_FU_input_bits_RS1_data[22];
+        misa_reg_K <= io_FU_input_bits_RS1_data[21];
+        misa_reg_L <= io_FU_input_bits_RS1_data[20];
+        misa_reg_M <= io_FU_input_bits_RS1_data[19];
+        misa_reg_N <= io_FU_input_bits_RS1_data[18];
+        misa_reg_O <= io_FU_input_bits_RS1_data[17];
+        misa_reg_P <= io_FU_input_bits_RS1_data[16];
+        misa_reg_Q <= io_FU_input_bits_RS1_data[15];
+        misa_reg_R <= io_FU_input_bits_RS1_data[14];
+        misa_reg_S <= io_FU_input_bits_RS1_data[13];
+        misa_reg_T <= io_FU_input_bits_RS1_data[12];
+        misa_reg_U <= io_FU_input_bits_RS1_data[11];
+        misa_reg_V <= io_FU_input_bits_RS1_data[10];
+        misa_reg_W <= io_FU_input_bits_RS1_data[9];
+        misa_reg_X <= io_FU_input_bits_RS1_data[8];
+        misa_reg_Y <= io_FU_input_bits_RS1_data[7];
+        misa_reg_Z <= io_FU_input_bits_RS1_data[6];
         misa_reg_WPRI <= io_FU_input_bits_RS1_data[5:2];
         misa_reg_MXL <= io_FU_input_bits_RS1_data[1:0];
       end

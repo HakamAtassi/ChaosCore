@@ -446,3 +446,49 @@ object increment_perf_counter{
     (counter_new(63, 32), counter_new(31, 0))
   }
 }
+
+object initMisa {
+  def apply(coreParameters: CoreParameters): UInt = {
+    // Construct the misa register based on the coreConfig string in coreParameters
+
+    import coreParameters._
+
+    val mxlValue = userXLEN match {
+      case 32  => "b01".U(2.W) // MXL = 1 for RV32
+      case 64  => "b10".U(2.W) // MXL = 2 for RV64
+      case 128 => "b11".U(2.W) // MXL = 3 for RV128
+      case _   => "b00".U(2.W) // Default or invalid XLEN
+    }
+    Cat(
+      // Atomic extension or Reserved extension 'G'
+      (coreParameters.coreConfig.contains("A") || coreParameters.coreConfig.contains("G")).B,
+      coreParameters.coreConfig.contains("B").B, // B extension
+      coreParameters.coreConfig.contains("C").B, // Compressed extension
+      (coreParameters.coreConfig.contains("D") || coreParameters.coreConfig.contains("G")).B, // Double-precision floating-point or Reserved G
+      coreParameters.coreConfig.contains("E").B, // RV32E base ISA
+      (coreParameters.coreConfig.contains("F") || coreParameters.coreConfig.contains("G")).B, // Single-precision floating-point or Reserved G
+      0.U, // RESERVED
+      coreParameters.coreConfig.contains("H").B, // Hypervisor extension
+      (coreParameters.coreConfig.contains("I") || coreParameters.coreConfig.contains("G")).B, // RV32I/64I/128I base ISA or Reserved G
+      0.U, // RESERVED
+      0.U, // RESERVED
+      0.U, // RESERVED
+      (coreParameters.coreConfig.contains("M") || coreParameters.coreConfig.contains("G")).B, // Integer Multiply/Divide or Reserved G
+      0.U, // TENTATIVELY RESERVED FOR USER LEVEL INTERRUPTS EXTENSION
+      0.U, // RESERVED
+      0.U, // TENTATIVELY RESERVED FOR PACKED SIMD
+      coreParameters.coreConfig.contains("Q").B, // Quad-precision floating-point extension
+      0.U, // RESERVED
+      coreParameters.coreConfig.contains("S").B, // Supervisor mode implemented
+      0.U, // RESERVED
+      coreParameters.coreConfig.contains("U").B, // User mode implemented
+      coreParameters.coreConfig.contains("V").B, // Vector extension
+      0.U, // RESERVED
+      0.U, // NON-STANDARD EXTENSIONS PRESENT
+      0.U, // RESERVED
+      0.U, // RESERVED
+      0.U(4.W), // WPRI (Reserved bits - Write-preserve, read-ignore)
+      mxlValue
+    )
+  }
+}

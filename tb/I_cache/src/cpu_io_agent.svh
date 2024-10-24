@@ -6,7 +6,7 @@
 `include "cpu_io_monitor.svh"
 `include "cpu_io_driver.svh"
 `include "cache_agent.svh"
-`include "cache_req.svh"
+`include "test_sequences.svh"
 
 class cpu_io_agent extends cache_agent;
 
@@ -31,7 +31,7 @@ class cpu_io_agent extends cache_agent;
         uvm_config_db#(virtual instruction_cache_if)::set(this, "monitor", "cache_vif", cache_vif);
         uvm_config_db#(virtual instruction_cache_if)::set(this, "driver", "cache_vif", cache_vif);
 
-        seq = base_sequence::type_id::create("seq", this);
+        seq = random_with_flush_repeated::type_id::create("seq", this);
         sequencer = uvm_sequencer#(cache_req, cache_rsp)::type_id::create("sequencer", this);
         driver = cpu_io_driver::type_id::create("driver", this);
         monitor = cpu_io_monitor::type_id::create("monitor", this);

@@ -144,7 +144,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	println("========================================")
     println("========== BUILDING L1 D-CACHE =========")
-    println("===========================-============")
+    println("========================================")
     println("Parameters:")
     println("-----------------------------------------")
     println(f"Ways            : ${L1_DataCacheWays}%-10d")

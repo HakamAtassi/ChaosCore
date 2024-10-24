@@ -37,9 +37,40 @@ import chisel3.util._
 
 // Machine ISA register (misa) - 32 bits for RV32
 class misa extends Bundle {
-  val Extensions = UInt(26.W) // ISA extensions (one bit for each extension)
+    val A = Bool()  // Atomic extension
+    val B = Bool()  // B extension
+    val C = Bool()  // Compressed extension
+    val D = Bool()  // Double-precision floating-point extension
+    val E = Bool()  // RV32E base ISA
+    val F = Bool()  // Single-precision floating-point extension
+    val G = Bool()  // Reserved
+    val H = Bool()  // Hypervisor extension
+    val I = Bool()  // RV32I/64I/128I base ISA
+    val J = Bool()  // Reserved
+    val K = Bool()  // Reserved
+    val L = Bool()  // Reserved
+    val M = Bool()  // Integer Multiply/Divide extension
+    val N = Bool()  // Tentatively reserved for User-Level Interrupts
+    val O = Bool()  // Reserved
+    val P = Bool()  // Tentatively reserved for Packed-SIMD extension
+    val Q = Bool()  // Quad-precision floating-point extension
+    val R = Bool()  // Reserved
+    val S = Bool()  // Supervisor mode implemented
+    val T = Bool()  // Reserved
+    val U = Bool()  // User mode implemented
+    val V = Bool()  // Vector extension
+    val W = Bool()  // Reserved
+    val X = Bool()  // Non-standard extensions present
+    val Y = Bool()  // Reserved
+    val Z = Bool()  // Reserved
+
+    def init: UInt = {
+      0.U
+    }
+
   val WPRI       = UInt(4.W)  // Reserved bits (WPRI: write preserve, read ignore)
   val MXL        = UInt(2.W)  // Machine XLEN (for RV32 this should be 00)
+
 }
 
 // Vendor ID register (mvendorid) - 32 bits

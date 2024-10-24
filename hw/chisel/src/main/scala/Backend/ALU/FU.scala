@@ -57,7 +57,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     }); dontTouch(io)
 
 
-    val CSR_port = if (FUParam.supportsCSRs) Some(IO(Output(new CSR_out))) else None
+    val CSR_port = if (FUParam.supportsCSRs) Some(IO(Output(new CSR_out(coreParameters)))) else None
 
 
 

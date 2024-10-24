@@ -51,11 +51,11 @@ case class FUParams(
     val is_MEMFU:Boolean = supportsAddressGeneration
 
     require(
-        supportsInt || supportsMult || supportsDiv || supportsBranch || supportsAddressGeneration,
+        supportsInt || supportsMult || supportsDiv || supportsBranch || supportsCSRs || supportsAddressGeneration,
         "At least one of the functional unit supports must be true.")
 
     require(
-        !(supportsAddressGeneration && (supportsMult || supportsDiv || supportsBranch)),
+        !(supportsAddressGeneration && (supportsMult || supportsDiv || supportsBranch || supportsInt || supportsCSRs)),
         "FU cannot be an AGU and something else. Ie, AGUs are mutually exclusive from all other FU types"
     )
 
@@ -63,7 +63,4 @@ case class FUParams(
     require(
         !(is_INTFU && is_MEMFU), "FU cannot be INTFU and MEMFU at the same time. Please either disable all INT functionality or disable address generation for this FU."
         )
-
-
-
 }

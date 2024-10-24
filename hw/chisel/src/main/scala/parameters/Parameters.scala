@@ -35,12 +35,90 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
+
+object validate_backend{
+    def apply(coreConfig:String)(FUParamSeq: Seq[FUParams]): Boolean = {
+
+        val expects_mul = coreConfig.contains("M") || coreConfig.contains("G")
+
+        // There can only be 1 CSR
+        val csrUnits = FUParamSeq.count(_.supportsCSRs)
+        if (csrUnits != 1) {
+            println(s"There must be exactly 1 CSR unit, found $csrUnits.")
+            return false
+        }
+
+        // There can only be 1 AGU
+        val aguUnits = FUParamSeq.count(_.supportsAddressGeneration)
+        if (aguUnits != 1) {
+            println(s"There must be exactly 1 AGU unit, found $aguUnits.")
+            return false
+        }
+
+        // There must be at least 1 Branch Unit
+        val branchUnits = FUParamSeq.count(_.supportsBranch)
+        if (branchUnits < 1) {
+            println(s"There must be at least 1 Branch unit, found $branchUnits.")
+            return false
+        }
+
+        if (branchUnits > 1) {
+            println(s"[${Console.YELLOW}ChaosCore Warning${Console.RESET}] You have allocated more than 1 Branch Unit. This is not suggested for FPGA builds")
+        }
+
+
+
+        val branchPort = FUParamSeq.indexWhere(_.supportsBranch)
+        val csrPort = FUParamSeq.indexWhere(_.supportsCSRs)
+        val csrBranchOnDifferentPorts = branchPort != csrPort && branchPort >= 0 && csrPort >= 0
+        if (csrBranchOnDifferentPorts) {
+            println(s"[${Console.YELLOW}ChaosCore Warning${Console.RESET}] The CSR file and Branch Unit are exist in different FUs. This is not suggested for FPGA builds.")
+        }
+
+
+
+
+        // There must be at least 1 INT
+        val intUnits = FUParamSeq.count(_.supportsInt)
+        if (intUnits < 1) {
+            println(s"There must be at least 1 INT unit, found $intUnits.")
+            return false
+        }
+
+        // There must be at least 1 MUL
+        val mulUnits = FUParamSeq.count(_.supportsMult)
+        if(expects_mul){
+            if (mulUnits < 1) {
+                println(s"There must be at least 1 MUL unit, found $mulUnits.")
+                return false
+            }
+        }
+
+        // There must be at least 1 FPU (if enabled)
+        //val isFpuEnabled = true // Replace with actual condition
+        //if (isFpuEnabled) {
+            //val fpuUnits = FUParamSeq.count(_.supportsFPU) // Assuming supportsFPU exists
+            //if (fpuUnits < 1) {
+                //println(s"FPU is enabled, but no FPU units were found.")
+                //return false
+            //}
+        //}
+
+        true
+    }
+
+}
+
+
+
 case class CoreParameters(
+
 
     DEBUG: Boolean = false,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
     coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)
+    hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
 
@@ -81,6 +159,10 @@ case class CoreParameters(
     FPUportCount:Int = 0,  // not used if not "F"
 
 
+    ALUStages: Int = 2, // latency of the ALU unit
+
+
+
 
     /////////
     // MOB //
@@ -104,10 +186,10 @@ case class CoreParameters(
     // FIXME: check that there is only 1 CSRs, etc...
     // Add other requirements here
     FUParamSeq: Seq[FUParams] = Seq(
-        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=true, supportsCSRs=true,   supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsMult=true, supportsDiv=true, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
-        FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=true),
+        FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=true,   supportsDiv=true,  supportsBranch=true,  supportsCSRs=true,     supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
+        FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=true),
     )
 
     // TODO: 
@@ -115,6 +197,7 @@ case class CoreParameters(
     
 ){
 
+    println("Building ChaosCore parameters...")
 
     ///////////////////////////////////
     // DO NOT TOUCH THESE PARAMETERS //
@@ -172,13 +255,17 @@ case class CoreParameters(
     // REQUIREMENTS //
     //////////////////
 
-    val supportedExtensions = Seq("I", "IM", "IMA", "32G")
+    val supportedExtensions = Seq("I", "IM", "IMA", "32G")  // FIXME: coreConfig should just be a case class
 
     require(supportedExtensions.contains(userExtensions), 
     s"Invalid extensions: $userExtensions. Supported extensions are: ${supportedExtensions.mkString(", ")}")
 
+    require(validate_backend(coreConfig)(FUParamSeq))   // Ensure minimal required functional units
 
 
+
+
+    println("ChaosCore configuration done.")
 
 }
 

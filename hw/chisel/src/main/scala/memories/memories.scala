@@ -207,104 +207,29 @@ class ROB_shared_mem(coreParameters:CoreParameters, depth: Int) extends Module {
 
 }
 
-// make this parameterizable
-//class ROB_WB_mem(coreParameters:CoreParameters, depth: Int) extends Module { // 1 read, 1 write (allocate) + N write(FUs)
-  //val io = IO(new Bundle {
-    //// Port A (write only/Allocate)
-    //val addrA = Input(UInt(log2Ceil(depth).W))
-    //val writeDataA = Input(new ROB_WB(coreParameters))
-    //val writeEnableA = Input(Bool())
-
-    //// FU access
-    //val addrB = Input(UInt(log2Ceil(depth).W))
-    //val writeDataB = Input(new ROB_WB(coreParameters))
-    //val writeEnableB = Input(Bool())
-
-    //val addrC = Input(UInt(log2Ceil(depth).W)) //(write only/FU1)
-    //val writeDataC = Input(new ROB_WB(coreParameters))
-    //val writeEnableC = Input(Bool())
-
-    //val addrD = Input(UInt(log2Ceil(depth).W)) //(write only/FU2)
-    //val writeDataD = Input(new ROB_WB(coreParameters))
-    //val writeEnableD = Input(Bool())
-
-    //val addrE = Input(UInt(log2Ceil(depth).W)) //(write only/FU3)
-    //val writeDataE = Input(new ROB_WB(coreParameters))
-    //val writeEnableE = Input(Bool())
-    
-    //// Port C (read only)
-    //val addrG = Input(UInt(log2Ceil(depth).W))
-    //val readDataG = Output(new ROB_WB(coreParameters))
-
-    //val flush = Input(Bool())
-
-  //})
-
-
-  //val mem = SyncReadMem(depth, new ROB_WB(coreParameters))  // convert the module from using this memory
-  //val mem = VecInit(RegInit(Seq.fill(depth)(0.U.asTypeOf(new ROB_WB(coreParameters))))) // to this
-  //// ensure output latency is 1 cycle (register all outputs)
-
-
-  //when(io.writeEnableA) { // Allocate
-    //mem.write(io.addrA, io.writeDataA)
-  //}
-
-  //when(io.writeEnableB) { // FU1
-    //mem.write(io.addrB, io.writeDataB)
-  //}
-
-  //when(io.writeEnableC) { // FU2
-    //mem.write(io.addrC, io.writeDataC)
-  //}
-
-  //when(io.writeEnableD) { // FU3
-    //mem.write(io.addrD, io.writeDataD)
-  //}
-
-  //when(io.writeEnableE) { // FU4
-    //mem.write(io.addrE, io.writeDataE)
-  //}
-
-  //io.readDataG := mem.read(io.addrG, 1.B)
-
-  //when(io.flush){
-    //mem := Seq.fill(depth)(0.U.asTypeOf(new ROB_WB(coreParameters)))1
-  //}
-
-  ////dontTouch(io)
-//}
 
 class ROB_WB_mem(coreParameters: CoreParameters, depth: Int) extends Module {
   // This module represents a memory structure with 1 allocate port and N write ports for Function Units (FUs).
   // It allows reading from one port and flushing the memory content.
+  import coreParameters._
 
   val io = IO(new Bundle {
     // Port A (write only/Allocate): 
-    val addrA = Input(UInt(log2Ceil(depth).W)) 
-    val writeDataA = Input(new ROB_WB(coreParameters)) 
-    val writeEnableA = Input(Bool()) 
+
+
+    val allocateAddr = Input(UInt(log2Ceil(depth).W)) 
+    val allocateData = Input(new ROB_WB(coreParameters)) 
+    val allocateWriteEnable = Input(Bool()) 
 
     // FU access: Each FU has its own write port to update memory.
-    val addrB = Input(UInt(log2Ceil(depth).W)) 
-    val writeDataB = Input(new ROB_WB(coreParameters)) 
-    val writeEnableB = Input(Bool()) 
-
-    val addrC = Input(UInt(log2Ceil(depth).W)) 
-    val writeDataC = Input(new ROB_WB(coreParameters)) 
-    val writeEnableC = Input(Bool()) 
-
-    val addrD = Input(UInt(log2Ceil(depth).W)) 
-    val writeDataD = Input(new ROB_WB(coreParameters)) 
-    val writeEnableD = Input(Bool()) 
-
-    val addrE = Input(UInt(log2Ceil(depth).W)) 
-    val writeDataE = Input(new ROB_WB(coreParameters)) 
-    val writeEnableE = Input(Bool()) 
+    // WB ports
+    val WBAddr          = Input(Vec(portCount, UInt(log2Ceil(depth).W)))
+    val WBData          = Input(Vec(portCount, new ROB_WB(coreParameters)))
+    val WBWriteEnable   = Input(Vec(portCount, Bool()))
 
     // Port C (read only): Used for reading data from memory.
-    val addrG = Input(UInt(log2Ceil(depth).W)) 
-    val readDataG = Output(new ROB_WB(coreParameters)) 
+    val commitAddr     = Input(UInt(log2Ceil(depth).W)) 
+    val commitReadData = Output(new ROB_WB(coreParameters)) 
 
     val flush = Input(Bool()) // Signal to flush (reset) the entire memory.
   })
@@ -312,30 +237,21 @@ class ROB_WB_mem(coreParameters: CoreParameters, depth: Int) extends Module {
   // Memory declaration: A Vec of registers to hold ROB_WB entries.
   val mem = RegInit(VecInit(Seq.fill(depth)(0.U.asTypeOf(new ROB_WB(coreParameters)))))
 
-
-  when(io.writeEnableA) { // Allocate new entry into the memory.
-    mem(io.addrA) := io.writeDataA
+  when(io.allocateWriteEnable) {
+    mem(io.allocateAddr) := io.allocateData
   }
 
-  when(io.writeEnableB) { // FU1 writes to memory.
-    mem(io.addrB) := io.writeDataB
+  for(port <- 0 until fetchWidth){
+    when(io.WBWriteEnable(port)) {
+      mem(io.WBAddr(port)) := io.WBData(port)
+    }
   }
 
-  when(io.writeEnableC) { // FU2 writes to memory.
-    mem(io.addrC) := io.writeDataC
-  }
 
-  when(io.writeEnableD) { // FU3 writes to memory.
-    mem(io.addrD) := io.writeDataD
-  }
-
-  when(io.writeEnableE) { // FU4 writes to memory.
-    mem(io.addrE) := io.writeDataE
-  }
 
   // Flopping the read data to maintain 1 cycle latency.
-  val readDataReg = RegNext(mem(io.addrG))
-  io.readDataG := readDataReg
+  val readDataReg = RegNext(mem(io.commitAddr))
+  io.commitReadData := readDataReg
 
   // Flush operation: Resets all memory entries to 0 when flush is asserted.
   when(io.flush) {

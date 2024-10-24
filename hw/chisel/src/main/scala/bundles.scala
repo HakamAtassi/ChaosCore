@@ -208,7 +208,7 @@ class prediction(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
-    val br_type     =   br_type_t()
+    val br_type     =   br_type_t() 
     val br_mask     =   Vec(fetchWidth, Bool()) // OH of the taken branch in the fetch packet
 }
 
@@ -236,14 +236,29 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
 
+    def needs_MEM_RS = {
+        needs_memory
+    }
+
+    //def needs_FPU_RS = {
+    //}
+
+    def needs_INT_RS = {
+        needs_ALU  || 
+        needs_CSRs || 
+        needs_div  || 
+        needs_mul  || 
+        FENCE  || 
+        needs_branch_unit
+    }
+
+
     // ~30 bits
     val ready_bits          =  new sources_ready()
 
-    val RD                  =  UInt(architecturalRegBits.W) // Actual dest
-    val PRD                 =  UInt(physicalRegBits.W) // Actual dest
-    val PRDold              =  UInt(physicalRegBits.W) // Actual dest
-
-
+    val RD                  =  UInt(architecturalRegBits.W) 
+    val PRD                 =  UInt(physicalRegBits.W)
+    val PRDold              =  UInt(physicalRegBits.W)
 
     val RD_valid            =  Bool()
     val RS1                 =  UInt(physicalRegBits.W)
@@ -260,36 +275,28 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 
     // uOp info ~20 bits
     val instructionType     =  InstructionType()
-
-    val portID              =  UInt(log2Ceil(4).W)  // Decoder assings port ID
     
-    val RS_type             =  RS_types()
 
     val needs_ALU           =  Bool()
+    //val needs_FPU           =  Bool() // TODO
     val needs_branch_unit   =  Bool()
     val needs_CSRs          =  Bool()
     val needs_memory        =  Bool()
+    val needs_mul           =  Bool()
+    val needs_div           =  Bool()
 
     val SUBTRACT            =  Bool()
     val MULTIPLY            =  Bool()
     val FENCE               =  Bool()
     val MRET                =  Bool()
-    //val CSR                 =  Bool()
-
-    val IS_IMM              =  Bool() 
-
-
     val ECALL               =  Bool() 
 
+    val IS_IMM              =  Bool() 
 
     val mem_signed          =  Bool()
     val memory_type         =  memory_type_t()   // LOAD/STORE
     val access_width        =  access_width_t()  // B/HW/W
 
-
-    //val instruction_ID          = UInt(64.W)    // for debug only
-
-    // ADD atomic instructions
 }
 
 
@@ -391,7 +398,7 @@ class FTQ_entry(coreParameters:CoreParameters) extends Bundle{
     // Branch validation data
     val fetch_PC = UInt(32.W)    // fetch packet pc of the base instruction
 
-    val is_misprediction    = Bool()   // If set, predicted_expected_PC represents expected PC. Otherwise, it represents predicted PC
+    val is_misprediction    = Bool()        // If set, predicted_expected_PC represents expected PC. Otherwise, it represents predicted PC
     val predicted_PC        = UInt(32.W)    // if fetch packet contains a branch, this containts the dominant branch address
                                             // if fetch packet does not contain a taken branch, the dominant branch just PC+N
 
@@ -433,8 +440,118 @@ class ROB_output(coreParameters:CoreParameters) extends Bundle{
     val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
     val exception               = Vec(fetchWidth, Bool())                       
     val exception_cause         = Vec(fetchWidth, EX_CAUSE())                       
+}
+
+
+
+
+
+class ROB_row(coreParameters:CoreParameters) extends Bundle{
+    // A complete row of the ROB
+    // combines all memory components in to a single entry
+
+    import coreParameters._
+
+
+    val valid = Bool()
+
+    // shared info
+    val fetch_PC                = UInt(32.W)
+    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
+    val prediction              = new prediction(coreParameters)
+
+    // Saved State
+    val GHR                     = UInt(GHRWidth.W)
+    val NEXT                    = UInt(log2Ceil(RASEntries).W)
+    val TOS                     = UInt(log2Ceil(RASEntries).W)
+    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
+
+    // Instruction
+    val resolved_branch         = Vec(fetchWidth, new resolved_branch(coreParameters))
+    val WB                      = Vec(fetchWidth, new ROB_WB(coreParameters))
+    val insn                    = Vec(fetchWidth, new ROB_entry(coreParameters))
+
+
+    // CSR
+    val CSR_port = new CSR_out(coreParameters)
+
+
+    // UTILS
+    def is_exception(index:Int):Bool = {
+        WB(index).exception && insn(index).valid
+    }
+
+    def get_exception_cause(index:Int): EX_CAUSE.Type = {
+        WB(index).exception_cause 
+    }
+
+    def is_misprediction(index:Int): Bool = {
+        val incorrect_dir    = (resolved_branch(index).T_NT =/= prediction.br_mask(index)) 
+        val incorrect_target = (resolved_branch(index).target =/= prediction.target(index)) && resolved_branch(index).T_NT
+        (incorrect_dir || incorrect_target) && is_branch(index)
+    }
+
+    def is_flush(index:Int): Bool = {
+        (insn(index).is_fence || insn(index).is_CSR) && insn(index).valid
+    }
+
+    def instruction_PC(index:Int): UInt = {
+        fetch_PC + (index*4).U
+    }
+
+    def is_branch(index:Int): Bool = {
+        insn(index).is_branch && insn(index).valid
+    }
+
+    def get_next_PC(index:Int): UInt = {
+        // if exception, return MTVEC
+        // if branch, return insn PC + 4 if not taken
+        // if branch, return target if taken
+        //var next_PC = 0.U(32.W)
+        val next_PC = Wire(UInt(32.W))
+        when(is_branch(index)){
+            when(resolved_branch(index).T_NT){
+                next_PC := resolved_branch(index).target
+            }.otherwise{
+                next_PC := instruction_PC(index) + 4.U
+            }
+        }.elsewhen(is_exception(index)){
+            next_PC := CSR_port.mtvec.asUInt
+        }.elsewhen(is_flush(index)){
+            next_PC := instruction_PC(index) + 4.U
+        }.otherwise{
+            next_PC := instruction_PC(index) + 4.U
+        }
+        next_PC
+    }
+
+
+
+
+
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class ROB_shared(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
@@ -789,7 +906,7 @@ object ACCESS extends ChiselEnum{
 
 
 
-class CSR_out extends Bundle{
+class CSR_out(coreParameters:CoreParameters) extends Bundle{
     // globally viewable CSR
 
     val mtvec = new mtvec()
