@@ -123,6 +123,7 @@ module execution_engine(
                 io_FU_input_0_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_0_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_0_bits_decoded_instruction_FENCE,
+                io_FU_input_0_bits_decoded_instruction_FLUSH,
                 io_FU_input_0_bits_decoded_instruction_MRET,
                 io_FU_input_0_bits_decoded_instruction_ECALL,
                 io_FU_input_0_bits_decoded_instruction_IS_IMM,
@@ -159,6 +160,7 @@ module execution_engine(
                 io_FU_input_1_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_1_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_1_bits_decoded_instruction_FENCE,
+                io_FU_input_1_bits_decoded_instruction_FLUSH,
                 io_FU_input_1_bits_decoded_instruction_MRET,
                 io_FU_input_1_bits_decoded_instruction_ECALL,
                 io_FU_input_1_bits_decoded_instruction_IS_IMM,
@@ -195,6 +197,7 @@ module execution_engine(
                 io_FU_input_2_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_2_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_2_bits_decoded_instruction_FENCE,
+                io_FU_input_2_bits_decoded_instruction_FLUSH,
                 io_FU_input_2_bits_decoded_instruction_MRET,
                 io_FU_input_2_bits_decoded_instruction_ECALL,
                 io_FU_input_2_bits_decoded_instruction_IS_IMM,
@@ -230,6 +233,7 @@ module execution_engine(
                 io_FU_input_3_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_3_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_3_bits_decoded_instruction_FENCE,
+                io_FU_input_3_bits_decoded_instruction_FLUSH,
                 io_FU_input_3_bits_decoded_instruction_MRET,
                 io_FU_input_3_bits_decoded_instruction_ECALL,
                 io_FU_input_3_bits_decoded_instruction_IS_IMM,
@@ -383,6 +387,8 @@ module execution_engine(
       (io_FU_input_0_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_0_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_FLUSH
+      (io_FU_input_0_bits_decoded_instruction_FLUSH),
     .io_FU_input_bits_decoded_instruction_MRET
       (io_FU_input_0_bits_decoded_instruction_MRET),
     .io_FU_input_bits_decoded_instruction_ECALL
@@ -589,6 +595,8 @@ module execution_engine(
       (io_FU_input_1_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_1_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_FLUSH
+      (io_FU_input_1_bits_decoded_instruction_FLUSH),
     .io_FU_input_bits_decoded_instruction_MRET
       (io_FU_input_1_bits_decoded_instruction_MRET),
     .io_FU_input_bits_decoded_instruction_ECALL
@@ -798,6 +806,8 @@ module execution_engine(
       (io_FU_input_2_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_2_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_FLUSH
+      (io_FU_input_2_bits_decoded_instruction_FLUSH),
     .io_FU_input_bits_decoded_instruction_MRET
       (io_FU_input_2_bits_decoded_instruction_MRET),
     .io_FU_input_bits_decoded_instruction_ECALL
@@ -1003,6 +1013,8 @@ module execution_engine(
       (io_FU_input_3_bits_decoded_instruction_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_FENCE
       (io_FU_input_3_bits_decoded_instruction_FENCE),
+    .io_FU_input_bits_decoded_instruction_FLUSH
+      (io_FU_input_3_bits_decoded_instruction_FLUSH),
     .io_FU_input_bits_decoded_instruction_MRET
       (io_FU_input_3_bits_decoded_instruction_MRET),
     .io_FU_input_bits_decoded_instruction_ECALL

@@ -20,11 +20,11 @@ Queue16_frontend_memory_request.sv
 ram_16x40.sv
 Queue16_prediction.sv
 instruction_fetch.sv
-decoder.sv
-ram_2x498.sv
+improved_decoder.sv
+ram_2x502.sv
 Queue2_decoded_fetch_packet.sv
 fetch_packet_decoder.sv
-ram_16x498.sv
+ram_16x502.sv
 Queue16_decoded_fetch_packet.sv
 free_list.sv
 WAW_handler.sv

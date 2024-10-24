@@ -153,6 +153,7 @@ module backend(
                 io_backend_packet_0_bits_SUBTRACT,
                 io_backend_packet_0_bits_MULTIPLY,
                 io_backend_packet_0_bits_FENCE,
+                io_backend_packet_0_bits_FLUSH,
                 io_backend_packet_0_bits_MRET,
                 io_backend_packet_0_bits_ECALL,
                 io_backend_packet_0_bits_IS_IMM,
@@ -186,6 +187,7 @@ module backend(
                 io_backend_packet_1_bits_SUBTRACT,
                 io_backend_packet_1_bits_MULTIPLY,
                 io_backend_packet_1_bits_FENCE,
+                io_backend_packet_1_bits_FLUSH,
                 io_backend_packet_1_bits_MRET,
                 io_backend_packet_1_bits_ECALL,
                 io_backend_packet_1_bits_IS_IMM,
@@ -219,6 +221,7 @@ module backend(
                 io_backend_packet_2_bits_SUBTRACT,
                 io_backend_packet_2_bits_MULTIPLY,
                 io_backend_packet_2_bits_FENCE,
+                io_backend_packet_2_bits_FLUSH,
                 io_backend_packet_2_bits_MRET,
                 io_backend_packet_2_bits_ECALL,
                 io_backend_packet_2_bits_IS_IMM,
@@ -252,6 +255,7 @@ module backend(
                 io_backend_packet_3_bits_SUBTRACT,
                 io_backend_packet_3_bits_MULTIPLY,
                 io_backend_packet_3_bits_FENCE,
+                io_backend_packet_3_bits_FLUSH,
                 io_backend_packet_3_bits_MRET,
                 io_backend_packet_3_bits_ECALL,
                 io_backend_packet_3_bits_IS_IMM,
@@ -491,6 +495,7 @@ module backend(
   wire        _MEM_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _MEM_RS_io_RF_inputs_0_bits_MULTIPLY;
   wire        _MEM_RS_io_RF_inputs_0_bits_FENCE;
+  wire        _MEM_RS_io_RF_inputs_0_bits_FLUSH;
   wire        _MEM_RS_io_RF_inputs_0_bits_MRET;
   wire        _MEM_RS_io_RF_inputs_0_bits_ECALL;
   wire        _MEM_RS_io_RF_inputs_0_bits_IS_IMM;
@@ -527,6 +532,7 @@ module backend(
   wire        _INT_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_0_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_0_bits_FENCE;
+  wire        _INT_RS_io_RF_inputs_0_bits_FLUSH;
   wire        _INT_RS_io_RF_inputs_0_bits_MRET;
   wire        _INT_RS_io_RF_inputs_0_bits_ECALL;
   wire        _INT_RS_io_RF_inputs_0_bits_IS_IMM;
@@ -559,6 +565,7 @@ module backend(
   wire        _INT_RS_io_RF_inputs_1_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_1_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_1_bits_FENCE;
+  wire        _INT_RS_io_RF_inputs_1_bits_FLUSH;
   wire        _INT_RS_io_RF_inputs_1_bits_MRET;
   wire        _INT_RS_io_RF_inputs_1_bits_ECALL;
   wire        _INT_RS_io_RF_inputs_1_bits_IS_IMM;
@@ -591,6 +598,7 @@ module backend(
   wire        _INT_RS_io_RF_inputs_2_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_2_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_2_bits_FENCE;
+  wire        _INT_RS_io_RF_inputs_2_bits_FLUSH;
   wire        _INT_RS_io_RF_inputs_2_bits_MRET;
   wire        _INT_RS_io_RF_inputs_2_bits_ECALL;
   wire        _INT_RS_io_RF_inputs_2_bits_IS_IMM;
@@ -637,6 +645,7 @@ module backend(
   reg         read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_0_decoded_instruction_REG_FENCE;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_FLUSH;
   reg         read_decoded_instructions_0_decoded_instruction_REG_MRET;
   reg         read_decoded_instructions_0_decoded_instruction_REG_ECALL;
   reg         read_decoded_instructions_0_decoded_instruction_REG_IS_IMM;
@@ -669,6 +678,7 @@ module backend(
   reg         read_decoded_instructions_1_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_1_decoded_instruction_REG_FENCE;
+  reg         read_decoded_instructions_1_decoded_instruction_REG_FLUSH;
   reg         read_decoded_instructions_1_decoded_instruction_REG_MRET;
   reg         read_decoded_instructions_1_decoded_instruction_REG_ECALL;
   reg         read_decoded_instructions_1_decoded_instruction_REG_IS_IMM;
@@ -701,6 +711,7 @@ module backend(
   reg         read_decoded_instructions_2_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_2_decoded_instruction_REG_FENCE;
+  reg         read_decoded_instructions_2_decoded_instruction_REG_FLUSH;
   reg         read_decoded_instructions_2_decoded_instruction_REG_MRET;
   reg         read_decoded_instructions_2_decoded_instruction_REG_ECALL;
   reg         read_decoded_instructions_2_decoded_instruction_REG_IS_IMM;
@@ -733,6 +744,7 @@ module backend(
   reg         read_decoded_instructions_3_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_3_decoded_instruction_REG_FENCE;
+  reg         read_decoded_instructions_3_decoded_instruction_REG_FLUSH;
   reg         read_decoded_instructions_3_decoded_instruction_REG_MRET;
   reg         read_decoded_instructions_3_decoded_instruction_REG_ECALL;
   reg         read_decoded_instructions_3_decoded_instruction_REG_IS_IMM;
@@ -791,6 +803,8 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_MULTIPLY;
     read_decoded_instructions_0_decoded_instruction_REG_FENCE <=
       _INT_RS_io_RF_inputs_0_bits_FENCE;
+    read_decoded_instructions_0_decoded_instruction_REG_FLUSH <=
+      _INT_RS_io_RF_inputs_0_bits_FLUSH;
     read_decoded_instructions_0_decoded_instruction_REG_MRET <=
       _INT_RS_io_RF_inputs_0_bits_MRET;
     read_decoded_instructions_0_decoded_instruction_REG_ECALL <=
@@ -854,6 +868,8 @@ module backend(
       _INT_RS_io_RF_inputs_1_bits_MULTIPLY;
     read_decoded_instructions_1_decoded_instruction_REG_FENCE <=
       _INT_RS_io_RF_inputs_1_bits_FENCE;
+    read_decoded_instructions_1_decoded_instruction_REG_FLUSH <=
+      _INT_RS_io_RF_inputs_1_bits_FLUSH;
     read_decoded_instructions_1_decoded_instruction_REG_MRET <=
       _INT_RS_io_RF_inputs_1_bits_MRET;
     read_decoded_instructions_1_decoded_instruction_REG_ECALL <=
@@ -917,6 +933,8 @@ module backend(
       _INT_RS_io_RF_inputs_2_bits_MULTIPLY;
     read_decoded_instructions_2_decoded_instruction_REG_FENCE <=
       _INT_RS_io_RF_inputs_2_bits_FENCE;
+    read_decoded_instructions_2_decoded_instruction_REG_FLUSH <=
+      _INT_RS_io_RF_inputs_2_bits_FLUSH;
     read_decoded_instructions_2_decoded_instruction_REG_MRET <=
       _INT_RS_io_RF_inputs_2_bits_MRET;
     read_decoded_instructions_2_decoded_instruction_REG_ECALL <=
@@ -980,6 +998,8 @@ module backend(
       _MEM_RS_io_RF_inputs_0_bits_MULTIPLY;
     read_decoded_instructions_3_decoded_instruction_REG_FENCE <=
       _MEM_RS_io_RF_inputs_0_bits_FENCE;
+    read_decoded_instructions_3_decoded_instruction_REG_FLUSH <=
+      _MEM_RS_io_RF_inputs_0_bits_FLUSH;
     read_decoded_instructions_3_decoded_instruction_REG_MRET <=
       _MEM_RS_io_RF_inputs_0_bits_MRET;
     read_decoded_instructions_3_decoded_instruction_REG_ECALL <=
@@ -1042,6 +1062,7 @@ module backend(
     .io_backend_packet_0_bits_SUBTRACT             (io_backend_packet_0_bits_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY             (io_backend_packet_0_bits_MULTIPLY),
     .io_backend_packet_0_bits_FENCE                (io_backend_packet_0_bits_FENCE),
+    .io_backend_packet_0_bits_FLUSH                (io_backend_packet_0_bits_FLUSH),
     .io_backend_packet_0_bits_MRET                 (io_backend_packet_0_bits_MRET),
     .io_backend_packet_0_bits_ECALL                (io_backend_packet_0_bits_ECALL),
     .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
@@ -1086,6 +1107,7 @@ module backend(
     .io_backend_packet_1_bits_SUBTRACT             (io_backend_packet_1_bits_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY             (io_backend_packet_1_bits_MULTIPLY),
     .io_backend_packet_1_bits_FENCE                (io_backend_packet_1_bits_FENCE),
+    .io_backend_packet_1_bits_FLUSH                (io_backend_packet_1_bits_FLUSH),
     .io_backend_packet_1_bits_MRET                 (io_backend_packet_1_bits_MRET),
     .io_backend_packet_1_bits_ECALL                (io_backend_packet_1_bits_ECALL),
     .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
@@ -1130,6 +1152,7 @@ module backend(
     .io_backend_packet_2_bits_SUBTRACT             (io_backend_packet_2_bits_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY             (io_backend_packet_2_bits_MULTIPLY),
     .io_backend_packet_2_bits_FENCE                (io_backend_packet_2_bits_FENCE),
+    .io_backend_packet_2_bits_FLUSH                (io_backend_packet_2_bits_FLUSH),
     .io_backend_packet_2_bits_MRET                 (io_backend_packet_2_bits_MRET),
     .io_backend_packet_2_bits_ECALL                (io_backend_packet_2_bits_ECALL),
     .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
@@ -1174,6 +1197,7 @@ module backend(
     .io_backend_packet_3_bits_SUBTRACT             (io_backend_packet_3_bits_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY             (io_backend_packet_3_bits_MULTIPLY),
     .io_backend_packet_3_bits_FENCE                (io_backend_packet_3_bits_FENCE),
+    .io_backend_packet_3_bits_FLUSH                (io_backend_packet_3_bits_FLUSH),
     .io_backend_packet_3_bits_MRET                 (io_backend_packet_3_bits_MRET),
     .io_backend_packet_3_bits_ECALL                (io_backend_packet_3_bits_ECALL),
     .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
@@ -1352,6 +1376,7 @@ module backend(
     .io_RF_inputs_0_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_0_bits_SUBTRACT),
     .io_RF_inputs_0_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_0_bits_MULTIPLY),
     .io_RF_inputs_0_bits_FENCE                     (_INT_RS_io_RF_inputs_0_bits_FENCE),
+    .io_RF_inputs_0_bits_FLUSH                     (_INT_RS_io_RF_inputs_0_bits_FLUSH),
     .io_RF_inputs_0_bits_MRET                      (_INT_RS_io_RF_inputs_0_bits_MRET),
     .io_RF_inputs_0_bits_ECALL                     (_INT_RS_io_RF_inputs_0_bits_ECALL),
     .io_RF_inputs_0_bits_IS_IMM                    (_INT_RS_io_RF_inputs_0_bits_IS_IMM),
@@ -1403,6 +1428,7 @@ module backend(
     .io_RF_inputs_1_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_1_bits_SUBTRACT),
     .io_RF_inputs_1_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_1_bits_MULTIPLY),
     .io_RF_inputs_1_bits_FENCE                     (_INT_RS_io_RF_inputs_1_bits_FENCE),
+    .io_RF_inputs_1_bits_FLUSH                     (_INT_RS_io_RF_inputs_1_bits_FLUSH),
     .io_RF_inputs_1_bits_MRET                      (_INT_RS_io_RF_inputs_1_bits_MRET),
     .io_RF_inputs_1_bits_ECALL                     (_INT_RS_io_RF_inputs_1_bits_ECALL),
     .io_RF_inputs_1_bits_IS_IMM                    (_INT_RS_io_RF_inputs_1_bits_IS_IMM),
@@ -1454,6 +1480,7 @@ module backend(
     .io_RF_inputs_2_bits_SUBTRACT                  (_INT_RS_io_RF_inputs_2_bits_SUBTRACT),
     .io_RF_inputs_2_bits_MULTIPLY                  (_INT_RS_io_RF_inputs_2_bits_MULTIPLY),
     .io_RF_inputs_2_bits_FENCE                     (_INT_RS_io_RF_inputs_2_bits_FENCE),
+    .io_RF_inputs_2_bits_FLUSH                     (_INT_RS_io_RF_inputs_2_bits_FLUSH),
     .io_RF_inputs_2_bits_MRET                      (_INT_RS_io_RF_inputs_2_bits_MRET),
     .io_RF_inputs_2_bits_ECALL                     (_INT_RS_io_RF_inputs_2_bits_ECALL),
     .io_RF_inputs_2_bits_IS_IMM                    (_INT_RS_io_RF_inputs_2_bits_IS_IMM),
@@ -1508,6 +1535,7 @@ module backend(
     .io_backend_packet_0_bits_SUBTRACT             (io_backend_packet_0_bits_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY             (io_backend_packet_0_bits_MULTIPLY),
     .io_backend_packet_0_bits_FENCE                (io_backend_packet_0_bits_FENCE),
+    .io_backend_packet_0_bits_FLUSH                (io_backend_packet_0_bits_FLUSH),
     .io_backend_packet_0_bits_MRET                 (io_backend_packet_0_bits_MRET),
     .io_backend_packet_0_bits_ECALL                (io_backend_packet_0_bits_ECALL),
     .io_backend_packet_0_bits_IS_IMM               (io_backend_packet_0_bits_IS_IMM),
@@ -1548,6 +1576,7 @@ module backend(
     .io_backend_packet_1_bits_SUBTRACT             (io_backend_packet_1_bits_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY             (io_backend_packet_1_bits_MULTIPLY),
     .io_backend_packet_1_bits_FENCE                (io_backend_packet_1_bits_FENCE),
+    .io_backend_packet_1_bits_FLUSH                (io_backend_packet_1_bits_FLUSH),
     .io_backend_packet_1_bits_MRET                 (io_backend_packet_1_bits_MRET),
     .io_backend_packet_1_bits_ECALL                (io_backend_packet_1_bits_ECALL),
     .io_backend_packet_1_bits_IS_IMM               (io_backend_packet_1_bits_IS_IMM),
@@ -1588,6 +1617,7 @@ module backend(
     .io_backend_packet_2_bits_SUBTRACT             (io_backend_packet_2_bits_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY             (io_backend_packet_2_bits_MULTIPLY),
     .io_backend_packet_2_bits_FENCE                (io_backend_packet_2_bits_FENCE),
+    .io_backend_packet_2_bits_FLUSH                (io_backend_packet_2_bits_FLUSH),
     .io_backend_packet_2_bits_MRET                 (io_backend_packet_2_bits_MRET),
     .io_backend_packet_2_bits_ECALL                (io_backend_packet_2_bits_ECALL),
     .io_backend_packet_2_bits_IS_IMM               (io_backend_packet_2_bits_IS_IMM),
@@ -1628,6 +1658,7 @@ module backend(
     .io_backend_packet_3_bits_SUBTRACT             (io_backend_packet_3_bits_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY             (io_backend_packet_3_bits_MULTIPLY),
     .io_backend_packet_3_bits_FENCE                (io_backend_packet_3_bits_FENCE),
+    .io_backend_packet_3_bits_FLUSH                (io_backend_packet_3_bits_FLUSH),
     .io_backend_packet_3_bits_MRET                 (io_backend_packet_3_bits_MRET),
     .io_backend_packet_3_bits_ECALL                (io_backend_packet_3_bits_ECALL),
     .io_backend_packet_3_bits_IS_IMM               (io_backend_packet_3_bits_IS_IMM),
@@ -1806,6 +1837,7 @@ module backend(
     .io_RF_inputs_0_bits_SUBTRACT                  (_MEM_RS_io_RF_inputs_0_bits_SUBTRACT),
     .io_RF_inputs_0_bits_MULTIPLY                  (_MEM_RS_io_RF_inputs_0_bits_MULTIPLY),
     .io_RF_inputs_0_bits_FENCE                     (_MEM_RS_io_RF_inputs_0_bits_FENCE),
+    .io_RF_inputs_0_bits_FLUSH                     (_MEM_RS_io_RF_inputs_0_bits_FLUSH),
     .io_RF_inputs_0_bits_MRET                      (_MEM_RS_io_RF_inputs_0_bits_MRET),
     .io_RF_inputs_0_bits_ECALL                     (_MEM_RS_io_RF_inputs_0_bits_ECALL),
     .io_RF_inputs_0_bits_IS_IMM                    (_MEM_RS_io_RF_inputs_0_bits_IS_IMM),
@@ -1871,6 +1903,7 @@ module backend(
     .io_reserve_0_bits_MULTIPLY
       (io_backend_packet_0_bits_MULTIPLY),
     .io_reserve_0_bits_FENCE                            (io_backend_packet_0_bits_FENCE),
+    .io_reserve_0_bits_FLUSH                            (io_backend_packet_0_bits_FLUSH),
     .io_reserve_0_bits_MRET                             (io_backend_packet_0_bits_MRET),
     .io_reserve_0_bits_ECALL                            (io_backend_packet_0_bits_ECALL),
     .io_reserve_0_bits_IS_IMM                           (io_backend_packet_0_bits_IS_IMM),
@@ -1924,6 +1957,7 @@ module backend(
     .io_reserve_1_bits_MULTIPLY
       (io_backend_packet_1_bits_MULTIPLY),
     .io_reserve_1_bits_FENCE                            (io_backend_packet_1_bits_FENCE),
+    .io_reserve_1_bits_FLUSH                            (io_backend_packet_1_bits_FLUSH),
     .io_reserve_1_bits_MRET                             (io_backend_packet_1_bits_MRET),
     .io_reserve_1_bits_ECALL                            (io_backend_packet_1_bits_ECALL),
     .io_reserve_1_bits_IS_IMM                           (io_backend_packet_1_bits_IS_IMM),
@@ -1977,6 +2011,7 @@ module backend(
     .io_reserve_2_bits_MULTIPLY
       (io_backend_packet_2_bits_MULTIPLY),
     .io_reserve_2_bits_FENCE                            (io_backend_packet_2_bits_FENCE),
+    .io_reserve_2_bits_FLUSH                            (io_backend_packet_2_bits_FLUSH),
     .io_reserve_2_bits_MRET                             (io_backend_packet_2_bits_MRET),
     .io_reserve_2_bits_ECALL                            (io_backend_packet_2_bits_ECALL),
     .io_reserve_2_bits_IS_IMM                           (io_backend_packet_2_bits_IS_IMM),
@@ -2030,6 +2065,7 @@ module backend(
     .io_reserve_3_bits_MULTIPLY
       (io_backend_packet_3_bits_MULTIPLY),
     .io_reserve_3_bits_FENCE                            (io_backend_packet_3_bits_FENCE),
+    .io_reserve_3_bits_FLUSH                            (io_backend_packet_3_bits_FLUSH),
     .io_reserve_3_bits_MRET                             (io_backend_packet_3_bits_MRET),
     .io_reserve_3_bits_ECALL                            (io_backend_packet_3_bits_ECALL),
     .io_reserve_3_bits_IS_IMM                           (io_backend_packet_3_bits_IS_IMM),
@@ -2418,6 +2454,8 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_0_bits_decoded_instruction_FENCE
       (read_decoded_instructions_0_decoded_instruction_REG_FENCE),
+    .io_FU_input_0_bits_decoded_instruction_FLUSH
+      (read_decoded_instructions_0_decoded_instruction_REG_FLUSH),
     .io_FU_input_0_bits_decoded_instruction_MRET
       (read_decoded_instructions_0_decoded_instruction_REG_MRET),
     .io_FU_input_0_bits_decoded_instruction_ECALL
@@ -2487,6 +2525,8 @@ module backend(
       (read_decoded_instructions_1_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_1_bits_decoded_instruction_FENCE
       (read_decoded_instructions_1_decoded_instruction_REG_FENCE),
+    .io_FU_input_1_bits_decoded_instruction_FLUSH
+      (read_decoded_instructions_1_decoded_instruction_REG_FLUSH),
     .io_FU_input_1_bits_decoded_instruction_MRET
       (read_decoded_instructions_1_decoded_instruction_REG_MRET),
     .io_FU_input_1_bits_decoded_instruction_ECALL
@@ -2556,6 +2596,8 @@ module backend(
       (read_decoded_instructions_2_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_2_bits_decoded_instruction_FENCE
       (read_decoded_instructions_2_decoded_instruction_REG_FENCE),
+    .io_FU_input_2_bits_decoded_instruction_FLUSH
+      (read_decoded_instructions_2_decoded_instruction_REG_FLUSH),
     .io_FU_input_2_bits_decoded_instruction_MRET
       (read_decoded_instructions_2_decoded_instruction_REG_MRET),
     .io_FU_input_2_bits_decoded_instruction_ECALL
@@ -2623,6 +2665,8 @@ module backend(
       (read_decoded_instructions_3_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_3_bits_decoded_instruction_FENCE
       (read_decoded_instructions_3_decoded_instruction_REG_FENCE),
+    .io_FU_input_3_bits_decoded_instruction_FLUSH
+      (read_decoded_instructions_3_decoded_instruction_REG_FLUSH),
     .io_FU_input_3_bits_decoded_instruction_MRET
       (read_decoded_instructions_3_decoded_instruction_REG_MRET),
     .io_FU_input_3_bits_decoded_instruction_ECALL

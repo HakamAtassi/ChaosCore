@@ -288,6 +288,7 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val SUBTRACT            =  Bool()
     val MULTIPLY            =  Bool()
     val FENCE               =  Bool()
+    val FLUSH               =  Bool()
     val MRET                =  Bool()
     val ECALL               =  Bool() 
 
@@ -372,6 +373,7 @@ object InstructionType extends ChiselEnum {
     val SYSTEM      = Value("b11100".U)
     // RESERVED
     val CUSTOM_3    = Value("b11110".U)
+
 }
 
 

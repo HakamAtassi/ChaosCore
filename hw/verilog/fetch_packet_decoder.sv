@@ -85,6 +85,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_FENCE,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_FLUSH,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MRET,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_ECALL,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,
@@ -116,6 +117,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_FENCE,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_FLUSH,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MRET,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_ECALL,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,
@@ -147,6 +149,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_FENCE,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_FLUSH,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MRET,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_ECALL,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,
@@ -178,6 +181,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_FENCE,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_FLUSH,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MRET,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_ECALL,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,
@@ -304,7 +308,7 @@ module fetch_packet_decoder(
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;
   always @(posedge clock)
     io_fetch_packet_ready_REG <= io_decoded_fetch_packet_ready;
-  decoder decoders_0 (
+  improved_decoder decoders_0 (
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
@@ -364,7 +368,7 @@ module fetch_packet_decoder(
     .io_decoded_instruction_bits_access_width
       (_decoders_0_io_decoded_instruction_bits_access_width)
   );
-  decoder decoders_1 (
+  improved_decoder decoders_1 (
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
@@ -424,7 +428,7 @@ module fetch_packet_decoder(
     .io_decoded_instruction_bits_access_width
       (_decoders_1_io_decoded_instruction_bits_access_width)
   );
-  decoder decoders_2 (
+  improved_decoder decoders_2 (
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
@@ -484,7 +488,7 @@ module fetch_packet_decoder(
     .io_decoded_instruction_bits_access_width
       (_decoders_2_io_decoded_instruction_bits_access_width)
   );
-  decoder decoders_3 (
+  improved_decoder decoders_3 (
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
@@ -596,6 +600,7 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_0_FENCE
       (_decoders_0_io_decoded_instruction_bits_FENCE),
+    .io_enq_bits_decoded_instruction_0_FLUSH                (1'h0),
     .io_enq_bits_decoded_instruction_0_MRET
       (_decoders_0_io_decoded_instruction_bits_MRET),
     .io_enq_bits_decoded_instruction_0_ECALL
@@ -652,6 +657,7 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_1_FENCE
       (_decoders_1_io_decoded_instruction_bits_FENCE),
+    .io_enq_bits_decoded_instruction_1_FLUSH                (1'h0),
     .io_enq_bits_decoded_instruction_1_MRET
       (_decoders_1_io_decoded_instruction_bits_MRET),
     .io_enq_bits_decoded_instruction_1_ECALL
@@ -708,6 +714,7 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_2_FENCE
       (_decoders_2_io_decoded_instruction_bits_FENCE),
+    .io_enq_bits_decoded_instruction_2_FLUSH                (1'h0),
     .io_enq_bits_decoded_instruction_2_MRET
       (_decoders_2_io_decoded_instruction_bits_MRET),
     .io_enq_bits_decoded_instruction_2_ECALL
@@ -764,6 +771,7 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_MULTIPLY),
     .io_enq_bits_decoded_instruction_3_FENCE
       (_decoders_3_io_decoded_instruction_bits_FENCE),
+    .io_enq_bits_decoded_instruction_3_FLUSH                (1'h0),
     .io_enq_bits_decoded_instruction_3_MRET
       (_decoders_3_io_decoded_instruction_bits_MRET),
     .io_enq_bits_decoded_instruction_3_ECALL
@@ -858,6 +866,8 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_deq_bits_decoded_instruction_0_FENCE
       (io_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
+    .io_deq_bits_decoded_instruction_0_FLUSH
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_FLUSH),
     .io_deq_bits_decoded_instruction_0_MRET
       (io_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
     .io_deq_bits_decoded_instruction_0_ECALL
@@ -920,6 +930,8 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_deq_bits_decoded_instruction_1_FENCE
       (io_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
+    .io_deq_bits_decoded_instruction_1_FLUSH
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_FLUSH),
     .io_deq_bits_decoded_instruction_1_MRET
       (io_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
     .io_deq_bits_decoded_instruction_1_ECALL
@@ -982,6 +994,8 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_deq_bits_decoded_instruction_2_FENCE
       (io_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
+    .io_deq_bits_decoded_instruction_2_FLUSH
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_FLUSH),
     .io_deq_bits_decoded_instruction_2_MRET
       (io_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
     .io_deq_bits_decoded_instruction_2_ECALL
@@ -1044,6 +1058,8 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_deq_bits_decoded_instruction_3_FENCE
       (io_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
+    .io_deq_bits_decoded_instruction_3_FLUSH
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_FLUSH),
     .io_deq_bits_decoded_instruction_3_MRET
       (io_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
     .io_deq_bits_decoded_instruction_3_ECALL
