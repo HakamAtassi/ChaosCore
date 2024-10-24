@@ -530,16 +530,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     when(commit_valid && (has_branch || has_flushing_instr)) {  
         // TODO: make this a foldleft or something...
         for(i <- fetchWidth-1 to 0 by - 1){
-
-            // FIXME: seperate these correctly, currently indistinguishable...
-            val is_valid        = ROB_output.ROB_entries(i).valid
-            val is_exception    = ROB_output.exception(i)
-            val exception_cause = ROB_output.exception_cause(i)
-            val is_branch       = ROB_entry_banks(i).io.readDataB.is_branch
-            val is_fence        = ROB_entry_banks(i).io.readDataB.is_fence
-            val is_CSR          = ROB_entry_banks(i).io.readDataB.is_CSR
             when(ROB_commit_row.is_branch(i)){
-
                 when(ROB_commit_row.is_misprediction(i)){
                     commit.is_misprediction      := 1.B
                     commit.br_type               := commit_resolved(i).br_type 
@@ -557,10 +548,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
                 commit.br_type               := br_type_t.NONE
                 commit.fetch_packet_index    := 0.U
 
-                flush.is_exception          := is_exception
-                flush.exception_cause       := exception_cause
-                flush.is_fence              := is_fence
-                flush.is_CSR                := is_CSR
+                flush.is_exception          := ROB_commit_row.is_exception(i)
+                flush.exception_cause       := ROB_commit_row.get_exception_cause(i)
+                flush.is_fence              := ROB_commit_row.is_flush(i)
+                flush.is_CSR                := ROB_commit_row.is_flush(i)
                 flush.flushing_PC           := ROB_commit_row.instruction_PC(i) //commit.fetch_PC + (i*4).U
 
                 commit.expected_PC := ROB_commit_row.get_next_PC(i) 
@@ -569,32 +560,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
             }
         }
     }
-
-
-
-
-
-
-    // Ideally, what you want is:
-
-    // from left to write 
-
-    // check for misprediction
-        // 
-    // check for exception
-        // check for other type of flush (CSR, fence, etc...)
-
-    // you want a structure for each instruction like
-    // ROB_entry.is_misprediction => ROB_entry.get_next_PC
-    // or
-    // ROB_entry.is_exception...
-
-    // Also, consider cleaning up the pointer bypass stuff. Its messy and not necessary. 
-
-
-    
-
-
 
 
     //////////////////

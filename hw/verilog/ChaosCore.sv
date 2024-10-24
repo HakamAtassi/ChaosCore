@@ -337,6 +337,7 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FLUSH;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;
@@ -388,6 +389,7 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FLUSH;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;
@@ -439,6 +441,7 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FLUSH;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;
@@ -490,6 +493,7 @@ module ChaosCore(
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE;
+  wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FLUSH;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL;
   wire        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;
@@ -777,6 +781,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FLUSH),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ECALL
@@ -839,6 +845,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FLUSH),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ECALL
@@ -901,6 +909,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FLUSH),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ECALL
@@ -963,6 +973,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FLUSH),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ECALL
@@ -1347,6 +1359,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_backend_packet_0_bits_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
+    .io_backend_packet_0_bits_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FLUSH),
     .io_backend_packet_0_bits_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
     .io_backend_packet_0_bits_ECALL
@@ -1414,6 +1428,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_backend_packet_1_bits_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
+    .io_backend_packet_1_bits_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FLUSH),
     .io_backend_packet_1_bits_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
     .io_backend_packet_1_bits_ECALL
@@ -1481,6 +1497,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_backend_packet_2_bits_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
+    .io_backend_packet_2_bits_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FLUSH),
     .io_backend_packet_2_bits_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
     .io_backend_packet_2_bits_ECALL
@@ -1548,6 +1566,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_backend_packet_3_bits_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
+    .io_backend_packet_3_bits_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FLUSH),
     .io_backend_packet_3_bits_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
     .io_backend_packet_3_bits_ECALL
@@ -1796,6 +1816,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_0_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FENCE),
+    .io_ROB_packet_bits_decoded_instruction_0_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FLUSH),
     .io_ROB_packet_bits_decoded_instruction_0_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MRET),
     .io_ROB_packet_bits_decoded_instruction_0_ECALL
@@ -1858,6 +1880,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_1_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FENCE),
+    .io_ROB_packet_bits_decoded_instruction_1_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FLUSH),
     .io_ROB_packet_bits_decoded_instruction_1_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MRET),
     .io_ROB_packet_bits_decoded_instruction_1_ECALL
@@ -1920,6 +1944,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_2_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FENCE),
+    .io_ROB_packet_bits_decoded_instruction_2_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FLUSH),
     .io_ROB_packet_bits_decoded_instruction_2_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MRET),
     .io_ROB_packet_bits_decoded_instruction_2_ECALL
@@ -1982,6 +2008,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_ROB_packet_bits_decoded_instruction_3_FENCE
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FENCE),
+    .io_ROB_packet_bits_decoded_instruction_3_FLUSH
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FLUSH),
     .io_ROB_packet_bits_decoded_instruction_3_MRET
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MRET),
     .io_ROB_packet_bits_decoded_instruction_3_ECALL
