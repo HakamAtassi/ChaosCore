@@ -103,102 +103,76 @@ module ChaosCore_tile(
                 io_data_cache_AXI_port_AXI_R_bits_ruser
 );
 
-  wire        _data_cache_io_CPU_request_ready;
-  wire        _data_cache_io_CPU_response_valid;
-  wire [31:0] _data_cache_io_CPU_response_bits_addr;
-  wire [31:0] _data_cache_io_CPU_response_bits_PRD;
-  wire [31:0] _data_cache_io_CPU_response_bits_fetch_packet_index;
-  wire [5:0]  _data_cache_io_CPU_response_bits_ROB_index;
-  wire [31:0] _data_cache_io_CPU_response_bits_data;
-  wire [3:0]  _data_cache_io_CPU_response_bits_MOB_index;
-  wire        _instruction_cache_io_CPU_request_ready;
-  wire        _instruction_cache_io_CPU_response_valid;
-  wire [31:0] _instruction_cache_io_CPU_response_bits_fetch_PC;
-  wire        _instruction_cache_io_CPU_response_bits_valid_bits_0;
-  wire        _instruction_cache_io_CPU_response_bits_valid_bits_1;
-  wire        _instruction_cache_io_CPU_response_bits_valid_bits_2;
-  wire        _instruction_cache_io_CPU_response_bits_valid_bits_3;
-  wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_0_instruction;
-  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_0_packet_index;
-  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_0_ROB_index;
-  wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_1_instruction;
-  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_1_packet_index;
-  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_1_ROB_index;
-  wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_2_instruction;
-  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_2_packet_index;
-  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_2_ROB_index;
-  wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_3_instruction;
-  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_3_packet_index;
-  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_3_ROB_index;
-  wire        _instruction_cache_io_CPU_response_bits_prediction_hit;
-  wire [31:0] _instruction_cache_io_CPU_response_bits_prediction_target;
-  wire [2:0]  _instruction_cache_io_CPU_response_bits_prediction_br_type;
-  wire        _instruction_cache_io_CPU_response_bits_prediction_br_mask_0;
-  wire        _instruction_cache_io_CPU_response_bits_prediction_br_mask_1;
-  wire        _instruction_cache_io_CPU_response_bits_prediction_br_mask_2;
-  wire        _instruction_cache_io_CPU_response_bits_prediction_br_mask_3;
-  wire [15:0] _instruction_cache_io_CPU_response_bits_GHR;
-  wire [6:0]  _instruction_cache_io_CPU_response_bits_NEXT;
-  wire [6:0]  _instruction_cache_io_CPU_response_bits_TOS;
-  wire        _ChaosCore_io_flush_valid;
-  wire        _ChaosCore_io_frontend_memory_request_valid;
-  wire [31:0] _ChaosCore_io_frontend_memory_request_bits_addr;
-  wire [31:0] _ChaosCore_io_frontend_memory_request_bits_wr_data;
-  wire        _ChaosCore_io_frontend_memory_request_bits_wr_en;
-  wire        _ChaosCore_io_frontend_memory_response_ready;
-  wire        _ChaosCore_io_backend_memory_request_valid;
-  wire [31:0] _ChaosCore_io_backend_memory_request_bits_addr;
-  wire [31:0] _ChaosCore_io_backend_memory_request_bits_data;
-  wire        _ChaosCore_io_backend_memory_request_bits_mem_signed;
-  wire [1:0]  _ChaosCore_io_backend_memory_request_bits_memory_type;
-  wire [1:0]  _ChaosCore_io_backend_memory_request_bits_access_width;
-  wire [3:0]  _ChaosCore_io_backend_memory_request_bits_MOB_index;
-  wire [1:0]  _ChaosCore_io_backend_memory_request_bits_packet_index;
-  wire [5:0]  _ChaosCore_io_backend_memory_request_bits_ROB_index;
-  wire [6:0]  _ChaosCore_io_backend_memory_request_bits_PRD;
-  wire        _ChaosCore_io_backend_memory_response_ready;
+  wire         _data_cache_io_CPU_request_ready;
+  wire         _data_cache_io_CPU_response_valid;
+  wire [31:0]  _data_cache_io_CPU_response_bits_addr;
+  wire [31:0]  _data_cache_io_CPU_response_bits_PRD;
+  wire [31:0]  _data_cache_io_CPU_response_bits_fetch_packet_index;
+  wire [5:0]   _data_cache_io_CPU_response_bits_ROB_index;
+  wire [31:0]  _data_cache_io_CPU_response_bits_data;
+  wire [3:0]   _data_cache_io_CPU_response_bits_MOB_index;
+  wire         _instruction_cache_io_CPU_request_ready;
+  wire         _instruction_cache_io_CPU_response_valid;
+  wire [127:0] _instruction_cache_io_CPU_response_bits_instruction_data;
+  wire [31:0]  _instruction_cache_io_CPU_response_bits_fetch_PC;
+  wire         _ChaosCore_io_flush_valid;
+  wire         _ChaosCore_io_frontend_memory_request_valid;
+  wire [31:0]  _ChaosCore_io_frontend_memory_request_bits_addr;
+  wire [31:0]  _ChaosCore_io_frontend_memory_request_bits_wr_data;
+  wire         _ChaosCore_io_frontend_memory_request_bits_wr_en;
+  wire         _ChaosCore_io_frontend_memory_response_ready;
+  wire         _ChaosCore_io_backend_memory_request_valid;
+  wire [31:0]  _ChaosCore_io_backend_memory_request_bits_addr;
+  wire [31:0]  _ChaosCore_io_backend_memory_request_bits_data;
+  wire         _ChaosCore_io_backend_memory_request_bits_mem_signed;
+  wire [1:0]   _ChaosCore_io_backend_memory_request_bits_memory_type;
+  wire [1:0]   _ChaosCore_io_backend_memory_request_bits_access_width;
+  wire [3:0]   _ChaosCore_io_backend_memory_request_bits_MOB_index;
+  wire [1:0]   _ChaosCore_io_backend_memory_request_bits_packet_index;
+  wire [5:0]   _ChaosCore_io_backend_memory_request_bits_ROB_index;
+  wire [6:0]   _ChaosCore_io_backend_memory_request_bits_PRD;
+  wire         _ChaosCore_io_backend_memory_response_ready;
   ChaosCore ChaosCore (
-    .clock                                                        (clock),
-    .reset                                                        (reset),
-    .io_commit_valid                                              (/* unused */),
-    .io_commit_bits_fetch_PC                                      (/* unused */),
-    .io_commit_bits_T_NT                                          (/* unused */),
-    .io_commit_bits_ROB_index                                     (/* unused */),
-    .io_commit_bits_br_type                                       (/* unused */),
-    .io_commit_bits_br_mask_0                                     (/* unused */),
-    .io_commit_bits_br_mask_1                                     (/* unused */),
-    .io_commit_bits_br_mask_2                                     (/* unused */),
-    .io_commit_bits_br_mask_3                                     (/* unused */),
-    .io_commit_bits_fetch_packet_index                            (/* unused */),
-    .io_commit_bits_is_misprediction                              (/* unused */),
-    .io_commit_bits_expected_PC                                   (/* unused */),
-    .io_commit_bits_GHR                                           (/* unused */),
-    .io_commit_bits_TOS                                           (/* unused */),
-    .io_commit_bits_NEXT                                          (/* unused */),
-    .io_commit_bits_free_list_front_pointer                       (/* unused */),
-    .io_commit_bits_RD_0                                          (/* unused */),
-    .io_commit_bits_RD_1                                          (/* unused */),
-    .io_commit_bits_RD_2                                          (/* unused */),
-    .io_commit_bits_RD_3                                          (/* unused */),
-    .io_commit_bits_PRD_0                                         (/* unused */),
-    .io_commit_bits_PRD_1                                         (/* unused */),
-    .io_commit_bits_PRD_2                                         (/* unused */),
-    .io_commit_bits_PRD_3                                         (/* unused */),
-    .io_commit_bits_RD_valid_0                                    (/* unused */),
-    .io_commit_bits_RD_valid_1                                    (/* unused */),
-    .io_commit_bits_RD_valid_2                                    (/* unused */),
-    .io_commit_bits_RD_valid_3                                    (/* unused */),
-    .io_flush_valid
-      (_ChaosCore_io_flush_valid),
-    .io_flush_bits_is_misprediction                               (/* unused */),
-    .io_flush_bits_is_exception                                   (/* unused */),
-    .io_flush_bits_is_fence                                       (/* unused */),
-    .io_flush_bits_is_CSR                                         (/* unused */),
-    .io_flush_bits_exception_cause                                (/* unused */),
-    .io_flush_bits_flushing_PC                                    (/* unused */),
-    .io_flush_bits_redirect_PC                                    (/* unused */),
-    .io_revert_valid                                              (/* unused */),
-    .io_revert_bits_PC                                            (/* unused */),
+    .clock                                              (clock),
+    .reset                                              (reset),
+    .io_commit_valid                                    (/* unused */),
+    .io_commit_bits_fetch_PC                            (/* unused */),
+    .io_commit_bits_T_NT                                (/* unused */),
+    .io_commit_bits_ROB_index                           (/* unused */),
+    .io_commit_bits_br_type                             (/* unused */),
+    .io_commit_bits_br_mask_0                           (/* unused */),
+    .io_commit_bits_br_mask_1                           (/* unused */),
+    .io_commit_bits_br_mask_2                           (/* unused */),
+    .io_commit_bits_br_mask_3                           (/* unused */),
+    .io_commit_bits_fetch_packet_index                  (/* unused */),
+    .io_commit_bits_is_misprediction                    (/* unused */),
+    .io_commit_bits_expected_PC                         (/* unused */),
+    .io_commit_bits_GHR                                 (/* unused */),
+    .io_commit_bits_TOS                                 (/* unused */),
+    .io_commit_bits_NEXT                                (/* unused */),
+    .io_commit_bits_free_list_front_pointer             (/* unused */),
+    .io_commit_bits_RD_0                                (/* unused */),
+    .io_commit_bits_RD_1                                (/* unused */),
+    .io_commit_bits_RD_2                                (/* unused */),
+    .io_commit_bits_RD_3                                (/* unused */),
+    .io_commit_bits_PRD_0                               (/* unused */),
+    .io_commit_bits_PRD_1                               (/* unused */),
+    .io_commit_bits_PRD_2                               (/* unused */),
+    .io_commit_bits_PRD_3                               (/* unused */),
+    .io_commit_bits_RD_valid_0                          (/* unused */),
+    .io_commit_bits_RD_valid_1                          (/* unused */),
+    .io_commit_bits_RD_valid_2                          (/* unused */),
+    .io_commit_bits_RD_valid_3                          (/* unused */),
+    .io_flush_valid                                     (_ChaosCore_io_flush_valid),
+    .io_flush_bits_is_misprediction                     (/* unused */),
+    .io_flush_bits_is_exception                         (/* unused */),
+    .io_flush_bits_is_fence                             (/* unused */),
+    .io_flush_bits_is_CSR                               (/* unused */),
+    .io_flush_bits_exception_cause                      (/* unused */),
+    .io_flush_bits_flushing_PC                          (/* unused */),
+    .io_flush_bits_redirect_PC                          (/* unused */),
+    .io_revert_valid                                    (/* unused */),
+    .io_revert_bits_PC                                  (/* unused */),
     .io_frontend_memory_request_ready
       (_instruction_cache_io_CPU_request_ready),
     .io_frontend_memory_request_valid
@@ -213,60 +187,10 @@ module ChaosCore_tile(
       (_ChaosCore_io_frontend_memory_response_ready),
     .io_frontend_memory_response_valid
       (_instruction_cache_io_CPU_response_valid),
+    .io_frontend_memory_response_bits_instruction_data
+      (_instruction_cache_io_CPU_response_bits_instruction_data),
     .io_frontend_memory_response_bits_fetch_PC
       (_instruction_cache_io_CPU_response_bits_fetch_PC),
-    .io_frontend_memory_response_bits_valid_bits_0
-      (_instruction_cache_io_CPU_response_bits_valid_bits_0),
-    .io_frontend_memory_response_bits_valid_bits_1
-      (_instruction_cache_io_CPU_response_bits_valid_bits_1),
-    .io_frontend_memory_response_bits_valid_bits_2
-      (_instruction_cache_io_CPU_response_bits_valid_bits_2),
-    .io_frontend_memory_response_bits_valid_bits_3
-      (_instruction_cache_io_CPU_response_bits_valid_bits_3),
-    .io_frontend_memory_response_bits_instructions_0_instruction
-      (_instruction_cache_io_CPU_response_bits_instructions_0_instruction),
-    .io_frontend_memory_response_bits_instructions_0_packet_index
-      (_instruction_cache_io_CPU_response_bits_instructions_0_packet_index),
-    .io_frontend_memory_response_bits_instructions_0_ROB_index
-      (_instruction_cache_io_CPU_response_bits_instructions_0_ROB_index),
-    .io_frontend_memory_response_bits_instructions_1_instruction
-      (_instruction_cache_io_CPU_response_bits_instructions_1_instruction),
-    .io_frontend_memory_response_bits_instructions_1_packet_index
-      (_instruction_cache_io_CPU_response_bits_instructions_1_packet_index),
-    .io_frontend_memory_response_bits_instructions_1_ROB_index
-      (_instruction_cache_io_CPU_response_bits_instructions_1_ROB_index),
-    .io_frontend_memory_response_bits_instructions_2_instruction
-      (_instruction_cache_io_CPU_response_bits_instructions_2_instruction),
-    .io_frontend_memory_response_bits_instructions_2_packet_index
-      (_instruction_cache_io_CPU_response_bits_instructions_2_packet_index),
-    .io_frontend_memory_response_bits_instructions_2_ROB_index
-      (_instruction_cache_io_CPU_response_bits_instructions_2_ROB_index),
-    .io_frontend_memory_response_bits_instructions_3_instruction
-      (_instruction_cache_io_CPU_response_bits_instructions_3_instruction),
-    .io_frontend_memory_response_bits_instructions_3_packet_index
-      (_instruction_cache_io_CPU_response_bits_instructions_3_packet_index),
-    .io_frontend_memory_response_bits_instructions_3_ROB_index
-      (_instruction_cache_io_CPU_response_bits_instructions_3_ROB_index),
-    .io_frontend_memory_response_bits_prediction_hit
-      (_instruction_cache_io_CPU_response_bits_prediction_hit),
-    .io_frontend_memory_response_bits_prediction_target
-      (_instruction_cache_io_CPU_response_bits_prediction_target),
-    .io_frontend_memory_response_bits_prediction_br_type
-      (_instruction_cache_io_CPU_response_bits_prediction_br_type),
-    .io_frontend_memory_response_bits_prediction_br_mask_0
-      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_0),
-    .io_frontend_memory_response_bits_prediction_br_mask_1
-      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_1),
-    .io_frontend_memory_response_bits_prediction_br_mask_2
-      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_2),
-    .io_frontend_memory_response_bits_prediction_br_mask_3
-      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_3),
-    .io_frontend_memory_response_bits_GHR
-      (_instruction_cache_io_CPU_response_bits_GHR),
-    .io_frontend_memory_response_bits_NEXT
-      (_instruction_cache_io_CPU_response_bits_NEXT),
-    .io_frontend_memory_response_bits_TOS
-      (_instruction_cache_io_CPU_response_bits_TOS),
     .io_backend_memory_request_ready
       (_data_cache_io_CPU_request_ready),
     .io_backend_memory_request_valid
@@ -307,12 +231,10 @@ module ChaosCore_tile(
       (_data_cache_io_CPU_response_bits_MOB_index)
   );
   L1_instruction_cache instruction_cache (
-    .clock                                            (clock),
-    .reset                                            (reset),
-    .m_axi_awvalid
-      (io_instruction_cache_AXI_port_AXI_AW_valid),
-    .m_axi_awready
-      (io_instruction_cache_AXI_port_AXI_AW_ready),
+    .clock                                 (clock),
+    .reset                                 (reset),
+    .m_axi_awvalid                         (io_instruction_cache_AXI_port_AXI_AW_valid),
+    .m_axi_awready                         (io_instruction_cache_AXI_port_AXI_AW_ready),
     .m_axi_awid
       (io_instruction_cache_AXI_port_AXI_AW_bits_awid),
     .m_axi_awaddr
@@ -335,10 +257,8 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_AW_bits_awregion),
     .m_axi_awuser
       (io_instruction_cache_AXI_port_AXI_AW_bits_awuser),
-    .m_axi_wready
-      (io_instruction_cache_AXI_port_AXI_W_ready),
-    .m_axi_wvalid
-      (io_instruction_cache_AXI_port_AXI_W_valid),
+    .m_axi_wready                          (io_instruction_cache_AXI_port_AXI_W_ready),
+    .m_axi_wvalid                          (io_instruction_cache_AXI_port_AXI_W_valid),
     .m_axi_wdata
       (io_instruction_cache_AXI_port_AXI_W_bits_wdata),
     .m_axi_wstrb
@@ -347,20 +267,15 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_W_bits_wlast),
     .m_axi_wuser
       (io_instruction_cache_AXI_port_AXI_W_bits_wuser),
-    .m_axi_bready
-      (io_instruction_cache_AXI_port_AXI_B_ready),
-    .m_axi_bvalid
-      (io_instruction_cache_AXI_port_AXI_B_valid),
-    .m_axi_bid
-      (io_instruction_cache_AXI_port_AXI_B_bits_bid),
+    .m_axi_bready                          (io_instruction_cache_AXI_port_AXI_B_ready),
+    .m_axi_bvalid                          (io_instruction_cache_AXI_port_AXI_B_valid),
+    .m_axi_bid                             (io_instruction_cache_AXI_port_AXI_B_bits_bid),
     .m_axi_bresp
       (io_instruction_cache_AXI_port_AXI_B_bits_bresp),
     .m_axi_buser
       (io_instruction_cache_AXI_port_AXI_B_bits_buser),
-    .m_axi_arvalid
-      (io_instruction_cache_AXI_port_AXI_AR_valid),
-    .m_axi_arready
-      (io_instruction_cache_AXI_port_AXI_AR_ready),
+    .m_axi_arvalid                         (io_instruction_cache_AXI_port_AXI_AR_valid),
+    .m_axi_arready                         (io_instruction_cache_AXI_port_AXI_AR_ready),
     .m_axi_arid
       (io_instruction_cache_AXI_port_AXI_AR_bits_arid),
     .m_axi_araddr
@@ -383,12 +298,9 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_AR_bits_arregion),
     .m_axi_aruser
       (io_instruction_cache_AXI_port_AXI_AR_bits_aruser),
-    .m_axi_rready
-      (io_instruction_cache_AXI_port_AXI_R_ready),
-    .m_axi_rvalid
-      (io_instruction_cache_AXI_port_AXI_R_valid),
-    .m_axi_rid
-      (io_instruction_cache_AXI_port_AXI_R_bits_rid),
+    .m_axi_rready                          (io_instruction_cache_AXI_port_AXI_R_ready),
+    .m_axi_rvalid                          (io_instruction_cache_AXI_port_AXI_R_valid),
+    .m_axi_rid                             (io_instruction_cache_AXI_port_AXI_R_bits_rid),
     .m_axi_rdata
       (io_instruction_cache_AXI_port_AXI_R_bits_rdata),
     .m_axi_rresp
@@ -397,75 +309,21 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_R_bits_rlast),
     .m_axi_ruser
       (io_instruction_cache_AXI_port_AXI_R_bits_ruser),
-    .io_CPU_request_ready
-      (_instruction_cache_io_CPU_request_ready),
-    .io_CPU_request_valid
-      (_ChaosCore_io_frontend_memory_request_valid),
+    .io_CPU_request_ready                  (_instruction_cache_io_CPU_request_ready),
+    .io_CPU_request_valid                  (_ChaosCore_io_frontend_memory_request_valid),
     .io_CPU_request_bits_addr
       (_ChaosCore_io_frontend_memory_request_bits_addr),
     .io_CPU_request_bits_wr_data
       (_ChaosCore_io_frontend_memory_request_bits_wr_data),
     .io_CPU_request_bits_wr_en
       (_ChaosCore_io_frontend_memory_request_bits_wr_en),
-    .io_CPU_response_ready
-      (_ChaosCore_io_frontend_memory_response_ready),
-    .io_CPU_response_valid
-      (_instruction_cache_io_CPU_response_valid),
+    .io_CPU_response_ready                 (_ChaosCore_io_frontend_memory_response_ready),
+    .io_CPU_response_valid                 (_instruction_cache_io_CPU_response_valid),
+    .io_CPU_response_bits_instruction_data
+      (_instruction_cache_io_CPU_response_bits_instruction_data),
     .io_CPU_response_bits_fetch_PC
       (_instruction_cache_io_CPU_response_bits_fetch_PC),
-    .io_CPU_response_bits_valid_bits_0
-      (_instruction_cache_io_CPU_response_bits_valid_bits_0),
-    .io_CPU_response_bits_valid_bits_1
-      (_instruction_cache_io_CPU_response_bits_valid_bits_1),
-    .io_CPU_response_bits_valid_bits_2
-      (_instruction_cache_io_CPU_response_bits_valid_bits_2),
-    .io_CPU_response_bits_valid_bits_3
-      (_instruction_cache_io_CPU_response_bits_valid_bits_3),
-    .io_CPU_response_bits_instructions_0_instruction
-      (_instruction_cache_io_CPU_response_bits_instructions_0_instruction),
-    .io_CPU_response_bits_instructions_0_packet_index
-      (_instruction_cache_io_CPU_response_bits_instructions_0_packet_index),
-    .io_CPU_response_bits_instructions_0_ROB_index
-      (_instruction_cache_io_CPU_response_bits_instructions_0_ROB_index),
-    .io_CPU_response_bits_instructions_1_instruction
-      (_instruction_cache_io_CPU_response_bits_instructions_1_instruction),
-    .io_CPU_response_bits_instructions_1_packet_index
-      (_instruction_cache_io_CPU_response_bits_instructions_1_packet_index),
-    .io_CPU_response_bits_instructions_1_ROB_index
-      (_instruction_cache_io_CPU_response_bits_instructions_1_ROB_index),
-    .io_CPU_response_bits_instructions_2_instruction
-      (_instruction_cache_io_CPU_response_bits_instructions_2_instruction),
-    .io_CPU_response_bits_instructions_2_packet_index
-      (_instruction_cache_io_CPU_response_bits_instructions_2_packet_index),
-    .io_CPU_response_bits_instructions_2_ROB_index
-      (_instruction_cache_io_CPU_response_bits_instructions_2_ROB_index),
-    .io_CPU_response_bits_instructions_3_instruction
-      (_instruction_cache_io_CPU_response_bits_instructions_3_instruction),
-    .io_CPU_response_bits_instructions_3_packet_index
-      (_instruction_cache_io_CPU_response_bits_instructions_3_packet_index),
-    .io_CPU_response_bits_instructions_3_ROB_index
-      (_instruction_cache_io_CPU_response_bits_instructions_3_ROB_index),
-    .io_CPU_response_bits_prediction_hit
-      (_instruction_cache_io_CPU_response_bits_prediction_hit),
-    .io_CPU_response_bits_prediction_target
-      (_instruction_cache_io_CPU_response_bits_prediction_target),
-    .io_CPU_response_bits_prediction_br_type
-      (_instruction_cache_io_CPU_response_bits_prediction_br_type),
-    .io_CPU_response_bits_prediction_br_mask_0
-      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_0),
-    .io_CPU_response_bits_prediction_br_mask_1
-      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_1),
-    .io_CPU_response_bits_prediction_br_mask_2
-      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_2),
-    .io_CPU_response_bits_prediction_br_mask_3
-      (_instruction_cache_io_CPU_response_bits_prediction_br_mask_3),
-    .io_CPU_response_bits_GHR
-      (_instruction_cache_io_CPU_response_bits_GHR),
-    .io_CPU_response_bits_NEXT
-      (_instruction_cache_io_CPU_response_bits_NEXT),
-    .io_CPU_response_bits_TOS
-      (_instruction_cache_io_CPU_response_bits_TOS),
-    .io_flush_valid                                   (_ChaosCore_io_flush_valid)
+    .io_flush_valid                        (_ChaosCore_io_flush_valid)
   );
   L1_data_cache data_cache (
     .clock                                   (clock),

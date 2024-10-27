@@ -53,6 +53,13 @@ class fetch_packet(coreParameters:CoreParameters) extends Bundle{
     val TOS             = UInt(log2Ceil(RASEntries).W)
 }
 
+class mem_response(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+    val instruction_data = UInt((32*fetchWidth).W)
+    //val valid_bits      = Vec(fetchWidth, Bool())
+    val fetch_PC        = UInt(32.W)
+}
+
 class metadata extends Bundle{
     val br_type =       br_type_t()
 

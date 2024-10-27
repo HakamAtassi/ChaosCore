@@ -49,7 +49,7 @@ class frontend(coreParameters:CoreParameters) extends Module{
 
         // DRAM CHANNELS //
         val memory_request                  =   Decoupled(new frontend_memory_request(coreParameters))
-        val memory_response                 =   Flipped(Decoupled(new fetch_packet(coreParameters)))
+        val memory_response                 =   Flipped(Decoupled(new mem_response(coreParameters)))
         
         // COMMIT // 
         val partial_commit                  =   Input(new partial_commit(coreParameters))                                         // commit mem op

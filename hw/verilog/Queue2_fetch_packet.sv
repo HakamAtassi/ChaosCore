@@ -32,7 +32,6 @@ module Queue2_fetch_packet(
   input  [31:0] io_enq_bits_instructions_3_instruction,
   input  [3:0]  io_enq_bits_instructions_3_packet_index,
   input  [5:0]  io_enq_bits_instructions_3_ROB_index,
-  input         io_enq_bits_prediction_hit,
   input  [31:0] io_enq_bits_prediction_target,
   input  [2:0]  io_enq_bits_prediction_br_type,
   input         io_enq_bits_prediction_br_mask_0,
@@ -71,7 +70,6 @@ module Queue2_fetch_packet(
   output [15:0] io_deq_bits_GHR,
   output [6:0]  io_deq_bits_NEXT,
                 io_deq_bits_TOS,
-  output [1:0]  io_count,
   input         io_flush
 );
 
@@ -114,7 +112,7 @@ module Queue2_fetch_packet(
         io_enq_bits_prediction_br_mask_0,
         io_enq_bits_prediction_br_type,
         io_enq_bits_prediction_target,
-        io_enq_bits_prediction_hit,
+        1'h0,
         io_enq_bits_instructions_3_ROB_index,
         io_enq_bits_instructions_3_packet_index,
         io_enq_bits_instructions_3_instruction,
@@ -162,6 +160,5 @@ module Queue2_fetch_packet(
   assign io_deq_bits_GHR = _ram_ext_R0_data[259:244];
   assign io_deq_bits_NEXT = _ram_ext_R0_data[266:260];
   assign io_deq_bits_TOS = _ram_ext_R0_data[273:267];
-  assign io_count = {maybe_full & ptr_match, wrap - wrap_1};
 endmodule
 

@@ -11,304 +11,276 @@
 `endif // not def PRINTF_COND_
 
 module L1_instruction_cache(
-  input         clock,
-                reset,
-  output        m_axi_awvalid,
-  input         m_axi_awready,
-  output [7:0]  m_axi_awid,
-  output [31:0] m_axi_awaddr,
-  output [7:0]  m_axi_awlen,
-  output [2:0]  m_axi_awsize,
-  output [1:0]  m_axi_awburst,
-  output        m_axi_awlock,
-  output [3:0]  m_axi_awcache,
-  output [2:0]  m_axi_awprot,
-  output [3:0]  m_axi_awqos,
-                m_axi_awregion,
-  output        m_axi_awuser,
-  input         m_axi_wready,
-  output        m_axi_wvalid,
-  output [31:0] m_axi_wdata,
-  output [3:0]  m_axi_wstrb,
-  output        m_axi_wlast,
-                m_axi_wuser,
-                m_axi_bready,
-  input         m_axi_bvalid,
-  input  [7:0]  m_axi_bid,
-  input  [1:0]  m_axi_bresp,
-  input         m_axi_buser,
-  output        m_axi_arvalid,
-  input         m_axi_arready,
-  output [7:0]  m_axi_arid,
-  output [31:0] m_axi_araddr,
-  output [7:0]  m_axi_arlen,
-  output [2:0]  m_axi_arsize,
-  output [1:0]  m_axi_arburst,
-  output        m_axi_arlock,
-  output [3:0]  m_axi_arcache,
-  output [2:0]  m_axi_arprot,
-  output [3:0]  m_axi_arqos,
-                m_axi_arregion,
-  output        m_axi_aruser,
-                m_axi_rready,
-  input         m_axi_rvalid,
-  input  [7:0]  m_axi_rid,
-  input  [31:0] m_axi_rdata,
-  input  [1:0]  m_axi_rresp,
-  input         m_axi_rlast,
-                m_axi_ruser,
-  output        io_CPU_request_ready,
-  input         io_CPU_request_valid,
-  input  [31:0] io_CPU_request_bits_addr,
-                io_CPU_request_bits_wr_data,
-  input         io_CPU_request_bits_wr_en,
-                io_CPU_response_ready,
-  output        io_CPU_response_valid,
-  output [31:0] io_CPU_response_bits_fetch_PC,
-  output        io_CPU_response_bits_valid_bits_0,
-                io_CPU_response_bits_valid_bits_1,
-                io_CPU_response_bits_valid_bits_2,
-                io_CPU_response_bits_valid_bits_3,
-  output [31:0] io_CPU_response_bits_instructions_0_instruction,
-  output [3:0]  io_CPU_response_bits_instructions_0_packet_index,
-  output [5:0]  io_CPU_response_bits_instructions_0_ROB_index,
-  output [31:0] io_CPU_response_bits_instructions_1_instruction,
-  output [3:0]  io_CPU_response_bits_instructions_1_packet_index,
-  output [5:0]  io_CPU_response_bits_instructions_1_ROB_index,
-  output [31:0] io_CPU_response_bits_instructions_2_instruction,
-  output [3:0]  io_CPU_response_bits_instructions_2_packet_index,
-  output [5:0]  io_CPU_response_bits_instructions_2_ROB_index,
-  output [31:0] io_CPU_response_bits_instructions_3_instruction,
-  output [3:0]  io_CPU_response_bits_instructions_3_packet_index,
-  output [5:0]  io_CPU_response_bits_instructions_3_ROB_index,
-  output        io_CPU_response_bits_prediction_hit,
-  output [31:0] io_CPU_response_bits_prediction_target,
-  output [2:0]  io_CPU_response_bits_prediction_br_type,
-  output        io_CPU_response_bits_prediction_br_mask_0,
-                io_CPU_response_bits_prediction_br_mask_1,
-                io_CPU_response_bits_prediction_br_mask_2,
-                io_CPU_response_bits_prediction_br_mask_3,
-  output [15:0] io_CPU_response_bits_GHR,
-  output [6:0]  io_CPU_response_bits_NEXT,
-                io_CPU_response_bits_TOS,
-  input         io_flush_valid
+  input          clock,
+                 reset,
+  output         m_axi_awvalid,
+  input          m_axi_awready,
+  output [7:0]   m_axi_awid,
+  output [31:0]  m_axi_awaddr,
+  output [7:0]   m_axi_awlen,
+  output [2:0]   m_axi_awsize,
+  output [1:0]   m_axi_awburst,
+  output         m_axi_awlock,
+  output [3:0]   m_axi_awcache,
+  output [2:0]   m_axi_awprot,
+  output [3:0]   m_axi_awqos,
+                 m_axi_awregion,
+  output         m_axi_awuser,
+  input          m_axi_wready,
+  output         m_axi_wvalid,
+  output [31:0]  m_axi_wdata,
+  output [3:0]   m_axi_wstrb,
+  output         m_axi_wlast,
+                 m_axi_wuser,
+                 m_axi_bready,
+  input          m_axi_bvalid,
+  input  [7:0]   m_axi_bid,
+  input  [1:0]   m_axi_bresp,
+  input          m_axi_buser,
+  output         m_axi_arvalid,
+  input          m_axi_arready,
+  output [7:0]   m_axi_arid,
+  output [31:0]  m_axi_araddr,
+  output [7:0]   m_axi_arlen,
+  output [2:0]   m_axi_arsize,
+  output [1:0]   m_axi_arburst,
+  output         m_axi_arlock,
+  output [3:0]   m_axi_arcache,
+  output [2:0]   m_axi_arprot,
+  output [3:0]   m_axi_arqos,
+                 m_axi_arregion,
+  output         m_axi_aruser,
+                 m_axi_rready,
+  input          m_axi_rvalid,
+  input  [7:0]   m_axi_rid,
+  input  [31:0]  m_axi_rdata,
+  input  [1:0]   m_axi_rresp,
+  input          m_axi_rlast,
+                 m_axi_ruser,
+  output         io_CPU_request_ready,
+  input          io_CPU_request_valid,
+  input  [31:0]  io_CPU_request_bits_addr,
+                 io_CPU_request_bits_wr_data,
+  input          io_CPU_request_bits_wr_en,
+                 io_CPU_response_ready,
+  output         io_CPU_response_valid,
+  output [127:0] io_CPU_response_bits_instruction_data,
+  output [31:0]  io_CPU_response_bits_fetch_PC,
+  input          io_flush_valid
 );
 
-  wire             CPU_response_valid;
-  wire             miss;
-  wire [1:0]       hit_oh;
-  wire             data_way_1_valid;
-  wire             data_way_0_valid;
-  wire [1:0]       valid_oh;
-  wire [5:0]       current_set_decomposed_icache_address_set;
-  wire             _GEN;
-  wire             m_axi_rready_0;
-  wire             _CPU_response_skid_buffer_io_enq_ready;
-  wire [3:0]       _validator_io_instruction_output;
-  wire [20:0]      _data_memory_1_io_data_out_tag;
-  wire [255:0]     _data_memory_1_io_data_out_data;
-  wire [20:0]      _data_memory_0_io_data_out_tag;
-  wire [255:0]     _data_memory_0_io_data_out_data;
-  wire [1:0]       _LRU_memory_io_data_out;
-  wire             _final_response_buffer_io_deq_valid;
-  wire [255:0]     _final_response_buffer_io_deq_bits_data;
-  reg  [31:0]      AXI_AR_buf_araddr;
-  reg  [7:0]       AXI_AR_buf_arlen;
-  reg  [2:0]       AXI_AR_buf_arsize;
-  reg  [255:0]     AXI_AW_DATA_BUFFER;
-  reg  [2:0]       AXI_REQUEST_STATE;
-  reg              R_done;
-  reg              W_done;
-  wire             _GEN_0 = AXI_REQUEST_STATE == 3'h2;
-  wire             _GEN_1 = AXI_REQUEST_STATE == 3'h3;
-  wire             _GEN_2 = AXI_REQUEST_STATE == 3'h4;
-  wire             _GEN_3 = AXI_REQUEST_STATE == 3'h5;
-  wire             _GEN_4 = AXI_REQUEST_STATE == 3'h1;
-  wire             m_axi_bready_0 = AXI_REQUEST_STATE == 3'h6;
-  reg  [31:0]      write_counter;
-  reg  [255:0]     AXI_read_buffer;
-  wire             _GEN_5 = _GEN_3 & ~W_done;
-  wire             _GEN_6 = _GEN_5 & ~(|write_counter);
-  wire             _GEN_7 = _GEN_3 & ~W_done;
-  wire             _GEN_8 = m_axi_rready_0 & m_axi_rvalid;
-  wire             _GEN_9 = _GEN_8 & m_axi_rlast;
-  wire [255:0]     _GEN_10 = {m_axi_rdata, AXI_read_buffer[255:32]};
-  wire             _GEN_11 = _GEN_4 & _GEN_9;
-  wire             _GEN_12 = _GEN_0 & ~W_done;
-  wire             _GEN_13 = W_done & R_done;
-  wire             _GEN_14 = _GEN_0 & _GEN_13;
+  wire         miss;
+  wire [1:0]   hit_oh;
+  wire         data_way_1_valid;
+  wire         data_way_0_valid;
+  wire [1:0]   valid_oh;
+  wire [5:0]   current_set_decomposed_icache_address_set;
+  wire         _GEN;
+  wire         m_axi_rready_0;
+  wire         _CPU_response_skid_buffer_io_enq_ready;
+  wire [20:0]  _data_memory_1_io_data_out_tag;
+  wire [255:0] _data_memory_1_io_data_out_data;
+  wire [20:0]  _data_memory_0_io_data_out_tag;
+  wire [255:0] _data_memory_0_io_data_out_data;
+  wire [1:0]   _LRU_memory_io_data_out;
+  wire         _final_response_buffer_io_deq_valid;
+  wire [255:0] _final_response_buffer_io_deq_bits_data;
+  reg  [31:0]  AXI_AR_buf_araddr;
+  reg  [7:0]   AXI_AR_buf_arlen;
+  reg  [2:0]   AXI_AR_buf_arsize;
+  reg  [255:0] AXI_AW_DATA_BUFFER;
+  reg  [2:0]   AXI_REQUEST_STATE;
+  reg          R_done;
+  reg          W_done;
+  wire         _GEN_0 = AXI_REQUEST_STATE == 3'h2;
+  wire         _GEN_1 = AXI_REQUEST_STATE == 3'h3;
+  wire         _GEN_2 = AXI_REQUEST_STATE == 3'h4;
+  wire         _GEN_3 = AXI_REQUEST_STATE == 3'h5;
+  wire         _GEN_4 = AXI_REQUEST_STATE == 3'h1;
+  wire         m_axi_bready_0 = AXI_REQUEST_STATE == 3'h6;
+  reg  [31:0]  write_counter;
+  reg  [255:0] AXI_read_buffer;
+  wire         _GEN_5 = _GEN_3 & ~W_done;
+  wire         _GEN_6 = _GEN_5 & ~(|write_counter);
+  wire         _GEN_7 = _GEN_3 & ~W_done;
+  wire         _GEN_8 = m_axi_rready_0 & m_axi_rvalid;
+  wire         _GEN_9 = _GEN_8 & m_axi_rlast;
+  wire [255:0] _GEN_10 = {m_axi_rdata, AXI_read_buffer[255:32]};
+  wire         _GEN_11 = _GEN_4 & _GEN_9;
+  wire         _GEN_12 = _GEN_0 & ~W_done;
+  wire         _GEN_13 = W_done & R_done;
+  wire         _GEN_14 = _GEN_0 & _GEN_13;
   assign m_axi_rready_0 = _GEN_1 | _GEN_0 | _GEN_4;
-  wire             _GEN_15 = _GEN_2 & ~W_done;
-  wire             m_axi_wvalid_0 =
-    _GEN_2 ? ~W_done | _GEN_12 | _GEN_7 : _GEN_12 | _GEN_7;
-  reg  [2:0]       cache_state;
-  reg  [31:0]      fetch_PC_buf_addr;
-  reg  [31:0]      replay_address_addr;
-  reg  [31:0]      replay_address_wr_data;
-  reg              replay_address_wr_en;
-  reg              cache_valid;
-  reg              valid_mem_0_0;
-  reg              valid_mem_0_1;
-  reg              valid_mem_1_0;
-  reg              valid_mem_1_1;
-  reg              valid_mem_2_0;
-  reg              valid_mem_2_1;
-  reg              valid_mem_3_0;
-  reg              valid_mem_3_1;
-  reg              valid_mem_4_0;
-  reg              valid_mem_4_1;
-  reg              valid_mem_5_0;
-  reg              valid_mem_5_1;
-  reg              valid_mem_6_0;
-  reg              valid_mem_6_1;
-  reg              valid_mem_7_0;
-  reg              valid_mem_7_1;
-  reg              valid_mem_8_0;
-  reg              valid_mem_8_1;
-  reg              valid_mem_9_0;
-  reg              valid_mem_9_1;
-  reg              valid_mem_10_0;
-  reg              valid_mem_10_1;
-  reg              valid_mem_11_0;
-  reg              valid_mem_11_1;
-  reg              valid_mem_12_0;
-  reg              valid_mem_12_1;
-  reg              valid_mem_13_0;
-  reg              valid_mem_13_1;
-  reg              valid_mem_14_0;
-  reg              valid_mem_14_1;
-  reg              valid_mem_15_0;
-  reg              valid_mem_15_1;
-  reg              valid_mem_16_0;
-  reg              valid_mem_16_1;
-  reg              valid_mem_17_0;
-  reg              valid_mem_17_1;
-  reg              valid_mem_18_0;
-  reg              valid_mem_18_1;
-  reg              valid_mem_19_0;
-  reg              valid_mem_19_1;
-  reg              valid_mem_20_0;
-  reg              valid_mem_20_1;
-  reg              valid_mem_21_0;
-  reg              valid_mem_21_1;
-  reg              valid_mem_22_0;
-  reg              valid_mem_22_1;
-  reg              valid_mem_23_0;
-  reg              valid_mem_23_1;
-  reg              valid_mem_24_0;
-  reg              valid_mem_24_1;
-  reg              valid_mem_25_0;
-  reg              valid_mem_25_1;
-  reg              valid_mem_26_0;
-  reg              valid_mem_26_1;
-  reg              valid_mem_27_0;
-  reg              valid_mem_27_1;
-  reg              valid_mem_28_0;
-  reg              valid_mem_28_1;
-  reg              valid_mem_29_0;
-  reg              valid_mem_29_1;
-  reg              valid_mem_30_0;
-  reg              valid_mem_30_1;
-  reg              valid_mem_31_0;
-  reg              valid_mem_31_1;
-  reg              valid_mem_32_0;
-  reg              valid_mem_32_1;
-  reg              valid_mem_33_0;
-  reg              valid_mem_33_1;
-  reg              valid_mem_34_0;
-  reg              valid_mem_34_1;
-  reg              valid_mem_35_0;
-  reg              valid_mem_35_1;
-  reg              valid_mem_36_0;
-  reg              valid_mem_36_1;
-  reg              valid_mem_37_0;
-  reg              valid_mem_37_1;
-  reg              valid_mem_38_0;
-  reg              valid_mem_38_1;
-  reg              valid_mem_39_0;
-  reg              valid_mem_39_1;
-  reg              valid_mem_40_0;
-  reg              valid_mem_40_1;
-  reg              valid_mem_41_0;
-  reg              valid_mem_41_1;
-  reg              valid_mem_42_0;
-  reg              valid_mem_42_1;
-  reg              valid_mem_43_0;
-  reg              valid_mem_43_1;
-  reg              valid_mem_44_0;
-  reg              valid_mem_44_1;
-  reg              valid_mem_45_0;
-  reg              valid_mem_45_1;
-  reg              valid_mem_46_0;
-  reg              valid_mem_46_1;
-  reg              valid_mem_47_0;
-  reg              valid_mem_47_1;
-  reg              valid_mem_48_0;
-  reg              valid_mem_48_1;
-  reg              valid_mem_49_0;
-  reg              valid_mem_49_1;
-  reg              valid_mem_50_0;
-  reg              valid_mem_50_1;
-  reg              valid_mem_51_0;
-  reg              valid_mem_51_1;
-  reg              valid_mem_52_0;
-  reg              valid_mem_52_1;
-  reg              valid_mem_53_0;
-  reg              valid_mem_53_1;
-  reg              valid_mem_54_0;
-  reg              valid_mem_54_1;
-  reg              valid_mem_55_0;
-  reg              valid_mem_55_1;
-  reg              valid_mem_56_0;
-  reg              valid_mem_56_1;
-  reg              valid_mem_57_0;
-  reg              valid_mem_57_1;
-  reg              valid_mem_58_0;
-  reg              valid_mem_58_1;
-  reg              valid_mem_59_0;
-  reg              valid_mem_59_1;
-  reg              valid_mem_60_0;
-  reg              valid_mem_60_1;
-  reg              valid_mem_61_0;
-  reg              valid_mem_61_1;
-  reg              valid_mem_62_0;
-  reg              valid_mem_62_1;
-  reg              valid_mem_63_0;
-  reg              valid_mem_63_1;
-  wire [31:0]      request_addr = io_CPU_request_bits_addr & 32'hFFFFFFE0;
-  wire             _GEN_16 = miss & ~io_flush_valid;
-  wire             _GEN_17 = cache_state == 3'h1;
-  wire             _GEN_18 = (|cache_state) ? _GEN_17 : _GEN_16;
-  wire             m_axi_arvalid_0 =
+  wire         _GEN_15 = _GEN_2 & ~W_done;
+  wire         m_axi_wvalid_0 = _GEN_2 ? ~W_done | _GEN_12 | _GEN_7 : _GEN_12 | _GEN_7;
+  reg  [2:0]   cache_state;
+  reg  [31:0]  fetch_PC_buf_addr;
+  reg  [31:0]  replay_address_addr;
+  reg  [31:0]  replay_address_wr_data;
+  reg          replay_address_wr_en;
+  reg          cache_valid;
+  reg          valid_mem_0_0;
+  reg          valid_mem_0_1;
+  reg          valid_mem_1_0;
+  reg          valid_mem_1_1;
+  reg          valid_mem_2_0;
+  reg          valid_mem_2_1;
+  reg          valid_mem_3_0;
+  reg          valid_mem_3_1;
+  reg          valid_mem_4_0;
+  reg          valid_mem_4_1;
+  reg          valid_mem_5_0;
+  reg          valid_mem_5_1;
+  reg          valid_mem_6_0;
+  reg          valid_mem_6_1;
+  reg          valid_mem_7_0;
+  reg          valid_mem_7_1;
+  reg          valid_mem_8_0;
+  reg          valid_mem_8_1;
+  reg          valid_mem_9_0;
+  reg          valid_mem_9_1;
+  reg          valid_mem_10_0;
+  reg          valid_mem_10_1;
+  reg          valid_mem_11_0;
+  reg          valid_mem_11_1;
+  reg          valid_mem_12_0;
+  reg          valid_mem_12_1;
+  reg          valid_mem_13_0;
+  reg          valid_mem_13_1;
+  reg          valid_mem_14_0;
+  reg          valid_mem_14_1;
+  reg          valid_mem_15_0;
+  reg          valid_mem_15_1;
+  reg          valid_mem_16_0;
+  reg          valid_mem_16_1;
+  reg          valid_mem_17_0;
+  reg          valid_mem_17_1;
+  reg          valid_mem_18_0;
+  reg          valid_mem_18_1;
+  reg          valid_mem_19_0;
+  reg          valid_mem_19_1;
+  reg          valid_mem_20_0;
+  reg          valid_mem_20_1;
+  reg          valid_mem_21_0;
+  reg          valid_mem_21_1;
+  reg          valid_mem_22_0;
+  reg          valid_mem_22_1;
+  reg          valid_mem_23_0;
+  reg          valid_mem_23_1;
+  reg          valid_mem_24_0;
+  reg          valid_mem_24_1;
+  reg          valid_mem_25_0;
+  reg          valid_mem_25_1;
+  reg          valid_mem_26_0;
+  reg          valid_mem_26_1;
+  reg          valid_mem_27_0;
+  reg          valid_mem_27_1;
+  reg          valid_mem_28_0;
+  reg          valid_mem_28_1;
+  reg          valid_mem_29_0;
+  reg          valid_mem_29_1;
+  reg          valid_mem_30_0;
+  reg          valid_mem_30_1;
+  reg          valid_mem_31_0;
+  reg          valid_mem_31_1;
+  reg          valid_mem_32_0;
+  reg          valid_mem_32_1;
+  reg          valid_mem_33_0;
+  reg          valid_mem_33_1;
+  reg          valid_mem_34_0;
+  reg          valid_mem_34_1;
+  reg          valid_mem_35_0;
+  reg          valid_mem_35_1;
+  reg          valid_mem_36_0;
+  reg          valid_mem_36_1;
+  reg          valid_mem_37_0;
+  reg          valid_mem_37_1;
+  reg          valid_mem_38_0;
+  reg          valid_mem_38_1;
+  reg          valid_mem_39_0;
+  reg          valid_mem_39_1;
+  reg          valid_mem_40_0;
+  reg          valid_mem_40_1;
+  reg          valid_mem_41_0;
+  reg          valid_mem_41_1;
+  reg          valid_mem_42_0;
+  reg          valid_mem_42_1;
+  reg          valid_mem_43_0;
+  reg          valid_mem_43_1;
+  reg          valid_mem_44_0;
+  reg          valid_mem_44_1;
+  reg          valid_mem_45_0;
+  reg          valid_mem_45_1;
+  reg          valid_mem_46_0;
+  reg          valid_mem_46_1;
+  reg          valid_mem_47_0;
+  reg          valid_mem_47_1;
+  reg          valid_mem_48_0;
+  reg          valid_mem_48_1;
+  reg          valid_mem_49_0;
+  reg          valid_mem_49_1;
+  reg          valid_mem_50_0;
+  reg          valid_mem_50_1;
+  reg          valid_mem_51_0;
+  reg          valid_mem_51_1;
+  reg          valid_mem_52_0;
+  reg          valid_mem_52_1;
+  reg          valid_mem_53_0;
+  reg          valid_mem_53_1;
+  reg          valid_mem_54_0;
+  reg          valid_mem_54_1;
+  reg          valid_mem_55_0;
+  reg          valid_mem_55_1;
+  reg          valid_mem_56_0;
+  reg          valid_mem_56_1;
+  reg          valid_mem_57_0;
+  reg          valid_mem_57_1;
+  reg          valid_mem_58_0;
+  reg          valid_mem_58_1;
+  reg          valid_mem_59_0;
+  reg          valid_mem_59_1;
+  reg          valid_mem_60_0;
+  reg          valid_mem_60_1;
+  reg          valid_mem_61_0;
+  reg          valid_mem_61_1;
+  reg          valid_mem_62_0;
+  reg          valid_mem_62_1;
+  reg          valid_mem_63_0;
+  reg          valid_mem_63_1;
+  wire [31:0]  request_addr = io_CPU_request_bits_addr & 32'hFFFFFFE0;
+  wire         _GEN_16 = miss & ~io_flush_valid;
+  wire         _GEN_17 = cache_state == 3'h1;
+  wire         _GEN_18 = (|cache_state) ? _GEN_17 : _GEN_16;
+  wire         m_axi_arvalid_0 =
     (|cache_state) ? _GEN_17 & ~(|AXI_REQUEST_STATE) : _GEN_16 & ~(|AXI_REQUEST_STATE);
-  wire             _GEN_19 = cache_state == 3'h2;
-  wire             _GEN_20 = cache_state == 3'h3;
-  wire             _GEN_21 = ~(|cache_state) | _GEN_17;
+  wire         _GEN_19 = cache_state == 3'h2;
+  wire         _GEN_20 = cache_state == 3'h3;
+  wire         _GEN_21 = ~(|cache_state) | _GEN_17;
   assign _GEN = ~_GEN_21 & (_GEN_19 ? ~io_flush_valid : _GEN_20);
-  wire [255:0]     axi_response =
+  wire [255:0] axi_response =
     _GEN_21
       ? 256'h0
       : _GEN_19
           ? (io_flush_valid ? 256'h0 : _final_response_buffer_io_deq_bits_data)
           : _GEN_20 ? _final_response_buffer_io_deq_bits_data : 256'h0;
-  wire             axi_response_valid =
+  wire         axi_response_valid =
     ~_GEN_21
     & (_GEN_19
          ? ~io_flush_valid & _GEN & _final_response_buffer_io_deq_valid
          : _GEN_20 & _GEN & _final_response_buffer_io_deq_valid);
-  wire             _current_address_T_1 = (|cache_state) | miss;
-  wire [31:0]      current_address_addr =
+  wire         _current_address_T_1 = (|cache_state) | miss;
+  wire [31:0]  current_address_addr =
     _current_address_T_1 ? replay_address_addr : io_CPU_request_bits_addr;
-  wire [31:0]      current_address_wr_data =
+  wire [31:0]  current_address_wr_data =
     _current_address_T_1 ? replay_address_wr_data : io_CPU_request_bits_wr_data;
-  wire             current_address_wr_en =
+  wire         current_address_wr_en =
     _current_address_T_1 ? replay_address_wr_en : io_CPU_request_bits_wr_en;
-  wire [20:0]      current_packet_tag = current_address_addr[31:11];
-  wire [5:0]       current_packet_set = current_address_addr[10:5];
-  wire             current_packet_fetch_packet = current_address_addr[4];
-  wire [2:0]       current_packet_instruction_offset = current_address_addr[4:2];
-  reg  [5:0]       LRU_memory_io_wr_addr_REG;
-  wire [63:0]      _GEN_22 =
+  wire [20:0]  current_packet_tag = current_address_addr[31:11];
+  wire [5:0]   current_packet_set = current_address_addr[10:5];
+  wire         current_packet_fetch_packet = current_address_addr[4];
+  wire [2:0]   current_packet_instruction_offset = current_address_addr[4:2];
+  reg  [5:0]   LRU_memory_io_wr_addr_REG;
+  wire [63:0]  _GEN_22 =
     {{valid_mem_63_0},
      {valid_mem_62_0},
      {valid_mem_61_0},
@@ -373,8 +345,8 @@ module L1_instruction_cache(
      {valid_mem_2_0},
      {valid_mem_1_0},
      {valid_mem_0_0}};
-  wire             _GEN_23 = _GEN_22[current_set_decomposed_icache_address_set];
-  wire [63:0]      _GEN_24 =
+  wire         _GEN_23 = _GEN_22[current_set_decomposed_icache_address_set];
+  wire [63:0]  _GEN_24 =
     {{valid_mem_63_1},
      {valid_mem_62_1},
      {valid_mem_61_1},
@@ -439,96 +411,76 @@ module L1_instruction_cache(
      {valid_mem_2_1},
      {valid_mem_1_1},
      {valid_mem_0_1}};
-  wire             _GEN_25 = _GEN_24[current_set_decomposed_icache_address_set];
-  wire [1:0]       allocate_way =
+  wire         _GEN_25 = _GEN_24[current_set_decomposed_icache_address_set];
+  wire [1:0]   allocate_way =
     ~(|valid_oh) | _LRU_memory_io_data_out[1] ? 2'h2 : {1'h0, _LRU_memory_io_data_out[0]};
   assign current_set_decomposed_icache_address_set = replay_address_addr[10:5];
-  reg              REG_0;
-  reg              REG_1;
+  reg          REG_0;
+  reg          REG_1;
   assign valid_oh = {REG_1, REG_0};
-  wire             _data_memory_1_io_wr_en_T_2 = cache_state == 3'h2;
-  wire             _data_memory_0_io_wr_en_T_3 =
+  wire         _data_memory_1_io_wr_en_T_2 = cache_state == 3'h2;
+  wire         _data_memory_0_io_wr_en_T_3 =
     axi_response_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2;
-  wire             _data_memory_1_io_wr_en_T_3 =
+  wire         _data_memory_1_io_wr_en_T_3 =
     axi_response_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2;
-  reg  [20:0]      hit_oh_vec_0_REG;
-  wire             hit_oh_vec_0 =
+  reg  [20:0]  hit_oh_vec_0_REG;
+  wire         hit_oh_vec_0 =
     _data_memory_0_io_data_out_tag == hit_oh_vec_0_REG & data_way_0_valid;
   assign data_way_0_valid = allocate_way[0] & _data_memory_0_io_wr_en_T_3 | _GEN_23;
-  reg  [20:0]      hit_oh_vec_1_REG;
-  wire             hit_oh_vec_1 =
+  reg  [20:0]  hit_oh_vec_1_REG;
+  wire         hit_oh_vec_1 =
     _data_memory_1_io_data_out_tag == hit_oh_vec_1_REG & data_way_1_valid;
   assign data_way_1_valid = allocate_way[1] & _data_memory_1_io_wr_en_T_3 | _GEN_25;
   assign hit_oh = {hit_oh_vec_1, hit_oh_vec_0};
-  wire             replay_valid = cache_state == 3'h4;
-  reg              hit_REG;
-  reg              hit_REG_1;
-  reg              hit_REG_2;
-  reg  [31:0]      hit_REG_3;
-  wire             hit =
+  wire         replay_valid = cache_state == 3'h4;
+  reg          hit_REG;
+  reg          hit_REG_1;
+  reg          hit_REG_2;
+  reg  [31:0]  hit_REG_3;
+  wire         hit =
     (|hit_oh) & (hit_REG | replay_valid) & ~hit_REG_1 & ~hit_REG_2 & (|valid_oh)
     & io_CPU_request_bits_addr == hit_REG_3;
-  reg              miss_REG;
-  reg              miss_REG_1;
-  reg              miss_REG_2;
-  reg  [31:0]      miss_REG_3;
+  reg          miss_REG;
+  reg          miss_REG_1;
+  reg          miss_REG_2;
+  reg  [31:0]  miss_REG_3;
   assign miss =
     ~(|hit_oh) & (miss_REG | replay_valid) & ~miss_REG_1 & ~miss_REG_2 | ~(|valid_oh)
     | io_CPU_request_bits_addr != miss_REG_3;
-  wire [255:0]     hit_instruction_data =
+  wire [255:0] hit_instruction_data =
     hit_oh_vec_1
       ? _data_memory_1_io_data_out_data
       : hit_oh_vec_0 ? _data_memory_0_io_data_out_data : 256'h0;
-  wire [31:0]      instruction_vec_0 = hit_instruction_data[31:0];
-  wire [31:0]      instruction_vec_1 = hit_instruction_data[63:32];
-  wire [31:0]      instruction_vec_2 = hit_instruction_data[95:64];
-  wire [31:0]      instruction_vec_3 = hit_instruction_data[127:96];
-  wire [31:0]      instruction_vec_4 = hit_instruction_data[159:128];
-  wire [31:0]      instruction_vec_5 = hit_instruction_data[191:160];
-  wire [31:0]      instruction_vec_6 = hit_instruction_data[223:192];
-  wire [31:0]      instruction_vec_7 = hit_instruction_data[255:224];
-  reg              CPU_response_bits_instructions_0_instruction_REG;
-  wire [7:0][31:0] _GEN_26 =
-    {{instruction_vec_7},
-     {instruction_vec_6},
-     {instruction_vec_5},
-     {instruction_vec_4},
-     {instruction_vec_3},
-     {instruction_vec_2},
-     {instruction_vec_1},
-     {instruction_vec_0}};
-  reg              CPU_response_bits_instructions_1_instruction_REG;
-  reg              CPU_response_bits_instructions_2_instruction_REG;
-  reg              CPU_response_bits_instructions_3_instruction_REG;
-  reg              CPU_response_valid_REG;
-  assign CPU_response_valid =
+  reg          CPU_response_bits_instruction_data_REG;
+  reg          CPU_response_valid_REG;
+  wire         CPU_response_valid =
     (cache_valid | hit) & ~(io_flush_valid | CPU_response_valid_REG);
-  wire             io_CPU_request_ready_0 = ~(|cache_state) & ~miss;
+  wire         io_CPU_request_ready_0 = ~(|cache_state) & ~miss;
   always @(posedge clock) begin
-    automatic logic _GEN_27 = ~W_done & m_axi_wready & m_axi_wvalid_0;
+    automatic logic _GEN_26 = ~W_done & m_axi_wready & m_axi_wvalid_0;
+    automatic logic _GEN_27;
     automatic logic _GEN_28;
     automatic logic _GEN_29;
     automatic logic _GEN_30;
-    automatic logic _GEN_31;
     automatic logic _miss_T_2 = io_CPU_request_ready_0 & io_CPU_request_valid;
-    _GEN_28 = _GEN_3 & _GEN_27;
-    _GEN_29 = ~R_done & _GEN_8;
-    _GEN_30 = _GEN_0 & _GEN_27;
-    _GEN_31 = _GEN_2 & _GEN_27;
+    _GEN_27 = _GEN_3 & _GEN_26;
+    _GEN_28 = ~R_done & _GEN_8;
+    _GEN_29 = _GEN_0 & _GEN_26;
+    _GEN_30 = _GEN_2 & _GEN_26;
     AXI_AR_buf_araddr <= _GEN_18 ? request_addr : 32'h0;
     AXI_AR_buf_arlen <= _GEN_18 ? 8'h7 : 8'h0;
     AXI_AR_buf_arsize <= {1'h0, (|cache_state) ? _GEN_17 : _GEN_16, 1'h0};
-    if (_GEN_31 | _GEN_30 | _GEN_28)
+    if (_GEN_30 | _GEN_29 | _GEN_27)
       AXI_AW_DATA_BUFFER <= {32'h0, AXI_AW_DATA_BUFFER[255:32]};
     if (_GEN_1) begin
       if (_GEN_9)
         AXI_read_buffer <= 256'h0;
-      else if (_GEN_29)
+      else if (_GEN_28)
         AXI_read_buffer <= _GEN_10;
       else if (_GEN_0) begin
         if (_GEN_13)
           AXI_read_buffer <= 256'h0;
-        else if (_GEN_29)
+        else if (_GEN_28)
           AXI_read_buffer <= _GEN_10;
         else if (_GEN_4) begin
           if (_GEN_9)
@@ -547,7 +499,7 @@ module L1_instruction_cache(
     else if (_GEN_0) begin
       if (_GEN_13)
         AXI_read_buffer <= 256'h0;
-      else if (_GEN_29)
+      else if (_GEN_28)
         AXI_read_buffer <= _GEN_10;
       else if (_GEN_4) begin
         if (_GEN_9)
@@ -575,10 +527,7 @@ module L1_instruction_cache(
     miss_REG_1 <= io_flush_valid;
     miss_REG_2 <= reset;
     miss_REG_3 <= io_CPU_request_bits_addr;
-    CPU_response_bits_instructions_0_instruction_REG <= current_packet_fetch_packet;
-    CPU_response_bits_instructions_1_instruction_REG <= current_packet_fetch_packet;
-    CPU_response_bits_instructions_2_instruction_REG <= current_packet_fetch_packet;
-    CPU_response_bits_instructions_3_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_bits_instruction_data_REG <= current_packet_fetch_packet;
     CPU_response_valid_REG <= io_flush_valid;
     if (reset) begin
       AXI_REQUEST_STATE <= 3'h0;
@@ -721,34 +670,34 @@ module L1_instruction_cache(
       valid_mem_63_1 <= 1'h0;
     end
     else begin
+      automatic logic _GEN_31;
       automatic logic _GEN_32;
-      automatic logic _GEN_33;
       automatic logic _valid_mem_0_T_2;
       automatic logic _valid_mem_1_T_2;
-      _GEN_32 = m_axi_arready & m_axi_arvalid_0;
-      _GEN_33 =
+      _GEN_31 = m_axi_arready & m_axi_arvalid_0;
+      _GEN_32 =
         cache_state == 3'h4
         & (io_flush_valid | CPU_response_valid & _CPU_response_skid_buffer_io_enq_ready);
       _valid_mem_0_T_2 = allocate_way[0] & _data_memory_0_io_wr_en_T_3 | _GEN_23;
       _valid_mem_1_T_2 = allocate_way[1] & _data_memory_1_io_wr_en_T_3 | _GEN_25;
       if (|AXI_REQUEST_STATE) begin
-        automatic logic [7:0][2:0] _GEN_34;
-        _GEN_34 =
+        automatic logic [7:0][2:0] _GEN_33;
+        _GEN_33 =
           {{AXI_REQUEST_STATE},
            {m_axi_bready_0 & m_axi_bvalid ? 3'h0 : 3'h6},
-           {_GEN_32 ? 3'h2 : 3'h5},
+           {_GEN_31 ? 3'h2 : 3'h5},
            {{1'h1, W_done, 1'h0}},
            {R_done ? 3'h0 : 3'h3},
            {{R_done & W_done, 2'h2}},
            {3'h1},
            {AXI_REQUEST_STATE}};
-        AXI_REQUEST_STATE <= _GEN_34[AXI_REQUEST_STATE];
+        AXI_REQUEST_STATE <= _GEN_33[AXI_REQUEST_STATE];
       end
-      else if (_GEN_32)
+      else if (_GEN_31)
         AXI_REQUEST_STATE <= 3'h3;
       else
         AXI_REQUEST_STATE <= 3'h0;
-      if (_GEN_1 & _GEN_29 | _GEN_0 & _GEN_29)
+      if (_GEN_1 & _GEN_28 | _GEN_0 & _GEN_28)
         R_done <= m_axi_rlast;
       else if (~(|AXI_REQUEST_STATE))
         R_done <= ~m_axi_arvalid_0;
@@ -764,11 +713,11 @@ module L1_instruction_cache(
       end
       else
         W_done <= ~(|AXI_REQUEST_STATE) | W_done;
-      if (_GEN_31)
+      if (_GEN_30)
         write_counter <= write_counter - 32'h1;
-      else if (_GEN_30)
+      else if (_GEN_29)
         write_counter <= write_counter - 32'h1;
-      else if (_GEN_28)
+      else if (_GEN_27)
         write_counter <= write_counter - 32'h1;
       if (|cache_state) begin
         if (_GEN_17) begin
@@ -781,7 +730,7 @@ module L1_instruction_cache(
           else if (axi_response_valid)
             cache_state <= 3'h4;
         end
-        else if (_GEN_20 ? axi_response_valid : _GEN_33)
+        else if (_GEN_20 ? axi_response_valid : _GEN_32)
           cache_state <= 3'h0;
       end
       else begin
@@ -800,7 +749,7 @@ module L1_instruction_cache(
         if (_GEN_19)
           cache_valid <= ~io_flush_valid & cache_valid;
         else
-          cache_valid <= (_GEN_20 | ~_GEN_33) & cache_valid;
+          cache_valid <= (_GEN_20 | ~_GEN_32) & cache_valid;
       end
       if (current_set_decomposed_icache_address_set == 6'h0) begin
         valid_mem_0_0 <= _valid_mem_0_T_2;
@@ -1108,93 +1057,22 @@ module L1_instruction_cache(
     .io_data_out_tag  (_data_memory_1_io_data_out_tag),
     .io_data_out_data (_data_memory_1_io_data_out_data)
   );
-  instruction_validator validator (
-    .io_instruction_index  (fetch_PC_buf_addr[3:2]),
-    .io_instruction_output (_validator_io_instruction_output)
-  );
-  Queue2_fetch_packet CPU_response_skid_buffer (
-    .clock                                   (clock),
-    .reset                                   (reset),
-    .io_enq_ready                            (_CPU_response_skid_buffer_io_enq_ready),
-    .io_enq_valid                            (CPU_response_valid),
-    .io_enq_bits_fetch_PC                    (fetch_PC_buf_addr),
-    .io_enq_bits_valid_bits_0
-      (_validator_io_instruction_output[3] & CPU_response_valid),
-    .io_enq_bits_valid_bits_1
-      (_validator_io_instruction_output[2] & CPU_response_valid),
-    .io_enq_bits_valid_bits_2
-      (_validator_io_instruction_output[1] & CPU_response_valid),
-    .io_enq_bits_valid_bits_3
-      (_validator_io_instruction_output[0] & CPU_response_valid),
-    .io_enq_bits_instructions_0_instruction
-      (_GEN_26[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
-    .io_enq_bits_instructions_0_packet_index (4'h0),
-    .io_enq_bits_instructions_0_ROB_index    (6'h0),
-    .io_enq_bits_instructions_1_instruction
-      (_GEN_26[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
-    .io_enq_bits_instructions_1_packet_index (4'h1),
-    .io_enq_bits_instructions_1_ROB_index    (6'h0),
-    .io_enq_bits_instructions_2_instruction
-      (_GEN_26[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
-    .io_enq_bits_instructions_2_packet_index (4'h2),
-    .io_enq_bits_instructions_2_ROB_index    (6'h0),
-    .io_enq_bits_instructions_3_instruction
-      (_GEN_26[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
-    .io_enq_bits_instructions_3_packet_index (4'h3),
-    .io_enq_bits_instructions_3_ROB_index    (6'h0),
-    .io_enq_bits_prediction_hit              (1'h0),
-    .io_enq_bits_prediction_target           (32'h0),
-    .io_enq_bits_prediction_br_type          (3'h0),
-    .io_enq_bits_prediction_br_mask_0        (1'h0),
-    .io_enq_bits_prediction_br_mask_1        (1'h0),
-    .io_enq_bits_prediction_br_mask_2        (1'h0),
-    .io_enq_bits_prediction_br_mask_3        (1'h0),
-    .io_enq_bits_GHR                         (16'h0),
-    .io_enq_bits_NEXT                        (7'h0),
-    .io_enq_bits_TOS                         (7'h0),
-    .io_deq_ready                            (io_CPU_response_ready),
-    .io_deq_valid                            (io_CPU_response_valid),
-    .io_deq_bits_fetch_PC                    (io_CPU_response_bits_fetch_PC),
-    .io_deq_bits_valid_bits_0                (io_CPU_response_bits_valid_bits_0),
-    .io_deq_bits_valid_bits_1                (io_CPU_response_bits_valid_bits_1),
-    .io_deq_bits_valid_bits_2                (io_CPU_response_bits_valid_bits_2),
-    .io_deq_bits_valid_bits_3                (io_CPU_response_bits_valid_bits_3),
-    .io_deq_bits_instructions_0_instruction
-      (io_CPU_response_bits_instructions_0_instruction),
-    .io_deq_bits_instructions_0_packet_index
-      (io_CPU_response_bits_instructions_0_packet_index),
-    .io_deq_bits_instructions_0_ROB_index
-      (io_CPU_response_bits_instructions_0_ROB_index),
-    .io_deq_bits_instructions_1_instruction
-      (io_CPU_response_bits_instructions_1_instruction),
-    .io_deq_bits_instructions_1_packet_index
-      (io_CPU_response_bits_instructions_1_packet_index),
-    .io_deq_bits_instructions_1_ROB_index
-      (io_CPU_response_bits_instructions_1_ROB_index),
-    .io_deq_bits_instructions_2_instruction
-      (io_CPU_response_bits_instructions_2_instruction),
-    .io_deq_bits_instructions_2_packet_index
-      (io_CPU_response_bits_instructions_2_packet_index),
-    .io_deq_bits_instructions_2_ROB_index
-      (io_CPU_response_bits_instructions_2_ROB_index),
-    .io_deq_bits_instructions_3_instruction
-      (io_CPU_response_bits_instructions_3_instruction),
-    .io_deq_bits_instructions_3_packet_index
-      (io_CPU_response_bits_instructions_3_packet_index),
-    .io_deq_bits_instructions_3_ROB_index
-      (io_CPU_response_bits_instructions_3_ROB_index),
-    .io_deq_bits_prediction_hit              (io_CPU_response_bits_prediction_hit),
-    .io_deq_bits_prediction_target           (io_CPU_response_bits_prediction_target),
-    .io_deq_bits_prediction_br_type          (io_CPU_response_bits_prediction_br_type),
-    .io_deq_bits_prediction_br_mask_0        (io_CPU_response_bits_prediction_br_mask_0),
-    .io_deq_bits_prediction_br_mask_1        (io_CPU_response_bits_prediction_br_mask_1),
-    .io_deq_bits_prediction_br_mask_2        (io_CPU_response_bits_prediction_br_mask_2),
-    .io_deq_bits_prediction_br_mask_3        (io_CPU_response_bits_prediction_br_mask_3),
-    .io_deq_bits_GHR                         (io_CPU_response_bits_GHR),
-    .io_deq_bits_NEXT                        (io_CPU_response_bits_NEXT),
-    .io_deq_bits_TOS                         (io_CPU_response_bits_TOS),
-    .io_count                                (/* unused */),
-    .io_flush                                (io_flush_valid)
+  Queue2_mem_response CPU_response_skid_buffer (
+    .clock                        (clock),
+    .reset                        (reset),
+    .io_enq_ready                 (_CPU_response_skid_buffer_io_enq_ready),
+    .io_enq_valid                 (CPU_response_valid),
+    .io_enq_bits_instruction_data
+      (CPU_response_bits_instruction_data_REG
+         ? hit_instruction_data[255:128]
+         : hit_instruction_data[127:0]),
+    .io_enq_bits_fetch_PC         (fetch_PC_buf_addr),
+    .io_deq_ready                 (io_CPU_response_ready),
+    .io_deq_valid                 (io_CPU_response_valid),
+    .io_deq_bits_instruction_data (io_CPU_response_bits_instruction_data),
+    .io_deq_bits_fetch_PC         (io_CPU_response_bits_fetch_PC),
+    .io_count                     (/* unused */),
+    .io_flush                     (io_flush_valid)
   );
   assign m_axi_awvalid = 1'h0;
   assign m_axi_awid = 8'h0;

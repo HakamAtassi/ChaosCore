@@ -42,7 +42,7 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
         val flush                 =   Flipped(ValidIO(new flush(coreParameters)))
 
         val commit                =   Flipped(ValidIO(new commit(coreParameters)))
-        val memory_response       =   Flipped(Decoupled(new fetch_packet(coreParameters)))               // TO CPU
+        val memory_response       =   Flipped(Decoupled(new mem_response(coreParameters)))               // TO CPU
 
         val memory_request        =   Decoupled(new frontend_memory_request(coreParameters))
         val fetch_packet          =   Decoupled(new fetch_packet(coreParameters))                     // Fetch packet result (To Decoders)

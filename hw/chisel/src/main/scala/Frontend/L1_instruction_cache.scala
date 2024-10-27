@@ -39,26 +39,6 @@ object cacheState extends ChiselEnum{
     val Active, Request, Allocate, Kill, Replay, Stall = Value
 }
 
-class instruction_validator(fetchWidth: Int) extends Module {
-  val io = IO(new Bundle {
-    val instruction_index = Input(UInt(log2Ceil(fetchWidth).W))
-    val instruction_output = Output(UInt(fetchWidth.W))
-  })
-    // instruction offset -> valid mask
-    //fetch width = 2
-        // 0 -> 11
-        // 1 -> 01
-
-    // fetch width = 4
-        //00 -> 1111
-        //01 -> 0111
-        //10 -> 0011
-        //11 -> 0001
-
-    val masks = VecInit(Seq.tabulate(fetchWidth)(i => ((1 << (fetchWidth - i)) - 1).U(fetchWidth.W)))
-    io.instruction_output := masks(io.instruction_index)
-}
-
 class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:NOCParameters) extends Module with AXICacheNode{
     import coreParameters._
 
@@ -103,7 +83,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     val io = IO(new Bundle{
         val CPU_request         =     Flipped(Decoupled(new frontend_memory_request(coreParameters)))            // Inputs from CPU
-        val CPU_response        =     Decoupled(new fetch_packet(coreParameters))                       // TO CPU
+        val CPU_response        =     Decoupled(new mem_response(coreParameters))                       // TO CPU
 
         val flush               =     Flipped(ValidIO(new flush(coreParameters)))
 
@@ -114,8 +94,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     ////////////////////
     // OUTPUT BUNDLES //
     ////////////////////
-    val CPU_response         = Wire(Decoupled(new fetch_packet(coreParameters)))
-    CPU_response := DontCare
+    val CPU_response         = Wire(Decoupled(new mem_response(coreParameters)))
+    //CPU_response := DontCare
 
     val cache_state     = RegInit(cacheState(), cacheState.Active)
 
@@ -145,7 +125,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val hit_oh_vec  = Wire(Vec(ways, UInt(1.W)))
 
     val hit_instruction_data = Wire(UInt(wayDataWidth.W)) 
-    val instruction_vec      = Wire(Vec(instructionsPerLine, UInt(32.W)))   
+    val packet_vec           = Wire(Vec(instructionsPerLine/fetchWidth, UInt((fetchWidth*32).W)))   
     val aligned_packet_index = Wire(UInt(fetchPacketBits.W))
 
     val dram_addr_mask = ((1.U << 32.U) - (1.U << byteOffsetBits))
@@ -346,25 +326,17 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
         }
     }
 
-    for(instruction <- 0 until instructionsPerLine){    // split hit line into its constituent instructions
-        instruction_vec(instruction) := hit_instruction_data((instruction+1)*32-1, (instruction)*32)    
+    for(instruction <- 0 until instructionsPerLine/fetchWidth){    // split hit line into its constituent instructions
+        packet_vec(instruction) := hit_instruction_data((instruction+1)*(32*fetchWidth)-1, (instruction)*32*fetchWidth)    
     }
 
-    dontTouch(instruction_vec)
+    CPU_response.bits.instruction_data := packet_vec(RegNext(current_packet.fetch_packet))
 
-    for(i <- 0 until fetchWidth){
-        CPU_response.bits.instructions(i).instruction  := instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
-        CPU_response.bits.instructions(i).packet_index := i.U
-        CPU_response.bits.instructions(i).ROB_index    := 0.U
-    }
+    // validator.io.instruction_index := get_decomposed_icache_address(coreParameters, CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
 
-    val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
-
-    validator.io.instruction_index := get_decomposed_icache_address(coreParameters, CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
-
-    for(i <- 0 until fetchWidth){
-        CPU_response.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && CPU_response.valid
-    }
+    // for(i <- 0 until fetchWidth){
+    //     CPU_response.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && CPU_response.valid
+    // }
 
     //////////////////
     // SKID BUFFERS //
@@ -380,7 +352,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     io.CPU_request.ready := (cache_state === cacheState.Active) && !miss //&& io.CPU_response.ready
 
     // FIXME: critical path here...
-    val CPU_response_skid_buffer         = Module(new Queue(new fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val CPU_response_skid_buffer         = Module(new Queue(new mem_response(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
     dontTouch(CPU_response_skid_buffer.io)
 
     CPU_response_skid_buffer.io.enq                  <> CPU_response

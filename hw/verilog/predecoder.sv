@@ -344,7 +344,6 @@ module predecoder(
       (io_fetch_packet_bits_instructions_3_packet_index),
     .io_enq_bits_instructions_3_ROB_index
       (io_fetch_packet_bits_instructions_3_ROB_index),
-    .io_enq_bits_prediction_hit              (1'h0),
     .io_enq_bits_prediction_target           (target_address),
     .io_enq_bits_prediction_br_type
       (is_BRANCH
@@ -404,7 +403,6 @@ module predecoder(
     .io_deq_bits_GHR                         (io_final_fetch_packet_bits_GHR),
     .io_deq_bits_NEXT                        (io_final_fetch_packet_bits_NEXT),
     .io_deq_bits_TOS                         (io_final_fetch_packet_bits_TOS),
-    .io_count                                (/* unused */),
     .io_flush                                (io_flush_valid)
   );
   assign io_revert_valid =

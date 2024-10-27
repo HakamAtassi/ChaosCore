@@ -32,6 +32,26 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
+class instruction_validator(fetchWidth: Int) extends Module {
+  val io = IO(new Bundle {
+    val instruction_index = Input(UInt(log2Ceil(fetchWidth).W))
+    val instruction_output = Output(UInt(fetchWidth.W))
+  })
+    // instruction offset -> valid mask
+    //fetch width = 2
+        // 0 -> 11
+        // 1 -> 01
+
+    // fetch width = 4
+        //00 -> 1111
+        //01 -> 0111
+        //10 -> 0011
+        //11 -> 0001
+
+    val masks = VecInit(Seq.tabulate(fetchWidth)(i => ((1 << (fetchWidth - i)) - 1).U(fetchWidth.W)))
+    io.instruction_output := masks(io.instruction_index)
+}
+
 class instruction_aligner(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
@@ -147,29 +167,66 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
     io.mem_fetch_packet.ready := ready_reg
 }
 
+class aligner_uncompressed(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+
+    val io = IO(new Bundle{
+        //val flush                 =   Input(Bool())
+        val mem_rsp                            =   Flipped(Decoupled(new mem_response(coreParameters)))
+        val aligned_fetch_packet               =   Decoupled(new fetch_packet(coreParameters))           
+    })
+
+    io.aligned_fetch_packet.bits := DontCare
+
+    io.aligned_fetch_packet.bits.fetch_PC := io.mem_rsp.bits.fetch_PC
+
+    for(i <- 0 until fetchWidth){
+        io.aligned_fetch_packet.bits.instructions(i).instruction  := io.mem_rsp.bits.instruction_data((i+1)*32-1, (i)*32) 
+        io.aligned_fetch_packet.bits.instructions(i).packet_index := i.U
+        io.aligned_fetch_packet.bits.instructions(i).ROB_index    := 0.U
+    }
+
+    val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
+    validator.io.instruction_index := get_decomposed_icache_address(coreParameters, io.mem_rsp.bits.fetch_PC).instruction_offset 
+
+    for(i <- 0 until fetchWidth){
+        io.aligned_fetch_packet.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && io.mem_rsp.valid
+    }
+
+    io.aligned_fetch_packet.valid := io.mem_rsp.valid
+    io.mem_rsp.ready := io.aligned_fetch_packet.ready
+
+}
 
 class fetch_queue(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
     val io = IO(new Bundle{
         val flush                 =   Input(Bool())
-        val enq                   =   Flipped(Decoupled(new fetch_packet(coreParameters)))           
+        val enq                   =   Flipped(Decoupled(new mem_response(coreParameters)))           
         val deq                   =   Decoupled(new fetch_packet(coreParameters))           
     })
 
     val instruction_Q   =   Module(new Queue(new fetch_packet(coreParameters), 32, flow=true, hasFlush=true, useSyncReadMem=true))
-    val aligner         =   Module(new instruction_aligner(coreParameters))
-    
+    val rvc:Boolean = false
+    val aligner         =   Module(new aligner_uncompressed(coreParameters))
+    // if (rvc){
+    //     val aligner         =   Module(new instruction_aligner(coreParameters))
+    // } else {
+    //     val aligner         =   Module(new aligner_uncompressed(coreParameters))
+    // }
 
-    aligner.io.mem_fetch_packet.valid     := io.enq.valid
+    aligner.io := DontCare
+
+    aligner.io.mem_rsp.valid     := io.enq.valid
     aligner.io.aligned_fetch_packet.ready := instruction_Q.io.enq.ready
-    aligner.io.mem_fetch_packet.bits      := io.enq.bits
+    aligner.io.mem_rsp.bits      := io.enq.bits
 
     instruction_Q.io.enq.bits             := aligner.io.aligned_fetch_packet.bits
     instruction_Q.io.enq.valid            := aligner.io.aligned_fetch_packet.valid
     instruction_Q.io.flush.get            := io.flush
     instruction_Q.io.deq                  <> io.deq
 
-    io.enq.ready                          := aligner.io.mem_fetch_packet.ready
+    io.enq.ready                          := aligner.io.mem_rsp.ready
 
 }
