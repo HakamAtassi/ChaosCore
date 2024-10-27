@@ -20,7 +20,7 @@ Queue16_frontend_memory_request.sv
 ram_16x40.sv
 Queue16_prediction.sv
 instruction_fetch.sv
-improved_decoder.sv
+decoder.sv
 ram_2x502.sv
 Queue2_decoded_fetch_packet.sv
 fetch_packet_decoder.sv
@@ -80,6 +80,9 @@ L1_data_cache.sv
 ChaosCore_tile.sv
 AXI_debug_printer.sv
 extern_modules.sv
-axi_interconnect_2x2.sv
+axi_interconnect_top.sv
 SOC.sv
-./axi_interconnect_wrap_2x2.v
+./axi_interconnect.v
+
+arbiter.v
+priority_encoder.v

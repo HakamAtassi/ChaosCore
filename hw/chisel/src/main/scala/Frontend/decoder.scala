@@ -40,7 +40,7 @@ import helperFunctions._
 import chisel3.util.experimental.decode._
 
 
-class improved_decoder(coreParameters:CoreParameters) extends Module{
+class decoder(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     import InstructionType._
 
@@ -285,8 +285,8 @@ class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
     ////////////////////
     val decoded_fetch_packet    = Wire(Decoupled(new decoded_fetch_packet(coreParameters)))
 
-    val decoders: Seq[improved_decoder] = Seq.tabulate(fetchWidth) { w =>
-        Module(new improved_decoder(coreParameters))
+    val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
+        Module(new decoder(coreParameters))
     }
 
     var fetch_packet_ready = 1.B

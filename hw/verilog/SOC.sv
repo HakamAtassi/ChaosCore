@@ -437,7 +437,7 @@ module SOC(
     .s_axi_rlast    (_AXI_debug_printer_s_axi_rlast),
     .s_axi_ruser    (_AXI_debug_printer_s_axi_ruser)
   );
-  axi_interconnect_2x2 axi_interconnect (
+  axi_interconnect_top axi_interconnect (
     .clock                                (clock),
     .reset                                (reset),
     .io_m_AXI_port_0_AXI_AW_ready

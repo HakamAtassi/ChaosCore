@@ -312,7 +312,7 @@ module fetch_packet_decoder(
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;
   always @(posedge clock)
     io_fetch_packet_ready_REG <= io_decoded_fetch_packet_ready;
-  improved_decoder decoders_0 (
+  decoder decoders_0 (
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
@@ -374,7 +374,7 @@ module fetch_packet_decoder(
     .io_decoded_instruction_bits_access_width
       (_decoders_0_io_decoded_instruction_bits_access_width)
   );
-  improved_decoder decoders_1 (
+  decoder decoders_1 (
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
@@ -436,7 +436,7 @@ module fetch_packet_decoder(
     .io_decoded_instruction_bits_access_width
       (_decoders_1_io_decoded_instruction_bits_access_width)
   );
-  improved_decoder decoders_2 (
+  decoder decoders_2 (
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
@@ -498,7 +498,7 @@ module fetch_packet_decoder(
     .io_decoded_instruction_bits_access_width
       (_decoders_2_io_decoded_instruction_bits_access_width)
   );
-  improved_decoder decoders_3 (
+  decoder decoders_3 (
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid

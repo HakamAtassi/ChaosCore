@@ -47,28 +47,26 @@ class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NO
     ///////////////
     val ChaosCore_tile = Module(new ChaosCore_tile(coreParameters, addressMap, nocParameters))
 
-
-
     /////////////////
     // PERIPHIRALS //
     /////////////////
     val AXI_debug_printer = Module(new AXI_debug_printer(nocParameters, addressMap))
     //instruction_cache.io.flush := flush
 
-
     //////////////////
     // INTERCONNECT //
     //////////////////
 
-    val axi_interconnect = Module(new axi_interconnect_2x2(nocParameters))
+    //val axi_interconnect = Module(new axi_interconnect_2x2(nocParameters))
+    val axi_interconnect = Module(new axi_interconnect_top(nocParameters))
 
 
     // Connect to NOC
 
-    // D$ <> NOC
+    // I$ <> NOC
     ChaosCore_tile.io.instruction_cache_AXI_port    <> axi_interconnect.io.m_AXI_port(0)
 
-    // I$ <> NOC
+    // D$ <> NOC
     ChaosCore_tile.io.data_cache_AXI_port           <> axi_interconnect.io.m_AXI_port(1)
 
     // NOC <> IO (DRAM)
