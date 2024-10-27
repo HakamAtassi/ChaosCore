@@ -10,7 +10,8 @@ url: "https://hakamtassi.github.io" # The base hostname & protocol for your site
 aux_links:
   Project Repository: https://github.com/hakamtassi/ChaosCore
 
-color_scheme: dark
+#color_scheme: dark
+color_scheme: theme
 
 callouts_level: loud
 callouts:

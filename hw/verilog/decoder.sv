@@ -613,7 +613,9 @@ module decoder(
          io_instruction_valid},
        &_decode_pat_andMatrixOutputs_T_21,
        &_decode_pat_andMatrixOutputs_T_23,
+       &_decode_pat_andMatrixOutputs_T_26,
        &_decode_pat_andMatrixOutputs_T_27,
+       &_decode_pat_andMatrixOutputs_T_28,
        &_decode_pat_andMatrixOutputs_T_34}};
   wire        _SUBTRACT_T_3 = io_instruction_bits_instruction[6:2] == 5'h4;
   wire        _SUBTRACT_T = io_instruction_bits_instruction[6:2] == 5'hC;

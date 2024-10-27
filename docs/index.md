@@ -87,7 +87,7 @@ To run tests on the Pre-Built ChaosCore configurations, run:
 ```
 source venv/bin/activate  # source the python venv
 cd cocotb/prebuilt        # cd into the simulation env
-./profile test          
+./prebuilt_executables/Vtop ../../binaries/bin/dhrystone_main.bin 
 ```
 
 Here, the command `./profile` command is a bash script that ???

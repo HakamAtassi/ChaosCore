@@ -451,7 +451,7 @@ module axi_interconnect_top(
   assign io_s_AXI_port_0_AXI_AR_bits_arcache = _NOC_m_axi_arcache[3:0];
   assign io_s_AXI_port_0_AXI_AR_bits_arprot = _NOC_m_axi_arprot[2:0];
   assign io_s_AXI_port_0_AXI_AR_bits_arqos = _NOC_m_axi_arqos[3:0];
-  assign io_s_AXI_port_0_AXI_AR_bits_arregion = {3'h0, _NOC_m_axi_arregion[0]};
+  assign io_s_AXI_port_0_AXI_AR_bits_arregion = _NOC_m_axi_arregion[3:0];
   assign io_s_AXI_port_0_AXI_AR_bits_aruser = _NOC_m_axi_aruser[0];
   assign io_s_AXI_port_0_AXI_R_ready = _NOC_m_axi_rready[0];
   assign io_s_AXI_port_1_AXI_AW_valid = _NOC_m_axi_awvalid[1];
@@ -482,7 +482,7 @@ module axi_interconnect_top(
   assign io_s_AXI_port_1_AXI_AR_bits_arcache = _NOC_m_axi_arcache[7:4];
   assign io_s_AXI_port_1_AXI_AR_bits_arprot = _NOC_m_axi_arprot[5:3];
   assign io_s_AXI_port_1_AXI_AR_bits_arqos = _NOC_m_axi_arqos[7:4];
-  assign io_s_AXI_port_1_AXI_AR_bits_arregion = {3'h0, _NOC_m_axi_arregion[1]};
+  assign io_s_AXI_port_1_AXI_AR_bits_arregion = _NOC_m_axi_arregion[7:4];
   assign io_s_AXI_port_1_AXI_AR_bits_aruser = _NOC_m_axi_aruser[1];
   assign io_s_AXI_port_1_AXI_R_ready = _NOC_m_axi_rready[1];
 endmodule

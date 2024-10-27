@@ -150,9 +150,6 @@ class axi_interconnect(nocParameters:NOCParameters)	extends	BlackBox(Map(
 }
 
 
-
-
-
 class axi_interconnect_top(nocParameters:NOCParameters)	extends	Module{
 
 	import	nocParameters._
@@ -183,9 +180,6 @@ class axi_interconnect_top(nocParameters:NOCParameters)	extends	Module{
 	}
 
 
-
-
-
 	//connect up masters
 	for(i<-0 until M_COUNT){
 		io.s_AXI_port(i).AXI_AW.bits.awid  		:=read_slice(NOC.io.m_axi_awid, io.s_AXI_port(i).AXI_AW.bits.awid.getWidth, i)
@@ -213,20 +207,20 @@ class axi_interconnect_top(nocParameters:NOCParameters)	extends	Module{
 		NOC.io.m_axi_bresp 	:= Cat(io.s_AXI_port.map(_.AXI_B.bits.bresp).reverse)
 		NOC.io.m_axi_buser 	:= Cat(io.s_AXI_port.map(_.AXI_B.bits.buser).reverse)
 		NOC.io.m_axi_bvalid := Cat(io.s_AXI_port.map(_.AXI_B.valid).reverse)
-		io.s_AXI_port(i).AXI_B.ready := read_slice(NOC.io.m_axi_bready,1,i)
+		io.s_AXI_port(i).AXI_B.ready := read_slice(NOC.io.m_axi_bready,io.s_AXI_port(i).AXI_B.ready.getWidth,i)
 
-		io.s_AXI_port(i).AXI_AR.bits.arid 		:= read_slice(NOC.io.m_axi_arid,ID_WIDTH,i)
-		io.s_AXI_port(i).AXI_AR.bits.araddr 	:= read_slice(NOC.io.m_axi_araddr,ADDR_WIDTH,i)
-		io.s_AXI_port(i).AXI_AR.bits.arlen 		:= read_slice(NOC.io.m_axi_arlen,8,i)
-		io.s_AXI_port(i).AXI_AR.bits.arsize	 	:= read_slice(NOC.io.m_axi_arsize,3,i)
-		io.s_AXI_port(i).AXI_AR.bits.arburst	:= read_slice(NOC.io.m_axi_arburst,2,i)
-		io.s_AXI_port(i).AXI_AR.bits.arlock 	:= read_slice(NOC.io.m_axi_arlock,1,i)
-		io.s_AXI_port(i).AXI_AR.bits.arcache 	:= read_slice(NOC.io.m_axi_arcache,4,i)
-		io.s_AXI_port(i).AXI_AR.bits.arprot 	:= read_slice(NOC.io.m_axi_arprot,3,i)
-		io.s_AXI_port(i).AXI_AR.bits.arqos 		:= read_slice(NOC.io.m_axi_arqos,4,i)
-		io.s_AXI_port(i).AXI_AR.bits.arregion 	:= read_slice(NOC.io.m_axi_arregion,1,i)
-		io.s_AXI_port(i).AXI_AR.bits.aruser 	:= read_slice(NOC.io.m_axi_aruser,ARUSER_WIDTH,i)
-		io.s_AXI_port(i).AXI_AR.valid			:= read_slice(NOC.io.m_axi_arvalid,1,i)
+		io.s_AXI_port(i).AXI_AR.bits.arid 		:= read_slice(NOC.io.m_axi_arid,io.s_AXI_port(i).AXI_AR.bits.arid.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.araddr 	:= read_slice(NOC.io.m_axi_araddr,io.s_AXI_port(i).AXI_AR.bits.araddr.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.arlen 		:= read_slice(NOC.io.m_axi_arlen,io.s_AXI_port(i).AXI_AR.bits.arlen.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.arsize	 	:= read_slice(NOC.io.m_axi_arsize,io.s_AXI_port(i).AXI_AR.bits.arsize.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.arburst	:= read_slice(NOC.io.m_axi_arburst,io.s_AXI_port(i).AXI_AR.bits.arburst.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.arlock 	:= read_slice(NOC.io.m_axi_arlock,io.s_AXI_port(i).AXI_AR.bits.arlock.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.arcache 	:= read_slice(NOC.io.m_axi_arcache,io.s_AXI_port(i).AXI_AR.bits.arcache.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.arprot 	:= read_slice(NOC.io.m_axi_arprot,io.s_AXI_port(i).AXI_AR.bits.arprot.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.arqos 		:= read_slice(NOC.io.m_axi_arqos,io.s_AXI_port(i).AXI_AR.bits.arqos.getWidth 	,i)
+		io.s_AXI_port(i).AXI_AR.bits.arregion 	:= read_slice(NOC.io.m_axi_arregion,io.s_AXI_port(i).AXI_AR.bits.arregion.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.bits.aruser 	:= read_slice(NOC.io.m_axi_aruser,io.s_AXI_port(i).AXI_AR.bits.aruser.getWidth,i)
+		io.s_AXI_port(i).AXI_AR.valid			:= read_slice(NOC.io.m_axi_arvalid,io.s_AXI_port(i).AXI_AR.valid.getWidth,i)
 		NOC.io.m_axi_arready					:= Cat(io.s_AXI_port.map(_.AXI_AR.ready).reverse)
 
 		NOC.io.m_axi_rid   := Cat(io.s_AXI_port.map(_.AXI_R.bits.rid).reverse)
@@ -235,7 +229,7 @@ class axi_interconnect_top(nocParameters:NOCParameters)	extends	Module{
 		NOC.io.m_axi_rlast := Cat(io.s_AXI_port.map(_.AXI_R.bits.rlast).reverse)
 		NOC.io.m_axi_ruser := Cat(io.s_AXI_port.map(_.AXI_R.bits.ruser).reverse)
 		NOC.io.m_axi_rvalid:= Cat(io.s_AXI_port.map(_.AXI_R.valid).reverse)
-		io.s_AXI_port(i).AXI_R.ready := read_slice(NOC.io.m_axi_rready,1,i)
+		io.s_AXI_port(i).AXI_R.ready := read_slice(NOC.io.m_axi_rready,io.s_AXI_port(i).AXI_R.ready.getWidth,i)
 	}
 		
 
@@ -254,21 +248,21 @@ class axi_interconnect_top(nocParameters:NOCParameters)	extends	Module{
 		NOC.io.s_axi_awqos  := Cat(io.m_AXI_port.map(_.AXI_AW.bits.awqos).reverse)
 		NOC.io.s_axi_awuser := Cat(io.m_AXI_port.map(_.AXI_AW.bits.awuser).reverse)
 		NOC.io.s_axi_awvalid:= Cat(io.m_AXI_port.map(_.AXI_AW.valid).reverse)
-		io.m_AXI_port(i).AXI_AW.ready := 	read_slice(NOC.io.s_axi_awready,1,i)
+		io.m_AXI_port(i).AXI_AW.ready := 	read_slice(NOC.io.s_axi_awready,io.m_AXI_port(i).AXI_AW.ready.getWidth,i)
 
 		NOC.io.s_axi_wdata := Cat(io.m_AXI_port.map(_.AXI_W.bits.wdata).reverse)
 		NOC.io.s_axi_wstrb := Cat(io.m_AXI_port.map(_.AXI_W.bits.wstrb).reverse)
 		NOC.io.s_axi_wlast := Cat(io.m_AXI_port.map(_.AXI_W.bits.wlast).reverse)
 		NOC.io.s_axi_wuser := Cat(io.m_AXI_port.map(_.AXI_W.bits.wuser).reverse)
 		NOC.io.s_axi_wvalid:= Cat(io.m_AXI_port.map(_.AXI_W.valid).reverse)
-		io.m_AXI_port(i).AXI_W.ready := read_slice(NOC.io.s_axi_wready,1,i)
+		io.m_AXI_port(i).AXI_W.ready := read_slice(NOC.io.s_axi_wready,io.m_AXI_port(i).AXI_W.ready.getWidth,i)
 	
 	 
 	 	// FIXME: REVERSE RHS
-		io.m_AXI_port(i).AXI_B.bits.bid 	:= 	read_slice(NOC.io.s_axi_bid,ID_WIDTH ,i)
-		io.m_AXI_port(i).AXI_B.bits.bresp 	:= 	read_slice(NOC.io.s_axi_bresp,2,i)
-		io.m_AXI_port(i).AXI_B.bits.buser 	:= 	read_slice(NOC.io.s_axi_buser,BUSER_WIDTH,i)
-		io.m_AXI_port(i).AXI_B.valid 		:= 	read_slice(NOC.io.s_axi_bvalid,1,i)
+		io.m_AXI_port(i).AXI_B.bits.bid 	:= 	read_slice(NOC.io.s_axi_bid,io.m_AXI_port(i).AXI_B.bits.bid.getWidth ,i)
+		io.m_AXI_port(i).AXI_B.bits.bresp 	:= 	read_slice(NOC.io.s_axi_bresp,io.m_AXI_port(i).AXI_B.bits.bresp.getWidth,i)
+		io.m_AXI_port(i).AXI_B.bits.buser 	:= 	read_slice(NOC.io.s_axi_buser,io.m_AXI_port(i).AXI_B.bits.buser.getWidth,i)
+		io.m_AXI_port(i).AXI_B.valid 		:= 	read_slice(NOC.io.s_axi_bvalid,io.m_AXI_port(i).AXI_B.valid.getWidth,i)
 		NOC.io.s_axi_bready 				:= 	Cat(io.m_AXI_port.map(_.AXI_B.ready).reverse)
 
 		NOC.io.s_axi_arid   := Cat(io.m_AXI_port.map(_.AXI_AR.bits.arid).reverse)
@@ -282,15 +276,14 @@ class axi_interconnect_top(nocParameters:NOCParameters)	extends	Module{
 		NOC.io.s_axi_arqos  := Cat(io.m_AXI_port.map(_.AXI_AR.bits.arqos).reverse)
 		NOC.io.s_axi_aruser := Cat(io.m_AXI_port.map(_.AXI_AR.bits.aruser).reverse)
 		NOC.io.s_axi_arvalid:= Cat(io.m_AXI_port.map(_.AXI_AR.valid).reverse)
-		io.m_AXI_port(i).AXI_AR.ready := read_slice(NOC.io.s_axi_arready,1,i)
+		io.m_AXI_port(i).AXI_AR.ready := read_slice(NOC.io.s_axi_arready,io.m_AXI_port(i).AXI_AR.ready.getWidth,i)
 	
-		// FIXME: reverse RH,,iS
-		io.m_AXI_port(i).AXI_R.bits.rid 	:= 	read_slice(NOC.io.s_axi_rid,ID_WIDTH,i)
-		io.m_AXI_port(i).AXI_R.bits.rdata 	:= 	read_slice(NOC.io.s_axi_rdata,DATA_WIDTH,i)
-		io.m_AXI_port(i).AXI_R.bits.rresp 	:=	read_slice(NOC.io.s_axi_rresp,2,i)
-		io.m_AXI_port(i).AXI_R.bits.rlast 	:=  read_slice(NOC.io.s_axi_rlast,1,i)
-		io.m_AXI_port(i).AXI_R.bits.ruser 	:= 	read_slice(NOC.io.s_axi_ruser,RUSER_WIDTH,i)
-		io.m_AXI_port(i).AXI_R.valid 		:= 	read_slice(NOC.io.s_axi_rvalid,1,i)
+		io.m_AXI_port(i).AXI_R.bits.rid 	:= 	read_slice(NOC.io.s_axi_rid,io.m_AXI_port(i).AXI_R.bits.rid.getWidth,i)
+		io.m_AXI_port(i).AXI_R.bits.rdata 	:= 	read_slice(NOC.io.s_axi_rdata,io.m_AXI_port(i).AXI_R.bits.rdata.getWidth,i)
+		io.m_AXI_port(i).AXI_R.bits.rresp 	:=	read_slice(NOC.io.s_axi_rresp,io.m_AXI_port(i).AXI_R.bits.rresp.getWidth,i)
+		io.m_AXI_port(i).AXI_R.bits.rlast 	:=  read_slice(NOC.io.s_axi_rlast,io.m_AXI_port(i).AXI_R.bits.rlast.getWidth,i)
+		io.m_AXI_port(i).AXI_R.bits.ruser 	:= 	read_slice(NOC.io.s_axi_ruser,io.m_AXI_port(i).AXI_R.bits.ruser.getWidth,i)
+		io.m_AXI_port(i).AXI_R.valid 		:= 	read_slice(NOC.io.s_axi_rvalid,io.m_AXI_port(i).AXI_R.valid.getWidth,i)
 		NOC.io.s_axi_rready					:= 	Cat(io.m_AXI_port.map(_.AXI_R.ready).reverse)
 	}
 	

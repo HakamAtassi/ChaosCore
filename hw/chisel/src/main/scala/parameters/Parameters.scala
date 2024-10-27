@@ -113,7 +113,6 @@ object validate_backend{
 
 case class CoreParameters(
 
-
     DEBUG: Boolean = false,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
@@ -161,14 +160,10 @@ case class CoreParameters(
 
     ALUStages: Int = 2, // latency of the ALU unit
 
-
-
-
     /////////
     // MOB //
     /////////
     MOBWBPortCount:Int = 1, // The number of ports the MOB has to write back to the PRF
-
 
     instruction_queue_depth:Int = 8,
 
@@ -176,7 +171,6 @@ case class CoreParameters(
 
     MOBEntries:Int = 16,
     //MOBForceInOrder:Boolean = true,  // can loads execute if not all previous (load+store) addresses have been resolved?
-
 
     /////////////////////////////
     // EXECUTION ENGINE PARAMS //
@@ -191,6 +185,12 @@ case class CoreParameters(
         FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
         FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=true),
     )
+
+
+
+
+
+
 
     // TODO: 
     // Add requirement that there can only be 1 AGU, and that there are no mults or divs currently. 
@@ -240,8 +240,6 @@ case class CoreParameters(
 
     val portedFUParamSeq = generateFUPorts(FUParamSeq)
 
-
-
     ////////////////
     // EXTENSIONS //
     ////////////////
@@ -261,8 +259,6 @@ case class CoreParameters(
     s"Invalid extensions: $userExtensions. Supported extensions are: ${supportedExtensions.mkString(", ")}")
 
     require(validate_backend(coreConfig)(FUParamSeq))   // Ensure minimal required functional units
-
-
 
 
     println("ChaosCore configuration done.")
