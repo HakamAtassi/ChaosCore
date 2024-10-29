@@ -112,12 +112,14 @@ object validate_backend{
 
 
 case class CoreParameters(
-
     DEBUG: Boolean = false,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
     coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)
     hartID: Int = 0, // for multicore, this must be assigned on config. 
+
+    //hartIDs:Seq[Int] = Seq(0, 1),
+
 
     fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
 
@@ -196,8 +198,7 @@ case class CoreParameters(
     // Add requirement that there can only be 1 AGU, and that there are no mults or divs currently. 
     
 ){
-
-    println("Building ChaosCore parameters...")
+    println(s"Building Core $hartID parameters...")
 
     ///////////////////////////////////
     // DO NOT TOUCH THESE PARAMETERS //
@@ -222,6 +223,17 @@ case class CoreParameters(
     // DATA CACHE //
     ////////////////
     val L1_DataCacheTagBits:Int = 32 - log2Ceil(L1_DataCacheSets) - log2Ceil(L1_cacheLineSizeBytes)
+
+    def getDataCacheSizeKB:Int = {
+        0
+    }
+
+    ////////////////////////
+    // Instruction CACHE //
+    ///////////////////////
+    def getInstructionCacheSizeKB:Int = {
+        0
+    }
 
 
     ////////
@@ -259,9 +271,6 @@ case class CoreParameters(
     s"Invalid extensions: $userExtensions. Supported extensions are: ${supportedExtensions.mkString(", ")}")
 
     require(validate_backend(coreConfig)(FUParamSeq))   // Ensure minimal required functional units
-
-
-    println("ChaosCore configuration done.")
 
 }
 

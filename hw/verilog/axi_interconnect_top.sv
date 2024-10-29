@@ -119,6 +119,94 @@ module axi_interconnect_top(
   output [1:0]  io_m_AXI_port_1_AXI_R_bits_rresp,
   output        io_m_AXI_port_1_AXI_R_bits_rlast,
                 io_m_AXI_port_1_AXI_R_bits_ruser,
+                io_m_AXI_port_2_AXI_AW_ready,
+  input         io_m_AXI_port_2_AXI_AW_valid,
+  input  [7:0]  io_m_AXI_port_2_AXI_AW_bits_awid,
+  input  [31:0] io_m_AXI_port_2_AXI_AW_bits_awaddr,
+  input  [7:0]  io_m_AXI_port_2_AXI_AW_bits_awlen,
+  input  [2:0]  io_m_AXI_port_2_AXI_AW_bits_awsize,
+  input  [1:0]  io_m_AXI_port_2_AXI_AW_bits_awburst,
+  input         io_m_AXI_port_2_AXI_AW_bits_awlock,
+  input  [3:0]  io_m_AXI_port_2_AXI_AW_bits_awcache,
+  input  [2:0]  io_m_AXI_port_2_AXI_AW_bits_awprot,
+  input  [3:0]  io_m_AXI_port_2_AXI_AW_bits_awqos,
+                io_m_AXI_port_2_AXI_AW_bits_awregion,
+  input         io_m_AXI_port_2_AXI_AW_bits_awuser,
+  output        io_m_AXI_port_2_AXI_W_ready,
+  input         io_m_AXI_port_2_AXI_W_valid,
+  input  [31:0] io_m_AXI_port_2_AXI_W_bits_wdata,
+  input  [3:0]  io_m_AXI_port_2_AXI_W_bits_wstrb,
+  input         io_m_AXI_port_2_AXI_W_bits_wlast,
+                io_m_AXI_port_2_AXI_W_bits_wuser,
+                io_m_AXI_port_2_AXI_B_ready,
+  output        io_m_AXI_port_2_AXI_B_valid,
+  output [7:0]  io_m_AXI_port_2_AXI_B_bits_bid,
+  output [1:0]  io_m_AXI_port_2_AXI_B_bits_bresp,
+  output        io_m_AXI_port_2_AXI_B_bits_buser,
+                io_m_AXI_port_2_AXI_AR_ready,
+  input         io_m_AXI_port_2_AXI_AR_valid,
+  input  [7:0]  io_m_AXI_port_2_AXI_AR_bits_arid,
+  input  [31:0] io_m_AXI_port_2_AXI_AR_bits_araddr,
+  input  [7:0]  io_m_AXI_port_2_AXI_AR_bits_arlen,
+  input  [2:0]  io_m_AXI_port_2_AXI_AR_bits_arsize,
+  input  [1:0]  io_m_AXI_port_2_AXI_AR_bits_arburst,
+  input         io_m_AXI_port_2_AXI_AR_bits_arlock,
+  input  [3:0]  io_m_AXI_port_2_AXI_AR_bits_arcache,
+  input  [2:0]  io_m_AXI_port_2_AXI_AR_bits_arprot,
+  input  [3:0]  io_m_AXI_port_2_AXI_AR_bits_arqos,
+                io_m_AXI_port_2_AXI_AR_bits_arregion,
+  input         io_m_AXI_port_2_AXI_AR_bits_aruser,
+                io_m_AXI_port_2_AXI_R_ready,
+  output        io_m_AXI_port_2_AXI_R_valid,
+  output [7:0]  io_m_AXI_port_2_AXI_R_bits_rid,
+  output [31:0] io_m_AXI_port_2_AXI_R_bits_rdata,
+  output [1:0]  io_m_AXI_port_2_AXI_R_bits_rresp,
+  output        io_m_AXI_port_2_AXI_R_bits_rlast,
+                io_m_AXI_port_2_AXI_R_bits_ruser,
+                io_m_AXI_port_3_AXI_AW_ready,
+  input         io_m_AXI_port_3_AXI_AW_valid,
+  input  [7:0]  io_m_AXI_port_3_AXI_AW_bits_awid,
+  input  [31:0] io_m_AXI_port_3_AXI_AW_bits_awaddr,
+  input  [7:0]  io_m_AXI_port_3_AXI_AW_bits_awlen,
+  input  [2:0]  io_m_AXI_port_3_AXI_AW_bits_awsize,
+  input  [1:0]  io_m_AXI_port_3_AXI_AW_bits_awburst,
+  input         io_m_AXI_port_3_AXI_AW_bits_awlock,
+  input  [3:0]  io_m_AXI_port_3_AXI_AW_bits_awcache,
+  input  [2:0]  io_m_AXI_port_3_AXI_AW_bits_awprot,
+  input  [3:0]  io_m_AXI_port_3_AXI_AW_bits_awqos,
+                io_m_AXI_port_3_AXI_AW_bits_awregion,
+  input         io_m_AXI_port_3_AXI_AW_bits_awuser,
+  output        io_m_AXI_port_3_AXI_W_ready,
+  input         io_m_AXI_port_3_AXI_W_valid,
+  input  [31:0] io_m_AXI_port_3_AXI_W_bits_wdata,
+  input  [3:0]  io_m_AXI_port_3_AXI_W_bits_wstrb,
+  input         io_m_AXI_port_3_AXI_W_bits_wlast,
+                io_m_AXI_port_3_AXI_W_bits_wuser,
+                io_m_AXI_port_3_AXI_B_ready,
+  output        io_m_AXI_port_3_AXI_B_valid,
+  output [7:0]  io_m_AXI_port_3_AXI_B_bits_bid,
+  output [1:0]  io_m_AXI_port_3_AXI_B_bits_bresp,
+  output        io_m_AXI_port_3_AXI_B_bits_buser,
+                io_m_AXI_port_3_AXI_AR_ready,
+  input         io_m_AXI_port_3_AXI_AR_valid,
+  input  [7:0]  io_m_AXI_port_3_AXI_AR_bits_arid,
+  input  [31:0] io_m_AXI_port_3_AXI_AR_bits_araddr,
+  input  [7:0]  io_m_AXI_port_3_AXI_AR_bits_arlen,
+  input  [2:0]  io_m_AXI_port_3_AXI_AR_bits_arsize,
+  input  [1:0]  io_m_AXI_port_3_AXI_AR_bits_arburst,
+  input         io_m_AXI_port_3_AXI_AR_bits_arlock,
+  input  [3:0]  io_m_AXI_port_3_AXI_AR_bits_arcache,
+  input  [2:0]  io_m_AXI_port_3_AXI_AR_bits_arprot,
+  input  [3:0]  io_m_AXI_port_3_AXI_AR_bits_arqos,
+                io_m_AXI_port_3_AXI_AR_bits_arregion,
+  input         io_m_AXI_port_3_AXI_AR_bits_aruser,
+                io_m_AXI_port_3_AXI_R_ready,
+  output        io_m_AXI_port_3_AXI_R_valid,
+  output [7:0]  io_m_AXI_port_3_AXI_R_bits_rid,
+  output [31:0] io_m_AXI_port_3_AXI_R_bits_rdata,
+  output [1:0]  io_m_AXI_port_3_AXI_R_bits_rresp,
+  output        io_m_AXI_port_3_AXI_R_bits_rlast,
+                io_m_AXI_port_3_AXI_R_bits_ruser,
   input         io_s_AXI_port_0_AXI_AW_ready,
   output        io_s_AXI_port_0_AXI_AW_valid,
   output [7:0]  io_s_AXI_port_0_AXI_AW_bits_awid,
@@ -209,50 +297,50 @@ module axi_interconnect_top(
                 io_s_AXI_port_1_AXI_R_bits_ruser
 );
 
-  wire [1:0]  _NOC_s_axi_awready;
-  wire [1:0]  _NOC_s_axi_wready;
-  wire [15:0] _NOC_s_axi_bid;
-  wire [3:0]  _NOC_s_axi_bresp;
-  wire [1:0]  _NOC_s_axi_buser;
-  wire [1:0]  _NOC_s_axi_bvalid;
-  wire [1:0]  _NOC_s_axi_arready;
-  wire [15:0] _NOC_s_axi_rid;
-  wire [63:0] _NOC_s_axi_rdata;
-  wire [3:0]  _NOC_s_axi_rresp;
-  wire [1:0]  _NOC_s_axi_rlast;
-  wire [1:0]  _NOC_s_axi_ruser;
-  wire [1:0]  _NOC_s_axi_rvalid;
-  wire [15:0] _NOC_m_axi_awid;
-  wire [63:0] _NOC_m_axi_awaddr;
-  wire [15:0] _NOC_m_axi_awlen;
-  wire [5:0]  _NOC_m_axi_awsize;
-  wire [3:0]  _NOC_m_axi_awburst;
-  wire [1:0]  _NOC_m_axi_awlock;
-  wire [7:0]  _NOC_m_axi_awcache;
-  wire [5:0]  _NOC_m_axi_awprot;
-  wire [7:0]  _NOC_m_axi_awqos;
-  wire [7:0]  _NOC_m_axi_awregion;
-  wire [1:0]  _NOC_m_axi_awuser;
-  wire [1:0]  _NOC_m_axi_awvalid;
-  wire [63:0] _NOC_m_axi_wdata;
-  wire [7:0]  _NOC_m_axi_wstrb;
-  wire [1:0]  _NOC_m_axi_wlast;
-  wire [1:0]  _NOC_m_axi_wuser;
-  wire [1:0]  _NOC_m_axi_wvalid;
-  wire [1:0]  _NOC_m_axi_bready;
-  wire [15:0] _NOC_m_axi_arid;
-  wire [63:0] _NOC_m_axi_araddr;
-  wire [15:0] _NOC_m_axi_arlen;
-  wire [5:0]  _NOC_m_axi_arsize;
-  wire [3:0]  _NOC_m_axi_arburst;
-  wire [1:0]  _NOC_m_axi_arlock;
-  wire [7:0]  _NOC_m_axi_arcache;
-  wire [5:0]  _NOC_m_axi_arprot;
-  wire [7:0]  _NOC_m_axi_arqos;
-  wire [7:0]  _NOC_m_axi_arregion;
-  wire [1:0]  _NOC_m_axi_aruser;
-  wire [1:0]  _NOC_m_axi_arvalid;
-  wire [1:0]  _NOC_m_axi_rready;
+  wire [3:0]   _NOC_s_axi_awready;
+  wire [3:0]   _NOC_s_axi_wready;
+  wire [31:0]  _NOC_s_axi_bid;
+  wire [7:0]   _NOC_s_axi_bresp;
+  wire [3:0]   _NOC_s_axi_buser;
+  wire [3:0]   _NOC_s_axi_bvalid;
+  wire [3:0]   _NOC_s_axi_arready;
+  wire [31:0]  _NOC_s_axi_rid;
+  wire [127:0] _NOC_s_axi_rdata;
+  wire [7:0]   _NOC_s_axi_rresp;
+  wire [3:0]   _NOC_s_axi_rlast;
+  wire [3:0]   _NOC_s_axi_ruser;
+  wire [3:0]   _NOC_s_axi_rvalid;
+  wire [15:0]  _NOC_m_axi_awid;
+  wire [63:0]  _NOC_m_axi_awaddr;
+  wire [15:0]  _NOC_m_axi_awlen;
+  wire [5:0]   _NOC_m_axi_awsize;
+  wire [3:0]   _NOC_m_axi_awburst;
+  wire [1:0]   _NOC_m_axi_awlock;
+  wire [7:0]   _NOC_m_axi_awcache;
+  wire [5:0]   _NOC_m_axi_awprot;
+  wire [7:0]   _NOC_m_axi_awqos;
+  wire [7:0]   _NOC_m_axi_awregion;
+  wire [1:0]   _NOC_m_axi_awuser;
+  wire [1:0]   _NOC_m_axi_awvalid;
+  wire [63:0]  _NOC_m_axi_wdata;
+  wire [7:0]   _NOC_m_axi_wstrb;
+  wire [1:0]   _NOC_m_axi_wlast;
+  wire [1:0]   _NOC_m_axi_wuser;
+  wire [1:0]   _NOC_m_axi_wvalid;
+  wire [1:0]   _NOC_m_axi_bready;
+  wire [15:0]  _NOC_m_axi_arid;
+  wire [63:0]  _NOC_m_axi_araddr;
+  wire [15:0]  _NOC_m_axi_arlen;
+  wire [5:0]   _NOC_m_axi_arsize;
+  wire [3:0]   _NOC_m_axi_arburst;
+  wire [1:0]   _NOC_m_axi_arlock;
+  wire [7:0]   _NOC_m_axi_arcache;
+  wire [5:0]   _NOC_m_axi_arprot;
+  wire [7:0]   _NOC_m_axi_arqos;
+  wire [7:0]   _NOC_m_axi_arregion;
+  wire [1:0]   _NOC_m_axi_aruser;
+  wire [1:0]   _NOC_m_axi_arvalid;
+  wire [1:0]   _NOC_m_axi_rready;
   axi_interconnect #(
     .ADDR_WIDTH(32),
     .ARUSER_ENABLE(0),
@@ -264,80 +352,168 @@ module axi_interconnect_top(
     .DATA_WIDTH(32),
     .FORWARD_ID(1),
     .ID_WIDTH(8),
-    .M_ADDR_WIDTH(80'd18446744125249159192),
+    .M_ADDR_WIDTH(80'd18446744125249159196),
     .M_BASE_ADDR(80'd18448995875670720512),
-    .M_CONNECT_READ(15),
-    .M_CONNECT_WRITE(15),
+    .M_CONNECT_READ(255),
+    .M_CONNECT_WRITE(255),
     .M_COUNT(2),
     .M_REGIONS(1),
     .M_SECURE(0),
     .RUSER_ENABLE(0),
     .RUSER_WIDTH(1),
     .STRB_WIDTH(4),
-    .S_COUNT(2),
+    .S_COUNT(4),
     .WUSER_ENABLE(0),
     .WUSER_WIDTH(1)
   ) NOC (
     .clk            (clock),
     .rst            (reset),
     .s_axi_awid
-      ({io_m_AXI_port_1_AXI_AW_bits_awid, io_m_AXI_port_0_AXI_AW_bits_awid}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awid,
+        io_m_AXI_port_2_AXI_AW_bits_awid,
+        io_m_AXI_port_1_AXI_AW_bits_awid,
+        io_m_AXI_port_0_AXI_AW_bits_awid}),
     .s_axi_awaddr
-      ({io_m_AXI_port_1_AXI_AW_bits_awaddr, io_m_AXI_port_0_AXI_AW_bits_awaddr}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awaddr,
+        io_m_AXI_port_2_AXI_AW_bits_awaddr,
+        io_m_AXI_port_1_AXI_AW_bits_awaddr,
+        io_m_AXI_port_0_AXI_AW_bits_awaddr}),
     .s_axi_awlen
-      ({io_m_AXI_port_1_AXI_AW_bits_awlen, io_m_AXI_port_0_AXI_AW_bits_awlen}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awlen,
+        io_m_AXI_port_2_AXI_AW_bits_awlen,
+        io_m_AXI_port_1_AXI_AW_bits_awlen,
+        io_m_AXI_port_0_AXI_AW_bits_awlen}),
     .s_axi_awsize
-      ({io_m_AXI_port_1_AXI_AW_bits_awsize, io_m_AXI_port_0_AXI_AW_bits_awsize}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awsize,
+        io_m_AXI_port_2_AXI_AW_bits_awsize,
+        io_m_AXI_port_1_AXI_AW_bits_awsize,
+        io_m_AXI_port_0_AXI_AW_bits_awsize}),
     .s_axi_awburst
-      ({io_m_AXI_port_1_AXI_AW_bits_awburst, io_m_AXI_port_0_AXI_AW_bits_awburst}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awburst,
+        io_m_AXI_port_2_AXI_AW_bits_awburst,
+        io_m_AXI_port_1_AXI_AW_bits_awburst,
+        io_m_AXI_port_0_AXI_AW_bits_awburst}),
     .s_axi_awlock
-      ({io_m_AXI_port_1_AXI_AW_bits_awlock, io_m_AXI_port_0_AXI_AW_bits_awlock}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awlock,
+        io_m_AXI_port_2_AXI_AW_bits_awlock,
+        io_m_AXI_port_1_AXI_AW_bits_awlock,
+        io_m_AXI_port_0_AXI_AW_bits_awlock}),
     .s_axi_awcache
-      ({io_m_AXI_port_1_AXI_AW_bits_awcache, io_m_AXI_port_0_AXI_AW_bits_awcache}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awcache,
+        io_m_AXI_port_2_AXI_AW_bits_awcache,
+        io_m_AXI_port_1_AXI_AW_bits_awcache,
+        io_m_AXI_port_0_AXI_AW_bits_awcache}),
     .s_axi_awprot
-      ({io_m_AXI_port_1_AXI_AW_bits_awprot, io_m_AXI_port_0_AXI_AW_bits_awprot}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awprot,
+        io_m_AXI_port_2_AXI_AW_bits_awprot,
+        io_m_AXI_port_1_AXI_AW_bits_awprot,
+        io_m_AXI_port_0_AXI_AW_bits_awprot}),
     .s_axi_awqos
-      ({io_m_AXI_port_1_AXI_AW_bits_awqos, io_m_AXI_port_0_AXI_AW_bits_awqos}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awqos,
+        io_m_AXI_port_2_AXI_AW_bits_awqos,
+        io_m_AXI_port_1_AXI_AW_bits_awqos,
+        io_m_AXI_port_0_AXI_AW_bits_awqos}),
     .s_axi_awuser
-      ({io_m_AXI_port_1_AXI_AW_bits_awuser, io_m_AXI_port_0_AXI_AW_bits_awuser}),
-    .s_axi_awvalid  ({io_m_AXI_port_1_AXI_AW_valid, io_m_AXI_port_0_AXI_AW_valid}),
+      ({io_m_AXI_port_3_AXI_AW_bits_awuser,
+        io_m_AXI_port_2_AXI_AW_bits_awuser,
+        io_m_AXI_port_1_AXI_AW_bits_awuser,
+        io_m_AXI_port_0_AXI_AW_bits_awuser}),
+    .s_axi_awvalid
+      ({io_m_AXI_port_3_AXI_AW_valid,
+        io_m_AXI_port_2_AXI_AW_valid,
+        io_m_AXI_port_1_AXI_AW_valid,
+        io_m_AXI_port_0_AXI_AW_valid}),
     .s_axi_awready  (_NOC_s_axi_awready),
     .s_axi_wdata
-      ({io_m_AXI_port_1_AXI_W_bits_wdata, io_m_AXI_port_0_AXI_W_bits_wdata}),
+      ({io_m_AXI_port_3_AXI_W_bits_wdata,
+        io_m_AXI_port_2_AXI_W_bits_wdata,
+        io_m_AXI_port_1_AXI_W_bits_wdata,
+        io_m_AXI_port_0_AXI_W_bits_wdata}),
     .s_axi_wstrb
-      ({io_m_AXI_port_1_AXI_W_bits_wstrb, io_m_AXI_port_0_AXI_W_bits_wstrb}),
+      ({io_m_AXI_port_3_AXI_W_bits_wstrb,
+        io_m_AXI_port_2_AXI_W_bits_wstrb,
+        io_m_AXI_port_1_AXI_W_bits_wstrb,
+        io_m_AXI_port_0_AXI_W_bits_wstrb}),
     .s_axi_wlast
-      ({io_m_AXI_port_1_AXI_W_bits_wlast, io_m_AXI_port_0_AXI_W_bits_wlast}),
+      ({io_m_AXI_port_3_AXI_W_bits_wlast,
+        io_m_AXI_port_2_AXI_W_bits_wlast,
+        io_m_AXI_port_1_AXI_W_bits_wlast,
+        io_m_AXI_port_0_AXI_W_bits_wlast}),
     .s_axi_wuser
-      ({io_m_AXI_port_1_AXI_W_bits_wuser, io_m_AXI_port_0_AXI_W_bits_wuser}),
-    .s_axi_wvalid   ({io_m_AXI_port_1_AXI_W_valid, io_m_AXI_port_0_AXI_W_valid}),
+      ({io_m_AXI_port_3_AXI_W_bits_wuser,
+        io_m_AXI_port_2_AXI_W_bits_wuser,
+        io_m_AXI_port_1_AXI_W_bits_wuser,
+        io_m_AXI_port_0_AXI_W_bits_wuser}),
+    .s_axi_wvalid
+      ({io_m_AXI_port_3_AXI_W_valid,
+        io_m_AXI_port_2_AXI_W_valid,
+        io_m_AXI_port_1_AXI_W_valid,
+        io_m_AXI_port_0_AXI_W_valid}),
     .s_axi_wready   (_NOC_s_axi_wready),
     .s_axi_bid      (_NOC_s_axi_bid),
     .s_axi_bresp    (_NOC_s_axi_bresp),
     .s_axi_buser    (_NOC_s_axi_buser),
     .s_axi_bvalid   (_NOC_s_axi_bvalid),
-    .s_axi_bready   ({io_m_AXI_port_1_AXI_B_ready, io_m_AXI_port_0_AXI_B_ready}),
+    .s_axi_bready
+      ({io_m_AXI_port_3_AXI_B_ready,
+        io_m_AXI_port_2_AXI_B_ready,
+        io_m_AXI_port_1_AXI_B_ready,
+        io_m_AXI_port_0_AXI_B_ready}),
     .s_axi_arid
-      ({io_m_AXI_port_1_AXI_AR_bits_arid, io_m_AXI_port_0_AXI_AR_bits_arid}),
+      ({io_m_AXI_port_3_AXI_AR_bits_arid,
+        io_m_AXI_port_2_AXI_AR_bits_arid,
+        io_m_AXI_port_1_AXI_AR_bits_arid,
+        io_m_AXI_port_0_AXI_AR_bits_arid}),
     .s_axi_araddr
-      ({io_m_AXI_port_1_AXI_AR_bits_araddr, io_m_AXI_port_0_AXI_AR_bits_araddr}),
+      ({io_m_AXI_port_3_AXI_AR_bits_araddr,
+        io_m_AXI_port_2_AXI_AR_bits_araddr,
+        io_m_AXI_port_1_AXI_AR_bits_araddr,
+        io_m_AXI_port_0_AXI_AR_bits_araddr}),
     .s_axi_arlen
-      ({io_m_AXI_port_1_AXI_AR_bits_arlen, io_m_AXI_port_0_AXI_AR_bits_arlen}),
+      ({io_m_AXI_port_3_AXI_AR_bits_arlen,
+        io_m_AXI_port_2_AXI_AR_bits_arlen,
+        io_m_AXI_port_1_AXI_AR_bits_arlen,
+        io_m_AXI_port_0_AXI_AR_bits_arlen}),
     .s_axi_arsize
-      ({io_m_AXI_port_1_AXI_AR_bits_arsize, io_m_AXI_port_0_AXI_AR_bits_arsize}),
+      ({io_m_AXI_port_3_AXI_AR_bits_arsize,
+        io_m_AXI_port_2_AXI_AR_bits_arsize,
+        io_m_AXI_port_1_AXI_AR_bits_arsize,
+        io_m_AXI_port_0_AXI_AR_bits_arsize}),
     .s_axi_arburst
-      ({io_m_AXI_port_1_AXI_AR_bits_arburst, io_m_AXI_port_0_AXI_AR_bits_arburst}),
+      ({io_m_AXI_port_3_AXI_AR_bits_arburst,
+        io_m_AXI_port_2_AXI_AR_bits_arburst,
+        io_m_AXI_port_1_AXI_AR_bits_arburst,
+        io_m_AXI_port_0_AXI_AR_bits_arburst}),
     .s_axi_arlock
-      ({io_m_AXI_port_1_AXI_AR_bits_arlock, io_m_AXI_port_0_AXI_AR_bits_arlock}),
+      ({io_m_AXI_port_3_AXI_AR_bits_arlock,
+        io_m_AXI_port_2_AXI_AR_bits_arlock,
+        io_m_AXI_port_1_AXI_AR_bits_arlock,
+        io_m_AXI_port_0_AXI_AR_bits_arlock}),
     .s_axi_arcache
-      ({io_m_AXI_port_1_AXI_AR_bits_arcache, io_m_AXI_port_0_AXI_AR_bits_arcache}),
+      ({io_m_AXI_port_3_AXI_AR_bits_arcache,
+        io_m_AXI_port_2_AXI_AR_bits_arcache,
+        io_m_AXI_port_1_AXI_AR_bits_arcache,
+        io_m_AXI_port_0_AXI_AR_bits_arcache}),
     .s_axi_arprot
-      ({io_m_AXI_port_1_AXI_AR_bits_arprot, io_m_AXI_port_0_AXI_AR_bits_arprot}),
+      ({io_m_AXI_port_3_AXI_AR_bits_arprot,
+        io_m_AXI_port_2_AXI_AR_bits_arprot,
+        io_m_AXI_port_1_AXI_AR_bits_arprot,
+        io_m_AXI_port_0_AXI_AR_bits_arprot}),
     .s_axi_arqos
-      ({io_m_AXI_port_1_AXI_AR_bits_arqos, io_m_AXI_port_0_AXI_AR_bits_arqos}),
+      ({io_m_AXI_port_3_AXI_AR_bits_arqos,
+        io_m_AXI_port_2_AXI_AR_bits_arqos,
+        io_m_AXI_port_1_AXI_AR_bits_arqos,
+        io_m_AXI_port_0_AXI_AR_bits_arqos}),
     .s_axi_aruser
-      ({io_m_AXI_port_1_AXI_AR_bits_aruser, io_m_AXI_port_0_AXI_AR_bits_aruser}),
-    .s_axi_arvalid  ({io_m_AXI_port_1_AXI_AR_valid, io_m_AXI_port_0_AXI_AR_valid}),
+      ({io_m_AXI_port_3_AXI_AR_bits_aruser,
+        io_m_AXI_port_2_AXI_AR_bits_aruser,
+        io_m_AXI_port_1_AXI_AR_bits_aruser,
+        io_m_AXI_port_0_AXI_AR_bits_aruser}),
+    .s_axi_arvalid
+      ({io_m_AXI_port_3_AXI_AR_valid,
+        io_m_AXI_port_2_AXI_AR_valid,
+        io_m_AXI_port_1_AXI_AR_valid,
+        io_m_AXI_port_0_AXI_AR_valid}),
     .s_axi_arready  (_NOC_s_axi_arready),
     .s_axi_rid      (_NOC_s_axi_rid),
     .s_axi_rdata    (_NOC_s_axi_rdata),
@@ -345,7 +521,11 @@ module axi_interconnect_top(
     .s_axi_rlast    (_NOC_s_axi_rlast),
     .s_axi_ruser    (_NOC_s_axi_ruser),
     .s_axi_rvalid   (_NOC_s_axi_rvalid),
-    .s_axi_rready   ({io_m_AXI_port_1_AXI_R_ready, io_m_AXI_port_0_AXI_R_ready}),
+    .s_axi_rready
+      ({io_m_AXI_port_3_AXI_R_ready,
+        io_m_AXI_port_2_AXI_R_ready,
+        io_m_AXI_port_1_AXI_R_ready,
+        io_m_AXI_port_0_AXI_R_ready}),
     .m_axi_awid     (_NOC_m_axi_awid),
     .m_axi_awaddr   (_NOC_m_axi_awaddr),
     .m_axi_awlen    (_NOC_m_axi_awlen),
@@ -423,6 +603,32 @@ module axi_interconnect_top(
   assign io_m_AXI_port_1_AXI_R_bits_rresp = _NOC_s_axi_rresp[3:2];
   assign io_m_AXI_port_1_AXI_R_bits_rlast = _NOC_s_axi_rlast[1];
   assign io_m_AXI_port_1_AXI_R_bits_ruser = _NOC_s_axi_ruser[1];
+  assign io_m_AXI_port_2_AXI_AW_ready = _NOC_s_axi_awready[2];
+  assign io_m_AXI_port_2_AXI_W_ready = _NOC_s_axi_wready[2];
+  assign io_m_AXI_port_2_AXI_B_valid = _NOC_s_axi_bvalid[2];
+  assign io_m_AXI_port_2_AXI_B_bits_bid = _NOC_s_axi_bid[23:16];
+  assign io_m_AXI_port_2_AXI_B_bits_bresp = _NOC_s_axi_bresp[5:4];
+  assign io_m_AXI_port_2_AXI_B_bits_buser = _NOC_s_axi_buser[2];
+  assign io_m_AXI_port_2_AXI_AR_ready = _NOC_s_axi_arready[2];
+  assign io_m_AXI_port_2_AXI_R_valid = _NOC_s_axi_rvalid[2];
+  assign io_m_AXI_port_2_AXI_R_bits_rid = _NOC_s_axi_rid[23:16];
+  assign io_m_AXI_port_2_AXI_R_bits_rdata = _NOC_s_axi_rdata[95:64];
+  assign io_m_AXI_port_2_AXI_R_bits_rresp = _NOC_s_axi_rresp[5:4];
+  assign io_m_AXI_port_2_AXI_R_bits_rlast = _NOC_s_axi_rlast[2];
+  assign io_m_AXI_port_2_AXI_R_bits_ruser = _NOC_s_axi_ruser[2];
+  assign io_m_AXI_port_3_AXI_AW_ready = _NOC_s_axi_awready[3];
+  assign io_m_AXI_port_3_AXI_W_ready = _NOC_s_axi_wready[3];
+  assign io_m_AXI_port_3_AXI_B_valid = _NOC_s_axi_bvalid[3];
+  assign io_m_AXI_port_3_AXI_B_bits_bid = _NOC_s_axi_bid[31:24];
+  assign io_m_AXI_port_3_AXI_B_bits_bresp = _NOC_s_axi_bresp[7:6];
+  assign io_m_AXI_port_3_AXI_B_bits_buser = _NOC_s_axi_buser[3];
+  assign io_m_AXI_port_3_AXI_AR_ready = _NOC_s_axi_arready[3];
+  assign io_m_AXI_port_3_AXI_R_valid = _NOC_s_axi_rvalid[3];
+  assign io_m_AXI_port_3_AXI_R_bits_rid = _NOC_s_axi_rid[31:24];
+  assign io_m_AXI_port_3_AXI_R_bits_rdata = _NOC_s_axi_rdata[127:96];
+  assign io_m_AXI_port_3_AXI_R_bits_rresp = _NOC_s_axi_rresp[7:6];
+  assign io_m_AXI_port_3_AXI_R_bits_rlast = _NOC_s_axi_rlast[3];
+  assign io_m_AXI_port_3_AXI_R_bits_ruser = _NOC_s_axi_ruser[3];
   assign io_s_AXI_port_0_AXI_AW_valid = _NOC_m_axi_awvalid[0];
   assign io_s_AXI_port_0_AXI_AW_bits_awid = _NOC_m_axi_awid[7:0];
   assign io_s_AXI_port_0_AXI_AW_bits_awaddr = _NOC_m_axi_awaddr[31:0];

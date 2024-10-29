@@ -8,8 +8,9 @@ import	chisel3.util._
 
 //	Define	the	BlackBox	module
 class axi_interconnect(nocParameters:NOCParameters)	extends	BlackBox(Map(
-	"S_COUNT" -> nocParameters.S_COUNT,
-	"M_COUNT" -> nocParameters.M_COUNT,
+	// Intentionally swapped (external M <-> NOC S ...)
+	"S_COUNT" -> nocParameters.M_COUNT,
+	"M_COUNT" -> nocParameters.S_COUNT,
 
 	"DATA_WIDTH"			->	nocParameters.DATA_WIDTH,
 	"ADDR_WIDTH"			->	nocParameters.ADDR_WIDTH,
@@ -28,14 +29,14 @@ class axi_interconnect(nocParameters:NOCParameters)	extends	BlackBox(Map(
 	"FORWARD_ID"			->	nocParameters.FORWARD_ID,
 	"M_REGIONS"				->	nocParameters.M_REGIONS,
 
-
 	"M_BASE_ADDR"			->BigInt("10008000080000000",16),	// Need to insert dummy 1 to avoid optimization
-	"M_ADDR_WIDTH"			->BigInt("10000000c00000018",16),
+	"M_ADDR_WIDTH"			->BigInt("10000000c0000001c",16),
 
-	//"M_BASE_ADDR"			->BigInt("18000000000080000",16),	// Need to insert dummy 1 to avoid optimization
-	//"M_ADDR_WIDTH"			->BigInt("1000000180000000c",16),
-	"M_CONNECT_READ"		->0xf,
-	"M_CONNECT_WRITE"		->0xf,
+    //parameter M_CONNECT_READ = {M_COUNT{{S_COUNT{1'b1}}}},
+    //parameter M_CONNECT_WRITE = {M_COUNT{{S_COUNT{1'b1}}}},
+	"M_CONNECT_READ"		->0xff, // FIXME: make this parameterizable...
+	"M_CONNECT_WRITE"		->0xff,
+
 	"M_SECURE"				->0,
 ))	with	HasBlackBoxResource{
 
@@ -46,102 +47,102 @@ class axi_interconnect(nocParameters:NOCParameters)	extends	BlackBox(Map(
 		val	rst	=	Input(UInt(1.W))
 
 		//	AXI	slave	interface	s_axi
-		val	s_axi_awid			=	Input(UInt((S_COUNT*ID_WIDTH).W))
-		val	s_axi_awaddr		=	Input(UInt((S_COUNT*ADDR_WIDTH).W))
-		val	s_axi_awlen			=	Input(UInt((S_COUNT*8).W))
-		val	s_axi_awsize		=	Input(UInt((S_COUNT*3).W))
-		val	s_axi_awburst		=	Input(UInt((S_COUNT*2).W))
-		val	s_axi_awlock		=	Input(UInt((S_COUNT*1).W))
-		val	s_axi_awcache		=	Input(UInt((S_COUNT*4).W))
-		val	s_axi_awprot		=	Input(UInt((S_COUNT*3).W))
-		val	s_axi_awqos			=	Input(UInt((S_COUNT*4).W))
-		val	s_axi_awuser		=	Input(UInt((S_COUNT*AWUSER_WIDTH).W))
-		val	s_axi_awvalid		=	Input(UInt((S_COUNT*1).W))
-		val	s_axi_awready		=	Output(UInt((S_COUNT*1).W))
+		val	s_axi_awid			=	Input(UInt((M_COUNT*ID_WIDTH).W))
+		val	s_axi_awaddr		=	Input(UInt((M_COUNT*ADDR_WIDTH).W))
+		val	s_axi_awlen			=	Input(UInt((M_COUNT*8).W))
+		val	s_axi_awsize		=	Input(UInt((M_COUNT*3).W))
+		val	s_axi_awburst		=	Input(UInt((M_COUNT*2).W))
+		val	s_axi_awlock		=	Input(UInt((M_COUNT*1).W))
+		val	s_axi_awcache		=	Input(UInt((M_COUNT*4).W))
+		val	s_axi_awprot		=	Input(UInt((M_COUNT*3).W))
+		val	s_axi_awqos			=	Input(UInt((M_COUNT*4).W))
+		val	s_axi_awuser		=	Input(UInt((M_COUNT*AWUSER_WIDTH).W))
+		val	s_axi_awvalid		=	Input(UInt((M_COUNT*1).W))
+		val	s_axi_awready		=	Output(UInt((M_COUNT*1).W))
 
-		val	s_axi_wdata			=	Input(UInt((S_COUNT*DATA_WIDTH).W))
-		val	s_axi_wstrb			=	Input(UInt((S_COUNT*STRB_WIDTH).W))
-		val	s_axi_wlast			=	Input(UInt((S_COUNT*1).W))
-		val	s_axi_wuser			=	Input(UInt((S_COUNT*WUSER_WIDTH).W))
-		val	s_axi_wvalid		=	Input(UInt((S_COUNT*1).W))
-		val	s_axi_wready		=	Output(UInt((S_COUNT*1).W))
+		val	s_axi_wdata			=	Input(UInt((M_COUNT*DATA_WIDTH).W))
+		val	s_axi_wstrb			=	Input(UInt((M_COUNT*STRB_WIDTH).W))
+		val	s_axi_wlast			=	Input(UInt((M_COUNT*1).W))
+		val	s_axi_wuser			=	Input(UInt((M_COUNT*WUSER_WIDTH).W))
+		val	s_axi_wvalid		=	Input(UInt((M_COUNT*1).W))
+		val	s_axi_wready		=	Output(UInt((M_COUNT*1).W))
 
-		val	s_axi_bid			=	Output(UInt((S_COUNT*ID_WIDTH).W))
-		val	s_axi_bresp			=	Output(UInt((S_COUNT*2).W))
-		val	s_axi_buser			=	Output(UInt((S_COUNT*BUSER_WIDTH).W))
-		val	s_axi_bvalid		=	Output(UInt((S_COUNT*1).W))
-		val	s_axi_bready		=	Input(UInt((S_COUNT*1).W))
+		val	s_axi_bid			=	Output(UInt((M_COUNT*ID_WIDTH).W))
+		val	s_axi_bresp			=	Output(UInt((M_COUNT*2).W))
+		val	s_axi_buser			=	Output(UInt((M_COUNT*BUSER_WIDTH).W))
+		val	s_axi_bvalid		=	Output(UInt((M_COUNT*1).W))
+		val	s_axi_bready		=	Input(UInt((M_COUNT*1).W))
 
-		val	s_axi_arid			=	Input(UInt((S_COUNT*ID_WIDTH).W))
-		val	s_axi_araddr		=	Input(UInt((S_COUNT*ADDR_WIDTH).W))
-		val	s_axi_arlen			=	Input(UInt((S_COUNT*8).W))
-		val	s_axi_arsize		=	Input(UInt((S_COUNT*3).W))
-		val	s_axi_arburst		=	Input(UInt((S_COUNT*2).W))
-		val	s_axi_arlock		=	Input(UInt((S_COUNT*1).W))
-		val	s_axi_arcache		=	Input(UInt((S_COUNT*4).W))
-		val	s_axi_arprot		=	Input(UInt((S_COUNT*3).W))
-		val	s_axi_arqos			=	Input(UInt((S_COUNT*4).W))
-		val	s_axi_aruser		=	Input(UInt((S_COUNT*ARUSER_WIDTH).W))
-		val	s_axi_arvalid		=	Input(UInt((S_COUNT*1).W))
-		val	s_axi_arready		=	Output(UInt((S_COUNT*1).W))
+		val	s_axi_arid			=	Input(UInt((M_COUNT*ID_WIDTH).W))
+		val	s_axi_araddr		=	Input(UInt((M_COUNT*ADDR_WIDTH).W))
+		val	s_axi_arlen			=	Input(UInt((M_COUNT*8).W))
+		val	s_axi_arsize		=	Input(UInt((M_COUNT*3).W))
+		val	s_axi_arburst		=	Input(UInt((M_COUNT*2).W))
+		val	s_axi_arlock		=	Input(UInt((M_COUNT*1).W))
+		val	s_axi_arcache		=	Input(UInt((M_COUNT*4).W))
+		val	s_axi_arprot		=	Input(UInt((M_COUNT*3).W))
+		val	s_axi_arqos			=	Input(UInt((M_COUNT*4).W))
+		val	s_axi_aruser		=	Input(UInt((M_COUNT*ARUSER_WIDTH).W))
+		val	s_axi_arvalid		=	Input(UInt((M_COUNT*1).W))
+		val	s_axi_arready		=	Output(UInt((M_COUNT*1).W))
 
-		val	s_axi_rid			=	Output(UInt((S_COUNT*ID_WIDTH).W))
-		val	s_axi_rdata			=	Output(UInt((S_COUNT*DATA_WIDTH).W))
-		val	s_axi_rresp			=	Output(UInt((S_COUNT*2).W))
-		val	s_axi_rlast			=	Output(UInt((S_COUNT*1).W))
-		val	s_axi_ruser			=	Output(UInt((S_COUNT*RUSER_WIDTH).W))
-		val	s_axi_rvalid		=	Output(UInt((S_COUNT*1).W))
-		val	s_axi_rready		=	Input(UInt((S_COUNT*1).W))
+		val	s_axi_rid			=	Output(UInt((M_COUNT*ID_WIDTH).W))
+		val	s_axi_rdata			=	Output(UInt((M_COUNT*DATA_WIDTH).W))
+		val	s_axi_rresp			=	Output(UInt((M_COUNT*2).W))
+		val	s_axi_rlast			=	Output(UInt((M_COUNT*1).W))
+		val	s_axi_ruser			=	Output(UInt((M_COUNT*RUSER_WIDTH).W))
+		val	s_axi_rvalid		=	Output(UInt((M_COUNT*1).W))
+		val	s_axi_rready		=	Input(UInt((M_COUNT*1).W))
 
 		//	AXI	master	interface	m_axi
-		val	m_axi_awid			=	Output(UInt((M_COUNT*ID_WIDTH).W))
-		val	m_axi_awaddr		=	Output(UInt((M_COUNT*ADDR_WIDTH).W))
-		val	m_axi_awlen			=	Output(UInt((M_COUNT*8).W))
-		val	m_axi_awsize		=	Output(UInt((M_COUNT*3).W))
-		val	m_axi_awburst		=	Output(UInt((M_COUNT*2).W))
-		val	m_axi_awlock		=	Output(UInt((M_COUNT*1).W))
-		val	m_axi_awcache		=	Output(UInt((M_COUNT*4).W))
-		val	m_axi_awprot		=	Output(UInt((M_COUNT*3).W))
-		val	m_axi_awqos			=	Output(UInt((M_COUNT*4).W))
-		val	m_axi_awregion		=	Output(UInt((M_COUNT*4).W))
-		val	m_axi_awuser		=	Output(UInt((M_COUNT*AWUSER_WIDTH).W))
-		val	m_axi_awvalid		=	Output(UInt((M_COUNT*1).W))
-		val	m_axi_awready		=	Input(UInt((M_COUNT*1).W))
+		val	m_axi_awid			=	Output(UInt((S_COUNT*ID_WIDTH).W))
+		val	m_axi_awaddr		=	Output(UInt((S_COUNT*ADDR_WIDTH).W))
+		val	m_axi_awlen			=	Output(UInt((S_COUNT*8).W))
+		val	m_axi_awsize		=	Output(UInt((S_COUNT*3).W))
+		val	m_axi_awburst		=	Output(UInt((S_COUNT*2).W))
+		val	m_axi_awlock		=	Output(UInt((S_COUNT*1).W))
+		val	m_axi_awcache		=	Output(UInt((S_COUNT*4).W))
+		val	m_axi_awprot		=	Output(UInt((S_COUNT*3).W))
+		val	m_axi_awqos			=	Output(UInt((S_COUNT*4).W))
+		val	m_axi_awregion		=	Output(UInt((S_COUNT*4).W))
+		val	m_axi_awuser		=	Output(UInt((S_COUNT*AWUSER_WIDTH).W))
+		val	m_axi_awvalid		=	Output(UInt((S_COUNT*1).W))
+		val	m_axi_awready		=	Input(UInt((S_COUNT*1).W))
 
-		val	m_axi_wdata			=	Output(UInt((M_COUNT*DATA_WIDTH).W))
-		val	m_axi_wstrb			=	Output(UInt((M_COUNT*STRB_WIDTH).W))
-		val	m_axi_wlast			=	Output(UInt((M_COUNT*1).W))
-		val	m_axi_wuser			=	Output(UInt((M_COUNT*WUSER_WIDTH).W))
-		val	m_axi_wvalid		=	Output(UInt((M_COUNT*1).W))
-		val	m_axi_wready		=	Input(UInt((M_COUNT*1).W))
+		val	m_axi_wdata			=	Output(UInt((S_COUNT*DATA_WIDTH).W))
+		val	m_axi_wstrb			=	Output(UInt((S_COUNT*STRB_WIDTH).W))
+		val	m_axi_wlast			=	Output(UInt((S_COUNT*1).W))
+		val	m_axi_wuser			=	Output(UInt((S_COUNT*WUSER_WIDTH).W))
+		val	m_axi_wvalid		=	Output(UInt((S_COUNT*1).W))
+		val	m_axi_wready		=	Input(UInt((S_COUNT*1).W))
 
-		val	m_axi_bid			=	Input(UInt((M_COUNT*ID_WIDTH).W))
-		val	m_axi_bresp			=	Input(UInt((M_COUNT*2).W))
-		val	m_axi_buser			=	Input(UInt((M_COUNT*BUSER_WIDTH).W))
-		val	m_axi_bvalid		=	Input(UInt((M_COUNT*1).W))
-		val	m_axi_bready		=	Output(UInt((M_COUNT*1).W))
+		val	m_axi_bid			=	Input(UInt((S_COUNT*ID_WIDTH).W))
+		val	m_axi_bresp			=	Input(UInt((S_COUNT*2).W))
+		val	m_axi_buser			=	Input(UInt((S_COUNT*BUSER_WIDTH).W))
+		val	m_axi_bvalid		=	Input(UInt((S_COUNT*1).W))
+		val	m_axi_bready		=	Output(UInt((S_COUNT*1).W))
 
-		val	m_axi_arid			=	Output(UInt((M_COUNT*ID_WIDTH).W))
-		val	m_axi_araddr		=	Output(UInt((M_COUNT*ADDR_WIDTH).W))
-		val	m_axi_arlen			=	Output(UInt((M_COUNT*8).W))
-		val	m_axi_arsize		=	Output(UInt((M_COUNT*3).W))
-		val	m_axi_arburst		=	Output(UInt((M_COUNT*2).W))
-		val	m_axi_arlock		=	Output(UInt((M_COUNT*1).W))
-		val	m_axi_arcache		=	Output(UInt((M_COUNT*4).W))
-		val	m_axi_arprot		=	Output(UInt((M_COUNT*3).W))
-		val	m_axi_arqos			=	Output(UInt((M_COUNT*4).W))
-		val	m_axi_arregion		=	Output(UInt((M_COUNT*4).W))
-		val	m_axi_aruser		=	Output(UInt((M_COUNT*ARUSER_WIDTH).W))
-		val	m_axi_arvalid		=	Output(UInt((M_COUNT*1).W))
-		val	m_axi_arready		=	Input(UInt((M_COUNT*1).W))
+		val	m_axi_arid			=	Output(UInt((S_COUNT*ID_WIDTH).W))
+		val	m_axi_araddr		=	Output(UInt((S_COUNT*ADDR_WIDTH).W))
+		val	m_axi_arlen			=	Output(UInt((S_COUNT*8).W))
+		val	m_axi_arsize		=	Output(UInt((S_COUNT*3).W))
+		val	m_axi_arburst		=	Output(UInt((S_COUNT*2).W))
+		val	m_axi_arlock		=	Output(UInt((S_COUNT*1).W))
+		val	m_axi_arcache		=	Output(UInt((S_COUNT*4).W))
+		val	m_axi_arprot		=	Output(UInt((S_COUNT*3).W))
+		val	m_axi_arqos			=	Output(UInt((S_COUNT*4).W))
+		val	m_axi_arregion		=	Output(UInt((S_COUNT*4).W))
+		val	m_axi_aruser		=	Output(UInt((S_COUNT*ARUSER_WIDTH).W))
+		val	m_axi_arvalid		=	Output(UInt((S_COUNT*1).W))
+		val	m_axi_arready		=	Input(UInt((S_COUNT*1).W))
 
-		val	m_axi_rid			=	Input(UInt((M_COUNT*ID_WIDTH).W))
-		val	m_axi_rdata			=	Input(UInt((M_COUNT*DATA_WIDTH).W))
-		val	m_axi_rresp			=	Input(UInt((M_COUNT*2).W))
-		val	m_axi_rlast			=	Input(UInt((M_COUNT*1).W))
-		val	m_axi_ruser			=	Input(UInt((M_COUNT*RUSER_WIDTH).W))
-		val	m_axi_rvalid		=	Input(UInt((M_COUNT*1).W))
-		val	m_axi_rready		=	Output(UInt((M_COUNT*1).W))
+		val	m_axi_rid			=	Input(UInt((S_COUNT*ID_WIDTH).W))
+		val	m_axi_rdata			=	Input(UInt((S_COUNT*DATA_WIDTH).W))
+		val	m_axi_rresp			=	Input(UInt((S_COUNT*2).W))
+		val	m_axi_rlast			=	Input(UInt((S_COUNT*1).W))
+		val	m_axi_ruser			=	Input(UInt((S_COUNT*RUSER_WIDTH).W))
+		val	m_axi_rvalid		=	Input(UInt((S_COUNT*1).W))
+		val	m_axi_rready		=	Output(UInt((S_COUNT*1).W))
 
 	})
 
@@ -181,7 +182,7 @@ class axi_interconnect_top(nocParameters:NOCParameters)	extends	Module{
 
 
 	//connect up masters
-	for(i<-0 until M_COUNT){
+	for(i<-0 until S_COUNT){
 		io.s_AXI_port(i).AXI_AW.bits.awid  		:=read_slice(NOC.io.m_axi_awid, io.s_AXI_port(i).AXI_AW.bits.awid.getWidth, i)
 		io.s_AXI_port(i).AXI_AW.bits.awaddr 	:=read_slice(NOC.io.m_axi_awaddr, io.s_AXI_port(i).AXI_AW.bits.awaddr.getWidth ,i)
 		io.s_AXI_port(i).AXI_AW.bits.awlen 		:=read_slice(NOC.io.m_axi_awlen, io.s_AXI_port(i).AXI_AW.bits.awlen.getWidth, i)
@@ -236,7 +237,7 @@ class axi_interconnect_top(nocParameters:NOCParameters)	extends	Module{
 
 
 
-	for(i<-0 until S_COUNT){
+	for(i<-0 until M_COUNT){
 		NOC.io.s_axi_awid   := Cat(io.m_AXI_port.map(_.AXI_AW.bits.awid).reverse)
 		NOC.io.s_axi_awaddr	:= Cat(io.m_AXI_port.map(_.AXI_AW.bits.awaddr).reverse)
 		NOC.io.s_axi_awlen  := Cat(io.m_AXI_port.map(_.AXI_AW.bits.awlen).reverse)

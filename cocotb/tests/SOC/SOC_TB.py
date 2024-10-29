@@ -12,7 +12,14 @@ from monitors.SOC_mon import *
 
 
 class SOC_TB:
-    def __init__(self, dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin"):
+
+    def __init__(self, dut, binary=["/home/hakam/Repos/ChaosCore/binaries/bin/hello_world.bin"]):
+        """
+        Parameters:
+        - dut: A pointer to the top level dut
+        - binary: An array of 
+        """
+
         # Top level Module #
         self.dut = dut
 
@@ -23,7 +30,6 @@ class SOC_TB:
 
         self.axi_ram.write_if.log.setLevel(logging.CRITICAL)
         self.axi_ram.read_if.log.setLevel(logging.CRITICAL)
-
 
 
         with open(binary, "rb") as f:

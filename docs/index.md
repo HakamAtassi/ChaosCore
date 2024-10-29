@@ -116,6 +116,8 @@ It is assumed that the following tools have already been installed. The versions
 1. Verilator 5.024
 2. Chisel 6.0
 3. Python3
+4. Espresso (optional)
+5. Missing stuff! Spike, etc!
 
 All other requirements are included as part of the setup process for this repository.
 

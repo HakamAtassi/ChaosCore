@@ -36,16 +36,15 @@ import chisel3.util._
 
 import chisel3.experimental.dataview._
 
-class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NOCParameters) extends Module{
+class SOC(socParameters:SOCParameters) extends Module{
+
+    val nocParameters = socParameters.nocParameters
+    val addressMap = socParameters.addressMap
 
     val m_axi = IO(new VerilogAXIFullIO(nocParameters))
-
     val dram_AXI = m_axi.viewAs[AXIFullIO]
-
-    ///////////////
-    // CHAOSCORE //
-    ///////////////
-    val ChaosCore_tile = Module(new ChaosCore_tile(coreParameters, addressMap, nocParameters))
+    
+    val axi_interconnect = Module(new axi_interconnect_top(nocParameters))
 
     /////////////////
     // PERIPHIRALS //
@@ -53,21 +52,32 @@ class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NO
     val AXI_debug_printer = Module(new AXI_debug_printer(nocParameters, addressMap))
     //instruction_cache.io.flush := flush
 
-    //////////////////
-    // INTERCONNECT //
-    //////////////////
-
-    //val axi_interconnect = Module(new axi_interconnect_2x2(nocParameters))
-    val axi_interconnect = Module(new axi_interconnect_top(nocParameters))
+    for(coreParameters <- socParameters.coreParameters.zipWithIndex){
 
 
-    // Connect to NOC
+        ///////////////
+        // CHAOSCORE //
+        ///////////////
 
-    // I$ <> NOC
-    ChaosCore_tile.io.instruction_cache_AXI_port    <> axi_interconnect.io.m_AXI_port(0)
+        val ChaosCore_tile = Module(new ChaosCore_tile(coreParameters._1, addressMap, nocParameters))
 
-    // D$ <> NOC
-    ChaosCore_tile.io.data_cache_AXI_port           <> axi_interconnect.io.m_AXI_port(1)
+
+        //////////////////
+        // INTERCONNECT //
+        //////////////////
+
+
+        // Connect to NOC
+        val I_port = coreParameters._2*2
+        val D_port = coreParameters._2*2+1
+
+        // I$ <> NOC
+        ChaosCore_tile.io.instruction_cache_AXI_port    <> axi_interconnect.io.m_AXI_port(I_port)
+        // D$ <> NOC
+        ChaosCore_tile.io.data_cache_AXI_port           <> axi_interconnect.io.m_AXI_port(D_port)
+
+    }
+
 
     // NOC <> IO (DRAM)
     axi_interconnect.io.s_AXI_port(0) <> dram_AXI
@@ -77,5 +87,6 @@ class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NO
     
 
     dontTouch(axi_interconnect.io)
+
 
 }

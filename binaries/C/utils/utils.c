@@ -12,7 +12,6 @@
 })
 
 
-
 int putchar(int ASCII)
 {
     volatile unsigned int* ptr = (unsigned int*)0x80000;
