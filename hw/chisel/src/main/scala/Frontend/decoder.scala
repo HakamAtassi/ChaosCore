@@ -39,172 +39,8 @@ import helperFunctions._
 
 import chisel3.util.experimental.decode._
 
-class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder and field extraction
-    import coreParameters._
-    import InstructionType._
-    val io = IO(new Bundle{
-        val instruction         = Flipped(Decoupled(new Instruction(coreParameters)))
-        val decoded_instruction = Decoupled(new decoded_instruction(coreParameters))
-    })
 
-
-
-
-    val instruction = io.instruction.bits.instruction
-
-    // Direct instruction fields
-    val opcode      = instruction(6, 0)
-    val RS1         = instruction(19, 15)
-    val RS2         = instruction(24, 20)
-    val PRD         = instruction(11, 7)
-    val IMM         = getImm(instruction)
-    val FUNCT3      = instruction(14, 12)
-    val FUNCT7      = instruction(31, 25)
-
-
-    val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
-    assert(valid, "Enum state must be valid, got %x!",instruction)
-
-    //Do we check entire funct7 field or just check for single bit?
-
-
-    val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
-
-
-    val SUBTRACT    =   (instructionType === OP && FUNCT7 === 0x20.U) || (instructionType === OP_IMM && FUNCT3 === 0x5.U && FUNCT7 === 0x20.U)
-
-
-    val IS_IMM   =      (instructionType === OP_IMM)    || 
-                        (instructionType === LUI)       || 
-                        (instructionType === AUIPC)     || 
-                        (instructionType === STORE)     || 
-                        (instructionType === LOAD)      || 
-                        (instructionType === BRANCH)    || 
-                        (instructionType === JAL)       || 
-                        (instructionType === JALR)      ||
-                        ((instructionType === SYSTEM) && (FUNCT3 === 5.U || FUNCT3 === 6.U || FUNCT3 === 7.U))
-
-    val needs_div            =   (instructionType === OP) && FUNCT7(0)
-    val needs_mul            =   (instructionType === OP) && FUNCT7(0)
-    val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === AUIPC)
-    val needs_CSRs           =   (instructionType === SYSTEM) && (FUNCT3 === 0x0.U || FUNCT3 === 0x1.U || FUNCT3 === 0x2.U || FUNCT3 === 0x3.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
-    val needs_ALU            =   ((instructionType === OP) &&
-                                 ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
-                                 (instructionType === OP_IMM) || (instructionType === LUI)
-
-
-
-    val ECALL               =   instruction === "b00000000000000000000000001110011".U 
-    val MRET                =   instruction === "b00110000001000000000000001110011".U 
-    //instruciton === "b00110000001000000000000001110011".U //(instructionType === SYSTEM) && (FUNCT3 === 0x0.U)
-
-
-    val FENCE               =   ((instructionType === MISC_MEM) && FUNCT3 === 0x0.U)
-
-
-    // Assign output
-
-    io.decoded_instruction.valid    := io.instruction.valid
-    io.instruction.ready            := io.decoded_instruction.ready
-
-    val initialReady = Wire(new sources_ready)
-    initialReady.RS1_ready := false.B
-    initialReady.RS2_ready := false.B
-
-    io.decoded_instruction.bits.ready_bits      :=   initialReady
-
-    io.decoded_instruction.bits.RD_valid := (instructionType === OP         || 
-                                            instructionType === OP_IMM      || 
-                                            instructionType === LOAD        || 
-                                            instructionType === JAL         || 
-                                            instructionType === JALR        || 
-                                            instructionType === LUI         || 
-                                            instructionType === AUIPC       || 
-                                            (instructionType === SYSTEM &&  FUNCT3=/=0.U))     && 
-                                            io.instruction.valid
-
-    io.decoded_instruction.bits.RS1_valid            := (instructionType === OP         || 
-                                                        instructionType === OP_IMM      || 
-                                                        instructionType === LOAD        || 
-                                                        instructionType === STORE       || 
-                                                        instructionType === JALR        || 
-                                                        (needs_CSRs && !IS_IMM) ||
-                                                        instructionType === BRANCH)     && 
-                                                        io.instruction.valid
-
-    io.decoded_instruction.bits.RS2_valid            := (instructionType === OP         ||
-                                                        instructionType === STORE       || 
-                                                        instructionType === BRANCH)     && 
-                                                        io.instruction.valid
-
-
-    io.decoded_instruction.bits.RD                   := PRD
-    io.decoded_instruction.bits.PRDold               := DontCare
-    io.decoded_instruction.bits.PRD                  := DontCare
-    io.decoded_instruction.bits.RS1                  := RS1
-    io.decoded_instruction.bits.RS2                  := RS2
-    io.decoded_instruction.bits.IMM                  := IMM
-    io.decoded_instruction.bits.FUNCT3               := FUNCT3
-    io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
-    io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
-    io.decoded_instruction.bits.FENCE                := FENCE       // FLUSH of ANY TYPE    (they all do the same thing)
-    io.decoded_instruction.bits.FLUSH                := 0.B       // FLUSH of ANY TYPE    (they all do the same thing)
-    io.decoded_instruction.bits.MRET                 := MRET       // FLUSH of ANY TYPE    (they all do the same thing)
-    io.decoded_instruction.bits.IS_IMM               := IS_IMM   // subtract or arithmetic shift...
-
-
-
-
-
-    when(instructionType === LOAD){
-        io.decoded_instruction.bits.memory_type              := memory_type_t.LOAD
-    }.elsewhen(instructionType === STORE){
-        io.decoded_instruction.bits.memory_type              := memory_type_t.STORE
-    }.otherwise{
-        io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
-    }
-
-    val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
-
-    io.decoded_instruction.bits.packet_index         := io.instruction.bits.packet_index 
-    io.decoded_instruction.bits.instructionType      := instructionType
-    io.decoded_instruction.bits.ROB_index            := 0.U
-    io.decoded_instruction.bits.MOB_index            := 0.U
-    io.decoded_instruction.bits.needs_ALU            := needs_ALU
-    io.decoded_instruction.bits.needs_memory         := needs_memory
-    io.decoded_instruction.bits.needs_branch_unit    := needs_branch_unit
-    io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
-    io.decoded_instruction.bits.needs_mul            := needs_mul
-    io.decoded_instruction.bits.needs_div            := needs_div
-    io.decoded_instruction.bits.ECALL                := ECALL
-
-    io.decoded_instruction.bits.access_width                 := access_width_t.NONE
-    io.decoded_instruction.bits.mem_signed  := 0.B
-
-
-    when(FUNCT3  === "b000".U && needs_memory){ // LB
-        io.decoded_instruction.bits.access_width             := access_width_t.B
-        io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b001".U && needs_memory){   // LHW
-        io.decoded_instruction.bits.access_width             := access_width_t.HW
-        io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b010".U && needs_memory){   // LW
-        io.decoded_instruction.bits.access_width             := access_width_t.W
-        io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b100".U && needs_memory){   // LBU
-        io.decoded_instruction.bits.access_width             := access_width_t.B
-        io.decoded_instruction.bits.mem_signed  := 0.B
-    }.elsewhen(FUNCT3  === "b101".U && needs_memory){   // LHWU
-        io.decoded_instruction.bits.access_width             := access_width_t.HW
-        io.decoded_instruction.bits.mem_signed  := 0.B
-    }
-
-    dontTouch(IMM)
-    dontTouch(instructionType)
-
-}
-
-class improved_decoder(coreParameters:CoreParameters) extends Module{
+class decoder(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     import InstructionType._
 
@@ -227,9 +63,11 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
     val FUNCT3      = instruction(14, 12)
     val FUNCT7      = instruction(31, 25)
 
+    // helper fields
+    // "1" and "0" => are concatenated to a bit string which is then converted to an int
+    // "?" is a dont care
     val Y = "1"
     val N = "0"
-    val X = "x"
     val R_NONE = "?????"
     val FUNCT7_NONE = "???????"
     val FUNCT3_NONE = "???"
@@ -253,100 +91,102 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
 
 
     val table = TruthTable(
-        Map(
-            //                                                                                                                                                                                                                          needs ALU                                  LOAD
-            //                                                                                                                                                                                                                          |   needs branch unit                      |   STORE
-            //                                                                                                                                                                                                                          |   |   needs CSR                          |   |   FENCE
-            //                                                                                                                                                                                                                          |   |   |   needs memory                   |   |   |   FLUSH
-            //                                                                                                                                                                                                                          |   |   |   |   needs mul                  |   |   |   |   RD valid?
-            //                                                                                                                                                                                                                          |   |   |   |   |   needs div              |   |   |   |   |
-            //                                                                                                                                                                                                                          |   |   |   |   |   |   Unsigned?          |   |   |   |   |
-            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   IMM?           |   |   |   |   |
-            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   MRET       |   |   |   |   |
-            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   |   ECALL  |   |   |   |   |
-            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   |   |      |   |   |   |   |
-            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // ADD
-            BitPat("b1"+ binString(0x20.U(7.W)) + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SUB
-            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // XOR
-            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // OR
-            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // AND
-            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SLL
-            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SRL
-            BitPat("b1"+ binString(0x20.U(7.W)) + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SRA
-            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SLT
-            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x3.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + N + N + N + N + N + Y + N + N + N +    N + N + N + N + Y),   // SLTU
+        Map(    // (Hint: Scroll right to see mappings)
+            //                                                                                                                                                                                                                          RS2 valid         
+            //                                                                                                                                                                                                                          |   RS1 valid    
+            //                                                                                                                                                                                                                          |   |   needs ALU                                  LOAD
+            //                                                                                                                                                                                                                          |   |   |   needs branch unit                      |   STORE
+            //                                                                                                                                                                                                                          |   |   |   |   needs CSR                          |   |   FENCE
+            //                                                                                                                                                                                                                          |   |   |   |   |   needs memory                   |   |   |   FLUSH
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   needs mul                  |   |   |   |   RD valid
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   needs div              |   |   |   |   |
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   Unsigned?          |   |   |   |   |
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   |   IMM?           |   |   |   |   |
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   |   |   MRET       |   |   |   |   |
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   |   |   |   ECALL  |   |   |   |   |
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |   |   |   |   |   |      |   |   |   |   |
+            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // ADD
+            BitPat("b1"+ binString(0x20.U(7.W)) + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SUB
+            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // XOR
+            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // OR
+            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // AND
+            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SLL
+            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SRL
+            BitPat("b1"+ binString(0x20.U(7.W)) + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SRA
+            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + N + N + N + N +    N + N + N + N + Y),   // SLT
+            BitPat("b1"+ binString(0x00.U(7.W)) + R_NONE + R_NONE + binString(0x3.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + Y + N + N + N + N + N + Y + N + N + N +    N + N + N + N + Y),   // SLTU
 
             // IMM                                     
-            BitPat("b1"+ IMM_NONE                 + R_NONE               + binString(0x0.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // ADDI
-            BitPat("b1"+ IMM_NONE                 + R_NONE               + binString(0x4.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // XORI
-            BitPat("b1"+ IMM_NONE                 + R_NONE               + binString(0x6.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // ORI
-            BitPat("b1"+ IMM_NONE                 + R_NONE               + binString(0x7.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // ANDI
-            BitPat("b1"+ binString(0x00.U(7.W))   + R_NONE   + R_NONE    + binString(0x1.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // SLLI
-            BitPat("b1"+ binString(0x00.U(7.W))   + R_NONE   + R_NONE    + binString(0x5.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // SRLI
-            BitPat("b1"+ binString(0x20.U(7.W))   + R_NONE   + R_NONE    + binString(0x5.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // SRAI
-            BitPat("b1"+ FUNCT7_NONE              + R_NONE   + R_NONE    + binString(0x2.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // SLTI
-            BitPat("b1"+ FUNCT7_NONE              + R_NONE   + R_NONE    + binString(0x3.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + Y + N + N + N + N + N + Y + Y + N + N +    N + N + N + N + Y),   // SLTUI
+            BitPat("b1"+ IMM_NONE                 + R_NONE               + binString(0x0.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // ADDI
+            BitPat("b1"+ IMM_NONE                 + R_NONE               + binString(0x4.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // XORI
+            BitPat("b1"+ IMM_NONE                 + R_NONE               + binString(0x6.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // ORI
+            BitPat("b1"+ IMM_NONE                 + R_NONE               + binString(0x7.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // ANDI
+            BitPat("b1"+ binString(0x00.U(7.W))   + R_NONE   + R_NONE    + binString(0x1.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // SLLI
+            BitPat("b1"+ binString(0x00.U(7.W))   + R_NONE   + R_NONE    + binString(0x5.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // SRLI
+            BitPat("b1"+ binString(0x20.U(7.W))   + R_NONE   + R_NONE    + binString(0x5.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // SRAI
+            BitPat("b1"+ FUNCT7_NONE              + R_NONE   + R_NONE    + binString(0x2.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // SLTI
+            BitPat("b1"+ FUNCT7_NONE              + R_NONE   + R_NONE    + binString(0x3.U(3.W))         + R_NONE + s"${binString(InstructionType.OP_IMM.litValue.U(5.W))}")                                            -> BitPat("b" + N + Y + Y + N + N + N + N + N + Y + Y + N + N +    N + N + N + N + Y),   // SLTUI
 
             // LD                                      
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + N + N + Y + N + N + N + Y + N + N +    Y + N + N + N + Y),   // LB
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + N + N + Y + N + N + N + Y + N + N +    Y + N + N + N + Y),   // LH
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + N + N + Y + N + N + N + Y + N + N +    Y + N + N + N + Y),   // LW
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + N + N + Y + N + N + Y + Y + N + N +    Y + N + N + N + Y),   // LBU
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + N + N + Y + N + N + Y + Y + N + N +    Y + N + N + N + Y),   // LHU
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + Y + N + N + N + Y + N + N + N + Y + N + N +    Y + N + N + N + Y),   // LB
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + Y + N + N + N + Y + N + N + N + Y + N + N +    Y + N + N + N + Y),   // LH
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + Y + N + N + N + Y + N + N + N + Y + N + N +    Y + N + N + N + Y),   // LW
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + Y + N + N + N + Y + N + N + Y + Y + N + N +    Y + N + N + N + Y),   // LBU
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.LOAD.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + Y + N + N + N + Y + N + N + Y + Y + N + N +    Y + N + N + N + Y),   // LHU
 
             // STR                                     
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.STORE.litValue.U(5.W))}")                                                                       -> BitPat("b" + N + N + N + Y + N + N + N + Y + N + N +    N + Y + N + N + N),   // SB
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.STORE.litValue.U(5.W))}")                                                                       -> BitPat("b" + N + N + N + Y + N + N + N + Y + N + N +    N + Y + N + N + N),   // SHW
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.STORE.litValue.U(5.W))}")                                                                       -> BitPat("b" + N + N + N + Y + N + N + N + Y + N + N +    N + Y + N + N + N),   // SB
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.STORE.litValue.U(5.W))}")                                                                       -> BitPat("b" + Y + Y + N + N + N + Y + N + N + N + Y + N + N +    N + Y + N + N + N),   // SB
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.STORE.litValue.U(5.W))}")                                                                       -> BitPat("b" + Y + Y + N + N + N + Y + N + N + N + Y + N + N +    N + Y + N + N + N),   // SHW
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.STORE.litValue.U(5.W))}")                                                                       -> BitPat("b" + Y + Y + N + N + N + Y + N + N + N + Y + N + N +    N + Y + N + N + N),   // SB
 
             // BRANCH                                      
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + N),   // BEQ
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + N),   // BNE
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + N),   // BLT
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + N),   // BGE
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + N + Y + N + N + N + N + Y + Y + N + N +    N + N + N + N + N),   // BLTU
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + N + Y + N + N + N + N + Y + Y + N + N +    N + N + N + N + N),   // BGEU
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + Y + Y + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + N),   // BEQ
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + Y + Y + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + N),   // BNE
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + Y + Y + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + N),   // BLT
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + Y + Y + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + N),   // BGE
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + Y + Y + N + Y + N + N + N + N + Y + Y + N + N +    N + N + N + N + N),   // BLTU
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}")                                                                      -> BitPat("b" + Y + Y + N + Y + N + N + N + N + Y + Y + N + N +    N + N + N + N + N),   // BGEU
 
             // JAL                                     
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.JAL.litValue.U(5.W))}")                                                                                   -> BitPat("b" + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // JAL
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.JAL.litValue.U(5.W))}")                                                                                   -> BitPat("b" + N + N + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // JAL
 
             // JALR                                    
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.JALR.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // JALR
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.JALR.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + Y + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // JALR
 
             // MISC insn                                       
-            BitPat("b1"+ FUNCT7_NONE+ R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.LUI.litValue.U(5.W))}")                                                                                    -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // LUI
-            BitPat("b1"+ FUNCT7_NONE+ R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.AUIPC.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // AUIPC
+            BitPat("b1"+ FUNCT7_NONE+ R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.LUI.litValue.U(5.W))}")                                                                                    -> BitPat("b" + N + N + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // LUI
+            BitPat("b1"+ FUNCT7_NONE+ R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.AUIPC.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // AUIPC
 
             // MISC mem                                    
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.MISC_MEM.litValue.U(5.W))}")                                                                    -> BitPat("b" + Y + N + N + N + N + N + N + Y + N + N +    N + N + Y + Y + N),   // FENCE
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.MISC_MEM.litValue.U(5.W))}")                                                                    -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N + N + N +    N + N + Y + Y + N),   // FENCE
 
             // CSR                                     
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + N + N + N + N + Y + N + N +    N + N + N + Y + N),   // CSRRW
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + N + N + N + N + Y + N + N +    N + N + N + Y + N),   // CSRRS
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x3.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + N + N + N + N + Y + N + N +    N + N + N + Y + N),   // CSRRC
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + Y + N + N + N + N + Y + N + N +    N + N + N + Y + N),   // CSRWI
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + Y + N + N + N + N + Y + N + N +    N + N + N + Y + N),   // CSRSI
-            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + Y + N + N + N + N + Y + N + N +    N + N + N + Y + N),   // CSRCI
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + Y + N + N + Y + N + N + N + N + N + N + N +    N + N + N + Y + Y),   // CSRRW
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + Y + N + N + Y + N + N + N + N + N + N + N +    N + N + N + Y + Y),   // CSRRS
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x3.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + Y + N + N + Y + N + N + N + N + N + N + N +    N + N + N + Y + Y),   // CSRRC
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + N + Y + N + N + N + N + Y + N + N +    N + N + N + Y + Y),   // CSRWI
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + N + Y + N + N + N + N + Y + N + N +    N + N + N + Y + Y),   // CSRSI
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + N + Y + N + N + N + N + Y + N + N +    N + N + N + Y + Y),   // CSRCI
 
             // SYSTEM
-            BitPat("b1"+ binString(0x0.U(7.W))  + binString(0x0.U(5.W)) + binString(0x0.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + Y + N + N + N + N + N + N + Y +    N + N + Y + Y + N),   // ECALL 
-            BitPat("b1"+ binString(0x8.U(7.W))  + binString(0x2.U(5.W)) + binString(0x0.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + Y + N + N + N + N + Y + N + N +    N + N + Y + Y + N),   // SRET FIXME: not implemented
-            BitPat("b1"+ binString(0x24.U(7.W)) + binString(0x2.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + Y + N + N + N + N + Y + Y + N +    N + N + Y + Y + N),   // MRET 
+            BitPat("b1"+ binString(0x0.U(7.W))  + binString(0x0.U(5.W)) + binString(0x0.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N + N + Y +    N + N + Y + Y + N),   // ECALL 
+            BitPat("b1"+ binString(0x8.U(7.W))  + binString(0x2.U(5.W)) + binString(0x0.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + N + N + Y + N + N + N + N + Y + N + N +    N + N + Y + Y + N),   // SRET FIXME: not implemented
+            BitPat("b1"+ binString(0x24.U(7.W)) + binString(0x2.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + N + N + Y + N + N + N + N + Y + Y + N +    N + N + Y + Y + N),   // MRET 
             //BitPat("b"+ binString(0x24.U(7.W)) + binString(0x2.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + Y + N + N + N + N + Y + Y + N +    N + N + Y + Y + N),   // FIXME: add EBREAK
 
 
             // M
-            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // mul
-            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // mulh
-            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // mulsu
-            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x3.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // mulu
-            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + N + N + N + N + Y + Y + N + N + N + N +    N + N + N + N + Y),   // div
-            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + N + N + N + N + Y + Y + N + N + N + N +    N + N + N + N + Y),   // divu
-            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // rem
-            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // remu
+            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // mul
+            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // mulh
+            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x2.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // mulsu
+            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x3.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // mulu
+            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + N + N + N + N + Y + Y + N + N + N + N +    N + N + N + N + Y),   // div
+            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + N + N + N + N + Y + Y + N + N + N + N +    N + N + N + N + Y),   // divu
+            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // rem
+            BitPat("b1"+ binString(0x01.U(7.W)) + R_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.OP.litValue.U(5.W))}")                                                               -> BitPat("b" + Y + Y + N + N + N + N + Y + N + N + N + N + N +    N + N + N + N + Y),   // remu
 
         ),
-        BitPat("b" + N + N + N + N + N + N + N + N + N + N + N + N + N + N + N)
+        BitPat("b" + N + N + N + N + N + N + N + N + N + N + N + N + N + N + N + N + N)
     )
 
 
@@ -356,8 +196,7 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
     // READ OUT BITPATTERN & ASSIGN //
     //////////////////////////////////
 
-    val test = decoder(Cat(io.instruction.valid, instruction(31, 2)), table)   // FIXME: add all fields, like RS1, RS2, RD, etc since some instructions have them fixed as per the spec (See MRET, sret, etc...)
-    dontTouch(test)
+    val decode_pat = decoder(Cat(io.instruction.valid, instruction(31, 2)), table)   // FIXME: add all fields, like RS1, RS2, RD, etc since some instructions have them fixed as per the spec (See MRET, sret, etc...)
 
     val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
     assert(valid, "Enum state must be valid, got %x!",instruction)
@@ -376,179 +215,56 @@ class improved_decoder(coreParameters:CoreParameters) extends Module{
     io.decoded_instruction.bits.MOB_index            := 0.U
 
 
-//                                                                            needs ALU                                  LOAD
-//                                                                            |   needs branch unit                      |   STORE
-//                                                                            |   |   needs CSR                          |   |   FENCE
-//                                                                            |   |   |   needs memory                   |   |   |   FLUSH
-//                                                                            |   |   |   |   needs mul                  |   |   |   |   RD valid?
-//                                                                            |   |   |   |   |   needs div              |   |   |   |   |
-//                                                                            |   |   |   |   |   |   Unsigned?          |   |   |   |   |
-//                                                                            |   |   |   |   |   |   |   IMM?           |   |   |   |   |
-//                                                                            |   |   |   |   |   |   |   |   MRET       |   |   |   |   |
-//                                                                            |   |   |   |   |   |   |   |   |   ECALL  |   |   |   |   |
-//                                                                            |   |   |   |   |   |   |   |   |   |      |   |   |   |   |
-                                                                          //  14  13  12  11  10  9   8   7   6   5      4   3   2   1   0     
-                                                                          //  0   1   2   3   4   5   6   7   8   9     10   11 12   13 14     
-
-    io.decoded_instruction.bits.needs_ALU            := test(14)
-    io.decoded_instruction.bits.needs_branch_unit    := test(13)
-    io.decoded_instruction.bits.needs_CSRs           := test(12)
-    io.decoded_instruction.bits.needs_memory         := test(11)
-    io.decoded_instruction.bits.needs_mul            := test(10)
-    io.decoded_instruction.bits.needs_div            := test(9)
-    io.decoded_instruction.bits.SUBTRACT             := !test(8)     // FIXME: change this to UNSIGNED
-
-    io.decoded_instruction.bits.IS_IMM               := test(7)     //
-    io.decoded_instruction.bits.MRET                 := test(6)     //
-    io.decoded_instruction.bits.ECALL                := test(5)     //
-
+    io.decoded_instruction.bits.FENCE                := decode_pat(2)
+    io.decoded_instruction.bits.FLUSH                := decode_pat(1)
+    io.decoded_instruction.bits.RD_valid             := decode_pat(0)
+    io.decoded_instruction.bits.needs_ALU            := decode_pat(14)
+    io.decoded_instruction.bits.needs_branch_unit    := decode_pat(13)
+    io.decoded_instruction.bits.needs_CSRs           := decode_pat(12)
+    io.decoded_instruction.bits.needs_memory         := decode_pat(11)
+    io.decoded_instruction.bits.needs_mul            := decode_pat(10)
+    io.decoded_instruction.bits.needs_div            := decode_pat(9)
+    io.decoded_instruction.bits.SUBTRACT             := decode_pat(8)     // FIXME: change this to UNSIGNED
+    io.decoded_instruction.bits.IS_IMM               := decode_pat(7)
+    io.decoded_instruction.bits.MRET                 := decode_pat(6)
+    io.decoded_instruction.bits.ECALL                := decode_pat(5)
     io.decoded_instruction.bits.IMM                  := IMM
-    io.decoded_instruction.bits.MULTIPLY             := test(10)
+    io.decoded_instruction.bits.MULTIPLY             := decode_pat(10)
+   
 
-    when(test(10)){
+    when(decode_pat(4)){
         io.decoded_instruction.bits.memory_type              := memory_type_t.LOAD
-    }.elsewhen(test(11)){
+    }.elsewhen(decode_pat(3)){
         io.decoded_instruction.bits.memory_type              := memory_type_t.STORE
     }.otherwise{
         io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
     }
 
-    io.decoded_instruction.bits.FENCE                := test(2)
-    io.decoded_instruction.bits.FLUSH                := test(1)
-    io.decoded_instruction.bits.RD_valid             := test(0)
-
-    when(FUNCT3  === "b000".U){         // LB
-        io.decoded_instruction.bits.access_width             := access_width_t.B
-        //io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b001".U){   // LHW
-        io.decoded_instruction.bits.access_width             := access_width_t.HW
-        //io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b010".U){   // LW
-        io.decoded_instruction.bits.access_width             := access_width_t.W
-        //io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b100".U){   // LBU
-        io.decoded_instruction.bits.access_width             := access_width_t.B
-        //io.decoded_instruction.bits.mem_signed  := 0.B
-    }.elsewhen(FUNCT3  === "b101".U){   // LHWU
-        io.decoded_instruction.bits.access_width             := access_width_t.HW
-        //io.decoded_instruction.bits.mem_signed  := 0.B
-    }
-
-
-
-
-    // OLD CODE //
-
-    val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
-
-
+    // FIXME: remove this and integrate it into the decoder
     val SUBTRACT    =   (instructionType === OP && FUNCT7 === 0x20.U) || (instructionType === OP_IMM && FUNCT3 === 0x5.U && FUNCT7 === 0x20.U)
 
+    io.decoded_instruction.bits.SUBTRACT            := SUBTRACT
 
-    val IS_IMM   =      (instructionType === OP_IMM)    || 
-                        (instructionType === LUI)       || 
-                        (instructionType === AUIPC)     || 
-                        (instructionType === STORE)     || 
-                        (instructionType === LOAD)      || 
-                        (instructionType === BRANCH)    || 
-                        (instructionType === JAL)       || 
-                        (instructionType === JALR)      ||
-                        ((instructionType === SYSTEM) && (FUNCT3 === 5.U || FUNCT3 === 6.U || FUNCT3 === 7.U))
+    io.decoded_instruction.bits.RS1_valid            := decode_pat(15)
+    io.decoded_instruction.bits.RS2_valid            := decode_pat(16)
 
-    val needs_div            =   (instructionType === OP) && FUNCT7(0)
-    val needs_mul            =   (instructionType === OP) && FUNCT7(0)
-    val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === AUIPC)
-    val needs_CSRs           =   (instructionType === SYSTEM) && (FUNCT3 === 0x0.U || FUNCT3 === 0x1.U || FUNCT3 === 0x2.U || FUNCT3 === 0x3.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
-    val needs_ALU            =   ((instructionType === OP) &&
-                                 ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
-                                 (instructionType === OP_IMM) || (instructionType === LUI)
-
-
-
-    val ECALL               =   instruction === "b00000000000000000000000001110011".U 
-    val MRET                =   instruction === "b00110000001000000000000001110011".U 
-
-    val FENCE               =   ((instructionType === MISC_MEM) && FUNCT3 === 0x0.U)
-
-
-    // Assign output
-
-    io.decoded_instruction.valid    := io.instruction.valid
-    io.instruction.ready            := io.decoded_instruction.ready
-
-    initialReady.RS1_ready := false.B
-    initialReady.RS2_ready := false.B
-
-    io.decoded_instruction.bits.ready_bits      :=   initialReady
-
-    io.decoded_instruction.bits.RD_valid := (instructionType === OP         || 
-                                            instructionType === OP_IMM      || 
-                                            instructionType === LOAD        || 
-                                            instructionType === JAL         || 
-                                            instructionType === JALR        || 
-                                            instructionType === LUI         || 
-                                            instructionType === AUIPC       || 
-                                            (instructionType === SYSTEM &&  FUNCT3=/=0.U))     && 
-                                            io.instruction.valid
-
-    io.decoded_instruction.bits.RS1_valid            := (instructionType === OP         || 
-                                                        instructionType === OP_IMM      || 
-                                                        instructionType === LOAD        || 
-                                                        instructionType === STORE       || 
-                                                        instructionType === JALR        || 
-                                                        (needs_CSRs && !IS_IMM) ||
-                                                        instructionType === BRANCH)     && 
-                                                        io.instruction.valid
-
-    io.decoded_instruction.bits.RS2_valid            := (instructionType === OP         ||
-                                                        instructionType === STORE       || 
-                                                        instructionType === BRANCH)     && 
-                                                        io.instruction.valid
-
-
-    //io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
-    io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
-    io.decoded_instruction.bits.FLUSH                := 0.B       // FLUSH of ANY TYPE    (they all do the same thing)
-    io.decoded_instruction.bits.IS_IMM               := IS_IMM   // subtract or arithmetic shift...
-
-
-    when(instructionType === LOAD){
-        io.decoded_instruction.bits.memory_type              := memory_type_t.LOAD
-    }.elsewhen(instructionType === STORE){
-        io.decoded_instruction.bits.memory_type              := memory_type_t.STORE
-    }.otherwise{
-        io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
-    }
-
-    val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
-
-
-    io.decoded_instruction.bits.access_width                 := access_width_t.NONE
-    io.decoded_instruction.bits.mem_signed  := 0.B
-
-
-    when(FUNCT3  === "b000".U && needs_memory){ // LB
+    when(FUNCT3  === "b000".U){ // LB
         io.decoded_instruction.bits.access_width             := access_width_t.B
         io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b001".U && needs_memory){   // LHW
+    }.elsewhen(FUNCT3  === "b001".U ){   // LHW
         io.decoded_instruction.bits.access_width             := access_width_t.HW
         io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b010".U && needs_memory){   // LW
+    }.elsewhen(FUNCT3  === "b010".U){   // LW
         io.decoded_instruction.bits.access_width             := access_width_t.W
         io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b100".U && needs_memory){   // LBU
+    }.elsewhen(FUNCT3  === "b100".U){   // LBU
         io.decoded_instruction.bits.access_width             := access_width_t.B
         io.decoded_instruction.bits.mem_signed  := 0.B
-    }.elsewhen(FUNCT3  === "b101".U && needs_memory){   // LHWU
+    }.elsewhen(FUNCT3  === "b101".U){   // LHWU
         io.decoded_instruction.bits.access_width             := access_width_t.HW
         io.decoded_instruction.bits.mem_signed  := 0.B
     }
-
-
-
-
-
-
+    dontTouch(decode_pat)
 }
 
 
@@ -569,8 +285,8 @@ class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
     ////////////////////
     val decoded_fetch_packet    = Wire(Decoupled(new decoded_fetch_packet(coreParameters)))
 
-    val decoders: Seq[improved_decoder] = Seq.tabulate(fetchWidth) { w =>
-        Module(new improved_decoder(coreParameters))
+    val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
+        Module(new decoder(coreParameters))
     }
 
     var fetch_packet_ready = 1.B

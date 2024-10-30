@@ -37,7 +37,7 @@ Disassembly of section .text:
 80000074:	00000e93          	li	x29,0
 80000078:	00000f13          	li	x30,0
 8000007c:	00000f93          	li	x31,0
-80000080:	80100137          	lui	x2,0x80100
+80000080:	81000137          	lui	x2,0x81000
 80000084:	00001517          	auipc	x10,0x1
 80000088:	5fb50513          	addi	x10,x10,1531 # 8000167f <init_string>
 8000008c:	614000ef          	jal	800006a0 <printf>
@@ -52,7 +52,7 @@ Disassembly of section .text:
 800000b0:	00028067          	jr	x5
 
 800000b4 <trap_handler>:
-800000b4:	fc010113          	addi	x2,x2,-64 # 800fffc0 <__bss_end+0xfe932>
+800000b4:	fc010113          	addi	x2,x2,-64 # 80ffffc0 <__bss_end+0xffe932>
 800000b8:	00112023          	sw	x1,0(x2)
 800000bc:	00512223          	sw	x5,4(x2)
 800000c0:	00612423          	sw	x6,8(x2)

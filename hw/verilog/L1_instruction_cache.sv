@@ -115,16 +115,14 @@ module L1_instruction_cache(
   wire             CPU_response_valid;
   wire             miss;
   wire [1:0]       hit_oh;
-  wire             data_way_1_valid;
-  wire             data_way_0_valid;
-  wire [1:0]       valid_oh;
-  wire [5:0]       current_set_decomposed_icache_address_set;
   wire             _GEN;
   wire             m_axi_rready_0;
   wire             _CPU_response_skid_buffer_io_enq_ready;
   wire [3:0]       _validator_io_instruction_output;
+  wire             _data_memory_1_io_data_out_valid;
   wire [20:0]      _data_memory_1_io_data_out_tag;
   wire [255:0]     _data_memory_1_io_data_out_data;
+  wire             _data_memory_0_io_data_out_valid;
   wire [20:0]      _data_memory_0_io_data_out_tag;
   wire [255:0]     _data_memory_0_io_data_out_data;
   wire [1:0]       _LRU_memory_io_data_out;
@@ -164,136 +162,8 @@ module L1_instruction_cache(
   reg  [31:0]      replay_address_addr;
   reg  [31:0]      replay_address_wr_data;
   reg              replay_address_wr_en;
+  reg  [31:0]      request_addr;
   reg              cache_valid;
-  reg              valid_mem_0_0;
-  reg              valid_mem_0_1;
-  reg              valid_mem_1_0;
-  reg              valid_mem_1_1;
-  reg              valid_mem_2_0;
-  reg              valid_mem_2_1;
-  reg              valid_mem_3_0;
-  reg              valid_mem_3_1;
-  reg              valid_mem_4_0;
-  reg              valid_mem_4_1;
-  reg              valid_mem_5_0;
-  reg              valid_mem_5_1;
-  reg              valid_mem_6_0;
-  reg              valid_mem_6_1;
-  reg              valid_mem_7_0;
-  reg              valid_mem_7_1;
-  reg              valid_mem_8_0;
-  reg              valid_mem_8_1;
-  reg              valid_mem_9_0;
-  reg              valid_mem_9_1;
-  reg              valid_mem_10_0;
-  reg              valid_mem_10_1;
-  reg              valid_mem_11_0;
-  reg              valid_mem_11_1;
-  reg              valid_mem_12_0;
-  reg              valid_mem_12_1;
-  reg              valid_mem_13_0;
-  reg              valid_mem_13_1;
-  reg              valid_mem_14_0;
-  reg              valid_mem_14_1;
-  reg              valid_mem_15_0;
-  reg              valid_mem_15_1;
-  reg              valid_mem_16_0;
-  reg              valid_mem_16_1;
-  reg              valid_mem_17_0;
-  reg              valid_mem_17_1;
-  reg              valid_mem_18_0;
-  reg              valid_mem_18_1;
-  reg              valid_mem_19_0;
-  reg              valid_mem_19_1;
-  reg              valid_mem_20_0;
-  reg              valid_mem_20_1;
-  reg              valid_mem_21_0;
-  reg              valid_mem_21_1;
-  reg              valid_mem_22_0;
-  reg              valid_mem_22_1;
-  reg              valid_mem_23_0;
-  reg              valid_mem_23_1;
-  reg              valid_mem_24_0;
-  reg              valid_mem_24_1;
-  reg              valid_mem_25_0;
-  reg              valid_mem_25_1;
-  reg              valid_mem_26_0;
-  reg              valid_mem_26_1;
-  reg              valid_mem_27_0;
-  reg              valid_mem_27_1;
-  reg              valid_mem_28_0;
-  reg              valid_mem_28_1;
-  reg              valid_mem_29_0;
-  reg              valid_mem_29_1;
-  reg              valid_mem_30_0;
-  reg              valid_mem_30_1;
-  reg              valid_mem_31_0;
-  reg              valid_mem_31_1;
-  reg              valid_mem_32_0;
-  reg              valid_mem_32_1;
-  reg              valid_mem_33_0;
-  reg              valid_mem_33_1;
-  reg              valid_mem_34_0;
-  reg              valid_mem_34_1;
-  reg              valid_mem_35_0;
-  reg              valid_mem_35_1;
-  reg              valid_mem_36_0;
-  reg              valid_mem_36_1;
-  reg              valid_mem_37_0;
-  reg              valid_mem_37_1;
-  reg              valid_mem_38_0;
-  reg              valid_mem_38_1;
-  reg              valid_mem_39_0;
-  reg              valid_mem_39_1;
-  reg              valid_mem_40_0;
-  reg              valid_mem_40_1;
-  reg              valid_mem_41_0;
-  reg              valid_mem_41_1;
-  reg              valid_mem_42_0;
-  reg              valid_mem_42_1;
-  reg              valid_mem_43_0;
-  reg              valid_mem_43_1;
-  reg              valid_mem_44_0;
-  reg              valid_mem_44_1;
-  reg              valid_mem_45_0;
-  reg              valid_mem_45_1;
-  reg              valid_mem_46_0;
-  reg              valid_mem_46_1;
-  reg              valid_mem_47_0;
-  reg              valid_mem_47_1;
-  reg              valid_mem_48_0;
-  reg              valid_mem_48_1;
-  reg              valid_mem_49_0;
-  reg              valid_mem_49_1;
-  reg              valid_mem_50_0;
-  reg              valid_mem_50_1;
-  reg              valid_mem_51_0;
-  reg              valid_mem_51_1;
-  reg              valid_mem_52_0;
-  reg              valid_mem_52_1;
-  reg              valid_mem_53_0;
-  reg              valid_mem_53_1;
-  reg              valid_mem_54_0;
-  reg              valid_mem_54_1;
-  reg              valid_mem_55_0;
-  reg              valid_mem_55_1;
-  reg              valid_mem_56_0;
-  reg              valid_mem_56_1;
-  reg              valid_mem_57_0;
-  reg              valid_mem_57_1;
-  reg              valid_mem_58_0;
-  reg              valid_mem_58_1;
-  reg              valid_mem_59_0;
-  reg              valid_mem_59_1;
-  reg              valid_mem_60_0;
-  reg              valid_mem_60_1;
-  reg              valid_mem_61_0;
-  reg              valid_mem_61_1;
-  reg              valid_mem_62_0;
-  reg              valid_mem_62_1;
-  reg              valid_mem_63_0;
-  reg              valid_mem_63_1;
-  wire [31:0]      request_addr = io_CPU_request_bits_addr & 32'hFFFFFFE0;
   wire             _GEN_16 = miss & ~io_flush_valid;
   wire             _GEN_17 = cache_state == 3'h1;
   wire             _GEN_18 = (|cache_state) ? _GEN_17 : _GEN_16;
@@ -326,173 +196,25 @@ module L1_instruction_cache(
   wire             current_packet_fetch_packet = current_address_addr[4];
   wire [2:0]       current_packet_instruction_offset = current_address_addr[4:2];
   reg  [5:0]       LRU_memory_io_wr_addr_REG;
-  wire [63:0]      _GEN_22 =
-    {{valid_mem_63_0},
-     {valid_mem_62_0},
-     {valid_mem_61_0},
-     {valid_mem_60_0},
-     {valid_mem_59_0},
-     {valid_mem_58_0},
-     {valid_mem_57_0},
-     {valid_mem_56_0},
-     {valid_mem_55_0},
-     {valid_mem_54_0},
-     {valid_mem_53_0},
-     {valid_mem_52_0},
-     {valid_mem_51_0},
-     {valid_mem_50_0},
-     {valid_mem_49_0},
-     {valid_mem_48_0},
-     {valid_mem_47_0},
-     {valid_mem_46_0},
-     {valid_mem_45_0},
-     {valid_mem_44_0},
-     {valid_mem_43_0},
-     {valid_mem_42_0},
-     {valid_mem_41_0},
-     {valid_mem_40_0},
-     {valid_mem_39_0},
-     {valid_mem_38_0},
-     {valid_mem_37_0},
-     {valid_mem_36_0},
-     {valid_mem_35_0},
-     {valid_mem_34_0},
-     {valid_mem_33_0},
-     {valid_mem_32_0},
-     {valid_mem_31_0},
-     {valid_mem_30_0},
-     {valid_mem_29_0},
-     {valid_mem_28_0},
-     {valid_mem_27_0},
-     {valid_mem_26_0},
-     {valid_mem_25_0},
-     {valid_mem_24_0},
-     {valid_mem_23_0},
-     {valid_mem_22_0},
-     {valid_mem_21_0},
-     {valid_mem_20_0},
-     {valid_mem_19_0},
-     {valid_mem_18_0},
-     {valid_mem_17_0},
-     {valid_mem_16_0},
-     {valid_mem_15_0},
-     {valid_mem_14_0},
-     {valid_mem_13_0},
-     {valid_mem_12_0},
-     {valid_mem_11_0},
-     {valid_mem_10_0},
-     {valid_mem_9_0},
-     {valid_mem_8_0},
-     {valid_mem_7_0},
-     {valid_mem_6_0},
-     {valid_mem_5_0},
-     {valid_mem_4_0},
-     {valid_mem_3_0},
-     {valid_mem_2_0},
-     {valid_mem_1_0},
-     {valid_mem_0_0}};
-  wire             _GEN_23 = _GEN_22[current_set_decomposed_icache_address_set];
-  wire [63:0]      _GEN_24 =
-    {{valid_mem_63_1},
-     {valid_mem_62_1},
-     {valid_mem_61_1},
-     {valid_mem_60_1},
-     {valid_mem_59_1},
-     {valid_mem_58_1},
-     {valid_mem_57_1},
-     {valid_mem_56_1},
-     {valid_mem_55_1},
-     {valid_mem_54_1},
-     {valid_mem_53_1},
-     {valid_mem_52_1},
-     {valid_mem_51_1},
-     {valid_mem_50_1},
-     {valid_mem_49_1},
-     {valid_mem_48_1},
-     {valid_mem_47_1},
-     {valid_mem_46_1},
-     {valid_mem_45_1},
-     {valid_mem_44_1},
-     {valid_mem_43_1},
-     {valid_mem_42_1},
-     {valid_mem_41_1},
-     {valid_mem_40_1},
-     {valid_mem_39_1},
-     {valid_mem_38_1},
-     {valid_mem_37_1},
-     {valid_mem_36_1},
-     {valid_mem_35_1},
-     {valid_mem_34_1},
-     {valid_mem_33_1},
-     {valid_mem_32_1},
-     {valid_mem_31_1},
-     {valid_mem_30_1},
-     {valid_mem_29_1},
-     {valid_mem_28_1},
-     {valid_mem_27_1},
-     {valid_mem_26_1},
-     {valid_mem_25_1},
-     {valid_mem_24_1},
-     {valid_mem_23_1},
-     {valid_mem_22_1},
-     {valid_mem_21_1},
-     {valid_mem_20_1},
-     {valid_mem_19_1},
-     {valid_mem_18_1},
-     {valid_mem_17_1},
-     {valid_mem_16_1},
-     {valid_mem_15_1},
-     {valid_mem_14_1},
-     {valid_mem_13_1},
-     {valid_mem_12_1},
-     {valid_mem_11_1},
-     {valid_mem_10_1},
-     {valid_mem_9_1},
-     {valid_mem_8_1},
-     {valid_mem_7_1},
-     {valid_mem_6_1},
-     {valid_mem_5_1},
-     {valid_mem_4_1},
-     {valid_mem_3_1},
-     {valid_mem_2_1},
-     {valid_mem_1_1},
-     {valid_mem_0_1}};
-  wire             _GEN_25 = _GEN_24[current_set_decomposed_icache_address_set];
   wire [1:0]       allocate_way =
-    ~(|valid_oh) | _LRU_memory_io_data_out[1] ? 2'h2 : {1'h0, _LRU_memory_io_data_out[0]};
-  assign current_set_decomposed_icache_address_set = replay_address_addr[10:5];
-  reg              REG_0;
-  reg              REG_1;
-  assign valid_oh = {REG_1, REG_0};
+    _LRU_memory_io_data_out[1] ? {1'h0, ~(_LRU_memory_io_data_out[0])} : 2'h2;
   wire             _data_memory_1_io_wr_en_T_2 = cache_state == 3'h2;
-  wire             _data_memory_0_io_wr_en_T_3 =
-    axi_response_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2;
-  wire             _data_memory_1_io_wr_en_T_3 =
-    axi_response_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2;
   reg  [20:0]      hit_oh_vec_0_REG;
   wire             hit_oh_vec_0 =
-    _data_memory_0_io_data_out_tag == hit_oh_vec_0_REG & data_way_0_valid;
-  assign data_way_0_valid = allocate_way[0] & _data_memory_0_io_wr_en_T_3 | _GEN_23;
+    _data_memory_0_io_data_out_tag == hit_oh_vec_0_REG & _data_memory_0_io_data_out_valid;
   reg  [20:0]      hit_oh_vec_1_REG;
   wire             hit_oh_vec_1 =
-    _data_memory_1_io_data_out_tag == hit_oh_vec_1_REG & data_way_1_valid;
-  assign data_way_1_valid = allocate_way[1] & _data_memory_1_io_wr_en_T_3 | _GEN_25;
+    _data_memory_1_io_data_out_tag == hit_oh_vec_1_REG & _data_memory_1_io_data_out_valid;
   assign hit_oh = {hit_oh_vec_1, hit_oh_vec_0};
   wire             replay_valid = cache_state == 3'h4;
   reg              hit_REG;
   reg              hit_REG_1;
   reg              hit_REG_2;
-  reg  [31:0]      hit_REG_3;
-  wire             hit =
-    (|hit_oh) & (hit_REG | replay_valid) & ~hit_REG_1 & ~hit_REG_2 & (|valid_oh)
-    & io_CPU_request_bits_addr == hit_REG_3;
+  wire             hit = (|hit_oh) & (hit_REG | replay_valid) & ~hit_REG_1 & ~hit_REG_2;
   reg              miss_REG;
   reg              miss_REG_1;
   reg              miss_REG_2;
-  reg  [31:0]      miss_REG_3;
-  assign miss =
-    ~(|hit_oh) & (miss_REG | replay_valid) & ~miss_REG_1 & ~miss_REG_2 | ~(|valid_oh)
-    | io_CPU_request_bits_addr != miss_REG_3;
+  assign miss = ~(|hit_oh) & (miss_REG | replay_valid) & ~miss_REG_1 & ~miss_REG_2;
   wire [255:0]     hit_instruction_data =
     hit_oh_vec_1
       ? _data_memory_1_io_data_out_data
@@ -506,7 +228,7 @@ module L1_instruction_cache(
   wire [31:0]      instruction_vec_6 = hit_instruction_data[223:192];
   wire [31:0]      instruction_vec_7 = hit_instruction_data[255:224];
   reg              CPU_response_bits_instructions_0_instruction_REG;
-  wire [7:0][31:0] _GEN_26 =
+  wire [7:0][31:0] _GEN_22 =
     {{instruction_vec_7},
      {instruction_vec_6},
      {instruction_vec_5},
@@ -523,30 +245,30 @@ module L1_instruction_cache(
     (cache_valid | hit) & ~(io_flush_valid | CPU_response_valid_REG);
   wire             io_CPU_request_ready_0 = ~(|cache_state) & ~miss;
   always @(posedge clock) begin
-    automatic logic _GEN_27 = ~W_done & m_axi_wready & m_axi_wvalid_0;
-    automatic logic _GEN_28;
-    automatic logic _GEN_29;
-    automatic logic _GEN_30;
-    automatic logic _GEN_31;
+    automatic logic _GEN_23 = ~W_done & m_axi_wready & m_axi_wvalid_0;
+    automatic logic _GEN_24;
+    automatic logic _GEN_25;
+    automatic logic _GEN_26;
+    automatic logic _GEN_27;
     automatic logic _miss_T_2 = io_CPU_request_ready_0 & io_CPU_request_valid;
-    _GEN_28 = _GEN_3 & _GEN_27;
-    _GEN_29 = ~R_done & _GEN_8;
-    _GEN_30 = _GEN_0 & _GEN_27;
-    _GEN_31 = _GEN_2 & _GEN_27;
+    _GEN_24 = _GEN_3 & _GEN_23;
+    _GEN_25 = ~R_done & _GEN_8;
+    _GEN_26 = _GEN_0 & _GEN_23;
+    _GEN_27 = _GEN_2 & _GEN_23;
     AXI_AR_buf_araddr <= _GEN_18 ? request_addr : 32'h0;
     AXI_AR_buf_arlen <= _GEN_18 ? 8'h7 : 8'h0;
     AXI_AR_buf_arsize <= {1'h0, (|cache_state) ? _GEN_17 : _GEN_16, 1'h0};
-    if (_GEN_31 | _GEN_30 | _GEN_28)
+    if (_GEN_27 | _GEN_26 | _GEN_24)
       AXI_AW_DATA_BUFFER <= {32'h0, AXI_AW_DATA_BUFFER[255:32]};
     if (_GEN_1) begin
       if (_GEN_9)
         AXI_read_buffer <= 256'h0;
-      else if (_GEN_29)
+      else if (_GEN_25)
         AXI_read_buffer <= _GEN_10;
       else if (_GEN_0) begin
         if (_GEN_13)
           AXI_read_buffer <= 256'h0;
-        else if (_GEN_29)
+        else if (_GEN_25)
           AXI_read_buffer <= _GEN_10;
         else if (_GEN_4) begin
           if (_GEN_9)
@@ -565,7 +287,7 @@ module L1_instruction_cache(
     else if (_GEN_0) begin
       if (_GEN_13)
         AXI_read_buffer <= 256'h0;
-      else if (_GEN_29)
+      else if (_GEN_25)
         AXI_read_buffer <= _GEN_10;
       else if (_GEN_4) begin
         if (_GEN_9)
@@ -581,18 +303,14 @@ module L1_instruction_cache(
         AXI_read_buffer <= _GEN_10;
     end
     LRU_memory_io_wr_addr_REG <= current_packet_set;
-    REG_0 <= _GEN_23;
-    REG_1 <= _GEN_25;
     hit_oh_vec_0_REG <= current_packet_tag;
     hit_oh_vec_1_REG <= current_packet_tag;
     hit_REG <= _miss_T_2 & ~(|cache_state);
     hit_REG_1 <= io_flush_valid;
     hit_REG_2 <= reset;
-    hit_REG_3 <= io_CPU_request_bits_addr;
     miss_REG <= _miss_T_2;
     miss_REG_1 <= io_flush_valid;
     miss_REG_2 <= reset;
-    miss_REG_3 <= io_CPU_request_bits_addr;
     CPU_response_bits_instructions_0_instruction_REG <= current_packet_fetch_packet;
     CPU_response_bits_instructions_1_instruction_REG <= current_packet_fetch_packet;
     CPU_response_bits_instructions_2_instruction_REG <= current_packet_fetch_packet;
@@ -608,165 +326,34 @@ module L1_instruction_cache(
       replay_address_addr <= 32'h0;
       replay_address_wr_data <= 32'h0;
       replay_address_wr_en <= 1'h0;
+      request_addr <= 32'h0;
       cache_valid <= 1'h0;
-      valid_mem_0_0 <= 1'h0;
-      valid_mem_0_1 <= 1'h0;
-      valid_mem_1_0 <= 1'h0;
-      valid_mem_1_1 <= 1'h0;
-      valid_mem_2_0 <= 1'h0;
-      valid_mem_2_1 <= 1'h0;
-      valid_mem_3_0 <= 1'h0;
-      valid_mem_3_1 <= 1'h0;
-      valid_mem_4_0 <= 1'h0;
-      valid_mem_4_1 <= 1'h0;
-      valid_mem_5_0 <= 1'h0;
-      valid_mem_5_1 <= 1'h0;
-      valid_mem_6_0 <= 1'h0;
-      valid_mem_6_1 <= 1'h0;
-      valid_mem_7_0 <= 1'h0;
-      valid_mem_7_1 <= 1'h0;
-      valid_mem_8_0 <= 1'h0;
-      valid_mem_8_1 <= 1'h0;
-      valid_mem_9_0 <= 1'h0;
-      valid_mem_9_1 <= 1'h0;
-      valid_mem_10_0 <= 1'h0;
-      valid_mem_10_1 <= 1'h0;
-      valid_mem_11_0 <= 1'h0;
-      valid_mem_11_1 <= 1'h0;
-      valid_mem_12_0 <= 1'h0;
-      valid_mem_12_1 <= 1'h0;
-      valid_mem_13_0 <= 1'h0;
-      valid_mem_13_1 <= 1'h0;
-      valid_mem_14_0 <= 1'h0;
-      valid_mem_14_1 <= 1'h0;
-      valid_mem_15_0 <= 1'h0;
-      valid_mem_15_1 <= 1'h0;
-      valid_mem_16_0 <= 1'h0;
-      valid_mem_16_1 <= 1'h0;
-      valid_mem_17_0 <= 1'h0;
-      valid_mem_17_1 <= 1'h0;
-      valid_mem_18_0 <= 1'h0;
-      valid_mem_18_1 <= 1'h0;
-      valid_mem_19_0 <= 1'h0;
-      valid_mem_19_1 <= 1'h0;
-      valid_mem_20_0 <= 1'h0;
-      valid_mem_20_1 <= 1'h0;
-      valid_mem_21_0 <= 1'h0;
-      valid_mem_21_1 <= 1'h0;
-      valid_mem_22_0 <= 1'h0;
-      valid_mem_22_1 <= 1'h0;
-      valid_mem_23_0 <= 1'h0;
-      valid_mem_23_1 <= 1'h0;
-      valid_mem_24_0 <= 1'h0;
-      valid_mem_24_1 <= 1'h0;
-      valid_mem_25_0 <= 1'h0;
-      valid_mem_25_1 <= 1'h0;
-      valid_mem_26_0 <= 1'h0;
-      valid_mem_26_1 <= 1'h0;
-      valid_mem_27_0 <= 1'h0;
-      valid_mem_27_1 <= 1'h0;
-      valid_mem_28_0 <= 1'h0;
-      valid_mem_28_1 <= 1'h0;
-      valid_mem_29_0 <= 1'h0;
-      valid_mem_29_1 <= 1'h0;
-      valid_mem_30_0 <= 1'h0;
-      valid_mem_30_1 <= 1'h0;
-      valid_mem_31_0 <= 1'h0;
-      valid_mem_31_1 <= 1'h0;
-      valid_mem_32_0 <= 1'h0;
-      valid_mem_32_1 <= 1'h0;
-      valid_mem_33_0 <= 1'h0;
-      valid_mem_33_1 <= 1'h0;
-      valid_mem_34_0 <= 1'h0;
-      valid_mem_34_1 <= 1'h0;
-      valid_mem_35_0 <= 1'h0;
-      valid_mem_35_1 <= 1'h0;
-      valid_mem_36_0 <= 1'h0;
-      valid_mem_36_1 <= 1'h0;
-      valid_mem_37_0 <= 1'h0;
-      valid_mem_37_1 <= 1'h0;
-      valid_mem_38_0 <= 1'h0;
-      valid_mem_38_1 <= 1'h0;
-      valid_mem_39_0 <= 1'h0;
-      valid_mem_39_1 <= 1'h0;
-      valid_mem_40_0 <= 1'h0;
-      valid_mem_40_1 <= 1'h0;
-      valid_mem_41_0 <= 1'h0;
-      valid_mem_41_1 <= 1'h0;
-      valid_mem_42_0 <= 1'h0;
-      valid_mem_42_1 <= 1'h0;
-      valid_mem_43_0 <= 1'h0;
-      valid_mem_43_1 <= 1'h0;
-      valid_mem_44_0 <= 1'h0;
-      valid_mem_44_1 <= 1'h0;
-      valid_mem_45_0 <= 1'h0;
-      valid_mem_45_1 <= 1'h0;
-      valid_mem_46_0 <= 1'h0;
-      valid_mem_46_1 <= 1'h0;
-      valid_mem_47_0 <= 1'h0;
-      valid_mem_47_1 <= 1'h0;
-      valid_mem_48_0 <= 1'h0;
-      valid_mem_48_1 <= 1'h0;
-      valid_mem_49_0 <= 1'h0;
-      valid_mem_49_1 <= 1'h0;
-      valid_mem_50_0 <= 1'h0;
-      valid_mem_50_1 <= 1'h0;
-      valid_mem_51_0 <= 1'h0;
-      valid_mem_51_1 <= 1'h0;
-      valid_mem_52_0 <= 1'h0;
-      valid_mem_52_1 <= 1'h0;
-      valid_mem_53_0 <= 1'h0;
-      valid_mem_53_1 <= 1'h0;
-      valid_mem_54_0 <= 1'h0;
-      valid_mem_54_1 <= 1'h0;
-      valid_mem_55_0 <= 1'h0;
-      valid_mem_55_1 <= 1'h0;
-      valid_mem_56_0 <= 1'h0;
-      valid_mem_56_1 <= 1'h0;
-      valid_mem_57_0 <= 1'h0;
-      valid_mem_57_1 <= 1'h0;
-      valid_mem_58_0 <= 1'h0;
-      valid_mem_58_1 <= 1'h0;
-      valid_mem_59_0 <= 1'h0;
-      valid_mem_59_1 <= 1'h0;
-      valid_mem_60_0 <= 1'h0;
-      valid_mem_60_1 <= 1'h0;
-      valid_mem_61_0 <= 1'h0;
-      valid_mem_61_1 <= 1'h0;
-      valid_mem_62_0 <= 1'h0;
-      valid_mem_62_1 <= 1'h0;
-      valid_mem_63_0 <= 1'h0;
-      valid_mem_63_1 <= 1'h0;
     end
     else begin
-      automatic logic _GEN_32;
-      automatic logic _GEN_33;
-      automatic logic _valid_mem_0_T_2;
-      automatic logic _valid_mem_1_T_2;
-      _GEN_32 = m_axi_arready & m_axi_arvalid_0;
-      _GEN_33 =
+      automatic logic _GEN_28;
+      automatic logic _GEN_29;
+      _GEN_28 = m_axi_arready & m_axi_arvalid_0;
+      _GEN_29 =
         cache_state == 3'h4
         & (io_flush_valid | CPU_response_valid & _CPU_response_skid_buffer_io_enq_ready);
-      _valid_mem_0_T_2 = allocate_way[0] & _data_memory_0_io_wr_en_T_3 | _GEN_23;
-      _valid_mem_1_T_2 = allocate_way[1] & _data_memory_1_io_wr_en_T_3 | _GEN_25;
       if (|AXI_REQUEST_STATE) begin
-        automatic logic [7:0][2:0] _GEN_34;
-        _GEN_34 =
+        automatic logic [7:0][2:0] _GEN_30;
+        _GEN_30 =
           {{AXI_REQUEST_STATE},
            {m_axi_bready_0 & m_axi_bvalid ? 3'h0 : 3'h6},
-           {_GEN_32 ? 3'h2 : 3'h5},
+           {_GEN_28 ? 3'h2 : 3'h5},
            {{1'h1, W_done, 1'h0}},
            {R_done ? 3'h0 : 3'h3},
            {{R_done & W_done, 2'h2}},
            {3'h1},
            {AXI_REQUEST_STATE}};
-        AXI_REQUEST_STATE <= _GEN_34[AXI_REQUEST_STATE];
+        AXI_REQUEST_STATE <= _GEN_30[AXI_REQUEST_STATE];
       end
-      else if (_GEN_32)
+      else if (_GEN_28)
         AXI_REQUEST_STATE <= 3'h3;
       else
         AXI_REQUEST_STATE <= 3'h0;
-      if (_GEN_1 & _GEN_29 | _GEN_0 & _GEN_29)
+      if (_GEN_1 & _GEN_25 | _GEN_0 & _GEN_25)
         R_done <= m_axi_rlast;
       else if (~(|AXI_REQUEST_STATE))
         R_done <= ~m_axi_arvalid_0;
@@ -782,11 +369,11 @@ module L1_instruction_cache(
       end
       else
         W_done <= ~(|AXI_REQUEST_STATE) | W_done;
-      if (_GEN_31)
+      if (_GEN_27)
         write_counter <= write_counter - 32'h1;
-      else if (_GEN_30)
+      else if (_GEN_26)
         write_counter <= write_counter - 32'h1;
-      else if (_GEN_28)
+      else if (_GEN_24)
         write_counter <= write_counter - 32'h1;
       if (|cache_state) begin
         if (_GEN_17) begin
@@ -799,282 +386,29 @@ module L1_instruction_cache(
           else if (axi_response_valid)
             cache_state <= 3'h4;
         end
-        else if (_GEN_20 ? axi_response_valid : _GEN_33)
+        else if (_GEN_20 ? axi_response_valid : _GEN_29)
           cache_state <= 3'h0;
       end
+      else if (_GEN_16) begin
+        if (m_axi_arready & m_axi_arvalid_0)
+          cache_state <= 3'h2;
+        else
+          cache_state <= 3'h1;
+      end
+      if ((|cache_state) | _GEN_16) begin
+      end
       else begin
-        if (_GEN_16) begin
-          if (m_axi_arready & m_axi_arvalid_0)
-            cache_state <= 3'h2;
-          else
-            cache_state <= 3'h1;
-        end
         fetch_PC_buf_addr <= io_CPU_request_bits_addr;
         replay_address_addr <= io_CPU_request_bits_addr;
         replay_address_wr_data <= io_CPU_request_bits_wr_data;
         replay_address_wr_en <= io_CPU_request_bits_wr_en;
+        request_addr <= io_CPU_request_bits_addr & 32'hFFFFFFE0;
       end
       if (~_GEN_21) begin
         if (_GEN_19)
           cache_valid <= ~io_flush_valid & cache_valid;
         else
-          cache_valid <= (_GEN_20 | ~_GEN_33) & cache_valid;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h0) begin
-        valid_mem_0_0 <= _valid_mem_0_T_2;
-        valid_mem_0_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h1) begin
-        valid_mem_1_0 <= _valid_mem_0_T_2;
-        valid_mem_1_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h2) begin
-        valid_mem_2_0 <= _valid_mem_0_T_2;
-        valid_mem_2_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h3) begin
-        valid_mem_3_0 <= _valid_mem_0_T_2;
-        valid_mem_3_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h4) begin
-        valid_mem_4_0 <= _valid_mem_0_T_2;
-        valid_mem_4_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h5) begin
-        valid_mem_5_0 <= _valid_mem_0_T_2;
-        valid_mem_5_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h6) begin
-        valid_mem_6_0 <= _valid_mem_0_T_2;
-        valid_mem_6_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h7) begin
-        valid_mem_7_0 <= _valid_mem_0_T_2;
-        valid_mem_7_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h8) begin
-        valid_mem_8_0 <= _valid_mem_0_T_2;
-        valid_mem_8_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h9) begin
-        valid_mem_9_0 <= _valid_mem_0_T_2;
-        valid_mem_9_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'hA) begin
-        valid_mem_10_0 <= _valid_mem_0_T_2;
-        valid_mem_10_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'hB) begin
-        valid_mem_11_0 <= _valid_mem_0_T_2;
-        valid_mem_11_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'hC) begin
-        valid_mem_12_0 <= _valid_mem_0_T_2;
-        valid_mem_12_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'hD) begin
-        valid_mem_13_0 <= _valid_mem_0_T_2;
-        valid_mem_13_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'hE) begin
-        valid_mem_14_0 <= _valid_mem_0_T_2;
-        valid_mem_14_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'hF) begin
-        valid_mem_15_0 <= _valid_mem_0_T_2;
-        valid_mem_15_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h10) begin
-        valid_mem_16_0 <= _valid_mem_0_T_2;
-        valid_mem_16_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h11) begin
-        valid_mem_17_0 <= _valid_mem_0_T_2;
-        valid_mem_17_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h12) begin
-        valid_mem_18_0 <= _valid_mem_0_T_2;
-        valid_mem_18_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h13) begin
-        valid_mem_19_0 <= _valid_mem_0_T_2;
-        valid_mem_19_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h14) begin
-        valid_mem_20_0 <= _valid_mem_0_T_2;
-        valid_mem_20_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h15) begin
-        valid_mem_21_0 <= _valid_mem_0_T_2;
-        valid_mem_21_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h16) begin
-        valid_mem_22_0 <= _valid_mem_0_T_2;
-        valid_mem_22_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h17) begin
-        valid_mem_23_0 <= _valid_mem_0_T_2;
-        valid_mem_23_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h18) begin
-        valid_mem_24_0 <= _valid_mem_0_T_2;
-        valid_mem_24_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h19) begin
-        valid_mem_25_0 <= _valid_mem_0_T_2;
-        valid_mem_25_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h1A) begin
-        valid_mem_26_0 <= _valid_mem_0_T_2;
-        valid_mem_26_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h1B) begin
-        valid_mem_27_0 <= _valid_mem_0_T_2;
-        valid_mem_27_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h1C) begin
-        valid_mem_28_0 <= _valid_mem_0_T_2;
-        valid_mem_28_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h1D) begin
-        valid_mem_29_0 <= _valid_mem_0_T_2;
-        valid_mem_29_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h1E) begin
-        valid_mem_30_0 <= _valid_mem_0_T_2;
-        valid_mem_30_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h1F) begin
-        valid_mem_31_0 <= _valid_mem_0_T_2;
-        valid_mem_31_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h20) begin
-        valid_mem_32_0 <= _valid_mem_0_T_2;
-        valid_mem_32_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h21) begin
-        valid_mem_33_0 <= _valid_mem_0_T_2;
-        valid_mem_33_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h22) begin
-        valid_mem_34_0 <= _valid_mem_0_T_2;
-        valid_mem_34_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h23) begin
-        valid_mem_35_0 <= _valid_mem_0_T_2;
-        valid_mem_35_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h24) begin
-        valid_mem_36_0 <= _valid_mem_0_T_2;
-        valid_mem_36_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h25) begin
-        valid_mem_37_0 <= _valid_mem_0_T_2;
-        valid_mem_37_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h26) begin
-        valid_mem_38_0 <= _valid_mem_0_T_2;
-        valid_mem_38_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h27) begin
-        valid_mem_39_0 <= _valid_mem_0_T_2;
-        valid_mem_39_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h28) begin
-        valid_mem_40_0 <= _valid_mem_0_T_2;
-        valid_mem_40_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h29) begin
-        valid_mem_41_0 <= _valid_mem_0_T_2;
-        valid_mem_41_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h2A) begin
-        valid_mem_42_0 <= _valid_mem_0_T_2;
-        valid_mem_42_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h2B) begin
-        valid_mem_43_0 <= _valid_mem_0_T_2;
-        valid_mem_43_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h2C) begin
-        valid_mem_44_0 <= _valid_mem_0_T_2;
-        valid_mem_44_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h2D) begin
-        valid_mem_45_0 <= _valid_mem_0_T_2;
-        valid_mem_45_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h2E) begin
-        valid_mem_46_0 <= _valid_mem_0_T_2;
-        valid_mem_46_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h2F) begin
-        valid_mem_47_0 <= _valid_mem_0_T_2;
-        valid_mem_47_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h30) begin
-        valid_mem_48_0 <= _valid_mem_0_T_2;
-        valid_mem_48_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h31) begin
-        valid_mem_49_0 <= _valid_mem_0_T_2;
-        valid_mem_49_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h32) begin
-        valid_mem_50_0 <= _valid_mem_0_T_2;
-        valid_mem_50_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h33) begin
-        valid_mem_51_0 <= _valid_mem_0_T_2;
-        valid_mem_51_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h34) begin
-        valid_mem_52_0 <= _valid_mem_0_T_2;
-        valid_mem_52_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h35) begin
-        valid_mem_53_0 <= _valid_mem_0_T_2;
-        valid_mem_53_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h36) begin
-        valid_mem_54_0 <= _valid_mem_0_T_2;
-        valid_mem_54_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h37) begin
-        valid_mem_55_0 <= _valid_mem_0_T_2;
-        valid_mem_55_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h38) begin
-        valid_mem_56_0 <= _valid_mem_0_T_2;
-        valid_mem_56_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h39) begin
-        valid_mem_57_0 <= _valid_mem_0_T_2;
-        valid_mem_57_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h3A) begin
-        valid_mem_58_0 <= _valid_mem_0_T_2;
-        valid_mem_58_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h3B) begin
-        valid_mem_59_0 <= _valid_mem_0_T_2;
-        valid_mem_59_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h3C) begin
-        valid_mem_60_0 <= _valid_mem_0_T_2;
-        valid_mem_60_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h3D) begin
-        valid_mem_61_0 <= _valid_mem_0_T_2;
-        valid_mem_61_1 <= _valid_mem_1_T_2;
-      end
-      if (current_set_decomposed_icache_address_set == 6'h3E) begin
-        valid_mem_62_0 <= _valid_mem_0_T_2;
-        valid_mem_62_1 <= _valid_mem_1_T_2;
-      end
-      if (&current_set_decomposed_icache_address_set) begin
-        valid_mem_63_0 <= _valid_mem_0_T_2;
-        valid_mem_63_1 <= _valid_mem_1_T_2;
+          cache_valid <= (_GEN_20 | ~_GEN_29) & cache_valid;
       end
     end
   end // always @(posedge)
@@ -1099,32 +433,29 @@ module L1_instruction_cache(
     .io_wr_addr  (LRU_memory_io_wr_addr_REG),
     .io_wr_en    (hit),
     .io_data_in
-      ((|valid_oh)
-         ? (_GEN_25
-              ? (_GEN_23
-                   ? {2{(_LRU_memory_io_data_out | hit_oh) != 2'h3}}
-                     & _LRU_memory_io_data_out | hit_oh
-                   : 2'h1)
-              : 2'h2)
-         : 2'h1)
+      ({2{(_LRU_memory_io_data_out | hit_oh) != 2'h3}} & _LRU_memory_io_data_out | hit_oh)
   );
   icache_ReadWriteSmem data_memory_0 (
-    .clock            (clock),
-    .io_wr_en         (_data_memory_0_io_wr_en_T_3),
-    .io_addr          (current_packet_set),
-    .io_data_in_tag   (replay_address_addr[31:11]),
-    .io_data_in_data  (axi_response),
-    .io_data_out_tag  (_data_memory_0_io_data_out_tag),
-    .io_data_out_data (_data_memory_0_io_data_out_data)
+    .clock             (clock),
+    .io_wr_en
+      (axi_response_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2),
+    .io_addr           (current_packet_set),
+    .io_data_in_tag    (replay_address_addr[31:11]),
+    .io_data_in_data   (axi_response),
+    .io_data_out_valid (_data_memory_0_io_data_out_valid),
+    .io_data_out_tag   (_data_memory_0_io_data_out_tag),
+    .io_data_out_data  (_data_memory_0_io_data_out_data)
   );
   icache_ReadWriteSmem data_memory_1 (
-    .clock            (clock),
-    .io_wr_en         (_data_memory_1_io_wr_en_T_3),
-    .io_addr          (current_packet_set),
-    .io_data_in_tag   (replay_address_addr[31:11]),
-    .io_data_in_data  (axi_response),
-    .io_data_out_tag  (_data_memory_1_io_data_out_tag),
-    .io_data_out_data (_data_memory_1_io_data_out_data)
+    .clock             (clock),
+    .io_wr_en
+      (axi_response_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2),
+    .io_addr           (current_packet_set),
+    .io_data_in_tag    (replay_address_addr[31:11]),
+    .io_data_in_data   (axi_response),
+    .io_data_out_valid (_data_memory_1_io_data_out_valid),
+    .io_data_out_tag   (_data_memory_1_io_data_out_tag),
+    .io_data_out_data  (_data_memory_1_io_data_out_data)
   );
   instruction_validator validator (
     .io_instruction_index  (fetch_PC_buf_addr[3:2]),
@@ -1145,22 +476,21 @@ module L1_instruction_cache(
     .io_enq_bits_valid_bits_3
       (_validator_io_instruction_output[0] & CPU_response_valid),
     .io_enq_bits_instructions_0_instruction
-      (_GEN_26[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
+      (_GEN_22[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
     .io_enq_bits_instructions_0_packet_index (4'h0),
     .io_enq_bits_instructions_0_ROB_index    (6'h0),
     .io_enq_bits_instructions_1_instruction
-      (_GEN_26[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
+      (_GEN_22[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
     .io_enq_bits_instructions_1_packet_index (4'h1),
     .io_enq_bits_instructions_1_ROB_index    (6'h0),
     .io_enq_bits_instructions_2_instruction
-      (_GEN_26[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
+      (_GEN_22[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
     .io_enq_bits_instructions_2_packet_index (4'h2),
     .io_enq_bits_instructions_2_ROB_index    (6'h0),
     .io_enq_bits_instructions_3_instruction
-      (_GEN_26[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
+      (_GEN_22[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
     .io_enq_bits_instructions_3_packet_index (4'h3),
     .io_enq_bits_instructions_3_ROB_index    (6'h0),
-    .io_enq_bits_prediction_hit              (1'h0),
     .io_enq_bits_prediction_target           (32'h0),
     .io_enq_bits_prediction_br_type          (3'h0),
     .io_enq_bits_prediction_br_mask_0        (1'h0),
@@ -1211,7 +541,6 @@ module L1_instruction_cache(
     .io_deq_bits_GHR                         (io_CPU_response_bits_GHR),
     .io_deq_bits_NEXT                        (io_CPU_response_bits_NEXT),
     .io_deq_bits_TOS                         (io_CPU_response_bits_TOS),
-    .io_count                                (/* unused */),
     .io_flush                                (io_flush_valid)
   );
   assign m_axi_awvalid = 1'h0;

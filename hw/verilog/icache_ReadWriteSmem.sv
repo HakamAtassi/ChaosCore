@@ -34,6 +34,7 @@ module icache_ReadWriteSmem(
   input  [5:0]   io_addr,
   input  [20:0]  io_data_in_tag,
   input  [255:0] io_data_in_data,
+  output         io_data_out_valid,
   output [20:0]  io_data_out_tag,
   output [255:0] io_data_out_data
 );
@@ -49,6 +50,7 @@ module icache_ReadWriteSmem(
     .W0_clk  (clock),
     .W0_data ({io_data_in_data, io_data_in_tag, 1'h1})
   );
+  assign io_data_out_valid = _mem_ext_R0_data[0];
   assign io_data_out_tag = _mem_ext_R0_data[21:1];
   assign io_data_out_data = _mem_ext_R0_data[277:22];
 endmodule

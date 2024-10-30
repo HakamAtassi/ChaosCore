@@ -1,3 +1,6 @@
+extern_modules.sv
+axi_interconnect_top.sv
+AXI_debug_printer.sv
 mem_65536x2.sv
 PHT_memory.sv
 gshare.sv
@@ -20,7 +23,7 @@ Queue16_frontend_memory_request.sv
 ram_16x40.sv
 Queue16_prediction.sv
 instruction_fetch.sv
-improved_decoder.sv
+decoder.sv
 ram_2x502.sv
 Queue2_decoded_fetch_packet.sv
 fetch_packet_decoder.sv
@@ -78,8 +81,15 @@ Arbiter2_AXI_request_Q_entry.sv
 Arbiter2_backend_memory_response.sv
 L1_data_cache.sv
 ChaosCore_tile.sv
-AXI_debug_printer.sv
-extern_modules.sv
-axi_interconnect_2x2.sv
+predecoder_1.sv
+PC_gen_1.sv
+instruction_fetch_1.sv
+frontend_1.sv
+CSR_FU_1.sv
+FU_5.sv
+execution_engine_1.sv
+backend_1.sv
+ChaosCore_1.sv
+ChaosCore_tile_1.sv
 SOC.sv
-./axi_interconnect_wrap_2x2.v
+./axi_interconnect.v

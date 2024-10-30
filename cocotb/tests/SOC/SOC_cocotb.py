@@ -301,7 +301,7 @@ async def test_bubble_sort(dut):
     await cocotb.start(generateClock(dut))
 
     # Bring up TB
-    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/bubble_sort.bin")     # construct TB
+    SOC = SOC_TB(dut, binary="/home/hakam/Repos/ChaosCore/binaries/bin/bubble_sort.bin")
 
     await SOC.reset()                      # Reset
 

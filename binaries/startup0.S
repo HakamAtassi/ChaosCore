@@ -46,7 +46,7 @@ _start:
     li x30, 0
     li x31, 0
     
-    li sp, 0x80100000    # Set stack pointer
+    li sp, 0x81000000    # Set stack pointer (16MB stack)
 
 
     la a0, init_string          # Load the address of the format string into a0

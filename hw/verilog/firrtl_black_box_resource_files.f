@@ -1,1 +1,1 @@
-axi_interconnect_wrap_2x2.v
+axi_interconnect.v

@@ -50,7 +50,6 @@ case class NOCParameters(
     // Master interface base addresses
     // M_COUNT concatenated fields of M_REGIONS concatenated fields of ADDR_WIDTH bits
     // set to zero for default addressing based on M_ADDR_WIDTH
-    M_BASE_ADDR:Int = 0,
     // Master interface address widths
     // M_COUNT concatenated fields of M_REGIONS concatenated fields of 32 bits
     // Read connections between interfaces
@@ -59,6 +58,8 @@ case class NOCParameters(
     // M_COUNT concatenated fields of S_COUNT bits
     // Secure master (fail operations based on awprot/arprot)
     // M_COUNT bits
+
+
 
 
 

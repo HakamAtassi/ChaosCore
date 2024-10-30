@@ -142,6 +142,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val consumedKBData = L1_DataCacheWays*L1_DataCacheSets*(L1_cacheLineSizeBytes*8)/1024.0/8.0
 
 
+	/*
 	println("========================================")
     println("========== BUILDING L1 D-CACHE =========")
     println("========================================")
@@ -155,6 +156,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
     println(f"Total Consumed Memory : ${consumedKB}%.2f KB")
     println("========================================")
 	println("")
+	*/
 
 
 	io.CPU_response.bits.addr := 0.U
