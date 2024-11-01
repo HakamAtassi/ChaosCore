@@ -104,9 +104,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val io = IO(new Bundle{
         val CPU_request         =     Flipped(Decoupled(new frontend_memory_request(coreParameters)))            // Inputs from CPU
         val CPU_response        =     Decoupled(new fetch_packet(coreParameters))                       // TO CPU
-
         val flush               =     Flipped(ValidIO(new flush(coreParameters)))
-
     })
 
 

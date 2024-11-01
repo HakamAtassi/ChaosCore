@@ -610,28 +610,11 @@ always @* begin
         end
         STATE_DECODE: begin
             // decode state; determine master interface
+
             match = 1'b0;
             for (i = 0; i < M_COUNT; i = i + 1) begin
                 for (j = 0; j < M_REGIONS; j = j + 1) begin
-
-                    //M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]    == 24 
-
-                    //$display("Cond Expected: %h", (M_BASE_ADDR_INT[(i*M_REGIONS+j)*ADDR_WIDTH +: ADDR_WIDTH] >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]));
-                    //$display("Cond got: %h", axi_addr_reg >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]);
-                    //$display("%h =?= %h", (axi_addr_reg >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]), (M_BASE_ADDR_INT[(i*M_REGIONS+j)*ADDR_WIDTH +: ADDR_WIDTH] >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]));
-                    
-                    // Every master has N bits of read/write access to each slave. 
-                    // i*S_count is the offset that outputs the corresponding master bit field. 
-                    // s_select is the selected slave
-
-
-                    //$display("select (%d) cond %h", s_select, ((M_CONNECT_WRITE) & (1 << (s_select+i*S_COUNT))));
-
-                    if (
-                        M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32] && 
-                    (!M_SECURE[i] || !axi_prot_reg[1]) &&   // Not the issue
-                    ((read ? M_CONNECT_READ : M_CONNECT_WRITE) & (1 << (s_select+i*S_COUNT))) && 
-                    (axi_addr_reg >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]) == (M_BASE_ADDR_INT[(i*M_REGIONS+j)*ADDR_WIDTH +: ADDR_WIDTH] >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32])) begin
+                    if (M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32] && (!M_SECURE[i] || !axi_prot_reg[1]) && ((read ? M_CONNECT_READ : M_CONNECT_WRITE) & (1 << (s_select+i*S_COUNT))) && (axi_addr_reg >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]) == (M_BASE_ADDR_INT[(i*M_REGIONS+j)*ADDR_WIDTH +: ADDR_WIDTH] >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32])) begin
                         m_select_next = i;
                         axi_region_next = j;
                         match = 1'b1;
@@ -655,7 +638,6 @@ always @* begin
                     // reading
                     state_next = STATE_READ_DROP;
                 end else begin
-                    //$display("DROP at %h!", axi_addr_reg);
                     // writing
                     axi_bresp_next = 2'b11;
                     s_axi_wready_next[s_select] = 1'b1;
