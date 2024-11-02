@@ -50,7 +50,8 @@ object printWelcome{
 }
 
 case class SOCParameters(
-    coreParameters:Seq[CoreParameters] = Seq(CoreParameters(hartID=0, startPC="h80000000".U, DEBUG=false), CoreParameters(hartID=1, startPC="h81000000".U)),
+    //coreParameters:Seq[CoreParameters] = Seq(CoreParameters(hartID=0, startPC="h80000000".U, DEBUG=false), CoreParameters(hartID=1, startPC="h81000000".U)),
+    coreParameters:Seq[CoreParameters] = Seq(CoreParameters(hartID=0, startPC="h80000000".U, DEBUG=false)),
     addressMap:AddressMap = AddressMap()
 ){
 

@@ -34,27 +34,37 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
+/*
+* @param entry: For normal data cache, use UInt(8.W)
+*/
 
-case class BasicCacheParameters[T <: Data](
-    entry:T,
+
+case class BasicCacheParameters(
+    blockSizeBytes:Int = 64,
     sets:Int = 64,
     ways:Int = 4,
 ){
 
+
     val depth                       = sets
-    val byteOffsetBits              = log2Ceil(entry.getWidth)                                          // Bits needed to each byte in a cache line
+    val byteOffsetBits              = log2Ceil(blockSizeBytes)                                          // Bits needed to each byte in a cache line
     val setBits                     = log2Ceil(sets)                                                    // Bits needed to address sets
     val wayBits                     = log2Ceil(ways)                                                    // Bits needed to address ways
     val validBits                   = 1                                                                 // number of valid bits
     val LRUBits                     = ways                                                              // number of LRU bits (per way)
-    val dataSizeBits                = entry.getWidth                                                    // 
+    val blockSizeBits               = blockSizeBytes*8
     val tagBits                     = 32 - setBits - byteOffsetBits
 
-    val wayDataWidth                = validBits + tagBits + dataSizeBits                              // width of the data line
-    val consumedKB                  = (sets*ways*wayDataWidth+sets*LRUBits)/8.0/1024.0 
-    val consumedKBData              = (sets*ways*dataSizeBits)/8.0/1024.0 
+    val wayDataWidth                = validBits + tagBits + blockSizeBits                              // width of the data line
+    val consumedKB                  = (sets*ways*blockSizeBits+sets*LRUBits)/8.0/1024.0 
+    val consumedKBData              = (sets*ways*blockSizeBits)/8.0/1024.0 
 
     def getTag(address: UInt): UInt = {address(address.getWidth - 1, address.getWidth - tagBits)}
     def getSet(address: UInt): UInt = {address(setBits + byteOffsetBits - 1, byteOffsetBits)}
-    def getSizeKB: Double = (sets * ways * (dataSizeBits + tagBits + wayBits + validBits) / 8.0 / 1024.0)
+    def getSizeKB: Double = (sets * ways * (blockSizeBits + tagBits + wayBits + validBits) / 8.0 / 1024.0)
+
+
+    //type cacheItemType = T                // Define cacheItemType as a type alias for T
+    //type cacheBlockType = Vec[T]          // Define cacheBlockType as a type alias for Vec[T]
+
 }

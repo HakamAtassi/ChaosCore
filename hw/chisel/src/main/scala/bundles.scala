@@ -680,6 +680,8 @@ class frontend_memory_request(coreParameters:CoreParameters) extends Bundle{
     val wr_en   = Bool()
 }
 
+
+
 class backend_memory_request(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val addr            = UInt(32.W)

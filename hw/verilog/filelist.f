@@ -81,15 +81,5 @@ Arbiter2_AXI_request_Q_entry.sv
 Arbiter2_backend_memory_response.sv
 L1_data_cache.sv
 ChaosCore_tile.sv
-predecoder_1.sv
-PC_gen_1.sv
-instruction_fetch_1.sv
-frontend_1.sv
-CSR_FU_1.sv
-FU_5.sv
-execution_engine_1.sv
-backend_1.sv
-ChaosCore_1.sv
-ChaosCore_tile_1.sv
 SOC.sv
 ./axi_interconnect.v
