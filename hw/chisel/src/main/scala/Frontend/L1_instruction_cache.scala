@@ -332,12 +332,6 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     CPU_response.bits.instruction_data := packet_vec(RegNext(current_packet.fetch_packet))
 
-    // validator.io.instruction_index := get_decomposed_icache_address(coreParameters, CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
-
-    // for(i <- 0 until fetchWidth){
-    //     CPU_response.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && CPU_response.valid
-    // }
-
     //////////////////
     // SKID BUFFERS //
     //////////////////

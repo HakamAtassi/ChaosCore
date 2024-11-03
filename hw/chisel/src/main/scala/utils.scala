@@ -330,7 +330,7 @@ object get_MOB_row_wr_bytes {
 object get_fetch_packet_aligned_address {
   def apply(coreParameters:CoreParameters, addr: UInt): UInt = {
     import coreParameters._
-    val mask = ~((fetchWidth * 4 - 1).U(addr.getWidth.W))
+    val mask = ~((fetchWidth * 2 - 1).U(addr.getWidth.W))
     addr & mask
   }
 }
@@ -338,8 +338,8 @@ object get_fetch_packet_aligned_address {
 object get_PC_increment{
   def apply(coreParameters:CoreParameters, PC:UInt):UInt = {
     import coreParameters._
-    val masked_address = (fetchWidth*4 - 1).U & PC
-    val increment = (fetchWidth*4).U - masked_address
+    val masked_address = (fetchWidth*2 - 1).U & PC
+    val increment = (fetchWidth*2).U - masked_address
     increment
   }
 }
