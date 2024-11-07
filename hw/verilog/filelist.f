@@ -15,8 +15,9 @@ predecoder.sv
 PC_gen.sv
 ram_32x274.sv
 Queue32_fetch_packet.sv
+RVC_expander.sv
 instruction_validator.sv
-aligner_uncompressed.sv
+instruction_aligner.sv
 fetch_queue.sv
 ram_16x65.sv
 Queue16_frontend_memory_request.sv

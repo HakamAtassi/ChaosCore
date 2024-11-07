@@ -114,7 +114,9 @@ module fetch_queue(
     .io_deq_bits_TOS                         (io_deq_bits_TOS),
     .io_flush                                (io_flush)
   );
-  aligner_uncompressed aligner (
+  instruction_aligner aligner (
+    .clock                                                   (clock),
+    .reset                                                   (reset),
     .io_mem_rsp_ready                                        (io_enq_ready),
     .io_mem_rsp_valid                                        (io_enq_valid),
     .io_mem_rsp_bits_instruction_data

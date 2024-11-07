@@ -721,7 +721,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     if(DEBUG){
         when(io.commit.valid){
             for(i <- 0 until fetchWidth){
-                val instruction_PC  = io.commit.bits.fetch_PC + (i*4).U
+                val instruction_PC  = io.commit.bits.fetch_PC + (i*2).U
                 val arch_RD         = io.partial_commit.RD(i)
                 val arch_RD_valid   = io.partial_commit.RD_valid(i)
                 val physical_RD     = io.partial_commit.PRD(i)

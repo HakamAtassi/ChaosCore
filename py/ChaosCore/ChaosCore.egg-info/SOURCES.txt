@@ -21,6 +21,7 @@ agents/__init__.py
 agents/fetch_packet_decoder_agent.py
 agents/predecoder_agent.py
 agents/rename_agent.py
+instruction/RVC_expander_dut.py
 instruction/__init__.py
 instruction/instruction.py
 model_utils/__init__.py

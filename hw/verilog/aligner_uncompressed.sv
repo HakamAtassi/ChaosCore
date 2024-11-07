@@ -19,13 +19,9 @@ module aligner_uncompressed(
   output         io_aligned_fetch_packet_valid,
   output [31:0]  io_aligned_fetch_packet_bits_fetch_PC,
   output         io_aligned_fetch_packet_bits_valid_bits_0,
-                 io_aligned_fetch_packet_bits_valid_bits_1,
                  io_aligned_fetch_packet_bits_valid_bits_2,
-                 io_aligned_fetch_packet_bits_valid_bits_3,
   output [31:0]  io_aligned_fetch_packet_bits_instructions_0_instruction,
-                 io_aligned_fetch_packet_bits_instructions_1_instruction,
-                 io_aligned_fetch_packet_bits_instructions_2_instruction,
-                 io_aligned_fetch_packet_bits_instructions_3_instruction
+                 io_aligned_fetch_packet_bits_instructions_2_instruction
 );
 
   wire [3:0] _validator_io_instruction_output;
@@ -38,19 +34,11 @@ module aligner_uncompressed(
   assign io_aligned_fetch_packet_bits_fetch_PC = io_mem_rsp_bits_fetch_PC;
   assign io_aligned_fetch_packet_bits_valid_bits_0 =
     _validator_io_instruction_output[3] & io_mem_rsp_valid;
-  assign io_aligned_fetch_packet_bits_valid_bits_1 =
-    _validator_io_instruction_output[2] & io_mem_rsp_valid;
   assign io_aligned_fetch_packet_bits_valid_bits_2 =
     _validator_io_instruction_output[1] & io_mem_rsp_valid;
-  assign io_aligned_fetch_packet_bits_valid_bits_3 =
-    _validator_io_instruction_output[0] & io_mem_rsp_valid;
   assign io_aligned_fetch_packet_bits_instructions_0_instruction =
     io_mem_rsp_bits_instruction_data[31:0];
-  assign io_aligned_fetch_packet_bits_instructions_1_instruction =
-    io_mem_rsp_bits_instruction_data[63:32];
   assign io_aligned_fetch_packet_bits_instructions_2_instruction =
     io_mem_rsp_bits_instruction_data[95:64];
-  assign io_aligned_fetch_packet_bits_instructions_3_instruction =
-    io_mem_rsp_bits_instruction_data[127:96];
 endmodule
 

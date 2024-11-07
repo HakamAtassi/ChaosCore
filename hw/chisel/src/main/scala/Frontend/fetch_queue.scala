@@ -90,10 +90,12 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
     validator.io.instruction_index := get_decomposed_icache_address(coreParameters, io.mem_rsp.bits.fetch_PC).instruction_offset 
 
     for(i <- 0 until fetchWidth){
-        if (i < fetchWidth/2){
+        when (io.mem_rsp.valid){
             valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && io.mem_rsp.valid
-        }else{
+        }.elsewhen(RegNext(io.mem_rsp.valid)){
             valid_bits(i):= RegNext(validator.io.instruction_output(fetchWidth-1-i) && io.mem_rsp.valid)
+        }.otherwise{
+            valid_bits(i) := 0.B
         }
     }
 
@@ -101,7 +103,6 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
 
     val instructions = Wire(Vec(4, UInt(32.W)))   
 
-    lower_bits_valid := 0.B
     aligned_fetch_packet_1 := DontCare
     aligned_fetch_packet_2 := DontCare
 
@@ -120,34 +121,45 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
         aligned_fetch_packet_2.instructions(i).packet_index := i.U
         aligned_fetch_packet_2.instructions(i).ROB_index    := 0.U
     }
+
     for(i <- 0 until fetchWidth){
         when(valid_bits(i)){
-            if (i < fetchWidth/2){
+            //Sepearate into 32 bit slices
+            when(io.mem_rsp.valid){
                 instructions(i) := io.mem_rsp.bits.instruction_data((i+1)*32-1, (i)*32)
-            }else{
+            }.elsewhen(RegNext(io.mem_rsp.valid)){
                 instructions(i) := fetch_reg.instruction_data((i+1)*32-1, (i)*32)
-            } 
+            }
+            // if (i < fetchWidth/2){
+            //     instructions(i) := io.mem_rsp.bits.instruction_data((i+1)*32-1, (i)*32)
+            // }else{
+            //     instructions(i) := fetch_reg.instruction_data((i+1)*32-1, (i)*32)
+            // } 
+
+            //Only checks [1:0]. Proper RVC check during alignment
             if (i > 0){
                 is_RVC(i*2) := instructions(i)(1,0) =/= 3.U
             }else{
-                is_RVC(0) := instructions(i)(1,0) =/= 3.U && !lower_bits_valid
+                is_RVC(0) := instructions(i)(1,0) =/= 3.U
             }
-            is_RVC(i*2 +1) := instructions(i)(17,16) =/= 3.U && is_RVC(i*2)
+            is_RVC(i*2 +1) := instructions(i)(17,16) =/= 3.U
         }
     }
 
+    //Determine whcih 16 bit slice are the upper 16Bits(Either RVC or upper 16 of normal instruction)
     when(aligned_fetch_packet_1.fetch_PC(1) === 1.B || (is_RVC(0) && aligned_fetch_packet_1.fetch_PC(1) === 0.B)){
         upper_bits(0) := 1.B
     }
 
     for(i <- 1 until fetchWidth*2){
-        when((upper_bits(i-1) === 1.B && is_RVC(i)) || upper_bits(i-1) === 0.B){
+        when((!upper_bits(i-1) === 1.B && !is_RVC(i)) || upper_bits(i-1) === 0.B || (upper_bits(i-1) === 1.B && is_RVC(i))) {
             upper_bits(i) := 1.B
         }
     }
 
-    for(i <- 0 until fetchWidth){
 
+    //Construct Fetch Packets
+    for(i <- 0 until fetchWidth){
         if (i < fetchWidth/2){
             if (i==0){
                 when (lower_bits_valid && upper_bits(0)){
@@ -183,55 +195,31 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
             
         } else {
 
-            when(is_RVC(i*2) && upper_bits(i*2 - 1)){
+            when(is_RVC(i*2) && RegNext(upper_bits(i*2 - 1)) && RegNext(upper_bits(i*2))){
                 expanders(i*2).io.compressed_instr := instructions(i)(15, 0)
                 aligned_fetch_packet_2.instructions((i-2)*2).instruction := expanders(i*2).io.instruction
                 aligned_fetch_packet_2.valid_bits((i-2)*2) := 1.B
-            }.elsewhen(valid_bits(i) && upper_bits(i*2 + 1)){
+            }.elsewhen(valid_bits(i) && RegNext(upper_bits(i*2 + 1)) && RegNext(upper_bits(i*2)) === 0.B){
                 aligned_fetch_packet_2.instructions((i-2)*2).instruction := instructions(i)
                 aligned_fetch_packet_2.valid_bits((i-2)*2) := 1.B
-            }.elsewhen(valid_bits(i) && valid_bits(i-1) && upper_bits(i*2)){
+            }.elsewhen(valid_bits(i) && valid_bits(i-1) && RegNext(upper_bits(i*2))){
                 aligned_fetch_packet_2.instructions((i-2)*2).instruction := Cat(instructions(i)(15,0), instructions(i-1)(31,16))
                 aligned_fetch_packet_2.valid_bits((i-2)*2) := 1.B
             }
 
-            // when(is_RVC(i*2)){
-            //     expanders(i*2).io.compressed_instr := instructions(i)(15, 0)
-            //     aligned_fetch_packet_2.instructions((i-2)*2).instruction := expanders(i*2).io.instruction
-            //     aligned_fetch_packet_2.valid_bits((i-2)*2) := 1.B
-            // }.elsewhen(valid_bits(i)){
-            //     aligned_fetch_packet_2.instructions((i-2)*2).instruction := instructions(i)
-            //     aligned_fetch_packet_2.valid_bits((i-2)*2) := 1.B
-            // }
-
-            when(is_RVC(i*2 + 1) && upper_bits(i*2)){
+            when(is_RVC(i*2 + 1) && RegNext(upper_bits(i*2))){
                 expanders(i*2 + 1).io.compressed_instr := instructions(i)(31, 16)
                 aligned_fetch_packet_2.instructions((i-2)*2 + 1).instruction := expanders(i*2 + 1).io.instruction
                 aligned_fetch_packet_2.valid_bits((i-2)*2 + 1) := 1.B
             }
 
             if(i == fetchWidth - 1) {
-                when(!upper_bits(i*2 + 1)){
+                when(!RegNext(upper_bits(i*2 + 1))){
                     aligned_fetch_packet_2.valid_bits((i-2)*2 + 1) := 0.B 
-                    lower_bits := instructions(i)(31,16)
-                    lower_bits_valid := 1.B
+                    //lower_bits := instructions(i)(31,16)
+                    //lower_bits_valid := 1.B
                 }
             }
-
-            // when(is_RVC(i*2 + 1)){
-            //     expanders(i*2 + 1).io.compressed_instr := instructions(i)(31, 16)
-            //     aligned_fetch_packet_2.instructions((i-2)*2 + 1).instruction := expanders(i*2 + 1).io.instruction
-            //     aligned_fetch_packet_2.valid_bits((i-2)*2 + 1) := 1.B
-            // }.elsewhen(valid_bits(i) && !is_RVC(i*2)){
-            //     if(i < fetchWidth - 1){
-            //         aligned_fetch_packet_2.instructions((i-2)*2 + 1).instruction := Cat(instructions(i+1)(15,0), instructions(i)(31,16))
-            //     } else {
-            //         aligned_fetch_packet_2.valid_bits((i-2)*2 + 1) := 0.B 
-            //         lower_bits := instructions(i)(31,16)
-            //         lower_bits_valid := 1.B
-            //     }
-            //     aligned_fetch_packet_2.valid_bits((i-2)*2 + 1) := 1.B
-            // }
 
         }
     }
@@ -244,10 +232,17 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
         io.aligned_fetch_packet.bits := aligned_fetch_packet_1
         io.aligned_fetch_packet.bits.fetch_PC := io.mem_rsp.bits.fetch_PC
         io.aligned_fetch_packet.valid := 1.B
+        lower_bits := instructions(fetchWidth-1)(31,16)
+        lower_bits_valid := upper_bits(fetchWidth - 1) === 0.B && lower_bits(1,0) === 3.U
     }.elsewhen(RegNext(io.mem_rsp.fire) && io.aligned_fetch_packet.ready){
         io.aligned_fetch_packet.bits := aligned_fetch_packet_2
         ready_reg := 1.B
         io.aligned_fetch_packet.valid := 1.B
+        lower_bits := instructions(fetchWidth-1)(31,16)
+        lower_bits_valid := RegNext(upper_bits(fetchWidth*2 - 1)) === 0.B && lower_bits(1,0) === 3.U
+    }.otherwise{
+        lower_bits := lower_bits
+        lower_bits_valid := lower_bits_valid
     }
     io.mem_rsp.ready := ready_reg
 }

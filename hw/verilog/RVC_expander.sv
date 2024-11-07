@@ -92,47 +92,45 @@ module RVC_expander(
                  io_compressed_instr[6],
                  2'h0}
               : J | JAL
-                  ? {20'h0,
-                     io_compressed_instr[12],
+                  ? {{21{io_compressed_instr[12]}},
                      io_compressed_instr[8],
                      io_compressed_instr[10:9],
                      io_compressed_instr[6],
                      io_compressed_instr[7],
                      io_compressed_instr[2],
                      io_compressed_instr[11],
-                     io_compressed_instr[5:4],
-                     2'h0}
-                  : BNEZ | BEQZ
-                      ? {23'h0,
-                         io_compressed_instr[12],
+                     io_compressed_instr[5:3],
+                     1'h0}
+                  : BNEZ | BEQZ | ANDI
+                      ? {{24{io_compressed_instr[12]}},
                          io_compressed_instr[6:5],
                          io_compressed_instr[2],
                          io_compressed_instr[11:10],
                          io_compressed_instr[4:3],
                          1'h0}
-                      : _GEN_1 | SLLI | ADDI | LI
+                      : _GEN_1 | SLLI
                           ? {26'h0, io_compressed_instr[12], io_compressed_instr[6:2]}
-                          : LUI
-                              ? {14'h0,
-                                 io_compressed_instr[12],
-                                 io_compressed_instr[6:2],
-                                 12'h0}
-                              : ADDI16SP
-                                  ? {22'h0,
-                                     io_compressed_instr[12],
-                                     io_compressed_instr[4:3],
-                                     io_compressed_instr[5],
-                                     io_compressed_instr[2],
-                                     io_compressed_instr[6],
-                                     4'h0}
-                                  : ADDI4SPN
-                                      ? {22'h0,
-                                         io_compressed_instr[10:7],
-                                         io_compressed_instr[12:11],
+                          : ADDI | LI
+                              ? {{27{io_compressed_instr[12]}}, io_compressed_instr[6:2]}
+                              : LUI
+                                  ? {{15{io_compressed_instr[12]}},
+                                     io_compressed_instr[6:2],
+                                     12'h0}
+                                  : ADDI16SP
+                                      ? {{23{io_compressed_instr[12]}},
+                                         io_compressed_instr[4:3],
                                          io_compressed_instr[5],
+                                         io_compressed_instr[2],
                                          io_compressed_instr[6],
-                                         2'h0}
-                                      : 32'h0;
+                                         4'h0}
+                                      : ADDI4SPN
+                                          ? {22'h0,
+                                             io_compressed_instr[10:7],
+                                             io_compressed_instr[12:11],
+                                             io_compressed_instr[5],
+                                             io_compressed_instr[6],
+                                             2'h0}
+                                          : 32'h0;
   wire        _GEN_2 = LW | LWSP;
   wire        _GEN_3 = SW | SWSP;
   wire        _GEN_4 = JAL | J;

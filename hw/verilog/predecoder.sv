@@ -236,7 +236,7 @@ module predecoder(
   wire [31:0]      dominant_instruction = _GEN[dominant_branch_index];
   wire [1:0]       _GEN_0 = {1'h0, T_NT_0};
   wire [1:0]       _GEN_1 = {1'h0, T_NT_1};
-  wire [31:0]      masked_addr = io_fetch_packet_bits_fetch_PC & 32'hFFFFFFF0;
+  wire [31:0]      masked_addr = io_fetch_packet_bits_fetch_PC & 32'hFFFFFFF8;
   wire [8:0]       _GEN_2 = {9{dominant_instruction[31]}};
   wire [20:0]      imm_imm =
     dominant_instruction[6:0] == 7'h63
@@ -271,7 +271,7 @@ module predecoder(
             & io_prediction_bits_hit & io_prediction_valid
               ? io_prediction_bits_target
               : io_fetch_packet_bits_fetch_PC
-                + {26'h0, 6'h10 - {2'h0, io_fetch_packet_bits_fetch_PC[3:0]}};
+                + {27'h0, 5'h8 - {2'h0, io_fetch_packet_bits_fetch_PC[2:0]}};
   reg  [31:0]      expected_next_PC;
   wire             _input_fetch_packet_valid_T =
     io_fetch_packet_ready_REG & io_fetch_packet_valid;

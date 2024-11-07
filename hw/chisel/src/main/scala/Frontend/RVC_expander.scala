@@ -112,7 +112,7 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
     val lwsp_imm = Cat(instruction(3,2), instruction(12), instruction(6,4), 0.U(2.W))
     val swsp_imm = Cat(instruction(8,7), instruction(12,9), 0.U(2.W))
     val lsw_imm = Cat(instruction(5), instruction(12,10), instruction(6), 0.U(2.W))
-    val j_imm = Cat(instruction(12), instruction(8), instruction(10,9), instruction(6), instruction(7), instruction(2), instruction(11), instruction(5,4), 0.U(2.W))
+    val j_imm = Cat(instruction(12), instruction(8), instruction(10,9), instruction(6), instruction(7), instruction(2), instruction(11), instruction(5,3), 0.U(1.W))
     val b_imm = Cat(instruction(12), instruction(6,5), instruction(2), instruction(11,10), instruction(4,3), 0.U(1.W))
     val shamt = Cat(instruction(12), instruction(6,2))
     val lui_imm = Cat(shamt, 0.U(12.W))
@@ -150,15 +150,17 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
     }.elsewhen(LW || SW){
         decoded_instr.imm := lsw_imm
     }.elsewhen(CJ){
-        decoded_instr.imm := j_imm
-    }.elsewhen(BNEZ || BEQZ){
-        decoded_instr.imm := b_imm
-    }.elsewhen(SRLI || SRAI || SLLI || ADDI || LI){
+        decoded_instr.imm := sign_extend(j_imm, 32)
+    }.elsewhen(BNEZ || BEQZ || ANDI){
+        decoded_instr.imm := sign_extend(b_imm, 32)
+    }.elsewhen(SRLI || SRAI || SLLI){
         decoded_instr.imm := shamt
+    }.elsewhen(ADDI || LI){
+        decoded_instr.imm := sign_extend(shamt, 32)
     }.elsewhen(LUI){
-        decoded_instr.imm := lui_imm
+        decoded_instr.imm := sign_extend(lui_imm, 32)
     }.elsewhen(ADDI16SP){
-        decoded_instr.imm := addi16sp_imm
+        decoded_instr.imm := sign_extend(addi16sp_imm, 32)
     }.elsewhen(ADDI4SPN){
         decoded_instr.imm := addi4spn_imm
     }
