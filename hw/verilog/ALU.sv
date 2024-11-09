@@ -46,7 +46,7 @@ module ALU(
   wire [31:0] RS1_unsigned = io_FU_input_bits_RS1_data;
   wire [31:0] instruction_PC =
     io_FU_input_bits_fetch_PC
-    + {28'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0};
+    + {29'h0, io_FU_input_bits_decoded_instruction_packet_index, 1'h0};
   reg  [31:0] arithmetic_result;
   wire [31:0] IMM_signed =
     {{19{io_FU_input_bits_decoded_instruction_IMM[12]}},

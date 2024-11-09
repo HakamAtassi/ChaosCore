@@ -61,7 +61,7 @@ module CSR_FU(
   wire        CSR_input_valid;
   wire [31:0] instruction_PC =
     io_FU_input_bits_fetch_PC
-    + {28'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0};
+    + {29'h0, io_FU_input_bits_decoded_instruction_packet_index, 1'h0};
   wire [11:0] CSR_addr = io_FU_input_bits_decoded_instruction_IMM[11:0];
   wire        _REMU_T = io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
   wire        _SLTU_T_1 = io_FU_input_bits_decoded_instruction_instructionType == 5'h4;

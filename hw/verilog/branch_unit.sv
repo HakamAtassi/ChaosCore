@@ -46,7 +46,7 @@ module branch_unit(
 
   wire [31:0] instruction_PC =
     io_FU_input_bits_fetch_PC
-    + {28'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0};
+    + {29'h0, io_FU_input_bits_decoded_instruction_packet_index, 1'h0};
   reg  [31:0] arithmetic_result;
   wire        _REMU_T = io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
   wire        _SLTU_T_1 = io_FU_input_bits_decoded_instruction_instructionType == 5'h4;
