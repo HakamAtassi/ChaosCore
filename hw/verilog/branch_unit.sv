@@ -90,7 +90,6 @@ module branch_unit(
     automatic logic        GEU;
     automatic logic        JAL;
     automatic logic        JALR;
-    automatic logic [31:0] _arithmetic_result_T;
     automatic logic [31:0] _GEN =
       {{19{io_FU_input_bits_decoded_instruction_IMM[12]}},
        io_FU_input_bits_decoded_instruction_IMM[12:0]};
@@ -112,13 +111,12 @@ module branch_unit(
       & (&io_FU_input_bits_decoded_instruction_FUNCT3);
     JAL = io_FU_input_bits_decoded_instruction_instructionType == 5'h1B;
     JALR = io_FU_input_bits_decoded_instruction_instructionType == 5'h19;
-    _arithmetic_result_T = instruction_PC + 32'h4;
     if (reset)
       arithmetic_result <= 32'h0;
     else
       arithmetic_result <=
         EQ | NE | LT | GE | LTU | GEU | JAL | JALR | ~AUIPC
-          ? _arithmetic_result_T
+          ? instruction_PC + 32'h2
           : instruction_PC + {io_FU_input_bits_decoded_instruction_IMM[19:0], 12'h0};
     io_FU_output_valid_REG <=
       branch_unit_input_valid & ~io_flush_valid
@@ -149,7 +147,7 @@ module branch_unit(
                                     ? io_FU_input_bits_RS1_data
                                       + {{20{io_FU_input_bits_decoded_instruction_IMM[11]}},
                                          io_FU_input_bits_decoded_instruction_IMM[11:0]}
-                                    : AUIPC ? 32'h0 : _arithmetic_result_T;
+                                    : AUIPC ? 32'h0 : instruction_PC + 32'h4;
     io_FU_output_bits_PRD_REG <= io_FU_input_bits_decoded_instruction_PRD;
     io_FU_output_bits_RD_valid_REG <= io_FU_input_bits_decoded_instruction_RD_valid;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;

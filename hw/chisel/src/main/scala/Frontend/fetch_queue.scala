@@ -134,8 +134,8 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
 
     jumped := 0.B
     when(io.mem_rsp.valid && 
-        ((io.aligned_fetch_packet.bits.fetch_PC - prev_fetch_PC) =/= (fetchWidth*4).U) &&
-        (prev_fetch_PC + get_PC_increment(coreParameters, prev_fetch_PC) =/= io.aligned_fetch_packet.bits.fetch_PC)){
+        ((io.mem_rsp.bits.fetch_PC - prev_fetch_PC) =/= (fetchWidth*4).U) &&
+        (prev_fetch_PC + get_PC_increment(coreParameters, prev_fetch_PC) =/= io.mem_rsp.bits.fetch_PC)){
         jumped := 1.B
     }
 
@@ -193,7 +193,7 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
                     expanders(i*2).io.compressed_instr := instructions(i)(15, 0)
                     aligned_fetch_packet_1.instructions(i*2).instruction := expanders(i*2).io.instruction
                     aligned_fetch_packet_1.valid_bits(i*2) := 1.B
-                }.elsewhen(valid_bits(i) && upper_bits(i*2 + 1)){
+                }.elsewhen(valid_bits(i) && upper_bits(i*2 + 1) && !upper_bits(i*2)){
                     aligned_fetch_packet_1.instructions(i*2).instruction := instructions(i)
                     aligned_fetch_packet_1.valid_bits(i*2) := 1.B
                 }.elsewhen(valid_bits(i) && valid_bits(i-1) && upper_bits(i*2)){
@@ -257,6 +257,9 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
         ready_reg := 0.B
         io.aligned_fetch_packet.bits := aligned_fetch_packet_1
         io.aligned_fetch_packet.bits.fetch_PC := io.mem_rsp.bits.fetch_PC
+        // when(lower_bits_valid && upper_bits(0) && !jumped){
+        //     io.aligned_fetch_packet.bits.fetch_PC := io.mem_rsp.bits.fetch_PC - 2.U
+        // }
         when (aligned_fetch_packet_1.valid_bits(0) ||
                 aligned_fetch_packet_1.valid_bits(1) ||
                 aligned_fetch_packet_1.valid_bits(2) ||

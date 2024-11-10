@@ -30,7 +30,6 @@ module instruction_aligner(
                  io_aligned_fetch_packet_bits_instructions_3_instruction
 );
 
-  wire [31:0]  io_aligned_fetch_packet_bits_fetch_PC_0;
   wire [3:0]   _validator_io_instruction_output;
   wire [31:0]  _expanders_7_io_instruction;
   wire [31:0]  _expanders_6_io_instruction;
@@ -71,10 +70,8 @@ module instruction_aligner(
       ? _validator_io_instruction_output[0] & io_mem_rsp_valid
       : REG_3 & valid_bits_3_REG;
   wire         jumped =
-    io_mem_rsp_valid & io_aligned_fetch_packet_bits_fetch_PC_0 - prev_fetch_PC != 32'h10
-    & prev_fetch_PC
-    + {27'h0,
-       5'h8 - {2'h0, prev_fetch_PC[2:0]}} != io_aligned_fetch_packet_bits_fetch_PC_0;
+    io_mem_rsp_valid & io_mem_rsp_bits_fetch_PC - prev_fetch_PC != 32'h10 & prev_fetch_PC
+    + {27'h0, 5'h8 - {2'h0, prev_fetch_PC[2:0]}} != io_mem_rsp_bits_fetch_PC;
   reg          REG_4;
   wire [31:0]  instructions_0 =
     valid_bits_0
@@ -126,7 +123,7 @@ module instruction_aligner(
   wire         aligned_fetch_packet_1_valid_bits_0 =
     _GEN | _GEN_0 | valid_bits_0 & ~(io_mem_rsp_bits_fetch_PC[1]);
   wire         _GEN_1 = is_RVC_2 & upper_bits_1;
-  wire         _GEN_2 = valid_bits_1 & upper_bits_3;
+  wire         _GEN_2 = valid_bits_1 & upper_bits_3 & ~upper_bits_2;
   wire         aligned_fetch_packet_1_valid_bits_2 = _GEN_1 | _GEN_2;
   wire         _GEN_3 = valid_bits_1 & valid_bits_0 & upper_bits_2;
   wire         _GEN_4 = _GEN_1 | _GEN_2;
@@ -161,12 +158,6 @@ module instruction_aligner(
   reg          REG_20;
   wire         _GEN_11 = REG_20 & io_aligned_fetch_packet_ready;
   reg  [31:0]  io_aligned_fetch_packet_bits_fetch_PC_REG;
-  assign io_aligned_fetch_packet_bits_fetch_PC_0 =
-    _GEN_10
-      ? io_mem_rsp_bits_fetch_PC
-      : valid_bits_0 | valid_bits_1
-          ? fetch_reg_fetch_PC + {27'h0, 5'h8 - {2'h0, fetch_reg_fetch_PC[2:0]}}
-          : io_aligned_fetch_packet_bits_fetch_PC_REG;
   reg          lower_bits_valid_REG;
   always @(posedge clock) begin
     if (_GEN_10) begin
@@ -263,7 +254,12 @@ module instruction_aligner(
       : _GEN_11
         & (aligned_fetch_packet_2_valid_bits_0 | aligned_fetch_packet_2_valid_bits_1
            | aligned_fetch_packet_2_valid_bits_2 | aligned_fetch_packet_2_valid_bits_3);
-  assign io_aligned_fetch_packet_bits_fetch_PC = io_aligned_fetch_packet_bits_fetch_PC_0;
+  assign io_aligned_fetch_packet_bits_fetch_PC =
+    _GEN_10
+      ? io_mem_rsp_bits_fetch_PC
+      : valid_bits_0 | valid_bits_1
+          ? fetch_reg_fetch_PC + {27'h0, 5'h8 - {2'h0, fetch_reg_fetch_PC[2:0]}}
+          : io_aligned_fetch_packet_bits_fetch_PC_REG;
   assign io_aligned_fetch_packet_bits_valid_bits_0 =
     _GEN_10 ? aligned_fetch_packet_1_valid_bits_0 : aligned_fetch_packet_2_valid_bits_0;
   assign io_aligned_fetch_packet_bits_valid_bits_1 =

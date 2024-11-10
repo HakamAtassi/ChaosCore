@@ -62,7 +62,8 @@ module RVC_expander(
   wire        _JALR_T_4 = io_compressed_instr[6:2] == 5'h0;
   wire        JR =
     _ADD_T & Q2 & ~(io_compressed_instr[12]) & _JALR_T_4 & (|(io_compressed_instr[11:7]));
-  wire        MV = _ADD_T & Q2 & (|(io_compressed_instr[11:7]));
+  wire        MV =
+    _ADD_T & Q2 & (|(io_compressed_instr[11:7])) & (|(io_compressed_instr[6:2]));
   wire        EBREAK = _ADD_T & Q2 & io_compressed_instr[12:2] == 11'h400;
   wire        JALR =
     _ADD_T & Q2 & io_compressed_instr[12] & _JALR_T_4 & (|(io_compressed_instr[11:7]));
@@ -174,15 +175,18 @@ module RVC_expander(
   assign decoded_instr_rd =
     ADDI16SP
       ? 5'h2
-      : JAL | JALR | JR
-          ? 5'h1
-          : _GEN_8 | ~(ADDI4SPN | LW) ? (_GEN_7 ? rd_rs1 : 5'h0) : rd_rs2;
+      : J | JR
+          ? 5'h0
+          : JAL | JALR
+              ? 5'h1
+              : _GEN_8 | ~(ADDI4SPN | LW) ? (_GEN_7 ? rd_rs1 : 5'h0) : rd_rs2;
   assign decoded_instr_rs1 =
     LI | MV
       ? 5'h0
       : LWSP | SWSP | ADDI4SPN | ADDI16SP ? 5'h2 : _GEN_7 | _GEN_0 ? rd_rs1 : 5'h0;
   assign io_instruction =
     _GEN_2 | ADDI4SPN | NOP | ADDI | LI | ADDI16SP | SRLI | SRAI | ANDI | SLLI | EBREAK
+    | JALR | JR
       ? {decoded_instr_imm[11:0],
          decoded_instr_rs1,
          decoded_instr_funct3,

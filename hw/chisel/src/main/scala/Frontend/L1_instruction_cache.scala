@@ -177,6 +177,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
         }
 
         is(cacheState.Request){
+            request_addr   := fetch_PC_buf.addr & dram_addr_mask
             val read_accepted = AXI_read_request(request_addr, 0.U, L1_cacheLineSizeBytes.U)
             when(read_accepted){
                 cache_state              := cacheState.Allocate

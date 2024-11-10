@@ -80,7 +80,7 @@ class branch_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     auipc_result    := (instruction_PC + Cat(imm, 0.U(12.W))) // same here???
 
-    arithmetic_result   := instruction_PC + 4.U
+    arithmetic_result   := instruction_PC + 2.U
 
 
     when(EQ)        {branch_taken := 1.B; target_address := instruction_PC + IMM_12_0}

@@ -94,7 +94,7 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
     //Quadrant 2
     val SLLI       = FUNCT3 === "b000".U && Q2 && (imm_5 === 0.U) && (lower_imm =/= 0.U) && (RD =/= 0.U)
     val JR         = FUNCT3 === "b100".U && Q2 && (imm_5 === 0.U) && (lower_imm === 0.U) && (RD =/= 0.U)
-    val MV         = FUNCT3 === "b100".U && Q2 && (RD =/= 0.U)
+    val MV         = FUNCT3 === "b100".U && Q2 && (RD =/= 0.U) && (lower_imm =/= 0.U)
     val EBREAK     = FUNCT3 === "b100".U && Q2 && (instruction(12,2) === "b10000000000".U)
     val JALR       = FUNCT3 === "b100".U && Q2 && (imm_5 === 1.U) && (lower_imm === 0.U) && (RD =/= 0.U)
     val ADD        = FUNCT3 === "b100".U && Q2 && (imm_5 === 1.U) && (lower_imm =/= 0.U) && (RD =/= 0.U)
@@ -230,8 +230,12 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
         decoded_instr.rd := rd_rs2
     }
 
-    when(JAL || JALR || JR){
+    when(JAL || JALR){
         decoded_instr.rd := 1.U
+    }
+
+    when(J || JR){
+        decoded_instr.rd := 0.U
     }
 
     when(LWSP || SWSP || ADDI4SPN || ADDI16SP){
@@ -247,7 +251,7 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
     }
 
     //Contruct Expanded Instruction
-    when(LW || LWSP || ADDI4SPN || NOP || ADDI || LI || ADDI16SP || SRLI || SRAI || ANDI || SLLI || EBREAK){
+    when(LW || LWSP || ADDI4SPN || NOP || ADDI || LI || ADDI16SP || SRLI || SRAI || ANDI || SLLI || EBREAK || JALR || JR){
         expanded_instruction := Cat(decoded_instr.imm(11,0), decoded_instr.rs1, decoded_instr.funct3, decoded_instr.rd, decoded_instr.opcode)
     }
 

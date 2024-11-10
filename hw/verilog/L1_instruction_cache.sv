@@ -247,9 +247,12 @@ module L1_instruction_cache(
   reg          valid_mem_62_1;
   reg          valid_mem_63_0;
   reg          valid_mem_63_1;
-  wire [31:0]  request_addr = io_CPU_request_bits_addr & 32'hFFFFFFE0;
   wire         _GEN_16 = miss & ~io_flush_valid;
   wire         _GEN_17 = cache_state == 3'h1;
+  wire [31:0]  request_addr =
+    (|cache_state) & _GEN_17
+      ? fetch_PC_buf_addr & 32'hFFFFFFE0
+      : io_CPU_request_bits_addr & 32'hFFFFFFE0;
   wire         _GEN_18 = (|cache_state) ? _GEN_17 : _GEN_16;
   wire         m_axi_arvalid_0 =
     (|cache_state) ? _GEN_17 & ~(|AXI_REQUEST_STATE) : _GEN_16 & ~(|AXI_REQUEST_STATE);
