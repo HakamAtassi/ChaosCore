@@ -78,13 +78,13 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
     val ADDI16SP   = FUNCT3 === "b011".U && Q1 && (RD === 2.U)
     val LUI        = FUNCT3 === "b011".U && Q1 && (RD =/= 0.U) && (RD =/= 2.U) && (lower_imm =/= 0.U)
 
-    val SRLI       = FUNCT6 === "b10000".U && Q1 && (lower_imm =/= 0.U) && (imm_5 === 0.U) 
-    val SRAI       = FUNCT6 === "b10001".U && Q1 && (lower_imm =/= 0.U) && (imm_5 === 0.U) 
-    val ANDI       = FUNCT3 === "b100".U && instruction(11,10) === "b10".U && Q1
-    val SUB        = FUNCT6 === "b10011".U && Q1 && (instruction(6,5) === 0.U)
-    val XOR        = FUNCT6 === "b10001".U && Q1 && (instruction(6,5) === 1.U)
-    val OR         = FUNCT6 === "b10001".U && Q1 && (instruction(6,5) === 2.U)
-    val AND        = FUNCT6 === "b10001".U && Q1 && (instruction(6,5) === 3.U)
+    val SRLI       = FUNCT3 === "b100".U && Q1 && instruction(11,10) === "b00".U (lower_imm =/= 0.U) && (imm_5 === 0.U) 
+    val SRAI       = FUNCT3 === "b100".U && Q1 && instruction(11,10) === "b01".U (lower_imm =/= 0.U) && (imm_5 === 0.U) 
+    val ANDI       = FUNCT3 === "b100".U && Q1 && instruction(11,10) === "b10".U
+    val SUB        = FUNCT6 === "b100011".U && Q1 && (instruction(6,5) === 0.U)
+    val XOR        = FUNCT6 === "b100011".U && Q1 && (instruction(6,5) === 1.U)
+    val OR         = FUNCT6 === "b100011".U && Q1 && (instruction(6,5) === 2.U)
+    val AND        = FUNCT6 === "b100011".U && Q1 && (instruction(6,5) === 3.U)
 
     val J          = FUNCT3 === "b101".U && Q1
 
@@ -94,7 +94,7 @@ class RVC_expander(coreParameters:CoreParameters) extends Module{
     //Quadrant 2
     val SLLI       = FUNCT3 === "b000".U && Q2 && (imm_5 === 0.U) && (lower_imm =/= 0.U) && (RD =/= 0.U)
     val JR         = FUNCT3 === "b100".U && Q2 && (imm_5 === 0.U) && (lower_imm === 0.U) && (RD =/= 0.U)
-    val MV         = FUNCT3 === "b100".U && Q2 && (RD =/= 0.U) && (lower_imm =/= 0.U)
+    val MV         = FUNCT3 === "b100".U && Q2 && (imm_5 === 0.U) && (lower_imm =/= 0.U) && (RD =/= 0.U)
     val EBREAK     = FUNCT3 === "b100".U && Q2 && (instruction(12,2) === "b10000000000".U)
     val JALR       = FUNCT3 === "b100".U && Q2 && (imm_5 === 1.U) && (lower_imm === 0.U) && (RD =/= 0.U)
     val ADD        = FUNCT3 === "b100".U && Q2 && (imm_5 === 1.U) && (lower_imm =/= 0.U) && (RD =/= 0.U)

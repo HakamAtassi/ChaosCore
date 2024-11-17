@@ -761,7 +761,7 @@ module ROB(
       ? (_GEN_12
            ? 32'h0
            : _GEN_13
-               ? commit_fetch_PC + 32'hC
+               ? commit_fetch_PC + 32'h6
                : _GEN_14 ? commit_fetch_PC + 32'hC : 32'h0)
       : _GEN_16 ? commit_fetch_PC + 32'hC : 32'h0;
   wire [31:0]      _GEN_25 =
@@ -769,7 +769,7 @@ module ROB(
       ? (_GEN_12
            ? commit_resolved_3_target
            : _GEN_13
-               ? ROB_output_fetch_PC + 32'h10
+               ? ROB_output_fetch_PC + 32'h8
                : _GEN_14 ? commit_resolved_3_target : expected_PC)
       : _GEN_16 ? ROB_output_fetch_PC + 32'h10 : expected_PC;
   wire [31:0]      _GEN_26 =
@@ -777,7 +777,7 @@ module ROB(
       ? (_GEN_12
            ? commit_resolved_3_target
            : _GEN_13
-               ? ROB_output_fetch_PC + 32'h10
+               ? ROB_output_fetch_PC + 32'h8
                : _GEN_14 ? commit_resolved_3_target : 32'h0)
       : _GEN_16
           ? (ROB_output_exception_3
@@ -829,7 +829,7 @@ module ROB(
       ? (_GEN_28
            ? _GEN_24
            : _GEN_29
-               ? commit_fetch_PC + 32'h8
+               ? commit_fetch_PC + 32'h4
                : _GEN_30 ? commit_fetch_PC + 32'h8 : _GEN_24)
       : _GEN_33 ? commit_fetch_PC + 32'h8 : _GEN_24;
   wire [31:0]      _GEN_42 =
@@ -837,7 +837,7 @@ module ROB(
       ? (_GEN_28
            ? commit_resolved_2_target
            : _GEN_29
-               ? ROB_output_fetch_PC + 32'hC
+               ? ROB_output_fetch_PC + 32'h6
                : _GEN_30 ? commit_resolved_2_target : _GEN_25)
       : _GEN_33 ? ROB_output_fetch_PC + 32'hC : _GEN_25;
   wire [31:0]      _GEN_43 =
@@ -845,7 +845,7 @@ module ROB(
       ? (_GEN_28
            ? commit_resolved_2_target
            : _GEN_29
-               ? ROB_output_fetch_PC + 32'hC
+               ? ROB_output_fetch_PC + 32'h6
                : _GEN_30 ? commit_resolved_2_target : _GEN_26)
       : _GEN_33
           ? (ROB_output_exception_2
@@ -890,7 +890,7 @@ module ROB(
       ? (_GEN_45
            ? _GEN_41
            : _GEN_46
-               ? commit_fetch_PC + 32'h4
+               ? commit_fetch_PC + 32'h2
                : _GEN_47 ? commit_fetch_PC + 32'h4 : _GEN_41)
       : _GEN_49 ? commit_fetch_PC + 32'h4 : _GEN_41;
   wire [31:0]      _GEN_57 =
@@ -898,7 +898,7 @@ module ROB(
       ? (_GEN_45
            ? commit_resolved_1_target
            : _GEN_46
-               ? ROB_output_fetch_PC + 32'h8
+               ? ROB_output_fetch_PC + 32'h4
                : _GEN_47 ? commit_resolved_1_target : _GEN_42)
       : _GEN_49 ? ROB_output_fetch_PC + 32'h8 : _GEN_42;
   wire [31:0]      _GEN_58 =
@@ -906,7 +906,7 @@ module ROB(
       ? (_GEN_45
            ? commit_resolved_1_target
            : _GEN_46
-               ? ROB_output_fetch_PC + 32'h8
+               ? ROB_output_fetch_PC + 32'h4
                : _GEN_47 ? commit_resolved_1_target : _GEN_43)
       : _GEN_49
           ? (ROB_output_exception_1
@@ -978,7 +978,7 @@ module ROB(
            ? (_GEN_60
                 ? commit_resolved_0_target
                 : _GEN_61
-                    ? ROB_output_fetch_PC + 32'h4
+                    ? ROB_output_fetch_PC + 32'h2
                     : _GEN_62 ? commit_resolved_0_target : _GEN_57)
            : _GEN_66 ? ROB_output_fetch_PC + 32'h4 : _GEN_57)
       : expected_PC;
@@ -988,7 +988,7 @@ module ROB(
            ? (_GEN_60
                 ? commit_resolved_0_target
                 : _GEN_61
-                    ? ROB_output_fetch_PC + 32'h4
+                    ? ROB_output_fetch_PC + 32'h2
                     : _GEN_62 ? commit_resolved_0_target : _GEN_58)
            : _GEN_66
                ? (ROB_output_exception_0

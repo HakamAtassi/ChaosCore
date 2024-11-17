@@ -27,7 +27,9 @@ module instruction_aligner(
   output [31:0]  io_aligned_fetch_packet_bits_instructions_0_instruction,
                  io_aligned_fetch_packet_bits_instructions_1_instruction,
                  io_aligned_fetch_packet_bits_instructions_2_instruction,
-                 io_aligned_fetch_packet_bits_instructions_3_instruction
+                 io_aligned_fetch_packet_bits_instructions_3_instruction,
+  input  [31:0]  io_commit_fetch_PC,
+  input          io_commit_valid
 );
 
   wire [3:0]   _validator_io_instruction_output;
@@ -42,8 +44,11 @@ module instruction_aligner(
   reg  [127:0] fetch_reg_instruction_data;
   reg  [31:0]  fetch_reg_fetch_PC;
   reg          ready_reg;
-  reg  [15:0]  lower_bits;
-  reg          lower_bits_valid;
+  reg  [15:0]  lower_bits_reg;
+  reg          lower_bits_valid_reg;
+  reg          saved_lower_bits_valid;
+  reg  [31:0]  last_commit_fetch_PC;
+  reg  [15:0]  saved_lower_bits;
   reg  [31:0]  prev_fetch_PC;
   reg          REG;
   reg          valid_bits_0_REG;
@@ -69,9 +74,18 @@ module instruction_aligner(
     io_mem_rsp_valid
       ? _validator_io_instruction_output[0] & io_mem_rsp_valid
       : REG_3 & valid_bits_3_REG;
-  wire         jumped =
+  wire         _GEN =
     io_mem_rsp_valid & io_mem_rsp_bits_fetch_PC - prev_fetch_PC != 32'h10 & prev_fetch_PC
-    + {27'h0, 5'h8 - {2'h0, prev_fetch_PC[2:0]}} != io_mem_rsp_bits_fetch_PC;
+    + {27'h0, 5'h8 - {2'h0, prev_fetch_PC[2:0]}} != io_mem_rsp_bits_fetch_PC
+    & prev_fetch_PC
+    + {26'h0, 6'h10 - {2'h0, prev_fetch_PC[3:0]}} != io_mem_rsp_bits_fetch_PC;
+  wire         _GEN_0 =
+    io_mem_rsp_bits_fetch_PC - 32'h8 == last_commit_fetch_PC | io_mem_rsp_bits_fetch_PC
+    - 32'h10 == last_commit_fetch_PC;
+  wire         _GEN_1 = _GEN & _GEN_0;
+  wire [15:0]  lower_bits = _GEN_1 ? saved_lower_bits : lower_bits_reg;
+  wire         lower_bits_valid = _GEN_1 ? saved_lower_bits_valid : lower_bits_valid_reg;
+  wire         jumped = _GEN & ~_GEN_0;
   reg          REG_4;
   wire [31:0]  instructions_0 =
     valid_bits_0
@@ -118,49 +132,54 @@ module instruction_aligner(
   wire         upper_bits_5 = ~upper_bits_4 | upper_bits_4 & is_RVC_5;
   wire         upper_bits_6 = ~upper_bits_5 | upper_bits_5 & is_RVC_6;
   wire         upper_bits_7 = ~upper_bits_6 | upper_bits_6 & is_RVC_7;
-  wire         _GEN = lower_bits_valid & upper_bits_0 & ~jumped;
-  wire         _GEN_0 = is_RVC_0 & upper_bits_0 & ~(io_mem_rsp_bits_fetch_PC[1]);
+  wire         _GEN_2 = lower_bits_valid & upper_bits_0 & ~jumped & valid_bits_0;
+  wire         _GEN_3 =
+    is_RVC_0 & upper_bits_0 & ~(io_mem_rsp_bits_fetch_PC[1]) & valid_bits_0;
   wire         aligned_fetch_packet_1_valid_bits_0 =
-    _GEN | _GEN_0 | valid_bits_0 & ~(io_mem_rsp_bits_fetch_PC[1]);
-  wire         _GEN_1 = is_RVC_2 & upper_bits_1;
-  wire         _GEN_2 = valid_bits_1 & upper_bits_3 & ~upper_bits_2;
-  wire         aligned_fetch_packet_1_valid_bits_2 = _GEN_1 | _GEN_2;
-  wire         _GEN_3 = valid_bits_1 & valid_bits_0 & upper_bits_2;
-  wire         _GEN_4 = _GEN_1 | _GEN_2;
+    _GEN_2 | _GEN_3 | valid_bits_0 & ~(io_mem_rsp_bits_fetch_PC[1]);
+  wire         _GEN_4 = is_RVC_2 & upper_bits_1;
+  wire         _GEN_5 = valid_bits_1 & upper_bits_3 & ~upper_bits_2;
+  wire         aligned_fetch_packet_1_valid_bits_2 = _GEN_4 | _GEN_5;
+  wire         _GEN_6 = valid_bits_1 & valid_bits_0 & upper_bits_2;
+  wire         _GEN_7 = _GEN_4 | _GEN_5;
   wire         aligned_fetch_packet_1_valid_bits_1 =
-    ~_GEN_4 & _GEN_3 | is_RVC_1 & upper_bits_0;
+    ~_GEN_7 & _GEN_6 | is_RVC_1 & upper_bits_0;
   reg          REG_8;
   reg          REG_9;
-  wire         _GEN_5 = is_RVC_4 & REG_8 & REG_9;
+  wire         _GEN_8 = is_RVC_4 & REG_8 & REG_9;
   reg          REG_10;
   reg          REG_11;
   wire         aligned_fetch_packet_2_valid_bits_0 =
-    _GEN_5 | valid_bits_2 & REG_10 & ~REG_11;
-  wire         _GEN_6 =
+    _GEN_8 | valid_bits_2 & REG_10 & ~REG_11;
+  wire         _GEN_9 =
     valid_bits_2 & valid_bits_1 & upper_bits_4 & ~upper_bits_3 & ~is_RVC_3;
-  wire         aligned_fetch_packet_1_valid_bits_3 = _GEN_6 | is_RVC_3 & upper_bits_2;
+  wire         aligned_fetch_packet_1_valid_bits_3 = _GEN_9 | is_RVC_3 & upper_bits_2;
   reg          REG_12;
   reg          REG_13;
   reg          REG_14;
-  wire         _GEN_7 = is_RVC_6 & REG_13 & REG_14;
+  wire         _GEN_10 = is_RVC_6 & REG_13 & REG_14;
   reg          REG_15;
   reg          REG_16;
   wire         aligned_fetch_packet_2_valid_bits_2 =
-    _GEN_7 | valid_bits_3 & REG_15 & ~REG_16;
+    _GEN_10 | valid_bits_3 & REG_15 & ~REG_16;
   reg          REG_17;
-  wire         _GEN_8 = valid_bits_3 & valid_bits_2 & REG_17 & ~is_RVC_5;
-  wire         aligned_fetch_packet_2_valid_bits_1 = _GEN_8 | is_RVC_5 & REG_12;
+  wire         _GEN_11 = valid_bits_3 & valid_bits_2 & REG_17 & ~is_RVC_5;
+  wire         aligned_fetch_packet_2_valid_bits_1 = _GEN_11 | is_RVC_5 & REG_12;
   reg          REG_18;
   reg          REG_19;
   wire         aligned_fetch_packet_2_valid_bits_3 = REG_19 & is_RVC_7 & REG_18;
-  wire         _GEN_9 = ready_reg & io_mem_rsp_valid;
-  wire         _GEN_10 = _GEN_9 & io_aligned_fetch_packet_ready;
+  wire         _GEN_12 = ready_reg & io_mem_rsp_valid;
+  wire         _GEN_13 = _GEN_12 & io_aligned_fetch_packet_ready;
   reg          REG_20;
-  wire         _GEN_11 = REG_20 & io_aligned_fetch_packet_ready;
+  wire         _GEN_14 = REG_20 & io_aligned_fetch_packet_ready;
   reg  [31:0]  io_aligned_fetch_packet_bits_fetch_PC_REG;
-  reg          lower_bits_valid_REG;
+  reg          lower_bits_valid_reg_REG;
+  reg  [15:0]  REG_21;
+  reg          REG_22;
+  reg          REG_23;
+  reg  [15:0]  saved_lower_bits_REG;
   always @(posedge clock) begin
-    if (_GEN_10) begin
+    if (_GEN_13) begin
       fetch_reg_instruction_data <= io_mem_rsp_bits_instruction_data;
       fetch_reg_fetch_PC <= io_mem_rsp_bits_fetch_PC;
     end
@@ -188,26 +207,41 @@ module instruction_aligner(
     REG_17 <= upper_bits_6 & ~upper_bits_5;
     REG_18 <= upper_bits_6;
     REG_19 <= upper_bits_7;
-    REG_20 <= _GEN_9;
+    REG_20 <= _GEN_12;
     io_aligned_fetch_packet_bits_fetch_PC_REG <= io_mem_rsp_bits_fetch_PC;
-    lower_bits_valid_REG <= upper_bits_7;
+    lower_bits_valid_reg_REG <= upper_bits_7;
+    REG_21 <= lower_bits;
+    REG_22 <= jumped;
+    REG_23 <= lower_bits_valid;
+    saved_lower_bits_REG <= lower_bits;
     if (reset) begin
       ready_reg <= 1'h1;
-      lower_bits <= 16'h0;
-      lower_bits_valid <= 1'h0;
+      lower_bits_reg <= 16'h0;
+      lower_bits_valid_reg <= 1'h0;
+      saved_lower_bits_valid <= 1'h0;
+      last_commit_fetch_PC <= 32'h0;
+      saved_lower_bits <= 16'h0;
       prev_fetch_PC <= 32'h0;
     end
     else begin
-      ready_reg <= ~_GEN_10 & (_GEN_11 | ready_reg);
-      if (_GEN_10) begin
-        lower_bits <= instructions_3[31:16];
-        lower_bits_valid <= ~upper_bits_3 & (&(lower_bits[1:0]));
+      automatic logic _GEN_15 = lower_bits != REG_21 & REG_22 & REG_23;
+      ready_reg <= ~_GEN_13 & (_GEN_14 | ready_reg);
+      if (_GEN_13) begin
+        lower_bits_reg <= instructions_3[31:16];
+        lower_bits_valid_reg <= ~upper_bits_3 & (&(lower_bits[1:0]));
         prev_fetch_PC <= io_mem_rsp_bits_fetch_PC;
       end
-      else if (_GEN_11) begin
-        lower_bits <= instructions_3[31:16];
-        lower_bits_valid <= ~lower_bits_valid_REG & (&(lower_bits[1:0]));
+      else if (_GEN_14) begin
+        lower_bits_reg <= instructions_3[31:16];
+        lower_bits_valid_reg <= ~lower_bits_valid_reg_REG & (&(lower_bits[1:0]));
       end
+      else if (_GEN_1)
+        lower_bits_valid_reg <= saved_lower_bits_valid;
+      saved_lower_bits_valid <= _GEN_15 | ~_GEN_1 & saved_lower_bits_valid;
+      if (io_commit_valid)
+        last_commit_fetch_PC <= io_commit_fetch_PC;
+      if (_GEN_15)
+        saved_lower_bits <= saved_lower_bits_REG;
     end
   end // always @(posedge)
   RVC_expander expanders_0 (
@@ -248,47 +282,47 @@ module instruction_aligner(
   );
   assign io_mem_rsp_ready = ready_reg;
   assign io_aligned_fetch_packet_valid =
-    _GEN_10
+    _GEN_13
       ? aligned_fetch_packet_1_valid_bits_0 | aligned_fetch_packet_1_valid_bits_1
         | aligned_fetch_packet_1_valid_bits_2 | aligned_fetch_packet_1_valid_bits_3
-      : _GEN_11
+      : _GEN_14
         & (aligned_fetch_packet_2_valid_bits_0 | aligned_fetch_packet_2_valid_bits_1
            | aligned_fetch_packet_2_valid_bits_2 | aligned_fetch_packet_2_valid_bits_3);
   assign io_aligned_fetch_packet_bits_fetch_PC =
-    _GEN_10
+    _GEN_13
       ? io_mem_rsp_bits_fetch_PC
       : valid_bits_0 | valid_bits_1
           ? fetch_reg_fetch_PC + {27'h0, 5'h8 - {2'h0, fetch_reg_fetch_PC[2:0]}}
           : io_aligned_fetch_packet_bits_fetch_PC_REG;
   assign io_aligned_fetch_packet_bits_valid_bits_0 =
-    _GEN_10 ? aligned_fetch_packet_1_valid_bits_0 : aligned_fetch_packet_2_valid_bits_0;
+    _GEN_13 ? aligned_fetch_packet_1_valid_bits_0 : aligned_fetch_packet_2_valid_bits_0;
   assign io_aligned_fetch_packet_bits_valid_bits_1 =
-    _GEN_10 ? aligned_fetch_packet_1_valid_bits_1 : aligned_fetch_packet_2_valid_bits_1;
+    _GEN_13 ? aligned_fetch_packet_1_valid_bits_1 : aligned_fetch_packet_2_valid_bits_1;
   assign io_aligned_fetch_packet_bits_valid_bits_2 =
-    _GEN_10 ? aligned_fetch_packet_1_valid_bits_2 : aligned_fetch_packet_2_valid_bits_2;
+    _GEN_13 ? aligned_fetch_packet_1_valid_bits_2 : aligned_fetch_packet_2_valid_bits_2;
   assign io_aligned_fetch_packet_bits_valid_bits_3 =
-    _GEN_10 ? aligned_fetch_packet_1_valid_bits_3 : aligned_fetch_packet_2_valid_bits_3;
+    _GEN_13 ? aligned_fetch_packet_1_valid_bits_3 : aligned_fetch_packet_2_valid_bits_3;
   assign io_aligned_fetch_packet_bits_instructions_0_instruction =
-    _GEN_10
-      ? (_GEN
+    _GEN_13
+      ? (_GEN_2
            ? {instructions_0[15:0], lower_bits}
-           : _GEN_0 ? _expanders_0_io_instruction : instructions_0)
-      : _GEN_5 ? _expanders_4_io_instruction : instructions_2;
+           : _GEN_3 ? _expanders_0_io_instruction : instructions_0)
+      : _GEN_8 ? _expanders_4_io_instruction : instructions_2;
   assign io_aligned_fetch_packet_bits_instructions_1_instruction =
-    _GEN_10
-      ? (_GEN_4 | ~_GEN_3
+    _GEN_13
+      ? (_GEN_7 | ~_GEN_6
            ? _expanders_1_io_instruction
            : {instructions_1[15:0], instructions_0[31:16]})
-      : _GEN_8
+      : _GEN_11
           ? {instructions_3[15:0], instructions_2[31:16]}
           : _expanders_5_io_instruction;
   assign io_aligned_fetch_packet_bits_instructions_2_instruction =
-    _GEN_10
-      ? (_GEN_1 ? _expanders_2_io_instruction : instructions_1)
-      : _GEN_7 ? _expanders_6_io_instruction : instructions_3;
+    _GEN_13
+      ? (_GEN_4 ? _expanders_2_io_instruction : instructions_1)
+      : _GEN_10 ? _expanders_6_io_instruction : instructions_3;
   assign io_aligned_fetch_packet_bits_instructions_3_instruction =
-    _GEN_10
-      ? (_GEN_6
+    _GEN_13
+      ? (_GEN_9
            ? {instructions_2[15:0], instructions_1[31:16]}
            : _expanders_3_io_instruction)
       : _expanders_7_io_instruction;

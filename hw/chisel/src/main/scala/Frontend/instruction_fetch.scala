@@ -71,7 +71,8 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     instruction_Q.io.enq          <> io.memory_response
     instruction_Q.io.deq          <> predecoder.io.fetch_packet
     instruction_Q.io.deq.ready    := (predecoder.io.prediction.ready && predecoder.io.fetch_packet.ready && BTB_Q.io.deq.valid)
-
+    instruction_Q.io.commit_valid := io.commit.valid
+    instruction_Q.io.commit_fetch_PC := io.commit.bits.fetch_PC
 
     ////////////////
     // PREDECODER //

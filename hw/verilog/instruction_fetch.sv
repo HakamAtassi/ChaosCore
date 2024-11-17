@@ -466,7 +466,9 @@ module instruction_fetch(
       (_instruction_Q_io_deq_bits_prediction_br_mask_3),
     .io_deq_bits_GHR                         (_instruction_Q_io_deq_bits_GHR),
     .io_deq_bits_NEXT                        (_instruction_Q_io_deq_bits_NEXT),
-    .io_deq_bits_TOS                         (_instruction_Q_io_deq_bits_TOS)
+    .io_deq_bits_TOS                         (_instruction_Q_io_deq_bits_TOS),
+    .io_commit_fetch_PC                      (io_commit_bits_fetch_PC),
+    .io_commit_valid                         (io_commit_valid)
   );
   Queue16_frontend_memory_request PC_Q (
     .clock               (clock),

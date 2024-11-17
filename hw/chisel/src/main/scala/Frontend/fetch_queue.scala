@@ -56,9 +56,11 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
     val io = IO(new Bundle{
-        //val flush                 =   Input(Bool())
-        val mem_rsp                  =   Flipped(Decoupled(new mem_response(coreParameters)))           
-        val aligned_fetch_packet                   =   Decoupled(new fetch_packet(coreParameters))           
+        val mem_rsp                         =   Flipped(Decoupled(new mem_response(coreParameters)))           
+        val aligned_fetch_packet            =   Decoupled(new fetch_packet(coreParameters))
+        val commit_fetch_PC                 = Input(UInt(32.W))
+        val commit_valid                    = Input(Bool()) 
+        val flush                    = Input(Bool())            
     })
 
     val expanders = for (i <- 0 until fetchWidth*2) yield
@@ -79,19 +81,34 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
     val upper_bits = Wire(Vec(fetchWidth*2, Bool()))
     val ready_reg = RegInit(Bool(),1.B)
 
-    val lower_bits = RegInit(0.U(16.W))
-    val lower_bits_valid = RegInit(Bool(),0.B)
+    val lower_bits_reg = RegInit(0.U(16.W))
+    val lower_bits = Wire(UInt(16.W))
+
+    lower_bits := lower_bits_reg
+    val lower_bits_valid_reg = RegInit(Bool(),0.B)
+    val lower_bits_valid = Wire(Bool())
+    lower_bits_valid := lower_bits_valid_reg
+
+
+    val saved_lower_bits_valid = RegInit(Bool(), 0.B)
+    dontTouch(saved_lower_bits_valid)
+
+    //lower_bits_valid_reg := lower_bits(1,0) === 3.U
+    val last_commit_fetch_PC = RegInit(0.U(32.W))
+    val saved_lower_bits = RegInit(0.U(16.W))
+    dontTouch(saved_lower_bits)
 
     val jumped = Wire(Bool())
     val prev_fetch_PC = RegInit(0.U(32.W))
-
-    lower_bits_valid := lower_bits(1,0) === 3.U
 
 
     val valid_bits = Wire(Vec(fetchWidth, Bool()))
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
     validator.io.instruction_index := get_decomposed_icache_address(coreParameters, io.mem_rsp.bits.fetch_PC).instruction_offset 
 
+    when(io.commit_valid){
+        last_commit_fetch_PC := io.commit_fetch_PC
+    }
     for(i <- 0 until fetchWidth){
         when (io.mem_rsp.valid){
             valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && io.mem_rsp.valid
@@ -135,8 +152,17 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
     jumped := 0.B
     when(io.mem_rsp.valid && 
         ((io.mem_rsp.bits.fetch_PC - prev_fetch_PC) =/= (fetchWidth*4).U) &&
-        (prev_fetch_PC + get_PC_increment(coreParameters, prev_fetch_PC) =/= io.mem_rsp.bits.fetch_PC)){
-        jumped := 1.B
+        (prev_fetch_PC + get_PC_increment(coreParameters, prev_fetch_PC) =/= io.mem_rsp.bits.fetch_PC) &&
+        (prev_fetch_PC + get_PC_inc_4(coreParameters, prev_fetch_PC) =/= io.mem_rsp.bits.fetch_PC)){
+        when((io.mem_rsp.bits.fetch_PC - (fetchWidth*2).U) === last_commit_fetch_PC ||
+            (io.mem_rsp.bits.fetch_PC - (fetchWidth*4).U) === last_commit_fetch_PC){
+            jumped := 0.B
+            lower_bits := saved_lower_bits
+            lower_bits_valid := saved_lower_bits_valid
+            saved_lower_bits_valid := 0.B
+        }.otherwise{
+            jumped := 1.B
+        }   
     }
 
     for(i <- 0 until fetchWidth){
@@ -177,14 +203,14 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         if (i < fetchWidth/2){
             if (i==0){
-                when (lower_bits_valid && upper_bits(0) && !jumped){
+                when (lower_bits_valid && upper_bits(0) && !jumped && valid_bits(0)){
                     aligned_fetch_packet_1.instructions(i*2).instruction := Cat(instructions(i)(15, 0), lower_bits)
                     aligned_fetch_packet_1.valid_bits(i*2) := 1.B
-                }.elsewhen(is_RVC(0) && upper_bits(0) && io.mem_rsp.bits.fetch_PC(1) === 0.B){
+                }.elsewhen(is_RVC(0) && upper_bits(0) && io.mem_rsp.bits.fetch_PC(1) === 0.B && valid_bits(0)){
                     expanders(0).io.compressed_instr := instructions(0)(15, 0)
                     aligned_fetch_packet_1.instructions(0).instruction := expanders(0).io.instruction
                     aligned_fetch_packet_1.valid_bits(0) := 1.B
-                }.elsewhen(valid_bits(0) && io.mem_rsp.bits.fetch_PC(1) === 0.B){
+                }.elsewhen(valid_bits(0) && io.mem_rsp.bits.fetch_PC(1) === 0.B && valid_bits(0)){
                     aligned_fetch_packet_1.instructions(0).instruction := instructions(0)
                     aligned_fetch_packet_1.valid_bits(0) := 1.B
                 }
@@ -257,17 +283,14 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
         ready_reg := 0.B
         io.aligned_fetch_packet.bits := aligned_fetch_packet_1
         io.aligned_fetch_packet.bits.fetch_PC := io.mem_rsp.bits.fetch_PC
-        // when(lower_bits_valid && upper_bits(0) && !jumped){
-        //     io.aligned_fetch_packet.bits.fetch_PC := io.mem_rsp.bits.fetch_PC - 2.U
-        // }
         when (aligned_fetch_packet_1.valid_bits(0) ||
                 aligned_fetch_packet_1.valid_bits(1) ||
                 aligned_fetch_packet_1.valid_bits(2) ||
                 aligned_fetch_packet_1.valid_bits(3)){
             io.aligned_fetch_packet.valid := 1.B
         }
-        lower_bits := instructions(fetchWidth-1)(31,16)
-        lower_bits_valid := upper_bits(fetchWidth - 1) === 0.B && lower_bits(1,0) === 3.U
+        lower_bits_reg := instructions(fetchWidth-1)(31,16)
+        lower_bits_valid_reg := upper_bits(fetchWidth - 1) === 0.B && lower_bits(1,0) === 3.U
         prev_fetch_PC := io.mem_rsp.bits.fetch_PC
     }.elsewhen(RegNext(io.mem_rsp.fire) && io.aligned_fetch_packet.ready){
         io.aligned_fetch_packet.bits := aligned_fetch_packet_2
@@ -279,11 +302,16 @@ class instruction_aligner(coreParameters:CoreParameters) extends Module{
                 aligned_fetch_packet_2.valid_bits(3)){
             io.aligned_fetch_packet.valid := 1.B
         }
-        lower_bits := instructions(fetchWidth-1)(31,16)
-        lower_bits_valid := RegNext(upper_bits(fetchWidth*2 - 1)) === 0.B && lower_bits(1,0) === 3.U
+        lower_bits_reg := instructions(fetchWidth-1)(31,16)
+        lower_bits_valid_reg := RegNext(upper_bits(fetchWidth*2 - 1)) === 0.B && lower_bits(1,0) === 3.U
     }.otherwise{
-        lower_bits := lower_bits
-        lower_bits_valid := lower_bits_valid
+        lower_bits_reg := lower_bits_reg
+        lower_bits_valid_reg := lower_bits_valid
+    }
+
+    when (lower_bits =/= RegNext(lower_bits) && RegNext(jumped) && RegNext(lower_bits_valid)){
+        saved_lower_bits := RegNext(lower_bits)
+        saved_lower_bits_valid := 1.B
     }
     io.mem_rsp.ready := ready_reg
 }
@@ -325,7 +353,9 @@ class fetch_queue(coreParameters:CoreParameters) extends Module{
     val io = IO(new Bundle{
         val flush                 =   Input(Bool())
         val enq                   =   Flipped(Decoupled(new mem_response(coreParameters)))           
-        val deq                   =   Decoupled(new fetch_packet(coreParameters))           
+        val deq                   =   Decoupled(new fetch_packet(coreParameters))
+        val commit_fetch_PC       =   Input(UInt(32.W))
+        val commit_valid          =   Input(Bool())            
     })
 
     val instruction_Q   =   Module(new Queue(new fetch_packet(coreParameters), 32, flow=true, hasFlush=true, useSyncReadMem=true))
@@ -342,6 +372,10 @@ class fetch_queue(coreParameters:CoreParameters) extends Module{
     aligner.io.mem_rsp.valid     := io.enq.valid
     aligner.io.aligned_fetch_packet.ready := instruction_Q.io.enq.ready
     aligner.io.mem_rsp.bits      := io.enq.bits
+
+    aligner.io.commit_fetch_PC   := io.commit_fetch_PC
+    aligner.io.commit_valid      := io.commit_valid
+    aligner.io.flush             := io.flush
 
     instruction_Q.io.enq.bits             := aligner.io.aligned_fetch_packet.bits
     instruction_Q.io.enq.valid            := aligner.io.aligned_fetch_packet.valid

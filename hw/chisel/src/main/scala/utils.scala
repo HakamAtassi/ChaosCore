@@ -344,6 +344,15 @@ object get_PC_increment{
   }
 }
 
+object get_PC_inc_4{
+  def apply(coreParameters:CoreParameters, PC:UInt):UInt = {
+    import coreParameters._
+    val masked_address = (fetchWidth*4 - 1).U & PC
+    val increment = (fetchWidth*4).U - masked_address
+    increment
+  }
+}
+
 
 object sign_extend {
   def apply(data: UInt, width: Int): UInt = {

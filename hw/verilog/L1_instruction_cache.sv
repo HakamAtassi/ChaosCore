@@ -736,13 +736,13 @@ module L1_instruction_cache(
         else if (_GEN_20 ? axi_response_valid : _GEN_32)
           cache_state <= 3'h0;
       end
-      else begin
-        if (_GEN_16) begin
-          if (m_axi_arready & m_axi_arvalid_0)
-            cache_state <= 3'h2;
-          else
-            cache_state <= 3'h1;
-        end
+      else if (_GEN_16) begin
+        if (m_axi_arready & m_axi_arvalid_0)
+          cache_state <= 3'h2;
+        else
+          cache_state <= 3'h1;
+      end
+      if (~(|cache_state) & io_CPU_request_ready_0 & io_CPU_request_valid) begin
         fetch_PC_buf_addr <= io_CPU_request_bits_addr;
         replay_address_addr <= io_CPU_request_bits_addr;
         replay_address_wr_data <= io_CPU_request_bits_wr_data;

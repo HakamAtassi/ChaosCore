@@ -40,16 +40,18 @@ module RVC_expander(
   wire        LUI =
     _LUI_T & Q1 & (|(io_compressed_instr[11:7])) & io_compressed_instr[11:7] != 5'h2
     & (|(io_compressed_instr[6:2]));
-  wire        SRLI =
-    io_compressed_instr[15:10] == 6'h10 & Q1 & (|(io_compressed_instr[6:2]))
-    & ~(io_compressed_instr[12]);
-  wire        _AND_T = io_compressed_instr[15:10] == 6'h11;
-  wire        SRAI =
-    _AND_T & Q1 & (|(io_compressed_instr[6:2])) & ~(io_compressed_instr[12]);
   wire        _ADD_T = io_compressed_instr[15:13] == 3'h4;
-  wire        ANDI = _ADD_T & io_compressed_instr[11:10] == 2'h2 & Q1;
-  wire        SUB =
-    io_compressed_instr[15:10] == 6'h13 & Q1 & io_compressed_instr[6:5] == 2'h0;
+  wire        SRLI =
+    _ADD_T & Q1
+    & io_compressed_instr[11:10] == {1'h0, 1'h0 >> (|(io_compressed_instr[6:2]))}
+    & ~(io_compressed_instr[12]);
+  wire        SRAI =
+    _ADD_T & Q1
+    & io_compressed_instr[11:10] == {1'h0, 1'h1 >> (|(io_compressed_instr[6:2]))}
+    & ~(io_compressed_instr[12]);
+  wire        ANDI = _ADD_T & Q1 & io_compressed_instr[11:10] == 2'h2;
+  wire        _AND_T = io_compressed_instr[15:10] == 6'h23;
+  wire        SUB = _AND_T & Q1 & io_compressed_instr[6:5] == 2'h0;
   wire        XOR = _AND_T & Q1 & io_compressed_instr[6:5] == 2'h1;
   wire        OR = _AND_T & Q1 & io_compressed_instr[6:5] == 2'h2;
   wire        AND = _AND_T & Q1 & (&(io_compressed_instr[6:5]));
@@ -63,7 +65,8 @@ module RVC_expander(
   wire        JR =
     _ADD_T & Q2 & ~(io_compressed_instr[12]) & _JALR_T_4 & (|(io_compressed_instr[11:7]));
   wire        MV =
-    _ADD_T & Q2 & (|(io_compressed_instr[11:7])) & (|(io_compressed_instr[6:2]));
+    _ADD_T & Q2 & ~(io_compressed_instr[12]) & (|(io_compressed_instr[6:2]))
+    & (|(io_compressed_instr[11:7]));
   wire        EBREAK = _ADD_T & Q2 & io_compressed_instr[12:2] == 11'h400;
   wire        JALR =
     _ADD_T & Q2 & io_compressed_instr[12] & _JALR_T_4 & (|(io_compressed_instr[11:7]));

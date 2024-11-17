@@ -163,9 +163,10 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     switch(cache_state){
 
         is(cacheState.Active){  // Wait for request
-
-            replay_address := io.CPU_request.bits  // if miss, buffer address
-            fetch_PC_buf   := io.CPU_request.bits
+            when(io.CPU_request.fire){
+                replay_address := io.CPU_request.bits  // if miss, buffer address
+                fetch_PC_buf   := io.CPU_request.bits
+            }
             when(miss===1.B && io.flush.valid === 0.U){           // Buffer current request, stall cache, go to wait state
 		        val read_accepted = AXI_read_request(request_addr, 0.U, L1_cacheLineSizeBytes.U)
                 when(read_accepted){

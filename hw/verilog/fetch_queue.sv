@@ -46,7 +46,9 @@ module fetch_queue(
                  io_deq_bits_prediction_br_mask_3,
   output [15:0]  io_deq_bits_GHR,
   output [6:0]   io_deq_bits_NEXT,
-                 io_deq_bits_TOS
+                 io_deq_bits_TOS,
+  input  [31:0]  io_commit_fetch_PC,
+  input          io_commit_valid
 );
 
   wire        _aligner_io_aligned_fetch_packet_valid;
@@ -143,7 +145,9 @@ module fetch_queue(
     .io_aligned_fetch_packet_bits_instructions_2_instruction
       (_aligner_io_aligned_fetch_packet_bits_instructions_2_instruction),
     .io_aligned_fetch_packet_bits_instructions_3_instruction
-      (_aligner_io_aligned_fetch_packet_bits_instructions_3_instruction)
+      (_aligner_io_aligned_fetch_packet_bits_instructions_3_instruction),
+    .io_commit_fetch_PC                                      (io_commit_fetch_PC),
+    .io_commit_valid                                         (io_commit_valid)
   );
 endmodule
 

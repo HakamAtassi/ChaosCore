@@ -617,10 +617,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
                     flush.exception_cause       := 0.U.asTypeOf(EX_CAUSE())
                     flush.is_fence              := 0.B
                     flush.is_CSR                := 0.B
-                    flush.flushing_PC           := commit.fetch_PC + (i*4).U
+                    flush.flushing_PC           := commit.fetch_PC + (i*2).U
 
-                    commit.expected_PC := ROB_output.fetch_PC + (i*4).U + 4.U
-                    flush.redirect_PC  := ROB_output.fetch_PC + (i*4).U + 4.U
+                    commit.expected_PC := ROB_output.fetch_PC + (i*2).U + 2.U
+                    flush.redirect_PC  := ROB_output.fetch_PC + (i*2).U + 2.U
                 }.elsewhen(commit_resolved(i).T_NT === 1.B && commit_prediction.br_mask(i) === 1.B && (commit_prediction.target =/= commit_resolved(i).target) && is_branch){
                     commit.is_misprediction      := 1.B
                     commit.br_type               := commit_resolved(i).br_type
