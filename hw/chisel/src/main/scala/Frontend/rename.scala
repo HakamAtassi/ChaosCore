@@ -31,7 +31,6 @@ package ChaosCore
 
 import chisel3._
 import chisel3.util._
-import chisel3.ltl._
 
 
 // the architecture of the RAT and RAT checkpointing is inspired by sargantana.

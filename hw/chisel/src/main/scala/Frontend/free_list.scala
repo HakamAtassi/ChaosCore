@@ -30,8 +30,6 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage 
-import chisel3.ltl._
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
@@ -165,6 +163,8 @@ class free_list(coreParameters:CoreParameters) extends Module{
     // FORMAL //
     ////////////
 
+    /*
+
     // no flushes
 
     val no_flush: Sequence = !(io.commit.valid && io.commit.bits.is_misprediction)
@@ -201,7 +201,7 @@ class free_list(coreParameters:CoreParameters) extends Module{
         AssertProperty(PRDold_free)
     }
 
-
+    */
 
     //AssumeProperty(no_flush)
 

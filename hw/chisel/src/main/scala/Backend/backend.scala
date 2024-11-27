@@ -30,7 +30,6 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage 
 
 import chisel3.util._
 
@@ -60,7 +59,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
         // REDIRECTS // 
         val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
-        val partial_commit              =   Flipped(new partial_commit(coreParameters))
+        val partial_commit              =   Input(new partial_commit(coreParameters))
 
         // PC_file access (for branch unit)
         val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))

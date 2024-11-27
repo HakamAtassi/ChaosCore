@@ -1,4 +1,4 @@
-
+/*
 package ChaosCore
 
 import scala.meta._
@@ -246,3 +246,4 @@ object generate_sv_interfaces{    // convert bundles, params and enums to verilo
     }
 }
 
+*/

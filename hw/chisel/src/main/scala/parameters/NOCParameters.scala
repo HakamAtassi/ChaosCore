@@ -1,7 +1,6 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage 
 import chisel3.util._
 
 
@@ -81,7 +80,7 @@ case class NOCParameters(
 
     // UART params
     //UART0_BASE_ADDR: BigInt = 0x08000000, //BigInt("80000000", 16),
-    UART0_BASE_ADDR: Int = 0x8_0000, 
+    UART0_BASE_ADDR: Int = 0x80000, 
     UART0_ADDR_WIDTH:Int = 12,              
     UART0_CONNECT_READ:Int = 0x3,
     UART0_CONNECT_WRITE:Int = 0x3,

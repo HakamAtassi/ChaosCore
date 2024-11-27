@@ -2,7 +2,6 @@ package	ChaosCore
 
 import	chisel3._
 import	chisel3.experimental._
-import	circt.stage.ChiselStage	
 import	chisel3.util._
 
 //	Define	the	BlackBox	module

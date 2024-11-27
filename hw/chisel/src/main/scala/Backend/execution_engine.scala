@@ -31,7 +31,6 @@ package ChaosCore
 
 
 import chisel3._
-import circt.stage.ChiselStage 
 import chisel3.util._
 
 class execution_engine(coreParameters:CoreParameters) extends Module{

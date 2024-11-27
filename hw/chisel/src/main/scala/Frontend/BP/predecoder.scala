@@ -30,11 +30,9 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage 
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
-import chisel3.ltl._
 
 import helperFunctions._
 
@@ -50,7 +48,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
         // inputs
         val prediction          = Flipped(Decoupled(new prediction(coreParameters)))
         val fetch_packet        = Flipped(Decoupled(new fetch_packet(coreParameters)))
-        val RAS_read            = Flipped(new RAS_read(coreParameters))
+        val RAS_read            = Input(new RAS_read(coreParameters))
         val commit              = Flipped(ValidIO(new commit(coreParameters)))
 
         // outputs

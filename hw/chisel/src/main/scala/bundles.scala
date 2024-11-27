@@ -29,10 +29,10 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
+import chisel3.experimental.ChiselEnum
 
 
 import helperFunctions.getBTBTagBits

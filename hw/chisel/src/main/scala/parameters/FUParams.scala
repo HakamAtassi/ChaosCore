@@ -31,7 +31,6 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage 
 
 
 case class FUParams(

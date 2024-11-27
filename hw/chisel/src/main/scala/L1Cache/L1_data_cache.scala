@@ -31,6 +31,7 @@ package ChaosCore
 
 import chisel3._
 import chisel3.util._
+import chisel3.experimental.ChiselEnum
 
 
 object format_dcache_word {

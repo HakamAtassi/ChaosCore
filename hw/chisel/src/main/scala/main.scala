@@ -30,26 +30,25 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage 
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-object VerilogGenerator {
+//object VerilogGenerator {
 
-    def generateVerilog(module: => RawModule, fileName: String): Unit = {
-        val elaboratedModule = ChiselStage.emitSystemVerilog(module, firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info"))
+    //def generateVerilog(module: => RawModule, fileName: String): Unit = {
+        //val elaboratedModule = ChiselStage.emitSystemVerilog(module, firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info"))
 
-        val file = new File(fileName)
-        val fw = new FileWriter(file)
+        //val file = new File(fileName)
+        //val fw = new FileWriter(file)
 
-        try {
-            fw.write(elaboratedModule)
-        } finally {
-            fw.close()
-        }
-    }
-}
+        //try {
+            //fw.write(elaboratedModule)
+        //} finally {
+            //fw.close()
+        //}
+    //}
+//}
 
 
 
@@ -64,12 +63,11 @@ object Main extends App {
 
 
 
-    ChiselStage.emitSystemVerilogFile(new SOC(socParameters), Array("--split-verilog", 
-                                                                        "--target", "verilog", 
+    emitVerilog(new SOC(socParameters), Array(
+                                                                        
                                                                         "--target-dir", "../verilog",
                                                                         //"--preserve-aggregate", "all", 
                                                                         ), 
-                                                                        firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
                                                                         )
 
     //ChiselStage.emitSystemVerilogFile(new axi_ram_wrap(nocParameters), Array("--split-verilog", 
@@ -87,7 +85,7 @@ object Main extends App {
     //VerilogGenerator.generateVerilog(new SOC(coreParameters, addressMap, nocParameters), 
      //"../verilog/Core/SOC.v")
 
-    removeYosysInvalid("../verilog/")
+    //removeYosysInvalid("../verilog/")
     //fixHexPrint("../verilog/")
     //generate_sv_interfaces("src/main/scala/coreParameters.scala", "src/main/scala/bundles.scala")
 

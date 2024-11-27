@@ -29,8 +29,18 @@
 
 package ChaosCore
 
+
+
 import chisel3._
 import chisel3.util._
+
+import freechips.rocketchip._
+
+import freechips.rocketchip.diplomacy._
+import freechips.rocketchip.tilelink._
+import freechips.rocketchip.tile._
+import freechips.rocketchip.util._
+import freechips.rocketchip.rocket._
 
 class instruction_fetch(coreParameters:CoreParameters) extends Module{
   import coreParameters._
@@ -126,5 +136,9 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     // OUTPUTS //
     /////////////
     io.fetch_packet         <> predecoder.io.final_fetch_packet
-    io.revert := predecoder.io.revert
+    
+
+
+    io.revert := RegNext(predecoder.io.revert)    // FIXME: THIS SHOULD NOT HAVE A REGNEXT !!
+    // removing it causes a comb loop!
 }

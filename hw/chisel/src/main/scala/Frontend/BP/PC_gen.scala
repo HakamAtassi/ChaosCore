@@ -30,8 +30,6 @@
 package ChaosCore
 
 import chisel3._
-import chisel3.ltl._
-import circt.stage.ChiselStage 
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
@@ -46,7 +44,7 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
         val revert                          =   Flipped(ValidIO(new revert(coreParameters)))
 
         val prediction                      =   Flipped(Decoupled(new prediction(coreParameters)))           // BTB response
-        val RAS_read                        =   Flipped(new RAS_read(coreParameters))
+        val RAS_read                        =   Input(new RAS_read(coreParameters))
         // TODO: Exception:...                                                     // exception
 
         val PC_next                         =   Decoupled(new frontend_memory_request(coreParameters))
