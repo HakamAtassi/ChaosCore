@@ -32,7 +32,7 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 import chisel3.experimental.dataview._
-import chisel3.experimental.ChiselEnum
+//import chisel3.experimental.ChiselEnum
 
 class AXI_debug_printer(nocParameters: NOCParameters, addressMap:AddressMap) extends Module{
     import addressMap._

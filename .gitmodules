@@ -7,3 +7,15 @@
 [submodule "binaries/riscv-tests"]
 	path = binaries/riscv-tests
 	url = https://github.com/riscv-software-src/riscv-tests.git
+[submodule "hw/chisel/deps/diplomacy"]
+	path = hw/chisel/deps/diplomacy
+	url = git@github.com:chipsalliance/diplomacy.git
+[submodule "hw/chisel/deps/cde"]
+	path = hw/chisel/deps/cde
+	url = git@github.com:chipsalliance/cde.git
+[submodule "hw/chisel/deps/berkeley-hardfloat"]
+	path = hw/chisel/deps/berkeley-hardfloat
+	url = git@github.com:ucb-bar/berkeley-hardfloat.git
+[submodule "hw/chisel/deps/rocketchip"]
+	path = hw/chisel/deps/rocketchip
+	url = git@github.com:chipsalliance/rocket-chip.git

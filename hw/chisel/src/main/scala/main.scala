@@ -52,9 +52,6 @@ import java.rmi.server.UID
 
 
 
-
-
-
 object Main extends App {
 
 
@@ -69,6 +66,7 @@ object Main extends App {
                                                                         //"--preserve-aggregate", "all", 
                                                                         ), 
                                                                         )
+
 
     //ChiselStage.emitSystemVerilogFile(new axi_ram_wrap(nocParameters), Array("--split-verilog", 
                                                                         //"--target", "verilog", 

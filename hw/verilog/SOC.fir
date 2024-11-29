@@ -2141,9 +2141,9 @@ circuit SOC :
     io.fetch_packet.valid <= predecoder.io.final_fetch_packet.valid @[instruction_fetch.scala 138:29]
     predecoder.io.final_fetch_packet.ready <= io.fetch_packet.ready @[instruction_fetch.scala 138:29]
     reg io_revert_REG : { valid : UInt<1>, bits : { PC : UInt<32>}}, clock with :
-      reset => (UInt<1>("h0"), io_revert_REG) @[instruction_fetch.scala 139:25]
-    io_revert_REG <= predecoder.io.revert @[instruction_fetch.scala 139:25]
-    io.revert <= io_revert_REG @[instruction_fetch.scala 139:15]
+      reset => (UInt<1>("h0"), io_revert_REG) @[instruction_fetch.scala 142:25]
+    io_revert_REG <= predecoder.io.revert @[instruction_fetch.scala 142:25]
+    io.revert <= io_revert_REG @[instruction_fetch.scala 142:15]
 
   module decoder :
     input clock : Clock
