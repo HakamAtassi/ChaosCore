@@ -30,58 +30,63 @@ import freechips.rocketchip.util._
 import freechips.rocketchip.tile._
 import freechips.rocketchip.amba.axi4._
 
+case class ChaosCoreTileBoundaryBufferParams(force: Boolean = false)
+
 case class ChaosCoreParams(
-  xLen: Int = 64,
-  bootFreqHz: BigInt = BigInt(1700000000),
-  rasEntries: Int = 4,
-  btbEntries: Int = 16,
-  bhtEntries: Int = 16,
-  pmpEntries: Int = 4,
-  enableToFromHostCaching: Boolean = false,
+  xLen: Int = 32,
+  pgLevels: Int = 3, // sv39 default
+  bootFreqHz: BigInt = 0,
+  useVM: Boolean = false,
+  useUser: Boolean = false,
+  useSupervisor: Boolean = false,
+  useHypervisor: Boolean = false,
+  useDebug: Boolean = true,
+  useAtomics: Boolean = false,
+  useAtomicsOnlyForIO: Boolean = false,
+  useCompressed: Boolean = false,
+  useRVE: Boolean = false,
+  useConditionalZero: Boolean = false,
+  useZba: Boolean = false,
+  useZbb: Boolean = false,
+  useZbs: Boolean = false,
+  nLocalInterrupts: Int = 0,
+  useNMI: Boolean = false,
+  nBreakpoints: Int = 1,
+  useBPWatch: Boolean = false,
+  mcontextWidth: Int = 0,
+  scontextWidth: Int = 0,
+  nPMPs: Int = 8,
+  nPerfCounters: Int = 0,
+  haveBasicCounters: Boolean = true,
+  haveCFlush: Boolean = false,
+  misaWritable: Boolean = true,
+  nL2TLBEntries: Int = 0,
+  nL2TLBWays: Int = 1,
+  nPTECacheEntries: Int = 8,
+  mtvecInit: Option[BigInt] = Some(BigInt(0)),
+  mtvecWritable: Boolean = true,
+  fastLoadWord: Boolean = true,
+  fastLoadByte: Boolean = false,
+  branchPredictionModeCSR: Boolean = false,
+  clockGate: Boolean = false,
+  mvendorid: Int = 0, // 0 means non-commercial implementation
+  mimpid: Int = 0x20181004, // release date in BCD
+  mulDiv: Option[MulDivParams] = Some(MulDivParams()),
+  fpu: Option[FPUParams] = Some(FPUParams()),
+  debugROB: Option[DebugROBParams] = None, // if size < 1, SW ROB, else HW ROB
+  haveCease: Boolean = true, // non-standard CEASE instruction
+  haveSimTimeout: Boolean = true, // add plusarg for simulation timeout
 ) extends CoreParams {
-  /* DO NOT CHANGE BELOW THIS */
-  val useVM: Boolean = true
-  val useHypervisor: Boolean = false
-  val useUser: Boolean = true
-  val useSupervisor: Boolean = false
-  val useDebug: Boolean = true
-  val useAtomics: Boolean = true
-  val useAtomicsOnlyForIO: Boolean = false // copied from Rocket
-  val useCompressed: Boolean = true
-  override val useVector: Boolean = false
-  val useSCIE: Boolean = false
-  val useRVE: Boolean = false
-  val mulDiv: Option[MulDivParams] = Some(MulDivParams()) // copied from Rocket
-  val fpu: Option[FPUParams] = Some(FPUParams()) // copied fma latencies from Rocket
-  val nLocalInterrupts: Int = 0
-  val useNMI: Boolean = false
-  val nPMPs: Int = 0 // TODO: Check
-  val pmpGranularity: Int = 4 // copied from Rocket
-  val nBreakpoints: Int = 0 // TODO: Check
-  val useBPWatch: Boolean = false
-  val mcontextWidth: Int = 0 // TODO: Check
-  val scontextWidth: Int = 0 // TODO: Check
-  val nPerfCounters: Int = 29
-  val haveBasicCounters: Boolean = true
-  val haveFSDirty: Boolean = false
-  val misaWritable: Boolean = false
-  val haveCFlush: Boolean = false
-  val nL2TLBEntries: Int = 512 // copied from Rocket
-  val nL2TLBWays: Int = 1
-  val mtvecInit: Option[BigInt] = Some(BigInt(0)) // copied from Rocket
-  val mtvecWritable: Boolean = true // copied from Rocket
+  val lgPauseCycles = 5
+  val haveFSDirty = false
+  val pmpGranularity: Int = if (useHypervisor) 4096 else 4
+  val fetchWidth: Int = if (useCompressed) 2 else 1
+  //  fetchWidth doubled, but coreInstBytes halved, for RVC:
+  val decodeWidth: Int = fetchWidth / (if (useCompressed) 2 else 1)
+  val retireWidth: Int = 1
   val instBits: Int = if (useCompressed) 16 else 32
-  val lrscCycles: Int = 80 // copied from Rocket
-  val decodeWidth: Int = 1 // TODO: Check
-  val fetchWidth: Int = 1 // TODO: Check
-  val retireWidth: Int = 2
-  val nPTECacheEntries: Int = 8 // TODO: Check
-  val traceHasWdata: Boolean = false
-  val useConditionalZero: Boolean = false
-  val useZba: Boolean = false
-  val useZbb: Boolean = false
-  val useZbs: Boolean = false
-  val pgLevels = if (xLen == 64) 3 else 2
+  val lrscCycles: Int = 80 // worst case is 14 mispredicted branches + slop
+  val traceHasWdata: Boolean = debugROB.isDefined // ooo wb, so no wdata in trace
 }
 
 case class ChaosCoreAttachParams(
@@ -102,7 +107,7 @@ case class ChaosCoreTileParams(
   val beuAddr: Option[BigInt] = None
   val blockerCtrlAddr: Option[BigInt] = None
   val btb: Option[BTBParams] = Some(BTBParams())
-  val boundaryBuffers: Boolean = false
+  val boundaryBuffers: Option[ChaosCoreTileBoundaryBufferParams] = None
   val dcache: Option[DCacheParams] = Some(DCacheParams())
   val icache: Option[ICacheParams] = Some(ICacheParams())
   val clockSinkParams: ClockSinkParameters = ClockSinkParameters()
@@ -129,11 +134,11 @@ case class ChaosCoreTileParams(
 //)
 
 class ChaosCoreTile(
-  val ChaosCoreParams: ChaosCoreTileParams,
+  val chaosParams: ChaosCoreTileParams,
   crossing: ClockCrossingType,
   lookup: LookupByHartIdImpl,
   q: Parameters)
-  extends BaseTile(ChaosCoreParams, crossing, lookup, q)
+  extends BaseTile(chaosParams, crossing, lookup, q)
   with SinksExternalInterrupts
   with SourcesExternalNotifications
 {
@@ -143,22 +148,70 @@ class ChaosCoreTile(
     this(params, crossing.crossingType, lookup, p)
 
   // Require TileLink nodes
-  val intOutwardNode = None
+  val intOutwardNode = chaosParams.beuAddr map { _ => IntIdentityNode() }
   val masterNode = visibilityNode
   val slaveNode = TLIdentityNode()
 
-  // Implementation class (See below)
-  override lazy val module = new ChaosCoreTileModuleImp(this)
+  // //Frontend/ICache
+  val icache = LazyModule(new ICache(ICacheParams(), 0))
+  //icache.resetVectorSinkNode := resetVectorNexusNode
+  tlMasterXbar.node := TLWidthWidget(tileParams.icache.get.rowBits/8) := icache.masterNode
+  icache.hartIdSinkNodeOpt.foreach { _ := hartIdNexusNode }
+  icache.mmioAddressPrefixSinkNodeOpt.foreach { _ := mmioAddressPrefixNexusNode }
+
+
+
+  var nDCachePorts = 0
+  lazy val dcache: HellaCache = LazyModule(p(BuildHellaCache)(this)(p))
+
+  tlMasterXbar.node := TLWidthWidget(tileParams.dcache.get.rowBits/8) := dcache.node
+  dcache.hartIdSinkNodeOpt.map { _ := hartIdNexusNode }
+  dcache.mmioAddressPrefixSinkNodeOpt.map { _ := mmioAddressPrefixNexusNode }
+  InModuleBody {
+    dcache.module.io.tlb_port := DontCare
+  }
+
+  val dtim_adapter = tileParams.dcache.flatMap { d => d.scratch.map { s =>
+    LazyModule(new ScratchpadSlavePort(AddressSet.misaligned(s, d.dataScratchpadBytes), lazyCoreParamsView.coreDataBytes, tileParams.core.useAtomics && !tileParams.core.useAtomicsOnlyForIO))
+  }}
+  dtim_adapter.foreach(lm => connectTLSlave(lm.node, lm.node.portParams.head.beatBytes))
+
+  val bus_error_unit = chaosParams.beuAddr map { a =>
+    val beu = LazyModule(new BusErrorUnit(new L1BusErrors, BusErrorUnitParams(a), xLen/8))
+    intOutwardNode.get := beu.intNode
+    connectTLSlave(beu.node, xBytes)
+    beu
+  }
+
+  val tile_master_blocker =
+    tileParams.blockerCtrlAddr
+      .map(BasicBusBlockerParams(_, xBytes, masterPortBeatBytes, deadlock = true))
+      .map(bp => LazyModule(new BasicBusBlocker(bp)))
+
+  tile_master_blocker.foreach(lm => connectTLSlave(lm.controlNode, xBytes))
+
+  // TODO: this doesn't block other masters, e.g. RoCCs
+  tlOtherMastersNode := tile_master_blocker.map { _.node := tlMasterXbar.node } getOrElse { tlMasterXbar.node }
+  masterNode :=* tlOtherMastersNode
+  DisableMonitors { implicit p => tlSlaveXbar.node :*= slaveNode }
+
+  nDCachePorts += 1
+
+  val dtimProperty = dtim_adapter.map(d => Map(
+    "sifive,dtim" -> d.device.asProperty)).getOrElse(Nil)
+
+  val itimProperty = icache.itimProperty.toSeq.flatMap(p => Map("sifive,itim" -> p))
+
+  val beuProperty = bus_error_unit.map(d => Map(
+          "sifive,buserror" -> d.device.asProperty)).getOrElse(Nil)
 
   // Required entry of CPU device in the device tree for interrupt purpose
-  val cpuDevice: SimpleDevice = new SimpleDevice("cpu", Seq("my-organization,my-cpu", "riscv")) {
+  val cpuDevice: SimpleDevice = new SimpleDevice("cpu", Seq("sifive,rocket0", "riscv")) {
     override def parent = Some(ResourceAnchors.cpus)
     override def describe(resources: ResourceBindings): Description = {
       val Description(name, mapping) = super.describe(resources)
-      Description(name, mapping ++
-                        cpuProperties ++
-                        nextLevelCacheProperty ++
-                        tileProperties)
+      Description(name, mapping ++ cpuProperties ++ nextLevelCacheProperty
+                  ++ tileProperties ++ dtimProperty ++ itimProperty ++ beuProperty)
     }
   }
 
@@ -166,25 +219,20 @@ class ChaosCoreTile(
     Resource(cpuDevice, "reg").bind(ResourceAddress(tileId))
   }
 
+  // Implementation class (See below)
+  override lazy val module = new ChaosCoreTileModuleImp(this)
 
-  // INIT I$, D$, CACHE ARBITERS 
+  override def makeMasterBoundaryBuffers(crossing: ClockCrossingType)(implicit p: Parameters) = (chaosParams.boundaryBuffers, crossing) match {
+    case (Some(ChaosCoreTileBoundaryBufferParams(true )), _)                   => TLBuffer()
+    case (Some(ChaosCoreTileBoundaryBufferParams(false)), _: RationalCrossing) => TLBuffer(BufferParams.none, BufferParams.flow, BufferParams.none, BufferParams.flow, BufferParams(1))
+    case _ => TLBuffer(BufferParams.none)
+  }
 
-
-  val hellaCachePorts  = ListBuffer[HellaCacheIO]()
-
-
-  val hellaCacheArb = Module(new HellaCacheArbiter(hellaCachePorts.length)(p))
-
-  // DCache
-  lazy val dcache: DCache = LazyModule(new DCache(tileId, SynchronousCrossing()))
-  val dCacheTap = TLIdentityNode()
-  tlMasterXbar.node := dCacheTap := TLWidthWidget(tileParams.dcache.get.rowBits/8) := visibilityNode := dcache.node
-
-  // Frontend/ICache
-  lazy val icache = LazyModule(new ICache(ICacheParams(), 0))
-  //icache.resetVectorSinkNode := resetVectorNexusNode
-  tlMasterXbar.node := TLWidthWidget(tileParams.icache.get.rowBits/8) := icache.masterNode
-
+  override def makeSlaveBoundaryBuffers(crossing: ClockCrossingType)(implicit p: Parameters) = (chaosParams.boundaryBuffers, crossing) match {
+    case (Some(ChaosCoreTileBoundaryBufferParams(true )), _)                   => TLBuffer()
+    case (Some(ChaosCoreTileBoundaryBufferParams(false)), _: RationalCrossing) => TLBuffer(BufferParams.flow, BufferParams.none, BufferParams.none, BufferParams.none, BufferParams.none)
+    case _ => TLBuffer(BufferParams.none)
+  }
 
 }
 
@@ -192,7 +240,7 @@ class ChaosCoreTile(
 
 class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(outer){
   // annotate the parameters
-  Annotated.params(this, outer.ChaosCoreParams)
+  Annotated.params(this, outer.chaosParams)
 
   // TODO: Create the top module of the core and connect it with the ports in "outer"
 
@@ -216,6 +264,9 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   // connect the I$ and D$
 
   val core = Module(new ChaosCore(CoreParameters()))
+
+  //outer.icache.module.io.resp <> core.io.frontend_memory_response
+  //outer.icache.module.io.req <> core.io.frontend_memory_request
 
 
         //val frontend_memory_request             =   Decoupled(new frontend_memory_request(coreParameters))

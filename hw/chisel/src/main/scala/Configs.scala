@@ -32,7 +32,7 @@ import freechips.rocketchip.amba.axi4._
 
 
 
-class WithNChaosCores(n: Int = 1) extends Config((site, here, up) => {
+class WithNChaosCore(n: Int = 1) extends Config((site, here, up) => {
   case TilesLocated(InSubsystem) => {
     // Calculate the next available hart ID (since hart ID cannot be duplicated)
     val prev = up(TilesLocated(InSubsystem), site)
@@ -46,6 +46,6 @@ class WithNChaosCores(n: Int = 1) extends Config((site, here, up) => {
     } ++ prev
   }
   // Configurate # of bytes in one memory / IO transaction. For RV64, one load/store instruction can transfer 8 bytes at most.
-  case SystemBusKey => up(SystemBusKey, site).copy(beatBytes = 4)
+  case SystemBusKey => up(SystemBusKey, site).copy(beatBytes = 8)
   case NumTiles => up(NumTiles) + n
 })
