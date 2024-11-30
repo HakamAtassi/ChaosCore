@@ -265,6 +265,13 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
   val core = Module(new ChaosCore(CoreParameters()))
 
+  core.io := DontCare
+  dontTouch(core.io)
+  outer.icache.module.io := DontCare
+  dontTouch(outer.icache.module.io)
+  outer.dcache.module.io := DontCare
+  dontTouch(outer.dcache.module.io)
+
   //outer.icache.module.io.resp <> core.io.frontend_memory_response
   //outer.icache.module.io.req <> core.io.frontend_memory_request
 
