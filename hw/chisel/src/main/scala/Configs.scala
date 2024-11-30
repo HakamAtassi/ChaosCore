@@ -32,7 +32,7 @@ import freechips.rocketchip.amba.axi4._
 
 
 
-class WithNChaosCore(n: Int = 1) extends Config((site, here, up) => {
+class WithNChaosCores(n: Int = 1) extends Config((site, here, up) => {
   case TilesLocated(InSubsystem) => {
     // Calculate the next available hart ID (since hart ID cannot be duplicated)
     val prev = up(TilesLocated(InSubsystem), site)
