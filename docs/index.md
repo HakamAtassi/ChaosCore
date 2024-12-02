@@ -8,6 +8,11 @@ has_children: true
 
 # ChaosCore
 
+{: .warning }
+> WARNING: CHAOSCORE IS CURRENTLY BEING MIGRATED TO CHIPYARD
+
+
+
 <div style="display: flex; align-items: flex-start;">
   <div style="flex: 1; padding-right: 20px;">
     <p>ChoasCore is a security oriented RV32GC core implemented in Chisel. It is aggressively parameterizeable, Out-of-Order, superscalar, and synthesizeable.  ChaosCore can be parametrized to generate verilog targeting either FPGAs or ASICs.</p>

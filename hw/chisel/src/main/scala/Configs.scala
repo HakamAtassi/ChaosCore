@@ -32,20 +32,50 @@ import freechips.rocketchip.amba.axi4._
 
 
 
-class WithNChaosCore(n: Int = 1) extends Config((site, here, up) => {
+class WithNChaosCores(n: Int = 1) extends Config((site, here, up) => {
   case TilesLocated(InSubsystem) => {
     // Calculate the next available hart ID (since hart ID cannot be duplicated)
     val prev = up(TilesLocated(InSubsystem), site)
     val idOffset = up(NumTiles)
     // Create TileAttachParams for every core to be instantiated
+
+
     (0 until n).map { i =>
       ChaosCoreAttachParams(
         tileParams = ChaosCoreTileParams(tileId = i + idOffset),
-        crossingParams = RocketCrossingParams()
+        crossingParams = RocketCrossingParams(),
+
+        ///////////////////
+        // DCACHE PARAMS //
+        ///////////////////
+
+        dcache = Some(DCacheParams(
+          nSets = 64,
+          nWays = 8,
+          rowBits = site(SystemBusKey).beatBits,
+          nMSHRs = 0,
+          blockBytes = site(CacheBlockBytes))),
+
+
+        ///////////////////
+        // ICACHE PARAMS //
+        ///////////////////
+        icache = Some(ICacheParams(
+          nSets = 64,
+          nWays = 8,
+          rowBits = site(SystemBusKey).beatBits,
+          blockBytes = site(CacheBlockBytes)))
+
+
       )
+
     } ++ prev
+
+
   }
   // Configurate # of bytes in one memory / IO transaction. For RV64, one load/store instruction can transfer 8 bytes at most.
   case SystemBusKey => up(SystemBusKey, site).copy(beatBytes = 8)
   case NumTiles => up(NumTiles) + n
 })
+
+

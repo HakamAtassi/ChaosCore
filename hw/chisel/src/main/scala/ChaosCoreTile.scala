@@ -91,7 +91,9 @@ case class ChaosCoreParams(
 
 case class ChaosCoreAttachParams(
   tileParams: ChaosCoreTileParams,
-  crossingParams: RocketCrossingParams
+  crossingParams: RocketCrossingParams,
+  icache: Option[ICacheParams] = Some(ICacheParams()),
+  dcache: Option[DCacheParams] = Some(DCacheParams()),
 ) extends CanAttachTile {
   type TileType = ChaosCoreTile
   val lookup = PriorityMuxHartIdFromSeq(Seq(tileParams))
@@ -99,7 +101,7 @@ case class ChaosCoreAttachParams(
 
 
 case class ChaosCoreTileParams(
-  name: Option[String] = Some("cva6_tile"),
+  name: Option[String] = Some("ChaosCore_tile"),
   tileId: Int = 0,
   trace: Boolean = false,
   val core: ChaosCoreParams = ChaosCoreParams()
@@ -152,17 +154,26 @@ class ChaosCoreTile(
   val masterNode = visibilityNode
   val slaveNode = TLIdentityNode()
 
-  // //Frontend/ICache
-  val icache = LazyModule(new ICache(ICacheParams(), 0))
+
+  /////////////////
+  // ICACHE INIT //
+  /////////////////
+
+  val icache = LazyModule(new ICache(tileParams.icache.get, 0))
   //icache.resetVectorSinkNode := resetVectorNexusNode
   tlMasterXbar.node := TLWidthWidget(tileParams.icache.get.rowBits/8) := icache.masterNode
   icache.hartIdSinkNodeOpt.foreach { _ := hartIdNexusNode }
   icache.mmioAddressPrefixSinkNodeOpt.foreach { _ := mmioAddressPrefixNexusNode }
 
 
+  /////////////////
+  // DCACHE INIT //
+  /////////////////
 
-  var nDCachePorts = 0
+
   lazy val dcache: HellaCache = LazyModule(p(BuildHellaCache)(this)(p))
+  var nDCachePorts = 0
+
 
   tlMasterXbar.node := TLWidthWidget(tileParams.dcache.get.rowBits/8) := dcache.node
   dcache.hartIdSinkNodeOpt.map { _ := hartIdNexusNode }
@@ -263,7 +274,11 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   // INIT the core
   // connect the I$ and D$
 
-  val core = Module(new ChaosCore(CoreParameters()))
+
+
+  val core = Module(new ChaosCore(CoreParameters(
+    startPC = 0x10000.U
+  )))
 
   core.io := DontCare
   dontTouch(core.io)
@@ -276,14 +291,14 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   //outer.icache.module.io.req <> core.io.frontend_memory_request
 
 
-        //val frontend_memory_request             =   Decoupled(new frontend_memory_request(coreParameters))
-        //val frontend_memory_response            =   Flipped(Decoupled(new fetch_packet(coreParameters)))
+  //val frontend_memory_request             =   Decoupled(new frontend_memory_request(coreParameters))
+  //val frontend_memory_response            =   Flipped(Decoupled(new fetch_packet(coreParameters)))
 
-        /////////////////////////////
-        //// D$ BACKEND MEM ACCESS //
-        /////////////////////////////
-        //val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
-        //val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
+  /////////////////////////////
+  //// D$ BACKEND MEM ACCESS //
+  /////////////////////////////
+  //val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
+  //val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
 
 
 
