@@ -80,9 +80,9 @@ case class ChaosCoreParams(
   val lgPauseCycles = 5
   val haveFSDirty = false
   val pmpGranularity: Int = if (useHypervisor) 4096 else 4
-  val fetchWidth: Int = if (useCompressed) 2 else 1
+  val fetchWidth: Int = 4
   //  fetchWidth doubled, but coreInstBytes halved, for RVC:
-  val decodeWidth: Int = fetchWidth / (if (useCompressed) 2 else 1)
+  val decodeWidth: Int = 4
   val retireWidth: Int = 1
   val instBits: Int = if (useCompressed) 16 else 32
   val lrscCycles: Int = 80 // worst case is 14 mispredicted branches + slop
@@ -159,7 +159,15 @@ class ChaosCoreTile(
   // ICACHE INIT //
   /////////////////
 
-  val icache = LazyModule(new ICache(tileParams.icache.get, 0))
+  // FIXME: the caches are not getting the parameters correctly. 
+  // I had to manually set fetchBytes to get the correct number of bytes for the frontend. 
+  //val icache = LazyModule(new ICache(tileParams.icache.get, 0))
+  val icache = LazyModule(new ICache(ICacheParams(
+                                      nSets = 64,
+                                      nWays = 8,
+                                      fetchBytes = 16), 0))
+
+
   //icache.resetVectorSinkNode := resetVectorNexusNode
   tlMasterXbar.node := TLWidthWidget(tileParams.icache.get.rowBits/8) := icache.masterNode
   icache.hartIdSinkNodeOpt.foreach { _ := hartIdNexusNode }
@@ -276,8 +284,8 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
 
 
-  val core = Module(new ChaosCore(CoreParameters(
-    startPC = 0x10000.U
+  val core = Module(new ChaosCore(CoreParameters( 
+    startPC = 0x10000.U // FIXME: this should be set based on the starting address of the bootrom automatically
   )))
 
   core.io := DontCare
@@ -287,16 +295,73 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   outer.dcache.module.io := DontCare
   dontTouch(outer.dcache.module.io)
 
-  //outer.icache.module.io.resp <> core.io.frontend_memory_response
-  //outer.icache.module.io.req <> core.io.frontend_memory_request
 
 
-  //val frontend_memory_request             =   Decoupled(new frontend_memory_request(coreParameters))
-  //val frontend_memory_response            =   Flipped(Decoupled(new fetch_packet(coreParameters)))
+  ////////////////
+  // I$ CONNECT //
+  ////////////////
+
+  // connect I$ request 
+  outer.icache.module.io.req.bits.addr  := core.io.frontend_memory_request.bits.addr
+  outer.icache.module.io.req.valid      := core.io.frontend_memory_request.valid
+  outer.icache.module.io.req.ready      <> core.io.frontend_memory_request.ready
+
+  // connect I$ resp
+  for(i <- 0 until 4){  // FIXME: this needs to be based on the fetchwidth parameter
+      core.io.frontend_memory_response.bits.instructions(i).instruction    := (outer.icache.module.io.resp.bits.data >> (32*i).U)(31, 0) //(outer.icache.module.io.resp.bits.data)(i)
+      // FIXME: idk about the rest of these params. maybe we can scrap them all together?
+      core.io.frontend_memory_response.bits.fetch_PC        := 0.U
+      core.io.frontend_memory_response.bits.valid_bits(i)   := 0.U
+      core.io.frontend_memory_response.bits.prediction      := DontCare//0.U
+      core.io.frontend_memory_response.bits.GHR             := DontCare//0.U
+      core.io.frontend_memory_response.bits.NEXT            := DontCare//0.U
+      core.io.frontend_memory_response.bits.TOS             := DontCare//0.U
+  }
+
+  core.io.frontend_memory_response.valid      := outer.icache.module.io.resp.valid
+
+
+  // The rest of the I$ signals 
+  // see https://github.com/riscv-boom/riscv-boom/blob/master/src/main/scala/v4/ifu/frontend.scala
+  // for an exmaple on how they are connected
+
+
+  //val s1_paddr = Input(UInt(paddrBits.W)) // delayed one cycle w.r.t. req
+  //val s2_vaddr = Input(UInt(vaddrBits.W)) // delayed two cycles w.r.t. req
+  //val s1_kill = Input(Bool()) // delayed one cycle w.r.t. req
+  //val s2_kill = Input(Bool()) // delayed two cycles; prevents I$ miss emission
+  //val s2_cacheable = Input(Bool()) // should L2 cache line on a miss?
+  //val s2_prefetch = Input(Bool()) // should I$ prefetch next line on a miss?
+  ///** response to CPU. */
+  //val resp = Valid(new ICacheResp(outer))
+
+  ///** flush L1 cache from CPU.
+    //* TODO: IIRC, SFENCE.I
+    //*/
+  //val invalidate = Input(Bool())
+
+  ///** I$ has error, notify to bus.
+    //* TODO: send to BPU.
+    //*/
+  //val errors = new ICacheErrors
+
+  ///** for performance counting. */
+  //val perf = Output(new ICachePerfEvents())
+
+  ///** enable clock. */
+  outer.icache.module.io.clock_enabled := 1.B
+
+  ///** I$ miss or ITIM access will still enable clock even [[ICache]] is asked to be gated. */
+  //outer.icache.module.io.keep_clock_enabled = Output(Bool())
+
+
 
   /////////////////////////////
   //// D$ BACKEND MEM ACCESS //
   /////////////////////////////
+
+  // TODO
+
   //val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
   //val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
 

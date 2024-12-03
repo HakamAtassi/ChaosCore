@@ -64,7 +64,9 @@ class WithNChaosCores(n: Int = 1) extends Config((site, here, up) => {
           nSets = 64,
           nWays = 8,
           rowBits = site(SystemBusKey).beatBits,
-          blockBytes = site(CacheBlockBytes)))
+          fetchBytes = 16,  // FIXME: this needs to be based on the actual parameter, somehow.
+          blockBytes = site(CacheBlockBytes))
+        )
 
 
       )
