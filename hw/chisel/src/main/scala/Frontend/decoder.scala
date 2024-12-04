@@ -198,7 +198,9 @@ class decoder(coreParameters:CoreParameters) extends Module{
     val decode_pat = decoder(Cat(io.instruction.valid, instruction(31, 2)), table)   // FIXME: add all fields, like RS1, RS2, RD, etc since some instructions have them fixed as per the spec (See MRET, sret, etc...)
 
     val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
-    assert(valid, "Enum state must be valid, got %x!",instruction)
+    when(io.instruction.fire){
+        assert(valid, "Enum state must be valid, got %x!",instruction)
+    }
 
 
 

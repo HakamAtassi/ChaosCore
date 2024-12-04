@@ -165,6 +165,7 @@ class ChaosCoreTile(
   val icache = LazyModule(new ICache(ICacheParams(
                                       nSets = 64,
                                       nWays = 8,
+                                      latency = 1,
                                       fetchBytes = 16), 0))
 
 
@@ -290,7 +291,7 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
   core.io := DontCare
   dontTouch(core.io)
-  outer.icache.module.io := DontCare
+  //outer.icache.module.io := DontCare
   dontTouch(outer.icache.module.io)
   outer.dcache.module.io := DontCare
   dontTouch(outer.dcache.module.io)
@@ -301,10 +302,6 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   // I$ CONNECT //
   ////////////////
 
-  // connect I$ request 
-  outer.icache.module.io.req.bits.addr  := core.io.frontend_memory_request.bits.addr
-  outer.icache.module.io.req.valid      := core.io.frontend_memory_request.valid
-  outer.icache.module.io.req.ready      <> core.io.frontend_memory_request.ready
 
   // connect I$ resp
   for(i <- 0 until 4){  // FIXME: this needs to be based on the fetchwidth parameter
@@ -318,42 +315,30 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
       core.io.frontend_memory_response.bits.TOS             := DontCare//0.U
   }
 
+
+  // connect I$ request 
+  outer.icache.module.io.req.bits.addr  := core.io.frontend_memory_request.bits.addr
+  outer.icache.module.io.req.valid      := core.io.frontend_memory_request.valid
+  outer.icache.module.io.req.ready      <> core.io.frontend_memory_request.ready
+
   core.io.frontend_memory_response.valid      := outer.icache.module.io.resp.valid
 
+  outer.icache.module.io.s1_paddr := RegNext(core.io.frontend_memory_request.bits.addr) // delayed one cycle w.r.t. req (no vmem)
+  outer.icache.module.io.s2_vaddr :=  RegNext(RegNext(core.io.frontend_memory_request.bits.addr)) //Input(UInt(vaddrBits.W)) // delayed two cycles w.r.t. req
+  outer.icache.module.io.s1_kill := 0.U //Input(Bool()) // delayed one cycle w.r.t. req
+  outer.icache.module.io.s2_kill := 0.U //Input(Bool()) // delayed two cycles; prevents I$ miss emission
+  outer.icache.module.io.s2_cacheable := 0.B //Input(Bool()) // should L2 cache line on a miss?
+  outer.icache.module.io.s2_prefetch := 0.U //Input(Bool()) // should I$ prefetch next line on a miss?
 
-  // The rest of the I$ signals 
-  // see https://github.com/riscv-boom/riscv-boom/blob/master/src/main/scala/v4/ifu/frontend.scala
-  // for an exmaple on how they are connected
-
-
-  //val s1_paddr = Input(UInt(paddrBits.W)) // delayed one cycle w.r.t. req
-  //val s2_vaddr = Input(UInt(vaddrBits.W)) // delayed two cycles w.r.t. req
-  //val s1_kill = Input(Bool()) // delayed one cycle w.r.t. req
-  //val s2_kill = Input(Bool()) // delayed two cycles; prevents I$ miss emission
-  //val s2_cacheable = Input(Bool()) // should L2 cache line on a miss?
-  //val s2_prefetch = Input(Bool()) // should I$ prefetch next line on a miss?
-  ///** response to CPU. */
-  //val resp = Valid(new ICacheResp(outer))
-
-  ///** flush L1 cache from CPU.
-    //* TODO: IIRC, SFENCE.I
-    //*/
-  //val invalidate = Input(Bool())
-
-  ///** I$ has error, notify to bus.
-    //* TODO: send to BPU.
-    //*/
-  //val errors = new ICacheErrors
-
-  ///** for performance counting. */
-  //val perf = Output(new ICachePerfEvents())
+  outer.icache.module.io.invalidate := 0.B // flush L1 cache from CPU. IIRC, SFENCE.I
 
   ///** enable clock. */
   outer.icache.module.io.clock_enabled := 1.B
 
   ///** I$ miss or ITIM access will still enable clock even [[ICache]] is asked to be gated. */
   //outer.icache.module.io.keep_clock_enabled = Output(Bool())
-
+  //outer.icache.module.io.errors = new ICacheErrors
+  //val perf = Output(new ICachePerfEvents()) // performance counting
 
 
   /////////////////////////////
