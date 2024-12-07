@@ -73,15 +73,6 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
 
   first_req := 0.B
 
-  val s1_replay = WireInit(Bool(), 0.B)
-
-
-  object FETCH_FSM extends ChiselEnum{
-    val ACTIVE, REPLAY = Value;
-  }
-
-  val fetch_state = RegInit(FETCH_FSM(), FETCH_FSM.ACTIVE)
-
   /////////////
   // STAGE 0 //
   /////////////
@@ -139,11 +130,11 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   // Pre-decode instructions
   // construct prediction based on BTB and gshare
 
-  io.fetch_packet.valid := DontCare
 
   io.fetch_packet.bits.fetch_PC := PC_next
-  io.fetch_packet.bits.valid_bits := DontCare
-  io.fetch_packet.bits.instructions := DontCare
+
+  io.fetch_packet <> io.memory_response
+
   io.fetch_packet.bits.prediction := DontCare
   io.fetch_packet.bits.GHR := GHR
   io.fetch_packet.bits.NEXT := 0.U

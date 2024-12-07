@@ -262,32 +262,11 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   // annotate the parameters
   Annotated.params(this, outer.chaosParams)
 
-  // TODO: Create the top module of the core and connect it with the ports in "outer"
-
-  // If your core is in Verilog (assume your blackbox is called "MyCoreBlackbox"), instantiate it here like
-  //   val core = Module(new MyCoreBlackbox(params...))
-  // (as described in the blackbox tutorial) and connect appropriate signals. See the blackbox tutorial
-  // (link on the top of the page) for more info.
-  // You can look at https://github.com/ucb-bar/cva6-wrapper/blob/master/src/main/scala/CVA6Tile.scala
-  // for a Verilog example.
-
-  // If your core is in Chisel, you can simply instantiate the top module here like other Chisel module
-  // and connect appropriate signal. You can even implement this class as your top module.
-  // See https://github.com/riscv-boom/riscv-boom/blob/master/src/main/scala/common/tile.scala and
-  // https://github.com/chipsalliance/rocket-chip/blob/master/src/main/scala/tile/RocketTile.scala for
-  // Chisel example.
-
-  //https://github.com/riscv-boom/riscv-boom/blob/master/src/main/scala/v4/common/tile.scala#L182
-
-
-  // INIT the core
-  // connect the I$ and D$
-
-
-
   val core = Module(new ChaosCore(CoreParameters( 
     startPC = 0x10000.U // FIXME: this should be set based on the starting address of the bootrom automatically
   )))
+
+
 
   core.io := DontCare
   dontTouch(core.io)
@@ -301,7 +280,6 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   ////////////////
   // I$ CONNECT //
   ////////////////
-
 
   // connect I$ resp
   for(i <- 0 until 4){  // FIXME: this needs to be based on the fetchwidth parameter
@@ -328,7 +306,7 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   outer.icache.module.io.s1_kill := 0.U //Input(Bool()) // delayed one cycle w.r.t. req
   outer.icache.module.io.s2_kill := 0.U //Input(Bool()) // delayed two cycles; prevents I$ miss emission
   outer.icache.module.io.s2_cacheable := 0.B //Input(Bool()) // should L2 cache line on a miss?
-  outer.icache.module.io.s2_prefetch := 0.U //Input(Bool()) // should I$ prefetch next line on a miss?
+  outer.icache.module.io.s2_prefetch := 1.U //Input(Bool()) // should I$ prefetch next line on a miss?
 
   outer.icache.module.io.invalidate := 0.B // flush L1 cache from CPU. IIRC, SFENCE.I
 
@@ -341,14 +319,70 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   //val perf = Output(new ICachePerfEvents()) // performance counting
 
 
-  /////////////////////////////
-  //// D$ BACKEND MEM ACCESS //
-  /////////////////////////////
+  ////////////////
+  // D$ CONNECT //
+  ////////////////
 
   // TODO
-
+  // see https://github.com/chipsalliance/rocket-chip/blob/2fe6bb5e9c23360cac8297bb26512e4ca614f67b/src/main/scala/rocket/HellaCache.scala#L110
+  
   //val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
   //val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
+ 
+  // CACHE REQUEST 
+  outer.dcache.module.io.cpu.req.valid       := core.io.backend_memory_request.valid
+  outer.dcache.module.io.cpu.req.bits.addr   := core.io.backend_memory_request.bits.addr
+  //outer.dcache.module.io.cpu.req.bits.idx    := 0.U//(usingVM && untagBits > pgIdxBits).option(UInt(coreMaxAddrBits.W))
+  outer.dcache.module.io.cpu.req.bits.tag    := 0.U //UInt((coreParams.dcacheReqTagBits + log2Ceil(dcacheArbPorts)).W)
+  outer.dcache.module.io.cpu.req.bits.cmd    := 0.U //UInt(M_SZ.W)
+  outer.dcache.module.io.cpu.req.bits.size   := 0.U //UInt(log2Ceil(coreDataBytes.log2 + 1).W)
+  outer.dcache.module.io.cpu.req.bits.signed := 0.B //Bool()
+  outer.dcache.module.io.cpu.req.bits.dprv   := 0.U //UInt(PRV.SZ.W)
+  outer.dcache.module.io.cpu.req.bits.dv     := 0.B //Bool()
+
+  //outer.dcache.module.io.cpu.s1_data            = Output(new HellaCacheWriteData()) // data for previous cycle's req
+  outer.dcache.module.io.cpu.s1_kill            := 0.B // kill previous cycle's req
+  outer.dcache.module.io.cpu.s2_kill            := 0.B // kill req from two cycles ago
+
+
+  outer.dcache.module.io.cpu.s2_nack;           // req from two cycles ago is rejected
+  outer.dcache.module.io.cpu.s2_nack_cause_raw; // reason for nack is store-load RAW hazard (performance hint)
+  outer.dcache.module.io.cpu.s2_uncached;       // advisory signal that the access is MMIO
+  outer.dcache.module.io.cpu.s2_paddr;          // translated address
+
+
+  // CACHE RESPONSE (all outputs)
+  outer.dcache.module.io.cpu.resp.bits.addr  
+  outer.dcache.module.io.cpu.resp.bits.idx   
+  outer.dcache.module.io.cpu.resp.bits.tag   
+  outer.dcache.module.io.cpu.resp.bits.cmd   
+  outer.dcache.module.io.cpu.resp.bits.size  
+  outer.dcache.module.io.cpu.resp.bits.signed
+  outer.dcache.module.io.cpu.resp.bits.dprv  
+  outer.dcache.module.io.cpu.resp.bits.dv    
+
+  outer.dcache.module.io.cpu.resp.bits.data
+  outer.dcache.module.io.cpu.resp.bits.mask
+
+  outer.dcache.module.io.cpu.resp.bits.replay 
+  outer.dcache.module.io.cpu.resp.bits.has_data
+  outer.dcache.module.io.cpu.resp.bits.data_word_bypass
+  outer.dcache.module.io.cpu.resp.bits.data_raw 
+  outer.dcache.module.io.cpu.resp.bits.store_data 
+
+  outer.dcache.module.io.cpu.replay_next  
+  outer.dcache.module.io.cpu.s2_xcpt      
+  outer.dcache.module.io.cpu.s2_gpa       
+  outer.dcache.module.io.cpu.s2_gpa_is_pte
+  outer.dcache.module.io.cpu.uncached_resp
+  outer.dcache.module.io.cpu.ordered      
+  outer.dcache.module.io.cpu.store_pending
+  outer.dcache.module.io.cpu.perf         
+
+
+  // CLOCKING
+  outer.dcache.module.io.cpu.keep_clock_enabled := 1.B // is D$ currently being clocked?
+  //outer.dcache.module.io.cpu.clock_enabled      := 1.B // is D$ currently being clocked?
 
 
 
