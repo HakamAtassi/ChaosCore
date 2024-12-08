@@ -112,6 +112,11 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   io.memory_request.bits.addr := Mux((io.memory_response.fire || first_req), PC_next, replay_PC)
   io.memory_request.valid := 1.B
 
+  val last_req_PC = RegInit(UInt(32.W), 0.U)
+  when (io.memory_response.fire || first_req){
+    last_req_PC := PC_next
+  }
+
 
   // Access pred structures (BTB/GSHARE)
   gshare.io.predict_GHR     := GHR
@@ -130,10 +135,18 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   // Pre-decode instructions
   // construct prediction based on BTB and gshare
 
-
-  io.fetch_packet.bits.fetch_PC := PC_next
-
   io.fetch_packet <> io.memory_response
+  when(io.memory_response.valid){
+    io.fetch_packet.bits.fetch_PC := last_req_PC
+  }
+
+  val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
+  validator.io.instruction_index := get_decomposed_icache_address(coreParameters, io.fetch_packet.bits.fetch_PC).instruction_offset 
+
+  for(i <- 0 until fetchWidth){
+    io.fetch_packet.bits.instructions(i).packet_index := i.U
+    io.fetch_packet.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && io.memory_response.valid
+  }
 
   io.fetch_packet.bits.prediction := DontCare
   io.fetch_packet.bits.GHR := GHR
