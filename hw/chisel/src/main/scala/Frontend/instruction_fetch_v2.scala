@@ -71,6 +71,11 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   val first_req = RegInit(Bool(), 1.B)
   val GHR = RegInit(UInt(GHRWidth.W), 0.U)
 
+  val flush_PC_reg           = RegInit(UInt(32.W), 0.U)
+  val flush_PC_mux           = Wire(UInt(32.W))
+  val flushing_event         = Wire(Bool())
+  
+
   first_req := 0.B
 
   /////////////
@@ -78,19 +83,29 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   /////////////
 
   // GENERATE PC
-
+  val is_revert =  WireInit(Bool(), 0.B)
   val is_branch =  WireInit(Bool(), 0.B) //(io.prediction.bits.br_type === br_type_t.BR) && io.prediction.valid
   val is_jalr =    WireInit(Bool(), 0.B) //(io.prediction.bits.br_type === br_type_t.JALR) && io.prediction.valid
   val is_ret =     WireInit(Bool(), 0.B) //(io.prediction.bits.br_type === br_type_t.RET) && io.prediction.valid
   val use_BTB =    WireInit(Bool(), 0.B) //(io.prediction.bits.hit && io.prediction.valid && !is_ret)
   val use_RAS =    WireInit(Bool(), 0.B) //is_ret
-  //flushing_event := io.flush.valid || is_revert
+  is_revert           := (io.revert.valid)
+  flushing_event := io.flush.valid || is_revert
 
+  // FLUSHING MUX //
+  when(io.flush.valid){
+      flush_PC_mux := io.flush.bits.redirect_PC
+  }.elsewhen(io.revert.valid){
+      flush_PC_mux := io.revert.bits.PC
+  }.otherwise(flush_PC_mux := 0.U)    // TODO: exception
+  flush_PC_reg := flush_PC_mux
 
   when(use_BTB && (first_req || io.memory_response.fire)) {
     PC_next := 0.U //io.prediction.bits.target
   }.elsewhen(use_RAS && (first_req || io.memory_response.fire)) {
     PC_next := 0.U //io.RAS_read.ret_addr
+  }.elsewhen(RegNext(flushing_event)){
+    PC_next := flush_PC_reg
   }.elsewhen((first_req || io.memory_response.fire)) {
     PC_next := PC_next + (fetchWidth * 4).U
   }.otherwise{
@@ -147,6 +162,8 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
     io.fetch_packet.bits.instructions(i).packet_index := i.U
     io.fetch_packet.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && io.memory_response.valid
   }
+
+  io.fetch_packet.valid     := !flushing_event
 
   io.fetch_packet.bits.prediction := DontCare
   io.fetch_packet.bits.GHR := GHR
