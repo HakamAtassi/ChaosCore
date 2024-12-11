@@ -285,8 +285,8 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   for(i <- 0 until 4){  // FIXME: this needs to be based on the fetchwidth parameter
       core.io.frontend_memory_response.bits.instructions(i).instruction    := (outer.icache.module.io.resp.bits.data >> (32*i).U)(31, 0) //(outer.icache.module.io.resp.bits.data)(i)
       // FIXME: idk about the rest of these params. maybe we can scrap them all together?
-      core.io.frontend_memory_response.bits.fetch_PC        := 0.U
-      core.io.frontend_memory_response.bits.valid_bits(i)   := 0.U
+      core.io.frontend_memory_response.bits.fetch_PC        := RegNext(outer.icache.module.io.req.bits.addr)
+      core.io.frontend_memory_response.bits.valid_bits(i)   := RegNext((outer.icache.module.io.req.bits.addr(3, 0)) <= i.U)
       core.io.frontend_memory_response.bits.prediction      := DontCare//0.U
       core.io.frontend_memory_response.bits.GHR             := DontCare//0.U
       core.io.frontend_memory_response.bits.NEXT            := DontCare//0.U

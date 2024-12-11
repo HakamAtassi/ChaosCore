@@ -107,7 +107,7 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   }.elsewhen(RegNext(flushing_event)){
     PC_next := flush_PC_reg
   }.elsewhen((first_req || io.memory_response.fire)) {
-    PC_next := PC_next + (fetchWidth * 4).U
+    PC_next := PC_next + get_PC_increment(coreParameters, PC_next)
   }.otherwise{
     PC_next := PC_next
   }
