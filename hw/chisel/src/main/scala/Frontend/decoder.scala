@@ -170,7 +170,8 @@ class decoder(coreParameters:CoreParameters) extends Module{
             // SYSTEM
             BitPat("b1"+ binString(0x0.U(7.W))  + binString(0x0.U(5.W)) + binString(0x0.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N + N + Y +    N + N + Y + Y + N),   // ECALL 
             BitPat("b1"+ binString(0x8.U(7.W))  + binString(0x2.U(5.W)) + binString(0x0.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + N + N + Y + N + N + N + N + Y + N + N +    N + N + Y + Y + N),   // SRET FIXME: not implemented
-            BitPat("b1"+ binString(0x24.U(7.W)) + binString(0x2.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + N + N + Y + N + N + N + N + Y + Y + N +    N + N + Y + Y + N),   // MRET 
+            BitPat("b1"+ binString(0x24.U(7.W)) + binString(0x2.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + N + N + Y + N + N + N + N + Y + Y + N +    N + N + Y + Y + N),   // MRET FIXME doesnt add up to 30bits
+            BitPat("b1"+ binString(0x105.U(12.W)) + binString(0x0.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                    -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // WFI (As NOP) 
             //BitPat("b"+ binString(0x24.U(7.W)) + binString(0x2.U(5.W)) + binString(0x0.U(3.W)) + binString(0x0.U(3.W)) + binString(0x0.U(5.W)) + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")              -> BitPat("b" + N + N + Y + N + N + N + N + Y + Y + N +    N + N + Y + Y + N),   // FIXME: add EBREAK
 
 
@@ -229,8 +230,12 @@ class decoder(coreParameters:CoreParameters) extends Module{
     io.decoded_instruction.bits.IS_IMM               := decode_pat(7)
     io.decoded_instruction.bits.MRET                 := decode_pat(6)
     io.decoded_instruction.bits.ECALL                := decode_pat(5)
-    io.decoded_instruction.bits.IMM                  := IMM
+    io.decoded_instruction.bits.IMM                  := IMM 
     io.decoded_instruction.bits.MULTIPLY             := decode_pat(10)
+
+    when (instruction(31,12) === 0x105.U){
+        io.decoded_instruction.bits.IMM := 0.U
+    }
    
 
     when(decode_pat(4)){
