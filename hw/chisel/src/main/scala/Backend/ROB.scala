@@ -552,7 +552,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
                 flush.exception_cause       := ROB_commit_row.get_exception_cause(i)
                 flush.is_fence              := ROB_commit_row.is_flush(i)
                 flush.is_CSR                := ROB_commit_row.is_flush(i)
-                flush.flushing_PC           := ROB_commit_row.instruction_PC(i) //commit.fetch_PC + (i*4).U
+                flush.flushing_PC           := ROB_commit_row.instruction_PC(i) 
 
                 commit.expected_PC := ROB_commit_row.get_next_PC(i) 
                 flush.redirect_PC  := ROB_commit_row.get_next_PC(i)

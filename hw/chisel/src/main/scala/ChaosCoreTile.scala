@@ -303,7 +303,7 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
   outer.icache.module.io.s1_paddr := RegNext(core.io.frontend_memory_request.bits.addr) // delayed one cycle w.r.t. req (no vmem)
   outer.icache.module.io.s2_vaddr :=  RegNext(RegNext(core.io.frontend_memory_request.bits.addr)) //Input(UInt(vaddrBits.W)) // delayed two cycles w.r.t. req
-  outer.icache.module.io.s1_kill := 0.U //Input(Bool()) // delayed one cycle w.r.t. req
+  outer.icache.module.io.s1_kill := core.io.flush.valid //Input(Bool()) // delayed one cycle w.r.t. req
   outer.icache.module.io.s2_kill := 0.U //Input(Bool()) // delayed two cycles; prevents I$ miss emission
   outer.icache.module.io.s2_cacheable := 0.B //Input(Bool()) // should L2 cache line on a miss?
   outer.icache.module.io.s2_prefetch := 1.U //Input(Bool()) // should I$ prefetch next line on a miss?

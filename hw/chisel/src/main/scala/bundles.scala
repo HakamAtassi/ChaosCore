@@ -497,9 +497,10 @@ class ROB_row(coreParameters:CoreParameters) extends Bundle{
         (insn(index).is_fence || insn(index).is_CSR) && insn(index).valid
     }
 
-    def instruction_PC(index:Int): UInt = {
-        fetch_PC + (index*4).U
+    def instruction_PC(index: Int): UInt = {
+        (fetch_PC >> 4) << 4 | (index.U << 2)
     }
+
 
     def is_branch(index:Int): Bool = {
         insn(index).is_branch && insn(index).valid

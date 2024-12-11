@@ -72,11 +72,10 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   val GHR = RegInit(UInt(GHRWidth.W), 0.U)
 
   val flush_PC_reg           = RegInit(UInt(32.W), 0.U)
-  val flush_PC_mux           = Wire(UInt(32.W))
   val flushing_event         = Wire(Bool())
   
 
-  first_req := 0.B
+  first_req := 0.B || io.flush.valid  // this is high if there was no request 
 
   /////////////
   // STAGE 0 //
@@ -93,19 +92,13 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   flushing_event := io.flush.valid || is_revert
 
   // FLUSHING MUX //
-  when(io.flush.valid){
-      flush_PC_mux := io.flush.bits.redirect_PC
-  }.elsewhen(io.revert.valid){
-      flush_PC_mux := io.revert.bits.PC
-  }.otherwise(flush_PC_mux := 0.U)    // TODO: exception
-  flush_PC_reg := flush_PC_mux
 
   when(use_BTB && (first_req || io.memory_response.fire)) {
     PC_next := 0.U //io.prediction.bits.target
   }.elsewhen(use_RAS && (first_req || io.memory_response.fire)) {
     PC_next := 0.U //io.RAS_read.ret_addr
-  }.elsewhen(RegNext(flushing_event)){
-    PC_next := flush_PC_reg
+  }.elsewhen(flushing_event){
+    PC_next :=  io.flush.bits.redirect_PC
   }.elsewhen((first_req || io.memory_response.fire)) {
     PC_next := PC_next + get_PC_increment(coreParameters, PC_next)
   }.otherwise{
@@ -118,20 +111,28 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   // STAGE 1 //
   /////////////
 
-  replay_PC := Mux((io.memory_response.fire || first_req), PC_next, replay_PC)
+  when(io.memory_response.fire || first_req){
+    replay_PC :=  PC_next
+  }.elsewhen(io.flush.valid){
+    replay_PC := io.flush.bits.redirect_PC
+  }.otherwise{
+    replay_PC := replay_PC
+  }
+
 
   // Access I$
   dontTouch(io)
 
   io.memory_response.ready    := RegNext(io.memory_request.valid)
-  io.memory_request.bits.addr := Mux((io.memory_response.fire || first_req), PC_next, replay_PC)
-  io.memory_request.valid := 1.B
 
-  val last_req_PC = RegInit(UInt(32.W), 0.U)
-  when (io.memory_response.fire || first_req){
-    last_req_PC := PC_next
+  when(io.memory_response.fire || first_req){
+    io.memory_request.bits.addr := PC_next
+  }.otherwise{
+    io.memory_request.bits.addr := replay_PC
   }
 
+
+  io.memory_request.valid     := 1.B && !io.flush.valid
 
   // Access pred structures (BTB/GSHARE)
   gshare.io.predict_GHR     := GHR
@@ -151,9 +152,7 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   // construct prediction based on BTB and gshare
 
   io.fetch_packet <> io.memory_response
-  when(io.memory_response.valid){
-    io.fetch_packet.bits.fetch_PC := last_req_PC
-  }
+  io.fetch_packet.bits.fetch_PC := RegNext(io.memory_request.bits.addr)
 
   val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
   validator.io.instruction_index := get_decomposed_icache_address(coreParameters, io.fetch_packet.bits.fetch_PC).instruction_offset 
@@ -163,7 +162,7 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
     io.fetch_packet.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && io.memory_response.valid
   }
 
-  io.fetch_packet.valid     := !flushing_event
+  io.fetch_packet.valid     := io.memory_response.valid && !flushing_event
 
   io.fetch_packet.bits.prediction := DontCare
   io.fetch_packet.bits.GHR := GHR
