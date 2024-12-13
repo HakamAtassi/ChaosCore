@@ -152,10 +152,10 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   // construct prediction based on BTB and gshare
 
   io.fetch_packet <> io.memory_response
-  io.fetch_packet.bits.fetch_PC := RegNext(io.memory_request.bits.addr)
+  io.fetch_packet.bits.fetch_PC := RegNext(get_fetch_packet_aligned_address(coreParameters, io.memory_request.bits.addr))
 
   val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
-  validator.io.instruction_index := get_decomposed_icache_address(coreParameters, io.fetch_packet.bits.fetch_PC).instruction_offset 
+  validator.io.instruction_index := get_decomposed_icache_address(coreParameters, RegNext(io.memory_request.bits.addr)).instruction_offset 
 
   for(i <- 0 until fetchWidth){
     io.fetch_packet.bits.instructions(i).packet_index := i.U

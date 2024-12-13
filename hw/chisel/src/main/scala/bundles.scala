@@ -498,7 +498,7 @@ class ROB_row(coreParameters:CoreParameters) extends Bundle{
     }
 
     def instruction_PC(index: Int): UInt = {
-        (fetch_PC >> 4) << 4 | (index.U << 2)
+        (fetch_PC >> 4) << 4 | (index.U << 2)   // FIXME: parameterize this
     }
 
 
