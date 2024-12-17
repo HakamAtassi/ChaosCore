@@ -104,14 +104,18 @@ case class ChaosCoreTileParams(
   name: Option[String] = Some("ChaosCore_tile"),
   tileId: Int = 0,
   trace: Boolean = false,
-  val core: ChaosCoreParams = ChaosCoreParams()
+  core: ChaosCoreParams = ChaosCoreParams(),
+  icache: Option[ICacheParams] = Some(ICacheParams()),
+  dcache: Option[DCacheParams] = Some(DCacheParams())
 ) extends InstantiableTileParams[ChaosCoreTile] {
   val beuAddr: Option[BigInt] = None
   val blockerCtrlAddr: Option[BigInt] = None
   val btb: Option[BTBParams] = Some(BTBParams())
   val boundaryBuffers: Option[ChaosCoreTileBoundaryBufferParams] = None
-  val dcache: Option[DCacheParams] = Some(DCacheParams())
-  val icache: Option[ICacheParams] = Some(ICacheParams())
+  require(icache.isDefined)
+  require(dcache.isDefined)
+  //val dcache: Option[DCacheParams] = Some(DCacheParams())
+  //val icache: Option[ICacheParams] = Some(ICacheParams())
   val clockSinkParams: ClockSinkParameters = ClockSinkParameters()
   def instantiate(crossing: HierarchicalElementCrossingParamsLike, lookup: LookupByHartIdImpl)(implicit p: Parameters): ChaosCoreTile = {
     new ChaosCoreTile(this, crossing, lookup)
@@ -159,14 +163,7 @@ class ChaosCoreTile(
   // ICACHE INIT //
   /////////////////
 
-  // FIXME: the caches are not getting the parameters correctly. 
-  // I had to manually set fetchBytes to get the correct number of bytes for the frontend. 
-  //val icache = LazyModule(new ICache(tileParams.icache.get, 0))
-  val icache = LazyModule(new ICache(ICacheParams(
-                                      nSets = 64,
-                                      nWays = 8,
-                                      latency = 1,
-                                      fetchBytes = 16), 0))
+  val icache = LazyModule(new ICache(tileParams.icache.get, 0))
 
 
   //icache.resetVectorSinkNode := resetVectorNexusNode

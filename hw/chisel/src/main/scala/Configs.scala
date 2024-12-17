@@ -38,45 +38,30 @@ class WithNChaosCores(n: Int = 1) extends Config((site, here, up) => {
     val prev = up(TilesLocated(InSubsystem), site)
     val idOffset = up(NumTiles)
     // Create TileAttachParams for every core to be instantiated
-
-
-    (0 until n).map { i =>
-      ChaosCoreAttachParams(
-        tileParams = ChaosCoreTileParams(tileId = i + idOffset),
-        crossingParams = RocketCrossingParams(),
-
-        ///////////////////
-        // DCACHE PARAMS //
-        ///////////////////
-
-        dcache = Some(DCacheParams(
-          nSets = 64,
-          nWays = 8,
-          rowBits = site(SystemBusKey).beatBits,
-          nMSHRs = 0,
-          blockBytes = site(CacheBlockBytes))),
-
-
-        ///////////////////
-        // ICACHE PARAMS //
-        ///////////////////
-        icache = Some(ICacheParams(
-          nSets = 64,
-          nWays = 8,
-          rowBits = site(SystemBusKey).beatBits,
-          fetchBytes = 16,  // FIXME: this needs to be based on the actual parameter, somehow.
-          blockBytes = site(CacheBlockBytes))
-        )
-
-
-      )
-
-    } ++ prev
-
+    val big = ChaosCoreTileParams(
+      core   = ChaosCoreParams(),
+      dcache = Some(DCacheParams(
+        nSets = 64,
+        nWays = 8,
+        rowBits = site(SystemBusKey).beatBits,
+        nMSHRs = 0,
+        blockBytes = site(CacheBlockBytes))),
+      icache = Some(ICacheParams(
+        nSets = 64,
+        nWays = 8,
+        rowBits = site(SystemBusKey).beatBits,
+        latency = 1,
+        fetchBytes = 16,
+        blockBytes = site(CacheBlockBytes)
+        )))
+    List.tabulate(n)(i => ChaosCoreAttachParams(
+      big.copy(tileId = i + idOffset),
+      RocketCrossingParams()
+    )) ++ prev
 
   }
   // Configurate # of bytes in one memory / IO transaction. For RV64, one load/store instruction can transfer 8 bytes at most.
-  case SystemBusKey => up(SystemBusKey, site).copy(beatBytes = 8)
+  case SystemBusKey => up(SystemBusKey, site).copy(beatBytes = 16)
   case NumTiles => up(NumTiles) + n
 })
 
