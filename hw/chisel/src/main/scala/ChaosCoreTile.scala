@@ -29,12 +29,13 @@ import freechips.rocketchip.interrupts._
 import freechips.rocketchip.util._
 import freechips.rocketchip.tile._
 import freechips.rocketchip.amba.axi4._
+import _root_.ChaosCore.memory_type_t.LOAD
 
 case class ChaosCoreTileBoundaryBufferParams(force: Boolean = false)
 
 case class ChaosCoreParams(
   xLen: Int = 32,
-  pgLevels: Int = 3, // sv39 default
+  pgLevels: Int = 2, // sv39 default
   bootFreqHz: BigInt = 0,
   useVM: Boolean = false,
   useUser: Boolean = false,
@@ -55,14 +56,14 @@ case class ChaosCoreParams(
   useBPWatch: Boolean = false,
   mcontextWidth: Int = 0,
   scontextWidth: Int = 0,
-  nPMPs: Int = 8,
+  nPMPs: Int = 0,
   nPerfCounters: Int = 0,
   haveBasicCounters: Boolean = true,
   haveCFlush: Boolean = false,
   misaWritable: Boolean = true,
   nL2TLBEntries: Int = 0,
-  nL2TLBWays: Int = 1,
-  nPTECacheEntries: Int = 8,
+  nL2TLBWays: Int = 0,
+  nPTECacheEntries: Int = 0,
   mtvecInit: Option[BigInt] = Some(BigInt(0)),
   mtvecWritable: Boolean = true,
   fastLoadWord: Boolean = true,
@@ -79,7 +80,7 @@ case class ChaosCoreParams(
 ) extends CoreParams {
   val lgPauseCycles = 5
   val haveFSDirty = false
-  val pmpGranularity: Int = if (useHypervisor) 4096 else 4
+  val pmpGranularity: Int = 0
   val fetchWidth: Int = 4
   //  fetchWidth doubled, but coreInstBytes halved, for RVC:
   val decodeWidth: Int = 4
@@ -331,15 +332,20 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   outer.dcache.module.io.cpu.req.bits.addr   := core.io.backend_memory_request.bits.addr
   //outer.dcache.module.io.cpu.req.bits.idx    := 0.U//(usingVM && untagBits > pgIdxBits).option(UInt(coreMaxAddrBits.W))
   outer.dcache.module.io.cpu.req.bits.tag    := 0.U //UInt((coreParams.dcacheReqTagBits + log2Ceil(dcacheArbPorts)).W)
-  outer.dcache.module.io.cpu.req.bits.cmd    := 0.U //UInt(M_SZ.W)
+
+  when(core.io.backend_memory_request.bits.memory_type === memory_type_t.LOAD){
+    outer.dcache.module.io.cpu.req.bits.cmd    := M_XRD
+  }.elsewhen(core.io.backend_memory_request.bits.memory_type === memory_type_t.STORE){
+    outer.dcache.module.io.cpu.req.bits.cmd    := M_XWR
+  }
   outer.dcache.module.io.cpu.req.bits.size   := 0.U //UInt(log2Ceil(coreDataBytes.log2 + 1).W)
-  outer.dcache.module.io.cpu.req.bits.signed := 0.B //Bool()
+  outer.dcache.module.io.cpu.req.bits.signed := core.io.backend_memory_request.bits.mem_signed //Bool()
   outer.dcache.module.io.cpu.req.bits.dprv   := 0.U //UInt(PRV.SZ.W)
   outer.dcache.module.io.cpu.req.bits.dv     := 0.B //Bool()
 
   //outer.dcache.module.io.cpu.s1_data            = Output(new HellaCacheWriteData()) // data for previous cycle's req
-  outer.dcache.module.io.cpu.s1_kill            := 0.B // kill previous cycle's req
-  outer.dcache.module.io.cpu.s2_kill            := 0.B // kill req from two cycles ago
+  outer.dcache.module.io.cpu.s1_kill            := core.io.flush.valid // kill previous cycle's req
+  outer.dcache.module.io.cpu.s2_kill            := core.io.flush.valid // kill req from two cycles ago
 
 
   outer.dcache.module.io.cpu.s2_nack;           // req from two cycles ago is rejected
@@ -349,7 +355,8 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
 
   // CACHE RESPONSE (all outputs)
-  outer.dcache.module.io.cpu.resp.bits.addr  
+  core.io.backend_memory_response.valid     := outer.dcache.module.io.cpu.resp.valid
+  core.io.backend_memory_response.bits.addr := outer.dcache.module.io.cpu.resp.bits.addr  
   outer.dcache.module.io.cpu.resp.bits.idx   
   outer.dcache.module.io.cpu.resp.bits.tag   
   outer.dcache.module.io.cpu.resp.bits.cmd   
@@ -358,7 +365,7 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   outer.dcache.module.io.cpu.resp.bits.dprv  
   outer.dcache.module.io.cpu.resp.bits.dv    
 
-  outer.dcache.module.io.cpu.resp.bits.data
+  core.io.backend_memory_response.bits.data := outer.dcache.module.io.cpu.resp.bits.data
   outer.dcache.module.io.cpu.resp.bits.mask
 
   outer.dcache.module.io.cpu.resp.bits.replay 

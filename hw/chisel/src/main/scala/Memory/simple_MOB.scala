@@ -196,6 +196,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // CACHE //
     ///////////
 
+    val req_reg = RegInit(new backend_memory_request(coreParameters), 0.U.asTypeOf(new backend_memory_request(coreParameters)))
+
 
     // cache request
 
@@ -217,9 +219,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     when(io.backend_memory_request.fire){
         MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
         front_pointer    := front_pointer + 1.U
-
+        req_reg          := io.backend_memory_request.bits
     }
-
 
     // cache response
     io.MOB_output.bits                      := 0.U.asTypeOf(new FU_output(coreParameters))
@@ -231,6 +232,13 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.MOB_output.bits.RD_valid             := io.backend_memory_response.valid
     io.MOB_output.bits.fetch_packet_index   := io.backend_memory_response.bits.fetch_packet_index
     io.MOB_output.valid                     := io.backend_memory_response.valid
+
+    when(io.backend_memory_response.fire){
+        io.MOB_output.bits.ROB_index            := req_reg.ROB_index
+        io.MOB_output.bits.MOB_index            := req_reg.MOB_index
+        io.MOB_output.bits.fetch_packet_index   := req_reg.packet_index
+        io.MOB_output.bits.PRD                  := req_reg.PRD
+    }
 
     ///////////
     // READY //

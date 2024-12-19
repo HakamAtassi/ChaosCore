@@ -64,5 +64,3 @@ class WithNChaosCores(n: Int = 1) extends Config((site, here, up) => {
   case SystemBusKey => up(SystemBusKey, site).copy(beatBytes = 16)
   case NumTiles => up(NumTiles) + n
 })
-
-
