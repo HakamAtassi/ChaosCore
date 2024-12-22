@@ -73,6 +73,16 @@ class backend(coreParameters:CoreParameters) extends Module{
         val MOB_output                  =   ValidIO(new FU_output(coreParameters))                                               // broadcast load data
 
         //val mtvec = Output(UInt(32.W))
+        ////////////////
+        // INTERRUPTS //
+        ////////////////
+
+        // ibex naming convention
+        val irq_software_i                      = Input(Bool())      //msip
+        val irq_timer_i                         = Input(Bool())      //mtip
+        val irq_external_i                      = Input(Bool())      //meip
+        val debug_req_i                         = Input(Bool())      //debug
+        val irq_nm_i                            = Input(Bool())      //nmi
 
 
         // UPDATE //
@@ -237,6 +247,17 @@ class backend(coreParameters:CoreParameters) extends Module{
     execution_engine.io.partial_commit           <> io.partial_commit
     execution_engine.io.commit           <> io.commit
 
+    execution_engine.io.commit           <> io.commit
+
+
+    ////////////////
+    // INTERRUPTS //
+    ////////////////
+    execution_engine.io.irq_software_i                 := io.irq_software_i    
+    execution_engine.io.irq_timer_i                    := io.irq_timer_i
+    execution_engine.io.irq_external_i                 := io.irq_external_i
+    execution_engine.io.debug_req_i                    := io.debug_req_i
+    execution_engine.io.irq_nm_i                       := io.irq_nm_i
     
 
     // Output CSR_port values

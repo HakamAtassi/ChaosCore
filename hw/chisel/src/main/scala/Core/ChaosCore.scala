@@ -57,6 +57,19 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
         ///////////////////////////
         val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
         val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
+
+        ////////////////
+        // INTERRUPTS //
+        ////////////////
+
+        // ibex naming convention
+        val irq_software_i                      = Input(Bool())      //msip
+        val irq_timer_i                         = Input(Bool())      //mtip
+        val irq_external_i                      = Input(Bool())      //meip
+        val debug_req_i                         = Input(Bool())      //debug
+        val irq_nm_i                            = Input(Bool())      //nmi
+        //val [14:0] irq_fast_i =    //fast local interrupts
+
     }); dontTouch(io)
 
     //////////////////
@@ -73,10 +86,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     val frontend    = Module(new frontend(coreParameters))
     val backend     = Module(new backend(coreParameters))
 
-
     val ROB         = Module(new ROB(coreParameters))
-
-
 
 
     io.flush <> ROB.io.flush
@@ -172,5 +182,19 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
 
 
     frontend.io.renamed_decoded_fetch_packet.ready := backend_can_allocate
+
+
+  ////////////////
+  // INTERRUPTS //
+  ////////////////
+  //
+  dontTouch(io)
+
+  backend.io.irq_software_i                  := io.irq_software_i    
+  backend.io.irq_timer_i                     := io.irq_timer_i
+  backend.io.irq_external_i                  := io.irq_external_i
+  backend.io.debug_req_i                     := io.debug_req_i
+  backend.io.irq_nm_i                        := io.irq_nm_i
+  
 
 }

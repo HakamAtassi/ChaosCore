@@ -58,6 +58,12 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
 
     val CSR_port = if (FUParam.supportsCSRs) Some(IO(Output(new CSR_out(coreParameters)))) else None
 
+    val irq_software_i                      = if (FUParam.supportsCSRs) Some(IO(Input(Bool()))) else None
+    val irq_timer_i                         = if (FUParam.supportsCSRs) Some(IO(Input(Bool()))) else None
+    val irq_external_i                      = if (FUParam.supportsCSRs) Some(IO(Input(Bool()))) else None
+    val debug_req_i                         = if (FUParam.supportsCSRs) Some(IO(Input(Bool()))) else None
+    val irq_nm_i                            = if (FUParam.supportsCSRs) Some(IO(Input(Bool()))) else None
+
 
 
     val ALU             = if (supportsInt)                  Some(Module(new ALU(coreParameters))) else None
@@ -123,6 +129,12 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
 
         }
         CSR_port.get  <> CSR.get.CSR_port
+
+        irq_software_i.get <> CSR.get.irq_software_i
+        irq_timer_i.get <> CSR.get.irq_timer_i
+        irq_external_i.get <> CSR.get.irq_external_i
+        debug_req_i.get <> CSR.get.debug_req_i
+        irq_nm_i.get <> CSR.get.irq_nm_i
     }
 
 

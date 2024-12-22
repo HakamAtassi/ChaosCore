@@ -340,6 +340,19 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val CSR_port = IO(Output(new CSR_out(coreParameters)))
 
 
+    val irq_software_i                      = IO(Input(Bool()))      //msip
+    val irq_timer_i                         = IO(Input(Bool()))      //mtip
+    val irq_external_i                      = IO(Input(Bool()))      //meip
+    val debug_req_i                         = IO(Input(Bool()))      //debug
+    val irq_nm_i                            = IO(Input(Bool()))      //nmi
+
+    dontTouch(irq_nm_i)
+    dontTouch(irq_timer_i)
+    dontTouch(irq_external_i)
+    dontTouch(irq_software_i)
+    dontTouch(irq_nm_i)
+
+
     ////////////////////////
     // DECODE CSR REQUEST //
     ////////////////////////
@@ -462,7 +475,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val mepc_reg       = RegInit(0.U.asTypeOf(new mepc))
     val mcause_reg     = RegInit(0.U.asTypeOf(new mcause))
     val mtval_reg      = RegInit(0.U.asTypeOf(new mtval))
-    val mip_reg        = RegInit(0.U.asTypeOf(new mip))
+    val mip_reg        = RegInit(0.U.asTypeOf(new mip))    // not actually a reg
     val mtinst_reg     = RegInit(UInt(32.W), 0.U)
     val mtval2_reg     = RegInit(UInt(32.W), 0.U)
 
@@ -471,7 +484,32 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // missing pmp
     // missing mstateen0...
 
+    ////////////////
+    // INTERRUPTS //
+    ////////////////
 
+    mip_reg.MSIP := irq_software_i
+    mip_reg.MTIP := irq_timer_i
+    mip_reg.MEIP := irq_external_i
+
+    val interrupt = RegInit(Bool(), 0.B)
+
+    dontTouch(interrupt)
+    dontTouch(CSR_port)
+
+    val any_pending_interrupt = (mip_reg.MSIP.asBool || mip_reg.MTIP.asBool || mip_reg.MEIP.asBool)
+
+    when(any_pending_interrupt && !RegNext(any_pending_interrupt)) { // interrupt edge detect (CLINT)
+      interrupt := 1.B 
+    }
+
+    when(io.flush.valid && io.flush.bits.is_valid() && io.flush.bits.is_interrupt){ // ROB currently redirecting due to interrupt
+      interrupt := 0.B 
+      mepc_reg := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
+    }
+
+
+    CSR_port.interrupt := interrupt
 
     //-----------------------
     // MACHINE NMI HANDLING
@@ -520,6 +558,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         //---------------------
         // MACHINE TRAP SETUP
         //---------------------
+
 
         CSRs.mstatus      -> mstatus_reg,
         CSRs.misa         -> misa_reg,

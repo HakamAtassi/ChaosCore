@@ -48,6 +48,11 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
         val FU_output       =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
 
         //val mtvec = Output(UInt(32.W))
+        val irq_software_i                      = Input(Bool())      //msip
+        val irq_timer_i                         = Input(Bool())      //mtip
+        val irq_external_i                      = Input(Bool())      //meip
+        val debug_req_i                         = Input(Bool())      //debug
+        val irq_nm_i                            = Input(Bool())      //nmi
     })
 
 
@@ -66,6 +71,11 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
 
         FUs(i).CSR_port.foreach { _ =>
             FUs(i).CSR_port.get <> CSR_port
+            FUs(i).irq_software_i.get                 := io.irq_software_i    
+            FUs(i).irq_timer_i.get                    := io.irq_timer_i
+            FUs(i).irq_external_i.get                 := io.irq_external_i
+            FUs(i).debug_req_i.get                    := io.debug_req_i
+            FUs(i).irq_nm_i.get                       := io.irq_nm_i
         }
     }
 

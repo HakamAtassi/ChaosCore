@@ -150,6 +150,19 @@ class ChaosCoreTile(
   with SourcesExternalNotifications
 {
 
+
+  //////////////////
+  //// INTERRUPTS //
+  //////////////////
+
+  def connectChaosCoreInterrupts(debug: Bool, msip: Bool, mtip: Bool, meip: Bool) {
+    val (interrupts, _) = intSinkNode.in(0)
+    debug := interrupts(0)
+    msip := interrupts(1)
+    mtip := interrupts(2)
+    meip := interrupts(3)
+  }
+
   // Private constructor ensures altered LazyModule.p is used implicitly
   def this(params: ChaosCoreTileParams, crossing: HierarchicalElementCrossingParamsLike, lookup: LookupByHartIdImpl)(implicit p: Parameters) =
     this(params, crossing.crossingType, lookup, p)
@@ -158,6 +171,8 @@ class ChaosCoreTile(
   val intOutwardNode = chaosParams.beuAddr map { _ => IntIdentityNode() }
   val masterNode = visibilityNode
   val slaveNode = TLIdentityNode()
+
+
 
 
   /////////////////
@@ -252,6 +267,8 @@ class ChaosCoreTile(
     case _ => TLBuffer(BufferParams.none)
   }
 
+
+
 }
 
 
@@ -315,6 +332,9 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   //outer.icache.module.io.keep_clock_enabled = Output(Bool())
   //outer.icache.module.io.errors = new ICacheErrors
   //val perf = Output(new ICachePerfEvents()) // performance counting
+
+
+
 
 
   ////////////////
@@ -386,7 +406,14 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
   // CLOCKING
   outer.dcache.module.io.cpu.keep_clock_enabled := 1.B // is D$ currently being clocked?
-  //outer.dcache.module.io.cpu.clock_enabled      := 1.B // is D$ currently being clocked?
+
+
+  ////////////////
+  // INTERRUPTS //
+  ////////////////
+
+  outer.connectChaosCoreInterrupts(core.io.debug_req_i, core.io.irq_software_i, core.io.irq_timer_i, core.io.irq_external_i)
+
 
 
 
