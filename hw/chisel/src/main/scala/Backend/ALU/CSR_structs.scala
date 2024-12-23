@@ -91,7 +91,7 @@ class mhartid extends Bundle {
 // Machine status register (mstatus) - 32 bits
 class mstatus extends Bundle {
   val SD    = UInt(1.W)    // Status dirty
-  val WPRI1 = UInt(7.W)    // Reserved bits
+  val WPRI3 = UInt(8.W)    // Reserved bits
   val TSR   = UInt(1.W)    // Trap SRET
   val TW    = UInt(1.W)    // Timeout Wait
   val TVM   = UInt(1.W)    // Trap Virtual Memory
@@ -101,13 +101,16 @@ class mstatus extends Bundle {
   val XS    = UInt(2.W)    // Extension status
   val FS    = UInt(2.W)    // Floating-point status
   val MPP   = UInt(2.W)    // Machine previous privilege
+  val VS    = UInt(2.W)    
   val SPP   = UInt(1.W)    // Supervisor previous privilege
   val MPIE  = UInt(1.W)    // Machine previous interrupt enable
   val UBE   = UInt(1.W)    // User big-endian
   val SPIE  = UInt(1.W)    // Supervisor previous interrupt enable
   val WPRI2 = UInt(1.W)    // Reserved bit
   val MIE   = UInt(1.W)    // Machine interrupt enable
+  val WPRI1 = UInt(1.W)
   val SIE   = UInt(1.W)    // Supervisor interrupt enable
+  val WPRI0 = UInt(1.W)
 }
 
 // Machine trap-vector base address register (mtvec) - 32 bits
@@ -119,32 +122,46 @@ class mtvec extends Bundle {
 // Machine interrupt pending register (mip) - 32 bits
 class mip extends Bundle {
   val WPRI1  = UInt(20.W)  // Reserved
+
   val MEIP   = UInt(1.W)   // Machine external interrupt pending
+  val HEIP   = UInt(1.W)   // Machine external interrupt pending
   val SEIP   = UInt(1.W)   // Supervisor external interrupt pending
   val UEIP   = UInt(1.W)   // User external interrupt pending
-  val WPRI2  = UInt(3.W)   // Reserved
+
   val MTIP   = UInt(1.W)   // Machine timer interrupt pending
+  val HTIP   = UInt(1.W)   // Supervisor timer interrupt pending
   val STIP   = UInt(1.W)   // Supervisor timer interrupt pending
   val UTIP   = UInt(1.W)   // User timer interrupt pending
+
   val MSIP   = UInt(1.W)   // Machine software interrupt pending
+  val HSIP   = UInt(1.W)   // Supervisor software interrupt pending
   val SSIP   = UInt(1.W)   // Supervisor software interrupt pending
   val USIP   = UInt(1.W)   // User software interrupt pending
+
 }
 
 // Machine interrupt enable register (mie) - 32 bits
 class mie extends Bundle {
   val WPRI1  = UInt(20.W)  // Reserved
+
   val MEIE   = UInt(1.W)   // Machine external interrupt enable
+  val HEIE   = UInt(1.W)   // Supervisor external interrupt enable
   val SEIE   = UInt(1.W)   // Supervisor external interrupt enable
   val UEIE   = UInt(1.W)   // User external interrupt enable
-  val WPRI2  = UInt(3.W)   // Reserved
+
   val MTIE   = UInt(1.W)   // Machine timer interrupt enable
+  val HTIE   = UInt(1.W)   // Supervisor timer interrupt enable
   val STIE   = UInt(1.W)   // Supervisor timer interrupt enable
   val UTIE   = UInt(1.W)   // User timer interrupt enable
+
   val MSIE   = UInt(1.W)   // Machine software interrupt enable
+  val HSIE   = UInt(1.W)   // Supervisor software interrupt enable
   val SSIE   = UInt(1.W)   // Supervisor software interrupt enable
   val USIE   = UInt(1.W)   // User software interrupt enable
+
 }
+
+
 
 // Machine counter-inhibit register (mcountinhibit) - 32 bits
 class mcountinhibit extends Bundle {

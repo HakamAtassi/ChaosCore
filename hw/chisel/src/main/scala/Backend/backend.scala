@@ -126,6 +126,12 @@ class backend(coreParameters:CoreParameters) extends Module{
         INT_RS.io.backend_packet(i).valid    :=  io.backend_packet(i).bits.needs_INT_RS && io.backend_packet(i).valid
     }
 
+    INT_RS.io.commit <> io.commit
+    INT_RS.io.partial_commit <> io.partial_commit
+
+    MEM_RS.io.commit <> io.commit
+    MEM_RS.io.partial_commit <> io.partial_commit
+
     dontTouch(io)
     dontTouch(io.backend_packet)
 

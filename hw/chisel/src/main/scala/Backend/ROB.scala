@@ -73,6 +73,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     val CSR_port = IO(Input(new CSR_out(coreParameters)))
 
+    dontTouch(CSR_port)
+
     //////////////
     // POINTERS // 
     //////////////
@@ -376,7 +378,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val has_taken_branch_vec        = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_entry_banks(i).io.readDataB.is_branch})
     val has_exception_vec           = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && commit_resolved(i).T_NT && ROB_output.complete(i)})
     
-    val has_flushing_instr_vec      = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && ROB_output.complete(i) && (ROB_entry_banks(i).io.readDataB.is_fence || ROB_entry_banks(i).io.readDataB.is_CSR)})
+    val has_flushing_instr_vec      = VecInit(Seq.tabulate(fetchWidth) { i => ROB_output.ROB_entries(i).valid && (ROB_entry_banks(i).io.readDataB.is_fence || ROB_entry_banks(i).io.readDataB.is_CSR)})
+        
 
     val has_taken_branch            = has_taken_branch_vec.reduce(_ || _)
     val has_flushing_instr          = has_flushing_instr_vec.reduce(_ || _)
@@ -394,13 +397,19 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val commit          = Wire(new commit(coreParameters))
     val partial_commit  = Wire(new partial_commit(coreParameters))
 
+    //val leftmost_valid_CSR = PriorityEncoder(
+        //VecInit(ROB_output.ROB_entries.reverse.map(_.is_CSR)).asUInt
+    //)
+
+    val leftmost_valid_CSR = PriorityEncoder(VecInit(ROB_output.ROB_entries.map(_.is_CSR)).asUInt & VecInit(ROB_output.ROB_entries.map(_.valid)).asUInt)
+
 
     // commit signal
     for(i <- 0 until fetchWidth){
         val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
-        val is_valid        = (ROB_output.ROB_entries(i).valid)
-        commit_row_complete(i) := (is_completed || is_invalid) && ROB_output.row_valid  // stores happen after they commit
+        val is_CSR          = i.U >= leftmost_valid_CSR //(ROB_output.ROB_entries(i).is_CSR)
+        commit_row_complete(i) := (is_completed || is_invalid || is_CSR) && ROB_output.row_valid  // stores happen after they commit
     }
 
     commit_valid := commit_row_complete.reduce(_ && _)
@@ -484,6 +493,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
 
     val ROB_commit_row = Wire(new ROB_row(coreParameters))
+    dontTouch(ROB_commit_row)
     ROB_commit_row := DontCare
 
 
@@ -527,7 +537,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     flush := 0.U.asTypeOf(new flush(coreParameters))
 
-    when(commit_valid && (has_branch || has_flushing_instr)) {  
+    when(commit_valid && (has_branch || has_flushing_instr)) {
         // TODO: make this a foldleft or something...
         for(i <- fetchWidth-1 to 0 by - 1){
             when(ROB_commit_row.is_branch(i)){
@@ -561,10 +571,23 @@ class ROB(coreParameters:CoreParameters) extends Module{
         }
     }
 
+    when(CSR_port.interrupt && ROB_commit_row.has_valid_insn){
+        commit := 0.U.asTypeOf(new commit(coreParameters))
+        partial_commit := 0.U.asTypeOf(new partial_commit(coreParameters))
+        flush.is_interrupt := 1.B
+        flush.redirect_PC := CSR_port.mtvec.asUInt // jump to mtvec on interrupt
+        flush.flushing_PC := ROB_commit_row.youngest_PC    // store the PC of the oldest insn in the ROB
+    }
+
 
     //////////////////
     // FLUSH SIGNAL //
     //////////////////
+
+    // on interrupt, dont commit anything, partially or fully. 
+    // just flush and jump to interrupt handler 
+
+
 
 
     io.commit.bits      := RegNext(commit)
@@ -584,6 +607,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         front_pointer := 0.U
         back_pointer  := 0.U
     }
+
+    
 
 
 

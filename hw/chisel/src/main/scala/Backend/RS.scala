@@ -60,6 +60,10 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
         // REG READ (then execute) //
         val RF_inputs         =      Vec(RSPortCount, Decoupled(new decoded_instruction(coreParameters)))
 
+        // commit (mostly for CSRs) // 
+        val commit                  =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
+        val partial_commit          =      Input(new partial_commit(coreParameters))                                         // commit mem op
+
     }); dontTouch(io)
 
 
@@ -71,6 +75,13 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
     // Allocate RS regs
     //FIXME: update this so that it writes from top to bottom
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreParameters)))))
+
+
+    val committed     = RegInit(VecInit(Seq.fill(RSEntries)(0.B)))
+    val committed_next = WireInit(committed) // Wire for immediate updates
+
+    committed_next := committed
+
 
     dontTouch(reservation_station)
     
@@ -113,16 +124,25 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
 
 
 
-
-    //////////////
-    // FLUSH RS //
-    //////////////
-
-    for(i <- 0 until RSEntries){
-        when(io.flush.valid){
-            reservation_station(i) := 0.U.asTypeOf(new RS_entry(coreParameters))
+    for (i <- 0 until RSEntries) {
+        for (j <- 0 until fetchWidth) {
+            when(reservation_station(i).valid && io.commit.valid && 
+            (io.partial_commit.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && 
+            io.partial_commit.valid(j) && (j.U === reservation_station(i).decoded_instruction.packet_index)) {
+                committed_next(i) := 1.B // Update the wire immediately
+            }
         }
     }
+
+    // Update the register at the end of the cycle
+    committed := committed_next
+
+
+
+
+
+
+
 
     /////////////////////
     // PORT SCHEDULING //
@@ -176,17 +196,21 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
 
             val current_port_support     = FUParamSeq(port)
 
-            val fireable                =  ((reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid) &&
-                                            ((reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid) && 
-                                            reservation_station(i).valid
-                val supported = (
-                (current_instruction.needs_ALU && current_port_support.supportsInt.B) ||
-                (current_instruction.needs_branch_unit && current_port_support.supportsBranch.B) ||
-                (current_instruction.needs_CSRs && current_port_support.supportsCSRs.B) ||
-                (current_instruction.needs_div && current_port_support.supportsDiv.B) ||
-                (current_instruction.needs_mul && current_port_support.supportsMult.B) ||
-                (current_instruction.needs_memory && current_port_support.supportsAddressGeneration.B)
-                )
+            val RS1_valid_ready_or_not_valid    = (reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid
+            val RS2_valid_ready_or_not_valid    = (reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid
+            val need_commit_first               = (current_instruction.needs_CSRs && committed(i)) || !(current_instruction.needs_CSRs)
+
+            val fireable                        = reservation_station(i).valid && RS1_valid_ready_or_not_valid && RS2_valid_ready_or_not_valid && need_commit_first
+                                            
+                                            
+            val supported = (
+            (current_instruction.needs_ALU && current_port_support.supportsInt.B) ||
+            (current_instruction.needs_branch_unit && current_port_support.supportsBranch.B) ||
+            (current_instruction.needs_CSRs && current_port_support.supportsCSRs.B) ||
+            (current_instruction.needs_div && current_port_support.supportsDiv.B) ||
+            (current_instruction.needs_mul && current_port_support.supportsMult.B) ||
+            (current_instruction.needs_memory && current_port_support.supportsAddressGeneration.B)
+            )
 
                 // FIXME: another problem is that the FUParamSeq is "mixed" intems of RS
                 // so the first port for the MEMRS may be the Nth entry of the param seq. 
@@ -224,13 +248,13 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
     for (port <- 0 until RSPortCount) {
         when(io.RF_inputs(port).fire){
             reservation_station(port_RS_index(port)) := 0.U.asTypeOf(new RS_entry(coreParameters))
+            committed_next(port_RS_index(port)) := 0.B
         }
     }
 
     dontTouch(port_RS_index)
 
     // ADD RS entry freeing logic
-
 
 
     // iterate over RS
@@ -244,6 +268,16 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
         for(port <- 0 until RSPortCount){
             io.RF_inputs(port).bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
             io.RF_inputs(port).valid := 0.B
+        }
+    }
+
+    //////////////
+    // FLUSH RS //
+    //////////////
+
+    for(i <- 0 until RSEntries){
+        when(io.flush.valid && committed_next(i) === 0.B){
+            reservation_station(i) := 0.U.asTypeOf(new RS_entry(coreParameters))
         }
     }
 

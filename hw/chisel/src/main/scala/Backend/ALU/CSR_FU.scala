@@ -369,6 +369,10 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val is_CSRRSI =  is_CSR && FUNCT3 === 0x6.U
     val is_CSRRCI =  is_CSR && FUNCT3 === 0x7.U
 
+    val is_imm = is_CSR && (FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U)
+
+    val wr_data = Mux(is_imm, imm, RS1_data)
+
     val PRIVILAGE_OK = 1.B //FIXME:  // input privilage is lower or equal to active privilage
 
 
@@ -378,7 +382,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
 
     val input_CSR_read_request       = !(io.FU_input.bits.decoded_instruction.PRD === 0.U)  // when PRD == x0, the read is discarded, so dont read at all.
-    val input_CSR_write_request      = (is_CSRRW || is_CSRRWI) || (is_CSR && RS1 =/= 0.U)
+    val input_CSR_write_request      = (is_CSR && RS1 =/= 0.U)
     
 
     val active_CSR_privilage   = 0.U      // what was the privilage level of the core during request? 
@@ -497,9 +501,10 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     dontTouch(interrupt)
     dontTouch(CSR_port)
 
-    val any_pending_interrupt = (mip_reg.MSIP.asBool || mip_reg.MTIP.asBool || mip_reg.MEIP.asBool)
+    //val any_pending_interrupt = (mip_reg.MSIP.asBool || mip_reg.MTIP.asBool || mip_reg.MEIP.asBool)
+    val machine_pending_interrupt = (mip_reg.MSIP.asBool && mie_reg.MSIE.asBool || mip_reg.MTIP.asBool && mie_reg.MTIE.asBool || mip_reg.MEIP.asBool && mie_reg.MEIE.asBool) && mstatus_reg.MIE.asBool
 
-    when(any_pending_interrupt && !RegNext(any_pending_interrupt)) { // interrupt edge detect (CLINT)
+    when(machine_pending_interrupt && !RegNext(machine_pending_interrupt)) { // interrupt edge detect (CLINT)
       interrupt := 1.B 
     }
 
@@ -637,7 +642,13 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         for ((addr, reg) <- machine_mode_CSRs) {    // FIXME: add read only, etc...
             when(addr.U === CSR_addr) {
                 // FIXME: add proper write functions (ex, set, clear, etc...)
-                reg := RS1_data.asTypeOf(reg.cloneType) // Use cloneType to ensure the type matches
+                when(is_CSRRC){
+                    reg :=  (reg.asUInt & ~wr_data).asTypeOf(reg.cloneType)
+                }.elsewhen(is_CSRRW){
+                    reg :=  (wr_data).asTypeOf(reg.cloneType)
+                }.elsewhen(is_CSRRS){
+                    reg :=  (reg.asUInt | wr_data).asTypeOf(reg.cloneType)
+                }
             }
         }
     }

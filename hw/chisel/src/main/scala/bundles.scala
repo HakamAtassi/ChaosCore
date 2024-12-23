@@ -155,7 +155,7 @@ class flush(coreParameters:CoreParameters) extends Bundle{
     val is_CSR              = Bool()
 
     def is_valid(): Bool = {
-        is_misprediction || is_exception || is_fence || is_CSR
+        is_misprediction || is_exception || is_fence || is_CSR || is_interrupt
     }
 
 
@@ -529,7 +529,24 @@ class ROB_row(coreParameters:CoreParameters) extends Bundle{
         next_PC
     }
 
+   // Corrected has_valid_insn
+    def has_valid_insn: Bool = {
+        valid && insn.map(_.valid).reduce(_ || _)
+    }
 
+    // Implemented youngest_PC
+    def youngest_PC: UInt = {
+        val default_PC = 0.U(32.W)
+        val youngest_PC_reg = WireDefault(default_PC)
+
+        for (i <- (0 until fetchWidth).reverse) {
+            when(insn(i).valid && valid) {
+                youngest_PC_reg := fetch_PC + (i.U * 4.U)
+            }
+        }
+
+        youngest_PC_reg
+    }
 
 
 

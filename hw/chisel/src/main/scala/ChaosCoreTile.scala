@@ -347,9 +347,12 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   //val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
   //val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
  
+  
   // CACHE REQUEST 
   outer.dcache.module.io.cpu.req.valid       := core.io.backend_memory_request.valid
+  core.io.backend_memory_request.ready       := outer.dcache.module.io.cpu.req.ready
   outer.dcache.module.io.cpu.req.bits.addr   := core.io.backend_memory_request.bits.addr
+
   //outer.dcache.module.io.cpu.req.bits.idx    := 0.U//(usingVM && untagBits > pgIdxBits).option(UInt(coreMaxAddrBits.W))
   outer.dcache.module.io.cpu.req.bits.tag    := 0.U //UInt((coreParams.dcacheReqTagBits + log2Ceil(dcacheArbPorts)).W)
 
@@ -358,7 +361,7 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   }.elsewhen(core.io.backend_memory_request.bits.memory_type === memory_type_t.STORE){
     outer.dcache.module.io.cpu.req.bits.cmd    := M_XWR
   }
-  outer.dcache.module.io.cpu.req.bits.size   := 0.U //UInt(log2Ceil(coreDataBytes.log2 + 1).W)
+  outer.dcache.module.io.cpu.req.bits.size   := core.io.backend_memory_request.bits.access_width.asUInt //0.U //UInt(log2Ceil(coreDataBytes.log2 + 1).W)
   outer.dcache.module.io.cpu.req.bits.signed := core.io.backend_memory_request.bits.mem_signed //Bool()
   outer.dcache.module.io.cpu.req.bits.dprv   := 0.U //UInt(PRV.SZ.W)
   outer.dcache.module.io.cpu.req.bits.dv     := 0.B //Bool()
