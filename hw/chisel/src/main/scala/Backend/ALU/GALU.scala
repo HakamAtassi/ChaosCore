@@ -73,6 +73,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
     // Op select
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
+    val MRET                =   io.FU_input.bits.decoded_instruction.MRET
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
     val FENCE               =   io.FU_input.bits.decoded_instruction.FENCE
     val IS_IMM              =   io.FU_input.bits.decoded_instruction.IS_IMM

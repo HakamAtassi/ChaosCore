@@ -738,9 +738,8 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
 
 
-    val mret      = instructionType === InstructionType.SYSTEM && RS1 === 0.U && PRD === 0.U && imm === 0x302.U && FUNCT3 === 0.U
     val sret      = instructionType === InstructionType.SYSTEM && RS1 === 0.U && PRD === 0.U && imm === 0x102.U && FUNCT3 === 0.U
-    val mret_sret = mret || sret
+    val mret_sret = MRET || sret
 
 
     // FIXME: add more robust exception generation...

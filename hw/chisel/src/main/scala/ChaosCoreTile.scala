@@ -363,8 +363,9 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   outer.dcache.module.io.cpu.req.bits.data   := core.io.backend_memory_request.bits.data
   outer.dcache.module.io.cpu.req.bits.mask   := DontCare
 
-
   //outer.dcache.module.io.cpu.req.bits.idx    := 0.B
+
+
 
   // CACHE REQ - INTERNAL //
   outer.dcache.module.io.cpu.req.bits.phys      := 0.B
