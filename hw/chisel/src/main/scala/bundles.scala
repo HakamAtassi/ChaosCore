@@ -726,6 +726,9 @@ class backend_memory_response(coreParameters:CoreParameters) extends Bundle{
     //val memory_type     = memory_type_t() // LOAD/STORE
     //val access_width    = access_width_t()              // B/HW/W
     val MOB_index       = UInt(log2Ceil(MOBEntries).W)
+
+    val nack            = Bool()
+
 }
 
 
@@ -783,12 +786,13 @@ val Acquire,
 
 object MOB_STATES extends ChiselEnum {
     val INVALID,       
-    VALID,              // 1
-    READY,              // 2
-    REQUESTED,          // 3
-    CDB_WRITE,          // 4
-    WAIT,               // 5
-    DONE = Value        // 6
+    VALID,              // 1    (entry valid)
+    COMMITTED,          
+    RESOLVED,           
+    READY,              
+    REQUESTED,          // 3    (Request sent)
+    NACKED,             // 4    (Requested but denied)
+    DONE = Value        // 6    (Response received)
 }
 
 class MOB_entry(coreParameters:CoreParameters) extends Bundle{
@@ -816,9 +820,12 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
     val resolved                = Bool()    // all previous stores resolved?
 
 
-
     // Entry state
     val MOB_STATE               = MOB_STATES()
+
+    def in(s: MOB_STATES.Type): Bool = {
+        MOB_STATE === s
+    }
 
 }
 

@@ -44,7 +44,7 @@ class WithNChaosCores(n: Int = 1) extends Config((site, here, up) => {
         nSets = 64,
         nWays = 8,
         rowBits = site(SystemBusKey).beatBits,
-        nMSHRs = 0,
+        nMSHRs = 4,
         blockBytes = site(CacheBlockBytes))),
       icache = Some(ICacheParams(
         nSets = 64,

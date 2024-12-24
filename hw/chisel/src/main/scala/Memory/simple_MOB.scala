@@ -189,8 +189,14 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     dontTouch(back_index)
 
 
+    
+    // ENTRY FSM
 
-
+    for(i <- 0 until MOBEntries){
+        when(MOB(i).committed && MOB(i).resolved && MOB(i).in(MOB_STATES.VALID)){  
+            MOB(i).MOB_STATE := MOB_STATES.READY
+        }
+    }
 
     ///////////
     // CACHE //
@@ -202,7 +208,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // cache request
 
     io.backend_memory_request.bits   := 0.U.asTypeOf(new backend_memory_request(coreParameters))
-    io.backend_memory_request.valid  := (MOB_front.committed && MOB_front.resolved) && MOB_front.valid
+    //io.backend_memory_request.valid  := (MOB_front.committed && MOB_front.resolved) && MOB_front.valid
+    io.backend_memory_request.valid  := (MOB_front.MOB_STATE === MOB_STATES.READY) && MOB_front.valid
     
     //(MOB_front.committed || (MOB_front.memory_type === memory_type_t.LOAD)) && MOB_front.valid
 
@@ -216,11 +223,52 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.backend_memory_request.bits.data         := MOB_front.data
     io.backend_memory_request.bits.packet_index := MOB_front.fetch_packet_index
     
-    when(io.backend_memory_request.fire){
-        MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
-        front_pointer    := front_pointer + 1.U
+
+    // SEND REQUEST
+    when(io.backend_memory_request.fire){   // entry requested
+        //MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
+        MOB(front_index).MOB_STATE := MOB_STATES.REQUESTED
         req_reg          := io.backend_memory_request.bits
     }
+
+    when(MOB(front_index).valid && (MOB(front_index).MOB_STATE === MOB_STATES.REQUESTED) && (MOB(front_index).memory_type === memory_type_t.STORE)){
+        MOB(front_index).MOB_STATE := MOB_STATES.DONE
+    }
+
+
+    // AWAIT NACK
+    {
+        val response_index = io.backend_memory_response.bits.MOB_index
+        // NACK
+        when(io.backend_memory_response.bits.nack){
+            MOB(response_index).MOB_STATE := MOB_STATES.NACKED
+        }
+    }
+
+    // AWAIT RESPONSE
+    when(io.backend_memory_response.fire){ // entry response
+        val response_index = io.backend_memory_response.bits.MOB_index
+        // NACK
+        when(io.backend_memory_response.bits.nack){
+            MOB(response_index).MOB_STATE := MOB_STATES.NACKED
+        }.otherwise{
+            MOB(response_index).MOB_STATE := MOB_STATES.DONE
+        }
+    }
+
+
+    // HANDLE NACK
+    when(MOB(front_index).valid && MOB(front_index).MOB_STATE === MOB_STATES.NACKED){
+        MOB(front_index).MOB_STATE := MOB_STATES.READY  // set to ready and try again
+    }
+
+    // FREE ENTRY
+    when(MOB(front_index).MOB_STATE === MOB_STATES.DONE){ // entry response
+        front_pointer := front_pointer + 1.U
+       MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
+    }
+
+
 
     // cache response
     io.MOB_output.bits                      := 0.U.asTypeOf(new FU_output(coreParameters))
@@ -231,7 +279,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.MOB_output.bits.RD_data              := io.backend_memory_response.bits.data
     io.MOB_output.bits.RD_valid             := io.backend_memory_response.valid
     io.MOB_output.bits.fetch_packet_index   := io.backend_memory_response.bits.fetch_packet_index
-    io.MOB_output.valid                     := io.backend_memory_response.valid
+    io.MOB_output.valid                     := io.backend_memory_response.valid && !io.backend_memory_response.bits.nack
 
     when(io.backend_memory_response.fire){
         io.MOB_output.bits.ROB_index            := req_reg.ROB_index

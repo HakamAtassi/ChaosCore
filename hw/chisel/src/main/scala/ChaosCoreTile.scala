@@ -284,10 +284,11 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
 
   core.io := DontCare
-  dontTouch(core.io)
   //outer.icache.module.io := DontCare
+  //outer.dcache.module.io := DontCare
+  dontTouch(core.io)
   dontTouch(outer.icache.module.io)
-  outer.dcache.module.io := DontCare
+  dontTouch(outer.dcache.module.io)
   dontTouch(outer.dcache.module.io)
 
 
@@ -341,45 +342,57 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   // D$ CONNECT //
   ////////////////
 
-  // TODO
   // see https://github.com/chipsalliance/rocket-chip/blob/2fe6bb5e9c23360cac8297bb26512e4ca614f67b/src/main/scala/rocket/HellaCache.scala#L110
+
+  outer.dcache.module.io.ptw := DontCare  // no vmem
   
-  //val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
-  //val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
- 
-  
-  // CACHE REQUEST 
+  // CACHE REQ //
   outer.dcache.module.io.cpu.req.valid       := core.io.backend_memory_request.valid
   core.io.backend_memory_request.ready       := outer.dcache.module.io.cpu.req.ready
+
+  // CACHE REQ - MEM OP //
   outer.dcache.module.io.cpu.req.bits.addr   := core.io.backend_memory_request.bits.addr
-
-  //outer.dcache.module.io.cpu.req.bits.idx    := 0.U//(usingVM && untagBits > pgIdxBits).option(UInt(coreMaxAddrBits.W))
-  outer.dcache.module.io.cpu.req.bits.tag    := 0.U //UInt((coreParams.dcacheReqTagBits + log2Ceil(dcacheArbPorts)).W)
-
-  when(core.io.backend_memory_request.bits.memory_type === memory_type_t.LOAD){
-    outer.dcache.module.io.cpu.req.bits.cmd    := M_XRD
-  }.elsewhen(core.io.backend_memory_request.bits.memory_type === memory_type_t.STORE){
-    outer.dcache.module.io.cpu.req.bits.cmd    := M_XWR
-  }
-  outer.dcache.module.io.cpu.req.bits.size   := core.io.backend_memory_request.bits.access_width.asUInt //0.U //UInt(log2Ceil(coreDataBytes.log2 + 1).W)
+  //outer.dcache.module.io.cpu.req.bits.idx       := 0.U // something for virtual memory?
+  outer.dcache.module.io.cpu.req.bits.tag    := core.io.backend_memory_request.bits.MOB_index // request ID
+  outer.dcache.module.io.cpu.req.bits.cmd    := Mux(core.io.backend_memory_request.bits.memory_type === memory_type_t.LOAD, M_XRD, M_XWR)
+  outer.dcache.module.io.cpu.req.bits.size   := core.io.backend_memory_request.bits.access_width.asUInt - 1.U //0.U
   outer.dcache.module.io.cpu.req.bits.signed := core.io.backend_memory_request.bits.mem_signed //Bool()
-  outer.dcache.module.io.cpu.req.bits.dprv   := 0.U //UInt(PRV.SZ.W)
-  outer.dcache.module.io.cpu.req.bits.dv     := 0.B //Bool()
+  outer.dcache.module.io.cpu.req.bits.dprv   := "b11".U // privilege
+  outer.dcache.module.io.cpu.req.bits.dv     := 0.B 
 
-  //outer.dcache.module.io.cpu.s1_data            = Output(new HellaCacheWriteData()) // data for previous cycle's req
-  outer.dcache.module.io.cpu.s1_kill            := core.io.flush.valid // kill previous cycle's req
-  outer.dcache.module.io.cpu.s2_kill            := core.io.flush.valid // kill req from two cycles ago
-
-
-  outer.dcache.module.io.cpu.s2_nack;           // req from two cycles ago is rejected
-  outer.dcache.module.io.cpu.s2_nack_cause_raw; // reason for nack is store-load RAW hazard (performance hint)
-  outer.dcache.module.io.cpu.s2_uncached;       // advisory signal that the access is MMIO
-  outer.dcache.module.io.cpu.s2_paddr;          // translated address
+  outer.dcache.module.io.cpu.req.bits.data   := core.io.backend_memory_request.bits.data
+  outer.dcache.module.io.cpu.req.bits.mask   := DontCare
 
 
-  // CACHE RESPONSE (all outputs)
+  //outer.dcache.module.io.cpu.req.bits.idx    := 0.B
+
+  // CACHE REQ - INTERNAL //
+  outer.dcache.module.io.cpu.req.bits.phys      := 0.B
+  outer.dcache.module.io.cpu.req.bits.no_xcpt   := 0.B //core.io.backend_memory_request.valid
+  outer.dcache.module.io.cpu.req.bits.no_resp   := 0.B
+  outer.dcache.module.io.cpu.req.bits.no_alloc  := 0.B
+
+  // CACHE REQ - DATA //
+  outer.dcache.module.io.cpu.s1_data.data    := RegNext(core.io.backend_memory_request.bits.data)
+  outer.dcache.module.io.cpu.s1_data.mask    := DontCare
+
+  // CACHE REQ - MISC //
+  outer.dcache.module.io.cpu.s1_kill            := 0.B //core.io.flush.valid // kill previous cycle's req
+  outer.dcache.module.io.cpu.s2_kill            := 0.B //core.io.flush.valid // kill req from two cycles ago
+
+
+  // CACHE RESP //
   core.io.backend_memory_response.valid     := outer.dcache.module.io.cpu.resp.valid
   core.io.backend_memory_response.bits.addr := outer.dcache.module.io.cpu.resp.bits.addr  
+  core.io.backend_memory_response.bits.MOB_index := outer.dcache.module.io.cpu.resp.bits.tag
+  core.io.backend_memory_response.bits.nack := outer.dcache.module.io.cpu.s2_nack
+
+
+  outer.dcache.module.io.cpu.s2_paddr;
+  outer.dcache.module.io.cpu.s2_nack_cause_raw; // reason for nack is store-load RAW hazard (performance hint)
+  outer.dcache.module.io.cpu.s2_uncached;       // advisory signal that the access is MMIO
+
+
   outer.dcache.module.io.cpu.resp.bits.idx   
   outer.dcache.module.io.cpu.resp.bits.tag   
   outer.dcache.module.io.cpu.resp.bits.cmd   
@@ -397,6 +410,7 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   outer.dcache.module.io.cpu.resp.bits.data_raw 
   outer.dcache.module.io.cpu.resp.bits.store_data 
 
+  // CACHE RESP - MISC //
   outer.dcache.module.io.cpu.replay_next  
   outer.dcache.module.io.cpu.s2_xcpt      
   outer.dcache.module.io.cpu.s2_gpa       
@@ -405,6 +419,7 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   outer.dcache.module.io.cpu.ordered      
   outer.dcache.module.io.cpu.store_pending
   outer.dcache.module.io.cpu.perf         
+  
 
 
   // CLOCKING
