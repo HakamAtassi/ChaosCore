@@ -596,6 +596,7 @@ class ROB_entry(coreParameters:CoreParameters) extends Bundle{
     val is_fence    = Bool()       // currently is flushing means fence or CSR access
     val is_CSR      = Bool()       // currently is flushing means fence or CSR access
 
+
     val memory_type = memory_type_t()
 
     val MOB_index   = UInt(log2Ceil(MOBEntries).W)

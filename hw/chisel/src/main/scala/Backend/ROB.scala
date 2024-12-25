@@ -237,7 +237,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
                                                 io.ROB_packet.bits.decoded_instruction(i).MRET
         
         ROB_entry_data.is_fence              := io.ROB_packet.bits.decoded_instruction(i).FENCE
-        ROB_entry_data.is_CSR                := io.ROB_packet.bits.decoded_instruction(i).needs_CSRs
+        ROB_entry_data.is_CSR                := (io.ROB_packet.bits.decoded_instruction(i).needs_CSRs && !io.ROB_packet.bits.decoded_instruction(i).MRET) // MRET needs CSR unit but is not a CSR R/W FIXME: this is pretty messy
         ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
         ROB_entry_data.MOB_index             := io.ROB_packet.bits.decoded_instruction(i).MOB_index
 
@@ -408,7 +408,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
-        val is_CSR          = i.U >= leftmost_valid_CSR //(ROB_output.ROB_entries(i).is_CSR)
+        val is_CSR          = (i.U >= leftmost_valid_CSR) && ROB_output.ROB_entries.map(_.is_CSR).reduce(_ || _) //(ROB_output.ROB_entries(i).is_CSR)
         commit_row_complete(i) := (is_completed || is_invalid || is_CSR) && ROB_output.row_valid  // stores happen after they commit
     }
 
