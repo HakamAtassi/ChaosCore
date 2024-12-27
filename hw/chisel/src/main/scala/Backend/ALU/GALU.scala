@@ -82,6 +82,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
 
     val ECALL               =   io.FU_input.bits.decoded_instruction.ECALL
+    val ecall               =   io.FU_input.bits.decoded_instruction.ECALL
 
     //////////////////////////
     //////////////////////////

@@ -763,9 +763,9 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     io.FU_input.ready                       := 1.B    
 
     // mret/sret
-    io.FU_output.bits.branch_valid          := RegNext(mret_sret)
-    io.FU_output.bits.branch_taken          := RegNext(mret_sret)
-    io.FU_output.bits.target_address        := RegNext(mepc_reg.asUInt)
+    io.FU_output.bits.branch_valid          := RegNext(mret_sret || ecall)
+    io.FU_output.bits.branch_taken          := RegNext(mret_sret || ecall)
+    io.FU_output.bits.target_address        := RegNext(Mux(mret_sret , mepc_reg.asUInt, mtvec_reg.asUInt)) //RegNext(mepc_reg.asUInt)
 
 
 

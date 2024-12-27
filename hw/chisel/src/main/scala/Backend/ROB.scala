@@ -234,10 +234,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.BRANCH || 
                                                 io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.JALR   || 
                                                 io.ROB_packet.bits.decoded_instruction(i).instructionType === InstructionType.JAL    || 
-                                                io.ROB_packet.bits.decoded_instruction(i).MRET
+                                                io.ROB_packet.bits.decoded_instruction(i).MRET || io.ROB_packet.bits.decoded_instruction(i).ECALL
         
         ROB_entry_data.is_fence              := io.ROB_packet.bits.decoded_instruction(i).FENCE
-        ROB_entry_data.is_CSR                := (io.ROB_packet.bits.decoded_instruction(i).needs_CSRs && !io.ROB_packet.bits.decoded_instruction(i).MRET) // MRET needs CSR unit but is not a CSR R/W FIXME: this is pretty messy
+        ROB_entry_data.is_CSR                := (io.ROB_packet.bits.decoded_instruction(i).needs_CSRs && !io.ROB_packet.bits.decoded_instruction(i).MRET && !io.ROB_packet.bits.decoded_instruction(i).ECALL) // MRET needs CSR unit but is not a CSR R/W FIXME: this is pretty messy
         ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
         ROB_entry_data.MOB_index             := io.ROB_packet.bits.decoded_instruction(i).MOB_index
 
@@ -573,7 +573,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
                     flush.redirect_PC  := ROB_commit_row.get_next_PC(i)
                 }
 
-            }.elsewhen(ROB_commit_row.is_flush(i)){
+            }.elsewhen(ROB_commit_row.is_flush(i) || ROB_commit_row.is_exception(i)){
                 commit.is_misprediction      := 0.B
                 commit.br_type               := br_type_t.NONE
                 commit.fetch_packet_index    := 0.U

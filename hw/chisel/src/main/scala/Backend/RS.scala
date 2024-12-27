@@ -198,7 +198,7 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
 
             val RS1_valid_ready_or_not_valid    = (reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid
             val RS2_valid_ready_or_not_valid    = (reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid
-            val need_commit_first               = (current_instruction.needs_CSRs &&  committed(i)) || !(current_instruction.needs_CSRs) || current_instruction.MRET
+            val need_commit_first               = (current_instruction.needs_CSRs &&  committed(i)) || !(current_instruction.needs_CSRs) || current_instruction.MRET || current_instruction.ECALL
 
             val fireable                        = reservation_station(i).valid && RS1_valid_ready_or_not_valid && RS2_valid_ready_or_not_valid && need_commit_first
                                             
