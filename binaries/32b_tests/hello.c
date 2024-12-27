@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 int main(void) {
-  printf("Hello from 32 bit test!\n");
+  printf("Hello 32 bit rocketchip\n");
   return 0;
 }
 

@@ -111,7 +111,7 @@ object validate_backend{
 
 
 case class CoreParameters(
-    DEBUG: Boolean = false,
+    DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
     coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)

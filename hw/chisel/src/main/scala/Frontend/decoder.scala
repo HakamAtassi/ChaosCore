@@ -157,7 +157,7 @@ class decoder(coreParameters:CoreParameters) extends Module{
             BitPat("b1"+ FUNCT7_NONE+ R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.AUIPC.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + N + N + Y + N + N + N + N + N + Y + N + N +    N + N + N + N + Y),   // AUIPC
 
             // MISC mem                                    
-            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.MISC_MEM.litValue.U(5.W))}")                                                                    -> BitPat("b" + N + N + N + N + Y + N + N + N + N + N + N + N +    N + N + Y + Y + N),   // FENCE
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.MISC_MEM.litValue.U(5.W))}")                                                                    -> BitPat("b" + N + Y + Y + N + N + N + N + N + N + Y + N + N +    N + N + N + N + Y), //BitPat("b" + N + N + N + N + Y + N + N + N + N + N + N + N +    N + N + Y + Y + N),   // FENCE
 
             // CSR                                     
             BitPat("b1"+ IMM_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.SYSTEM.litValue.U(5.W))}")                                                                                  -> BitPat("b" + N + Y + N + N + Y + N + N + N + N + N + N + N +    N + N + N + Y + Y),   // CSRRW

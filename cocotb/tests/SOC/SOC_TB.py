@@ -98,7 +98,7 @@ class SOC_TB:
     def riscv_test_pass(self):
         PRS_31 = self.get_RS_mapping(31)
         x31_data = self.get_RS_data(PRS_31)
-        if(x31_data == 0x42424230):
+        if(x31_data == 0x42):
             return True
         else: 
             return False

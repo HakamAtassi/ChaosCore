@@ -34,13 +34,8 @@ import _root_.ChaosCore.memory_type_t.LOAD
 case class ChaosCoreTileBoundaryBufferParams(force: Boolean = false)
 
 case class ChaosCoreParams(
-  xLen: Int = 32,
   pgLevels: Int = 2, // sv39 default
   bootFreqHz: BigInt = 0,
-  useVM: Boolean = false,
-  useUser: Boolean = false,
-  useSupervisor: Boolean = false,
-  useHypervisor: Boolean = false,
   useDebug: Boolean = true,
   useAtomics: Boolean = false,
   useAtomicsOnlyForIO: Boolean = false,
@@ -73,15 +68,23 @@ case class ChaosCoreParams(
   mvendorid: Int = 0, // 0 means non-commercial implementation
   mimpid: Int = 0x20181004, // release date in BCD
   mulDiv: Option[MulDivParams] = Some(MulDivParams()),
-  fpu: Option[FPUParams] = Some(FPUParams()),
   debugROB: Option[DebugROBParams] = None, // if size < 1, SW ROB, else HW ROB
   haveCease: Boolean = true, // non-standard CEASE instruction
   haveSimTimeout: Boolean = true, // add plusarg for simulation timeout
 ) extends CoreParams {
+
+  //override def vMemDataBits: Int = 0
+
+  val useVM: Boolean = false
+  val useUser: Boolean = false
+  val useSupervisor: Boolean = false
+  val useHypervisor: Boolean = false
+  val xLen: Int = 32
   val lgPauseCycles = 5
   val haveFSDirty = false
   val pmpGranularity: Int = 0
   val fetchWidth: Int = 4
+  val fpu: Option[FPUParams] = None 
   //  fetchWidth doubled, but coreInstBytes halved, for RVC:
   val decodeWidth: Int = 4
   val retireWidth: Int = 1
@@ -89,6 +92,201 @@ case class ChaosCoreParams(
   val lrscCycles: Int = 80 // worst case is 14 mispredicted branches + slop
   val traceHasWdata: Boolean = debugROB.isDefined // ooo wb, so no wdata in trace
 }
+
+
+/*
+case class ChaosCoreParams(
+  //Defaults based on Ibex "small" configuration
+  //See https://github.com/lowRISC/ibex for more information
+  val bootFreqHz: BigInt = BigInt(1700000000),
+  val pmpEnable: Int = 0,
+  val pmpGranularity: Int = 0,
+  val pmpNumRegions: Int = 4,
+  val mhpmCounterNum: Int = 0,
+  val mhpmCounterWidth: Int = 0,
+  val rv32e: Int = 0,
+  val rv32m: String = "RV32MFast",
+  val rv32b: String = "RV32BNone",
+  val regFile: String = "RegFileFF",
+  val branchTargetALU: Int = 0,
+  val wbStage: Int = 0,
+  val branchPredictor: Int = 0,
+  val dbgHwBreakNum: Int = 1,
+  val dmHaltAddr: Int = 0x1A110800,
+  val dmExceptionAddr: Int = 0x1A110808
+) extends CoreParams {
+  val xLen = 32
+  val pgLevels = 2
+  val useVM: Boolean = false
+  val useHypervisor: Boolean = false
+  val useUser: Boolean = true
+  val useSupervisor: Boolean = false
+  val useDebug: Boolean = true
+  val useAtomics: Boolean = false
+  val useAtomicsOnlyForIO: Boolean = false
+  val useCompressed: Boolean = false
+  override val useVector: Boolean = false
+  val useSCIE: Boolean = false
+  val useRVE: Boolean = true
+  val mulDiv: Option[MulDivParams] = Some(MulDivParams()) // copied from Rocket
+  val fpu: Option[FPUParams] = None //floating point not supported
+  val fetchWidth: Int = 1
+  val decodeWidth: Int = 1
+  val retireWidth: Int = 2
+  val instBits: Int = if (useCompressed) 16 else 32
+  val nLocalInterrupts: Int = 15
+  val nPMPs: Int = 0
+  val nBreakpoints: Int = 0
+  val useBPWatch: Boolean = false
+  val nPerfCounters: Int = 29
+  val haveBasicCounters: Boolean = true
+  val haveFSDirty: Boolean = false
+  val misaWritable: Boolean = false
+  val haveCFlush: Boolean = false
+  val nL2TLBEntries: Int = 0
+  val mtvecInit: Option[BigInt] = Some(BigInt(0))
+  val mtvecWritable: Boolean = true
+  val nL2TLBWays: Int = 1
+  val lrscCycles: Int = 80
+  val mcontextWidth: Int = 0
+  val scontextWidth: Int = 0
+  val useNMI: Boolean = true
+  val nPTECacheEntries: Int = 0
+  val traceHasWdata: Boolean = false
+  val useConditionalZero: Boolean = false
+  val useZba: Boolean = false
+  val useZbb: Boolean = false
+  val useZbs: Boolean = false
+}
+*/
+
+
+
+
+
+/*
+case class BoomCoreParams(
+// DOC include start: BOOM Parameters
+  pgLevels: Int = 3,
+  fetchWidth: Int = 4,
+  decodeWidth: Int = 1,
+  numRobEntries: Int = 32,
+  issueParams: Seq[IssueParams] = Seq(
+    IssueParams(issueWidth=2, numEntries=8, iqType=IQ_MEM, dispatchWidth=1),
+    IssueParams(issueWidth=1, numEntries=8, iqType=IQ_UNQ, dispatchWidth=1),
+    IssueParams(issueWidth=1, numEntries=8, iqType=IQ_ALU, dispatchWidth=1),
+    IssueParams(issueWidth=1, numEntries=8, iqType=IQ_FP , dispatchWidth=1)),
+  lsuWidth: Int = 1,
+  numLdqEntries: Int = 8,
+  numStqEntries: Int = 8,
+  numIntPhysRegisters: Int = 48,
+  numFpPhysRegisters: Int = 48,
+  numImmPhysRegisters: Int = 32,
+  numIrfReadPorts: Int = 3,
+  numFrfReadPorts: Int = 3,
+  numIrfBanks: Int = 1,
+  numFrfBanks: Int = 1,
+  maxBrCount: Int = 4,
+  numFetchBufferEntries: Int = 8,
+  enableColumnALUIssue: Boolean = false,
+  enableALUSingleWideDispatch: Boolean = false,
+  enableBankedFPFreelist: Boolean = false,
+  enablePrefetching: Boolean = false,
+  enableFastLoadUse: Boolean = false,
+  enableCompactingLSUDuringDispatch: Boolean = true,
+  enableAgenStage: Boolean = false,
+  enableStLdForwarding: Boolean = false,
+  enableFastPNR: Boolean = false,
+  enableSFBOpt: Boolean = true,
+  enableGHistStallRepair: Boolean = true,
+  enableBTBFastRepair: Boolean = true,
+  enableLoadToStoreForwarding: Boolean = true,
+  enableSuperscalarSnapshots: Boolean = true,
+  enableSlowBTBRedirect: Boolean = false,
+  enableBPDHPMs: Boolean = false,
+
+  useAtomicsOnlyForIO: Boolean = false,
+  ftq: FtqParameters = FtqParameters(nEntries=16),
+  intToFpLatency: Int = 2,
+  imulLatency: Int = 3,
+  nPerfCounters: Int = 2,
+  numRXQEntries: Int = 4,
+  numRCQEntries: Int = 8,
+  numDCacheBanks: Int = 1,
+  dcacheSinglePorted: Boolean = false,
+
+  nPMPs: Int = 8,
+  enableICacheDelay: Boolean = false,
+  icacheSinglePorted: Boolean = true,
+
+  /* branch prediction */
+  enableBranchPrediction: Boolean = true,
+  branchPredictor: Function2[BranchPredictionBankResponse, Parameters, Tuple2[Seq[BranchPredictorBank], BranchPredictionBankResponse]] = ((resp_in: BranchPredictionBankResponse, p: Parameters) => (Nil, resp_in)),
+  globalHistoryLength: Int = 64,
+  localHistoryLength: Int = 32,
+  localHistoryNSets: Int = 128,
+  bpdMaxMetaLength: Int = 120,
+  numRasEntries: Int = 32,
+  enableRasTopRepair: Boolean = true,
+
+  /* more stuff */
+  useCompressed: Boolean = true,
+  useFetchMonitor: Boolean = true,
+  bootFreqHz: BigInt = 0,
+  fpu: Option[FPUParams] = Some(FPUParams(sfmaLatency=4, dfmaLatency=4, divSqrt=true)),
+  usingFPU: Boolean = true,
+  haveBasicCounters: Boolean = true,
+  misaWritable: Boolean = false,
+  mtvecInit: Option[BigInt] = Some(BigInt(0)),
+  mtvecWritable: Boolean = true,
+  haveCFlush: Boolean = false,
+  mulDiv: Option[freechips.rocketchip.rocket.MulDivParams] = Some(MulDivParams(divEarlyOut=true)),
+  nBreakpoints: Int = 0, // TODO Fix with better frontend breakpoint unit
+  nL2TLBEntries: Int = 512,
+  nL2TLBWays: Int = 1,
+  nLocalInterrupts: Int = 0,
+  useNMI: Boolean = false,
+  useAtomics: Boolean = true,
+  useDebug: Boolean = true,
+  useUser: Boolean = true,
+  useSupervisor: Boolean = false,
+  useVM: Boolean = true,
+  useSCIE: Boolean = false,
+  useRVE: Boolean = false,
+  useBPWatch: Boolean = false,
+  clockGate: Boolean = false,
+  mcontextWidth: Int = 0,
+  scontextWidth: Int = 0,
+  trace: Boolean = false,
+
+  /* debug stuff */
+  enableCommitLogPrintf: Boolean = false,
+  enableBranchPrintf: Boolean = false,
+  enableMemtracePrintf: Boolean = false
+
+// DOC include end: BOOM Parameters
+) extends freechips.rocketchip.tile.CoreParams
+{
+  override def traceCustom = Some(new BoomTraceBundle)
+  val xLen = 64
+  val haveFSDirty = true
+  val pmpGranularity: Int = 4
+  val instBits: Int = 16
+  val lrscCycles: Int = 80 // worst case is 14 mispredicted branches + slop
+  val retireWidth = decodeWidth
+  val nPTECacheEntries = 0
+  val useHypervisor = false
+  val jumpInFrontend: Boolean = false // unused in boom
+  val traceHasWdata = trace
+  val useConditionalZero = false
+  val useZba = true
+  val useZbb = true
+  val useZbs = true
+
+  override def customCSRs(implicit p: Parameters) = new BoomCustomCSRs
+}
+*/
+
 
 case class ChaosCoreAttachParams(
   tileParams: ChaosCoreTileParams,

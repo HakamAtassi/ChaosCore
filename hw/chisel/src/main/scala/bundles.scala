@@ -813,6 +813,7 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
     val data                    = UInt(32.W)              
     val data_valid              = Bool()
 
+    val counter                 = UInt(2.W)
 
     val fwd_valid               = Vec(4, Bool())
     val fwd_data                = Vec(4, UInt(8.W))

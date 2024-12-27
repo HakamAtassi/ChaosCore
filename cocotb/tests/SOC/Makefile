@@ -5,7 +5,7 @@ TEST_DIR=tests
 #SIM ?= modelsim
 
 SIM ?= verilator
-COMPILE_ARGS += -Wno-DECLFILENAME -Wno-UNUSED -Wno-UNDRIVEN -Wno-WIDTH -Wno-UNOPTFLAT -Wno-WIDTHEXPAND -j 16 
+COMPILE_ARGS += -Wno-DECLFILENAME -Wno-UNUSED -Wno-UNDRIVEN -Wno-WIDTH -Wno-UNOPTFLAT -Wno-WIDTHEXPAND -Wno-MODDUP -j 16 
 #--MAKEFLAGS OPT_FAST=-O0
 EXTRA_ARGS += --trace --trace-fst --trace-structs 
 

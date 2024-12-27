@@ -228,12 +228,19 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     when(io.backend_memory_request.fire){   // entry requested
         //MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
         MOB(front_index).MOB_STATE := MOB_STATES.REQUESTED
+        MOB(front_index).counter := MOB(front_index).counter + 1.U
         req_reg          := io.backend_memory_request.bits
     }
 
-    when(MOB(front_index).valid && (MOB(front_index).MOB_STATE === MOB_STATES.REQUESTED) && (MOB(front_index).memory_type === memory_type_t.STORE)){
-        MOB(front_index).MOB_STATE := MOB_STATES.DONE
+    for(i <- 0 until MOBEntries){
+        when(MOB(i).valid && MOB(i).MOB_STATE === MOB_STATES.REQUESTED){
+            MOB(i).counter := MOB(front_index).counter + 1.U
+            when(MOB(i).counter === 2.U && MOB(i).memory_type === memory_type_t.STORE){ // stores are successfull when they are requested and dont get nacked in 2 cycles
+                MOB(i).MOB_STATE := MOB_STATES.DONE
+            }
+        }
     }
+
 
 
     // AWAIT NACK
@@ -272,21 +279,21 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
     // cache response
     io.MOB_output.bits                      := 0.U.asTypeOf(new FU_output(coreParameters))
-    io.MOB_output.bits.ROB_index            := io.backend_memory_response.bits.ROB_index
+    io.MOB_output.bits.ROB_index            := MOB(io.backend_memory_response.bits.MOB_index).ROB_index //io.backend_memory_response.bits.PRD//io.backend_memory_response.bits.ROB_index
     io.MOB_output.bits.MOB_index            := io.backend_memory_response.bits.MOB_index    // why is this needed?
     io.MOB_output.bits.address              := io.backend_memory_response.bits.addr
-    io.MOB_output.bits.PRD                  := io.backend_memory_response.bits.PRD
+    io.MOB_output.bits.PRD                  := MOB(io.backend_memory_response.bits.MOB_index).PRD //io.backend_memory_response.bits.PRD
     io.MOB_output.bits.RD_data              := io.backend_memory_response.bits.data
     io.MOB_output.bits.RD_valid             := io.backend_memory_response.valid
     io.MOB_output.bits.fetch_packet_index   := io.backend_memory_response.bits.fetch_packet_index
     io.MOB_output.valid                     := io.backend_memory_response.valid && !io.backend_memory_response.bits.nack
 
-    when(io.backend_memory_response.fire){
-        io.MOB_output.bits.ROB_index            := req_reg.ROB_index
-        io.MOB_output.bits.MOB_index            := req_reg.MOB_index
-        io.MOB_output.bits.fetch_packet_index   := req_reg.packet_index
-        io.MOB_output.bits.PRD                  := req_reg.PRD
-    }
+    //when(io.backend_memory_response.fire){
+        //io.MOB_output.bits.ROB_index            := req_reg.ROB_index
+        //io.MOB_output.bits.MOB_index            := req_reg.MOB_index
+        //io.MOB_output.bits.fetch_packet_index   := req_reg.packet_index
+        //io.MOB_output.bits.PRD                  := req_reg.PRD
+    //}
 
     ///////////
     // READY //

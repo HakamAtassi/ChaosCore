@@ -6,6 +6,10 @@ import org.chipsalliance.cde.config.{Config}
 
 class ChaosCoreConfig extends Config(
 
+  new freechips.rocketchip.rocket.WithRV32 ++            // set RocketTiles to be 32-bit
+
+  new freechips.subsystem.WithoutTLMonitors ++ 
+
   ////////////////
   // INIT CORES //
   ////////////////

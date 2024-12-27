@@ -402,14 +402,34 @@ class ROB(coreParameters:CoreParameters) extends Module{
     //)
 
     val leftmost_valid_CSR = PriorityEncoder(VecInit(ROB_output.ROB_entries.map(_.is_CSR)).asUInt & VecInit(ROB_output.ROB_entries.map(_.valid)).asUInt)
+    val leftmost_taken_branch = PriorityEncoder(
+        VecInit(ROB_output.ROB_entries.map(_.is_branch)).asUInt & 
+        VecInit(commit_resolved.map(_.T_NT)).asUInt & 
+        VecInit(ROB_output.complete.map(_.asBool)).asUInt & // Explicitly converting each element to Bool
+        VecInit(ROB_output.ROB_entries.map(_.valid)).asUInt
+    )
+
+    val test = VecInit(ROB_output.ROB_entries.map(_.is_branch)).asUInt & 
+        VecInit(commit_resolved.map(_.T_NT)).asUInt & 
+        VecInit(ROB_output.complete.map(_.asBool)).asUInt & // Explicitly converting each element to Bool
+        VecInit(ROB_output.ROB_entries.map(_.valid)).asUInt
+
+    def has_valid(signal_flag: Seq[Bool], valid: Seq[Bool]): Bool = {
+        // Pair the signal_flag and valid, and check if any pair has both true
+        signal_flag.zip(valid).map { case (flag, v) => flag && v }.reduce(_ || _)
+    }
+
 
 
     // commit signal
     for(i <- 0 until fetchWidth){
         val is_completed    = (ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!ROB_output.ROB_entries(i).valid)
-        val is_CSR          = (i.U >= leftmost_valid_CSR) && ROB_output.ROB_entries.map(_.is_CSR).reduce(_ || _) //(ROB_output.ROB_entries(i).is_CSR)
-        commit_row_complete(i) := (is_completed || is_invalid || is_CSR) && ROB_output.row_valid  // stores happen after they commit
+
+        val is_CSR          = (i.U >= leftmost_valid_CSR) && has_valid(ROB_output.ROB_entries.map(_.is_CSR), ROB_output.ROB_entries.map(_.valid))
+        val is_branch       = (i.U >= leftmost_taken_branch) && test.orR //has_valid(ROB_output.ROB_entries.map(_.is_branch), ROB_output.ROB_entries.map(_.valid))
+
+        commit_row_complete(i) := (is_completed || is_invalid || is_CSR || is_branch) && ROB_output.row_valid  // stores happen after they commit
     }
 
     commit_valid := commit_row_complete.reduce(_ && _)
@@ -647,13 +667,11 @@ class ROB(coreParameters:CoreParameters) extends Module{
                 val physical_RD     = io.partial_commit.PRD(i)
                 val RD_data         = RegNext(ROB_output.RD_data.map(_(i)).getOrElse(0.U))
 
-                val is_completed    = RegNext(ROB_output.complete(i) && ROB_output.ROB_entries(i).valid)
-
-                when(arch_RD_valid && is_completed && io.partial_commit.valid(i) && arch_RD=/=0.U){
+                when( io.partial_commit.valid(i)){
                     // PC RD data
                     printf("core   0: 3 0x%x x%d 0x%x\n", instruction_PC, arch_RD, RD_data);
                   //printf("core   0: 3 0x80000004 (0x00000093) x1  0x00000000", )
-                }.elsewhen(is_completed && io.partial_commit.valid(i)){
+                }.elsewhen(io.partial_commit.valid(i)){
                     printf("core   0: 3 0x%x\n", instruction_PC)
                 }
             }

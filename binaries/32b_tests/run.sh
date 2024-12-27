@@ -2,7 +2,9 @@ riscv32-unknown-elf-gcc -fno-common -fno-builtin-printf  -specs=htif_nano.specs 
 riscv32-unknown-elf-gcc -static hello.o -o hello.riscv  -specs=htif_nano.specs -march=rv32im_zicsr -mabi=ilp32
 riscv32-unknown-elf-objdump -d hello.riscv > hello.riscv.dump
 
-spike --isa=rv32im_zicsr hello.riscv
+#spike --isa=rv32im_zicsr hello.riscv --log-commits --isa=rv32im_zicntr
+
+spike --log=test.txt --log-commits --isa=rv32im_zicsr  hello.riscv
 
 
 

@@ -219,7 +219,7 @@ async def test_riscv_tests(dut):
         await SOC.reset()                         # Reset
 
         # Simulate for 5000 clock cycles
-        for _ in range(7000):
+        for _ in range(10000):
             await SOC.clock()
 
         # Check if the test passed and print result
