@@ -105,6 +105,18 @@ object getPortCount
   }
 }
 
+object getBranchPortCount
+{
+  // Returns total number of ports across all reservations stations
+  def apply(coreParameters:CoreParameters) ={
+    import coreParameters._
+
+    var portCount = branchPortCount
+
+    portCount
+  }
+}
+
 object findMispredictionCommit {
   def apply(commits: Seq[commit], coreParameters:CoreParameters): commit = {
     import coreParameters._

@@ -47,8 +47,6 @@ class branch_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
     GE         :=  (RS1_data.asSInt  >= RS2_data.asSInt) && BGE
     LTU        :=  (RS1_data.asUInt   < RS2_data.asUInt) && BLTU
     GEU        :=  (RS1_data.asUInt  >= RS2_data.asUInt) && BGEU
-    JAL        :=  instructionType === InstructionType.JAL
-    JALR       :=  instructionType === InstructionType.JALR 
 
 
     val branch_taken   = Wire(Bool())

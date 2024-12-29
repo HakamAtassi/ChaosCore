@@ -120,10 +120,8 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // INT RS //
     for (i <- 0 until fetchWidth){
-
-
-        INT_RS.io.backend_packet(i).bits     := io.backend_packet(i).bits  // pass data along
-        INT_RS.io.backend_packet(i).valid    :=  io.backend_packet(i).bits.needs_INT_RS && io.backend_packet(i).valid
+        INT_RS.io.backend_packet(i).bits   := io.backend_packet(i).bits  // pass data along
+        INT_RS.io.backend_packet(i).valid  := io.backend_packet(i).bits.needs_INT_RS && io.backend_packet(i).valid
     }
 
     INT_RS.io.commit <> io.commit
@@ -162,8 +160,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     // REGISTER FILES (READ) //
     ///////////////////////////
 
-    //val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;    // Connect blackbox
     val INT_PRF = Module(new sim_nReadmWrite(coreParameters))
+    //val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount, depth=physicalRegCount, width=32))    // currently exposes an issue in the ROB
 
 
     val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))

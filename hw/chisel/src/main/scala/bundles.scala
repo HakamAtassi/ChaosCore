@@ -236,68 +236,80 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // coreParameters
     import coreParameters._
 
+    def needs_INT_RS: Bool = {
+        val result =    needs_ALU          ||
+                        needs_branch_unit  ||
+                        needs_CSRs         ||
+                        needs_mul          ||
+                        needs_div
+        result
+    }
 
-    def needs_MEM_RS = {
+    def needs_MEM_RS: Bool = {
         needs_memory
     }
 
-    //def needs_FPU_RS = {
-    //}
-
-    def needs_INT_RS = {
-        needs_ALU  || 
-        needs_CSRs || 
-        needs_div  || 
-        needs_mul  || 
-        FENCE  || 
-        needs_branch_unit
-    }
-
-
     // ~30 bits
     val ready_bits          =  new sources_ready()
+
+    val valid               =  Bool()
 
     val RD                  =  UInt(architecturalRegBits.W) 
     val PRD                 =  UInt(physicalRegBits.W)
     val PRDold              =  UInt(physicalRegBits.W)
 
-    val RD_valid            =  Bool()
     val RS1                 =  UInt(physicalRegBits.W)
-    val RS1_valid           =  Bool()
     val RS2                 =  UInt(physicalRegBits.W)
-    val RS2_valid           =  Bool()
     val IMM                 =  UInt(21.W)
     val FUNCT3              =  UInt(3.W)
+    val FUNCT7              =  UInt(7.W)
 
     // ~12 bits
     val packet_index        =  UInt(log2Ceil(fetchWidth).W)
     val ROB_index           =  UInt(log2Ceil(ROBEntries).W)
     val MOB_index           =  UInt(log2Ceil(MOBEntries).W)
 
-    // uOp info ~20 bits
-    val instructionType     =  InstructionType()
-    
-
-    val needs_ALU           =  Bool()
-    //val needs_FPU           =  Bool() // TODO
-    val needs_branch_unit   =  Bool()
-    val needs_CSRs          =  Bool()
-    val needs_memory        =  Bool()
-    val needs_mul           =  Bool()
-    val needs_div           =  Bool()
-
-    val SUBTRACT            =  Bool()
-    val MULTIPLY            =  Bool()
-    val FENCE               =  Bool()
-    val FLUSH               =  Bool()
-    val MRET                =  Bool()
-    val ECALL               =  Bool() 
-
-    val IS_IMM              =  Bool() 
 
     val mem_signed          =  Bool()
     val memory_type         =  memory_type_t()   // LOAD/STORE
     val access_width        =  access_width_t()  // B/HW/W
+
+    // Instruction steering
+    val needs_ALU           = Bool()
+    val needs_branch_unit   = Bool()
+    val needs_CSRs          = Bool()
+    val needs_memory        = Bool()
+    val needs_mul           = Bool()
+    val needs_div           = Bool()
+    val needs_FPU           = Bool()
+
+    // Operand
+    val RS1_valid          = Bool()
+    val RS2_valid          = Bool()
+    val RD_valid           = Bool()
+    val IS_IMM             = Bool()
+    val UNSIGNED           = Bool()
+
+    // INSTRUCTION TYPE //
+    val BASE_ARITHMETIC    = Bool()
+    val MULTIPLY           = Bool()
+    val LOAD               = Bool()
+    val STORE              = Bool()
+    val CTRL               = Bool()
+    val CSRRW              = Bool()
+    val XRET               = Bool()
+    val ENV                = Bool()
+    val FENCE              = Bool()
+
+    val LUI                = Bool()
+    val AUIPC              = Bool()
+    val JAL                = Bool()
+    val JALR               = Bool()
+
+    // MISC //
+    val FLUSH              = Bool()
+
+
 
 }
 
@@ -306,7 +318,6 @@ class decoded_fetch_packet(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val fetch_PC                = UInt(32.W)
     val decoded_instruction     = Vec(fetchWidth, new decoded_instruction(coreParameters))
-    val valid_bits              = Vec(fetchWidth, Bool())
 
     val GHR                     = UInt(GHRWidth.W)
     val TOS                     = UInt(log2Ceil(RASEntries).W)
@@ -377,8 +388,6 @@ object InstructionType extends ChiselEnum {
 
 }
 
-
-
 class misprediction(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val valid = Bool()
@@ -392,227 +401,59 @@ class misprediction(coreParameters:CoreParameters) extends Bundle{
     val TOS     = UInt(log2Ceil(RASEntries).W)
 }
 
-
-class FTQ_entry(coreParameters:CoreParameters) extends Bundle{
-    import coreParameters._
-
-    val valid = Bool()
-
-    // Branch validation data
-    val fetch_PC = UInt(32.W)    // fetch packet pc of the base instruction
-
-    val is_misprediction    = Bool()        // If set, predicted_expected_PC represents expected PC. Otherwise, it represents predicted PC
-    val predicted_PC        = UInt(32.W)    // if fetch packet contains a branch, this containts the dominant branch address
-                                            // if fetch packet does not contain a taken branch, the dominant branch just PC+N
-
-    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
-
-    val T_NT = Bool()
-    val br_type = br_type_t()
-
-    // FU branch data buffers
-    val dominant_index = UInt(log2Ceil(fetchWidth).W)
-    val resolved_PC    = UInt(32.W)
-
-}
-
 /////////////////////
 // BACKEND BUNDLES //
 /////////////////////
 
-class ROB_output(coreParameters:CoreParameters) extends Bundle{
+class ROB_uOp_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
-    
-    // 1 per row data
-    val row_valid               = Bool()
-    val fetch_PC                = UInt(32.W)
-    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
-
-    val GHR     = UInt(GHRWidth.W)
-    val NEXT    = UInt(log2Ceil(RASEntries).W)
-    val TOS     = UInt(log2Ceil(RASEntries).W)
-    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
-
-
-    val RD_data = if (coreParameters.DEBUG) Some(Vec(fetchWidth, UInt(32.W))) else None
-
-
-
-    // N per row 
-    val ROB_entries             = Vec(fetchWidth, new ROB_entry(coreParameters))    // "static" instruction data
-    val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
-    val exception               = Vec(fetchWidth, Bool())                       
-    val exception_cause         = Vec(fetchWidth, EX_CAUSE())                       
+    val decoded_insn = new decoded_instruction(coreParameters)
 }
 
-
-
-
-
-class ROB_row(coreParameters:CoreParameters) extends Bundle{
-    // A complete row of the ROB
-    // combines all memory components in to a single entry
-
-    import coreParameters._
-
-
-    val valid = Bool()
-
-    // shared info
-    val fetch_PC                = UInt(32.W)
-    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
-    val prediction              = new prediction(coreParameters)
-
-    // Saved State
-    val GHR                     = UInt(GHRWidth.W)
-    val NEXT                    = UInt(log2Ceil(RASEntries).W)
-    val TOS                     = UInt(log2Ceil(RASEntries).W)
-    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
-
-    // Instruction
-    val resolved_branch         = Vec(fetchWidth, new resolved_branch(coreParameters))
-    val WB                      = Vec(fetchWidth, new ROB_WB(coreParameters))
-    val insn                    = Vec(fetchWidth, new ROB_entry(coreParameters))
-
-
-    // CSR
-    val CSR_port = new CSR_out(coreParameters)
-
-
-    // UTILS
-    def is_exception(index:Int):Bool = {
-        WB(index).exception && insn(index).valid
-    }
-
-    def get_exception_cause(index:Int): EX_CAUSE.Type = {
-        WB(index).exception_cause 
-    }
-
-    def is_misprediction(index:Int): Bool = {
-        val incorrect_dir    = (resolved_branch(index).T_NT =/= prediction.br_mask(index)) 
-        val incorrect_target = (resolved_branch(index).target =/= prediction.target(index)) && resolved_branch(index).T_NT
-        (incorrect_dir || incorrect_target) && is_branch(index)
-    }
-
-    def is_flush(index:Int): Bool = {
-        (insn(index).is_fence || insn(index).is_CSR) && insn(index).valid
-    }
-
-    def instruction_PC(index: Int): UInt = {
-        (fetch_PC >> 4) << 4 | (index.U << 2)   // FIXME: parameterize this
-    }
-
-
-    def is_branch(index:Int): Bool = {
-        insn(index).is_branch && insn(index).valid
-    }
-
-    def get_next_PC(index:Int): UInt = {
-        // if exception, return MTVEC
-        // if branch, return insn PC + 4 if not taken
-        // if branch, return target if taken
-        //var next_PC = 0.U(32.W)
-        val next_PC = Wire(UInt(32.W))
-        when(is_branch(index)){
-            when(resolved_branch(index).T_NT){
-                next_PC := resolved_branch(index).target
-            }.otherwise{
-                next_PC := instruction_PC(index) + 4.U
-            }
-        }.elsewhen(is_exception(index)){
-            next_PC := CSR_port.mtvec.asUInt
-        }.elsewhen(is_flush(index)){
-            next_PC := instruction_PC(index) + 4.U
-        }.otherwise{
-            next_PC := instruction_PC(index) + 4.U
-        }
-        next_PC
-    }
-
-   // Corrected has_valid_insn
-    def has_valid_insn: Bool = {
-        valid && insn.map(_.valid).reduce(_ || _)
-    }
-
-    // Implemented youngest_PC
-    def youngest_PC: UInt = {
-        val default_PC = 0.U(32.W)
-        val youngest_PC_reg = WireDefault(default_PC)
-
-        for (i <- (0 until fetchWidth).reverse) {
-            when(insn(i).valid && valid) {
-                youngest_PC_reg := fetch_PC + (i.U * 4.U)
-            }
-        }
-
-        youngest_PC_reg
-    }
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class ROB_shared(coreParameters:CoreParameters) extends Bundle{
-    import coreParameters._
-
-    val fetch_PC                = UInt(32.W)
-
-    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
-
-    val GHR     = UInt(GHRWidth.W)
-    val NEXT    = UInt(log2Ceil(RASEntries).W)
-    val TOS     = UInt(log2Ceil(RASEntries).W)
-}
-
-// ROB entries that pertain to each instruction independantly (this info goes in a standalone bank)
-class ROB_entry(coreParameters:CoreParameters) extends Bundle{
-    import coreParameters._
-
-    val valid       = Bool()  // is this particular instruction valid?
-    val is_branch   = Bool()
-
-    val is_fence    = Bool()       // currently is flushing means fence or CSR access
-    val is_CSR      = Bool()       // currently is flushing means fence or CSR access
-
-
-    val memory_type = memory_type_t()
-
-    val MOB_index   = UInt(log2Ceil(MOBEntries).W)
-
-    val RD_valid    = Bool()
-    val RD          = UInt(architecturalRegBits.W)
-    val PRDold      = UInt(physicalRegBits.W)
-    val PRD         = UInt(physicalRegBits.W)
-}
-
-class ROB_WB(coreParameters:CoreParameters) extends Bundle{
-    val RD_data = if (coreParameters.DEBUG) Some(UInt(32.W)) else None
-    val busy                = Bool()
+class ROB_WB_entry(coreParameters:CoreParameters) extends Bundle{
+    val valid               = Bool()
+    val complete            = Bool()
     val exception           = Bool()
     val exception_cause     = EX_CAUSE()
+    val mem_violation       = Bool()    // for e.g., speculative memory violation
+    
+    val committed           = Bool()    // instruction "committed" (previous instructions do not flush)
+
+    val RD_data = if (coreParameters.DEBUG) Some(UInt(32.W)) else None
 }
+
+class ROB_instruction_entry(coreParameters:CoreParameters) extends Bundle{
+    val uOp = new ROB_uOp_entry(coreParameters)
+    val WB = new ROB_WB_entry(coreParameters)
+}
+
+class ROB_shared_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+
+    // fetch packet metadata
+    val fetch_PC                = UInt(32.W)
+
+    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
+
+    val GHR     = UInt(GHRWidth.W)
+    val NEXT    = UInt(log2Ceil(RASEntries).W)
+    val TOS     = UInt(log2Ceil(RASEntries).W)
+
+
+    val prediction      = new prediction(coreParameters)
+}
+
+
+class ROB_branch_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+
+    val target_PC = UInt(32.W)
+    val taken     = Bool()
+}
+
+
+
+// ROB entries that pertain to each instruction independantly (this info goes in a standalone bank)
 
 class sources_ready extends Bundle{
     val RS1_ready    =   Bool()
@@ -646,6 +487,7 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
     val RD_valid            =   Bool()
 
     // Branch
+    val CTRL                =   Bool()
     val fetch_PC            =   UInt(32.W)    // FIXME: is this necessary?
     val branch_taken        =   Bool()
     val target_address      =   UInt(32.W)

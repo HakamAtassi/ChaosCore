@@ -243,6 +243,7 @@ case class CoreParameters(
 
     val INTRSPortCount: Int = FUParamSeq.count(_.is_INTFU)
     val MEMRSPortCount: Int = FUParamSeq.count(_.is_MEMFU)
+    val branchPortCount: Int = FUParamSeq.count(_.is_branch)
 
     val WBPortCount: Int = INTRSPortCount + MOBWBPortCount
 

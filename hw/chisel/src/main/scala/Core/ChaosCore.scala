@@ -121,7 +121,6 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // FRONTEND <> ROB //
     /////////////////////
     frontend.io.commit <> ROB.io.commit
-    frontend.io.partial_commit <> ROB.io.partial_commit
 
     /////////////////////////
     // FRONTEND <> BACKEND //
@@ -133,11 +132,11 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ////////////////////
     // ROB <> BACKEND //
     ////////////////////
-    ROB.io.FU_outputs <> backend.io.FU_outputs 
+    ROB.io.FU_inputs <> backend.io.FU_outputs 
     //ROB.io.mtvec <> backend.io.mtvec
     ROB.CSR_port <> backend.CSR_port
 
-    ROB.io.partial_commit <> backend.io.partial_commit
+    ROB.io.commit <> backend.io.commit
 
 
     ///////////
@@ -159,7 +158,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // ROB and RS do not update until ready
     for(i <- 0 until fetchWidth){
         backend.io.backend_packet(i).bits   := frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)
-        backend.io.backend_packet(i).valid  := frontend.io.renamed_decoded_fetch_packet.valid && frontend.io.renamed_decoded_fetch_packet.bits.valid_bits(i) && backend_can_allocate
+        backend.io.backend_packet(i).valid  := frontend.io.renamed_decoded_fetch_packet.valid && frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).valid && backend_can_allocate
         backend.io.backend_packet(i).bits.ROB_index := ROB.io.ROB_index
     }
 

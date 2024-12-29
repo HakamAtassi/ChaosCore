@@ -276,20 +276,20 @@ class rename(coreParameters:CoreParameters) extends Module{
         for(j <- 0 until i){
             // forward RS1
             when((io.decoded_fetch_packet.bits.decoded_instruction(i).RS1 === io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
-                (io.decoded_fetch_packet.bits.decoded_instruction(i).RS1_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid) && io.decoded_fetch_packet.bits.valid_bits(j)
+                (io.decoded_fetch_packet.bits.decoded_instruction(i).RS1_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid) && io.decoded_fetch_packet.bits.decoded_instruction(j).valid
                         ){
                 renamed_RS1(i) := free_list.io.renamed_values(j)
             }
             // forward RS2
             when((io.decoded_fetch_packet.bits.decoded_instruction(i).RS2 === io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
-                            (io.decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid) && io.decoded_fetch_packet.bits.valid_bits(j)
+                            (io.decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid) && io.decoded_fetch_packet.bits.decoded_instruction(j).valid
             ){
                 renamed_RS2(i) := free_list.io.renamed_values(j)
             }
             // forward RDold
             when((io.decoded_fetch_packet.bits.decoded_instruction(i).RD === io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
                             (io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid && 
-                            io.decoded_fetch_packet.bits.decoded_instruction(i).RD =/= 0.U && io.decoded_fetch_packet.bits.decoded_instruction(j).RD =/= 0.U) && io.decoded_fetch_packet.bits.valid_bits(j)
+                            io.decoded_fetch_packet.bits.decoded_instruction(i).RD =/= 0.U && io.decoded_fetch_packet.bits.decoded_instruction(j).RD =/= 0.U) && io.decoded_fetch_packet.bits.decoded_instruction(j).valid
             ){
                 renamed_PRDold(i) := free_list.io.renamed_values(j)
             }
@@ -397,7 +397,7 @@ class rename(coreParameters:CoreParameters) extends Module{
         val set_RD      = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD
         val RD_valid    = io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid 
 
-        when(RD_valid && io.renamed_decoded_fetch_packet.fire && io.renamed_decoded_fetch_packet.bits.valid_bits(i)){    // is this fine?
+        when(RD_valid && io.renamed_decoded_fetch_packet.fire && io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).valid){    // is this fine?
             ready_memory(set_RD) := 0.B
         }
     }

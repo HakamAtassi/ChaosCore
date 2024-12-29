@@ -738,8 +738,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
 
 
-    val sret      = instructionType === InstructionType.SYSTEM && RS1 === 0.U && PRD === 0.U && imm === 0x102.U && FUNCT3 === 0.U
-    val mret_sret = MRET || sret
+    val MRET_SRET = MRET || SRET
 
 
     // FIXME: add more robust exception generation...
@@ -763,9 +762,9 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     io.FU_input.ready                       := 1.B    
 
     // mret/sret
-    io.FU_output.bits.branch_valid          := RegNext(mret_sret || ecall)
-    io.FU_output.bits.branch_taken          := RegNext(mret_sret || ecall)
-    io.FU_output.bits.target_address        := RegNext(Mux(mret_sret , mepc_reg.asUInt, mtvec_reg.asUInt)) //RegNext(mepc_reg.asUInt)
+    io.FU_output.bits.branch_valid          := RegNext(MRET_SRET || ECALL)
+    io.FU_output.bits.branch_taken          := RegNext(MRET_SRET || ECALL)
+    io.FU_output.bits.target_address        := RegNext(Mux(MRET_SRET , mepc_reg.asUInt, mtvec_reg.asUInt)) //RegNext(mepc_reg.asUInt)
 
 
 

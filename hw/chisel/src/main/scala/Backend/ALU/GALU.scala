@@ -72,17 +72,22 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val PRD                 =   io.FU_input.bits.decoded_instruction.PRD
 
     // Op select
-    val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
-    val MRET                =   io.FU_input.bits.decoded_instruction.MRET
+    val MRET                =   io.FU_input.bits.decoded_instruction.XRET    &&     io.FU_input.bits.decoded_instruction.FUNCT7 === "b0001000".U
+    val SRET                =   io.FU_input.bits.decoded_instruction.XRET    &&     io.FU_input.bits.decoded_instruction.FUNCT7 === "b0011000".U
+    // FIXME: MNRET?
+
+
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
+    val FUNCT7              =   io.FU_input.bits.decoded_instruction.FUNCT7
     val FENCE               =   io.FU_input.bits.decoded_instruction.FENCE
     val IS_IMM              =   io.FU_input.bits.decoded_instruction.IS_IMM
-    val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
-    val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
+    val SUBTRACT            =   !io.FU_input.bits.decoded_instruction.UNSIGNED
 
+    val ECALL               =   io.FU_input.bits.decoded_instruction.ENV    && io.FU_input.bits.decoded_instruction.IMM === 0x0.U
+    val EBREAK              =   io.FU_input.bits.decoded_instruction.ENV    && io.FU_input.bits.decoded_instruction.IMM === 0x1.U
 
-    val ECALL               =   io.FU_input.bits.decoded_instruction.ECALL
-    val ecall               =   io.FU_input.bits.decoded_instruction.ECALL
+    val BASE_ARITHMETIC     = io.FU_input.bits.decoded_instruction.BASE_ARITHMETIC
+    val MULTIPLY            = io.FU_input.bits.decoded_instruction.MULTIPLY
 
     //////////////////////////
     //////////////////////////
@@ -171,22 +176,20 @@ class GALU(coreParameters:CoreParameters) extends Module{
     /////////////
     // CONTROL //
     /////////////
-    // FIXME: This should really be in the decoder...
 
     // BASE INSTRUCTIONS //
-    val ADD      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b000".U  && !MULTIPLY && !SUBTRACT
-    val SUB      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b000".U  && !MULTIPLY && SUBTRACT
-    val XOR      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b100".U  && !MULTIPLY
-    val OR       =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b110".U  && !MULTIPLY
-    val AND      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b111".U  && !MULTIPLY
-    val SLL      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b001".U  && !MULTIPLY
-    val SRL      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && !SUBTRACT
-    val SRA      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && SUBTRACT
-
-    val SLT      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b010".U  && !MULTIPLY
-    val SLTU     =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b011".U  && !MULTIPLY
-    val LUI      =   (instructionType === InstructionType.LUI)   && !MULTIPLY
-    val AUIPC    =   (instructionType === InstructionType.AUIPC) && !MULTIPLY
+    val ADD      =   (BASE_ARITHMETIC) && FUNCT3 === "b000".U && !SUBTRACT
+    val SUB      =   (BASE_ARITHMETIC) && FUNCT3 === "b000".U && SUBTRACT
+    val XOR      =   (BASE_ARITHMETIC) && FUNCT3 === "b100".U  
+    val OR       =   (BASE_ARITHMETIC) && FUNCT3 === "b110".U 
+    val AND      =   (BASE_ARITHMETIC) && FUNCT3 === "b111".U 
+    val SLL      =   (BASE_ARITHMETIC) && FUNCT3 === "b001".U
+    val SRL      =   (BASE_ARITHMETIC) && FUNCT3 === "b101".U && !SUBTRACT
+    val SRA      =   (BASE_ARITHMETIC) && FUNCT3 === "b101".U && SUBTRACT
+    val SLT      =   (BASE_ARITHMETIC) && FUNCT3 === "b010".U
+    val SLTU     =   (BASE_ARITHMETIC) && FUNCT3 === "b011".U
+    val LUI      =   io.FU_input.bits.decoded_instruction.LUI
+    val AUIPC    =   io.FU_input.bits.decoded_instruction.AUIPC
 
     dontTouch(SLL)
     dontTouch(SRL)
@@ -197,17 +200,17 @@ class GALU(coreParameters:CoreParameters) extends Module{
     // FIXME: add ecall ebreak
 
     // "M" INSTRUCTIONS //
-    val MUL      =   (instructionType === OP) && FUNCT3 === "b000".U  && MULTIPLY
-    val MULH     =   (instructionType === OP) && FUNCT3 === "b001".U  && MULTIPLY
-    val MULSU    =   (instructionType === OP) && FUNCT3 === "b010".U  && MULTIPLY
-    val MULU     =   (instructionType === OP) && FUNCT3 === "b011".U  && MULTIPLY
-    val DIV      =   (instructionType === OP) && FUNCT3 === "b100".U  && MULTIPLY
-    val DIVU     =   (instructionType === OP) && FUNCT3 === "b101".U  && MULTIPLY
-    val REM      =   (instructionType === OP) && FUNCT3 === "b110".U  && MULTIPLY
-    val REMU     =   (instructionType === OP) && FUNCT3 === "b111".U  && MULTIPLY
+    val MUL      =   (MULTIPLY) && FUNCT3 === "b000".U
+    val MULH     =   (MULTIPLY) && FUNCT3 === "b001".U
+    val MULSU    =   (MULTIPLY) && FUNCT3 === "b010".U
+    val MULU     =   (MULTIPLY) && FUNCT3 === "b011".U
+    val DIV      =   (MULTIPLY) && FUNCT3 === "b100".U
+    val DIVU     =   (MULTIPLY) && FUNCT3 === "b101".U
+    val REM      =   (MULTIPLY) && FUNCT3 === "b110".U
+    val REMU     =   (MULTIPLY) && FUNCT3 === "b111".U
 
     // BRANCH INSTRUCTIONS //
-    val BRANCH      =   instructionType === InstructionType.BRANCH
+    val BRANCH      =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.CTRL //instructionType === InstructionType.BRANCH
     val BEQ         =   BRANCH && FUNCT3 === "b000".U
     val BNE         =   BRANCH && FUNCT3 === "b001".U
     val BLT         =   BRANCH && FUNCT3 === "b100".U
