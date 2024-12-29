@@ -180,10 +180,14 @@ case class CoreParameters(
     // Add as many FUs as desired. 
     // FIXME: check that there is only 1 CSRs, etc...
     // Add other requirements here
+    // 
     FUParamSeq: Seq[FUParams] = Seq(
+        // ALU + MUL ARITHMETIC UNITS
         FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
         FUParams(supportsInt=true, supportsMult=true,   supportsDiv=true,  supportsBranch=true,  supportsCSRs=true,     supportsAddressGeneration=false),
         FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
+
+        // MEMORY UNITS
         FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=true),
     )
 

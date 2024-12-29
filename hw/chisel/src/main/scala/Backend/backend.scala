@@ -47,6 +47,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     val portCount = getPortCount(coreParameters)
     val branchPortCount = getBranchPortCount(coreParameters)
+    val memoryPortCount = FUParamSeq.count(_.supportsAddressGeneration)
+    val nonMemoryPortCount = portCount - memoryPortCount 
 
     val io = IO(new Bundle{
         // FLUSH //
@@ -163,93 +165,92 @@ class backend(coreParameters:CoreParameters) extends Module{
     ///////////////////////////
 
     val INT_PRF = Module(new sim_nReadmWrite(coreParameters))
-    //val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount, depth=physicalRegCount, width=32))    // currently exposes an issue in the ROB
+    //val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount, depth=physicalRegCount, width=32))    //FIXME: currently exposes an issue in the ROB
 
 
     val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))
-
 
     ///////////////////////
     // EXECUTION ENGINES //
     ///////////////////////
 
     val execution_engine = Module(new execution_engine(coreParameters))
+    // NOTE: EX. UNITS ARE ALWAYS STRUCTURED AS [ALU, ALU, ALU, ALU, MEM, MEM, ...]
+    // That is, first come arithmetic units, then branch units. 
+    // Which may explain the structure of this code. 
 
-    //portedFUParamSeq.map(println)
+    // CONNECT NON-MEMORY FUs to Reg Read
+    for(i <- 0 until nonMemoryPortCount){
+        // RS <> PRF //
+        INT_PRF.io.raddr(i*2)       := INT_RS.io.RF_inputs(i).bits.RS1
+        INT_PRF.io.raddr(i*2+1)     := INT_RS.io.RF_inputs(i).bits.RS2
 
+        // PRF <> instr //
+        read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(i*2)
+        read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(i*2+1)
+
+
+        // FWD instruction //
+        read_decoded_instructions(i).decoded_instruction := RegNext(INT_RS.io.RF_inputs(i).bits)
+        execution_engine.io.FU_input(i).valid            := RegNext(INT_RS.io.RF_inputs(i).valid)
+        execution_engine.io.FU_input(i).bits             <> read_decoded_instructions(i)
+        
+        // RS ready <> FU ready //
+        INT_RS.io.RF_inputs(i).ready        := execution_engine.io.FU_input(i).ready
+
+    }
+
+    // CONNECT BRANCH UNITS TO PC FILE (in ROB)
+    for (i <- 0 until portCount) {
+        if (FUParamSeq(i).supportsBranch) {
+            val PC_file_port_index = FUParamSeq.take(i).count(_.supportsBranch)
+            io.PC_file_exec_addr(PC_file_port_index) := INT_RS.io.RF_inputs(i).bits.ROB_index
+            read_decoded_instructions(i).fetch_PC := io.PC_file_exec_data(PC_file_port_index)
+        }
+    }
+
+
+    // CONNECT MEMORY FUs TO REG READ
+    for(i <- nonMemoryPortCount until portCount){
+        // RS <> PRF //
+        INT_PRF.io.raddr(i*2)       := MEM_RS.io.RF_inputs(i-nonMemoryPortCount).bits.RS1
+        INT_PRF.io.raddr(i*2+1)     := MEM_RS.io.RF_inputs(i-nonMemoryPortCount).bits.RS2
+
+        // PRF <> instr //
+        read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(i*2)
+        read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(i*2+1)
+
+        // FWD instruction //
+        read_decoded_instructions(i).decoded_instruction := RegNext(MEM_RS.io.RF_inputs(i-nonMemoryPortCount).bits)
+        execution_engine.io.FU_input(i).valid            := RegNext(MEM_RS.io.RF_inputs(i-nonMemoryPortCount).valid)
+        execution_engine.io.FU_input(i).bits             <> read_decoded_instructions(i)
+        
+        // RS ready <> FU ready //
+        MEM_RS.io.RF_inputs(i-nonMemoryPortCount).ready        := execution_engine.io.FU_input(i).ready
+    }
+
+    // CONNECT EX. ENGINE TO WB
     for(i <- 0 until portCount){
-        val RS_port     = portedFUParamSeq(i).INTRS_MEMRS_port
-        val RS1_index   = portedFUParamSeq(i).RS1_RS2_indices(0)
-        val RS2_index   = portedFUParamSeq(i).RS1_RS2_indices(1)
-        val PRFRD       = portedFUParamSeq(i).PRFRD
+        // FU data <> PRF (WB) //
+        INT_PRF.io.waddr(i)  :=    execution_engine.io.FU_output(i).bits.PRD
+        INT_PRF.io.wen(i)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid
+        INT_PRF.io.wdata(i)  :=    execution_engine.io.FU_output(i).bits.RD_data
 
-        if(portedFUParamSeq(i).is_INTFU){
-            // RS <> PRF //
-            INT_PRF.io.raddr(RS1_index)     := INT_RS.io.RF_inputs(RS_port).bits.RS1
-            INT_PRF.io.raddr(RS2_index)     := INT_RS.io.RF_inputs(RS_port).bits.RS2
-
-            // PRF <> instr //
-            read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(RS1_index)
-            read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(RS2_index)
-            read_decoded_instructions(i).fetch_PC := DontCare //io.PC_file_exec_data   // branch unit  FIXME: this needs to be extended to have multiple fetch_PC ports in the ROB
-
-            // FWD instruction //
-            read_decoded_instructions(i).decoded_instruction := RegNext(INT_RS.io.RF_inputs(RS_port).bits)
-            
-            // RS ready <> FU ready //
-            INT_RS.io.RF_inputs(RS_port).ready        := execution_engine.io.FU_input(i).ready
-
-            // FU data <> PRF //
-            INT_PRF.io.waddr(PRFRD)  :=    execution_engine.io.FU_output(i).bits.PRD
-            INT_PRF.io.wen(PRFRD)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid
-            INT_PRF.io.wdata(PRFRD)  :=    execution_engine.io.FU_output(i).bits.RD_data
-
-
-            // RS <> RD complete/ready //
-            INT_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
-            MEM_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
-
-            execution_engine.io.FU_input(i).valid           := RegNext(INT_RS.io.RF_inputs(RS_port).valid)
-
-        }
-        else if(portedFUParamSeq(i).is_MEMFU){
-            // RS <> PRF //
-            INT_PRF.io.raddr(RS1_index)     :=    MEM_RS.io.RF_inputs(RS_port).bits.RS1   // MEM RS PORT 0
-            INT_PRF.io.raddr(RS2_index)     :=    MEM_RS.io.RF_inputs(RS_port).bits.RS2   // MEM RS PORT 0
-
-            // PRF <> instr //
-            read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(RS1_index)
-            read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(RS2_index)
-            read_decoded_instructions(i).fetch_PC := DontCare //io.PC_file_exec_data   // branch unit
-
-            // FWD instruction //
-            read_decoded_instructions(i).decoded_instruction <> RegNext(MEM_RS.io.RF_inputs(RS_port).bits)
-
-            // MEMRS ready <> FU ready //
-            MEM_RS.io.RF_inputs(RS_port).ready    := execution_engine.io.FU_input(RS_port).ready
-
-            // AGU_output <> MOB //
-            MOB.io.AGU_output <> execution_engine.io.FU_output(3)  // FIXME add param number of AGU inputs to MOB
-
-            // MOB <> PRF //
-            INT_PRF.io.waddr(PRFRD)  :=    MOB.io.MOB_output.bits.PRD
-            INT_PRF.io.wen(PRFRD)    :=    MOB.io.MOB_output.valid && MOB.io.MOB_output.bits.RD_valid
-            INT_PRF.io.wdata(PRFRD)  :=    MOB.io.MOB_output.bits.RD_data 
-
-            // RS <> RD complete/ready //
-            INT_RS.io.FU_outputs(i) <> MOB.io.MOB_output
-            MEM_RS.io.FU_outputs(i) <> MOB.io.MOB_output
-
-            execution_engine.io.FU_input(i).valid           := RegNext(MEM_RS.io.RF_inputs(RS_port).valid)
-        }
-
-        execution_engine.io.FU_input(i).bits            <> read_decoded_instructions(i)
+        // RS <> RD complete/ready //
+        INT_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
+        MEM_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
 
         io.FU_outputs(i) <> execution_engine.io.FU_output(i)
     }
 
     execution_engine.io.commit           <> io.commit
 
+    MOB.io.commit <> io.commit
+    for (i <- 0 until fetchWidth){
+        MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
+        MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
+    }
+    
     ////////////////
     // INTERRUPTS //
     ////////////////
@@ -262,20 +263,6 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // Output CSR_port values
     execution_engine.CSR_port <> CSR_port
-
-
-
-    MOB.io.commit <> io.commit
-    for (i <- 0 until fetchWidth){
-        MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
-        MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
-    }
-    
-    for(i <- 0 until fetchWidth){
-        if(FUParamSeq(i).supportsBranch){
-            //io.PC_file_exec_addr := INT_RS.io.RF_inputs(i).bits.ROB_index
-        }
-    }
 
     ////////////////
     // AGU <> MOB //
@@ -299,29 +286,4 @@ class backend(coreParameters:CoreParameters) extends Module{
     io.backend_memory_request       <>  MOB.io.backend_memory_request
     io.backend_memory_response      <>  MOB.io.backend_memory_response
 
-
-
-    ////////////////////////
-    // VERIFICATION HOOKS //
-    // DO NOT TOUCH ///////
-    ////////////////////////
-
-    //val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
-
-
-
-
-
-
-
 }
-
-
-
-
-// TODO:
-// Still cant have N many branch units (due to missing ROB update stuff)
-// Such as the ability to read N PCs from the PC file...
-// Need to add dynamic scheduling to the RS
-// Need to add parameterizable outputs from the MOB
-// and need to more clearly distinguish between ports overall and MOB output ports...
