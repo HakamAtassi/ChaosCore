@@ -45,10 +45,9 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
         
         // Output
-        val FU_output     =   ValidIO(new FU_output(coreParameters))
+        val FU_output     =   Decoupled(new FU_output(coreParameters))
 
         // partial_commit (for CSRs)
-        val partial_commit  =   Input(new partial_commit(coreParameters))
         val commit          =   Flipped(ValidIO(new commit(coreParameters)))
 
         //val CSR_out = if (FUParam.supportsCSRs) Some(Output(new CSR_out)) else None
@@ -80,12 +79,6 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     CSR.foreach         { CSR => CSR.io.FU_input                    <> io.FU_input }
 
     // assign inputs
-    ALU.foreach         {ALU => ALU.io.partial_commit                     <> io.partial_commit }
-    branch_unit.foreach {branch_unit => branch_unit.io.partial_commit     <> io.partial_commit }
-    AGU.foreach         { AGU => AGU.io.partial_commit                    <> io.partial_commit }
-    mul.foreach         { mul => mul.io.partial_commit                    <> io.partial_commit }
-    CSR.foreach         { CSR => CSR.io.partial_commit                    <> io.partial_commit }
-
 
     ALU.foreach         {ALU => ALU.io.commit                     <> io.commit }
     branch_unit.foreach {branch_unit => branch_unit.io.commit     <> io.commit }

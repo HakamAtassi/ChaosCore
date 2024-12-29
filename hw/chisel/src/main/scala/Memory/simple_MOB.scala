@@ -56,13 +56,11 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
         val fetch_PC                =      Input(UInt(32.W))                                                                  // DEBUG
 
-        //val complete                =      ValidIO(new FU_output(coreParameters))                                               // update ROB (front of MOB)
-        val AGU_output              =      Flipped(ValidIO(new FU_output(coreParameters)))                                      // update address (AGU)
-        val MOB_output              =      ValidIO(new FU_output(coreParameters))                                               // broadcast load data
+        val AGU_output              =      Flipped(Decoupled(new FU_output(coreParameters)))                                      // update address (AGU)
+        val MOB_output              =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
 
         // REDIRECTS // 
         val commit                  =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
-        val partial_commit          =      Input(new partial_commit(coreParameters))                                         // commit mem op
 
         ///////////////////////////
         // D$ BACKEND MEM ACCESS //
@@ -156,8 +154,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     comb_committed := MOB.map(MOB_entry => MOB_entry.committed)
 
     for(i <- 0 until fetchWidth){
-        when(io.partial_commit.valid(i) && MOB(io.partial_commit.MOB_index(i)).valid && (io.partial_commit.ROB_index === MOB(io.partial_commit.MOB_index(i)).ROB_index) && io.partial_commit.MOB_valid(i)){
-            comb_committed(io.partial_commit.MOB_index(i)) := 1.B
+        when(io.commit.valid && io.commit.bits.insn_commit(i).valid && MOB(io.commit.bits.insn_commit(i).bits.MOB_index).valid && (io.commit.bits.ROB_index === MOB(io.commit.bits.insn_commit(i).bits.MOB_index).ROB_index) && io.commit.bits.insn_commit(i).bits.MOB_valid){
+            comb_committed(io.commit.bits.insn_commit(i).bits.MOB_index) := 1.B
         }
     }
 

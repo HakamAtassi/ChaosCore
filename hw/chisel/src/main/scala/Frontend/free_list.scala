@@ -47,7 +47,6 @@ class free_list(coreParameters:CoreParameters) extends Module{
         val renamed_values          = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))       // Renamed RDs
         val renamed_valid           = Output(Vec(fetchWidth, Bool()))                                   // Renamed RDs valid
 
-        val partial_commit          = Input(new partial_commit(coreParameters))                                         // commit mem op
         val commit                  = Flipped(ValidIO(new commit(coreParameters)))                          // Free regs on commit
 
         val flush                   = Flipped(ValidIO(new flush(coreParameters)))
@@ -89,31 +88,22 @@ class free_list(coreParameters:CoreParameters) extends Module{
     //FIXME: does the order of these matter?
     when(io.commit.valid){  // add to freelist
         for(i <- 0 until fetchWidth){
-            when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i) && io.partial_commit.PRDold(i) =/= 0.U){    // dont add x0
+            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){    // dont add x0
                 val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
-                commit_PRDold := (io.partial_commit.PRDold(i) - 1.U) % (physicalRegCount-1).U
+                commit_PRDold := (io.commit.bits.insn_commit(i).bits.PRDold - 1.U) % (physicalRegCount-1).U
+
                 free_list_buffer(commit_PRDold) := 1.B
                 commit_free_list_buffer(commit_PRDold) := 1.B
             }
 
-            when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i) && io.partial_commit.PRD(i) =/= 0.U){
+            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){
                 val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
-                commit_PRD := (io.partial_commit.PRD(i) - 1.U) % (physicalRegCount-1).U
+                commit_PRD := (io.commit.bits.insn_commit(i).bits.PRD - 1.U) % (physicalRegCount-1).U
                 commit_free_list_buffer(commit_PRD) := 0.B
             }
 
         }
     }
-
-    //when(io.commit.valid){  // remove to freelist (commit)
-        //for(i <- 0 until fetchWidth){
-            //when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i) && io.partial_commit.PRD(i) =/= 0.U){
-                //val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
-                //commit_PRD := (io.partial_commit.PRD(i) - 1.U) % (physicalRegCount-1).U
-                //commit_free_list_buffer(commit_PRD) := 0.B
-            //}
-        //}
-    //}
 
 
     ///////////////////
@@ -124,15 +114,15 @@ class free_list(coreParameters:CoreParameters) extends Module{
     when(flush){
         free_list_buffer := commit_free_list_buffer
         for(i <- 0 until fetchWidth){
-            when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i)){
+            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid){
                 val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
-                commit_PRD := io.partial_commit.PRD(i) - 1.U
+                commit_PRD := io.commit.bits.insn_commit(i).bits.PRD - 1.U
                 free_list_buffer(commit_PRD) := 0.B
             }
 
-            when(io.partial_commit.valid(i) && io.partial_commit.RD_valid(i)){
+            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid){
                 val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
-                commit_PRDold := io.partial_commit.PRDold(i) - 1.U
+                commit_PRDold := io.commit.bits.insn_commit(i).bits.PRDold - 1.U
                 free_list_buffer(commit_PRDold) := 1.B
             }
 
@@ -157,52 +147,5 @@ class free_list(coreParameters:CoreParameters) extends Module{
     dontTouch(free_list_buffer)
     dontTouch(available_entries)
     dontTouch(commit_free_list_buffer)
-
-
-    ////////////
-    // FORMAL //
-    ////////////
-
-    /*
-
-    // no flushes
-
-    val no_flush: Sequence = !(io.commit.valid && io.commit.bits.is_misprediction)
-
-    // test that the outputs only come out of ready PRDs internall
-    val test = Wire(Vec(fetchWidth, UInt(7.W)))
-    dontTouch(test)
-    for(i <- 0 until fetchWidth){
-        test(i) := io.renamed_values(i) - 1.U
-        
-        //dontTouch(renamed_RD_available)
-
-        val renamed_valid: Sequence = io.renamed_valid(i)
-
-        val output_not_x0: Sequence = (io.renamed_values(i) =/= 0.U)
-        val output_never_x0: Property =  renamed_valid |-> output_not_x0
-
-
-        val renamed_RD_available:Sequence = free_list_buffer(test(i)) === 1.B
-        val output_PRD_ready: Property = (renamed_valid |-> renamed_RD_available)
-
-        AssertProperty(output_never_x0)
-        AssertProperty(output_PRD_ready)
-    }
-
-    // test that the commit inputs correctly update the readies
-    for(i <- 0 until fetchWidth){
-
-        val valid_partial_commit: Sequence = (io.partial_commit.PRDold(i) =/= 0.U) && io.partial_commit.RD_valid(i) && io.partial_commit.valid(i) && io.commit.valid
-
-        val PRD_freed: Sequence = free_list_buffer(RegNext(io.partial_commit.PRDold(i)-1.U)) === 1.B
-        val PRDold_free: Property =  valid_partial_commit |=> PRD_freed
-
-        AssertProperty(PRDold_free)
-    }
-
-    */
-
-    //AssumeProperty(no_flush)
 
 }

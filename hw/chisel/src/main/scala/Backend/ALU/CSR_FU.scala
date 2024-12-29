@@ -417,7 +417,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
 
     when(io.commit.valid){
-        val (new_instret_reg, new_instreth_reg) = increment_perf_counter(instreth_reg, instret_reg, PopCount(io.partial_commit.valid))
+        val (new_instret_reg, new_instreth_reg) = increment_perf_counter(instreth_reg, instret_reg, PopCount(io.commit.bits.insn_commit.map(_.valid)))
         instret_reg := new_instret_reg
         instreth_reg := new_instreth_reg
     }
@@ -542,7 +542,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     // PERFORMANCE COUNTER UPDATES
     mcycle_reg   := mcycle_reg   + 1.U
-    minstret_reg := minstret_reg + PopCount(io.partial_commit.valid)
+    //minstret_reg := minstret_reg + PopCount(io.partial_commit.valid) // FIXME: 
 
 
     //---------------------

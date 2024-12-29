@@ -40,12 +40,11 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     val io = IO(new Bundle{
         val flush           =   Flipped(ValidIO(new flush(coreParameters)))
 
-        val partial_commit  =   Input(new partial_commit(coreParameters))
         val commit          =   Flipped(ValidIO(new commit(coreParameters)))
 
         val FU_input        =   Vec(portCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
         
-        val FU_output       =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+        val FU_output       =   Vec(portCount, Decoupled(new FU_output(coreParameters)))
 
         //val mtvec = Output(UInt(32.W))
         val irq_software_i                      = Input(Bool())      //msip
@@ -64,7 +63,6 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until portCount){
         FUs(i).io.flush             <> io.flush
-        FUs(i).io.partial_commit    <> io.partial_commit
         FUs(i).io.commit            <> io.commit
         FUs(i).io.FU_input          <> io.FU_input(i)
         FUs(i).io.FU_output         <> io.FU_output(i)

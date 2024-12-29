@@ -95,7 +95,6 @@ class RAT(coreParameters:CoreParameters) extends Module{
         //val exception                   =   Input(Bool())
 
         val flush                       =   Flipped(ValidIO(new flush(coreParameters)))
-        val partial_commit              =   Input(new partial_commit(coreParameters))
         val commit                      =   Input(ValidIO(new commit(coreParameters)))
 
         // renamed outputs
@@ -136,8 +135,8 @@ class RAT(coreParameters:CoreParameters) extends Module{
     // write RAT
     for (i <- 0 until fetchWidth){
         //FIXME: use global flush signal and do not reconstruct
-        when(io.partial_commit.valid(i) && io.commit.bits.RD_valid(i)){
-            commit_RAT(io.commit.bits.RD(i)) := io.commit.bits.PRD(i)
+        when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid){
+            commit_RAT(io.commit.bits.insn_commit(i).bits.RD) := io.commit.bits.insn_commit(i).bits.PRD
         }
     }
 
@@ -147,8 +146,8 @@ class RAT(coreParameters:CoreParameters) extends Module{
     when(io.flush.valid){
         speculative_RAT := commit_RAT
         for(i <- 0 until fetchWidth){
-            when(io.partial_commit.valid(i) && io.commit.bits.RD_valid(i)){
-                speculative_RAT(io.commit.bits.RD(i)) := io.commit.bits.PRD(i)
+            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid){
+                speculative_RAT(io.commit.bits.insn_commit(i).bits.RD) := io.commit.bits.insn_commit(i).bits.PRD
             }
         }
     }
@@ -177,12 +176,11 @@ class rename(coreParameters:CoreParameters) extends Module{
 
         // CHECKPOINT 
         val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
-        val partial_commit                  =   Input(new partial_commit(coreParameters))                                         // commit mem op
 
         // Instruction input (decoded)
         val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
-        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
+        val FU_outputs                      =   Vec(portCount, Flipped(Decoupled(new FU_output(coreParameters))))
 
         // Instruction output (renamed)
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
@@ -254,7 +252,6 @@ class rename(coreParameters:CoreParameters) extends Module{
     RAT.io.free_list_RD                            :=  WAW_handler.io.FL_RD_values
     RAT.io.commit                                  <> io.commit
     RAT.io.flush                                  <> io.flush
-    RAT.io.partial_commit                          <> io.partial_commit
     
     // Assign read ports
     for(i <- 0 until fetchWidth){
@@ -332,7 +329,7 @@ class rename(coreParameters:CoreParameters) extends Module{
 
 
 
-    free_list.io.partial_commit           <> io.partial_commit
+    free_list.io.commit           <> io.commit
     free_list.io.flush                    <> io.flush
 
     // x0 as a dest or source is never remapped

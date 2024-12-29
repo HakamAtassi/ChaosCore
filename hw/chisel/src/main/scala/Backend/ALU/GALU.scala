@@ -46,14 +46,11 @@ class GALU(coreParameters:CoreParameters) extends Module{
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
         
         // Output
-        val FU_output     =   ValidIO(new FU_output(coreParameters))
+        val FU_output     =   Decoupled(new FU_output(coreParameters))
 
 
         // commit (for CSRs only)
-        val partial_commit  =   Input(new partial_commit(coreParameters))
         val commit          =   Flipped(ValidIO(new commit(coreParameters)))
-
-
 
     })
 

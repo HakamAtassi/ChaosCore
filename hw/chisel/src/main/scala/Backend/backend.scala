@@ -46,6 +46,7 @@ import chisel3.util._
 class backend(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     val portCount = getPortCount(coreParameters)
+    val branchPortCount = getBranchPortCount(coreParameters)
 
     val io = IO(new Bundle{
         // FLUSH //
@@ -57,20 +58,24 @@ class backend(coreParameters:CoreParameters) extends Module{
         val backend_memory_response     =   Flipped(Decoupled(new backend_memory_response(coreParameters))) // From MEM
         val backend_memory_request      =   Decoupled(new backend_memory_request(coreParameters))     // To MEM
 
+
+
         // REDIRECTS // 
         val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
-        val partial_commit              =   Input(new partial_commit(coreParameters))
 
         // PC_file access (for branch unit)
-        val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))
-        val PC_file_exec_data           =   Input(UInt(32.W))
+        //val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))
+        //val PC_file_exec_data           =   Input(UInt(32.W))
+
+        val PC_file_exec_addr           =   Vec(branchPortCount, Output(UInt(log2Ceil(ROBEntries).W)))
+        val PC_file_exec_data           =   Vec(branchPortCount, Input(UInt(32.W)))
 
         // ALLOCATE //
         val fetch_PC                    =   Input(UInt(32.W))  // DEBUG
         val backend_packet              =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
 
-        val MOB_output                  =   ValidIO(new FU_output(coreParameters))                                               // broadcast load data
+        val MOB_output                  =   Decoupled(new FU_output(coreParameters))                                               // broadcast load data
 
         //val mtvec = Output(UInt(32.W))
         ////////////////
@@ -86,7 +91,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
         // UPDATE //
-        val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+        val FU_outputs                  =   Vec(portCount, Decoupled(new FU_output(coreParameters)))
     }); dontTouch(io)
 
 
@@ -125,10 +130,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
     INT_RS.io.commit <> io.commit
-    INT_RS.io.partial_commit <> io.partial_commit
 
     MEM_RS.io.commit <> io.commit
-    MEM_RS.io.partial_commit <> io.partial_commit
 
     dontTouch(io)
     dontTouch(io.backend_packet)
@@ -143,7 +146,6 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
     MOB.io.commit <> io.commit
-    MOB.io.partial_commit <> io.partial_commit
     for (i <- 0 until fetchWidth){
         MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
         MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
@@ -171,8 +173,6 @@ class backend(coreParameters:CoreParameters) extends Module{
     // EXECUTION ENGINES //
     ///////////////////////
 
-    //MEM_RS.io.RF_inputs(0).ready       := 0.B   //FIXME: parameterize this
-
     val execution_engine = Module(new execution_engine(coreParameters))
 
     //portedFUParamSeq.map(println)
@@ -191,7 +191,7 @@ class backend(coreParameters:CoreParameters) extends Module{
             // PRF <> instr //
             read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(RS1_index)
             read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(RS2_index)
-            read_decoded_instructions(i).fetch_PC := io.PC_file_exec_data   // branch unit  FIXME: this needs to be extended to have multiple fetch_PC ports in the ROB
+            read_decoded_instructions(i).fetch_PC := DontCare //io.PC_file_exec_data   // branch unit  FIXME: this needs to be extended to have multiple fetch_PC ports in the ROB
 
             // FWD instruction //
             read_decoded_instructions(i).decoded_instruction := RegNext(INT_RS.io.RF_inputs(RS_port).bits)
@@ -206,8 +206,8 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
             // RS <> RD complete/ready //
-            INT_RS.io.FU_outputs(i) := execution_engine.io.FU_output(i)
-            MEM_RS.io.FU_outputs(i) := execution_engine.io.FU_output(i)
+            INT_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
+            MEM_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
 
             execution_engine.io.FU_input(i).valid           := RegNext(INT_RS.io.RF_inputs(RS_port).valid)
 
@@ -220,7 +220,7 @@ class backend(coreParameters:CoreParameters) extends Module{
             // PRF <> instr //
             read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(RS1_index)
             read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(RS2_index)
-            read_decoded_instructions(i).fetch_PC := io.PC_file_exec_data   // branch unit
+            read_decoded_instructions(i).fetch_PC := DontCare //io.PC_file_exec_data   // branch unit
 
             // FWD instruction //
             read_decoded_instructions(i).decoded_instruction <> RegNext(MEM_RS.io.RF_inputs(RS_port).bits)
@@ -237,8 +237,8 @@ class backend(coreParameters:CoreParameters) extends Module{
             INT_PRF.io.wdata(PRFRD)  :=    MOB.io.MOB_output.bits.RD_data 
 
             // RS <> RD complete/ready //
-            INT_RS.io.FU_outputs(i) := MOB.io.MOB_output
-            MEM_RS.io.FU_outputs(i) := MOB.io.MOB_output
+            INT_RS.io.FU_outputs(i) <> MOB.io.MOB_output
+            MEM_RS.io.FU_outputs(i) <> MOB.io.MOB_output
 
             execution_engine.io.FU_input(i).valid           := RegNext(MEM_RS.io.RF_inputs(RS_port).valid)
         }
@@ -248,11 +248,7 @@ class backend(coreParameters:CoreParameters) extends Module{
         io.FU_outputs(i) <> execution_engine.io.FU_output(i)
     }
 
-    execution_engine.io.partial_commit           <> io.partial_commit
     execution_engine.io.commit           <> io.commit
-
-    execution_engine.io.commit           <> io.commit
-
 
     ////////////////
     // INTERRUPTS //
@@ -270,7 +266,6 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     MOB.io.commit <> io.commit
-    MOB.io.partial_commit <> io.partial_commit
     for (i <- 0 until fetchWidth){
         MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
         MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
@@ -278,7 +273,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     
     for(i <- 0 until fetchWidth){
         if(FUParamSeq(i).supportsBranch){
-            io.PC_file_exec_addr := INT_RS.io.RF_inputs(i).bits.ROB_index
+            //io.PC_file_exec_addr := INT_RS.io.RF_inputs(i).bits.ROB_index
         }
     }
 

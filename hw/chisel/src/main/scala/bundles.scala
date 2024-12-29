@@ -121,13 +121,13 @@ class BTB_entry(coreParameters:CoreParameters) extends Bundle{
 
 class insn_commit(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
-    val MOB_index               = Vec(fetchWidth, UInt(log2Ceil(MOBEntries).W))
-    val MOB_valid               = Vec(fetchWidth, Bool())   // only valid on loads and stores
+    val MOB_index               = UInt(log2Ceil(MOBEntries).W)
+    val MOB_valid               = Bool()   // only valid on loads and stores
 
-    val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
-    val RD_valid                = Vec(fetchWidth, Bool())
-    val PRD                     = Vec(fetchWidth, UInt(physicalRegBits.W))
-    val PRDold                  = Vec(fetchWidth, UInt(physicalRegBits.W))
+    val RD                      = UInt(architecturalRegBits.W)
+    val RD_valid                = Bool()
+    val PRD                     = UInt(physicalRegBits.W)
+    val PRDold                  = UInt(physicalRegBits.W)
 }
 
 class commit(coreParameters:CoreParameters) extends Bundle{

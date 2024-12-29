@@ -54,7 +54,7 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
         val ROB_front_idx                 =   Input(UInt(log2Ceil(ROBEntries).W))
 
         // Flush
-        val flush                         =   ValidIO(new flush(coreParameters)) 
+        val flush                         =   Flipped(ValidIO(new flush(coreParameters)))
     }); dontTouch(io)
 
     // On allocate, write row and clear as needed 
@@ -250,6 +250,7 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
 
 
 
+// FIXME: missing ROB branch read ports
 
 
 
@@ -266,7 +267,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val FU_inputs                  =    Vec(portCount, Flipped(Decoupled(new FU_output(coreParameters))))
 
         // COMMIT //
-        val commit                      =   Output(new commit(coreParameters))
+        val commit                      =   ValidIO(new commit(coreParameters))
 
         // FLUSH 
         val flush                       =   ValidIO(new flush(coreParameters)) 
@@ -320,7 +321,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         }
 
         ROB_instruction_banks(i).io.ROB_front_idx        := front_index
-        ROB_instruction_banks(i).io.flush                := io.flush
+        //ROB_instruction_banks(i).io.flush                := io.flush.valid
     }
     
     
@@ -334,7 +335,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     val ROB_shared_bank = Module(new ROB_shared_bank(coreParameters))
 
-    ROB_shared_bank.io.ROB_packet                    := io.ROB_packet
+    ROB_shared_bank.io.ROB_packet.bits                    := io.ROB_packet.bits
+    ROB_shared_bank.io.ROB_packet.valid                    := io.ROB_packet.valid
+    //FIXME: rob_packet missing ready
     ROB_shared_bank.io.ROB_back_idx                  := back_index
     ROB_shared_bank.io.ROB_front_idx                 := front_index
 
@@ -402,30 +405,23 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     val earliest_CTRL_idx = PriorityEncoder(earliest_CTRL_oh.asUInt)
 
-    val earliest_CTRL_insn = MuxLookup(
-        earliest_CTRL_idx,
-        0.U.asTypeOf(new ROB_instruction_entry(coreParameters)), // Default value
-        ROB_instruction_banks.zipWithIndex.map { case (bank, idx) =>
-            idx.U -> bank.io.ROB_instruction_entry
+
+
+    // mux out the info for the taken branches
+    val earliest_CTRL_insn = WireInit(0.U.asTypeOf(new ROB_instruction_entry(coreParameters)))
+    val earliest_CTRL_branch_info = WireInit(0.U.asTypeOf(new ROB_branch_entry(coreParameters)))
+    for(i <- 0 until fetchWidth){
+        when(earliest_CTRL_idx === i.U){
+            earliest_CTRL_insn          := ROB_instruction_banks(i).io.ROB_instruction_entry
+            earliest_CTRL_branch_info   := ROB_branch_banks(i).io.resolved_branch_out
         }
-    )
-
-    val earliest_CTRL_branch_info = MuxLookup(
-        earliest_CTRL_idx,
-        0.U.asTypeOf(new ROB_branch_entry(coreParameters)), // Default value
-        ROB_branch_banks.zipWithIndex.map { case (bank, idx) =>
-            idx.U -> bank.io.resolved_branch_out
-        }
-    )
-
-
-
+    }
 
     val prediction = ROB_shared_bank.io.ROB_shared_entry.prediction
 
+    val output_flush = WireInit(0.U.asTypeOf(ValidIO(new flush(coreParameters))))
 
-    io.flush := 0.U.asTypeOf(new flush(coreParameters))
-
+    io.flush := output_flush
 
 
     when(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.uOp.decoded_insn.CTRL && earliest_CTRL_insn.WB.committed){
@@ -434,31 +430,31 @@ class ROB(coreParameters:CoreParameters) extends Module{
         when(0.B /*prediction.taken && prediction.target_address === earliest_CTRL_branch_info.target_PC*/){    // FIXME: for this, you need to ensure WHICH branch is taken and to where, if any (br mask...)
             // prediction correct, do nothing
         }.otherwise{
-            io.flush.valid := 1.B
-            io.flush.bits.flushing_PC:= ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx)
-            io.flush.bits.redirect_PC:= earliest_CTRL_branch_info.target_PC
-            io.flush.bits.is_misprediction := 1.B
+            output_flush.valid := 1.B
+            output_flush.bits.flushing_PC:= ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx)
+            output_flush.bits.redirect_PC:= earliest_CTRL_branch_info.target_PC
+            output_flush.bits.is_misprediction := 1.B
         }
     
     }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.exception /*&&*/ /*about to commit*/){ //FIXME: not complete// excepting instructions don't commit
         // is an exception
         // flush and jump to MTVEC
 
-        io.flush.bits.is_exception := 1.B
-    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_branch_info.WB.committed){
+        output_flush.bits.is_exception := 1.B
+    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.committed){
         // is a CSRRW, FENCE, FLUSH, or otherwise
         // flush and jump to next insn
-        io.flush.valid := 1.B
-        io.flush.bits.flushing_PC := ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx)
-        io.flush.bits.redirect_PC := ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx) + 4.U
+        output_flush.valid := 1.B
+        output_flush.bits.flushing_PC := ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx)
+        output_flush.bits.redirect_PC := ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx) + 4.U
 
-        io.flush.bits.is_fence    := earliest_CTRL_branch_info.uOp.decoded_insn.FENCE
-        io.flush.bits.is_CSR      := earliest_CTRL_branch_info.uOp.decoded_insn.CSR
+        output_flush.bits.is_fence    := earliest_CTRL_insn.uOp.decoded_insn.FENCE
+        output_flush.bits.is_CSR      := earliest_CTRL_insn.uOp.decoded_insn.CSRRW
     }
 
 
     // ASSIGN FLUSH //
-    ROB_instruction_banks.foreach { bank => bank.io.flush.valid := io.flush.valid }
+    ROB_instruction_banks.foreach { bank => bank.io.flush := output_flush }
 
     ////////////
     // COMMIT //
@@ -504,20 +500,21 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     
     // DRIVE I/O COMMIT //
-    io.commit.fetch_PC  := ROB_shared_bank.io.ROB_shared_entry.fetch_PC
-    io.commit.ROB_index := back_index
-    io.commit.free_list_front_pointer := ROB_shared_bank.io.ROB_shared_entry.free_list_front_pointer
+    io.commit.bits.fetch_PC  := ROB_shared_bank.io.ROB_shared_entry.fetch_PC
+    io.commit.bits.ROB_index := back_index
+    io.commit.bits.free_list_front_pointer := ROB_shared_bank.io.ROB_shared_entry.free_list_front_pointer
 
     for(i <- 0 until fetchWidth){
-        io.commit.insn_commit(i).valid          := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed
-
-        io.commit.insn_commit(i).bits.MOB_index := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_index
-        io.commit.insn_commit(i).bits.MOB_valid := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_valid
-        io.commit.insn_commit(i).bits.RD        := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD
-        io.commit.insn_commit(i).bits.RD_valid  := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD_valid
-        io.commit.insn_commit(i).bits.PRD       := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRD
-        io.commit.insn_commit(i).bits.PRDold    := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRDold
+        io.commit.bits.insn_commit(i).valid          := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed
+        io.commit.bits.insn_commit(i).bits.MOB_index := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_index
+        io.commit.bits.insn_commit(i).bits.MOB_valid := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_valid
+        io.commit.bits.insn_commit(i).bits.RD        := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD
+        io.commit.bits.insn_commit(i).bits.RD_valid  := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD_valid
+        io.commit.bits.insn_commit(i).bits.PRD       := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRD
+        io.commit.bits.insn_commit(i).bits.PRDold    := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRDold
     }
+
+    io.commit.valid := ROB_instruction_banks.map(_.io.ROB_instruction_entry.WB.committed).reduce(_ || _)   // output commit is high if any instructions are committing
 
 
     // This signal is only every high if the row completes without any flushes of any kind

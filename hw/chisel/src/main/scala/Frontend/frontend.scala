@@ -52,14 +52,13 @@ class frontend(coreParameters:CoreParameters) extends Module{
         val memory_response                 =   Flipped(Decoupled(new fetch_packet(coreParameters)))
         
         // COMMIT // 
-        val partial_commit                  =   Input(new partial_commit(coreParameters))                                         // commit mem op
         val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
 
         // INSTRUCTION OUT //
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
 
         // PRD FREE //
-        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
+        val FU_outputs                      =   Vec(portCount, Flipped(Decoupled(new FU_output(coreParameters))))
 
         val revert                          =   ValidIO(new revert(coreParameters))
     })
@@ -82,7 +81,6 @@ class frontend(coreParameters:CoreParameters) extends Module{
 
     io.revert <> instruction_fetch.io.revert
 
-    rename.io.partial_commit <> io.partial_commit
 
 
     ///////////////////////

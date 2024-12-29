@@ -55,14 +55,13 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
         val backend_packet    =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
         // UPDATE //
-        val FU_outputs        =      Vec(WBPortCount, Flipped(ValidIO(new FU_output(coreParameters))))
+        val FU_outputs        =      Vec(WBPortCount, Flipped(Decoupled(new FU_output(coreParameters))))
 
         // REG READ (then execute) //
         val RF_inputs         =      Vec(RSPortCount, Decoupled(new decoded_instruction(coreParameters)))
 
         // commit (mostly for CSRs) // 
         val commit                  =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
-        val partial_commit          =      Input(new partial_commit(coreParameters))                                         // commit mem op
 
     }); dontTouch(io)
 
@@ -127,8 +126,8 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
     for (i <- 0 until RSEntries) {
         for (j <- 0 until fetchWidth) {
             when(reservation_station(i).valid && io.commit.valid && 
-            (io.partial_commit.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && 
-            io.partial_commit.valid(j) && (j.U === reservation_station(i).decoded_instruction.packet_index)) {
+            (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && 
+            io.commit.bits.insn_commit(j).valid && (j.U === reservation_station(i).decoded_instruction.packet_index)) {
                 committed_next(i) := 1.B // Update the wire immediately
             }
         }
