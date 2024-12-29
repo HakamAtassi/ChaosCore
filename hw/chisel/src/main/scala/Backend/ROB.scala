@@ -140,15 +140,22 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
 class ROB_shared_bank(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
+    val portCount = getPortCount(coreParameters)
+    val branchPortCount = getBranchPortCount(coreParameters)
+
     val io = IO(new Bundle{
         // allocate input (1 wr)
         val ROB_packet                    =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters))) // ignore decoded_instruction input
-
         val ROB_back_idx                  =   Input(UInt(log2Ceil(ROBEntries).W))
 
-        // commit insn (1 bit, commit this instruction)
-        val ROB_front_idx                 =   Input(UInt(log2Ceil(ROBEntries).W))
+        // commit (1 RD)
         val ROB_shared_entry              =   Output(new ROB_shared_entry(coreParameters))
+        val ROB_front_idx                 =   Input(UInt(log2Ceil(ROBEntries).W))
+
+        // PC FILE //
+        // 1 pre branch unit
+        val PC_file_exec_addr           =   Vec(branchPortCount, Input(UInt(log2Ceil(ROBEntries).W)))
+        val PC_file_exec_data           =   Vec(branchPortCount, Output(UInt(32.W)))
 
     }); dontTouch(io)
 
@@ -173,6 +180,11 @@ class ROB_shared_bank(coreParameters:CoreParameters) extends Module{
 
     // commit //
     io.ROB_shared_entry := shared_mem.read(io.ROB_front_idx)
+
+    // PC FILE
+    for(i <- 0 until branchPortCount){
+        io.PC_file_exec_data(i) := shared_mem.read(io.PC_file_exec_addr(i)).fetch_PC
+    }
 
 
     io.ROB_packet.ready := (io.ROB_back_idx + 1.U) =/= io.ROB_front_idx
@@ -226,6 +238,8 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
     io.FU_inputs.zipWithIndex.foreach { case (fu_input, idx) =>
         fu_input.ready := arbiter.io.in(idx).ready || !fu_input.bits.CTRL || fu_input.bits.fetch_packet_index =/= bank_idx.U
     }
+
+    arbiter.io.out.ready := 1.B // you can always handle the selected write
 
     ///////////////////
     // MEMORY UPDATE //
@@ -300,6 +314,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     io.ROB_index := back_index
 
+    back_index   := back_pointer(pointer_width-2, 0)
+    front_index  := front_pointer(pointer_width-2, 0)
+
 
     //////////////////////////
     // ROB INSTRUCTION BANK //
@@ -338,6 +355,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
     ROB_shared_bank.io.ROB_packet.bits                    := io.ROB_packet.bits
     ROB_shared_bank.io.ROB_packet.valid                    := io.ROB_packet.valid
     //FIXME: rob_packet missing ready
+
+    ROB_shared_bank.io.PC_file_exec_addr <> io.PC_file_exec_addr
+    ROB_shared_bank.io.PC_file_exec_data <>  io.PC_file_exec_data
+
     ROB_shared_bank.io.ROB_back_idx                  := back_index
     ROB_shared_bank.io.ROB_front_idx                 := front_index
 
@@ -355,10 +376,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
             ROB_branch_banks(i).io.FU_inputs(j).valid             :=  io.FU_inputs(j).valid 
         }
     }
-
-
-
-
 
 
 
@@ -500,6 +517,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     
     // DRIVE I/O COMMIT //
+    io.commit.bits := DontCare // FIXME: complete assignment particularly for branches
     io.commit.bits.fetch_PC  := ROB_shared_bank.io.ROB_shared_entry.fetch_PC
     io.commit.bits.ROB_index := back_index
     io.commit.bits.free_list_front_pointer := ROB_shared_bank.io.ROB_shared_entry.free_list_front_pointer

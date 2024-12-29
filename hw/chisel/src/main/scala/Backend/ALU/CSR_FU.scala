@@ -756,41 +756,23 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     //io.mtvec := mtvec_reg.asUInt
 
-
-
     // ALU pipelined; always ready
-    io.FU_input.ready                       := 1.B    
 
     // mret/sret
-    io.FU_output.bits.branch_valid          := RegNext(MRET_SRET || ECALL)
-    io.FU_output.bits.branch_taken          := RegNext(MRET_SRET || ECALL)
-    io.FU_output.bits.target_address        := RegNext(Mux(MRET_SRET , mepc_reg.asUInt, mtvec_reg.asUInt)) //RegNext(mepc_reg.asUInt)
-
-
-
-    io.FU_output.bits.fetch_PC              := RegNext(io.FU_input.bits.fetch_PC)
-    io.FU_output.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
-
-    // Actual Outputs
-    io.FU_output.bits.PRD                   := RegNext(io.FU_input.bits.decoded_instruction.PRD)
-    io.FU_output.bits.RD_valid              := RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    io.FU_output.bits.RD_data               := CSR_out
-
-
-    io.FU_output.bits.MOB_index             := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
-    io.FU_output.bits.address               := 0.U
-
-    io.FU_output.bits.ROB_index             := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-
-    io.FU_output.bits.exception             := RegNext(ECALL)   //FIXME: currently only ECALL causes an exception
-    io.FU_output.bits.exception_cause       := RegNext(EXCEPTION_CAUSE)   //FIXME: currently only ECALL causes an exception
-
-
-
-    input_valid                             := CSR_input_valid
-
-    dontTouch(CSR_input_valid)
-    dontTouch(input_valid)
+    FU_output.io.enq.valid                      := RegNext(CSR_input_valid)
+    FU_output.io.enq.bits.branch_valid          := RegNext(MRET_SRET || ECALL)
+    FU_output.io.enq.bits.branch_taken          := RegNext(MRET_SRET || ECALL)
+    FU_output.io.enq.bits.target_address        := RegNext(Mux(MRET_SRET , mepc_reg.asUInt, mtvec_reg.asUInt)) //RegNext(mepc_reg.asUInt)
+    FU_output.io.enq.bits.fetch_PC              := RegNext(io.FU_input.bits.fetch_PC)
+    FU_output.io.enq.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
+    FU_output.io.enq.bits.PRD                   := RegNext(io.FU_input.bits.decoded_instruction.PRD)
+    FU_output.io.enq.bits.RD_valid              := RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    FU_output.io.enq.bits.RD_data               := CSR_out
+    FU_output.io.enq.bits.MOB_index             := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    FU_output.io.enq.bits.address               := 0.U
+    FU_output.io.enq.bits.ROB_index             := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    FU_output.io.enq.bits.exception             := RegNext(ECALL)   //FIXME: currently only ECALL causes an exception
+    FU_output.io.enq.bits.exception_cause       := RegNext(EXCEPTION_CAUSE)   //FIXME: currently only ECALL causes an exception
 
 }
 

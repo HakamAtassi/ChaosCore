@@ -66,9 +66,6 @@ class backend(coreParameters:CoreParameters) extends Module{
         val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
 
         // PC_file access (for branch unit)
-        //val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))
-        //val PC_file_exec_data           =   Input(UInt(32.W))
-
         val PC_file_exec_addr           =   Vec(branchPortCount, Output(UInt(log2Ceil(ROBEntries).W)))
         val PC_file_exec_data           =   Vec(branchPortCount, Input(UInt(32.W)))
 
@@ -202,6 +199,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // CONNECT BRANCH UNITS TO PC FILE (in ROB)
     for (i <- 0 until portCount) {
+        read_decoded_instructions(i).fetch_PC := DontCare
         if (FUParamSeq(i).supportsBranch) {
             val PC_file_port_index = FUParamSeq.take(i).count(_.supportsBranch)
             io.PC_file_exec_addr(PC_file_port_index) := INT_RS.io.RF_inputs(i).bits.ROB_index
@@ -229,8 +227,8 @@ class backend(coreParameters:CoreParameters) extends Module{
         MEM_RS.io.RF_inputs(i-nonMemoryPortCount).ready        := execution_engine.io.FU_input(i).ready
     }
 
-    // CONNECT EX. ENGINE TO WB
-    for(i <- 0 until portCount){
+    // CONNECT EX. ENGINE TO WB (ALUs)
+    for(i <- 0 until nonMemoryPortCount){
         // FU data <> PRF (WB) //
         INT_PRF.io.waddr(i)  :=    execution_engine.io.FU_output(i).bits.PRD
         INT_PRF.io.wen(i)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid
@@ -242,6 +240,21 @@ class backend(coreParameters:CoreParameters) extends Module{
 
         io.FU_outputs(i) <> execution_engine.io.FU_output(i)
     }
+
+    // CONNECT EX. ENGINE TO MOB
+    for(i <- nonMemoryPortCount until portCount){
+        MOB.io.AGU_output(i-nonMemoryPortCount) <> execution_engine.io.FU_output(i)  // FIXME add param number of AGU inputs to MOB
+
+        INT_PRF.io.waddr(i)  :=    execution_engine.io.FU_output(i).bits.PRD
+        INT_PRF.io.wen(i)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid
+        INT_PRF.io.wdata(i)  :=    execution_engine.io.FU_output(i).bits.RD_data
+
+        INT_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
+        MEM_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
+        io.FU_outputs(i)        <> MOB.io.MOB_output
+    }
+
+
 
     execution_engine.io.commit           <> io.commit
 
@@ -280,9 +293,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     MOB.io.flush    <> io.flush
 
     execution_engine.io.flush       <>  io.flush
-
     io.reserved_pointers            <>  MOB.io.reserved_pointers
-    
     io.backend_memory_request       <>  MOB.io.backend_memory_request
     io.backend_memory_response      <>  MOB.io.backend_memory_response
 

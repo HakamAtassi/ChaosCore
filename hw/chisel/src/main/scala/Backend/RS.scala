@@ -289,6 +289,10 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
     // These bits corrispond to how many instructions you can dispatch to the RS per cycle. 
     
     val availalbe_RS_entries = PopCount(~Cat(reservation_station.map(_.valid)))
+
+    for(i <- 0 until portCount){
+        io.FU_outputs(i).ready := 1.B   // RS can always set ready bits
+    }
     
     for (i <- 0 until fetchWidth){
         io.backend_packet(i).ready := availalbe_RS_entries >= fetchWidth.U

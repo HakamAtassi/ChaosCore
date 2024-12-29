@@ -56,7 +56,6 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
     // misaligned fetch exception ??
 
-    val input_valid         =   Wire(Bool())  // does the input correspond to this FU?
 
     // Operand data
     val RS1_data            =   io.FU_input.bits.RS1_data
@@ -85,6 +84,14 @@ class GALU(coreParameters:CoreParameters) extends Module{
 
     val BASE_ARITHMETIC     = io.FU_input.bits.decoded_instruction.BASE_ARITHMETIC
     val MULTIPLY            = io.FU_input.bits.decoded_instruction.MULTIPLY
+
+
+    //////////////
+    // OUTPUT Q //
+    //////////////
+
+    val FU_output = Module(new Queue(new FU_output(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    FU_output.io.enq.bits := DontCare
 
     //////////////////////////
     //////////////////////////
@@ -216,33 +223,26 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val BGEU        =   BRANCH && FUNCT3 === "b111".U
 
     
-
     // INPUT VALIDS
-    val ALU_input_valid                     =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_ALU
-    val branch_unit_input_valid             =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_branch_unit
-    val mult_unit_input_valid               =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.MULTIPLY
-    val AGU_input_valid                     =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_memory
-    val CSR_input_valid                     =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.needs_CSRs
+    val ALU_input_valid                     =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.needs_ALU
+    val branch_unit_input_valid             =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.needs_branch_unit
+    val mult_unit_input_valid               =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.MULTIPLY
+    val AGU_input_valid                     =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.needs_memory
+    val CSR_input_valid                     =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.needs_CSRs
     
-
 
     dontTouch(ALU_input_valid)
     dontTouch(branch_unit_input_valid)
     dontTouch(mult_unit_input_valid)
 
+    
+    ////////////////////
+    // ASSIGN OUTPUTS //
+    ////////////////////
+    FU_output.io.flush.get := io.flush.valid
 
-    //////////////////////
-    // CSR INSTRUCTIONS //
-    //////////////////////
-
-
-    //io.mtvec := DontCare
-
-    // ALU pipelined; always ready
-    io.FU_input.ready               :=  1.B    
-    io.FU_output                    :=  DontCare
-    io.FU_output.bits.exception     :=  0.B
-    io.FU_output.valid              :=  RegNext(input_valid && !io.flush.valid || FENCE) && !io.flush.valid
+    io.FU_input.ready :=  FU_output.io.enq.ready
+    io.FU_output <> FU_output.io.deq
 
 }
 

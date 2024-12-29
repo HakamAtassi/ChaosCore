@@ -41,6 +41,10 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     val portCount       = getPortCount(coreParameters)
     val portCountBits   = log2Ceil(portCount)
 
+    val memPortCount = FUParamSeq.count(_.supportsAddressGeneration)
+    val nonMemoryPortCount = portCount - memPortCount 
+
+
     val ptr_width = log2Ceil(MOBEntries) + 1
 
     val io = IO(new Bundle{
@@ -48,15 +52,13 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
         val flush               =     Flipped(ValidIO(new flush(coreParameters)))
 
-
-
         // ALLOCATE //
         val reserve                 =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))         // reserve entry (rename)
         val reserved_pointers       =      Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry
 
         val fetch_PC                =      Input(UInt(32.W))                                                                  // DEBUG
 
-        val AGU_output              =      Flipped(Decoupled(new FU_output(coreParameters)))                                      // update address (AGU)
+        val AGU_output              =      Vec(memPortCount, Flipped(Decoupled(new FU_output(coreParameters))))                                      // update address (AGU)
         val MOB_output              =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
 
         // REDIRECTS // 
@@ -138,11 +140,13 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // AGU UPDATE //
     ////////////////
 
-    val AGU_index = io.AGU_output.bits.MOB_index
-    when(io.AGU_output.valid){
-        MOB(AGU_index).address  := io.AGU_output.bits.address
-        MOB(AGU_index).data  := io.AGU_output.bits.wr_data
-        MOB(AGU_index).resolved := 1.B
+    for(i <- 0 until memPortCount){
+        val AGU_index = io.AGU_output(i).bits.MOB_index
+        when(io.AGU_output(i).valid){
+            MOB(AGU_index).address  := io.AGU_output(i).bits.address
+            MOB(AGU_index).data  := io.AGU_output(i).bits.wr_data
+            MOB(AGU_index).resolved := 1.B
+        }
     }
 
 
@@ -296,6 +300,11 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     ///////////
     // READY //
     ///////////
+
+
+    for(i<-0 until memPortCount){
+        io.AGU_output(i).ready := 1.B  // always ready to accept a resolved address
+    }
 
     io.backend_memory_response.ready := 1.B
 

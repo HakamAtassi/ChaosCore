@@ -83,16 +83,17 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     address         := RS1_data + sign_extend_var(imm, 21, 32)
 
     // Everything needed to perform the memory request (LSQ request)    
-    io.FU_output.valid              := RegNext(io.FU_input.valid && !io.flush.valid)
-    io.FU_output.bits.PRD           := RegNext(PRD)             // LOAD DEST
-    io.FU_output.bits.is_unsigned   := RegNext(unsigned)        // SIGNED/UNSIGNED
-    io.FU_output.bits.address       := RegNext(address)         // ADDRESS
-    io.FU_output.bits.wr_data       := RegNext(wr_data)         // WR DATA
-    io.FU_output.bits.MOB_index     := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
-    io.FU_output.bits.ROB_index     := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-    io.FU_output.bits.fetch_packet_index  := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
-    io.FU_output.bits.memory_type   := RegNext(io.FU_input.bits.decoded_instruction.memory_type)
-    io.FU_output.bits.access_width  := RegNext(io.FU_input.bits.decoded_instruction.access_width)
+
+    FU_output.io.enq.valid              := RegNext(AGU_input_valid && !io.flush.valid)
+    FU_output.io.enq.bits.PRD           := RegNext(PRD)             // LOAD DEST
+    FU_output.io.enq.bits.is_unsigned   := RegNext(unsigned)        // SIGNED/UNSIGNED
+    FU_output.io.enq.bits.address       := RegNext(address)         // ADDRESS
+    FU_output.io.enq.bits.wr_data       := RegNext(wr_data)         // WR DATA
+    FU_output.io.enq.bits.MOB_index     := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    FU_output.io.enq.bits.ROB_index     := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    FU_output.io.enq.bits.fetch_packet_index  := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
+    FU_output.io.enq.bits.memory_type   := RegNext(io.FU_input.bits.decoded_instruction.memory_type)
+    FU_output.io.enq.bits.access_width  := RegNext(io.FU_input.bits.decoded_instruction.access_width)
 
 
     /////////////////
@@ -100,7 +101,5 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     /////////////////
     io.FU_input.ready               := 1.B
 
-
-    input_valid                         :=      AGU_input_valid
 
 }

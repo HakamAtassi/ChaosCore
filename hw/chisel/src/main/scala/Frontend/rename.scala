@@ -314,9 +314,12 @@ class rename(coreParameters:CoreParameters) extends Module{
 
 
 
-    for(i <- 0 until fetchWidth){   // FIXME: this should be port width...
+    for(i <- 0 until portCount){
+
         val set_RD      = io.FU_outputs(i).bits.PRD
         val RD_valid    = io.FU_outputs(i).valid && io.FU_outputs(i).bits.RD_valid
+
+        io.FU_outputs(i).ready := 1.B   // rename can always set ready bits
 
         when(RD_valid){ // set ready bits
             comb_ready_bits(set_RD) := 1.B

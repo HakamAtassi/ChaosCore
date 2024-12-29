@@ -50,8 +50,6 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
         // partial_commit (for CSRs)
         val commit          =   Flipped(ValidIO(new commit(coreParameters)))
 
-        //val CSR_out = if (FUParam.supportsCSRs) Some(Output(new CSR_out)) else None
-
     }); dontTouch(io)
 
 
@@ -90,39 +88,26 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     // route outputs
     io.FU_output := DontCare
 
+    val FU_outputs = Seq(
+        ALU.map(_.io.FU_output),
+        branch_unit.map(_.io.FU_output),
+        AGU.map(_.io.FU_output),
+        mul.map(_.io.FU_output),
+        CSR.map(_.io.FU_output)
+    ).flatten
 
-    if(ALU.isDefined){
-        when(ALU.get.io.FU_output.valid){
-            io.FU_output <> ALU.get.io.FU_output
-        }
+    val arbiter = Module(new Arbiter(chiselTypeOf(io.FU_output.bits), FU_outputs.length))
+
+    FU_outputs.zip(arbiter.io.in).foreach { case (fu_output, arb_input) =>
+        fu_output <> arb_input
     }
 
-    if(branch_unit.isDefined){
-        when(branch_unit.get.io.FU_output.valid){
-            io.FU_output <> branch_unit.get.io.FU_output
-        }
-    }
+    // Connect arbiter output to io.FU_output
+    arbiter.io.out <> io.FU_output
 
-    if(AGU.isDefined){
-        when(AGU.get.io.FU_output.valid){
-            io.FU_output <> AGU.get.io.FU_output
-        }
-    }
-
-    if(mul.isDefined){
-        when(mul.get.io.FU_output.valid){
-            io.FU_output <> mul.get.io.FU_output
-        }
-    }
-
-    if(CSR.isDefined){
-        when(CSR.get.io.FU_output.valid){
-            io.FU_output <> CSR.get.io.FU_output
-            //io.mtvec <> CSR.get.io.mtvec
-
-        }
-        CSR_port.get  <> CSR.get.CSR_port
-
+    // Handle CSR-specific connections (unchanged)
+    if (CSR.isDefined) {
+        CSR_port.get <> CSR.get.CSR_port
         irq_software_i.get <> CSR.get.irq_software_i
         irq_timer_i.get <> CSR.get.irq_timer_i
         irq_external_i.get <> CSR.get.irq_external_i

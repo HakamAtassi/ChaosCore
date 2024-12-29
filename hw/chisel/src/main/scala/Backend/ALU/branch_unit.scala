@@ -92,26 +92,22 @@ class branch_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
 
 
     // PC of branch instruction and packet index (to access ROB bank)
-    io.FU_output.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
-    io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
+    FU_output.io.enq.valid                      :=  branch_unit_input_valid
+    FU_output.io.enq.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
+    FU_output.io.enq.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
-    // ALU pipelined; always ready
-    io.FU_input.ready := 1.B
-    io.FU_output.bits.branch_valid      :=   RegNext(BRANCH || JAL || JALR)
+    FU_output.io.enq.bits.branch_valid      :=   RegNext(BRANCH || JAL || JALR)
 
     // Not a branch unit (all FUs share the same output channel)
-    io.FU_output.bits.branch_taken      :=      RegNext(branch_taken)
-    io.FU_output.bits.target_address    :=      RegNext(target_address)
+    FU_output.io.enq.bits.branch_taken      :=      RegNext(branch_taken)
+    FU_output.io.enq.bits.target_address    :=      RegNext(target_address)
 
     // Actual Outputs
-    io.FU_output.bits.PRD               :=      RegNext(io.FU_input.bits.decoded_instruction.PRD)
-    io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    io.FU_output.bits.RD_data           :=      arithmetic_result
-    io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-    io.FU_output.bits.MOB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
-    io.FU_output.bits.address           :=      0.U
-
-
-    input_valid                         :=      branch_unit_input_valid
+    FU_output.io.enq.bits.PRD               :=      RegNext(io.FU_input.bits.decoded_instruction.PRD)
+    FU_output.io.enq.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    FU_output.io.enq.bits.RD_data           :=      arithmetic_result
+    FU_output.io.enq.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    FU_output.io.enq.bits.MOB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    FU_output.io.enq.bits.address           :=      0.U
 
 }
