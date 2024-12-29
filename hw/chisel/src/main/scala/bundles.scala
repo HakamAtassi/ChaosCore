@@ -119,13 +119,26 @@ class BTB_entry(coreParameters:CoreParameters) extends Bundle{
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 }
 
+class insn_commit(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+    val MOB_index               = Vec(fetchWidth, UInt(log2Ceil(MOBEntries).W))
+    val MOB_valid               = Vec(fetchWidth, Bool())   // only valid on loads and stores
+
+    val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
+    val RD_valid                = Vec(fetchWidth, Bool())
+    val PRD                     = Vec(fetchWidth, UInt(physicalRegBits.W))
+    val PRDold                  = Vec(fetchWidth, UInt(physicalRegBits.W))
+}
+
 class commit(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
+    // GLOBAL COMMIT SIGNALS
     val fetch_PC                = UInt(32.W)    // To update gshare/PHT
     val T_NT                    = Bool()    // To update BTB (BTB only updates on taken branches)
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
 
+    // BRANCH PREDICTION SIGNALS
     val br_type                 = br_type_t()
     val br_mask                 = Vec(fetchWidth, Bool())
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
@@ -140,9 +153,9 @@ class commit(coreParameters:CoreParameters) extends Bundle{
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
-    val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
-    val PRD                     = Vec(fetchWidth, UInt(physicalRegBits.W))
-    val RD_valid                = Vec(fetchWidth, Bool())
+    // INSN COMMIT SIGNALS
+    val insn_commit             = Vec(fetchWidth, ValidIO(new insn_commit(coreParameters)))
+
 }
 
 
@@ -165,18 +178,6 @@ class flush(coreParameters:CoreParameters) extends Bundle{
     val redirect_PC         = UInt(32.W)    // PC the instruction should redirect to
 }
 
-class partial_commit(coreParameters:CoreParameters) extends Bundle{
-    import coreParameters._
-    val valid                   = Vec(fetchWidth, Bool())
-    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
-    val MOB_index               = Vec(fetchWidth, UInt(log2Ceil(MOBEntries).W))
-    val MOB_valid               = Vec(fetchWidth, Bool())   // only valid on loads and stores
-
-    val RD                      = Vec(fetchWidth, UInt(architecturalRegBits.W))
-    val RD_valid                = Vec(fetchWidth, Bool())
-    val PRD                     = Vec(fetchWidth, UInt(physicalRegBits.W))
-    val PRDold                  = Vec(fetchWidth, UInt(physicalRegBits.W))
-}
 
 class RAS_update extends Bundle{    // Request call or ret
     val call_addr = UInt(32.W)
@@ -248,6 +249,12 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     def needs_MEM_RS: Bool = {
         needs_memory
     }
+
+    def MOB_valid: Bool = {
+        STORE || LOAD
+    }
+
+
 
     // ~30 bits
     val ready_bits          =  new sources_ready()
