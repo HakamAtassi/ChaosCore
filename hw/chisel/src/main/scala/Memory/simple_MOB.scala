@@ -195,7 +195,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // ENTRY FSM
 
     for(i <- 0 until MOBEntries){
-        when(MOB(i).committed && MOB(i).resolved && MOB(i).in(MOB_STATES.VALID)){  
+        when((MOB(i).committed || MOB(i).memory_type === memory_type_t.LOAD) && MOB(i).resolved && MOB(i).in(MOB_STATES.VALID)){  
             MOB(i).MOB_STATE := MOB_STATES.READY
         }
     }
@@ -281,13 +281,13 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
     // cache response
     io.MOB_output.bits                      := 0.U.asTypeOf(new FU_output(coreParameters))
-    io.MOB_output.bits.ROB_index            := MOB(io.backend_memory_response.bits.MOB_index).ROB_index //io.backend_memory_response.bits.PRD//io.backend_memory_response.bits.ROB_index
+    io.MOB_output.bits.ROB_index            := MOB(io.backend_memory_response.bits.MOB_index).ROB_index
     io.MOB_output.bits.MOB_index            := io.backend_memory_response.bits.MOB_index    // why is this needed?
     io.MOB_output.bits.address              := io.backend_memory_response.bits.addr
     io.MOB_output.bits.PRD                  := MOB(io.backend_memory_response.bits.MOB_index).PRD //io.backend_memory_response.bits.PRD
     io.MOB_output.bits.RD_data              := io.backend_memory_response.bits.data
     io.MOB_output.bits.RD_valid             := io.backend_memory_response.valid
-    io.MOB_output.bits.fetch_packet_index   := io.backend_memory_response.bits.fetch_packet_index
+    io.MOB_output.bits.fetch_packet_index   := MOB(io.backend_memory_response.bits.MOB_index).fetch_packet_index //io.backend_memory_response.bits.fetch_packet_index
     io.MOB_output.valid                     := io.backend_memory_response.valid && !io.backend_memory_response.bits.nack
 
     //when(io.backend_memory_response.fire){

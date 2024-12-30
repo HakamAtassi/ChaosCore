@@ -57,12 +57,14 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
         val flush                         =   Flipped(ValidIO(new flush(coreParameters)))
     }); dontTouch(io)
 
+
     // On allocate, write row and clear as needed 
     // On WB, update WB mem as needed
     // On commit, set commit bit
     // Clear entries with commit bit set
     // On flush, clear bank entries
 
+    val IS_STORE = Wire(Bool()) // FIXME: THIS IS TEMPORARY UNTIL THE MOB IS FIXED
 
     /////////////////////
     // WRITE-BACK BANK //
@@ -84,6 +86,7 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
             wb_mem(FU_input.bits.ROB_index).exception           := FU_input.bits.exception
             wb_mem(FU_input.bits.ROB_index).exception_cause     := FU_input.bits.exception_cause
             wb_mem(FU_input.bits.ROB_index).mem_violation       := 0.B //FU_input.bits.exception
+            if(DEBUG){ wb_mem(FU_input.bits.ROB_index).RD_data.get  := FU_input.bits.RD_data }
         }
     }
 
@@ -95,7 +98,7 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     }
 
     // free entry after "full" commit
-    when(wb_mem(io.ROB_front_idx).valid && wb_mem(io.ROB_front_idx).committed && wb_mem(io.ROB_front_idx).complete){
+    when(wb_mem(io.ROB_front_idx).valid && wb_mem(io.ROB_front_idx).committed && (wb_mem(io.ROB_front_idx).complete || IS_STORE)){
         wb_mem(io.ROB_front_idx) := 0.U.asTypeOf(new ROB_WB_entry(coreParameters))
     }
 
@@ -128,6 +131,11 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     // On write, ensure that writes to the commit row are visible 1 cycle later.
     // rob row output for commit
     io.ROB_instruction_entry.uOp := insn_mem.read(io.ROB_front_idx)
+
+    IS_STORE := insn_mem.read(io.ROB_front_idx).decoded_insn.STORE
+
+
+
     io.ROB_instruction_entry.WB  := wb_mem(RegNext(io.ROB_front_idx))
     
 
@@ -458,14 +466,17 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     val prediction      = ROB_shared_bank.io.ROB_shared_entry.bits.prediction
     val output_flush    = WireInit(0.U.asTypeOf(ValidIO(new flush(coreParameters))))
+    val expected_next_PC = WireInit(UInt(32.W), 0.U)
+
+    expected_next_PC    := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * fetchWidth.U)
 
     io.flush := output_flush
-
 
     when(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.uOp.decoded_insn.CTRL && earliest_CTRL_insn.WB.committed){
         // dominant branch is a typical branch
         // only flush if doesnt match prediction
-        when(PriorityEncoder(prediction.br_mask) === earliest_CTRL_idx && prediction.target === earliest_CTRL_branch_info.target_PC){    // FIXME: for this, you need to ensure WHICH branch is taken and to where, if any (br mask...)
+        expected_next_PC    := earliest_CTRL_branch_info.target_PC
+        when(PriorityEncoder(prediction.br_mask) === earliest_CTRL_idx && prediction.target === earliest_CTRL_branch_info.target_PC){
             // prediction correct, do nothing
         }.otherwise{
             output_flush.valid := 1.B
@@ -477,6 +488,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.exception /*&&*/ /*about to commit*/){ //FIXME: not complete// excepting instructions don't commit
         // is an exception
         // flush and jump to MTVEC
+        output_flush.valid := 1.B
+        output_flush.bits.flushing_PC:= ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx)
+        output_flush.bits.redirect_PC:= CSR_port.mtvec.asUInt
+        expected_next_PC    := CSR_port.mtvec.asUInt
 
         output_flush.bits.is_exception := 1.B
     }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.committed){
@@ -486,9 +501,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
         output_flush.bits.flushing_PC := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx)
         output_flush.bits.redirect_PC := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx) + 4.U
 
+        expected_next_PC              := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx) + 4.U
+
         output_flush.bits.is_fence    := earliest_CTRL_insn.uOp.decoded_insn.FENCE
         output_flush.bits.is_CSR      := earliest_CTRL_insn.uOp.decoded_insn.CSRRW
     }
+
+    
 
 
     // ASSIGN FLUSH //
@@ -527,6 +546,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
                         (!prevValid || (prevComplete && prevCommittedOrCommitting)) &&                                          // prev insn has committed or is committing
                         i.U <= earliest_CTRL_idx &&                                                                             // only commit up to commit point 
                         !EXCEPTION_insn_oh(i)                                                                                   // don't commit exceptions
+                        //!CSR_port.interrupt                                                                                   // don't commit anything when an interrupt is taking place
+
         }
         cVec
     }
@@ -556,8 +577,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
     io.commit.valid := ROB_instruction_banks.map(bank => bank.io.ROB_instruction_entry.WB.committed && bank.io.ROB_instruction_entry.WB.valid).reduce(_ || _) && ROB_shared_bank.io.ROB_shared_entry.valid   // output commit is high if any instructions are committing
 
 
-    // This signal is only every high if the row completes without any flushes of any kind
-    val row_commit = ROB_instruction_banks.map(bank => !bank.io.ROB_instruction_entry.WB.valid).reduce(_ && _) && ROB_shared_bank.io.ROB_shared_entry.valid
+    // done with this row
+    // this signal increments pointers and helps with interrupts and things
+    // FIXME: remove store condition after FIXING MOB
+    val row_commit = ROB_instruction_banks.zipWithIndex.map { case (bank, i) =>
+        !bank.io.ROB_instruction_entry.WB.valid || 
+        (bank.io.ROB_instruction_entry.WB.valid && (((bank.io.ROB_instruction_entry.WB.complete || bank.io.ROB_instruction_entry.uOp.decoded_insn.STORE) && bank.io.ROB_instruction_entry.WB.committed) || i.U > earliest_CTRL_idx))
+    }.reduce(_ && _) && ROB_shared_bank.io.ROB_shared_entry.valid
 
 
 
@@ -569,15 +595,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         back_pointer  := back_pointer + io.ROB_packet.fire
     }
 
-    ROB_shared_bank.io.commit_row                           := row_commit
+    ROB_shared_bank.io.commit_row                       := row_commit
     ROB_shared_bank.io.flush                            := output_flush.valid
-
-    ///////////////
-    // INTERRUPT //
-    ///////////////
-    
-    // TODO: 
-
 
     //////////////////
     // ASSIGN READY //
@@ -612,6 +631,23 @@ class ROB(coreParameters:CoreParameters) extends Module{
     io.ROB_packet.ready := ROB_shared_bank.io.ROB_packet.ready && ROB_instruction_banks.map(_.io.decoded_insn.ready).reduce(_ && _)
 
 
+
+    ///////////////
+    // INTERRUPT //
+    ///////////////
+    
+    when(CSR_port.interrupt && row_commit){ 
+        // on interrupt, jump to mtvec
+        // set PC to the next instruction that would have committed
+        output_flush    := 0.U.asTypeOf(ValidIO(new flush(coreParameters)))
+        output_flush.valid := 1.B
+
+        output_flush.bits.flushing_PC := expected_next_PC
+        output_flush.bits.redirect_PC := CSR_port.mtvec.asUInt
+        output_flush.bits.is_interrupt := 1.B
+    }
+
+
     ////////////////////
     // GENERATE TRACE //
     ////////////////////
@@ -624,16 +660,31 @@ class ROB(coreParameters:CoreParameters) extends Module{
             val arch_RD         = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD
             val arch_RD_valid   = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD_valid
             val PRD             = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRD
-            val done            = ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.valid
             val RD_data         = ROB_instruction_banks(i).io.ROB_instruction_entry.WB.RD_data.get
 
+            val IS_STORE        = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.STORE
+            val IS_LOAD         = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.LOAD
+            val IS_CSRRW        = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSRRW
+            val IS_CTRL        = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CTRL
+
+            val done            = ROB_shared_bank.io.ROB_shared_entry.valid && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed && (ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete || IS_STORE) && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.valid
+
             
-            //FIXME: add support for stores, CSRs, etc...
-            when(done && arch_RD_valid){
-                // PC RD data
+            // FIXME: ADD STORES AND EXCEPTIONS
+            // ALSO MAYBE INTERRUPTS
+            when(done && IS_STORE){
+                //printf("core   0: 3 0x%x mem[0x%0x] = 0x%x\n", instruction_PC, arch_RD, RD_data);
+                //printf("core   0: 3 0x%x mem[0x%x] = 0x%x\n", instruction_PC, RD_data, PRD)
+                printf("core   0: 3 0x%x STORE ???\n", instruction_PC)
+            }.elsewhen(done && IS_LOAD){
+                printf("core   0: 3 0x%x 0x%x = 0x%x | mem[???]\n", instruction_PC, arch_RD, RD_data)
+            }.elsewhen(done && IS_CSRRW){
+                printf("core   0: 3 0x%x CSR ???\n", instruction_PC);
+            }.elsewhen(done && IS_CTRL){
+                printf("core   0: 3 0x%x CTRL \n", instruction_PC);
+            }.elsewhen(done && arch_RD_valid){  // "normal" PRD modifying insn
                 printf("core   0: 3 0x%x x%d 0x%x\n", instruction_PC, arch_RD, RD_data);
-                //printf("core   0: 3 0x80000004 (0x00000093) x1  0x00000000", )
-            }.elsewhen(done){
+            }.elsewhen(done){    // something else with no PRD
                 printf("core   0: 3 0x%x\n", instruction_PC)
             }
 

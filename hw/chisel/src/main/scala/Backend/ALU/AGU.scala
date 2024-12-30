@@ -37,8 +37,6 @@ import chisel3.util._
 class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     import coreParameters._
 
-    io.FU_output.bits := 0.U.asTypeOf(new FU_output(coreParameters))
-
     ////////////////////
     // MEMORY REQUEST //
     ////////////////////
@@ -82,6 +80,8 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     unsigned        := LBU || LHU
     address         := RS1_data + sign_extend_var(imm, 21, 32)
 
+    dontTouch(address)
+
     // Everything needed to perform the memory request (LSQ request)    
 
     FU_output.io.enq.valid              := RegNext(AGU_input_valid && !io.flush.valid)
@@ -94,12 +94,6 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     FU_output.io.enq.bits.fetch_packet_index  := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
     FU_output.io.enq.bits.memory_type   := RegNext(io.FU_input.bits.decoded_instruction.memory_type)
     FU_output.io.enq.bits.access_width  := RegNext(io.FU_input.bits.decoded_instruction.access_width)
-
-
-    /////////////////
-    // VALID/READY //
-    /////////////////
-    io.FU_input.ready               := 1.B
 
 
 }

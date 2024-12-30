@@ -77,7 +77,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val FUNCT7              =   io.FU_input.bits.decoded_instruction.FUNCT7
     val FENCE               =   io.FU_input.bits.decoded_instruction.FENCE
     val IS_IMM              =   io.FU_input.bits.decoded_instruction.IS_IMM
-    val SUBTRACT            =   !io.FU_input.bits.decoded_instruction.UNSIGNED
+    val SUBTRACT            =   FUNCT7 === "b0100000".U
+    val UNSIGNED            =   io.FU_input.bits.decoded_instruction.UNSIGNED
 
     val ECALL               =   io.FU_input.bits.decoded_instruction.ENV    && io.FU_input.bits.decoded_instruction.IMM === 0x0.U
     val EBREAK              =   io.FU_input.bits.decoded_instruction.ENV    && io.FU_input.bits.decoded_instruction.IMM === 0x1.U
@@ -137,8 +138,6 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val GE              =   WireInit(Bool(), 0.B)
     val LTU             =   WireInit(Bool(), 0.B)
     val GEU             =   WireInit(Bool(), 0.B)
-    val JAL             =   WireInit(Bool(), 0.B)
-    val JALR            =   WireInit(Bool(), 0.B)
 
 
     val RS1_signed      =   Wire(SInt(32.W))
@@ -200,9 +199,9 @@ class GALU(coreParameters:CoreParameters) extends Module{
     dontTouch(SRA)
     dontTouch(instruction_PC)
     dontTouch(AUIPC)
+    dontTouch(LUI)
+    dontTouch(BASE_ARITHMETIC)
     
-    // FIXME: add ecall ebreak
-
     // "M" INSTRUCTIONS //
     val MUL      =   (MULTIPLY) && FUNCT3 === "b000".U
     val MULH     =   (MULTIPLY) && FUNCT3 === "b001".U
@@ -221,6 +220,9 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val BGE         =   BRANCH && FUNCT3 === "b101".U
     val BLTU        =   BRANCH && FUNCT3 === "b110".U
     val BGEU        =   BRANCH && FUNCT3 === "b111".U
+    val JALR        =   io.FU_input.bits.decoded_instruction.JALR
+    val JAL         =   io.FU_input.bits.decoded_instruction.JAL
+
 
     
     // INPUT VALIDS

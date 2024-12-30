@@ -99,6 +99,17 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
         arithmetic_result   := lui_result
     } 
 
+    dontTouch(LUI)
+    dontTouch(ADD)
+    dontTouch(SUB)
+    dontTouch(XOR)
+    dontTouch(OR)
+    dontTouch(AND)
+    dontTouch(SLL)
+    dontTouch(SRA)
+    dontTouch(imm)
+    dontTouch(lui_result)
+
 
     // Not a branch unit (all FUs share the same output channel)
 

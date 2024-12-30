@@ -243,15 +243,22 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // CONNECT EX. ENGINE TO MOB
     for(i <- nonMemoryPortCount until portCount){
+        // THIS LOOP WILL ONLY EVER RUN ONCE
         MOB.io.AGU_output(i-nonMemoryPortCount) <> execution_engine.io.FU_output(i)  // FIXME add param number of AGU inputs to MOB
 
-        INT_PRF.io.waddr(i)  :=    execution_engine.io.FU_output(i).bits.PRD
-        INT_PRF.io.wen(i)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid
-        INT_PRF.io.wdata(i)  :=    execution_engine.io.FU_output(i).bits.RD_data
+        INT_PRF.io.waddr(i)  :=  MOB.io.MOB_output.bits.PRD 
+        INT_PRF.io.wen(i)    :=  MOB.io.MOB_output.bits.RD_valid && MOB.io.MOB_output.valid 
+        INT_PRF.io.wdata(i)  :=  MOB.io.MOB_output.bits.RD_data
 
-        INT_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
-        MEM_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
+        // FIXME: this is a bit weird
+        // Basically, the AGU only generates an address. this address goes to the MOB. Thats it. 
+        // In other words, the AGU (of which many may exist based on config) (which lives in the exeuction engine) doesnt actually resolve any dependancies
+        // the output of the MOB, which is currently fixed to 1, is what actually writes to the reg file, ROB, and reservation stations to resolve/wakeup insns. 
+
+        INT_RS.io.FU_outputs(i) <> MOB.io.MOB_output //execution_engine.io.FU_output(i)
+        MEM_RS.io.FU_outputs(i) <> MOB.io.MOB_output //execution_engine.io.FU_output(i)
         io.FU_outputs(i)        <> MOB.io.MOB_output
+
     }
 
 
