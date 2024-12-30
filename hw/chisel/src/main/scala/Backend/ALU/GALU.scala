@@ -244,6 +244,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
     io.FU_input.ready :=  FU_output.io.enq.ready
     io.FU_output <> FU_output.io.deq
 
+    dontTouch(FU_output.io)
+
 }
 
 

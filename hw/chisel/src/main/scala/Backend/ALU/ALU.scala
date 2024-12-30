@@ -102,7 +102,7 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     // Not a branch unit (all FUs share the same output channel)
 
-    FU_output.io.enq.valid                      :=  branch_unit_input_valid
+    FU_output.io.enq.valid                      :=  RegNext(ALU_input_valid)
     FU_output.io.enq.bits.branch_valid          :=  0.B
     FU_output.io.enq.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
     FU_output.io.enq.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)

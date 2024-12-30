@@ -92,11 +92,13 @@ class branch_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
 
 
     // PC of branch instruction and packet index (to access ROB bank)
-    FU_output.io.enq.valid                      :=  branch_unit_input_valid
+
+    FU_output.io.enq.valid                      :=  RegNext(branch_unit_input_valid)
     FU_output.io.enq.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
     FU_output.io.enq.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
-    FU_output.io.enq.bits.branch_valid      :=   RegNext(BRANCH || JAL || JALR)
+    FU_output.io.enq.bits.branch_valid      :=   RegNext(BRANCH || JAL || JALR) // FIXME: why doe FU_output have CTRL and branch valid but no XRET??
+    FU_output.io.enq.bits.CTRL      :=   RegNext(BRANCH || JAL || JALR)
 
     // Not a branch unit (all FUs share the same output channel)
     FU_output.io.enq.bits.branch_taken      :=      RegNext(branch_taken)

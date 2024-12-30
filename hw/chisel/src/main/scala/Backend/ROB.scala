@@ -73,8 +73,8 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     // allocate
     when(io.decoded_insn.fire){
         // clear entry, update valid
-        wb_mem(io.ROB_front_idx)       := 0.U.asTypeOf(new ROB_WB_entry(coreParameters))
-        wb_mem(io.ROB_front_idx).valid := 1.B   // is this entry filled (irregardless of instruction being valid)
+        wb_mem(io.ROB_back_idx)       := 0.U.asTypeOf(new ROB_WB_entry(coreParameters))
+        wb_mem(io.ROB_back_idx).valid := io.decoded_insn.bits.valid 
     }
 
     // update (WB)
@@ -88,6 +88,8 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     }
 
     // commit
+
+
     when(io.commit){
         wb_mem(io.ROB_front_idx).committed           := 1.B
     }
@@ -111,10 +113,10 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     val insn_mem = SyncReadMem(ROBEntries, new ROB_uOp_entry(coreParameters))
 
     // allocate
+    val insn_entry = Wire(new ROB_uOp_entry(coreParameters))
+    insn_entry.decoded_insn := io.decoded_insn.bits
     when(io.decoded_insn.fire){
         // clear entry, update valid
-        val insn_entry = Wire(new ROB_uOp_entry(coreParameters))
-        insn_entry.decoded_insn := io.decoded_insn.bits
         insn_mem.write(io.ROB_back_idx, insn_entry)
     }
 
@@ -123,9 +125,11 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     // ASSIGN OUTPUT //
     ///////////////////
 
+    // On write, ensure that writes to the commit row are visible 1 cycle later.
     // rob row output for commit
     io.ROB_instruction_entry.uOp := insn_mem.read(io.ROB_front_idx)
-    io.ROB_instruction_entry.WB  := RegNext(wb_mem(io.ROB_front_idx))
+    io.ROB_instruction_entry.WB  := wb_mem(RegNext(io.ROB_front_idx))
+    
 
     // ready bits for WB mem access (always ready for WB)
     // WB mem always ready
@@ -149,8 +153,11 @@ class ROB_shared_bank(coreParameters:CoreParameters) extends Module{
         val ROB_back_idx                  =   Input(UInt(log2Ceil(ROBEntries).W))
 
         // commit (1 RD)
-        val ROB_shared_entry              =   Output(new ROB_shared_entry(coreParameters))
+        val ROB_shared_entry              =   ValidIO(new ROB_shared_entry(coreParameters))
         val ROB_front_idx                 =   Input(UInt(log2Ceil(ROBEntries).W))
+
+        val commit_row                    =   Input(Bool())
+        val flush                         =   Input(Bool())
 
         // PC FILE //
         // 1 pre branch unit
@@ -164,6 +171,8 @@ class ROB_shared_bank(coreParameters:CoreParameters) extends Module{
     // 1 Write for allocate
 
     val shared_mem = SyncReadMem(ROBEntries, new ROB_shared_entry(coreParameters))
+    val valid_vec  = RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
+
 
     // allocate //
     when(io.ROB_packet.fire) {
@@ -175,11 +184,20 @@ class ROB_shared_bank(coreParameters:CoreParameters) extends Module{
         shared_entry.TOS                        := io.ROB_packet.bits.TOS
         shared_entry.prediction                 := io.ROB_packet.bits.prediction
 
+        valid_vec(io.ROB_back_idx)              := 1.B
         shared_mem.write(io.ROB_back_idx, shared_entry)
     }
 
     // commit //
-    io.ROB_shared_entry := shared_mem.read(io.ROB_front_idx)
+    io.ROB_shared_entry.bits := shared_mem.read(io.ROB_front_idx)
+    io.ROB_shared_entry.valid := valid_vec(RegNext(io.ROB_front_idx))
+    when(io.commit_row){
+        valid_vec(io.ROB_front_idx) := 0.B  // clear valid bit
+    }
+
+    when(io.flush){
+        valid_vec := VecInit(Seq.fill(ROBEntries)(0.B))
+    }
 
     // PC FILE
     for(i <- 0 until branchPortCount){
@@ -218,14 +236,18 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
 
     val mem = SyncReadMem(ROBEntries, new ROB_branch_entry(coreParameters))
 
+    // FIXME: this module doesnt work
+
     /////////////////////////
     // ROUND ROBIN ARBITER //
     /////////////////////////
     // output is ready if input is non branch or if bank is available
 
-    val valid_branch_inputs = io.FU_inputs.zipWithIndex.map { case (fu_input, idx) =>
-        fu_input.valid && fu_input.bits.CTRL && fu_input.bits.fetch_packet_index === bank_idx.U
-    }
+    val valid_branch_inputs = WireInit(VecInit(io.FU_inputs.zipWithIndex.map { case (fu_input, idx) =>
+        fu_input.valid && (fu_input.bits.CTRL) && (fu_input.bits.fetch_packet_index === bank_idx.U)
+    }))
+
+    dontTouch(valid_branch_inputs)
 
     val arbiter = Module(new RRArbiter(new FU_output(coreParameters), portCount))
     arbiter.io.in.zip(io.FU_inputs).foreach { case (arb_in, fu_input) =>
@@ -246,9 +268,10 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
     ///////////////////
     // update (WB)
 
+    val wb_addr = arbiter.io.out.bits.ROB_index
+    val resolved_branch = Wire(new ROB_branch_entry(coreParameters))
+    resolved_branch := 0.U.asTypeOf(new ROB_branch_entry(coreParameters))
     when(arbiter.io.out.fire) {
-        val wb_addr = arbiter.io.out.bits.ROB_index
-        val resolved_branch = Wire(new ROB_branch_entry(coreParameters))
         resolved_branch.target_PC := arbiter.io.out.bits.target_address
         resolved_branch.taken := arbiter.io.out.bits.branch_taken
 
@@ -259,14 +282,8 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
     // OUTPUT LOGIC //
     //////////////////
 
-    io.resolved_branch_out := mem.read(io.ROB_front_idx) 
+    io.resolved_branch_out := Mux(RegNext(wb_addr === io.ROB_front_idx), RegNext(resolved_branch), mem.read(io.ROB_front_idx))
 }
-
-
-
-// FIXME: missing ROB branch read ports
-
-
 
 class ROB(coreParameters:CoreParameters) extends Module{
     import coreParameters._
@@ -329,22 +346,17 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_instruction_banks(i).io.decoded_insn.valid    := io.ROB_packet.valid
         ROB_instruction_banks(i).io.decoded_insn.bits     := io.ROB_packet.bits.decoded_instruction(i)
 
-        
-        ROB_instruction_banks(i).io.ROB_back_idx         := back_index
+        ROB_instruction_banks(i).io.ROB_back_idx          := back_index
 
         for(j <- 0 until portCount){
+            // FIXME: ready?
             ROB_instruction_banks(i).io.FU_inputs(j).bits              :=  io.FU_inputs(j).bits 
             ROB_instruction_banks(i).io.FU_inputs(j).valid             :=  io.FU_inputs(j).valid 
         }
 
         ROB_instruction_banks(i).io.ROB_front_idx        := front_index
-        //ROB_instruction_banks(i).io.flush                := io.flush.valid
     }
     
-    
-
-
-
     /////////////////////
     // ROB SHARED BANK //
     /////////////////////
@@ -352,8 +364,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     val ROB_shared_bank = Module(new ROB_shared_bank(coreParameters))
 
-    ROB_shared_bank.io.ROB_packet.bits                    := io.ROB_packet.bits
-    ROB_shared_bank.io.ROB_packet.valid                    := io.ROB_packet.valid
+    ROB_shared_bank.io.ROB_packet.valid                  := io.ROB_packet.valid
+    ROB_shared_bank.io.ROB_packet.bits                   := io.ROB_packet.bits
     //FIXME: rob_packet missing ready
 
     ROB_shared_bank.io.PC_file_exec_addr <> io.PC_file_exec_addr
@@ -395,30 +407,36 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
 
     // CSR instructions flush. Hence, get earliest CSRRW
-    val CSRRW_insn_oh     =  ROB_instruction_banks.map(bank =>  bank.io.ROB_instruction_entry.uOp.decoded_insn.CSRRW     && 
+    val CSRRW_insn_oh     =  WireInit(VecInit(ROB_instruction_banks.map(bank =>  bank.io.ROB_instruction_entry.uOp.decoded_insn.CSRRW     && 
                                                                 bank.io.ROB_instruction_entry.WB.complete   &&
-                                                                bank.io.ROB_instruction_entry.WB.valid) 
+                                                                bank.io.ROB_instruction_entry.WB.valid)))
     
     // Fences also flush. Hence, get earliest FENCE
-    val FENCE_insn_oh     =  ROB_instruction_banks.map(bank =>  bank.io.ROB_instruction_entry.uOp.decoded_insn.FENCE     && 
+    val FENCE_insn_oh     =  WireInit(VecInit(ROB_instruction_banks.map(bank =>  bank.io.ROB_instruction_entry.uOp.decoded_insn.FENCE     && 
                                                                 bank.io.ROB_instruction_entry.WB.complete   &&
-                                                                bank.io.ROB_instruction_entry.WB.valid) 
+                                                                bank.io.ROB_instruction_entry.WB.valid) ))
     
     // get any other MISC. flushing insns. 
-    val FLUSH_insn_oh     =  ROB_instruction_banks.map(bank =>  bank.io.ROB_instruction_entry.uOp.decoded_insn.FLUSH     && 
+    val FLUSH_insn_oh     =  WireInit(VecInit(ROB_instruction_banks.map(bank =>  bank.io.ROB_instruction_entry.uOp.decoded_insn.FLUSH     && 
                                                                 bank.io.ROB_instruction_entry.WB.complete   &&
-                                                                bank.io.ROB_instruction_entry.WB.valid) 
+                                                                bank.io.ROB_instruction_entry.WB.valid) ))
 
     // Exceptions also flush. Get earliest excepting insn. 
-    val EXCEPTION_insn_oh = ROB_instruction_banks.map(bank =>   bank.io.ROB_instruction_entry.WB.exception  && 
+    val EXCEPTION_insn_oh = WireInit(VecInit(ROB_instruction_banks.map(bank =>   bank.io.ROB_instruction_entry.WB.exception  && 
                                                                 bank.io.ROB_instruction_entry.WB.complete   &&
-                                                                bank.io.ROB_instruction_entry.WB.valid) 
+                                                                bank.io.ROB_instruction_entry.WB.valid) ))
 
     val earliest_CTRL_oh = VecInit(
         (0 until ROB_instruction_banks.length).map { i =>
             CTRL_insn_oh(i) || CSRRW_insn_oh(i) || FENCE_insn_oh(i) || FLUSH_insn_oh(i) || EXCEPTION_insn_oh(i)
         }
     )
+
+    dontTouch(CSRRW_insn_oh)
+    dontTouch(FENCE_insn_oh)
+    dontTouch(FLUSH_insn_oh)
+    dontTouch(EXCEPTION_insn_oh)
+    dontTouch(earliest_CTRL_oh)
 
     val earliest_CTRL_idx = PriorityEncoder(earliest_CTRL_oh.asUInt)
 
@@ -427,6 +445,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // mux out the info for the taken branches
     val earliest_CTRL_insn = WireInit(0.U.asTypeOf(new ROB_instruction_entry(coreParameters)))
     val earliest_CTRL_branch_info = WireInit(0.U.asTypeOf(new ROB_branch_entry(coreParameters)))
+
+    dontTouch(earliest_CTRL_idx)
+    dontTouch(earliest_CTRL_branch_info)
+
     for(i <- 0 until fetchWidth){
         when(earliest_CTRL_idx === i.U){
             earliest_CTRL_insn          := ROB_instruction_banks(i).io.ROB_instruction_entry
@@ -434,9 +456,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         }
     }
 
-    val prediction = ROB_shared_bank.io.ROB_shared_entry.prediction
-
-    val output_flush = WireInit(0.U.asTypeOf(ValidIO(new flush(coreParameters))))
+    val prediction      = ROB_shared_bank.io.ROB_shared_entry.bits.prediction
+    val output_flush    = WireInit(0.U.asTypeOf(ValidIO(new flush(coreParameters))))
 
     io.flush := output_flush
 
@@ -444,11 +465,11 @@ class ROB(coreParameters:CoreParameters) extends Module{
     when(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.uOp.decoded_insn.CTRL && earliest_CTRL_insn.WB.committed){
         // dominant branch is a typical branch
         // only flush if doesnt match prediction
-        when(0.B /*prediction.taken && prediction.target_address === earliest_CTRL_branch_info.target_PC*/){    // FIXME: for this, you need to ensure WHICH branch is taken and to where, if any (br mask...)
+        when(PriorityEncoder(prediction.br_mask) === earliest_CTRL_idx && prediction.target === earliest_CTRL_branch_info.target_PC){    // FIXME: for this, you need to ensure WHICH branch is taken and to where, if any (br mask...)
             // prediction correct, do nothing
         }.otherwise{
             output_flush.valid := 1.B
-            output_flush.bits.flushing_PC:= ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx)
+            output_flush.bits.flushing_PC:= ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx)
             output_flush.bits.redirect_PC:= earliest_CTRL_branch_info.target_PC
             output_flush.bits.is_misprediction := 1.B
         }
@@ -462,8 +483,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         // is a CSRRW, FENCE, FLUSH, or otherwise
         // flush and jump to next insn
         output_flush.valid := 1.B
-        output_flush.bits.flushing_PC := ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx)
-        output_flush.bits.redirect_PC := ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (4.U * earliest_CTRL_idx) + 4.U
+        output_flush.bits.flushing_PC := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx)
+        output_flush.bits.redirect_PC := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx) + 4.U
 
         output_flush.bits.is_fence    := earliest_CTRL_insn.uOp.decoded_insn.FENCE
         output_flush.bits.is_CSR      := earliest_CTRL_insn.uOp.decoded_insn.CSRRW
@@ -490,10 +511,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val entries = ROB_instruction_banks.map(_.io.ROB_instruction_entry)
         val committing = ROB_instruction_banks.map(_.io.commit)
 
-
         val cVec = WireInit(VecInit(Seq.fill(fetchWidth)(false.B)))
 
-        cVec(0) := (entries(0).WB.complete || entries(0).uOp.decoded_insn.STORE || entries(0).uOp.decoded_insn.CSRRW) && entries(0).WB.valid
+        cVec(0) := (entries(0).WB.complete || entries(0).uOp.decoded_insn.STORE || entries(0).uOp.decoded_insn.CSRRW) && !entries(0).WB.committed && entries(0).WB.valid
 
         for (i <- 1 until fetchWidth) {
             val prevValid      = entries(i-1).WB.valid
@@ -501,11 +521,12 @@ class ROB(coreParameters:CoreParameters) extends Module{
             val prevCommittedOrCommitting = entries(i-1).WB.committed || committing(i-1)
 
 
-            cVec(i) :=  (entries(i).WB.complete || entries(i).uOp.decoded_insn.STORE || entries(i).uOp.decoded_insn.CSRRW) && 
-                        (!prevValid || (prevComplete && prevCommittedOrCommitting)) && 
-                        i.U <= earliest_CTRL_idx &&
-                        !EXCEPTION_insn_oh(i)   // don't commit exceptions
-
+            cVec(i) :=  entries(i).WB.valid &&        // insn is valid
+                        !entries(i).WB.committed          &&        // insn not already committed
+                        (entries(i).WB.complete || entries(i).uOp.decoded_insn.STORE || entries(i).uOp.decoded_insn.CSRRW) &&   // insn is complete or commit first
+                        (!prevValid || (prevComplete && prevCommittedOrCommitting)) &&                                          // prev insn has committed or is committing
+                        i.U <= earliest_CTRL_idx &&                                                                             // only commit up to commit point 
+                        !EXCEPTION_insn_oh(i)                                                                                   // don't commit exceptions
         }
         cVec
     }
@@ -518,9 +539,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
     
     // DRIVE I/O COMMIT //
     io.commit.bits := DontCare // FIXME: complete assignment particularly for branches
-    io.commit.bits.fetch_PC  := ROB_shared_bank.io.ROB_shared_entry.fetch_PC
-    io.commit.bits.ROB_index := back_index
-    io.commit.bits.free_list_front_pointer := ROB_shared_bank.io.ROB_shared_entry.free_list_front_pointer
+    io.commit.bits.fetch_PC  := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC
+    io.commit.bits.ROB_index := front_index
+    io.commit.bits.free_list_front_pointer := ROB_shared_bank.io.ROB_shared_entry.bits.free_list_front_pointer
 
     for(i <- 0 until fetchWidth){
         io.commit.bits.insn_commit(i).valid          := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed
@@ -532,11 +553,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
         io.commit.bits.insn_commit(i).bits.PRDold    := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRDold
     }
 
-    io.commit.valid := ROB_instruction_banks.map(_.io.ROB_instruction_entry.WB.committed).reduce(_ || _)   // output commit is high if any instructions are committing
+    io.commit.valid := ROB_instruction_banks.map(bank => bank.io.ROB_instruction_entry.WB.committed && bank.io.ROB_instruction_entry.WB.valid).reduce(_ || _) && ROB_shared_bank.io.ROB_shared_entry.valid   // output commit is high if any instructions are committing
 
 
     // This signal is only every high if the row completes without any flushes of any kind
-    val row_commit = ROB_instruction_banks.map(bank => !bank.io.ROB_instruction_entry.WB.valid).reduce(_ || _)
+    val row_commit = ROB_instruction_banks.map(bank => !bank.io.ROB_instruction_entry.WB.valid).reduce(_ && _) && ROB_shared_bank.io.ROB_shared_entry.valid
+
+
 
     when(io.flush.valid){
         front_pointer := 0.U
@@ -546,11 +569,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         back_pointer  := back_pointer + io.ROB_packet.fire
     }
 
-
-
-
-
-
+    ROB_shared_bank.io.commit_row                           := row_commit
+    ROB_shared_bank.io.flush                            := output_flush.valid
 
     ///////////////
     // INTERRUPT //
@@ -599,14 +619,12 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     if(DEBUG){
         for(i <- 0 until fetchWidth){
-            val instruction_PC  = ROB_shared_bank.io.ROB_shared_entry.fetch_PC + (i*4).U
+            val instruction_PC  = ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (i*4).U
 
             val arch_RD         = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD
             val arch_RD_valid   = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD_valid
             val PRD             = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRD
-
             val done            = ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.valid
-
             val RD_data         = ROB_instruction_banks(i).io.ROB_instruction_entry.WB.RD_data.get
 
             
