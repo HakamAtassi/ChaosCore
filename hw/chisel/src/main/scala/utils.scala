@@ -458,6 +458,7 @@ object increment_perf_counter{
   }
 }
 
+
 object initMisa {
   def apply(coreParameters: CoreParameters): UInt = {
     // Construct the misa register based on the coreConfig string in coreParameters

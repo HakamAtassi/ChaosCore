@@ -667,7 +667,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // Write to MCAUSE
     // Write to MSTATUS
 
-    when(io.flush.bits.is_exception){
+    when(io.flush.valid && io.flush.bits.is_exception){
         //mepc_reg := io.flush.bits.flushing_PC
 
         mepc_reg := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
@@ -748,9 +748,13 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // FIXME: add mstatus
     // Then add mstatus check when outputting excause
 
+    // FIXME: this are all wrong (depends on mstatus I think)
     EXCEPTION_CAUSE := EX_CAUSE.INSTRUCTION_ADDRESS_MISALIGNED  // default doesnt matter
     when(ECALL){
-        EXCEPTION_CAUSE := EX_CAUSE.ECALL_FROM_M_MODE
+        EXCEPTION_CAUSE := EX_CAUSE.ECALL_FROM_U_MODE
+    }
+
+    when(io.flush.valid && io.flush.bits.is_exception){
     }
 
 
@@ -762,12 +766,14 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     FU_output.io.enq.valid                      := RegNext(CSR_input_valid)
     FU_output.io.enq.bits.branch_valid          := RegNext(MRET_SRET || ECALL)
     FU_output.io.enq.bits.branch_taken          := RegNext(MRET_SRET || ECALL)
+    FU_output.io.enq.bits.CTRL                  := RegNext(CTRL)
     FU_output.io.enq.bits.target_address        := RegNext(Mux(MRET_SRET , mepc_reg.asUInt, mtvec_reg.asUInt)) //RegNext(mepc_reg.asUInt)
     FU_output.io.enq.bits.fetch_PC              := RegNext(io.FU_input.bits.fetch_PC)
     FU_output.io.enq.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
     FU_output.io.enq.bits.PRD                   := RegNext(io.FU_input.bits.decoded_instruction.PRD)
     FU_output.io.enq.bits.RD_valid              := RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     FU_output.io.enq.bits.RD_data               := CSR_out
+    FU_output.io.enq.bits.RS1_data.get          := RegNext(RS1_data)
     FU_output.io.enq.bits.MOB_index             := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
     FU_output.io.enq.bits.address               := 0.U
     FU_output.io.enq.bits.ROB_index             := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)

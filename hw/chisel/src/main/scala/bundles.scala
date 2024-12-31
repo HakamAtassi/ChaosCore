@@ -237,25 +237,6 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // coreParameters
     import coreParameters._
 
-    def needs_INT_RS: Bool = {
-        val result =    needs_ALU          ||
-                        needs_branch_unit  ||
-                        needs_CSRs         ||
-                        needs_mul          ||
-                        needs_div
-        result
-    }
-
-    def needs_MEM_RS: Bool = {
-        needs_memory
-    }
-
-    def MOB_valid: Bool = {
-        STORE || LOAD
-    }
-
-
-
     // ~30 bits
     val ready_bits          =  new sources_ready()
 
@@ -315,9 +296,38 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 
     // MISC //
     val FLUSH              = Bool()
+    
 
+    def needs_INT_RS: Bool = {
+        val result =    needs_ALU          ||
+                        needs_branch_unit  ||
+                        needs_CSRs         ||
+                        needs_mul          ||
+                        needs_div
+        result
+    }
 
+    def needs_MEM_RS: Bool = {
+        needs_memory
+    }
 
+    def MOB_valid: Bool = {
+        STORE || LOAD
+    }
+
+    def CSRR: Bool = {
+        // is a CSR READ instruction
+        CSRRW && RD =/= 0.U && RS1 === 0.U
+    }
+
+    def CSRW: Bool = {
+        // is a CSR WRITE instruction
+        CSRRW && RD === 0.U && RS1 =/= 0.U
+    }
+
+    def CSR_addr: UInt = {
+        IMM(10,0).asUInt
+    }
 }
 
 
@@ -426,7 +436,11 @@ class ROB_WB_entry(coreParameters:CoreParameters) extends Bundle{
     
     val committed           = Bool()    // instruction "committed" (previous instructions do not flush)
 
-    val RD_data = if (coreParameters.DEBUG) Some(UInt(32.W)) else None
+    val RD_data = if (coreParameters.DEBUG) Some(UInt(32.W)) else None      // for WB data
+
+    //val mem addr = if (coreParameters.DEBUG) Some(UInt(32.W)) else None     // for memory accesses
+    val RS1_data = if (coreParameters.DEBUG) Some(UInt(32.W)) else None     // for CSR/memory writes
+
 }
 
 class ROB_instruction_entry(coreParameters:CoreParameters) extends Bundle{
@@ -491,6 +505,7 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
     // Arithmetic/Load
     val PRD                 =   UInt(physicalRegBits.W)
     val RD_data             =   UInt(32.W)
+    val RS1_data            =   if (coreParameters.DEBUG) Some(UInt(32.W)) else None     // for CSR/memory writes
     val RD_valid            =   Bool()
 
     // Branch

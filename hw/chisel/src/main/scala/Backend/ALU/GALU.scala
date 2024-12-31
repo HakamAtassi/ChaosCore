@@ -70,6 +70,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     // Op select
     val MRET                =   io.FU_input.bits.decoded_instruction.XRET    &&     io.FU_input.bits.decoded_instruction.FUNCT7 === "b0001000".U
     val SRET                =   io.FU_input.bits.decoded_instruction.XRET    &&     io.FU_input.bits.decoded_instruction.FUNCT7 === "b0011000".U
+    val CTRL                =   io.FU_input.bits.decoded_instruction.CTRL
     // FIXME: MNRET?
 
 

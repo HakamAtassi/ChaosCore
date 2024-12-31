@@ -290,7 +290,7 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
     // OUTPUT LOGIC //
     //////////////////
 
-    io.resolved_branch_out := Mux(RegNext(wb_addr === io.ROB_front_idx), RegNext(resolved_branch), mem.read(io.ROB_front_idx))
+    io.resolved_branch_out := Mux(RegNext(wb_addr === io.ROB_front_idx) && RegNext(arbiter.io.out.fire), RegNext(resolved_branch), mem.read(io.ROB_front_idx))
 }
 
 class ROB(coreParameters:CoreParameters) extends Module{
@@ -406,12 +406,14 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // get earliest taken CTRL insn (branch, XRET, etc)
     val CTRL_insn_oh = VecInit(
         ROB_instruction_banks.zipWithIndex.map { case (bank, i) =>
-            bank.io.ROB_instruction_entry.uOp.decoded_insn.CTRL &&
+            (bank.io.ROB_instruction_entry.uOp.decoded_insn.CTRL || bank.io.ROB_instruction_entry.uOp.decoded_insn.XRET) &&
             bank.io.ROB_instruction_entry.WB.complete &&
             ROB_branch_banks(i).io.resolved_branch_out.taken &&
             bank.io.ROB_instruction_entry.WB.valid
         }
     )
+
+    dontTouch(CTRL_insn_oh)
 
 
     // CSR instructions flush. Hence, get earliest CSRRW
@@ -448,8 +450,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     val earliest_CTRL_idx = PriorityEncoder(earliest_CTRL_oh.asUInt)
 
-
-
     // mux out the info for the taken branches
     val earliest_CTRL_insn = WireInit(0.U.asTypeOf(new ROB_instruction_entry(coreParameters)))
     val earliest_CTRL_branch_info = WireInit(0.U.asTypeOf(new ROB_branch_entry(coreParameters)))
@@ -468,6 +468,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
     val output_flush    = WireInit(0.U.asTypeOf(ValidIO(new flush(coreParameters))))
     val expected_next_PC = WireInit(UInt(32.W), 0.U)
 
+    val oldest_insn = PriorityEncoder(VecInit(ROB_instruction_banks.map(bank => bank.io.ROB_instruction_entry.WB.valid)).asUInt)
+
+
     expected_next_PC    := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * fetchWidth.U)
 
     io.flush := output_flush
@@ -485,15 +488,16 @@ class ROB(coreParameters:CoreParameters) extends Module{
             output_flush.bits.is_misprediction := 1.B
         }
     
-    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.exception /*&&*/ /*about to commit*/){ //FIXME: not complete// excepting instructions don't commit
+    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.exception && oldest_insn === earliest_CTRL_idx){ // exceptions only "trigger" when they are the oldest instruction in the pipeline
         // is an exception
         // flush and jump to MTVEC
         output_flush.valid := 1.B
-        output_flush.bits.flushing_PC:= ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx)
-        output_flush.bits.redirect_PC:= CSR_port.mtvec.asUInt
-        expected_next_PC    := CSR_port.mtvec.asUInt
+        output_flush.bits.flushing_PC   := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx)
+        output_flush.bits.redirect_PC   := CSR_port.mtvec.asUInt
+        expected_next_PC                := CSR_port.mtvec.asUInt
 
-        output_flush.bits.is_exception := 1.B
+        output_flush.bits.is_exception  := 1.B
+        output_flush.bits.exception_cause := earliest_CTRL_insn.WB.exception_cause
     }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.committed){
         // is a CSRRW, FENCE, FLUSH, or otherwise
         // flush and jump to next insn
@@ -539,7 +543,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
             val prevComplete   = entries(i-1).WB.complete
             val prevCommittedOrCommitting = entries(i-1).WB.committed || committing(i-1)
 
-
             cVec(i) :=  entries(i).WB.valid &&        // insn is valid
                         !entries(i).WB.committed          &&        // insn not already committed
                         (entries(i).WB.complete || entries(i).uOp.decoded_insn.STORE || entries(i).uOp.decoded_insn.CSRRW) &&   // insn is complete or commit first
@@ -547,7 +550,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
                         i.U <= earliest_CTRL_idx &&                                                                             // only commit up to commit point 
                         !EXCEPTION_insn_oh(i)                                                                                   // don't commit exceptions
                         //!CSR_port.interrupt                                                                                   // don't commit anything when an interrupt is taking place
-
         }
         cVec
     }
@@ -665,7 +667,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
             val IS_STORE        = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.STORE
             val IS_LOAD         = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.LOAD
             val IS_CSRRW        = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSRRW
-            val IS_CTRL        = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CTRL
+            val IS_CTRL         = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CTRL
 
             val done            = ROB_shared_bank.io.ROB_shared_entry.valid && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed && (ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete || IS_STORE) && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.valid
 
@@ -677,12 +679,32 @@ class ROB(coreParameters:CoreParameters) extends Module{
                 //printf("core   0: 3 0x%x mem[0x%x] = 0x%x\n", instruction_PC, RD_data, PRD)
                 printf("core   0: 3 0x%x STORE ???\n", instruction_PC)
             }.elsewhen(done && IS_LOAD){
-                printf("core   0: 3 0x%x 0x%x = 0x%x | mem[???]\n", instruction_PC, arch_RD, RD_data)
+                printf("core   0: 3 0x%x 0x%d = 0x%x | mem[???]\n", instruction_PC, arch_RD, RD_data)
             }.elsewhen(done && IS_CSRRW){
-                printf("core   0: 3 0x%x CSR ???\n", instruction_PC);
+                //printf();
+                val CSRR =  ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSRR 
+                val CSRW =  ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSRW 
+                val CSR_addr =  ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSR_addr
+
+                printf("core   0: 3 0x%x", instruction_PC);
+                //printf(cf"core   0: 3 0x$instruction_PC");
+                when(CSRR){
+                    printf(" x%x <= 0x%d", arch_RD, RD_data);
+                    //printf(cf" x$arch_RD <= 0x$RD_data");
+                }
+                printf("CSR 0x%x", CSR_addr)
+                //printf(cf"CSR 0x$CSR_addr")
+
+                // TODO add CSR W (RS1)
+                //when(CSRW){
+                    //printf("core   0: 3 0x%x x%d 0x%x\n", arch_RD, RD_data);
+                //}
+
+                printf("\n");
+
             }.elsewhen(done && IS_CTRL){
                 printf("core   0: 3 0x%x CTRL \n", instruction_PC);
-            }.elsewhen(done && arch_RD_valid){  // "normal" PRD modifying insn
+            }.elsewhen(done && arch_RD_valid && arch_RD =/= 0.U){  // "normal" PRD modifying insn
                 printf("core   0: 3 0x%x x%d 0x%x\n", instruction_PC, arch_RD, RD_data);
             }.elsewhen(done){    // something else with no PRD
                 printf("core   0: 3 0x%x\n", instruction_PC)
