@@ -62,6 +62,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val RS2_data            =   io.FU_input.bits.RS2_data
     val imm                 =   io.FU_input.bits.decoded_instruction.IMM
     val instruction_PC      =   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
+    val CSRRW               =  io.FU_input.bits.decoded_instruction.CSRRW
 
 
     // Dest reg

@@ -186,7 +186,7 @@ class ROB_shared_bank(coreParameters:CoreParameters) extends Module{
     when(io.ROB_packet.fire) {
         val shared_entry = Wire(new ROB_shared_entry(coreParameters))
         shared_entry.fetch_PC                   := io.ROB_packet.bits.fetch_PC
-        shared_entry.free_list_front_pointer    := io.ROB_packet.bits.free_list_front_pointer
+        shared_entry.free_list_front_pointer    := io.ROB_packet.bits.free_list_front_pointer   // FIXME: do we use this?
         shared_entry.GHR                        := io.ROB_packet.bits.GHR
         shared_entry.NEXT                       := io.ROB_packet.bits.NEXT
         shared_entry.TOS                        := io.ROB_packet.bits.TOS

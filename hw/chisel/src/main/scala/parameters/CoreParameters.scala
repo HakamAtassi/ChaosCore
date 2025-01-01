@@ -114,7 +114,7 @@ case class CoreParameters(
     DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
-    coreConfig: String = "RV32IM",  // core extension (IMAF, etc...)
+    coreConfig: String = "RV32IMSU",  // core extension (IMAF, etc...)
     hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     //hartIDs:Seq[Int] = Seq(0, 1),
@@ -269,10 +269,9 @@ case class CoreParameters(
     // REQUIREMENTS //
     //////////////////
 
-    val supportedExtensions = Seq("I", "IM", "IMA", "32G")  // FIXME: coreConfig should just be a case class
-
-    require(supportedExtensions.contains(userExtensions), 
-    s"Invalid extensions: $userExtensions. Supported extensions are: ${supportedExtensions.mkString(", ")}")
+    //val supportedExtensions = Seq("I", "IM", "IMA", "32G")  // FIXME: coreConfig should just be a case class
+    //require(supportedExtensions.contains(userExtensions), 
+    //s"Invalid extensions: $userExtensions. Supported extensions are: ${supportedExtensions.mkString(", ")}")
 
     require(validate_backend(coreConfig)(FUParamSeq))   // Ensure minimal required functional units
 
