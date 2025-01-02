@@ -235,8 +235,9 @@ import chisel3.util._
 
 
 // FIXME: CSRFU needs parameterizable latency
-class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters) with CSR_inits{
+class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     import coreParameters._
+
 
     /////////////
     // LATENCY //
@@ -246,7 +247,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters) with CS
     // Hence, CSR accesses are passed through an output shift register, where we rely on the synthesis tool to retime everything 
     // and provide an acceptable Fmax. 
 
-    val LATENCY:INT = 6 // output stages/access latency
+    val LATENCY:Int = 6 // output stages/access latency
 
     ////////////////////////////
     // CSR AND PLIC/CLINT I/O //
@@ -278,41 +279,650 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters) with CS
     val PRIVILAGE_OK                =  1.B //FIXME:  // input privilage is lower or equal to active privilage
 
     val input_CSR_address           =  io.FU_input.bits.decoded_instruction.IMM      // address of requested CSR
-    val input_CSR_privilage         =  get_CSR_lowest_priv(input_CSR_address)
+    val input_CSR_privilage         =  get_CSR_lowest_priv(input_CSR_address).asUInt
     val input_CSR_access            =  get_CSR_access(input_CSR_address)      // What is the minimum required privilage required for the requested CSR? (this is encoded in the address)
 
     val input_CSR_read_request      =  !(io.FU_input.bits.decoded_instruction.PRD === 0.U)  // when PRD == x0, the read is discarded, so dont read at all.
-    val input_CSR_write_request     =  (is_CSR && RS1 =/= 0.U)
+    val input_CSR_write_request     =  (CSRRW && RS1 =/= 0.U)
     
     val active_CSR_privilage        =  0.U      // what was the privilage level of the core during request? 
 
 
+    val current_privilege = RegInit(UInt(2.W), 0x11.U)   // Current privilage. Set to M on reset as per spec
+
+
+    val CSR_output = WireInit(0.U.asTypeOf(new FU_output(coreParameters)))
+
+    ////////////////////////
+    // USER MODE CSR INIT //
+    ////////////////////////
+    // Unprivileged Floating-Point CSRs
+    val fflags_reg      = RegInit(UInt(32.W), 0.U)    // no float atm
+    val frm_reg         = RegInit(UInt(32.W), 0.U)
+    val fcsr_reg        = RegInit(UInt(32.W), 0.U)
+
+    // Unprivileged Counters/Timers
+    // lower values 
+    // FIXME: these are bugged
+    val cycle_reg        = Reg(UInt(32.W))
+    val time_reg         = Reg(UInt(32.W))
+    val instret_reg      = Reg(UInt(32.W))     
+
+    val cycleh_reg       = Reg(UInt(32.W))
+    val timeh_reg        = Reg(UInt(32.W))
+    val instreth_reg     = Reg(UInt(32.W))
+
+
+    // optional counters (unused)
+    val hpmcounter3_reg  = RegInit(UInt(32.W), 0.U)
+    val hpmcounter4_reg  = RegInit(UInt(32.W), 0.U)
+    val hpmcounter5_reg  = RegInit(UInt(32.W), 0.U)
+    val hpmcounter6_reg  = RegInit(UInt(32.W), 0.U)
+    val hpmcounter7_reg  = RegInit(UInt(32.W), 0.U)
+    val hpmcounter8_reg  = RegInit(UInt(32.W), 0.U)
+    val hpmcounter9_reg  = RegInit(UInt(32.W), 0.U)
+    val hpmcounter10_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter11_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter12_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter13_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter14_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter15_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter16_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter17_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter18_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter19_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter20_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter21_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter22_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter23_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter24_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter25_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter26_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter27_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter28_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter29_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter30_reg = RegInit(UInt(32.W), 0.U)
+    val hpmcounter31_reg = RegInit(UInt(32.W), 0.U)
+
+    // upper values 
+    val hpmcounter3h_reg    = RegInit(UInt(32.W), 0.U)
+    val hpmcounter4h_reg    = RegInit(UInt(32.W), 0.U)
+    val hpmcounter5h_reg    = RegInit(UInt(32.W), 0.U)
+    val hpmcounter6h_reg    = RegInit(UInt(32.W), 0.U)
+    val hpmcounter7h_reg    = RegInit(UInt(32.W), 0.U)
+    val hpmcounter8h_reg    = RegInit(UInt(32.W), 0.U)
+    val hpmcounter9h_reg    = RegInit(UInt(32.W), 0.U)
+    val hpmcounter10h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter11h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter12h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter13h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter14h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter15h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter16h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter17h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter18h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter19h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter20h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter21h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter22h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter23h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter24h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter25h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter26h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter27h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter28h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter29h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter30h_reg   = RegInit(UInt(32.W), 0.U)
+    val hpmcounter31h_reg   = RegInit(UInt(32.W), 0.U)
+
+    //////////////////////////////
+    // SUPERVISOR MODE CSR INIT //
+    //////////////////////////////
+
+    // Supervisor Trap Setup
+    val sstatus_reg     = RegInit(0.U.asTypeOf(new mstatus))    
+    val sie_reg         = RegInit(0.U.asTypeOf(new mie))                      
+    val stvec_reg       = RegInit(0.U.asTypeOf(new mtvec))
+    val scounteren_reg  = RegInit(0.U.asTypeOf(new mcounteren))
+
+    // Supervisor Configuration
+    val senvcfg_reg     = RegInit(0.U.asTypeOf(new menvcfg))
+
+    //Supervisor Counter Setup (Smcdeleg extension) (not implemented)
+    val scountinhibit_reg = RegInit(0.U.asTypeOf(new mcountinhibit))
+
+    // Supervisor Trap Handling
+    val sscratch_reg    = RegInit(0.U.asTypeOf(new mscratch))
+    val sepc_reg        = RegInit(0.U.asTypeOf(new mepc))
+    val scause_reg      = RegInit(0.U.asTypeOf(new mcause))
+    val stval_reg       = RegInit(0.U.asTypeOf(new mtval))
+    val sip_reg         = RegInit(0.U.asTypeOf(new mip))
+
+    // Count overflow (Sscofpmf)
+    val scountovf_reg   = RegInit(UInt(32.W), 0.U)
+
+    // Supervisor Protection and Translation
+    val satp_reg        = RegInit(0.U.asTypeOf(new satp))  // Holds PPN and other data for base page table.
+
+    // Debug/Trace Registers (Smstateen extension)
+    val scontext_reg    = RegInit(UInt(32.W), 0.U)
+
+    // Supervisor State Enable Registers (Smstateen extension)
+    val sstateen0_reg   = RegInit(UInt(32.W), 0.U)
+    val sstateen1_reg   = RegInit(UInt(32.W), 0.U)
+    val sstateen2_reg   = RegInit(UInt(32.W), 0.U)
+    val sstateen3_reg   = RegInit(UInt(32.W), 0.U)
+
+    ///////////////////////////
+    // MACHINE MODE CSR INIT //
+    ///////////////////////////
+
+    // Machine Information Registers
+    val mvendorid_reg   = RegInit(0.U.asTypeOf(new mvendorid))                  // JEDEC ID. KEEP 0. READ ONLY.
+    val marchid_reg     = RegInit(0.U.asTypeOf(new marchid))                    // Architecture ID. Represents core iteration. RO. Encoded as O
+    val mimpid_reg      = RegInit(UInt(32.W), 0.U)                              // Processor version. Core Version. RO. Encoded as 0. 
+    val mhartid_reg     = RegInit(UInt(32.W), 0.U)                              // Index of hart FIXME: propegate from Chipyard. RO
+    val mconfigptr_reg  = RegInit(0.U.asTypeOf(new mconfigptr))                 // Pointer to structure that contains configuration info in SW. RO.
+
+    // Machine Trap Setup
+    val mstatus_reg     = RegInit(0.U.asTypeOf(new mstatus))                    // The current core's status. Supervisor and User view a modified version of this reg. RW. 
+    val misa_reg        = RegInit(initMisa(coreParameters).asTypeOf(new misa))  // Machine ISA ("RV32IMA..." etc). writeable if isa is modifiable at runtime. RW
+    val medeleg_reg     = RegInit(UInt(32.W), 0.U)                              // FIXME: IDK
+    val mideleg_reg     = RegInit(UInt(32.W), 0.U)                              // FIXME: IDK
+    val mie_reg         = RegInit(0.U.asTypeOf(new mie))                        // Machine interrupt enable. RW. Interrupt cause i in mcause correspondings to bit i here. 
+    val mtvec_reg       = RegInit(0.U.asTypeOf(new mtvec))                      // if MODE=base, all traps (interrupts + exceptions) jump to BASE. If MODE=vectored, exceptions jump to BASE, interrupts jump to BASE + 4*CAUSE. RW
+    val mcounteren_reg  = RegInit(0.U.asTypeOf(new mcounteren))                 // Controls availability of counter regs to lower privs. Only modifies visibility. Counters still count. 
+    
+    // FIXME: this is bugged (not upper bits of mstatus, just mstatus again. shouldnt be...)
+    val mstatush_reg    = RegInit(0.U.asTypeOf(new mstatush))
+    val medelegh_reg    = RegInit(UInt(32.W), 0.U)                              // FIXME: IDK
+
+    // Machine Trap Handling
+    val mscratch_reg   = RegInit(0.U.asTypeOf(new mscratch))                    // Scratch. I think this can be updated as needed. RW
+    val mepc_reg       = RegInit(0.U.asTypeOf(new mepc))                        // When trap taken to M mode, mepc stores address of interrupted or trapped insn. Otherwise, mepc is RW to software. Lower 2 bits ALWAYS 0. 
+    val mcause_reg     = RegInit(0.U.asTypeOf(new mcause))                      // When trap taken to M mode, mcause written with exception cause. If interrupt, just set interrupt bit. Also RW to software. 
+    val mtval_reg      = RegInit(0.U.asTypeOf(new mtval))                       // When trap taken to M mode, mtval is written with 0 or something else deemed useful for handling the trap. Otherwise set to 0. FIXME: this seems potentially useful. look into this more
+    val mip_reg        = RegInit(0.U.asTypeOf(new mip))                         // Machine interrupt pending. RW. Bit i in mcause corresponds to bit i here. 
+    val mtinst_reg     = RegInit(UInt(32.W), 0.U)                               // When trap to M mode, mtinst provides information to software to assist in handling trap. If unused, just keep 0. 
+    val mtval2_reg     = RegInit(0.U.asTypeOf(new mtval))                       // Same as mtval, just an extra one
+ 
+    // Machine Configuration
+    val menvcfg_reg  = RegInit(0.U.asTypeOf(new menvcfg))                       // Controls execution for modes less privilaged than M. 64 bits. FIXME: spec here is complex. RW
+    val menvcfgh_reg = RegInit(0.U.asTypeOf(new menvcfg))                       // upper half of menvcfg
+    val mseccfg_reg  = RegInit(0.U.asTypeOf(new mseccfg))                       // FIXME: for various security features. 64 bits. RW.
+    val mseccfgh_reg = RegInit(0.U.asTypeOf(new mseccfgh))                      // Upper half of mseccfg
+
+    // Machine State Enable Registers (Smstateen extension) (not implemented)
+    val mstateen0_reg  =  RegInit(UInt(32.W), 0.U)
+    val mstateen1_reg  =  RegInit(UInt(32.W), 0.U)
+    val mstateen2_reg  =  RegInit(UInt(32.W), 0.U)
+    val mstateen3_reg  =  RegInit(UInt(32.W), 0.U)
+    val mstateen0h_reg =  RegInit(UInt(32.W), 0.U)
+    val mstateen1h_reg =  RegInit(UInt(32.W), 0.U)
+    val mstateen2h_reg =  RegInit(UInt(32.W), 0.U)
+    val mstateen3h_reg =  RegInit(UInt(32.W), 0.U)
+
+    // Machine Non-Maskable Interrupt Handling (Smrnmi extension) (not implemented)
+    val mnscratch_reg = RegInit(UInt(32.W), 0.U)
+    val mnepc_reg     = RegInit(UInt(32.W), 0.U)
+    val mncause_reg   = RegInit(0.U.asTypeOf(new mcause))
+    val mnstatus_reg  = RegInit(UInt(32.W), 0.U)
+
+    // Machine Counter/Timers
+    val mcycle_reg        = RegInit(UInt(32.W), 0.U)  // lower 32 bits of cycle count. Writeable by SW. 
+    val minstret_reg      = RegInit(UInt(32.W), 0.U)  // lower 32 bits of instruction retired count. Writeable by SW. 
+
+    val mcycleh_reg       = RegInit(UInt(32.W), 0.U)   // upper 32 bits of mcycle
+    val minstreth_reg     = RegInit(UInt(32.W), 0.U)   // upper 32 bits of instret
+
+    // Optional performance counters (Sscofpmf extension) (not implemented)
+    val mhpmcounter3_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter4_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter5_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter6_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter7_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter8_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter9_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter10_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter11_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter12_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter13_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter14_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter15_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter16_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter17_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter18_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter19_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter20_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter21_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter22_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter23_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter24_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter25_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter26_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter27_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter28_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter29_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter30_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter31_reg   = RegInit(UInt(32.W), 0.U)
+
+    val mhpmcounter3h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter4h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter5h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter6h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter7h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter8h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter9h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter10h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter11h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter12h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter13h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter14h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter15h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter16h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter17h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter18h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter19h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter20h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter21h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter22h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter23h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter24h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter25h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter26h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter27h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter28h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter29h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter30h_reg = RegInit(UInt(32.W), 0.U)
+    val mhpmcounter31h_reg = RegInit(UInt(32.W), 0.U)
+
+    // Machine Counter Setup 
+    val mcountinhibit_reg = RegInit(0.U.asTypeOf(new mcountinhibit))  // Controls if counters update. Bit set disables corresponding couter updating
+
+    val mhpmevent3_reg    = RegInit(UInt(32.W), 0.U)   // Platform defined. Value determines event for counter updating. (not implemented)
+    val mhpmevent4_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmevent5_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmevent6_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmevent7_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmevent8_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmevent9_reg    = RegInit(UInt(32.W), 0.U)
+    val mhpmevent10_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent11_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent12_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent13_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent14_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent15_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent16_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent17_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent18_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent19_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent20_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent21_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent22_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent23_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent24_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent25_reg   = RegInit(UInt(32.W), 0.U)
+
+    val mhpmevent3h_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent4h_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent5h_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent6h_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent7h_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent8h_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent9h_reg   = RegInit(UInt(32.W), 0.U)
+    val mhpmevent10h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent11h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent12h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent13h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent14h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent15h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent16h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent17h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent18h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent19h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent20h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent21h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent22h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent23h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent24h_reg  = RegInit(UInt(32.W), 0.U)
+    val mhpmevent25h_reg  = RegInit(UInt(32.W), 0.U)
+
+    // Debug/Trace Registers (not implemented)
+    val tselect_reg     = RegInit(UInt(32.W), 0.U)
+    val tdata1_reg      = RegInit(UInt(32.W), 0.U)
+    val tdata2_reg      = RegInit(UInt(32.W), 0.U)
+    val tdata3_reg      = RegInit(UInt(32.W), 0.U)
+    val tinfo_reg       = RegInit(UInt(32.W), 0.U)
+    val tcontrol_reg    = RegInit(UInt(32.W), 0.U)
+    val mcontext_reg    = RegInit(UInt(32.W), 0.U)
+    val mscontext_reg   = RegInit(UInt(32.W), 0.U)
+
+    // Debug Mode Registers (not implemented)
+    val dcsr_reg        = RegInit(UInt(32.W), 0.U)
+    val dpc_reg         = RegInit(UInt(32.W), 0.U)
+    val dscratch0_reg   = RegInit(UInt(32.W), 0.U)
+    val dscratch1_reg   = RegInit(UInt(32.W), 0.U)
+
+
+    cycle_reg        := mcycle_reg       // user mode timers are just a view of machine mode timers
+    time_reg         := mcycle_reg       // can just be cycle timer as per spec Im pretty sure
+    instret_reg      := minstret_reg     
+
+    cycleh_reg       := mcycleh_reg
+    timeh_reg        := mcycleh_reg
+    instreth_reg     := minstreth_reg
+    
+
+    //////////////////
+    // CSR MAPPINGS //   
+    //////////////////
+    val user_mode_CSRs = Map(
+        //-----------------------
+        // Floating-Point CSRs
+        //-----------------------
+        CSRs.fflags         -> fflags_reg,
+        CSRs.frm            -> frm_reg, 
+        CSRs.fcsr           -> fcsr_reg,
+
+        //-----------------------
+        // UNPRIVILEGED COUNTERS
+        //-----------------------
+        CSRs.cycle          -> cycle_reg,
+        CSRs.time           -> time_reg,
+        CSRs.instret        -> instret_reg,
+
+        CSRs.cycleh         -> cycleh_reg,
+        CSRs.timeh          -> timeh_reg,
+        CSRs.instreth       -> instreth_reg,
+    )
+
+    val supervisor_mode_CSRs = Map(
+        //-----------------------
+        // SUPERVISOR TRAP SETUP
+        //-----------------------
+        CSRs.sstatus      -> sstatus_reg,
+        CSRs.sie          -> sie_reg,
+        CSRs.stvec        -> stvec_reg,
+        CSRs.scounteren   -> scounteren_reg,
+
+        //---------------------
+        // SUPERVISOR CONFIG 
+        //---------------------
+        CSRs.senvcfg   -> senvcfg_reg,
+
+        //----------------------------
+        // SUPERVISOR COUNTER SETUP 
+        //----------------------------
+        CSRs.scountinhibit   -> scountinhibit_reg,
+
+        //-----------------------
+        // MACHINE TRAP HANDLING
+        //-----------------------
+        CSRs.sscratch   -> sscratch_reg,
+        CSRs.sepc       -> sepc_reg,
+        CSRs.scause     -> scause_reg,
+        CSRs.stval      -> stval_reg,
+        CSRs.sip        -> sip_reg,
+        CSRs.scountovf  -> scountovf_reg,
+
+        //---------------------------------------
+        // SUPERVISOR PROTECTION AND TRANSLATION 
+        //---------------------------------------
+        CSRs.satp        -> satp_reg,
+
+        //-------------------------
+        // DEBUG/TRACE REGISTERS //
+        //-------------------------
+        CSRs.scontext    -> scontext_reg,
+
+        //------------------------------------
+        // SUPERVISOR STATE ENABLE REGISTERS
+        //------------------------------------
+        CSRs.sstateen0   -> sstateen0_reg,
+        CSRs.sstateen1   -> sstateen1_reg,
+        CSRs.sstateen2   -> sstateen2_reg,
+        CSRs.sstateen3   -> sstateen3_reg,
+    )
+
+    val machine_mode_CSRs = Map(
+        //------------------------------
+        //Machine Information Registers
+        //------------------------------
+        CSRs.mvendorid   -> mvendorid_reg,
+        CSRs.marchid     -> marchid_reg,           
+        CSRs.mimpid      -> mimpid_reg,           
+        CSRs.mhartid     -> mhartid_reg,           
+        CSRs.mconfigptr  -> mconfigptr_reg,
+
+        //---------------------
+        // MACHINE TRAP SETUP
+        //---------------------
+        CSRs.mstatus      -> mstatus_reg,
+        CSRs.misa         -> misa_reg,
+        CSRs.medeleg      -> medeleg_reg,
+        CSRs.mideleg      -> mideleg_reg,
+        CSRs.mie          -> mie_reg,
+        CSRs.mtvec        -> mtvec_reg,
+        CSRs.mcounteren   -> mcounteren_reg,
+        CSRs.mstatush     -> mstatush_reg,
+        CSRs.medelegh     -> medelegh_reg,
+
+        //-----------------------
+        // MACHINE TRAP HANDLING
+        //-----------------------
+        CSRs.mscratch   -> mscratch_reg,
+        CSRs.mepc       -> mepc_reg,
+        CSRs.mcause     -> mcause_reg,
+        CSRs.mtval      -> mtval_reg,
+        CSRs.mip        -> mip_reg,
+        CSRs.mtinst     -> mtinst_reg,
+        CSRs.mtval2     -> mtval2_reg,
+
+        //-----------------------
+        // MACHINE CONFIGURATION
+        //-----------------------
+        CSRs.menvcfg     -> menvcfg_reg, 
+        CSRs.menvcfgh    -> menvcfgh_reg,
+        CSRs.mseccfg     -> mseccfg_reg,
+        CSRs.mseccfgh    -> mseccfgh_reg,
+
+        //----------------------------
+        // MACHINE MEMORY PROTECTION
+        //----------------------------
+        // pmpcfg0         Physical memory protection configuration.
+        // pmpcfg1         Physical memory protection configuration, RV32 only.
+        // pmpcfg2         Physical memory protection configuration.
+        // pmpcfg3         Physical memory protection configuration, RV32 only.
+        // ...             ...
+        // pmpcfg14        Physical memory protection configuration.
+        // pmpcfg15        Physical memory protection configuration, RV32 only.
+        // pmpaddr0        Physical memory protection address register.
+        // pmpaddr1        Physical memory protection address register.
+        // ...             ...
+        // pmpaddr63       Physical memory protection address register.
+        
+        //------------------------
+        // MACHINE STATE ENABLE
+        //------------------------
+        CSRs.mstateen0  -> mstateen0_reg, 
+        CSRs.mstateen1  -> mstateen1_reg, 
+        CSRs.mstateen2  -> mstateen2_reg, 
+        CSRs.mstateen3  -> mstateen3_reg, 
+        CSRs.mstateen0h -> mstateen0_reg, 
+        CSRs.mstateen1h -> mstateen1h_reg,
+        CSRs.mstateen2h -> mstateen2h_reg,
+        CSRs.mstateen3h -> mstateen3h_reg,
+
+        //-----------------------
+        // MACHINE NMI HANDLING
+        //-----------------------
+        CSRs.mnscratch   -> mnscratch_reg,
+        CSRs.mnepc       -> mnepc_reg,
+        CSRs.mncause     -> mncause_reg,
+        CSRs.mnstatus    -> mnstatus_reg,
+
+        //--------------------
+        // MACHINE COUNTERS 
+        //--------------------
+        CSRs.mcycle      -> mcycle_reg,
+        CSRs.minstret    -> minstret_reg,
+        CSRs.mcycleh     -> mcycleh_reg,
+        CSRs.minstreth   -> minstreth_reg,
+
+        //-----------------------
+        // MACHINE COUNTER SETUP
+        //-----------------------
+        CSRs.mcountinhibit -> mcountinhibit_reg,
+
+        //--------------
+        // DEBUG/TRACE 
+        //--------------
+        CSRs.tselect     -> tselect_reg,
+        CSRs.tdata1      -> tdata1_reg,
+        CSRs.tdata2      -> tdata2_reg,
+        CSRs.tdata3      -> tdata3_reg,
+        CSRs.mcontext    -> mcontext_reg,
+
+        //-----------------------
+        // DEBUG MODE REGISTERS 
+        //-----------------------
+        CSRs.dcsr          -> dcsr_reg,
+        CSRs.dpc           -> dpc_reg,
+        CSRs.dscratch0     -> dscratch0_reg,
+        CSRs.dscratch1     -> dscratch1_reg,
+    )
 
     ////////////////////
     // CSR MANAGEMENT //
     ///////////////////
+    // PERFORMANCE COUNTER MANAGEMENT //
 
-    // PERFORMANCE COUNTERS //
+//    when(!mcountinhibit_reg.CY){
+        //val (new_cycleh_reg, new_cycle_reg) = increment_perf_counter(cycleh_reg, cycle_reg, 1.U)
+        //cycleh_reg := new_cycleh_reg
+        //cycle_reg := new_cycle_reg
+    //}
 
-    val (new_cycleh_reg, new_cycle_reg) = increment_perf_counter(cycleh_reg, cycle_reg, 1.U)
-    cycleh_reg := new_cycleh_reg
-    cycle_reg := new_cycle_reg
+    //when(!mcountinhibit_reg.TM){  // FIXME: ENSURE ALWAYS ON (as per spec. Timer cant be disabled internally)
+        //val (new_cycleh_reg, new_cycle_reg) = increment_perf_counter(cycleh_reg, cycle_reg, 1.U)
+        //cycleh_reg := new_cycleh_reg
+        //cycle_reg := new_cycle_reg
+    //}
+
+    //when(!mcountinhibit_reg.IR){
+        //val (new_instret_reg, new_instreth_reg) = increment_perf_counter(instreth_reg, instret_reg, PopCount(io.commit.bits.insn_commit.map(_.valid)))
+        //instret_reg := new_instret_reg
+        //instreth_reg := new_instreth_reg
+    //}
 
 
-    when(io.commit.valid){
-        val (new_instret_reg, new_instreth_reg) = increment_perf_counter(instreth_reg, instret_reg, PopCount(io.commit.bits.insn_commit.map(_.valid)))
-        instret_reg := new_instret_reg
-        instreth_reg := new_instreth_reg
+
+    ///////////////
+    // MRET/SRET //
+    ///////////////
+
+    // FROM SPEC:
+    // The MRET, HRET, SRET, or URET instructions are used to return from traps in M-mode, H-
+    // mode, S-mode, or U-mode respectively. When executing an xRET instruction, supposing x PP
+    // holds the value y, y IE is set to x PIE; the privilege mode is changed to y; x PIE is set to 1; and
+    // x PP is set to U (or M if user-mode is not supported)
+
+    when(MRET){
+        current_privilege := mstatus_reg.MPP    // update current status
+        mstatus_reg.MPP   := 0.U                  // set MPP to user (as per spec)
+        mstatus_reg.MPIE  := 1.U                     // XPIE to 1 (as per spec)
+
+        when(mstatus_reg.MPP === 0x11.U){           // prev was M
+            mstatus_reg.MIE := mstatus_reg.MPIE
+        }.elsewhen(mstatus_reg.MPP === 0x01.U){     // prev was S
+            mstatus_reg.SIE := mstatus_reg.MPIE
+        }.otherwise{/* nothing */}
+
+        // Trigger branch
+        CSR_output.CTRL := 1.B
+        CSR_output.branch_taken := 1.B
+        CSR_output.target_address := mepc_reg.asUInt
+
+    }.elsewhen(SRET){
+        current_privilege := mstatus_reg.SPP
+        mstatus_reg.SPP   := 0.U                  // set MPP to user (as per spec)
+        mstatus_reg.SPIE  := 1.U                     // XPIE to 1 (as per spec)
+        
+        when(mstatus_reg.TSR === 1.B){
+            CSR_output.exception := 1.B
+            CSR_output.exception_cause := EX_CAUSE.ILLEGAL_INSTRUCTION
+        }.otherwise{
+            // Trigger branch
+            CSR_output.CTRL := 1.B
+            CSR_output.branch_taken := 1.B
+            CSR_output.target_address := sepc_reg.asUInt
+        }
     }
 
-    // TRAP CSRs //
 
-    // TODO: 
+    //////////////////
+    // ECALL/EBREAK //
+    //////////////////
+
+    when(ECALL){
+        when(current_privilege === 0x11.U){         // MACHINE
+            CSR_output.exception := 1.B
+            CSR_output.exception_cause := EX_CAUSE.ECALL_FROM_M_MODE
+        }.elsewhen(current_privilege === 0x01.U){   // SUPERVISOR
+            CSR_output.exception := 1.B
+            CSR_output.exception_cause := EX_CAUSE.ECALL_FROM_S_MODE
+        }.elsewhen(current_privilege === 0x00.U){   // USER
+            CSR_output.exception := 1.B
+            CSR_output.exception_cause := EX_CAUSE.ECALL_FROM_S_MODE
+        }.otherwise{assert(0.B, "ECALL FROM INAVLID PRIVILEGE")}
+    }
+
+    when(EBREAK){
+        CSR_output.exception := 1.B
+        CSR_output.exception_cause := EX_CAUSE.BREAKPOINT
+    }
 
 
-    ////////////////
-    // INTERRUPTS //
-    ////////////////
+    ////////////////////////
+    // EXCEPTION HANDLING //
+    ////////////////////////
+
+    // medeleg is machine exception deleg
+
+    // FIXME: medeleg[11] MUST be read only 0.
+
+    when(io.flush.valid && io.flush.bits.is_exception){
+        val exception_code = io.flush.bits.exception_cause.asUInt
+
+        //val delegate_to_S = (Cat(medelegh_reg, medeleg_reg) >> exception_code)(0)
+
+        when(0.B /*should be delegate to s but idk how it works*/){      // delegate to S mode
+            current_privilege := 0x10.U
+            scause_reg.CODE := exception_code
+            sepc_reg        := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
+            //stval_reg       := 0.U      // FIXME: not used. seems optional
+            mstatus_reg.SPP := current_privilege(0)     // FIXME: is this accurate
+            mstatus_reg.SPIE:= mstatus_reg.SIE
+            mstatus_reg.SIE := 0.U 
+        }.otherwise{            // handle in M mode (standard)
+            current_privilege := 0x11.U
+            mcause_reg.CODE := exception_code
+            mepc_reg        := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
+            //mtval_reg       := 0.U      // FIXME: not used. seems optional
+            mstatus_reg.MPP := current_privilege
+            mstatus_reg.MPIE:= mstatus_reg.MIE
+            mstatus_reg.MIE := 0.U 
+        }
+    }
+
+    ////////////////////////
+    // INTERRUPT HANLDING //
+    ////////////////////////
+    
+    // FIXME: WFI needs to ensure that when a return from interrupt is executed, you dont jump back to the WFI loop
+    // for non WFI loops this is not needed. Can just return to interrupted insn (sepc/mepc)
+
+    // FIXME: I have no clue how delegation works
 
     mip_reg.MSIP := irq_software_i
     mip_reg.MTIP := irq_timer_i
@@ -320,109 +930,104 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters) with CS
 
     val interrupt = RegInit(Bool(), 0.B)
 
+    // hardcoded for now
+    val MEI_VALID = mstatus_reg.MIE.asBool && mip_reg.MEIP.asBool && mie_reg.MEIE.asBool
+    val MSI_VALID = mstatus_reg.MIE.asBool && mip_reg.MSIP.asBool && mie_reg.MSIE.asBool
+    val MTI_VALID = mstatus_reg.MIE.asBool && mip_reg.MTIP.asBool && mie_reg.MTIE.asBool
 
-    //val any_pending_interrupt = (mip_reg.MSIP.asBool || mip_reg.MTIP.asBool || mip_reg.MEIP.asBool)
-    val machine_pending_interrupt = (mip_reg.MSIP.asBool && mie_reg.MSIE.asBool || mip_reg.MTIP.asBool && mie_reg.MTIE.asBool || mip_reg.MEIP.asBool && mie_reg.MEIE.asBool) && mstatus_reg.MIE.asBool
+    val SEI_VALID = mstatus_reg.SIE.asBool && mip_reg.SEIP.asBool && mie_reg.SEIE.asBool
+    val SSI_VALID = mstatus_reg.SIE.asBool && mip_reg.SSIP.asBool && mie_reg.SSIE.asBool
+    val STI_VALID = mstatus_reg.SIE.asBool && mip_reg.STIP.asBool && mie_reg.STIE.asBool
 
-    when(machine_pending_interrupt && !RegNext(machine_pending_interrupt)) { // interrupt edge detect (CLINT)
-      interrupt := 1.B 
-    }
 
-    when(io.flush.valid && io.flush.bits.is_valid() && io.flush.bits.is_interrupt){ // ROB currently redirecting due to interrupt
-      interrupt := 0.B 
-      mepc_reg := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
-    }
 
+
+    // Priority: MEI, MSI, MTI, SEI, SSI, STI, UEI, USI, UTI
+    val pending_interrupt = WireInit(Bool(), 0.B)
+    pending_interrupt := MEI_VALID || MSI_VALID || MTI_VALID || SEI_VALID || SSI_VALID || STI_VALID
+
+
+//    val interrupt_delegated_to_S =  (MEI_VALID && mideleg_reg.MEI) || 
+//                                    (MSI_VALID && mideleg_reg.MSI) || 
+//                                    (MTI_VALID && mideleg_reg.MTI) || 
+//                                    (SEI_VALID && mideleg_reg.SEI) || 
+//                                    (SSI_VALID && mideleg_reg.SSI) || 
+//                                    (STI_VALID && mideleg_reg.STI)
+
+    interrupt := pending_interrupt
+    // signal interrupt to I/O
 
     CSR_port.interrupt := interrupt
 
-    // PERFORMANCE COUNTER UPDATES
-    mcycle_reg   := mcycle_reg   + 1.U
-    //minstret_reg := minstret_reg + PopCount(io.partial_commit.valid) // FIXME: 
-
-
-    ///////////////
-    // EXCEPTION //
-    ///////////////
-
-    when(io.flush.valid && io.flush.bits.is_exception){
-        //mepc_reg := io.flush.bits.flushing_PC
-
-        mepc_reg := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
+    // handle interrupt
+    when(io.flush.valid && io.flush.bits.is_interrupt){
+        interrupt := 0.B
+        current_privilege := 0x11.U // set as M mode
         mcause_reg.CODE := io.flush.bits.exception_cause.asUInt
-        //mstatus_reg := ???
+        mepc_reg        := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
+        //mtval_reg       := 0.U      // FIXME: not used. seems optional
+        mstatus_reg.MPP := current_privilege(0)     // FIXME: is this accurate
+        mstatus_reg.MPIE:= mstatus_reg.MIE
+        mstatus_reg.MIE := 0.U 
     }
 
-    val MRET_SRET = MRET || SRET
-
-
-    // FIXME: add more robust exception generation...
-    // ie, make it its own section
-    val EXCEPTION_CAUSE = Wire(EX_CAUSE())
-
-    // FIXME: add mstatus
-    // Then add mstatus check when outputting excause
-
-    // FIXME: this are all wrong (depends on mstatus I think)
-    EXCEPTION_CAUSE := EX_CAUSE.INSTRUCTION_ADDRESS_MISALIGNED  // default doesnt matter
-    when(ECALL){
-        EXCEPTION_CAUSE := EX_CAUSE.ECALL_FROM_U_MODE
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // PERFORMANCE COUNTER UPDATES
 
     //////////////
     // CSR READ //
     //////////////
 
-    val user_mode_CSR_OH            = user_mode_CSRs.map {case (addr, reg) => (addr.U === CSR_addr)}
-    val user_mode_CSR_read_resp     = Mux1H(user_mode_CSR_OH.zip(user_mode_CSRs.map(_._2)))
+    // FIXME: ensure corrent perms. otherwise, illegal instruction exception (I think)
+    // There has got to be a better way of doing this
 
+    val CSR_read_out = WireInit(UInt(32.W), 0.U)
 
-    val machine_mode_CSR_OH         = machine_mode_CSRs.map { case (addr, reg) => (addr.U === CSR_addr) }
-    val machine_mode_CSR_read_resp  = Mux1H(machine_mode_CSR_OH.zip(machine_mode_CSRs.map(_._2.asUInt)))
+    val CSR_not_found = Wire(Bool())
+    CSR_not_found := 1.B
 
-    // this is placeholder until I implemement an actual CSR file
-    val CSR_out    = Reg(UInt(32.W))
-
-    when(input_CSR_privilage === PRIVILAGE.MACHINE){
-      CSR_out := user_mode_CSR_read_resp
-    }.elsewhen(input_CSR_privilage === PRIVILAGE.USER){
-      CSR_out := machine_mode_CSR_read_resp
+    when(current_privilege === 0x00.U){ // user mode
+        for((addr, reg) <- user_mode_CSRs){
+            when(addr.U === CSR_addr){
+                CSR_read_out := reg.asUInt
+                CSR_not_found := 0.B
+            }
+        }
     }
 
-    dontTouch(input_CSR_privilage)
-    dontTouch(RS1_data)
-    dontTouch(CSR_addr)
+    when(current_privilege === 0x01.U){ // supervisor mode
+        for((addr, reg) <- supervisor_mode_CSRs){
+            when(addr.U === CSR_addr){
+                CSR_read_out := reg.asUInt
+                CSR_not_found := 0.B
+            }
+        }
+    }
 
+    when(current_privilege === 0x11.U){ // machine
+        for((addr, reg) <- machine_mode_CSRs){
+            when(addr.U === CSR_addr){
+                CSR_read_out := reg.asUInt
+                CSR_not_found := 0.B
+            }
+        }
+    }
+
+    when(CSR_not_found){
+        CSR_output.exception := 1.B
+        CSR_output.exception_cause := EX_CAUSE.ILLEGAL_INSTRUCTION
+    }
 
     ///////////////
     // CSR WRITE //
     ///////////////
+    // check write to machine mode regs  
+    // FIXME: privilege is not sufficient to determine writability.
+    // Need to also ensure that the register is R/W, etc.
 
-    // check write to machine mode regs
-    when(PRIVILAGE.MACHINE >= input_CSR_privilage && PRIVILAGE_OK && input_CSR_write_request) {
-        for ((addr, reg) <- machine_mode_CSRs) {    // FIXME: add read only, etc...
+    val CSR_map = user_mode_CSRs ++ supervisor_mode_CSRs ++ machine_mode_CSRs
+    when(current_privilege >= input_CSR_privilage && input_CSR_write_request) {
+        for ((addr, reg) <- CSR_map) {    // FIXME: add read only, etc...
             when(addr.U === CSR_addr) {
-                // FIXME: add proper write functions (ex, set, clear, etc...)
                 when(is_CSRRC){
                     reg :=  (reg.asUInt & ~wr_data).asTypeOf(reg.cloneType)
                 }.elsewhen(is_CSRRW){
@@ -434,48 +1039,53 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters) with CS
         }
     }
 
-    
-
-
-
 
     /////////////////////
     // ASSIGN CSR PORT //
     /////////////////////
-
-    CSR_port.mtvec := (mtvec_reg.BASE << 2)
-
+    CSR_port.mtvec := mtvec_reg
 
 
     /////////////
     //  OUTPUT //
     /////////////
 
-
-
-
+    CSR_output.fetch_PC              := io.FU_input.bits.fetch_PC
+    CSR_output.fetch_packet_index    := io.FU_input.bits.decoded_instruction.packet_index
+    CSR_output.PRD                   := io.FU_input.bits.decoded_instruction.PRD
+    CSR_output.RD_valid              := io.FU_input.bits.decoded_instruction.RD_valid
+    CSR_output.RD_data               := CSR_read_out
+    CSR_output.RS1_data.get          := RS1_data
+    CSR_output.MOB_index             := io.FU_input.bits.decoded_instruction.MOB_index
+    CSR_output.address               := 0.U
+    CSR_output.ROB_index             := io.FU_input.bits.decoded_instruction.ROB_index
+    //CSR_output.exception             := ECALL
+    //CSR_output.exception_cause       := (EXCEPTION_CAUSE)
 
     FU_output.io.enq.valid                      := RegNext(CSR_input_valid)
-    FU_output.io.enq.bits.branch_valid          := RegNext(MRET_SRET || ECALL)
-    FU_output.io.enq.bits.branch_taken          := RegNext(MRET_SRET || ECALL)
-    FU_output.io.enq.bits.CTRL                  := RegNext(CTRL)
-    FU_output.io.enq.bits.target_address        := RegNext(Mux(MRET_SRET , mepc_reg.asUInt, mtvec_reg.asUInt)) //RegNext(mepc_reg.asUInt)
-    FU_output.io.enq.bits.fetch_PC              := RegNext(io.FU_input.bits.fetch_PC)
-    FU_output.io.enq.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
-    FU_output.io.enq.bits.PRD                   := RegNext(io.FU_input.bits.decoded_instruction.PRD)
-    FU_output.io.enq.bits.RD_valid              := RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    FU_output.io.enq.bits.RD_data               := CSR_out
-    FU_output.io.enq.bits.RS1_data.get          := RegNext(RS1_data)
-    FU_output.io.enq.bits.MOB_index             := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
-    FU_output.io.enq.bits.address               := 0.U
-    FU_output.io.enq.bits.ROB_index             := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-    FU_output.io.enq.bits.exception             := RegNext(ECALL)   //FIXME: currently only ECALL causes an exception
-    FU_output.io.enq.bits.exception_cause       := RegNext(EXCEPTION_CAUSE)   //FIXME: currently only ECALL causes an exception
+    FU_output.io.enq.bits                       := RegNext(CSR_output)
+
+    //FU_output.io.enq.bits.branch_valid          := RegNext(MRET_SRET || ECALL)
+    //FU_output.io.enq.bits.branch_taken          := RegNext(MRET_SRET || ECALL)
+    //FU_output.io.enq.bits.CTRL                  := RegNext(CTRL)
+    //FU_output.io.enq.bits.target_address        := RegNext(Mux(MRET_SRET , mepc_reg.asUInt, mtvec_reg.asUInt)) //RegNext(mepc_reg.asUInt)
+    //FU_output.io.enq.bits.fetch_PC              := RegNext(io.FU_input.bits.fetch_PC)
+    //FU_output.io.enq.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
+    //FU_output.io.enq.bits.PRD                   := RegNext(io.FU_input.bits.decoded_instruction.PRD)
+    //FU_output.io.enq.bits.RD_valid              := RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    //FU_output.io.enq.bits.RD_data               := CSR_out
+    //FU_output.io.enq.bits.RS1_data.get          := RegNext(RS1_data)
+    //FU_output.io.enq.bits.MOB_index             := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    //FU_output.io.enq.bits.address               := 0.U
+    //FU_output.io.enq.bits.ROB_index             := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    //FU_output.io.enq.bits.exception             := RegNext(ECALL)   //FIXME: currently only ECALL causes an exception
+    //FU_output.io.enq.bits.exception_cause       := RegNext(EXCEPTION_CAUSE)   //FIXME: currently only ECALL causes an exception
+
 
 
     dontTouch(input_CSR_privilage)
-    dontTouch(user_mode_CSR_read_resp)
-    dontTouch(machine_mode_CSR_read_resp)
+    //dontTouch(user_mode_CSR_read_resp)
+    //dontTouch(machine_mode_CSR_read_resp)
     dontTouch(interrupt)
     dontTouch(CSR_port)
     dontTouch(irq_nm_i)
@@ -485,7 +1095,9 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters) with CS
     dontTouch(irq_nm_i)
     dontTouch(input_CSR_read_request)
     dontTouch(input_CSR_write_request)
-
+    dontTouch(input_CSR_privilage)
+    dontTouch(RS1_data)
+    dontTouch(CSR_addr)
 }
 
 

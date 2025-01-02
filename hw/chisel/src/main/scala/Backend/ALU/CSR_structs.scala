@@ -88,6 +88,10 @@ class mhartid extends Bundle {
   val hartid = UInt(32.W)    // Hardware thread ID
 }
 
+class satp extends Bundle{
+  val NA = UInt(32.W) // FIXME: incomplete
+}
+
 // Machine status register (mstatus) - 32 bits
 class mstatus extends Bundle {
   val SD    = UInt(1.W)    // Status dirty
@@ -175,6 +179,13 @@ class mcountinhibit extends Bundle {
   val WPRI = UInt(29.W)   // Reserved bits
 }
 
+class mcounteren extends Bundle {
+  val CY   = UInt(1.W)    // Inhibit cycle counter
+  val TM   = UInt(1.W)    // Inhibit timer counter
+  val IR   = UInt(1.W)    // Inhibit retired instructions counter
+  val WPRI = UInt(29.W)   // Reserved bits
+}
+
 // Machine scratch register (mscratch) - 32 bits
 class mscratch extends Bundle {
   val scratch = UInt(32.W)  // Scratch register for machine mode
@@ -189,6 +200,14 @@ class mepc extends Bundle {
 class mcause extends Bundle {
   val INTERRUPT = UInt(1.W)    // Interrupt flag
   val CODE      = UInt(31.W)   // Trap cause code
+}
+
+class mseccfgh extends Bundle{
+  val NA = UInt(32.W)
+}
+
+class mstatush extends Bundle{
+  val NA = UInt(32.W)
 }
 
 // Machine bad address register (mtval) - 32 bits
@@ -214,3 +233,7 @@ class mseccfg extends Bundle {
   val RLB   = UInt(1.W)   // Return from lower ring blocked
   val WPRI1 = UInt(30.W)  // Reserved bits
 }
+
+
+
+

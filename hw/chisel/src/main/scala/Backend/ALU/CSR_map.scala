@@ -321,7 +321,6 @@ object CSRs {
   val mhpmcounter31h = 0xb9f
 
   // Machine Counter Setup 
-  val mcountinhibit = 0x320
   val mhpmevent3 = 0x323
   val mhpmevent4 = 0x324
   val mhpmevent5 = 0x325

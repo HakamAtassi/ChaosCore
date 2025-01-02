@@ -696,6 +696,7 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
 }
 
 
+
 class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
     // An entire row of the MSHR.
     import coreParameters._
@@ -796,10 +797,10 @@ object EX_CAUSE extends ChiselEnum {
 
 
 
+
 object ACCESS extends ChiselEnum{
     val RW, RO = Value
 }
-
 
 
 class CSR_out(coreParameters:CoreParameters) extends Bundle{
