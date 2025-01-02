@@ -294,9 +294,21 @@ class rename(coreParameters:CoreParameters) extends Module{
     }
 
     for (i <- 0 until renamed_decoded_fetch_packet.bits.decoded_instruction.length) {
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1    := renamed_RS1(i)
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2    := renamed_RS2(i)
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := renamed_PRDold(i)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1    := io.decoded_fetch_packet.bits.decoded_instruction(i).RS1
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2    := io.decoded_fetch_packet.bits.decoded_instruction(i).RS2
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := 0.U //io.decoded_fetch_packet.bits.decoded_instruction(i).RD
+
+        when(io.decoded_fetch_packet.bits.decoded_instruction(i).RS1_valid){
+            renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1    := renamed_RS1(i)
+        }
+
+        when(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid){
+            renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2    := renamed_RS2(i)
+        }
+        when(io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid){
+            renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := renamed_PRDold(i)
+        }
+
     }
 
 

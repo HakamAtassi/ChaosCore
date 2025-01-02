@@ -233,6 +233,9 @@ import chisel3.util._
 */
 
 
+// upper 2 bits of address define RO or RW
+
+
 
 // FIXME: CSRFU needs parameterizable latency
 class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
@@ -274,19 +277,36 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val is_CSRRSI                   =  CSRRW && FUNCT3 === 0x6.U
     val is_CSRRCI                   =  CSRRW && FUNCT3 === 0x7.U
 
-    val wr_data                     =  Mux(IS_IMM, imm, RS1_data)
+    val wr_data                     =  Mux(IS_IMM, RS1, RS1_data)   // FIXME: CSR instruction encoding is weird. Technically, for CSR IMM insns, the imm is the RS1 field
 
     
     //1.B //FIXME:  // input privilage is lower or equal to active privilage
 
     val input_CSR_address           =  io.FU_input.bits.decoded_instruction.IMM         // address of requested CSR
     val input_CSR_privilage         =  get_CSR_lowest_priv(input_CSR_address).asUInt    // get privilage level of requested CSR
-    val input_CSR_access            =  get_CSR_access(input_CSR_address)                // get RO/RW FIXME: idk if this works
+    val input_CSR_access            =  get_CSR_access(input_CSR_address)                // get RO/RW 
 
 
-    val input_CSR_read_request      =  !(io.FU_input.bits.decoded_instruction.PRD === 0.U)  // when PRD == x0, the read is discarded, so dont read at all.
-    val input_CSR_write_request     =  (CSRRW && RS1 =/= 0.U)
+    // CSRRW always writes. only reads if RS1 != x0.
+    // CSRRS/CSRRC (imm and no imm) always read. only write if wr_data != 0
+
+
+    val input_CSR_read_request      =   ((is_CSRRW || is_CSRRWI) && io.FU_input.bits.decoded_instruction.PRD =/= 0.U) ||
+                                        (is_CSRRS || is_CSRRSI) || 
+                                        (is_CSRRC || is_CSRRCI)
+
+    dontTouch(is_CSRRW)
+    dontTouch(is_CSRRS)
+    dontTouch(is_CSRRC)
+    dontTouch(is_CSRRWI)
+    dontTouch(is_CSRRSI)
+    dontTouch(is_CSRRCI)
     
+    val input_CSR_write_request     =   ((is_CSRRW || is_CSRRWI)) ||
+                                        ((is_CSRRS || is_CSRRSI) && wr_data =/= 0.U) || 
+                                        ((is_CSRRC || is_CSRRCI) && wr_data =/= 0.U)
+    
+
     val current_privilege = RegInit(UInt(2.W), 0x3.U)   // Current privilage. Set to M on reset as per spec
 
     val PRIVILAGE_OK                =  current_privilege >= input_CSR_privilage
@@ -949,6 +969,8 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val pending_interrupt = WireInit(Bool(), 0.B)
     pending_interrupt := MEI_VALID || MSI_VALID || MTI_VALID || SEI_VALID || SSI_VALID || STI_VALID
 
+    dontTouch(pending_interrupt)
+
 
 //    val interrupt_delegated_to_S =  (MEI_VALID && mideleg_reg.MEI) || 
 //                                    (MSI_VALID && mideleg_reg.MSI) || 
@@ -1011,7 +1033,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // FIXME: privilege is not sufficient to determine writability.
     // Need to also ensure that the register is R/W, etc.
 
-    when(current_privilege >= input_CSR_privilage && input_CSR_write_request) {
+    when(current_privilege >= input_CSR_privilage && input_CSR_write_request && input_CSR_access === ACCESS.RW) {
         for ((addr, reg) <- CSR_map) {    // FIXME: add read only, etc...
             when(addr.U === CSR_addr) {
                 when(is_CSRRC || is_CSRRCI){

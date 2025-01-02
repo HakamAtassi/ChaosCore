@@ -431,15 +431,14 @@ object generateFUPorts {
 
 object get_CSR_access{
   def apply(csrAddr: UInt): ACCESS.Type = {
-    val roBit = csrAddr(9)
-    Mux(roBit === 0.U, ACCESS.RW, ACCESS.RO)
+    Mux(csrAddr(11,10) === 0x3.U, ACCESS.RO, ACCESS.RW)
   }
 }
 
 /** Function to get the lowest privilege level allowed to access a CSR */
 object get_CSR_lowest_priv{
   def apply(csrAddr: UInt): PRIVILAGE.Type = {
-    val priv_bits = csrAddr(11, 10)
+    val priv_bits = csrAddr(9, 8)
     val (priv, valid) = PRIVILAGE.safe(priv_bits)
     assert(valid, "PRIVILIGE MUST BE VALID")
 
