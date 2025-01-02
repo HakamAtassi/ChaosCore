@@ -288,7 +288,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val active_CSR_privilage        =  0.U      // what was the privilage level of the core during request? 
 
 
-    val current_privilege = RegInit(UInt(2.W), 0x11.U)   // Current privilage. Set to M on reset as per spec
+    val current_privilege = RegInit(UInt(2.W), 0x3.U)   // Current privilage. Set to M on reset as per spec
 
 
     val CSR_output = WireInit(0.U.asTypeOf(new FU_output(coreParameters)))
@@ -828,11 +828,11 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // x PP is set to U (or M if user-mode is not supported)
 
     when(MRET){
-        current_privilege := mstatus_reg.MPP    // update current status
+        //current_privilege := mstatus_reg.MPP    // update current status
         mstatus_reg.MPP   := 0.U                  // set MPP to user (as per spec)
         mstatus_reg.MPIE  := 1.U                     // XPIE to 1 (as per spec)
 
-        when(mstatus_reg.MPP === 0x11.U){           // prev was M
+        when(mstatus_reg.MPP === 0x3.U){           // prev was M
             mstatus_reg.MIE := mstatus_reg.MPIE
         }.elsewhen(mstatus_reg.MPP === 0x01.U){     // prev was S
             mstatus_reg.SIE := mstatus_reg.MPIE
@@ -840,11 +840,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
         // Trigger branch
         CSR_output.CTRL := 1.B
+        CSR_output.branch_valid := 1.B
         CSR_output.branch_taken := 1.B
         CSR_output.target_address := mepc_reg.asUInt
 
     }.elsewhen(SRET){
-        current_privilege := mstatus_reg.SPP
+        //current_privilege := mstatus_reg.SPP
         mstatus_reg.SPP   := 0.U                  // set MPP to user (as per spec)
         mstatus_reg.SPIE  := 1.U                     // XPIE to 1 (as per spec)
         
@@ -854,10 +855,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         }.otherwise{
             // Trigger branch
             CSR_output.CTRL := 1.B
+            CSR_output.branch_valid := 1.B
             CSR_output.branch_taken := 1.B
             CSR_output.target_address := sepc_reg.asUInt
         }
     }
+
 
 
     //////////////////
@@ -865,7 +868,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     //////////////////
 
     when(ECALL){
-        when(current_privilege === 0x11.U){         // MACHINE
+        when(current_privilege === 0x3.U){         // MACHINE
             CSR_output.exception := 1.B
             CSR_output.exception_cause := EX_CAUSE.ECALL_FROM_M_MODE
         }.elsewhen(current_privilege === 0x01.U){   // SUPERVISOR
@@ -897,7 +900,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         //val delegate_to_S = (Cat(medelegh_reg, medeleg_reg) >> exception_code)(0)
 
         when(0.B /*should be delegate to s but idk how it works*/){      // delegate to S mode
-            current_privilege := 0x10.U
+            current_privilege := 0x2.U
             scause_reg.CODE := exception_code
             sepc_reg        := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
             //stval_reg       := 0.U      // FIXME: not used. seems optional
@@ -905,7 +908,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
             mstatus_reg.SPIE:= mstatus_reg.SIE
             mstatus_reg.SIE := 0.U 
         }.otherwise{            // handle in M mode (standard)
-            current_privilege := 0x11.U
+            current_privilege := 0x3.U
             mcause_reg.CODE := exception_code
             mepc_reg        := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
             //mtval_reg       := 0.U      // FIXME: not used. seems optional
@@ -962,7 +965,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // handle interrupt
     when(io.flush.valid && io.flush.bits.is_interrupt){
         interrupt := 0.B
-        current_privilege := 0x11.U // set as M mode
+        current_privilege := 0x3.U // set as M mode
         mcause_reg.CODE := io.flush.bits.exception_cause.asUInt
         mepc_reg        := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
         //mtval_reg       := 0.U      // FIXME: not used. seems optional
@@ -1003,7 +1006,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         }
     }
 
-    when(current_privilege === 0x11.U){ // machine
+    when(current_privilege === 0x3.U){ // machine
         for((addr, reg) <- machine_mode_CSRs){
             when(addr.U === CSR_addr){
                 CSR_read_out := reg.asUInt
@@ -1050,6 +1053,8 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     //  OUTPUT //
     /////////////
 
+    dontTouch(CSR_output)
+
     CSR_output.fetch_PC              := io.FU_input.bits.fetch_PC
     CSR_output.fetch_packet_index    := io.FU_input.bits.decoded_instruction.packet_index
     CSR_output.PRD                   := io.FU_input.bits.decoded_instruction.PRD
@@ -1064,6 +1069,8 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     FU_output.io.enq.valid                      := RegNext(CSR_input_valid)
     FU_output.io.enq.bits                       := RegNext(CSR_output)
+
+    dontTouch(CSR_input_valid)
 
     //FU_output.io.enq.bits.branch_valid          := RegNext(MRET_SRET || ECALL)
     //FU_output.io.enq.bits.branch_taken          := RegNext(MRET_SRET || ECALL)
@@ -1086,6 +1093,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     dontTouch(input_CSR_privilage)
     //dontTouch(user_mode_CSR_read_resp)
     //dontTouch(machine_mode_CSR_read_resp)
+    dontTouch(current_privilege)
     dontTouch(interrupt)
     dontTouch(CSR_port)
     dontTouch(irq_nm_i)

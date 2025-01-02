@@ -69,10 +69,11 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val PRD                 =   io.FU_input.bits.decoded_instruction.PRD
 
     // Op select
-    val MRET                =   io.FU_input.bits.decoded_instruction.XRET    &&     io.FU_input.bits.decoded_instruction.FUNCT7 === "b0001000".U
-    val SRET                =   io.FU_input.bits.decoded_instruction.XRET    &&     io.FU_input.bits.decoded_instruction.FUNCT7 === "b0011000".U
-    val CTRL                =   io.FU_input.bits.decoded_instruction.CTRL
+    val SRET                =   io.FU_input.bits.decoded_instruction.XRET    &&     io.FU_input.bits.decoded_instruction.FUNCT7 === "b0001000".U
+    val MRET                =   io.FU_input.bits.decoded_instruction.XRET    &&     io.FU_input.bits.decoded_instruction.FUNCT7 === "b0011000".U
     // FIXME: MNRET?
+
+    val CTRL                =   io.FU_input.bits.decoded_instruction.CTRL
 
 
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
