@@ -158,7 +158,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     comb_committed := MOB.map(MOB_entry => MOB_entry.committed)
 
     for(i <- 0 until fetchWidth){
-        when(io.commit.valid && io.commit.bits.insn_commit(i).valid && MOB(io.commit.bits.insn_commit(i).bits.MOB_index).valid && (io.commit.bits.ROB_index === MOB(io.commit.bits.insn_commit(i).bits.MOB_index).ROB_index) && io.commit.bits.insn_commit(i).bits.MOB_valid){
+        when(io.commit.bits.insn_commit(i).valid && MOB(io.commit.bits.insn_commit(i).bits.MOB_index).valid && (io.commit.bits.ROB_index === MOB(io.commit.bits.insn_commit(i).bits.MOB_index).ROB_index) && io.commit.bits.insn_commit(i).bits.MOB_valid){
             comb_committed(io.commit.bits.insn_commit(i).bits.MOB_index) := 1.B
         }
     }

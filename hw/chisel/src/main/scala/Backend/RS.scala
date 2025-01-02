@@ -125,7 +125,7 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
 
     for (i <- 0 until RSEntries) {
         for (j <- 0 until fetchWidth) {
-            when(reservation_station(i).valid && io.commit.valid && 
+            when(reservation_station(i).valid && 
             (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && 
             io.commit.bits.insn_commit(j).valid && (j.U === reservation_station(i).decoded_instruction.packet_index)) {
                 committed_next(i) := 1.B // Update the wire immediately
@@ -197,7 +197,7 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
 
             val RS1_valid_ready_or_not_valid    = (reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).decoded_instruction.RS1_valid) || !reservation_station(i).decoded_instruction.RS1_valid
             val RS2_valid_ready_or_not_valid    = (reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).decoded_instruction.RS2_valid) || !reservation_station(i).decoded_instruction.RS2_valid
-            val need_commit_first               = (current_instruction.needs_CSRs &&  committed(i)) || !(current_instruction.needs_CSRs) || current_instruction.XRET || current_instruction.ENV
+            val need_commit_first               = (current_instruction.needs_CSRs &&  committed(i)) || !(current_instruction.needs_CSRs) || current_instruction.ENV
 
             val fireable                        = reservation_station(i).valid && RS1_valid_ready_or_not_valid && RS2_valid_ready_or_not_valid && need_commit_first
                                             

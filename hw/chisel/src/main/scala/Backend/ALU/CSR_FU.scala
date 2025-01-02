@@ -276,20 +276,20 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     val wr_data                     =  Mux(IS_IMM, imm, RS1_data)
 
-    val PRIVILAGE_OK                =  1.B //FIXME:  // input privilage is lower or equal to active privilage
+    
+    //1.B //FIXME:  // input privilage is lower or equal to active privilage
 
-    val input_CSR_address           =  io.FU_input.bits.decoded_instruction.IMM      // address of requested CSR
-    val input_CSR_privilage         =  get_CSR_lowest_priv(input_CSR_address).asUInt
-    val input_CSR_access            =  get_CSR_access(input_CSR_address)      // What is the minimum required privilage required for the requested CSR? (this is encoded in the address)
+    val input_CSR_address           =  io.FU_input.bits.decoded_instruction.IMM         // address of requested CSR
+    val input_CSR_privilage         =  get_CSR_lowest_priv(input_CSR_address).asUInt    // get privilage level of requested CSR
+    val input_CSR_access            =  get_CSR_access(input_CSR_address)                // get RO/RW FIXME: idk if this works
+
 
     val input_CSR_read_request      =  !(io.FU_input.bits.decoded_instruction.PRD === 0.U)  // when PRD == x0, the read is discarded, so dont read at all.
     val input_CSR_write_request     =  (CSRRW && RS1 =/= 0.U)
     
-    val active_CSR_privilage        =  0.U      // what was the privilage level of the core during request? 
-
-
     val current_privilege = RegInit(UInt(2.W), 0x3.U)   // Current privilage. Set to M on reset as per spec
 
+    val PRIVILAGE_OK                =  current_privilege >= input_CSR_privilage
 
     val CSR_output = WireInit(0.U.asTypeOf(new FU_output(coreParameters)))
 
@@ -425,7 +425,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val mconfigptr_reg  = RegInit(0.U.asTypeOf(new mconfigptr))                 // Pointer to structure that contains configuration info in SW. RO.
 
     // Machine Trap Setup
-    val mstatus_reg     = RegInit(0.U.asTypeOf(new mstatus))                    // The current core's status. Supervisor and User view a modified version of this reg. RW. 
+    val mstatus_reg     = RegInit(0x00001800.U.asTypeOf(new mstatus))                    // The current core's status. Supervisor and User view a modified version of this reg. RW. 
     val misa_reg        = RegInit(initMisa(coreParameters).asTypeOf(new misa))  // Machine ISA ("RV32IMA..." etc). writeable if isa is modifiable at runtime. RW
     val medeleg_reg     = RegInit(UInt(32.W), 0.U)                              // FIXME: IDK
     val mideleg_reg     = RegInit(UInt(32.W), 0.U)                              // FIXME: IDK
@@ -756,10 +756,10 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         //-----------------------
         // MACHINE NMI HANDLING
         //-----------------------
-        CSRs.mnscratch   -> mnscratch_reg,
-        CSRs.mnepc       -> mnepc_reg,
-        CSRs.mncause     -> mncause_reg,
-        CSRs.mnstatus    -> mnstatus_reg,
+        //CSRs.mnscratch   -> mnscratch_reg,
+        //CSRs.mnepc       -> mnepc_reg,
+        //CSRs.mncause     -> mncause_reg,
+        //CSRs.mnstatus    -> mnstatus_reg,
 
         //--------------------
         // MACHINE COUNTERS 
@@ -828,7 +828,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // x PP is set to U (or M if user-mode is not supported)
 
     when(MRET){
-        //current_privilege := mstatus_reg.MPP    // update current status
+        current_privilege := mstatus_reg.MPP    // update current status
         mstatus_reg.MPP   := 0.U                  // set MPP to user (as per spec)
         mstatus_reg.MPIE  := 1.U                     // XPIE to 1 (as per spec)
 
@@ -845,7 +845,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         CSR_output.target_address := mepc_reg.asUInt
 
     }.elsewhen(SRET){
-        //current_privilege := mstatus_reg.SPP
+        current_privilege := mstatus_reg.SPP
         mstatus_reg.SPP   := 0.U                  // set MPP to user (as per spec)
         mstatus_reg.SPIE  := 1.U                     // XPIE to 1 (as per spec)
         
@@ -969,7 +969,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         mcause_reg.CODE := io.flush.bits.exception_cause.asUInt
         mepc_reg        := io.flush.bits.flushing_PC.asTypeOf(mepc_reg.cloneType) 
         //mtval_reg       := 0.U      // FIXME: not used. seems optional
-        mstatus_reg.MPP := current_privilege(0)     // FIXME: is this accurate
+        mstatus_reg.MPP := current_privilege     // FIXME: is this accurate
         mstatus_reg.MPIE:= mstatus_reg.MIE
         mstatus_reg.MIE := 0.U 
     }
@@ -980,6 +980,8 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // CSR READ //
     //////////////
 
+    val CSR_map = user_mode_CSRs ++ supervisor_mode_CSRs ++ machine_mode_CSRs
+
     // FIXME: ensure corrent perms. otherwise, illegal instruction exception (I think)
     // There has got to be a better way of doing this
 
@@ -988,8 +990,8 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val CSR_not_found = Wire(Bool())
     CSR_not_found := 1.B
 
-    when(current_privilege === 0x00.U){ // user mode
-        for((addr, reg) <- user_mode_CSRs){
+    when(PRIVILAGE_OK){ // user mode
+        for((addr, reg) <- CSR_map){
             when(addr.U === CSR_addr){
                 CSR_read_out := reg.asUInt
                 CSR_not_found := 0.B
@@ -997,25 +999,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         }
     }
 
-    when(current_privilege === 0x01.U){ // supervisor mode
-        for((addr, reg) <- supervisor_mode_CSRs){
-            when(addr.U === CSR_addr){
-                CSR_read_out := reg.asUInt
-                CSR_not_found := 0.B
-            }
-        }
-    }
-
-    when(current_privilege === 0x3.U){ // machine
-        for((addr, reg) <- machine_mode_CSRs){
-            when(addr.U === CSR_addr){
-                CSR_read_out := reg.asUInt
-                CSR_not_found := 0.B
-            }
-        }
-    }
-
-    when(CSR_not_found){
+    when(CSR_not_found && CSRRW){
         CSR_output.exception := 1.B
         CSR_output.exception_cause := EX_CAUSE.ILLEGAL_INSTRUCTION
     }
@@ -1027,15 +1011,14 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // FIXME: privilege is not sufficient to determine writability.
     // Need to also ensure that the register is R/W, etc.
 
-    val CSR_map = user_mode_CSRs ++ supervisor_mode_CSRs ++ machine_mode_CSRs
     when(current_privilege >= input_CSR_privilage && input_CSR_write_request) {
         for ((addr, reg) <- CSR_map) {    // FIXME: add read only, etc...
             when(addr.U === CSR_addr) {
-                when(is_CSRRC){
+                when(is_CSRRC || is_CSRRCI){
                     reg :=  (reg.asUInt & ~wr_data).asTypeOf(reg.cloneType)
-                }.elsewhen(is_CSRRW){
+                }.elsewhen(is_CSRRW || is_CSRRWI){
                     reg :=  (wr_data).asTypeOf(reg.cloneType)
-                }.elsewhen(is_CSRRS){
+                }.elsewhen(is_CSRRS || is_CSRRSI){
                     reg :=  (reg.asUInt | wr_data).asTypeOf(reg.cloneType)
                 }
             }
