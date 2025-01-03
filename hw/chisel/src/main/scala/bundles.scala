@@ -616,8 +616,12 @@ object memory_type_t extends ChiselEnum{
     val NONE, LOAD, STORE = Value
 }
 
-object access_width_t extends ChiselEnum{
-    val NONE, B, HW, W = Value
+//object access_width_t extends ChiselEnum{
+    //val NONE, B, HW, W = Value
+//}
+
+object access_width_t extends ChiselEnum{   // in LOG2
+    val B, HW, W, DW, NONE = Value
 }
 
 class memory_access(coreParameters:CoreParameters) extends Bundle{   // output of the AGU

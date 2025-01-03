@@ -204,8 +204,19 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.backend_memory_request.bits.ROB_index    := MOB_front.ROB_index
     io.backend_memory_request.bits.MOB_index    := front_index
     io.backend_memory_request.bits.mem_signed   := MOB_front.mem_signed
-    io.backend_memory_request.bits.data         := MOB_front.data
     io.backend_memory_request.bits.packet_index := MOB_front.fetch_packet_index
+
+    // SB => {data, data, data, data}
+    // SH => {data, data}
+    // SW => {HW}
+    when(MOB_front.access_width === access_width_t.B){
+        io.backend_memory_request.bits.data := Fill(4, MOB_front.data(7, 0))
+    }.elsewhen(MOB_front.access_width === access_width_t.HW){
+        io.backend_memory_request.bits.data := Fill(2, MOB_front.data(15, 0))
+    }.otherwise{
+        io.backend_memory_request.bits.data := MOB_front.data
+    }
+
     
 
     // SEND REQUEST

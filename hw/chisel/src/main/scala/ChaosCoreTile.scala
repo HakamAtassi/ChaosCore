@@ -553,7 +553,9 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   //outer.dcache.module.io.cpu.req.bits.idx       := 0.U // something for virtual memory?
   outer.dcache.module.io.cpu.req.bits.tag    := core.io.backend_memory_request.bits.MOB_index // request ID
   outer.dcache.module.io.cpu.req.bits.cmd    := Mux(core.io.backend_memory_request.bits.memory_type === memory_type_t.LOAD, M_XRD, M_XWR)
-  outer.dcache.module.io.cpu.req.bits.size   := core.io.backend_memory_request.bits.access_width.asUInt - 1.U //0.U
+  
+  outer.dcache.module.io.cpu.req.bits.size   := core.io.backend_memory_request.bits.access_width.asUInt
+
   outer.dcache.module.io.cpu.req.bits.signed := core.io.backend_memory_request.bits.mem_signed //Bool()
   outer.dcache.module.io.cpu.req.bits.dprv   := "b11".U // privilege
   outer.dcache.module.io.cpu.req.bits.dv     := 0.B 

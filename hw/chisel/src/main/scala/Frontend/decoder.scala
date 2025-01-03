@@ -318,23 +318,34 @@ class decoder(coreParameters:CoreParameters) extends Module{
         io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
     }
 
+    // FIXME: why is this not part of the decoder? cant you just used the UNSIGNED FLAG?
+    // STORES should never be signed/unsigned. They just store the data at that particular width. loads determine if that data is signed or not...
+    // FIXME: SIGNED FOR STORES doesnt seem to actually matter (rocket keeps it high in sb isa test)
+    when(io.decoded_instruction.bits.STORE && FUNCT3  === "b000".U){ // SB
+        io.decoded_instruction.bits.access_width             := access_width_t.B
+    }.elsewhen(io.decoded_instruction.bits.STORE && FUNCT3  === "b001".U ){   // LH
+        io.decoded_instruction.bits.access_width             := access_width_t.HW
+    }.elsewhen(io.decoded_instruction.bits.STORE && FUNCT3  === "b010".U){   // SW
+        io.decoded_instruction.bits.access_width             := access_width_t.W
+    }
 
-    when(FUNCT3  === "b000".U){ // LB
+    when(io.decoded_instruction.bits.LOAD && FUNCT3  === "b000".U){ // LB
         io.decoded_instruction.bits.access_width             := access_width_t.B
         io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b001".U ){   // LHW
+    }.elsewhen(io.decoded_instruction.bits.LOAD && FUNCT3  === "b001".U ){   // LHW
         io.decoded_instruction.bits.access_width             := access_width_t.HW
         io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b010".U){   // LW
+    }.elsewhen(io.decoded_instruction.bits.LOAD && FUNCT3  === "b010".U){   // LW
         io.decoded_instruction.bits.access_width             := access_width_t.W
         io.decoded_instruction.bits.mem_signed  := 1.B
-    }.elsewhen(FUNCT3  === "b100".U){   // LBU
+    }.elsewhen(io.decoded_instruction.bits.LOAD && FUNCT3  === "b100".U){   // LBU
         io.decoded_instruction.bits.access_width             := access_width_t.B
         io.decoded_instruction.bits.mem_signed  := 0.B
-    }.elsewhen(FUNCT3  === "b101".U){   // LHWU
+    }.elsewhen(io.decoded_instruction.bits.LOAD && FUNCT3  === "b101".U){   // LHWU
         io.decoded_instruction.bits.access_width             := access_width_t.HW
         io.decoded_instruction.bits.mem_signed  := 0.B
     }
+
     dontTouch(decode_pat)
 }
 

@@ -71,6 +71,12 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     when(SH){wr_data := RS2_data & 0xFFFF.U}
     when(SW){wr_data := RS2_data.asUInt & "hFFFF_FFFF".U(32.W)}
 
+    dontTouch(SB)
+    dontTouch(SH)
+    dontTouch(SW)
+
+    dontTouch(wr_data)
+
     ///////////////////
     // GENERATE ADDR //
     ///////////////////
