@@ -2753,6 +2753,7 @@ Disassembly of section .text:
 8000287c:	fff00513          	li	a0,-1
 80002880:	06e84063          	blt	a6,a4,800028e0 <__register_exitproc+0x94>
 80002884:	04088263          	beqz	a7,800028c8 <__register_exitproc+0x7c>
+
 80002888:	0887a803          	lw	a6,136(a5)
 8000288c:	04080a63          	beqz	a6,800028e0 <__register_exitproc+0x94>
 80002890:	00271513          	slli	a0,a4,0x2

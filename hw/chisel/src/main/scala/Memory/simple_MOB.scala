@@ -158,7 +158,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     comb_committed := MOB.map(MOB_entry => MOB_entry.committed)
 
     for(i <- 0 until fetchWidth){
-        when(io.commit.bits.insn_commit(i).valid && MOB(io.commit.bits.insn_commit(i).bits.MOB_index).valid && (io.commit.bits.ROB_index === MOB(io.commit.bits.insn_commit(i).bits.MOB_index).ROB_index) && io.commit.bits.insn_commit(i).bits.MOB_valid){
+        when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.WB_committed && MOB(io.commit.bits.insn_commit(i).bits.MOB_index).valid && (io.commit.bits.ROB_index === MOB(io.commit.bits.insn_commit(i).bits.MOB_index).ROB_index) && io.commit.bits.insn_commit(i).bits.MOB_valid){
             comb_committed(io.commit.bits.insn_commit(i).bits.MOB_index) := 1.B
         }
     }
@@ -171,24 +171,6 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // FLUSH //
     ///////////
     val committed_entries = PopCount(comb_committed.zip(MOB).map { case (committed, mobEntry) => committed && mobEntry.valid })
-
-
-    dontTouch(committed_entries)
-
-    when(io.flush.valid){
-        for(i <- 0 until MOBEntries){
-            val clear = !comb_committed(i) && MOB(i).valid
-            when(clear){
-                MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
-            }
-        }
-        //back_pointer := back_pointer - flushed_entries   // walk back back pointer a few elements
-        back_pointer := front_pointer + committed_entries
-    }
-
-
-    dontTouch(front_index)
-    dontTouch(back_index)
 
 
     
@@ -258,10 +240,12 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     when(io.backend_memory_response.fire){ // entry response
         val response_index = io.backend_memory_response.bits.MOB_index
         // NACK
-        when(io.backend_memory_response.bits.nack){
-            MOB(response_index).MOB_STATE := MOB_STATES.NACKED
-        }.otherwise{
-            MOB(response_index).MOB_STATE := MOB_STATES.DONE
+        when(MOB(response_index).valid){
+            when(io.backend_memory_response.bits.nack){
+                MOB(response_index).MOB_STATE := MOB_STATES.NACKED
+            }.otherwise{
+                MOB(response_index).MOB_STATE := MOB_STATES.DONE
+            }
         }
     }
 
@@ -273,8 +257,10 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
     // FREE ENTRY
     when(MOB(front_index).MOB_STATE === MOB_STATES.DONE){ // entry response
-        front_pointer := front_pointer + 1.U
-       MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
+        when(!io.flush.valid || comb_committed(front_index)){
+            front_pointer := front_pointer + 1.U
+        }
+        MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
     }
 
 
@@ -296,6 +282,23 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
         //io.MOB_output.bits.fetch_packet_index   := req_reg.packet_index
         //io.MOB_output.bits.PRD                  := req_reg.PRD
     //}
+
+
+    when(io.flush.valid){
+        for(i <- 0 until MOBEntries){
+            val clear = !comb_committed(i) && MOB(i).valid
+            when(clear){
+                MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
+            }
+        }
+        back_pointer := front_pointer + committed_entries
+    }
+
+
+    dontTouch(committed_entries)
+    dontTouch(front_index)
+    dontTouch(back_index)
+
 
     ///////////
     // READY //

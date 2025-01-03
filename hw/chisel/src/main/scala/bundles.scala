@@ -121,6 +121,19 @@ class BTB_entry(coreParameters:CoreParameters) extends Bundle{
 
 class insn_commit(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
+
+    // BE VERY CAREFUL ABOUT WHICH OF THESE SINGALS YOU USE 
+    // THE COMMITTED FUNCTION IS THE ACTUAL "THIS INSTRUCTION IS ABOUT TO EXIT THE PIPELINE FULLY" SIGNAL
+    // WB_committed is just "nothing prior to this instruction has caused issues, but may or may not actually be complete". Think stores, CSR insns, etc...
+
+    val WB_complete                = Bool()
+    val WB_committed               = Bool()
+
+    def committed: Bool = {
+        WB_committed && WB_complete
+    }
+
+
     val MOB_index               = UInt(log2Ceil(MOBEntries).W)
     val MOB_valid               = Bool()   // only valid on loads and stores
 

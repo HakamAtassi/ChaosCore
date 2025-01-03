@@ -127,7 +127,7 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
         for (j <- 0 until fetchWidth) {
             when(reservation_station(i).valid && 
             (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && 
-            io.commit.bits.insn_commit(j).valid && (j.U === reservation_station(i).decoded_instruction.packet_index)) {
+            io.commit.bits.insn_commit(j).bits.WB_committed && (j.U === reservation_station(i).decoded_instruction.packet_index)) {
                 committed_next(i) := 1.B // Update the wire immediately
             }
         }

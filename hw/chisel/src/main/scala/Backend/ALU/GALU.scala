@@ -216,7 +216,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val REMU     =   (MULTIPLY) && FUNCT3 === "b111".U
 
     // BRANCH INSTRUCTIONS //
-    val BRANCH      =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.CTRL //instructionType === InstructionType.BRANCH
+    val BRANCH      =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.CTRL && !io.FU_input.bits.decoded_instruction.JAL && !io.FU_input.bits.decoded_instruction.JALR   // FIXME: once again, crappy decoding...
     val BEQ         =   BRANCH && FUNCT3 === "b000".U
     val BNE         =   BRANCH && FUNCT3 === "b001".U
     val BLT         =   BRANCH && FUNCT3 === "b100".U

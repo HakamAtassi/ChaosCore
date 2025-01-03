@@ -559,13 +559,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_instruction_banks(i).io.commit := commit_vec(i)
     }
 
-    // FIXME: small nuance here. CSR instructions can "commit", saying "this instruction should be able to safely execute" if no earlier instructions
-    // in that fetch packet flush or similar. However, if that CSR instruction is accessing a CSR it does not have privilege for, or that CSR does not exist, 
-    // it can STILL cause an exception.
-    // Consequently, a "complete" commit means an instruction committed and completed. This is denoted by the io.commit.valid being high
-    // instructions that are partially committed are denoted via the insn_commit(i).valid being high.
-    // In other words, the commit and complete signals are not decoupled cleanly. Could probably be a bit better
-
     
     // DRIVE I/O COMMIT //
     io.commit.bits := DontCare // FIXME: complete assignment particularly for branches
@@ -574,7 +567,11 @@ class ROB(coreParameters:CoreParameters) extends Module{
     io.commit.bits.free_list_front_pointer := ROB_shared_bank.io.ROB_shared_entry.bits.free_list_front_pointer
 
     for(i <- 0 until fetchWidth){
-        io.commit.bits.insn_commit(i).valid          := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed  // just a commit. ie, nothing prior to this instruction has caused issues. may or may not be complete 
+        io.commit.bits.insn_commit(i).valid          := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.valid  
+
+        io.commit.bits.insn_commit(i).bits.WB_committed := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed
+        io.commit.bits.insn_commit(i).bits.WB_complete := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete
+
         io.commit.bits.insn_commit(i).bits.MOB_index := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_index
         io.commit.bits.insn_commit(i).bits.MOB_valid := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_valid
         io.commit.bits.insn_commit(i).bits.RD        := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD
@@ -583,13 +580,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         io.commit.bits.insn_commit(i).bits.PRDold    := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRDold
     }
 
-    // indicate a complete commit 
-    io.commit.valid := ROB_instruction_banks.map(bank =>    bank.io.ROB_instruction_entry.WB.committed && 
-                                                            bank.io.ROB_instruction_entry.WB.complete && 
-                                                            !bank.io.ROB_instruction_entry.WB.exception && 
-                                                            bank.io.ROB_instruction_entry.WB.valid).reduce(_ || _) && 
-                                                            ROB_shared_bank.io.ROB_shared_entry.valid   // output commit is high if any instructions are committing
-
+    io.commit.valid := ROB_instruction_banks.map(bank =>   bank.io.ROB_instruction_entry.WB.valid).reduce(_ || _) && ROB_shared_bank.io.ROB_shared_entry.valid   // output commit is high if any instructions are committing
 
     // done with this row
     // this signal increments pointers and helps with interrupts and things
@@ -681,7 +672,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
             val IS_CSRRW        = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSRRW
             val IS_CTRL         = ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CTRL
 
-            val done            = io.commit.valid && ROB_shared_bank.io.ROB_shared_entry.valid && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed && (ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete || IS_STORE) && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.valid
+            val done            = ROB_shared_bank.io.ROB_shared_entry.valid && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed && (ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete || IS_STORE) && ROB_instruction_banks(i).io.ROB_instruction_entry.WB.valid
 
             
             // FIXME: ADD STORES AND EXCEPTIONS

@@ -194,7 +194,6 @@ class backend(coreParameters:CoreParameters) extends Module{
         
         // RS ready <> FU ready //
         INT_RS.io.RF_inputs(i).ready        := execution_engine.io.FU_input(i).ready
-
     }
 
     // CONNECT BRANCH UNITS TO PC FILE (in ROB)
@@ -243,7 +242,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // CONNECT EX. ENGINE TO MOB
     for(i <- nonMemoryPortCount until portCount){
-        // THIS LOOP WILL ONLY EVER RUN ONCE
+        // THIS LOOP WILL ONLY EVER RUN FOR ONE ITERATION
         MOB.io.AGU_output(i-nonMemoryPortCount) <> execution_engine.io.FU_output(i)  // FIXME add param number of AGU inputs to MOB
 
         INT_PRF.io.waddr(i)  :=  MOB.io.MOB_output.bits.PRD 

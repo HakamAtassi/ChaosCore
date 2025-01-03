@@ -88,7 +88,7 @@ class free_list(coreParameters:CoreParameters) extends Module{
     //FIXME: does the order of these matter?
     when(io.commit.valid){  // add to freelist
         for(i <- 0 until fetchWidth){
-            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){    // dont add x0
+            when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){    // dont add x0
                 val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
                 commit_PRDold := (io.commit.bits.insn_commit(i).bits.PRDold - 1.U) % (physicalRegCount-1).U
 
@@ -96,12 +96,11 @@ class free_list(coreParameters:CoreParameters) extends Module{
                 commit_free_list_buffer(commit_PRDold) := 1.B
             }
 
-            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){
+            when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){
                 val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
                 commit_PRD := (io.commit.bits.insn_commit(i).bits.PRD - 1.U) % (physicalRegCount-1).U
                 commit_free_list_buffer(commit_PRD) := 0.B
             }
-
         }
     }
 
@@ -111,16 +110,16 @@ class free_list(coreParameters:CoreParameters) extends Module{
     ///////////////////
 
     //FIXME: does the order of these matter?
-    when(flush){
+    when(io.flush.valid){
         free_list_buffer := commit_free_list_buffer
         for(i <- 0 until fetchWidth){
-            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid){
+            when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid){
                 val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
                 commit_PRD := io.commit.bits.insn_commit(i).bits.PRD - 1.U
                 free_list_buffer(commit_PRD) := 0.B
             }
 
-            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid){
+            when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid){
                 val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
                 commit_PRDold := io.commit.bits.insn_commit(i).bits.PRDold - 1.U
                 free_list_buffer(commit_PRDold) := 1.B
@@ -129,6 +128,7 @@ class free_list(coreParameters:CoreParameters) extends Module{
         }
         //for(i <- 0 until fetchWidth){
         //}
+        
     }
 
 

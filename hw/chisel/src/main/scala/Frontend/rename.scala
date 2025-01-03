@@ -134,8 +134,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     ////////////////
     // write RAT
     for (i <- 0 until fetchWidth){
-        //FIXME: use global flush signal and do not reconstruct
-        when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid){
+        when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid){
             commit_RAT(io.commit.bits.insn_commit(i).bits.RD) := io.commit.bits.insn_commit(i).bits.PRD
         }
     }
@@ -146,7 +145,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
     when(io.flush.valid){
         speculative_RAT := commit_RAT
         for(i <- 0 until fetchWidth){
-            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.RD_valid){
+            when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid){
                 speculative_RAT(io.commit.bits.insn_commit(i).bits.RD) := io.commit.bits.insn_commit(i).bits.PRD
             }
         }
