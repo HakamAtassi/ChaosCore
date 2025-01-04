@@ -47,22 +47,11 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
     or_result       := operand1_unsigned | operand2_unsigned
     and_result      := operand1_unsigned & operand2_unsigned
 
-    dontTouch(operand1_unsigned)
-    dontTouch(sub_result)
-    dontTouch(add_result)
-    dontTouch(ADD)
-    dontTouch(SUB)
 
     sll_result      := RS1_unsigned << shamt
     srl_result      := RS1_unsigned >> shamt
     sra_result      := RS1_signed   >> shamt
 
-    dontTouch(RS1_signed)
-
-    dontTouch(shamt)
-    dontTouch(sra_result)
-    dontTouch(SRA)
-    dontTouch(SRL)
 
     slt_result      := RS1_signed < operand2_signed
     sltu_result     := RS1_unsigned < operand2_unsigned
@@ -112,6 +101,16 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
     dontTouch(SRA)
     dontTouch(imm)
     dontTouch(lui_result)
+    dontTouch(RS1_signed)
+    dontTouch(shamt)
+    dontTouch(sra_result)
+    dontTouch(SRA)
+    dontTouch(SRL)
+    dontTouch(operand1_unsigned)
+    dontTouch(sub_result)
+    dontTouch(add_result)
+    dontTouch(ADD)
+    dontTouch(SUB)
 
 
     // Not a branch unit (all FUs share the same output channel)
@@ -124,7 +123,7 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // Actual Outputs
     FU_output.io.enq.bits.PRD                   :=  RegNext(io.FU_input.bits.decoded_instruction.PRD)
     FU_output.io.enq.bits.RD_valid              :=  RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    FU_output.io.enq.bits.RD_data               :=  arithmetic_result
+    FU_output.io.enq.bits.RD_data               :=  RegNext(arithmetic_result)
 
     FU_output.io.enq.bits.MOB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
     FU_output.io.enq.bits.address               :=  0.U

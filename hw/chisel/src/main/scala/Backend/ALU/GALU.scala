@@ -101,10 +101,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     //////////////////////////
     //////////////////////////
 
-
-
-
-    val arithmetic_result = RegInit(UInt(32.W), 0.U)
+    val arithmetic_result = WireInit(UInt(32.W), 0.U)
 
     val CSR_addr = imm(11, 0).asUInt
 
@@ -197,13 +194,6 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val LUI      =   io.FU_input.bits.decoded_instruction.LUI
     val AUIPC    =   io.FU_input.bits.decoded_instruction.AUIPC
 
-    dontTouch(SLL)
-    dontTouch(SRL)
-    dontTouch(SRA)
-    dontTouch(instruction_PC)
-    dontTouch(AUIPC)
-    dontTouch(LUI)
-    dontTouch(BASE_ARITHMETIC)
     
     // "M" INSTRUCTIONS //
     val MUL      =   (MULTIPLY) && FUNCT3 === "b000".U
@@ -215,14 +205,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val REM      =   (MULTIPLY) && FUNCT3 === "b110".U
     val REMU     =   (MULTIPLY) && FUNCT3 === "b111".U
 
-    dontTouch(MUL)
-    dontTouch(MULH)
-    dontTouch(MULSU)
-    dontTouch(MULU)
-    dontTouch(DIV)
-    dontTouch(DIVU)
-    dontTouch(REM)
-    dontTouch(REMU)
+
 
     // BRANCH INSTRUCTIONS //
     val BRANCH      =   io.FU_input.valid && io.FU_input.bits.decoded_instruction.CTRL && !io.FU_input.bits.decoded_instruction.JAL && !io.FU_input.bits.decoded_instruction.JALR   // FIXME: once again, crappy decoding...
@@ -248,6 +231,21 @@ class GALU(coreParameters:CoreParameters) extends Module{
     dontTouch(ALU_input_valid)
     dontTouch(branch_unit_input_valid)
     dontTouch(mult_unit_input_valid)
+    dontTouch(MUL)
+    dontTouch(MULH)
+    dontTouch(MULSU)
+    dontTouch(MULU)
+    dontTouch(DIV)
+    dontTouch(DIVU)
+    dontTouch(REM)
+    dontTouch(REMU)
+    dontTouch(SLL)
+    dontTouch(SRL)
+    dontTouch(SRA)
+    dontTouch(instruction_PC)
+    dontTouch(AUIPC)
+    dontTouch(LUI)
+    dontTouch(BASE_ARITHMETIC)
 
     
     ////////////////////

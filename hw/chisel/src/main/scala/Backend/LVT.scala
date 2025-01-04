@@ -91,13 +91,6 @@ class nReadmWriteLVT(n: Int, m: Int, depth: Int, width: Int) extends Module {
   }
 
   // Output Mux: Select data from the appropriate bank for each read port
-  //for (i <- 0 until n) {
-    //val selectedBankIndex = LVTTableOut(i)
-    //io.rdata(i) := LVTBanks.zipWithIndex.foldRight(0.U(width.W)) {
-        //case ((bank, index), default) =>
-        //Mux(selectedBankIndex === index.U, bank.io.rdata(i), default)
-    //}
-  //}
 
   // each output port has an associated bank value (LVTTableOut)
   for (i <- 0 until n) {  // for each output read port
@@ -108,13 +101,7 @@ class nReadmWriteLVT(n: Int, m: Int, depth: Int, width: Int) extends Module {
       when(j.U === selectedBankIndex){
         io.rdata(i) := bank.io.rdata(i) 
       }
-
     }
-    
-      //LVTBanks.zipWithIndex.foldRight(0.U(width.W)) {
-        //case ((bank, index), default) =>
-        //Mux(selectedBankIndex === index.U, bank.io.rdata(i), default)
-    //}
   }
 
 }

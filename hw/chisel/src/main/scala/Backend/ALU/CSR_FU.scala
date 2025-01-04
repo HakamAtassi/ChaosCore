@@ -322,15 +322,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val fcsr_reg        = RegInit(UInt(32.W), 0.U)
 
     // Unprivileged Counters/Timers
-    // lower values 
-    // FIXME: these are bugged
-    val cycle_reg        = Reg(UInt(32.W))
-    val time_reg         = Reg(UInt(32.W))
-    val instret_reg      = Reg(UInt(32.W))     
+    val cycle_reg        = Wire(UInt(32.W))
+    val instret_reg      = Wire(UInt(32.W))     
 
-    val cycleh_reg       = Reg(UInt(32.W))
-    val timeh_reg        = Reg(UInt(32.W))
-    val instreth_reg     = Reg(UInt(32.W))
+    val cycleh_reg       = Wire(UInt(32.W))
+    val instreth_reg     = Wire(UInt(32.W))
+
 
 
     // optional counters (unused)
@@ -490,9 +487,11 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     // Machine Counter/Timers
     val mcycle_reg        = RegInit(UInt(32.W), 0.U)  // lower 32 bits of cycle count. Writeable by SW. 
+    val mtime_reg         = RegInit(UInt(32.W), 0.U)  // lower 32 bits of cycle count. Writeable by SW. 
     val minstret_reg      = RegInit(UInt(32.W), 0.U)  // lower 32 bits of instruction retired count. Writeable by SW. 
 
     val mcycleh_reg       = RegInit(UInt(32.W), 0.U)   // upper 32 bits of mcycle
+    val mtimeh_reg        = RegInit(UInt(32.W), 0.U)   // upper 32 bits of mcycle
     val minstreth_reg     = RegInit(UInt(32.W), 0.U)   // upper 32 bits of instret
 
     // Optional performance counters (Sscofpmf extension) (not implemented)
@@ -623,14 +622,6 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val dscratch0_reg   = RegInit(UInt(32.W), 0.U)
     val dscratch1_reg   = RegInit(UInt(32.W), 0.U)
 
-
-    cycle_reg        := mcycle_reg       // user mode timers are just a view of machine mode timers
-    time_reg         := mcycle_reg       // can just be cycle timer as per spec Im pretty sure
-    instret_reg      := minstret_reg     
-
-    cycleh_reg       := mcycleh_reg
-    timeh_reg        := mcycleh_reg
-    instreth_reg     := minstreth_reg
     
 
     //////////////////
@@ -647,13 +638,13 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
         //-----------------------
         // UNPRIVILEGED COUNTERS
         //-----------------------
-        CSRs.cycle          -> cycle_reg,
-        CSRs.time           -> time_reg,
-        CSRs.instret        -> instret_reg,
+        CSRs.cycle          -> mcycle_reg,
+        CSRs.time           -> mtime_reg,
+        CSRs.instret        -> minstret_reg,
 
-        CSRs.cycleh         -> cycleh_reg,
-        CSRs.timeh          -> timeh_reg,
-        CSRs.instreth       -> instreth_reg,
+        CSRs.cycleh         -> mcycleh_reg,
+        CSRs.timeh          -> mtimeh_reg,
+        CSRs.instreth       -> minstreth_reg,
     )
 
     val supervisor_mode_CSRs = Map(
@@ -817,24 +808,35 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     ///////////////////
     // PERFORMANCE COUNTER MANAGEMENT //
 
-//    when(!mcountinhibit_reg.CY){
-        //val (new_cycleh_reg, new_cycle_reg) = increment_perf_counter(cycleh_reg, cycle_reg, 1.U)
-        //cycleh_reg := new_cycleh_reg
-        //cycle_reg := new_cycle_reg
-    //}
+    when(!mcountinhibit_reg.CY){
+        val (new_mcycleh_reg, new_mcycle_reg) = increment_perf_counter(mcycleh_reg, mcycle_reg, 1.U)
+        mcycleh_reg := new_mcycleh_reg
+        mcycle_reg := new_mcycle_reg
 
-    //when(!mcountinhibit_reg.TM){  // FIXME: ENSURE ALWAYS ON (as per spec. Timer cant be disabled internally)
-        //val (new_cycleh_reg, new_cycle_reg) = increment_perf_counter(cycleh_reg, cycle_reg, 1.U)
-        //cycleh_reg := new_cycleh_reg
-        //cycle_reg := new_cycle_reg
-    //}
+        mtimeh_reg := new_mcycleh_reg
+        mtime_reg := new_mcycle_reg
+    }
 
-    //when(!mcountinhibit_reg.IR){
-        //val (new_instret_reg, new_instreth_reg) = increment_perf_counter(instreth_reg, instret_reg, PopCount(io.commit.bits.insn_commit.map(_.valid)))
-        //instret_reg := new_instret_reg
-        //instreth_reg := new_instreth_reg
-    //}
+    when(1.B /*!mcountinhibit_reg.TM*/){  // FIXME: ENSURE ALWAYS ON (as per spec. Timer cant be disabled internally)
+        val (new_mcycleh_reg, new_mcycle_reg) = increment_perf_counter(mcycleh_reg, mcycle_reg, 1.U)
+        mcycleh_reg := new_mcycleh_reg
+        mcycle_reg := new_mcycle_reg
+    }
 
+    when(!mcountinhibit_reg.IR){
+        val (new_minstreth_reg, new_minstret_reg) = increment_perf_counter(minstreth_reg, minstret_reg, PopCount(io.commit.bits.insn_commit.map(_.bits.committed))) // FIXME: technically doesnt count stores
+        minstreth_reg := new_minstreth_reg
+        minstret_reg := new_minstret_reg
+    }
+
+
+    cycle_reg        := mcycle_reg       // user mode timers are just a view of machine mode timers
+    //time_reg         := mtime_reg       // can just be cycle timer as per spec Im pretty sure
+    instret_reg      := minstret_reg     
+
+    cycleh_reg       := mcycleh_reg
+    //timeh_reg        := mtime_reg
+    instreth_reg     := minstreth_reg
 
 
     ///////////////

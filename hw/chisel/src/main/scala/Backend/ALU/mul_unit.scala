@@ -57,9 +57,6 @@ class mul_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
         remu_result := operand1_unsigned
     }
 
-    dontTouch(MUL)
-    dontTouch(MULH)
-    dontTouch(MULSU)
 
     when(MUL){
         arithmetic_result   := mul_result
@@ -79,9 +76,12 @@ class mul_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
         arithmetic_result   := remu_result
     }
 
+    dontTouch(MUL)
+    dontTouch(MULH)
+    dontTouch(MULSU)
+
 
     // Not a branch unit (all FUs share the same output channel)
-
     FU_output.io.enq.valid                      :=   RegNext(mult_unit_input_valid)
     FU_output.io.enq.bits.branch_valid          :=   0.B
     FU_output.io.enq.bits.fetch_PC              :=   RegNext(io.FU_input.bits.fetch_PC)
@@ -90,7 +90,7 @@ class mul_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
     // Actual Outputs
     FU_output.io.enq.bits.PRD                   :=   RegNext(io.FU_input.bits.decoded_instruction.PRD)
     FU_output.io.enq.bits.RD_valid              :=   RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    FU_output.io.enq.bits.RD_data               :=   arithmetic_result
+    FU_output.io.enq.bits.RD_data               :=   RegNext(arithmetic_result)
 
     FU_output.io.enq.bits.MOB_index             :=   RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
     FU_output.io.enq.bits.address               :=   0.U

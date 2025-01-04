@@ -47,7 +47,6 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val IMM                    =   imm
     val PC                     =   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
 
-
     val is_load                =   io.FU_input.bits.decoded_instruction.memory_type === memory_type_t.LOAD   &&   io.FU_input.valid
     val is_store               =   io.FU_input.bits.decoded_instruction.memory_type === memory_type_t.STORE  &&   io.FU_input.valid
     val SB                     =   is_store && FUNCT3  === "b000".U               &&   io.FU_input.valid
@@ -71,12 +70,6 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     when(SH){wr_data := RS2_data & 0xFFFF.U}
     when(SW){wr_data := RS2_data.asUInt & "hFFFF_FFFF".U(32.W)}
 
-    dontTouch(SB)
-    dontTouch(SH)
-    dontTouch(SW)
-
-    dontTouch(wr_data)
-
     ///////////////////
     // GENERATE ADDR //
     ///////////////////
@@ -86,7 +79,11 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     unsigned        := LBU || LHU
     address         := RS1_data + sign_extend_var(imm, 21, 32)
 
+    dontTouch(wr_data)
     dontTouch(address)
+    dontTouch(SB)
+    dontTouch(SH)
+    dontTouch(SW)
 
     // Everything needed to perform the memory request (LSQ request)    
 

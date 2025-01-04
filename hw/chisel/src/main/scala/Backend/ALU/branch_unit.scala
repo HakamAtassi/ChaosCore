@@ -90,18 +90,7 @@ class branch_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
     .elsewhen(JALR) {branch_taken := 1.B; target_address := RS1_data       + IMM_11_0}
     .elsewhen(AUIPC){branch_taken := 0.B; target_address := 0.U; arithmetic_result   := auipc_result}   
 
-    dontTouch(EQ)
-    dontTouch(NE)
-    dontTouch(LT)
-    dontTouch(GE)
-    dontTouch(LTU)
-    dontTouch(GEU)
-    dontTouch(JAL)
-    dontTouch(JALR)
-    dontTouch(AUIPC)
 
-    dontTouch(IMM_20_0)
-    dontTouch(IMM_11_0)
 
 
     // PC of branch instruction and packet index (to access ROB bank)
@@ -121,9 +110,22 @@ class branch_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
     // Actual Outputs
     FU_output.io.enq.bits.PRD               :=      RegNext(io.FU_input.bits.decoded_instruction.PRD)
     FU_output.io.enq.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    FU_output.io.enq.bits.RD_data           :=      arithmetic_result
+    FU_output.io.enq.bits.RD_data           :=      RegNext(arithmetic_result)
     FU_output.io.enq.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
     FU_output.io.enq.bits.MOB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
     FU_output.io.enq.bits.address           :=      0.U
+    
+
+    dontTouch(EQ)
+    dontTouch(NE)
+    dontTouch(LT)
+    dontTouch(GE)
+    dontTouch(LTU)
+    dontTouch(GEU)
+    dontTouch(JAL)
+    dontTouch(JALR)
+    dontTouch(AUIPC)
+    dontTouch(IMM_20_0)
+    dontTouch(IMM_11_0)
 
 }
