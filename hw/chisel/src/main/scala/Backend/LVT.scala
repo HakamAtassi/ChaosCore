@@ -34,7 +34,7 @@ class nRead1Write(n: Int, depth: Int, width: Int) extends Module {
   }
 
   // output+forward data
-  io.rdata := VecInit(memories.zip(io.raddr).map { case (mem, addr) => Mux(io.waddr===addr && io.wen, RegNext(io.wdata), mem.read(addr))})
+  io.rdata := VecInit(memories.zip(io.raddr).map { case (mem, addr) => Mux(RegNext(io.waddr===addr && io.wen), RegNext(io.wdata), mem.read(addr))})
 }
 
 
@@ -70,7 +70,7 @@ class nReadmWriteLVT(n: Int, m: Int, depth: Int, width: Int) extends Module {
   for (i <- 0 until n) {
     LVTTableOut(i) := LVTTable(io.raddr(i)) // Default: read from the table
     for (j <- 0 until m) {
-      when(io.waddr(j) === io.raddr(i) && io.wen(j)) {
+      when((io.waddr(j) === io.raddr(i)) && io.wen(j)) {
         LVTTableOut(i) := j.U 
       }
     }
@@ -85,18 +85,36 @@ class nReadmWriteLVT(n: Int, m: Int, depth: Int, width: Int) extends Module {
   for (i <- 0 until m) {
     val bank = LVTBanks(i)
     bank.io.waddr := io.waddr(i)
-    bank.io.wdata := io.wdata(i)
+    bank.io.wdata := Mux(io.waddr(i) === 0.U, 0.U, io.wdata(i)) //x0 always 0 
     bank.io.wen := io.wen(i)
     bank.io.raddr := io.raddr
   }
 
   // Output Mux: Select data from the appropriate bank for each read port
-  for (i <- 0 until n) {
+  //for (i <- 0 until n) {
+    //val selectedBankIndex = LVTTableOut(i)
+    //io.rdata(i) := LVTBanks.zipWithIndex.foldRight(0.U(width.W)) {
+        //case ((bank, index), default) =>
+        //Mux(selectedBankIndex === index.U, bank.io.rdata(i), default)
+    //}
+  //}
+
+  // each output port has an associated bank value (LVTTableOut)
+  for (i <- 0 until n) {  // for each output read port
     val selectedBankIndex = LVTTableOut(i)
-    io.rdata(i) := LVTBanks.zipWithIndex.foldRight(0.U(width.W)) {
-        case ((bank, index), default) =>
-        Mux(selectedBankIndex === index.U, bank.io.rdata(i), default)
+    io.rdata(i) := 0.U
+    for(j <- 0 until m){  // search banks
+      val bank = LVTBanks(j)
+      when(j.U === selectedBankIndex){
+        io.rdata(i) := bank.io.rdata(i) 
+      }
+
     }
+    
+      //LVTBanks.zipWithIndex.foldRight(0.U(width.W)) {
+        //case ((bank, index), default) =>
+        //Mux(selectedBankIndex === index.U, bank.io.rdata(i), default)
+    //}
   }
 
 }

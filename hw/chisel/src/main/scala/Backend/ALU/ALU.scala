@@ -69,6 +69,9 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     lui_result      := Cat(imm, 0.U(12.W)) 
 
+    dontTouch(lui_result)
+    dontTouch(LUI)
+
 
     /////////////
     // CONTROL //

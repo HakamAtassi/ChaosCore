@@ -161,8 +161,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     // REGISTER FILES (READ) //
     ///////////////////////////
 
-    val INT_PRF = Module(new sim_nReadmWrite(coreParameters))
-    //val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount, depth=physicalRegCount, width=32))    //FIXME: currently exposes an issue in the ROB
+    //val INT_PRF = Module(new sim_nReadmWrite(coreParameters))
+    val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount, depth=physicalRegCount, width=32))    //FIXME: currently exposes an issue in the ROB
 
 
     val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))
