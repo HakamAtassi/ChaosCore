@@ -42,13 +42,20 @@ class mul_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
     val mul_result_64_u_u = (Cat(0.U(32.W),operand1_unsigned)       * Cat(0.U(32.W), operand2_unsigned))
 
     mul_result      := mul_result_64_s_s(31,0)
-    mulh_result     := mul_result_64_s_u(63,32)
+    mulh_result     := mul_result_64_s_s(63,32)
     mulsu_result    := mul_result_64_s_u(63,32)
     mulu_result     := mul_result_64_u_u(63,32)
-    div_result      := operand1_signed.asUInt / operand2_signed.asUInt
+    div_result      := (operand1_signed / operand2_signed).asUInt
     divu_result     := operand1_unsigned / operand2_unsigned
-    rem_result      := operand1_signed.asUInt % operand2_signed.asUInt
+    rem_result      := (operand1_signed % operand2_signed).asUInt
     remu_result     := operand1_unsigned % operand2_unsigned
+
+    when(operand2_unsigned === 0.U){
+        div_result := "hffffffff".U
+        divu_result := "hffffffff".U
+        rem_result := operand1_unsigned
+        remu_result := operand1_unsigned
+    }
 
     dontTouch(MUL)
     dontTouch(MULH)
@@ -75,7 +82,7 @@ class mul_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
 
     // Not a branch unit (all FUs share the same output channel)
 
-    FU_output.io.enq.valid                      :=   mult_unit_input_valid
+    FU_output.io.enq.valid                      :=   RegNext(mult_unit_input_valid)
     FU_output.io.enq.bits.branch_valid          :=   0.B
     FU_output.io.enq.bits.fetch_PC              :=   RegNext(io.FU_input.bits.fetch_PC)
     FU_output.io.enq.bits.fetch_packet_index    :=   RegNext(io.FU_input.bits.decoded_instruction.packet_index)
