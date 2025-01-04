@@ -1,11 +1,11 @@
 /* ------------------------------------------------------------------------------------
-* Filename: mul_unit.scala
-* Author: Hakam Atassi
+* Filename: div_unit.scala
+* Author: Alisher Rakhimov
 * Date: Sep 12 2024
 * Description: The multiplication implementation of a generic ALU
 * License: MIT
 *
-* Copyright (c) 2024 by Hakam Atassi
+* Copyright (c) 2024 by Alisher Rakhimov
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -33,35 +33,37 @@ import chisel3._
 
 import chisel3.util._
 
-class mul_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
+class div_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
     import coreParameters._
     import InstructionType._
 
-    val mul_result_64_s_s = sign_extend(operand1_signed.asUInt, 64) * sign_extend(operand2_signed.asUInt, 64)
-    val mul_result_64_s_u = sign_extend(operand1_signed.asUInt, 64) * Cat(0.U(32.W), operand2_unsigned) 
-    val mul_result_64_u_u = (Cat(0.U(32.W),operand1_unsigned)       * Cat(0.U(32.W), operand2_unsigned))
+    div_result      := (operand1_signed / operand2_signed).asUInt
+    divu_result     := operand1_unsigned / operand2_unsigned
+    rem_result      := (operand1_signed % operand2_signed).asUInt
+    remu_result     := operand1_unsigned % operand2_unsigned
 
-    mul_result      := mul_result_64_s_s(31,0)
-    mulh_result     := mul_result_64_s_s(63,32)
-    mulsu_result    := mul_result_64_s_u(63,32)
-    mulu_result     := mul_result_64_u_u(63,32)
-    
-    dontTouch(MUL)
-    dontTouch(MULH)
-    dontTouch(MULSU)
-
-    when(MUL){
-        arithmetic_result   := mul_result
-    }.elsewhen(MULH){
-        arithmetic_result   := mulh_result
-    }.elsewhen(MULSU){
-        arithmetic_result   := mulsu_result
-    }.elsewhen(MULU){
-        arithmetic_result   := mulu_result
+    when(operand2_unsigned === 0.U){
+        div_result := "hffffffff".U
+        divu_result := "hffffffff".U
+        rem_result := operand1_unsigned
+        remu_result := operand1_unsigned
     }
 
+    when(DIV){
+        arithmetic_result   := div_result
+    }.elsewhen(DIVU){
+        arithmetic_result   := divu_result
+    }.elsewhen(REM){
+        arithmetic_result   := rem_result
+    }.elsewhen(REMU){
+        arithmetic_result   := remu_result
+    }
+
+    dontTouch(arithmetic_result)
+
     // Not a branch unit (all FUs share the same output channel)
-    FU_output.io.enq.valid                      :=   RegNext(mult_unit_input_valid)
+
+    FU_output.io.enq.valid                      :=   RegNext(div_unit_input_valid)
     FU_output.io.enq.bits.branch_valid          :=   0.B
     FU_output.io.enq.bits.fetch_PC              :=   RegNext(io.FU_input.bits.fetch_PC)
     FU_output.io.enq.bits.fetch_packet_index    :=   RegNext(io.FU_input.bits.decoded_instruction.packet_index)

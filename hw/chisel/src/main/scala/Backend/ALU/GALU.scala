@@ -87,7 +87,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val EBREAK              =   io.FU_input.bits.decoded_instruction.ENV    && io.FU_input.bits.decoded_instruction.IMM === 0x1.U
 
     val BASE_ARITHMETIC     = io.FU_input.bits.decoded_instruction.BASE_ARITHMETIC
-    val MULTIPLY            = io.FU_input.bits.decoded_instruction.MULTIPLY
+    val MULTIPLY            = io.FU_input.bits.decoded_instruction.MULTIPLY && FUNCT3(2) === 0x0.U
+    val DIVIDE              = io.FU_input.bits.decoded_instruction.MULTIPLY && FUNCT3(2) === 0x1.U
 
 
     //////////////
@@ -126,6 +127,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val mulh_result     =   WireInit(UInt(32.W), 0.U)
     val mulsu_result    =   WireInit(UInt(32.W), 0.U)
     val mulu_result     =   WireInit(UInt(32.W), 0.U)
+
+    //div
     val div_result      =   WireInit(UInt(32.W), 0.U)
     val divu_result     =   WireInit(UInt(32.W), 0.U)
     val rem_result      =   WireInit(UInt(32.W), 0.U)
@@ -200,10 +203,10 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val MULH     =   (MULTIPLY) && FUNCT3 === "b001".U
     val MULSU    =   (MULTIPLY) && FUNCT3 === "b010".U
     val MULU     =   (MULTIPLY) && FUNCT3 === "b011".U
-    val DIV      =   (MULTIPLY) && FUNCT3 === "b100".U
-    val DIVU     =   (MULTIPLY) && FUNCT3 === "b101".U
-    val REM      =   (MULTIPLY) && FUNCT3 === "b110".U
-    val REMU     =   (MULTIPLY) && FUNCT3 === "b111".U
+    val DIV      =   (DIVIDE)   && FUNCT3 === "b100".U
+    val DIVU     =   (DIVIDE)   && FUNCT3 === "b101".U
+    val REM      =   (DIVIDE)   && FUNCT3 === "b110".U
+    val REMU     =   (DIVIDE)   && FUNCT3 === "b111".U
 
 
 
@@ -223,7 +226,8 @@ class GALU(coreParameters:CoreParameters) extends Module{
     // INPUT VALIDS
     val ALU_input_valid                     =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.needs_ALU
     val branch_unit_input_valid             =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.needs_branch_unit
-    val mult_unit_input_valid               =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.MULTIPLY
+    val mult_unit_input_valid               =   io.FU_input.fire && MULTIPLY
+    val div_unit_input_valid                =   io.FU_input.fire && DIVIDE
     val AGU_input_valid                     =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.needs_memory
     val CSR_input_valid                     =   io.FU_input.fire && io.FU_input.bits.decoded_instruction.needs_CSRs
     
@@ -231,6 +235,7 @@ class GALU(coreParameters:CoreParameters) extends Module{
     dontTouch(ALU_input_valid)
     dontTouch(branch_unit_input_valid)
     dontTouch(mult_unit_input_valid)
+    dontTouch(div_unit_input_valid)
     dontTouch(MUL)
     dontTouch(MULH)
     dontTouch(MULSU)

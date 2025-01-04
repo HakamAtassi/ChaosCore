@@ -66,14 +66,16 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     val ALU             = if (supportsInt)                  Some(Module(new ALU(coreParameters))) else None
     val branch_unit     = if (supportsBranch)               Some(Module(new branch_unit(coreParameters))) else None
     val AGU             = if (supportsAddressGeneration)    Some(Module(new AGU(coreParameters))) else None
-    val mul             = if (supportsMult || supportsDiv)  Some(Module(new mul_unit(coreParameters))) else None    // FIXME: for now, mult or div each generate support for both (cant have one without the other)
-    val CSR             = if (supportsCSRs)                 Some(Module(new CSR_FU(coreParameters))) else None    // FIXME: for now, mult or div each generate support for both (cant have one without the other)
+    val mul             = if (supportsMult)                 Some(Module(new mul_unit(coreParameters))) else None   
+    val div             = if (supportsDiv)                  Some(Module(new div_unit(coreParameters))) else None
+    val CSR             = if (supportsCSRs)                 Some(Module(new CSR_FU(coreParameters))) else None     
 
     // assign inputs
     ALU.foreach         {ALU => ALU.io.FU_input                     <> io.FU_input }
     branch_unit.foreach {branch_unit => branch_unit.io.FU_input     <> io.FU_input }
     AGU.foreach         { AGU => AGU.io.FU_input                    <> io.FU_input }
     mul.foreach         { mul => mul.io.FU_input                    <> io.FU_input }
+    div.foreach         { div => div.io.FU_input                    <> io.FU_input }
     CSR.foreach         { CSR => CSR.io.FU_input                    <> io.FU_input }
 
     // assign inputs
@@ -82,6 +84,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     branch_unit.foreach {branch_unit => branch_unit.io.commit     <> io.commit }
     AGU.foreach         { AGU => AGU.io.commit                    <> io.commit }
     mul.foreach         { mul => mul.io.commit                    <> io.commit }
+    div.foreach         { div => div.io.commit                    <> io.commit }
     CSR.foreach         { CSR => CSR.io.commit                    <> io.commit }
     
 
@@ -93,6 +96,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
         branch_unit.map(_.io.FU_output),
         AGU.map(_.io.FU_output),
         mul.map(_.io.FU_output),
+        div.map(_.io.FU_output),
         CSR.map(_.io.FU_output)
     ).flatten
 
@@ -124,6 +128,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     if(branch_unit.isDefined){branch_unit.get.io.flush  <> io.flush}
     if(AGU.isDefined){AGU.get.io.flush                  <> io.flush}
     if(mul.isDefined){mul.get.io.flush                  <> io.flush}
+    if(div.isDefined){div.get.io.flush                  <> io.flush}
     if(CSR.isDefined){CSR.get.io.flush                  <> io.flush}
 
 }
