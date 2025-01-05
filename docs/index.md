@@ -8,30 +8,27 @@ has_children: true
 
 # ChaosCore
 
-{: .warning }
-> WARNING: CHAOSCORE IS CURRENTLY BEING MIGRATED TO CHIPYARD
-
-
 
 <div style="display: flex; align-items: flex-start;">
   <div style="flex: 1; padding-right: 20px;">
-    <p>ChoasCore is a security oriented RV32GC core implemented in Chisel. It is aggressively parameterizeable, Out-of-Order, superscalar, and synthesizeable.  ChaosCore can be parametrized to generate verilog targeting either FPGAs or ASICs.</p>
-
-    <p>Beyond being able to adjust basic core parameters such as the core's fetch width, execution engine, and branch predictors, ChaosCore more importantly places an emphasis on demonstrating the impacts security features may have on the performance of a real Out-of-Order processor.</p>
+    <p>ChoasCore is a security oriented RV32GC core implemented in Chisel. It is aggressively parameterizable, Out-of-Order, superscalar, and synthesizeable. Beyond it's parameterizability, ChaosCore places an emphasis on demonstrating the impacts security features may have on the performance of a real Out-of-Order processor. </p>
 
     <h3>What is done:</h3>
     <ul>
-      <li>Dhrystone runs succesfully.</li>
-      <li>Riscv-tests passed.</li>
-      <li>Prediction accuracy of >90% (Workload?)</li>
-      <li>Exceptions, interrupts, & privilage.</li>
+      <li>Passes RISCV isa tests</li>
+      <li>Runs RISCV benchmarks (dhrystone, qsort, etc...)</li>
+      <li>Supports Machine, Supervisor and User privileges</li>
+      <li>Integrates with Chipyard Clint/Plic interrupt controllers?</li>
     </ul>
 
-    <h3>What is to be done:</h3>
+    <h3>Security Features:</h3>
     <ul>
-      <li>Float & Double extensions</li>
-      <li>Compressed instructions</li>
-      <li>Virtual Memory</li>
+      <li>This is needed</li>
+    </ul>
+
+    <h3>Performance optimizations:</h3>
+    <ul>
+      <li>do we need this?</li>
     </ul>
 
   </div>
@@ -42,149 +39,62 @@ has_children: true
 </div>
 
 
-
 # Setup
-The ChaosCore repository attempts to be as lean as possible to keep the setup process smooth. As part of this effort, this repository provides three streams for new users:
-
-1. Profile Pre-built configurations.
-2. Build, simulate, and synthesize custom configurations.
-3. Develop. 
+ChaosCore depends on a fork of the Chipyard Ecosystem. If already familiar with Chipyard, the setup process should seem very familiar. 
 
 
-### 1. Profile Pre-Built Configurations
 
-{: .note }
-> This process should take less than 3 minutes. We recommend all prospective users go through this stream.
+## Pre-requisites
 
-This option is for those interested in quickly seeing the core in action. It runs a series of pre-built, pre-verilated, and pre-compiled core configurations against similarly pre-built binaries to showcase the core's features and performance. There's little to no setup required.
+Chipyard uses Conda to manage its many dependencies and packages. The first steps to get set-up involve installing Miniforge (a minimal installer for conda) and libmamba (a fast dependency solver for conda).
 
-### 2. Build, Simulate, and Synthesize Custom Configurations
-
-This option is for users who want to tweak the core's parameters, run it with custom binaries, or even deploy it on an FPGA. It’s more involved than the first stream but still relatively lightweight.
-
-### 3. Develop
-
-This option is aimed at developers and provides a deep dive into the core from both architectural and implementation perspectives.
-
-
-# Setup (All Streams)
-
-This repository contains several external dependencies. Currently, these are riscv-tests and verilog-axi. Also, this repository uses python for interconnect generation, simulation, and module modeling. To manage these dependencies, we will assume the use of a python venv. Run:
+To install Miniforge, follow the instructions [here](https://github.com/conda-forge/miniforge/#download). Then, install libmamba by running the following commands: 
 
 ```
-git submodule update --init --recursive
-python3 -m venv venv
-source venv/bin/activate
-pip3 install -r requirements.txt
+conda install -n base conda-libmamba-solver
+conda config --set solver libmamba
 ```
 
-
-
-
-# Profile Pre-Built Configurations
-
-Once the ChaosCore has been recursively cloned, the different versions of ChaosCore can be either tested or profiled. 
-
-## Test Pre-Build Configurations
-
-To run tests on the Pre-Built ChaosCore configurations, run: 
-
+With Conda and Libmamba installed, run the following commands:
 ```
-source venv/bin/activate  # source the python venv
-cd cocotb/prebuilt        # cd into the simulation env
-./prebuilt_executables/Vtop ../../binaries/bin/dhrystone_main.bin 
+conda install -n base conda-lock==1.4.0
+conda activate base
 ```
 
-Here, the command `./profile` command is a bash script that ???
+## ChaosCore-Chipyard
 
-
-Alternatively, running `./profile profile` will run the same prebuilt verilator executables but against profiling benchmarks as opposed to community self-checking tests. 
-
-
-### TODO: 
-
-what should these profiling scripts be?
-
-
-Maybe one that profiles the ROB size, one that determines the cache sizes, one that tests the BP, etc...
-
-
-
-
-
-
-
-# Requirements 
-
-It is assumed that the following tools have already been installed. The versions for Verilator and Chisel are a requirement.
-
-1. Verilator 5.024
-2. Chisel 6.0
-3. Python3
-4. Espresso (optional)
-5. Missing stuff! Spike, etc!
-
-All other requirements are included as part of the setup process for this repository.
-
-
-## Python venv
-
-This repo uses python for generating interconnect and simulation, among other things. Consequenrly, a Python venv is used to contain and manage dependancies. 
-
-To setup a python venv, run:
+ChaosCore depends on a fork of Chipyard. Chipyard provides a variety of useful IP for RISCV related development, including interconnects, periphirals, interrupt controllers, and more. Chipyard also provides RISCV GNU, Spike, and Verilator. In other words, installing Chipyard's packages should (for the most part) bootstrap a development environment for ChaosCore and other RISCV Cores. To get started, clone the ChaosCore-chipyard fork.
 
 ```
-python3 -m venv venv
+git clone git@github.com:HakamAtassi/ChaosCore-chipyard.git
+cd ChaosCore-chipyard
+```
+Next, install the Chipyard packages. This process may take ~10-20 minutes. 
+```
+./build-setup.sh -s 6 -s 7 -s 8 -s 9  # Skip firemarshal and linux stuff
+source env.sh # Don't forget to source!
 ```
 
-Then install the required libraries in this venv:
+## ChaosCore
+
+{: .note} 
+>ChaosCore has already been integrated into the ChaosCore Chipyard fork. This means that this repo will likely error out if this step is skipped. We keep ChaosCore as an external repo (and not a true submodule) for development purposes. 
+
+With the Chipyard environment set-up, we can add ChaosCore as a generator in chipyard. 
+
 
 ```
-pip3 install -r requirements.txt
+git clone git@github.com:HakamAtassi/ChaosCore.git generators/ChaosCore
 ```
 
-# Installing RISCV GNU:
+# Running Workloads
+The combination of Chipyard and ChaosCore provides everything you need to run a workload on the core. Since Verilator is used for simulation, the compilation process may be somewhat time consuming. Consequently, we provide pre-built binaries for various Core configurations that we find interesting together with a variety of workloads to run. The combination of these two enable users of this repo to profile the Core's performance and the impacts certain configurations on performance without tinkering with config files. 
 
-This repository provides pre-compiled binaries to run a simulation of the SoC without the overhead of setting up and installing a RISCV toolchain. Feel free to skip this step if you do not anticipate compiling custom binaries for ChaosCore.
-
-To build RISCV-GNU, run the following commands: 
-```
-sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
-
-git clone https://github.com/riscv-collab/riscv-gnu-toolchain
-cd riscv-gnu-toolchain
-./configure --prefix=/opt/riscv --with-arch=rv32gc_zicsr_zifencei --with-abi=ilp32 --enable-multilib
-sudo make -j12
-```
-then add 
-```
-export PATH="$PATH:/opt/riscv/bin"
-```
-to your .bashrc
-
-# Installing SPIKE
-
-TODO
+## Profile Pre-Built Configurations
+#TODO: 
 
 
-# Generating ChaosCore
+## Profile Custom Configurations
 
-1) generating the core itself based on params
-
-2) Generating the interconnect (fix?)
-
-3) Generating the SoC
-
-
-# Running a Simulation
-
-
-...
-
-
-
-# Suggestions to Devs
-1) Set vscode to ignore everything in .gitignore (way too many junk files are generated by all the tools for the repo to be managable without hiding some)
-
-
+#TODO: 
 
