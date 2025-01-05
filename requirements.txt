@@ -1,9 +1,0 @@
-cocotb==1.8.1
-numpy
-cocotbext-axi
-py/ChaosCore
-py/cocotb_utils
-jinja2
-pytest
-coloredlogs
-

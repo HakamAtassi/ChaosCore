@@ -4,9 +4,6 @@
 [submodule "syn/bdf"]
 	path = syn/bdf
 	url = https://github.com/Avnet/bdf.git
-[submodule "binaries/riscv-tests"]
-	path = binaries/riscv-tests
-	url = https://github.com/riscv-software-src/riscv-tests.git
 [submodule "hw/chisel/deps/diplomacy"]
 	path = hw/chisel/deps/diplomacy
 	url = git@github.com:chipsalliance/diplomacy.git
@@ -19,6 +16,3 @@
 [submodule "hw/chisel/deps/rocketchip"]
 	path = hw/chisel/deps/rocketchip
 	url = git@github.com:chipsalliance/rocket-chip.git
-[submodule "binaries/ChaosCore-riscv-tests"]
-	path = binaries/ChaosCore-riscv-tests
-	url = https://github.com/HakamAtassi/ChaosCore-riscv-tests.git
