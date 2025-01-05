@@ -56,9 +56,11 @@ class div_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
         when (DIV || REM){
             divider.io.dividend.bits := operand1_signed.asUInt
             divider.io.divisor.bits  := operand2_signed.asUInt
+            divider.io.signed        := 1.B
         }.elsewhen(DIVU || REMU){
             divider.io.dividend.bits := operand1_unsigned
             divider.io.divisor.bits  := operand2_unsigned
+            divider.io.signed        := 0.B
         }
     }
 
