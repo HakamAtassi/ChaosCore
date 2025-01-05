@@ -13,14 +13,17 @@ has_children: true
   <div style="flex: 1; padding-right: 20px;">
     <p>ChoasCore is a security oriented RV32GC core implemented in Chisel. It is aggressively parameterizable, Out-of-Order, superscalar, and synthesizeable. Beyond it's parameterizability, ChaosCore places an emphasis on demonstrating the impacts security features may have on the performance of a real Out-of-Order processor. </p>
 
-    <h3>What is done:</h3>
+    <h3>Overview</h3> 
     <ul>
       <li>Passes RISCV isa tests</li>
       <li>Runs RISCV benchmarks (dhrystone, qsort, etc...)</li>
-      <li>Supports Machine, Supervisor and User privileges</li>
-      <li>Integrates with Chipyard Clint/Plic interrupt controllers?</li>
+      <li>Supports Machine, Supervisor and User privileges levels</li>
+      <li>Integrates with Chipyard CLINT/PLIC interrupt controllers</li>
     </ul>
 
+
+
+<!---
     <h3>Security Features:</h3>
     <ul>
       <li>This is needed</li>
@@ -30,6 +33,7 @@ has_children: true
     <ul>
       <li>do we need this?</li>
     </ul>
+-->
 
   </div>
 
@@ -88,7 +92,6 @@ make run-binary-debug CONFIG=ChaosCoreConfig BINARY=$CY_DIR/toolchains/riscv-too
 ```
 
 
-
 # Need Help?
 
-For issues in the setup process, please check the chipyard [chipyard mailing list](https://groups.google.com/g/chipyard). For further help, general inquires, or suggestions, please (open an issue)[https://github.com/HakamAtassi/ChaosCore/issues].
+* For issues in the setup process, check the chipyard [chipyard mailing list](https://groups.google.com/g/chipyard). For further help, general inquires, or suggestions, please [open an issue](https://github.com/HakamAtassi/ChaosCore/issues).
