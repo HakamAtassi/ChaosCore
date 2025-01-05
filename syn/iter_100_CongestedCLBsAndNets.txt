@@ -1,8 +1,0 @@
-List of CLB Tiles
-CLEM_X20Y35
-CLEL_R_X20Y35
-
-List of Congested Nets
-ChaosCore_tile/ChaosCore/backend/INT_PRF/mem_ext/Memory_reg[38][31]_0[15]
-ChaosCore_tile/ChaosCore/backend/INT_PRF/mem_ext/Memory_reg[39][31]_0[15]
-
