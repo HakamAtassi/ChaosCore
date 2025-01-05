@@ -51,6 +51,7 @@ class non_restoring_divider extends Module{
     val quotient    =     Decoupled(UInt(32.W))
     val remainder   =     Decoupled(UInt(32.W))
     val stall       =     Input(Bool())
+    val flush       =     Input(Bool())
   })
 
   // FIXME: Add stall signal if cant output result (backpressure)
@@ -58,7 +59,7 @@ class non_restoring_divider extends Module{
   // FIXME: forgot to follow my own naming conventions
 
   // Assign inputs as always ready
-  when (!io.stall){
+  when (!io.stall && !io.flush){
     io.dividend.ready :=  1.B
     io.divisor.ready  :=  1.B  
   }.otherwise{
@@ -70,7 +71,7 @@ class non_restoring_divider extends Module{
   val valid_reg     = RegInit(UInt(33.W), 0.U)  // No need to make this a vector
   val divisor_regs  = RegInit(VecInit(Seq.fill (33) (0.U(32.W))))
   val dividend_regs = Seq.tabulate(32)(i => RegInit(0.U((32 - i).W)))   // Reg 0 -> 32 bits. Reg 31 -> 1 Bit
-  val quotient_regs = Seq.tabulate(33)(i => RegInit(0.U((i+1).W)))      // Reg 0 -> 1 Bit.   Reg 31 -> 32 Bits
+  val quotient_regs = Seq.tabulate(32)(i => RegInit(0.U((i+1).W)))      // Reg 0 -> 1 Bit.   Reg 31 -> 32 Bits
   val partial_remainder_regs = RegInit(VecInit(Seq.fill (33) (0.U(32.W))))
   val divisor_sign_reg      = RegInit(UInt(33.W), 0.U)
   val dividend_sign_reg      = RegInit(UInt(33.W), 0.U)
@@ -106,16 +107,36 @@ class non_restoring_divider extends Module{
 
     for(i <- 1 until 32) { 
       divisor_regs(i) := divisor_regs(i-1)
-      dividend_regs(i) := dividend_regs(i-1)((31-i),0)
     }
     for(i <- 1 to 31){
       partial_remainder_regs(i) := partial_remainder_outputs(i-1)
       quotient_regs(i) := quotient_regs(i-1) ## (~partial_remainder_outputs(i)(31))
+      dividend_regs(i) := dividend_regs(i-1)((31-i),0)
     }
     quotient_regs(0) := (~partial_remainder_outputs(0)(31))
 
     partial_remainder_regs(32) := partial_remainder_outputs(31)
     divisor_regs(32) := divisor_regs(31)
+  }
+  
+  when(io.flush){
+
+    for(i <- 0 until 31) { 
+      divisor_regs(i)   := 0.U
+      dividend_regs(i)  := 0.U
+      partial_remainder_regs(i) := 0.U
+      quotient_regs(i) := 0.U
+    }
+
+    valid_reg               := 0.U
+    divisor_sign_reg        := 0.U
+    dividend_sign_reg       := 0.U
+
+    divisor_regs(32)   := 0.U
+    partial_remainder_regs(32) := 0.U
+    
+    io.quotient.valid := 0.B
+    io.remainder.valid := 0.B
   }
   
   for(i <- 1 until 32) { 

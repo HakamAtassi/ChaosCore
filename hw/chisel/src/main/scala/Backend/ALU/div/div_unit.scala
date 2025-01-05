@@ -37,46 +37,87 @@ class div_unit(coreParameters:CoreParameters) extends GALU(coreParameters){
     import coreParameters._
     import InstructionType._
 
-    div_result      := (operand1_signed / operand2_signed).asUInt
-    divu_result     := operand1_unsigned / operand2_unsigned
-    rem_result      := (operand1_signed % operand2_signed).asUInt
-    remu_result     := operand1_unsigned % operand2_unsigned
+    val divider = Module(new non_restoring_divider)
+    val decoded_instr_q = Module(new Queue(new read_decoded_instruction(coreParameters), 33, flow=false, hasFlush=true, useSyncReadMem=false))
 
-    when(operand2_unsigned === 0.U){
-        div_result := "hffffffff".U
-        divu_result := "hffffffff".U
-        rem_result := operand1_unsigned
-        remu_result := operand1_unsigned
+    divider.io := DontCare
+    decoded_instr_q.io.enq.bits := DontCare
+    divider.io.dividend.valid := 0.B
+    divider.io.divisor.valid := 0.B
+    decoded_instr_q.io.enq.valid := 0.B
+    decoded_instr_q.io.flush.get := io.flush.valid
+    divider.io.flush := io.flush.valid
+
+    when (div_unit_input_valid){
+        decoded_instr_q.io.enq.bits := io.FU_input.bits
+        decoded_instr_q.io.enq.valid := 1.B
+        divider.io.dividend.valid := 1.B
+        divider.io.divisor.valid := 1.B
+        when (DIV || REM){
+            divider.io.dividend.bits := operand1_signed.asUInt
+            divider.io.divisor.bits  := operand2_signed.asUInt
+        }.elsewhen(DIVU || REMU){
+            divider.io.dividend.bits := operand1_unsigned
+            divider.io.divisor.bits  := operand2_unsigned
+        }
     }
 
-    when(DIV){
-        arithmetic_result   := div_result
-    }.elsewhen(DIVU){
-        arithmetic_result   := divu_result
-    }.elsewhen(REM){
-        arithmetic_result   := rem_result
-    }.elsewhen(REMU){
-        arithmetic_result   := remu_result
+    val DIV_complete = WireInit(Bool(), 0.B)
+    val DIVU_complete = WireInit(Bool(), 0.B)
+    val REM_complete = WireInit(Bool(), 0.B)
+    val REMU_complete = WireInit(Bool(), 0.B)
+
+    // div_result      := (operand1_signed / operand2_signed).asUInt
+    // divu_result     := operand1_unsigned / operand2_unsigned
+    // rem_result      := (operand1_signed % operand2_signed).asUInt
+    // remu_result     := operand1_unsigned % operand2_unsigned
+
+    // when(operand2_unsigned === 0.U){
+    //     div_result := "hffffffff".U
+    //     divu_result := "hffffffff".U
+    //     rem_result := operand1_unsigned
+    //     remu_result := operand1_unsigned
+    // }
+
+    FU_output.io.enq.bits := DontCare
+    divider.io.quotient.ready := 1.B
+    divider.io.remainder.ready := 1.B
+    decoded_instr_q.io.deq.ready := 0.B
+    FU_output.io.enq.valid :=   0.B
+
+    when(divider.io.quotient.valid && divider.io.remainder.valid){
+        decoded_instr_q.io.deq.ready := 1.B
+
+        DIV_complete      :=   decoded_instr_q.io.deq.bits.decoded_instruction.MULTIPLY && decoded_instr_q.io.deq.bits.decoded_instruction.FUNCT3 === "b100".U
+        DIVU_complete     :=   decoded_instr_q.io.deq.bits.decoded_instruction.MULTIPLY && decoded_instr_q.io.deq.bits.decoded_instruction.FUNCT3 === "b101".U
+        REM_complete      :=   decoded_instr_q.io.deq.bits.decoded_instruction.MULTIPLY && decoded_instr_q.io.deq.bits.decoded_instruction.FUNCT3 === "b110".U
+        REMU_complete     :=   decoded_instr_q.io.deq.bits.decoded_instruction.MULTIPLY && decoded_instr_q.io.deq.bits.decoded_instruction.FUNCT3 === "b111".U
+
+        when(DIV_complete || DIVU_complete){
+            arithmetic_result := divider.io.quotient.bits
+        }.elsewhen(REM_complete || REMU_complete){
+            arithmetic_result := divider.io.remainder.bits
+        }
+
+        dontTouch(arithmetic_result)
+
+        // Not a branch unit (all FUs share the same output channel)
+        FU_output.io.enq.valid                      :=   1.B
+        FU_output.io.enq.bits.branch_valid          :=   0.B
+        FU_output.io.enq.bits.fetch_PC              :=   decoded_instr_q.io.deq.bits.fetch_PC
+        FU_output.io.enq.bits.fetch_packet_index    :=   decoded_instr_q.io.deq.bits.decoded_instruction.packet_index
+
+        // Actual Outputs
+        FU_output.io.enq.bits.PRD                   :=   decoded_instr_q.io.deq.bits.decoded_instruction.PRD
+        FU_output.io.enq.bits.RD_valid              :=   decoded_instr_q.io.deq.bits.decoded_instruction.RD_valid
+
+        FU_output.io.enq.bits.RD_data               :=   arithmetic_result
+
+        FU_output.io.enq.bits.MOB_index             :=   decoded_instr_q.io.deq.bits.decoded_instruction.MOB_index
+        FU_output.io.enq.bits.address               :=   0.U
+
+        FU_output.io.enq.bits.ROB_index             :=   decoded_instr_q.io.deq.bits.decoded_instruction.ROB_index
     }
-
-    dontTouch(arithmetic_result)
-
-    // Not a branch unit (all FUs share the same output channel)
-
-    FU_output.io.enq.valid                      :=   RegNext(div_unit_input_valid)
-    FU_output.io.enq.bits.branch_valid          :=   0.B
-    FU_output.io.enq.bits.fetch_PC              :=   RegNext(io.FU_input.bits.fetch_PC)
-    FU_output.io.enq.bits.fetch_packet_index    :=   RegNext(io.FU_input.bits.decoded_instruction.packet_index)
-
-    // Actual Outputs
-    FU_output.io.enq.bits.PRD                   :=   RegNext(io.FU_input.bits.decoded_instruction.PRD)
-    FU_output.io.enq.bits.RD_valid              :=   RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    FU_output.io.enq.bits.RD_data               :=   RegNext(arithmetic_result)
-
-    FU_output.io.enq.bits.MOB_index             :=   RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
-    FU_output.io.enq.bits.address               :=   0.U
-
-    FU_output.io.enq.bits.ROB_index             :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
 
 }
 
