@@ -19,3 +19,6 @@
 [submodule "hw/chisel/deps/rocketchip"]
 	path = hw/chisel/deps/rocketchip
 	url = git@github.com:chipsalliance/rocket-chip.git
+[submodule "binaries/ChaosCore-riscv-tests"]
+	path = binaries/ChaosCore-riscv-tests
+	url = https://github.com/HakamAtassi/ChaosCore-riscv-tests.git
