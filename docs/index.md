@@ -76,14 +76,11 @@ Next, install the Chipyard packages. This process may take ~10-20 minutes.
 source env.sh # Don't forget to source!
 ```
 
-# Running Workloads
-The combination of Chipyard and ChaosCore provides everything you need to run a workload on the core. Since Verilator is used for simulation, the compilation process may be somewhat time consuming. Consequently, we provide pre-built binaries for various Core configurations that we find interesting together with a variety of workloads to run. The combination of these two enable users of this repo to profile the Core's performance and the impacts certain configurations on performance without tinkering with config files. 
+# Running a Simulation!
+The combination of Chipyard and ChaosCore provides everything you need to run a workload on the core. A set of pre-compiled binaries are provided in `toolchains/riscv-tools/ChaosCore-riscv-tests`. To run a workload on ChaosCore:
 
-## Profile Pre-Built Configurations
-#TODO: 
-
-
-## Profile Custom Configurations
-
-#TODO: 
+```
+cd sims/verilator
+make run-binary-debug CONFIG=ChaosCoreConfig BINARY=$CY_DIR/toolchains/riscv-tools/ChaosCore-riscv-tests/benchmarks/dhrystone.riscv LOADMEM=1 -j 16
+```
 
