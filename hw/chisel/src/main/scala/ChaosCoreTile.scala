@@ -583,10 +583,19 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
 
   // CACHE RESP //
-  core.io.backend_memory_response.valid     := outer.dcache.module.io.cpu.resp.valid
-  core.io.backend_memory_response.bits.addr := outer.dcache.module.io.cpu.resp.bits.addr  
-  core.io.backend_memory_response.bits.MOB_index := outer.dcache.module.io.cpu.resp.bits.tag
-  core.io.backend_memory_response.bits.nack := outer.dcache.module.io.cpu.s2_nack
+  // Only responses are NACKS or read resp (filter out store resps)
+  core.io.backend_memory_response.valid     :=  0.U
+  core.io.backend_memory_response.bits.addr := 0.U
+  core.io.backend_memory_response.bits.MOB_index := 0.U
+  core.io.backend_memory_response.bits.nack := 0.B
+
+  when(outer.dcache.module.io.cpu.s2_nack || (outer.dcache.module.io.cpu.resp.bits.cmd === M_XRD)){
+    core.io.backend_memory_response.valid     := outer.dcache.module.io.cpu.resp.valid
+    core.io.backend_memory_response.bits.addr := outer.dcache.module.io.cpu.resp.bits.addr  
+    core.io.backend_memory_response.bits.MOB_index := outer.dcache.module.io.cpu.resp.bits.tag
+    core.io.backend_memory_response.bits.nack := outer.dcache.module.io.cpu.s2_nack
+
+  }
 
 
   outer.dcache.module.io.cpu.s2_paddr;
