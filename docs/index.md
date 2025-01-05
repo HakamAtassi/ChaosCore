@@ -63,6 +63,9 @@ conda activate base
 
 ## ChaosCore-Chipyard & ChaosCore
 
+{: .important }
+> This fork of Chipyard adds configuration specific to ChaosCore. As such, it will not work standalone (i.e., without ChaosCore).
+
 ChaosCore depends on a fork of Chipyard. Chipyard provides a variety of useful IP for RISCV related development, including interconnects, periphirals, interrupt controllers, and more. Chipyard also provides RISCV GNU, Spike, and Verilator. In other words, installing Chipyard's packages should (for the most part) bootstrap a development environment for ChaosCore and other RISCV Cores. To get started, clone the ChaosCore-chipyard fork.
 
 ```
@@ -84,3 +87,8 @@ cd sims/verilator
 make run-binary-debug CONFIG=ChaosCoreConfig BINARY=$CY_DIR/toolchains/riscv-tools/ChaosCore-riscv-tests/benchmarks/dhrystone.riscv LOADMEM=1 -j 16
 ```
 
+
+
+# Need Help?
+
+For issues in the setup process, please check the chipyard [chipyard mailing list](https://groups.google.com/g/chipyard). For further help, general inquires, or suggestions, please (open an issue)[https://github.com/HakamAtassi/ChaosCore/issues].
