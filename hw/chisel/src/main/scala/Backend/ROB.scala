@@ -321,7 +321,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }); dontTouch(io)
 
     val CSR_port = IO(Input(new CSR_out(coreParameters))); dontTouch(CSR_port)
-
+earliest_CTRL_oh
     // only update WB valid memory on a grant/no grant basis
     // for instance, multiple instructions may be writing to the same branch WB bank in a single cycle.
     // Only mark those branches as complete in the ROB_WB_bank if the ROB_branch_bank grants the write-back.
@@ -418,7 +418,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     // CSR instructions flush. Hence, get earliest CSRRW
     val CSRRW_insn_oh     =  WireInit(VecInit(ROB_instruction_banks.map(bank =>  bank.io.ROB_instruction_entry.uOp.decoded_insn.CSRRW     && 
-                                                                bank.io.ROB_instruction_entry.WB.complete   &&
+                                                                bank.io.ROB_instruction_entry.WB.complete   && 
                                                                 bank.io.ROB_instruction_entry.WB.valid)))
     
     // Fences also flush. Hence, get earliest FENCE
@@ -452,19 +452,36 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     // mux out the info for the taken branches
     val earliest_CTRL_insn = WireInit(0.U.asTypeOf(new ROB_instruction_entry(coreParameters)))
+    val prediction_earliest_CTRL_insn = WireInit(0.U.asTypeOf(new ROB_instruction_entry(coreParameters)))
     val earliest_CTRL_branch_info = WireInit(0.U.asTypeOf(new ROB_branch_entry(coreParameters)))
 
     dontTouch(earliest_CTRL_idx)
     dontTouch(earliest_CTRL_branch_info)
+
+
+
+    // done with this row
+    // this signal increments pointers and helps with interrupts and things
+    // FIXME: remove store condition after FIXING MOB
+    val row_commit = ROB_instruction_banks.zipWithIndex.map { case (bank, i) =>
+        !bank.io.ROB_instruction_entry.WB.valid || 
+        (bank.io.ROB_instruction_entry.WB.valid && (((bank.io.ROB_instruction_entry.WB.complete || bank.io.ROB_instruction_entry.uOp.decoded_insn.STORE) && bank.io.ROB_instruction_entry.WB.committed) || i.U > earliest_CTRL_idx))
+    }.reduce(_ && _) && ROB_shared_bank.io.ROB_shared_entry.valid
+
+    val prediction = WireInit(0.U.asTypeOf(new prediction(coreParameters)))
+    prediction      := ROB_shared_bank.io.ROB_shared_entry.bits.prediction
+
 
     for(i <- 0 until fetchWidth){
         when(earliest_CTRL_idx === i.U){
             earliest_CTRL_insn          := ROB_instruction_banks(i).io.ROB_instruction_entry
             earliest_CTRL_branch_info   := ROB_branch_banks(i).io.resolved_branch_out
         }
+        when(prediction.br_mask === i.U){
+            prediction_earliest_CTRL_insn          := ROB_instruction_banks(i).io.ROB_instruction_entry
+        }
     }
 
-    val prediction      = ROB_shared_bank.io.ROB_shared_entry.bits.prediction
     val output_flush    = WireInit(0.U.asTypeOf(ValidIO(new flush(coreParameters))))
     val expected_next_PC = WireInit(UInt(32.W), 0.U)
 
@@ -473,13 +490,22 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     expected_next_PC    := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * fetchWidth.U)
 
+    dontTouch(expected_next_PC)
+
     io.flush := output_flush
+
+    dontTouch(earliest_CTRL_insn)
+    dontTouch(prediction)
+
+    val test = WireInit(false.B)
+    dontTouch(test)
+
 
     when(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.uOp.decoded_insn.CTRL && earliest_CTRL_insn.WB.committed){
         // dominant branch is a typical branch
         // only flush if doesnt match prediction
         expected_next_PC    := earliest_CTRL_branch_info.target_PC
-        when(PriorityEncoder(prediction.br_mask) === earliest_CTRL_idx && prediction.target === earliest_CTRL_branch_info.target_PC){
+        when((prediction.br_mask === earliest_CTRL_idx) && (prediction.target === earliest_CTRL_branch_info.target_PC) && (prediction.T_NT)){
             // prediction correct, do nothing
         }.otherwise{
             output_flush.valid := 1.B
@@ -509,11 +535,21 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
         output_flush.bits.is_fence    := earliest_CTRL_insn.uOp.decoded_insn.FENCE
         output_flush.bits.is_CSR      := earliest_CTRL_insn.uOp.decoded_insn.CSRRW
+    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) === 0.B && prediction_earliest_CTRL_insn.WB.committed){    // no taken branch (make sure frontend agrees/agreed)
+
+        when(prediction.T_NT){ // if you predicted taken
+            // flush to the instruction after the incorrectly predicted one
+            output_flush.valid := 1.B
+            output_flush.bits.flushing_PC := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (prediction.br_mask*4.U) //(4.U * earliest_CTRL_idx)
+            output_flush.bits.redirect_PC :=  ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + prediction.br_mask*4.U + 4.U  // re-execute incorrectly speculated instruction
+            output_flush.bits.is_misprediction := 1.B
+        }
+
     }
 
+    dontTouch(prediction_earliest_CTRL_insn)
+
     
-
-
     // ASSIGN FLUSH //
     ROB_instruction_banks.foreach { bank => bank.io.flush := output_flush }
 
@@ -562,7 +598,16 @@ class ROB(coreParameters:CoreParameters) extends Module{
     
     // DRIVE I/O COMMIT //
     io.commit.bits := DontCare // FIXME: complete assignment particularly for branches
+
     io.commit.bits.fetch_PC  := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC
+    io.commit.bits.GHR  := ROB_shared_bank.io.ROB_shared_entry.bits.GHR
+    io.commit.bits.target    := earliest_CTRL_branch_info.target_PC
+    
+
+    io.commit.bits.br_type    :=  Mux(earliest_CTRL_insn.uOp.decoded_insn.CTRL, br_type_t.BR, br_type_t.NONE)  // FIXME: actually encode branches
+
+
+    io.commit.bits.br_mask    :=  earliest_CTRL_idx
     io.commit.bits.ROB_index := front_index
     io.commit.bits.free_list_front_pointer := ROB_shared_bank.io.ROB_shared_entry.bits.free_list_front_pointer
 
@@ -580,15 +625,15 @@ class ROB(coreParameters:CoreParameters) extends Module{
         io.commit.bits.insn_commit(i).bits.PRDold    := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRDold
     }
 
+    // ASSIGN commit T_NT
+    io.commit.bits.T_NT := ROB_instruction_banks.zip(ROB_branch_banks)
+    .map { case (insn_bank, branch_bank) =>
+        insn_bank.io.ROB_instruction_entry.WB.committed && insn_bank.io.ROB_instruction_entry.uOp.decoded_insn.CTRL && branch_bank.io.resolved_branch_out.taken
+    }.reduce(_ || _) && ROB_shared_bank.io.ROB_shared_entry.valid
+
+
     io.commit.valid := ROB_instruction_banks.map(bank =>   bank.io.ROB_instruction_entry.WB.valid).reduce(_ || _) && ROB_shared_bank.io.ROB_shared_entry.valid   // output commit is high if any instructions are committing
 
-    // done with this row
-    // this signal increments pointers and helps with interrupts and things
-    // FIXME: remove store condition after FIXING MOB
-    val row_commit = ROB_instruction_banks.zipWithIndex.map { case (bank, i) =>
-        !bank.io.ROB_instruction_entry.WB.valid || 
-        (bank.io.ROB_instruction_entry.WB.valid && (((bank.io.ROB_instruction_entry.WB.complete || bank.io.ROB_instruction_entry.uOp.decoded_insn.STORE) && bank.io.ROB_instruction_entry.WB.committed) || i.U > earliest_CTRL_idx))
-    }.reduce(_ && _) && ROB_shared_bank.io.ROB_shared_entry.valid
 
 
 

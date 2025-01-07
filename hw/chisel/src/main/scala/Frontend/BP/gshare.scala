@@ -73,78 +73,58 @@ class gshare(coreParameters:CoreParameters) extends Module{
     val io = IO(new Bundle{
 
         // prediction port
-        val predict_GHR     = Input(UInt(GHRWidth.W))
+        val GHR     = Input(UInt(GHRWidth.W))
+
         val predict_PC      = Input(UInt(32.W))
-        val predict_valid   = Input(Bool())
+
 
         // prediction output
-        val T_NT  = Output(Bool())
-        val valid = Output(Bool())
-
-        // commit port
-        //val commit_GHR         = Input(UInt(GHRWidth.W))
-        //val commit_PC          = Input(UInt(32.W))
-        //val commit_valid       = Input(Bool())
-        //val commit_branch_direction       = Input(Bool())
+        val T_NT            = Output(Bool())
 
         val commit      = Flipped(ValidIO(new commit(coreParameters)))
-        
     })
+
+    def update_state(state:UInt, T_NT:UInt): UInt = {
+        val new_state = WireInit(0.U(2.W))
+        when(T_NT === 1.U){
+            when(state < 3.U){
+                new_state := state + 1.U
+            }.otherwise{
+                new_state := state
+            }
+        }.otherwise{
+            when(state > 0.U){
+                new_state := state - 1.U
+            }.otherwise{
+                new_state := state
+            }
+        }
+        new_state
+    }
 
 
     ////////////////
     // PHT memory //     
     ////////////////
 
-    val prediction_state            = Wire(UInt(2.W))
-    val commit_state                = Wire(UInt(2.W))
-    val commit_state_updated        = Wire(UInt(2.W))
+    // 2 read 1 write memory
+    val mem = RegInit(VecInit(Seq.fill(BTBEntries)(0x2.U(2.W))))
 
-    val hashed_predict_addr         = Wire(UInt(GHRWidth.W))
-    val hashed_commit_addr          = Wire(UInt(GHRWidth.W))
+    val hashed_addr = (io.GHR ^ io.predict_PC) % BTBEntries.U
 
-    val PHT = Module(new PHT_memory(depth=(1<<GHRWidth), width=2))
+    // generate output
 
 
-    hashed_predict_addr := io.predict_PC(GHRWidth-1, 0) ^ io.predict_GHR
-    hashed_commit_addr  := io.commit.bits.fetch_PC(GHRWidth-1, 0) ^ io.commit.bits.GHR
-
-    dontTouch(hashed_predict_addr)
-    dontTouch(hashed_commit_addr)
-
-    // Read and generate prediction
-    PHT.io.addrA        := hashed_predict_addr
-    prediction_state    := PHT.io.readDataA 
-
-    io.T_NT     := prediction_state(1)
-    io.valid    := RegNext(io.predict_valid)
-
-    // Read and update state
-    PHT.io.addrB := hashed_commit_addr
-    commit_state := PHT.io.readDataB 
-
-    // Write updated data
-    PHT.io.addrC        := RegNext(hashed_commit_addr)
-    PHT.io.writeDataC   := commit_state_updated
-    dontTouch(io.commit)
-    PHT.io.writeEnableC := RegNext(io.commit.valid && io.commit.bits.br_mask.reduce(_ || _))
-
-    /////////
-    // FSM // 
-    /////////
-
-    when(RegNext(io.commit.bits.T_NT) === 1.U){
-        when(commit_state < 3.U){
-            commit_state_updated := commit_state + 1.U
-        }.otherwise{
-            commit_state_updated := commit_state
-        }
-    }.otherwise{
-        when(commit_state > 0.U){
-            commit_state_updated := commit_state - 1.U
-        }.otherwise{
-            commit_state_updated := commit_state
-        }
+    // UPDATE 
+    // update whenever the commit has a branch, T or NT
+    val update_addr = (io.commit.bits.fetch_PC ^ io.commit.bits.GHR) % BTBEntries.U
+    when(io.commit.valid && io.commit.bits.br_type =/= br_type_t.NONE){
+        mem(update_addr) := update_state(mem(update_addr), io.commit.bits.T_NT)
     }
+
+    dontTouch(mem)
+
+
+    io.T_NT := RegInit(mem(hashed_addr)(1))
 
 }

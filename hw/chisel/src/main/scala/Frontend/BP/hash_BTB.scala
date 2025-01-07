@@ -88,60 +88,64 @@ class hash_BTB(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     
 
-    val io = IO(new Bundle{
+  val io = IO(new Bundle{
 
-        //prediction-input
-        val predict_PC                          = Input(UInt(32.W))
-        val predict_valid                       = Input(Bool())
+      // PREDICTION REQUEST 
+      val predict_PC                          = Input(UInt(32.W))
 
-        //prediction-output
-        val BTB_hit                             = Output(Bool())
-        val BTB_output                          = Output(new BTB_entry(coreParameters))
+      // PREDICTION OUTPUT
+      val BTB_output                          = ValidIO(new BTB_entry(coreParameters))
 
-        //commit-input
-        val commit                              = Flipped(ValidIO(new commit(coreParameters)))
+      // UPDATE
+      val commit = Flipped(ValidIO(new commit(coreParameters)))
 
-    })
+  })
 
-    val commit_input_tag    = shiftDownByTagBits(io.commit.bits.fetch_PC)
-    val predict_input_tag   = shiftDownByTagBits(io.predict_PC)
-
-    // memory // 
-
-    val BTB_memory = Module(new hash_BTB_mem(new BTB_entry(coreParameters), depth = BTBEntries))
-
-    val prediction_BTB_address  = (io.predict_PC >> log2Ceil(fetchWidth*4))
-    val commit_BTB_address      = (io.commit.bits.fetch_PC >> log2Ceil(fetchWidth*4))
-
-    BTB_memory.io.enable    := 1.B
-    BTB_memory.io.rd_addr   := prediction_BTB_address
-    BTB_memory.io.wr_addr   := commit_BTB_address
-    BTB_memory.io.wr_en     := io.commit.valid
+  
+  // INIT
+  val valid_mem = RegInit(VecInit(Seq.fill(BTBEntries)(0.B)))
+  val mem = SyncReadMem(BTBEntries, new BTB_entry(coreParameters))
 
 
-    val commit_BTB_entry = Wire(new BTB_entry(coreParameters))
+  // SIGNALS
+  val s0_lookup_address  = io.predict_PC % BTBEntries.U
+  val s0_entry_valid     = valid_mem(s0_lookup_address)
 
-    // FIXME: consider updating this to its own bundle and using <>
-    commit_BTB_entry.valid                  := 1.B
-    commit_BTB_entry.tag                    := commit_input_tag
-    commit_BTB_entry.target                 := io.commit.bits.expected_PC
-    commit_BTB_entry.br_type                := io.commit.bits.br_type
-    commit_BTB_entry.fetch_packet_index     := io.commit.bits.fetch_packet_index
-    commit_BTB_entry.br_mask                := io.commit.bits.br_mask
+  val s1_tag             = RegNext(io.predict_PC)
+  val s1_entry_valid     = RegNext(s0_entry_valid)
 
-    BTB_memory.io.data_in := commit_BTB_entry
 
-    ////////////////////////////////////
-    // Hit logic and assignment logic // 
-    ////////////////////////////////////
+  // UPDATE 
+  // BTB 
 
-    val BTB_valid_output    = BTB_memory.io.data_out.valid
-    val BTB_tag_output      = BTB_memory.io.data_out.tag
-    val BTB_fetch_packet_index_output      = BTB_memory.io.data_out.fetch_packet_index
+  val BTB_entry_input = WireInit(0.U.asTypeOf(new BTB_entry(coreParameters)))
+  val commit_fetch_PC = io.commit.bits.fetch_PC
+  val commit_BTB_index = io.commit.bits.fetch_PC % BTBEntries.U
 
-    val access_fetch_packet_index = RegNext(get_decomposed_icache_address(coreParameters, io.predict_PC).instruction_offset)
+  dontTouch(BTB_entry_input)
 
-    io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && BTB_valid_output.asBool && (BTB_fetch_packet_index_output >= access_fetch_packet_index)
-    io.BTB_output <> BTB_memory.io.data_out
-    io.BTB_output.valid := RegNext(io.predict_valid)
+  BTB_entry_input.valid   := 1.B
+  BTB_entry_input.tag     := io.commit.bits.fetch_PC
+  BTB_entry_input.target  := io.commit.bits.target
+  BTB_entry_input.br_mask := io.commit.bits.br_mask
+  BTB_entry_input.br_type := io.commit.bits.br_type
+
+  when(io.commit.valid && io.commit.bits.T_NT){
+    mem.write(commit_BTB_index, BTB_entry_input)
+    valid_mem(commit_BTB_index) := 1.B
+  }
+
+  // OUTPUT
+
+  val BTB_output = mem.read(s0_lookup_address)
+
+  val hit = BTB_output.tag === s1_tag
+
+  dontTouch(hit)
+
+  io.BTB_output.bits := BTB_output
+  io.BTB_output.valid := hit && s1_entry_valid
+
+
+
 }

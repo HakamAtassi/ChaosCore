@@ -107,16 +107,13 @@ object br_type_t extends ChiselEnum{
 class BTB_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
-    val tag_size:Int            = 32 - log2Ceil(BTBEntries) - 2
-
     val valid                   = Bool()
-    val tag                     = UInt(tag_size.W)
+
+    val tag                     = UInt(32.W)
+
     val target                  = UInt(32.W)   // FIXME: this can be slightly smaller
-
-    val br_mask                 = Vec(fetchWidth, Bool())   // which entry in the fetch packet does this BTB prediction entry correspond to
-
+    val br_mask                 = UInt(log2Ceil(fetchWidth).W)   // which entry in the fetch packet does this BTB prediction entry correspond to
     val br_type                 = br_type_t()
-    val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 }
 
 class insn_commit(coreParameters:CoreParameters) extends Bundle{
@@ -148,12 +145,8 @@ class commit(coreParameters:CoreParameters) extends Bundle{
 
     // GLOBAL COMMIT SIGNALS
     val fetch_PC                = UInt(32.W)    // To update gshare/PHT
-    val T_NT                    = Bool()    // To update BTB (BTB only updates on taken branches)
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
 
-    // BRANCH PREDICTION SIGNALS
-    val br_type                 = br_type_t()
-    val br_mask                 = Vec(fetchWidth, Bool())
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val is_misprediction        = Bool()
@@ -168,6 +161,12 @@ class commit(coreParameters:CoreParameters) extends Bundle{
 
     // INSN COMMIT SIGNALS
     val insn_commit             = Vec(fetchWidth, ValidIO(new insn_commit(coreParameters)))
+
+    // BP signals
+    val T_NT                    = Bool()    // set when taken branch is committed
+    val target                  = UInt(32.W)
+    val br_type                 = br_type_t()
+    val br_mask                 = UInt(log2Ceil(fetchWidth).W)
 
 }
 
@@ -222,9 +221,10 @@ class revert(coreParameters:CoreParameters) extends Bundle{
 class prediction(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
+    val T_NT        =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
     val br_type     =   br_type_t() 
-    val br_mask     =   Vec(fetchWidth, Bool()) // OH of the taken branch in the fetch packet
+    val br_mask     =   UInt(log2Ceil(fetchWidth).W) // OH of the taken branch in the fetch packet
 }
 
 class resolved_branch(coreParameters:CoreParameters) extends Bundle{
@@ -309,7 +309,8 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 
     // MISC //
     val FLUSH              = Bool()
-    
+
+
 
     def needs_INT_RS: Bool = {
         val result =    needs_ALU          ||

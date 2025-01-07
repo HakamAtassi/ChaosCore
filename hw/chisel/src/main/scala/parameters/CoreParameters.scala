@@ -125,7 +125,7 @@ case class CoreParameters(
 
     GHRWidth: Int = 16,
     RASEntries: Int = 128,
-    BTBEntries: Int = 4096,
+    BTBEntries: Int = 1024,
     startPC: UInt = "h80000000".U,
     FTQEntries:Int  = 16,
 
@@ -168,7 +168,7 @@ case class CoreParameters(
 
     instruction_queue_depth:Int = 8,
 
-    speculative:Boolean = true,   // this does nothing yet
+    speculative:Boolean = true,
 
     MOBEntries:Int = 16,
     //MOBForceInOrder:Boolean = true,  // can loads execute if not all previous (load+store) addresses have been resolved?

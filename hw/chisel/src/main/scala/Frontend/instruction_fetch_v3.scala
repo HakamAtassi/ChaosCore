@@ -32,7 +32,7 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
-class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
+class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
   import coreParameters._
 
   val dataSizeBits = L1_cacheLineSizeBytes * 8
@@ -58,8 +58,8 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   // PREDICTION STRUCTURES
   val gshare = Module(new gshare(coreParameters))
   val BTB = Module(new hash_BTB(coreParameters))
-  val GHR = RegInit(UInt(GHRWidth.W), 0.U)
   //val RAS = Module(new RAS(coreParameters))
+  val GHR = RegInit(UInt(GHRWidth.W), 0.U)
 
   val prediction = WireInit(0.U.asTypeOf(new prediction(coreParameters)))
 
@@ -68,7 +68,7 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   val prev_PC = RegInit(UInt(32.W), 0.U)
 
 
-  val s0_request = WireInit(true.B)
+  val s0_request = WireInit(false.B)
   val s0_request_addr = WireInit(0.U(32.W))
 
   val s1_requested = WireInit(false.B)
@@ -77,13 +77,20 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   val s1_request_addr = RegInit(UInt(32.W), startPC)
   val s1_replay = WireInit(false.B)
 
+  val s1_BTB_hit = WireInit(false.B)
+
+
+  BTB.io.commit                              <> io.commit
+  gshare.io.GHR             := GHR
+  gshare.io.commit          := io.commit
+
 
   ////////////////////////
   // S0 - Read memories //
   ////////////////////////
+  s0_request := 1.B && !reset.asBool
 
   s0_request_addr := next_PC      // s0 just requests the PC register, which stores the next desired fetch PC
-
 
   
   // request I$ //
@@ -91,17 +98,11 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   io.memory_request.bits.addr := s0_request_addr
 
   // request BTB //
-  BTB.io.predict_PC                          := s0_request_addr
-  BTB.io.commit                              <> io.commit
-
-  // request direction predictor //
-  gshare.io.GHR             := GHR
+  BTB.io.predict_PC         := s0_request_addr
   gshare.io.predict_PC      := s0_request_addr % BTBEntries.U
-  gshare.io.commit          := io.commit
 
-
-
-
+  // update s0 next PC
+  next_PC := s0_request_addr + get_PC_increment(coreParameters, io.memory_request.bits.addr)
 
 
   ////////////////////
@@ -113,58 +114,44 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
   s1_hit := s1_requested && io.memory_response.valid 
   s1_miss := s1_requested && !io.memory_response.valid
 
-  s1_replay := s1_miss
+  s1_replay := s1_miss || (s1_hit && !io.fetch_packet.fire) // replay if request missed, or it hit but wasnt accepted
 
-
-  when(s1_replay){  // miss. re-request
-    io.memory_request.bits.addr := s1_request_addr
-    next_PC := s1_request_addr + get_PC_increment(coreParameters, s1_request_addr)
-  }.elsewhen(prediction.T_NT){  // hit and prediction
-    io.memory_request.bits.addr := prediction.target
-    //s0_request_addr := prediction.target
-    next_PC := next_PC + get_PC_increment(coreParameters, prediction.target)
-  }.otherwise{
-    next_PC := next_PC + get_PC_increment(coreParameters, next_PC)
-  }
-
+  // update s1_addr
   when(!s1_replay){
     s1_request_addr := io.memory_request.bits.addr
   }
 
-  // doesnt correctly update regs
-  // doesnt stall when output not ready
+  // replay request as needed
+  when(s1_replay){
+    s0_request_addr := s1_request_addr
+  }
 
-  // MISC //
-
+  s1_BTB_hit := s1_requested && BTB.io.BTB_output.valid
+  
 
   /////////////////////////////
   // CONSTRUCTION PREDICTION // 
   /////////////////////////////
 
-
-  prediction.hit     := BTB.io.BTB_output.valid         // BTB hit
-  prediction.T_NT    := 1.B && BTB.io.BTB_output.valid && s1_hit && (BTB.io.BTB_output.bits.br_mask >=  (s1_request_addr / 4.U)  % (fetchWidth.U)) // GSHARE T/NT
+  prediction.hit     := s1_BTB_hit         // BTB hit
+  //prediction.T_NT    := gshare.io.T_NT && s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U)) // GSHARE T/NT
+  prediction.T_NT    := 1.B && s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U)) // GSHARE T/NT
   prediction.br_type := BTB.io.BTB_output.bits.br_type
 
 
   when(prediction.T_NT && BTB.io.BTB_output.valid){
     prediction.target  := BTB.io.BTB_output.bits.target
     prediction.br_mask := BTB.io.BTB_output.bits.br_mask
-    next_PC            := get_fetch_packet_aligned_address(coreParameters, BTB.io.BTB_output.bits.target) + fetchWidth.U*4.U
+    s0_request_addr    := prediction.target
   }.otherwise{
     prediction.target := get_fetch_packet_aligned_address(coreParameters, io.memory_response.bits.fetch_PC) + fetchWidth.U*4.U
     prediction.br_mask := 0.U
   }
 
 
-  // flush
-  when(io.flush.valid){ 
-    s0_request := 0.B
-    next_PC := io.flush.bits.redirect_PC
-    io.fetch_packet.valid := 0.B  // invalidate output
+  when(s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U))){
+    GHR := (GHR << 1) | prediction.T_NT
   }
-
-
 
 
 
@@ -183,8 +170,8 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
     
     // ignore things before the start of the packet
     // ignore things after the assumed prediction 
-    io.fetch_packet.bits.valid_bits(i):=  (i.U >= ((io.memory_response.bits.fetch_PC / 4.U)  % (fetchWidth.U))) && 
-                                          ((i.U <= prediction.br_mask) || !(prediction.T_NT && BTB.io.BTB_output.valid)) && 
+    io.fetch_packet.bits.valid_bits(i):=  (i.U >= (RegNext(s0_request_addr / 4.U)  % (fetchWidth.U))) && 
+                                          ((i.U <= prediction.br_mask) || !prediction.T_NT) && 
                                           io.memory_response.valid
   }
 
@@ -206,6 +193,17 @@ class instruction_fetch_v2(coreParameters: CoreParameters) extends Module {
     io.fetch_packet.bits.NEXT := 0.U
     io.fetch_packet.bits.TOS := 0.U
   }
+
+
+  // flush
+  when(io.flush.valid){ 
+    s0_request := 0.B
+    s1_replay := 0.B
+    next_PC := io.flush.bits.redirect_PC
+    io.fetch_packet.valid := 0.B  // invalidate output
+  }
+
+
 
   dontTouch(prediction)
   dontTouch(s0_request)
