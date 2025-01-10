@@ -125,6 +125,6 @@ class gshare(coreParameters:CoreParameters) extends Module{
     dontTouch(mem)
 
 
-    io.T_NT := RegInit(mem(hashed_addr)(1))
+    io.T_NT := RegNext(mem(hashed_addr)(1))
 
 }

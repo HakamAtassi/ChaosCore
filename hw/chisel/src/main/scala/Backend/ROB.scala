@@ -497,8 +497,10 @@ earliest_CTRL_oh
     dontTouch(earliest_CTRL_insn)
     dontTouch(prediction)
 
-    val test = WireInit(false.B)
-    dontTouch(test)
+    val correct_T_br = RegInit(UInt(32.W), 0.U)
+    val incorrect_T_br = RegInit(UInt(32.W), 0.U)
+    val correct_NT_br = RegInit(UInt(32.W), 0.U)
+    val incorrect_NT_br = RegInit(UInt(32.W), 0.U)
 
 
     when(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.uOp.decoded_insn.CTRL && earliest_CTRL_insn.WB.committed){
@@ -507,11 +509,13 @@ earliest_CTRL_oh
         expected_next_PC    := earliest_CTRL_branch_info.target_PC
         when((prediction.br_mask === earliest_CTRL_idx) && (prediction.target === earliest_CTRL_branch_info.target_PC) && (prediction.T_NT)){
             // prediction correct, do nothing
+            correct_T_br := correct_T_br + 1.U
         }.otherwise{
             output_flush.valid := 1.B
             output_flush.bits.flushing_PC:= ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx)
             output_flush.bits.redirect_PC:= earliest_CTRL_branch_info.target_PC
             output_flush.bits.is_misprediction := 1.B
+            incorrect_T_br := incorrect_T_br + 1.U
         }
     
     }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.exception && oldest_insn === earliest_CTRL_idx){ // exceptions only "trigger" when they are the oldest instruction in the pipeline
@@ -543,6 +547,9 @@ earliest_CTRL_oh
             output_flush.bits.flushing_PC := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (prediction.br_mask*4.U) //(4.U * earliest_CTRL_idx)
             output_flush.bits.redirect_PC :=  ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + prediction.br_mask*4.U + 4.U  // re-execute incorrectly speculated instruction
             output_flush.bits.is_misprediction := 1.B
+            incorrect_NT_br := incorrect_NT_br + 1.U
+        }.otherwise{
+            correct_NT_br := correct_NT_br + 1.U
         }
 
     }
@@ -750,7 +757,8 @@ earliest_CTRL_oh
                 printf("\n");
 
             }.elsewhen(done && IS_CTRL){
-                printf("core   0: 3 0x%x CTRL \n", instruction_PC);
+                printf("core   0: 3 0x%x CTRL", instruction_PC);
+                printf("\tT_C: %d\tT_I: %d\tNT_C: %d\tNT_I: %d\n", correct_T_br, incorrect_T_br, correct_NT_br, incorrect_NT_br)
             }.elsewhen(done && arch_RD_valid && arch_RD =/= 0.U){  // "normal" PRD modifying insn
                 printf("core   0: 3 0x%x x%d 0x%x\n", instruction_PC, arch_RD, RD_data);
             }.elsewhen(done){    // something else with no PRD
