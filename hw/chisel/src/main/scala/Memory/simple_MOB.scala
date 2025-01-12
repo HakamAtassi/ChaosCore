@@ -250,8 +250,9 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // AWAIT RESPONSE
     when(io.backend_memory_response.fire){ // entry response
         val response_index = io.backend_memory_response.bits.MOB_index
+        val response_addr  = io.backend_memory_response.bits.addr 
         // NACK
-        when(MOB(response_index).valid){
+        when(MOB(response_index).valid && response_addr === MOB(response_index).address){
             when(io.backend_memory_response.bits.nack){
                 MOB(response_index).MOB_STATE := MOB_STATES.NACKED
             }.otherwise{
