@@ -85,9 +85,10 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     dontTouch(SH)
     dontTouch(SW)
 
+    FU_output.io.flush.get := 0.B
     // Everything needed to perform the memory request (LSQ request)    
 
-    FU_output.io.enq.valid              := RegNext(AGU_input_valid && !io.flush.valid)
+    FU_output.io.enq.valid              := RegNext(AGU_input_valid)
     FU_output.io.enq.bits.PRD           := RegNext(PRD)             // LOAD DEST
     FU_output.io.enq.bits.is_unsigned   := RegNext(unsigned)        // SIGNED/UNSIGNED
     FU_output.io.enq.bits.address       := RegNext(address)         // ADDRESS
