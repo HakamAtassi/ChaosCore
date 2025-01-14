@@ -184,6 +184,9 @@ class flush(coreParameters:CoreParameters) extends Bundle{
     }
 
 
+    val T_NT            = Bool()    // was the branch actually T or NT? (mostly for GHR)
+
+
     val exception_cause     = EX_CAUSE()
 
     val flushing_PC         = UInt(32.W)    // PC of the instruciton causing the flush
@@ -343,6 +346,16 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
         IMM(10,0).asUInt
     }
 }
+
+
+class decoded_branch(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+
+    //val branch_type             = br_type_t()
+
+
+}
+
 
 
 class decoded_fetch_packet(coreParameters:CoreParameters) extends Bundle{

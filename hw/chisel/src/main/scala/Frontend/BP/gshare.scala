@@ -108,7 +108,7 @@ class gshare(coreParameters:CoreParameters) extends Module{
     ////////////////
 
     // 2 read 1 write memory
-    val mem = RegInit(VecInit(Seq.fill(BTBEntries)(0x2.U(2.W))))
+    val mem = RegInit(VecInit(Seq.fill((1<<GHRWidth)-1)(0x2.U(2.W))))
 
     val hashed_addr = (io.GHR ^ io.predict_PC) % BTBEntries.U
 

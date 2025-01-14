@@ -123,7 +123,7 @@ case class CoreParameters(
     fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
 
 
-    GHRWidth: Int = 16,
+    GHRWidth: Int = 10,
     RASEntries: Int = 128,
     BTBEntries: Int = 1024,
     startPC: UInt = "h80000000".U,
@@ -136,7 +136,7 @@ case class CoreParameters(
 
     physicalRegCount:      Int = 65,  // 64 physical regs + x0 (not renamed)
 
-    RSEntries: Int = 16, // How many entires per reservation station (these are very expensive)
+    RSEntries: Int = 8, // How many entires per reservation station (these are very expensive)
 
 
     L1_cacheLineSizeBytes: Int = 32,
@@ -170,7 +170,7 @@ case class CoreParameters(
 
     speculative:Boolean = true,
 
-    MOBEntries:Int = 16,
+    MOBEntries:Int = 8,
     //MOBForceInOrder:Boolean = true,  // can loads execute if not all previous (load+store) addresses have been resolved?
 
     /////////////////////////////

@@ -32,6 +32,104 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
+import helperFunctions._
+
+import chisel3.util.experimental.decode._
+
+class branch_decode(coreParameters: CoreParameters) extends Module{
+  val io = IO(new Bundle {
+
+    val instruction      = Flipped(ValidIO(UInt(32.W)))
+
+    val branch  = Output(Bool())
+    val JAL     = Output(Bool())
+    val JALR    = Output(Bool())
+  }); dontTouch(io)
+
+
+
+    val instruction = io.instruction.bits
+
+    // Direct instruction fields
+    val opcode      = instruction(6, 0)
+    val RS1         = instruction(19, 15)
+    val RS2         = instruction(24, 20)
+    val PRD         = instruction(11, 7)
+    val IMM         = getImm(instruction)
+
+    val FUNCT3      = instruction(14, 12)
+    val FUNCT7      = instruction(31, 25)
+
+    // helper fields
+    // "1" and "0" => are concatenated to a bit string which is then converted to an int
+    // "?" is a dont care
+    val Y = "1"
+    val N = "0"
+    val R_NONE = "?????"
+    val FUNCT7_NONE = "???????"
+    val FUNCT3_NONE = "???"
+    val IMM_NONE = "????????????"
+
+    // This decoder is inspired by how BOOM does things because they very elegantly use the Chisel Decode lib
+    // to clean up the decode 
+
+
+    def binString(n:UInt): String = {
+        n.litValue.toString(2).reverse.padTo(n.getWidth, '0').reverse
+    }
+
+
+    val table = TruthTable(
+            Map( // (Hint: Scroll right to see mappings)
+            //                                                                                                                                                                                                                          // INSTRUCTION STEERING //                      
+            //                                                                                                                                                                                                                          BRANCH
+            //                                                                                                                                                                                                                          |   JAL
+            //                                                                                                                                                                                                                          |   |   JALR
+            //                                                                                                                                                                                                                          |   |   |   
+            //                                                                                                                                                                                                                          |   |   |   |   
+            //                                                                                                                                                                                                                          |   |   |   |   |   
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            //                                                                                                                                                                                                                          |   |   |   |   |   |   |                       
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}") -> BitPat("b" + Y + N + N + N + N + N + N),   // BEQ
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x1.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}") -> BitPat("b" + Y + N + N + N + N + N + N),   // BNE
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x4.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}") -> BitPat("b" + Y + N + N + N + N + N + N),   // BLT
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x5.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}") -> BitPat("b" + Y + N + N + N + N + N + N),   // BGE
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x6.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}") -> BitPat("b" + Y + N + N + N + N + N + N),   // BLTU
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + binString(0x7.U(3.W)) + R_NONE + s"${binString(InstructionType.BRANCH.litValue.U(5.W))}") -> BitPat("b" + Y + N + N + N + N + N + N),   // BGEU
+            BitPat("b1"+ FUNCT7_NONE + R_NONE + R_NONE + FUNCT3_NONE + R_NONE + s"${binString(InstructionType.JAL.litValue.U(5.W))}")              -> BitPat("b" + N + Y + N + N + N + N + N),   // JAL
+            BitPat("b1"+ IMM_NONE + R_NONE + binString(0x0.U(3.W)) + R_NONE + s"${binString(InstructionType.JALR.litValue.U(5.W))}")               -> BitPat("b" + N + N + Y + N + N + N + N),   // JALR
+
+
+        ),
+        BitPat("b" + N + N + N + N + N + N + N)
+    )
+
+    //////////////////////////////////
+    // READ OUT BITPATTERN & ASSIGN //
+    //////////////////////////////////
+
+    val decode_pat = decoder(Cat(io.instruction.valid, instruction(31, 2)), table)
+
+    io.branch         := decode_pat(6)
+    io.JAL            := decode_pat(5)
+    io.JALR           := decode_pat(4)
+
+
+
+}
+
+
 class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
   import coreParameters._
 
@@ -60,6 +158,13 @@ class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
   val BTB = Module(new hash_BTB(coreParameters))
   //val RAS = Module(new RAS(coreParameters))
   val GHR = RegInit(UInt(GHRWidth.W), 0.U)
+
+
+  val branch_decoders: Seq[branch_decode] = Seq.tabulate(fetchWidth) { w =>
+      Module(new branch_decode(coreParameters))
+  }
+
+
 
   val prediction = WireInit(0.U.asTypeOf(new prediction(coreParameters)))
 
@@ -135,8 +240,6 @@ class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
 
   prediction.hit     := s1_BTB_hit         // BTB hit
   prediction.T_NT    := gshare.io.T_NT && s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U)) // GSHARE T/NT
-  //prediction.T_NT    := 1.B && s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U)) // GSHARE T/NT
-  //prediction.T_NT := 0.B
   prediction.br_type := BTB.io.BTB_output.bits.br_type
 
 
@@ -150,9 +253,10 @@ class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
   }
 
 
-  when(s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U))){
-    GHR := (GHR << 1) | prediction.T_NT
-  }
+
+
+
+
 
 
 
@@ -174,6 +278,23 @@ class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
     io.fetch_packet.bits.valid_bits(i):=  (i.U >= (RegNext(s0_request_addr / 4.U)  % (fetchWidth.U))) && 
                                           ((i.U <= prediction.br_mask) || !prediction.T_NT) && 
                                           io.memory_response.valid
+
+
+    // connect branch decoder
+    branch_decoders(i).io.instruction.bits    := io.memory_response.bits.instructions(i).instruction
+    branch_decoders(i).io.instruction.valid   :=  (i.U >= (RegNext(s0_request_addr / 4.U)  % (fetchWidth.U))) && 
+                                                  ((i.U <= prediction.br_mask) || !prediction.T_NT) && 
+                                                  io.memory_response.valid
+    
+  }
+
+
+  
+
+  // update GHR
+  //when(s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U))){
+  when(branch_decoders.map(branch_decoder => branch_decoder.io.branch || branch_decoder.io.JAL || branch_decoder.io.JALR).reduce(_ || _)){
+    GHR := (GHR << 1) | prediction.T_NT
   }
 
   io.fetch_packet.valid     := io.memory_response.valid && !io.flush.valid 
@@ -202,6 +323,11 @@ class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
     s1_replay := 0.B
     next_PC := io.flush.bits.redirect_PC
     io.fetch_packet.valid := 0.B  // invalidate output
+
+    GHR := io.commit.bits.GHR
+    when(io.flush.bits.is_misprediction){
+      GHR := (io.commit.bits.GHR << 1) | io.flush.bits.T_NT
+    }
   }
 
 

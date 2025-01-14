@@ -321,7 +321,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }); dontTouch(io)
 
     val CSR_port = IO(Input(new CSR_out(coreParameters))); dontTouch(CSR_port)
-earliest_CTRL_oh
     // only update WB valid memory on a grant/no grant basis
     // for instance, multiple instructions may be writing to the same branch WB bank in a single cycle.
     // Only mark those branches as complete in the ROB_WB_bank if the ROB_branch_bank grants the write-back.
@@ -502,6 +501,16 @@ earliest_CTRL_oh
     val correct_NT_br = RegInit(UInt(32.W), 0.U)
     val incorrect_NT_br = RegInit(UInt(32.W), 0.U)
 
+    val committed_ctrl = RegInit(UInt(32.W), 0.U)
+    val misprediction_ctr = RegInit(UInt(32.W), 0.U)
+
+    dontTouch(committed_ctrl)
+    dontTouch(correct_T_br)
+    dontTouch(correct_NT_br)
+    dontTouch(misprediction_ctr)
+
+    
+
 
     when(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.uOp.decoded_insn.CTRL && earliest_CTRL_insn.WB.committed){
         // dominant branch is a typical branch
@@ -512,11 +521,15 @@ earliest_CTRL_oh
             correct_T_br := correct_T_br + 1.U
         }.otherwise{
             output_flush.valid := 1.B
+            output_flush.bits.T_NT := 1.B
             output_flush.bits.flushing_PC:= ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * earliest_CTRL_idx)
             output_flush.bits.redirect_PC:= earliest_CTRL_branch_info.target_PC
             output_flush.bits.is_misprediction := 1.B
             incorrect_T_br := incorrect_T_br + 1.U
+            misprediction_ctr   := misprediction_ctr + 1.U
         }
+
+        committed_ctrl := committed_ctrl + 1.U
     
     }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.exception && oldest_insn === earliest_CTRL_idx){ // exceptions only "trigger" when they are the oldest instruction in the pipeline
         // is an exception
@@ -544,10 +557,13 @@ earliest_CTRL_oh
         when(prediction.T_NT){ // if you predicted taken
             // flush to the instruction after the incorrectly predicted one
             output_flush.valid := 1.B
+            output_flush.bits.T_NT := 0.B
             output_flush.bits.flushing_PC := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (prediction.br_mask*4.U) //(4.U * earliest_CTRL_idx)
             output_flush.bits.redirect_PC :=  ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + prediction.br_mask*4.U + 4.U  // re-execute incorrectly speculated instruction
             output_flush.bits.is_misprediction := 1.B
             incorrect_NT_br := incorrect_NT_br + 1.U
+
+            misprediction_ctr   := misprediction_ctr + 1.U
         }.otherwise{
             correct_NT_br := correct_NT_br + 1.U
         }
@@ -639,7 +655,7 @@ earliest_CTRL_oh
     }.reduce(_ || _) && ROB_shared_bank.io.ROB_shared_entry.valid
 
 
-    io.commit.valid := ROB_instruction_banks.map(bank =>   bank.io.ROB_instruction_entry.WB.valid).reduce(_ || _) && ROB_shared_bank.io.ROB_shared_entry.valid   // output commit is high if any instructions are committing
+    io.commit.valid := row_commit //ROB_instruction_banks.map(bank =>   bank.io.ROB_instruction_entry.WB.valid).reduce(_ || _) && ROB_shared_bank.io.ROB_shared_entry.valid   // output commit is high if any instructions are committing
 
 
 

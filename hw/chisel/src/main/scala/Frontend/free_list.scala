@@ -86,21 +86,19 @@ class free_list(coreParameters:CoreParameters) extends Module{
     io.free_list_front_pointer  := 0.U
 
     //FIXME: does the order of these matter?
-    when(io.commit.valid){  // add to freelist
-        for(i <- 0 until fetchWidth){
-            when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){    // dont add x0
-                val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
-                commit_PRDold := (io.commit.bits.insn_commit(i).bits.PRDold - 1.U) % (physicalRegCount-1).U
+    for(i <- 0 until fetchWidth){
+        when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){    // dont add x0
+            val commit_PRDold = Wire(UInt(log2Ceil(physicalRegCount-1).W))
+            commit_PRDold := (io.commit.bits.insn_commit(i).bits.PRDold - 1.U) % (physicalRegCount-1).U
 
-                free_list_buffer(commit_PRDold) := 1.B
-                commit_free_list_buffer(commit_PRDold) := 1.B
-            }
+            free_list_buffer(commit_PRDold) := 1.B
+            commit_free_list_buffer(commit_PRDold) := 1.B
+        }
 
-            when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){
-                val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
-                commit_PRD := (io.commit.bits.insn_commit(i).bits.PRD - 1.U) % (physicalRegCount-1).U
-                commit_free_list_buffer(commit_PRD) := 0.B
-            }
+        when(io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid && io.commit.bits.insn_commit(i).bits.RD =/= 0.U){
+            val commit_PRD = Wire(UInt(log2Ceil(physicalRegCount-1).W))
+            commit_PRD := (io.commit.bits.insn_commit(i).bits.PRD - 1.U) % (physicalRegCount-1).U
+            commit_free_list_buffer(commit_PRD) := 0.B
         }
     }
 
