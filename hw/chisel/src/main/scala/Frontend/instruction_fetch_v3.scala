@@ -240,6 +240,7 @@ class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
 
   prediction.hit     := s1_BTB_hit         // BTB hit
   prediction.T_NT    := gshare.io.T_NT && s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U)) // GSHARE T/NT
+  //prediction.T_NT    := 0.B && s1_BTB_hit && !s1_replay && (BTB.io.BTB_output.bits.br_mask >=  RegNext(s0_request_addr / 4.U)  % (fetchWidth.U)) // GSHARE T/NT
   prediction.br_type := BTB.io.BTB_output.bits.br_type
 
 
