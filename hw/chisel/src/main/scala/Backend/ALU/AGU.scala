@@ -85,14 +85,16 @@ class AGU(coreParameters:CoreParameters) extends GALU(coreParameters){
     dontTouch(SH)
     dontTouch(SW)
 
+    FU_output.io.flush.get := 0.B
     // Everything needed to perform the memory request (LSQ request)    
 
-    FU_output.io.enq.valid              := RegNext(AGU_input_valid && !io.flush.valid)
+    FU_output.io.enq.valid              := RegNext(AGU_input_valid)
     FU_output.io.enq.bits.PRD           := RegNext(PRD)             // LOAD DEST
     FU_output.io.enq.bits.is_unsigned   := RegNext(unsigned)        // SIGNED/UNSIGNED
     FU_output.io.enq.bits.address       := RegNext(address)         // ADDRESS
     FU_output.io.enq.bits.wr_data       := RegNext(wr_data)         // WR DATA
-    FU_output.io.enq.bits.MOB_index     := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    FU_output.io.enq.bits.LOADQ_index   := RegNext(io.FU_input.bits.decoded_instruction.LOADQ_index)
+    FU_output.io.enq.bits.STOREQ_index  := RegNext(io.FU_input.bits.decoded_instruction.STOREQ_index)
     FU_output.io.enq.bits.ROB_index     := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
     FU_output.io.enq.bits.fetch_packet_index  := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
     FU_output.io.enq.bits.memory_type   := RegNext(io.FU_input.bits.decoded_instruction.memory_type)

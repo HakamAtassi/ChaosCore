@@ -617,12 +617,16 @@ earliest_CTRL_oh
         io.commit.bits.insn_commit(i).bits.WB_committed := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed
         io.commit.bits.insn_commit(i).bits.WB_complete := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete
 
-        io.commit.bits.insn_commit(i).bits.MOB_index := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_index
-        io.commit.bits.insn_commit(i).bits.MOB_valid := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_valid
-        io.commit.bits.insn_commit(i).bits.RD        := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD
-        io.commit.bits.insn_commit(i).bits.RD_valid  := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD_valid
-        io.commit.bits.insn_commit(i).bits.PRD       := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRD
-        io.commit.bits.insn_commit(i).bits.PRDold    := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRDold
+        //io.commit.bits.insn_commit(i).bits.MOB_index := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_index
+        io.commit.bits.insn_commit(i).bits.STOREQ_index := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.STOREQ_index
+        io.commit.bits.insn_commit(i).bits.LOADQ_index  := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.LOADQ_index
+        io.commit.bits.insn_commit(i).bits.LOAD         := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.LOAD
+        io.commit.bits.insn_commit(i).bits.STORE        := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.STORE
+        io.commit.bits.insn_commit(i).bits.MOB_valid    := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_valid
+        io.commit.bits.insn_commit(i).bits.RD           := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD
+        io.commit.bits.insn_commit(i).bits.RD_valid     := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD_valid
+        io.commit.bits.insn_commit(i).bits.PRD          := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRD
+        io.commit.bits.insn_commit(i).bits.PRDold       := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.PRDold
     }
 
     // ASSIGN commit T_NT

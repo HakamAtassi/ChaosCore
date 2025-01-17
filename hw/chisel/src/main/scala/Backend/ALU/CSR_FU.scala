@@ -1068,7 +1068,7 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     CSR_output.RD_valid              := io.FU_input.bits.decoded_instruction.RD_valid
     CSR_output.RD_data               := CSR_read_out
     CSR_output.RS1_data.get          := RS1_data
-    CSR_output.MOB_index             := io.FU_input.bits.decoded_instruction.MOB_index
+    //CSR_output.MOB_index             := io.FU_input.bits.decoded_instruction.MOB_index
     CSR_output.address               := 0.U
     CSR_output.ROB_index             := io.FU_input.bits.decoded_instruction.ROB_index
     //CSR_output.exception             := ECALL

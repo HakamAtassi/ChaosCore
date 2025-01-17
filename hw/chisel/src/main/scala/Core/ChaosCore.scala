@@ -168,7 +168,8 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     
 
     for(i <- 0 until fetchWidth){
-        ROB.io.ROB_packet.bits.decoded_instruction(i).MOB_index := backend.io.reserved_pointers(i).bits
+        ROB.io.ROB_packet.bits.decoded_instruction(i).STOREQ_index := backend.io.s_reserved_pointers(i).bits
+        ROB.io.ROB_packet.bits.decoded_instruction(i).LOADQ_index  := backend.io.l_reserved_pointers(i).bits
     }
 
 

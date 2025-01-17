@@ -171,6 +171,9 @@ case class CoreParameters(
     speculative:Boolean = true,
 
     MOBEntries:Int = 16,
+
+    LOADQEntries:Int = 8,
+    STOREQEntries:Int = 8,
     //MOBForceInOrder:Boolean = true,  // can loads execute if not all previous (load+store) addresses have been resolved?
 
     /////////////////////////////

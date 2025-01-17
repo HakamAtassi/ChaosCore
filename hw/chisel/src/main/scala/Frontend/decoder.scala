@@ -303,7 +303,8 @@ class decoder(coreParameters:CoreParameters) extends Module{
     io.decoded_instruction.bits.FUNCT7               := FUNCT7
     io.decoded_instruction.bits.packet_index         := io.instruction.bits.packet_index 
     io.decoded_instruction.bits.ROB_index            := 0.U
-    io.decoded_instruction.bits.MOB_index            := 0.U
+    io.decoded_instruction.bits.STOREQ_index         := 0.U
+    io.decoded_instruction.bits.LOADQ_index          := 0.U
 
     when (instruction(31,12) === 0x105.U){
         io.decoded_instruction.bits.IMM := 0.U

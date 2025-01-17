@@ -125,7 +125,7 @@ class ALU(coreParameters:CoreParameters) extends GALU(coreParameters){
     FU_output.io.enq.bits.RD_valid              :=  RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     FU_output.io.enq.bits.RD_data               :=  RegNext(arithmetic_result)
 
-    FU_output.io.enq.bits.MOB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    //FU_output.io.enq.bits.MOB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
     FU_output.io.enq.bits.address               :=  0.U
     FU_output.io.enq.bits.ROB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
 

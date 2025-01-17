@@ -597,6 +597,12 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
   }
 
+  when(outer.dcache.module.io.cpu.resp.bits.cmd === M_XRD){
+    core.io.backend_memory_response.bits.memory_type := memory_type_t.LOAD
+  }.elsewhen(outer.dcache.module.io.cpu.resp.bits.cmd === M_XWR){
+    core.io.backend_memory_response.bits.memory_type := memory_type_t.STORE
+  }
+
 
   outer.dcache.module.io.cpu.s2_paddr;
   outer.dcache.module.io.cpu.s2_nack_cause_raw; // reason for nack is store-load RAW hazard (performance hint)
@@ -605,7 +611,6 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
   outer.dcache.module.io.cpu.resp.bits.idx   
   outer.dcache.module.io.cpu.resp.bits.tag   
-  outer.dcache.module.io.cpu.resp.bits.cmd   
   outer.dcache.module.io.cpu.resp.bits.size  
   outer.dcache.module.io.cpu.resp.bits.signed
   outer.dcache.module.io.cpu.resp.bits.dprv  

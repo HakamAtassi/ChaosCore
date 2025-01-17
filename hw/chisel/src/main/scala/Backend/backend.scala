@@ -55,7 +55,8 @@ class backend(coreParameters:CoreParameters) extends Module{
         val flush                       =   Flipped(ValidIO(new flush(coreParameters)))
 
         // pointers to MOB entries for updating later
-        val reserved_pointers           =   Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry
+        val l_reserved_pointers           =   Vec(fetchWidth, ValidIO(UInt(log2Ceil(STOREQEntries).W)))                               // pointer to allocated entry
+        val s_reserved_pointers           =   Vec(fetchWidth, ValidIO(UInt(log2Ceil(LOADQEntries).W)))  
 
         val backend_memory_response     =   Flipped(Decoupled(new backend_memory_response(coreParameters))) // From MEM
         val backend_memory_request      =   Decoupled(new backend_memory_request(coreParameters))     // To MEM
@@ -110,7 +111,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     /////////
     // MOB //
     /////////
-    val MOB   =  Module(new simple_MOB(coreParameters))
+    val MOB   =  Module(new new_MOB(coreParameters))
 
     ///////////////////////////
     // SCHEDULE INSTRUCTIONS //
@@ -141,19 +142,21 @@ class backend(coreParameters:CoreParameters) extends Module{
         val needs_MEM_RS = io.backend_packet(i).bits.needs_memory
 
         MEM_RS.io.backend_packet(i).bits     := io.backend_packet(i).bits  // pass data along
-        MEM_RS.io.backend_packet(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
+        MEM_RS.io.backend_packet(i).valid    := needs_MEM_RS && io.backend_packet(i).valid
     }
 
     MOB.io.commit <> io.commit
     for (i <- 0 until fetchWidth){
+        val needs_MEM_RS = io.backend_packet(i).bits.needs_memory
         MOB.io.reserve(i).bits     := io.backend_packet(i).bits  // pass data along
-        MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
+        MOB.io.reserve(i).valid    := needs_MEM_RS && io.backend_packet(i).valid
     }
     
 
     // ASSIGN MOB POINTERS FOR MEMRS //
     for(i <- 0 until fetchWidth){
-        MEM_RS.io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
+        MEM_RS.io.backend_packet(i).bits.STOREQ_index := MOB.io.s_reserved_pointers(i).bits
+        MEM_RS.io.backend_packet(i).bits.LOADQ_index  := MOB.io.l_reserved_pointers(i).bits
     }
 
 
@@ -298,7 +301,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     MOB.io.flush    <> io.flush
 
     execution_engine.io.flush       <>  io.flush
-    io.reserved_pointers            <>  MOB.io.reserved_pointers
+    io.s_reserved_pointers            <>  MOB.io.s_reserved_pointers
+    io.l_reserved_pointers            <>  MOB.io.l_reserved_pointers
     io.backend_memory_request       <>  MOB.io.backend_memory_request
     io.backend_memory_response      <>  MOB.io.backend_memory_response
 

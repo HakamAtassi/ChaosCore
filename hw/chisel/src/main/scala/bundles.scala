@@ -131,8 +131,12 @@ class insn_commit(coreParameters:CoreParameters) extends Bundle{
     }
 
 
-    val MOB_index               = UInt(log2Ceil(MOBEntries).W)
+    //val MOB_index               = UInt(log2Ceil(MOBEntries).W)
+    val LOADQ_index             = UInt(log2Ceil(LOADQEntries).W)
+    val STOREQ_index            = UInt(log2Ceil(STOREQEntries).W)
     val MOB_valid               = Bool()   // only valid on loads and stores
+    val LOAD                    = Bool()
+    val STORE                   = Bool()
 
     val RD                      = UInt(architecturalRegBits.W)
     val RD_valid                = Bool()
@@ -268,7 +272,9 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // ~12 bits
     val packet_index        =  UInt(log2Ceil(fetchWidth).W)
     val ROB_index           =  UInt(log2Ceil(ROBEntries).W)
-    val MOB_index           =  UInt(log2Ceil(MOBEntries).W)
+    //val MOB_index           =  UInt(log2Ceil(MOBEntries).W)
+    val LOADQ_index           =  UInt(log2Ceil(LOADQEntries).W)
+    val STOREQ_index          =  UInt(log2Ceil(STOREQEntries).W)
 
 
     val mem_signed          =  Bool()
@@ -543,7 +549,9 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
     val wr_data             =   UInt(32.W)
 
     // MOB
-    val MOB_index           =   UInt(log2Ceil(MOBEntries).W)
+    //val MOB_index           =   UInt(log2Ceil(MOBEntries).W)
+    val LOADQ_index         =   UInt(log2Ceil(LOADQEntries).W)
+    val STOREQ_index        =   UInt(log2Ceil(STOREQEntries).W)
 
     val ROB_index           =   UInt(log2Ceil(ROBEntries).W)
     
@@ -602,7 +610,7 @@ class backend_memory_response(coreParameters:CoreParameters) extends Bundle{
     val ROB_index       = UInt(log2Ceil(ROBEntries).W)
 
     val data            = UInt(32.W)
-    //val memory_type     = memory_type_t() // LOAD/STORE
+    val memory_type     = memory_type_t() // LOAD/STORE
     //val access_width    = access_width_t()              // B/HW/W
     val MOB_index       = UInt(log2Ceil(MOBEntries).W)
 
