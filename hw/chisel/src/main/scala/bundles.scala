@@ -284,6 +284,8 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     val needs_div           = Bool()
     val needs_FPU           = Bool()
 
+    val assigned_port       = UInt(portCount.W)
+
     // Operand
     val RS1_valid          = Bool()
     val RS2_valid          = Bool()
@@ -337,6 +339,10 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     def CSRW: Bool = {
         // is a CSR WRITE instruction
         CSRRW && RD === 0.U && RS1 =/= 0.U
+    }
+
+    def needs_commit_first: Bool = {
+        CSRW || (memory_type === memory_type_t.STORE)
     }
 
     def CSR_addr: UInt = {
@@ -499,7 +505,8 @@ class RS_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
     val decoded_instruction = new decoded_instruction(coreParameters)
-    val valid               =  Bool()  // Is whole RS entry valid
+    val committed           =  Bool()  // 
+    val valid               =  Bool()  // 
 }
 
 class MEMRS_entry(coreParameters:CoreParameters) extends Bundle{

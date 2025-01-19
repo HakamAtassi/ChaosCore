@@ -103,7 +103,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     // RESERVATION STATIONS //
     //////////////////////////
 
-    val INT_RS   =  Module(new RS(coreParameters, INTRSPortCount, "INT"))
+    val INT_RS   =  Module(new age_RS(coreParameters, INTRSPortCount, "INT"))
     val MEM_RS   =  Module(new RS(coreParameters, MEMRSPortCount, "MEM"))
 
 
@@ -134,7 +134,6 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     dontTouch(io)
     dontTouch(io.backend_packet)
-
 
 
     for (i <- 0 until fetchWidth){

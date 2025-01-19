@@ -497,6 +497,9 @@ earliest_CTRL_oh
     dontTouch(earliest_CTRL_insn)
     dontTouch(prediction)
 
+    // FIXME: important! We are transitioning from the weird CSR commit/complete stuff in stores and CSR insns to instrucions ALWAYS requiring a 
+    // commit and complete bit to be set for its retirement. If a flush is taking place, re-attempt any unretired instructions(uncompleted but committed) instructions too
+
     val test = WireInit(false.B)
     dontTouch(test)
 
