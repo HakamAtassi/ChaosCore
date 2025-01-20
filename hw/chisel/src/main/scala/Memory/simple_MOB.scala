@@ -58,7 +58,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
         val fetch_PC                =      Input(UInt(32.W))                                                                  // DEBUG
 
-        val AGU_output              =      Vec(memPortCount, Flipped(Decoupled(new FU_output(coreParameters))))                                      // update address (AGU)
+        val AGU_output              =      Flipped(Decoupled(new FU_output(coreParameters)))                                      // update address (AGU)
         val MOB_output              =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
 
         // REDIRECTS // 
@@ -141,10 +141,10 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     ////////////////
 
     for(i <- 0 until memPortCount){
-        val AGU_index = io.AGU_output(i).bits.MOB_index
-        when(io.AGU_output(i).valid){
-            MOB(AGU_index).address  := io.AGU_output(i).bits.address
-            MOB(AGU_index).data  := io.AGU_output(i).bits.wr_data
+        val AGU_index = io.AGU_output.bits.MOB_index
+        when(io.AGU_output.valid){
+            MOB(AGU_index).address  := io.AGU_output.bits.address
+            MOB(AGU_index).data  := io.AGU_output.bits.wr_data
             MOB(AGU_index).resolved := 1.B
         }
     }
@@ -192,10 +192,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     // cache request
 
     io.backend_memory_request.bits   := 0.U.asTypeOf(new backend_memory_request(coreParameters))
-    //io.backend_memory_request.valid  := (MOB_front.committed && MOB_front.resolved) && MOB_front.valid
     io.backend_memory_request.valid  := (MOB_front.MOB_STATE === MOB_STATES.READY) && MOB_front.valid
     
-    //(MOB_front.committed || (MOB_front.memory_type === memory_type_t.LOAD)) && MOB_front.valid
 
     io.backend_memory_request.bits.addr         := MOB_front.address
     io.backend_memory_request.bits.memory_type  := MOB_front.memory_type
@@ -271,8 +269,13 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
         when(!io.flush.valid || comb_committed(front_index)){
             front_pointer := front_pointer + 1.U
         }
+
+
         MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
     }
+
+    
+
 
 
 
@@ -287,12 +290,16 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.MOB_output.bits.fetch_packet_index   := MOB(io.backend_memory_response.bits.MOB_index).fetch_packet_index //io.backend_memory_response.bits.fetch_packet_index
     io.MOB_output.valid                     := io.backend_memory_response.valid && !io.backend_memory_response.bits.nack
 
-    //when(io.backend_memory_response.fire){
-        //io.MOB_output.bits.ROB_index            := req_reg.ROB_index
-        //io.MOB_output.bits.MOB_index            := req_reg.MOB_index
-        //io.MOB_output.bits.fetch_packet_index   := req_reg.packet_index
-        //io.MOB_output.bits.PRD                  := req_reg.PRD
-    //}
+    when(MOB(front_index).valid && MOB(front_index).MOB_STATE === MOB_STATES.DONE && MOB(front_index).memory_type === memory_type_t.STORE){
+        io.MOB_output.bits.ROB_index            := MOB(front_index).ROB_index
+        //io.MOB_output.bits.MOB_index            := MOB(front_index).MOB_index
+        io.MOB_output.bits.address              := MOB(front_index).address
+        //io.MOB_output.bits.PRD                  := MOB(front_index).PRD
+        //io.MOB_output.bits.RD_data              := MOB(front_index).RD_data
+        //io.MOB_output.bits.RD_valid             := MOB(front_index).RD_valid
+        io.MOB_output.bits.fetch_packet_index   := MOB(front_index).fetch_packet_index //io.backend_memory_response.bits.fetch_packet_index
+        io.MOB_output.valid                     := 1.B
+    }
 
 
     when(io.flush.valid){
@@ -317,7 +324,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
 
     for(i<-0 until memPortCount){
-        io.AGU_output(i).ready := 1.B  // always ready to accept a resolved address
+        io.AGU_output.ready := 1.B  // always ready to accept a resolved address
     }
 
     io.backend_memory_response.ready := 1.B

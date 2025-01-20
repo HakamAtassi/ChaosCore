@@ -331,22 +331,8 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
         STORE || LOAD
     }
 
-    def CSRR: Bool = {
-        // is a CSR READ instruction
-        CSRRW && RD =/= 0.U && RS1 === 0.U
-    }
-
-    def CSRW: Bool = {
-        // is a CSR WRITE instruction
-        CSRRW && RD === 0.U && RS1 =/= 0.U
-    }
-
-    def needs_commit_first: Bool = {
-        CSRW || (memory_type === memory_type_t.STORE)
-    }
-
     def CSR_addr: UInt = {
-        IMM(10,0).asUInt
+        IMM(11,0).asUInt
     }
 }
 
@@ -449,13 +435,12 @@ class ROB_uOp_entry(coreParameters:CoreParameters) extends Bundle{
 
 class ROB_WB_entry(coreParameters:CoreParameters) extends Bundle{
     val valid               = Bool()
+    val committed           = Bool()    // instruction "committed" (previous instructions do not flush)
     val complete            = Bool()
     val exception           = Bool()
     val exception_cause     = EX_CAUSE()
     val mem_violation       = Bool()    // for e.g., speculative memory violation
     
-    val committed           = Bool()    // instruction "committed" (previous instructions do not flush)
-
     val RD_data = if (coreParameters.DEBUG) Some(UInt(32.W)) else None      // for WB data
 
     //val mem addr = if (coreParameters.DEBUG) Some(UInt(32.W)) else None     // for memory accesses
@@ -466,6 +451,14 @@ class ROB_WB_entry(coreParameters:CoreParameters) extends Bundle{
 class ROB_instruction_entry(coreParameters:CoreParameters) extends Bundle{
     val uOp = new ROB_uOp_entry(coreParameters)
     val WB = new ROB_WB_entry(coreParameters)
+
+    def commit:Bool = { // just a helper function
+        (WB.valid && WB.complete) || uOp.decoded_insn.STORE || uOp.decoded_insn.needs_CSRs
+    }
+
+    def retire:Bool = { // instruction can safely exit pipeline
+        (WB.valid && WB.complete && !WB.exception && WB.committed) 
+    }
 }
 
 class ROB_shared_entry(coreParameters:CoreParameters) extends Bundle{

@@ -30,16 +30,9 @@
 package ChaosCore
 
 import chisel3._
-
 import chisel3.util._
 
-
-//TODO: add port assignment
-//TODO: add commit bit
-//TODO: fix complete issue in ROB for CSRs and Stores
-
-
-class age_RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends Module{
+class age_RS(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
 
@@ -54,59 +47,39 @@ class age_RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) ext
         val FU_outputs        =      Vec(WBPortCount, Flipped(Decoupled(new FU_output(coreParameters))))
 
         // REG READ (module output) //
-        val RF_inputs         =      Vec(RSPortCount, Decoupled(new decoded_instruction(coreParameters)))
+        val RF_inputs         =      Decoupled(new decoded_instruction(coreParameters))
 
         // commit (mostly for CSRs) // 
-        val commit                  =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
+        val commit            =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
 
     }); dontTouch(io)
 
 
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreParameters))))) // once an entry is selected and issued
-    val issue_queues: Seq[Queue[decoded_instruction]] = Seq.tabulate(RSPortCount) { w => 
-    Module(new Queue(new decoded_instruction(coreParameters), IQEntries, flow = false, hasFlush = true, useSyncReadMem = false))
-    }
-
-
-    object arrow extends ChiselEnum{
-        val up, left = Value
-    }
-
-    val age_matrix = RegInit(VecInit.tabulate(RSEntries, RSEntries){(x, y) => arrow.up})    // does init dir matter?
-
-    //////////////////////
-    // AGE MATRIX LOGIC //
-    //////////////////////
+    val issue_queue         = Module(new Queue(new decoded_instruction(coreParameters), IQEntries, flow = false, hasFlush = true, useSyncReadMem = false))
     
-    def update_age(index:UInt):Unit = { // this is called when RS entries are allocated
-        for(i <- 0 until RSEntries){
-            age_matrix(index)(i) := arrow.up
-            age_matrix(i)(index) := arrow.left
-        }
-    }
 
-    def get_age(index:UInt): UInt = {   // return age for some entry
-        //0.U
-        age_matrix(index).asUInt
-    }
-    
     //////////////
     // ALLOCATE //
     //////////////
     // Allocate new RS entry
 
-    val validUInt = Cat(reservation_station.map(_.valid))
-    val allocate_index_vec = SelectFirstN(~validUInt, fetchWidth).map(x => OHToUInt(x))
+    // Reg allocate POS for new input
+    val validVec = reservation_station.map(_.valid)
+    val validUInt = Cat(validVec.reverse)
+    val allocate_index = SelectFirstN(~validUInt, fetchWidth)
     
+
+    // Allocate new RS entry
     for(i <- 0 until fetchWidth){
         when(io.backend_packet(i).fire){
-            val allocate_index = allocate_index_vec(i)
-            reservation_station(allocate_index).decoded_instruction := io.backend_packet(i).bits
-            reservation_station(allocate_index).valid   := 1.B
-
-            update_age(allocate_index)  // update age matrix
+            val allocateIndexBinary = OHToUInt(allocate_index(i))
+            reservation_station(allocateIndexBinary).decoded_instruction := io.backend_packet(i).bits
+            reservation_station(allocateIndexBinary).valid   := 1.B
         }
     }
+
+
 
     ////////////
     // UPDATE //
@@ -141,76 +114,57 @@ class age_RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) ext
     }
 
 
-
+    dontTouch(reservation_station)
 
     //////////////
     // SCHEDULE //
     //////////////
 
-    // step 1: create a bit vector for each port that encodes a 1 for each schedule-able instruction in the RS
-    // Ex: 
-    //// port[0]              = [0,0,0,0,1,0,0,1,1,...,0]
-    //// port[...]            = [...]
-    //// port[portCount-1]    = [1,1,0,1,0,0,1,1,0,...,0]
+    val schedulable_instructions = WireInit(VecInit(Seq.fill(RSEntries)(0.B)))
 
-  	val schedulable_instructions       = WireInit(VecInit.tabulate(RSPortCount, RSEntries){ (x, y) => 0.B })
+    for(i <- 0 until RSEntries){
+        val current_instruction = reservation_station(i).decoded_instruction
 
-    for(port <- 0 until RSPortCount){
-        for(i <- 0 until RSEntries){
-            val current_instruction = reservation_station(i).decoded_instruction
+        val needs_commit_first = current_instruction.needs_CSRs   // FIXME: this needs to be expressed more abstractly 
 
-            val needs_commit_first = current_instruction.needs_commit_first // ex, CSRW, mem store, etc...
-            val committed          = reservation_station(i).committed 
+        val committed          = reservation_station(i).committed 
 
-            val RS1_ready    = reservation_station(i).decoded_instruction.ready_bits.RS1_ready
-            val RS2_ready    = reservation_station(i).decoded_instruction.ready_bits.RS2_ready
+        val RS1_ready    = reservation_station(i).decoded_instruction.ready_bits.RS1_ready
+        val RS2_ready    = reservation_station(i).decoded_instruction.ready_bits.RS2_ready
 
-            val fireable     = reservation_station(i).valid && RS1_ready && RS2_ready && (!needs_commit_first || committed)
-            
-            schedulable_instructions(port)(i) := fireable && current_instruction.assigned_port === port.U
-        }
+        val fireable     = reservation_station(i).valid && RS1_ready && RS2_ready && (!needs_commit_first || committed)
+        
+        schedulable_instructions(i) := fireable
     }
+
+    dontTouch(schedulable_instructions)
 
     // Schedule oldest instruction each cycle for that port. 
     // currently schedules 1 instruction per cycle. FIXME: this may be a performance bottle neck down the line
 
-    val scheduled                      = WireInit(VecInit.tabulate(RSEntries, RSPortCount){(x, y) => 0.B})    
 
-    for(port <- 0 until RSPortCount) {
-        
+    // get oldest outstanding instruction for each port
+    var scheduled_index = WireInit(0.U(log2Ceil(RSEntries).W))
 
-        // get oldest outstanding instruction for each port
-        var scheduled_age   = WireInit(0.U(log2Ceil(RSEntries).W))
-        var scheduled_index = WireInit(0.U(log2Ceil(RSEntries).W))
-
-        val prev_max_vector = WireInit(VecInit(Seq.fill(RSEntries+1)(0.U(log2Ceil(RSEntries).W)))) 
-
-        for(i <- 0 until RSEntries){
-            val already_scheduled = scheduled(i).take(port).fold(0.B)(_ || _)
-
-            when(schedulable_instructions(port)(i) === 1.B && !already_scheduled && get_age(i.U) >= prev_max_vector(i)){
-                prev_max_vector(i+1)          := i.U
-                scheduled_index               := i.U
-                scheduled_age                 := get_age(i.U)
-            }
+    for(i <- 0 until RSEntries){    // FIXME: update to priority encoder
+        when(schedulable_instructions(i) === 1.B){
+            scheduled_index               := i.U
         }
+    }
 
+    // issue that instruction
+    issue_queue.io.enq.bits  := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+    issue_queue.io.enq.valid := 0.B
 
-        // issue that instruction
-        issue_queues(port).io.enq.bits  := 0.U.asTypeOf(new decoded_instruction(coreParameters))
-        issue_queues(port).io.enq.valid := 0.B
+    when(schedulable_instructions(scheduled_index)){
+        // assign instruction to issue Q
+        issue_queue.io.enq.bits  := reservation_station(scheduled_index).decoded_instruction
+        issue_queue.io.enq.valid := 1.B
+    }
 
-        when(reservation_station(scheduled_index).valid){   // FIXME: and if issue queue can accept...
-            // assign instruction to issue Q
-            issue_queues(port).io.enq.bits  := reservation_station(scheduled_index).decoded_instruction //scheduled_instruction(port).bits
-            issue_queues(port).io.enq.valid := 1.B
-            
-            // mark it as scheduled (so it isn't double-scheduled for a similar port)
-            scheduled(scheduled_index)(port) := 1.B
-
-            // free RS entry
-            reservation_station(scheduled_index) := 0.U.asTypeOf(new RS_entry(coreParameters))
-        }
+    when(issue_queue.io.enq.fire){
+        // free RS entry
+        reservation_station(scheduled_index) := 0.U.asTypeOf(new RS_entry(coreParameters))
     }
 
 
@@ -220,25 +174,22 @@ class age_RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) ext
     ////////////////////
 
     // write issue queue to output
-    for (port <- 0 until RSPortCount) {
-        issue_queues(port).io.deq <> io.RF_inputs(port)
+    issue_queue.io.deq <> io.RF_inputs
+
+    when(io.RF_inputs.valid === 0.B){
+        io.RF_inputs.bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
     }
 
     ///////////
     // FLUSH //
     ///////////
 
-    for(port <- 0 until RSPortCount){
-        issue_queues(port).io.flush.get := io.flush.valid  // flush issue queues
-    }
+    issue_queue.io.flush.get := io.flush.valid  // flush issue queues
 
     when(io.flush.valid){
-        // de-assert current outputs & flush issue queues
-        for(port <- 0 until RSPortCount){
-            issue_queues(port).io.flush.get := io.flush.valid  // flush issue queues
-            io.RF_inputs(port).bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
-            io.RF_inputs(port).valid := 0.B
-        }
+        // de-assert current outputs
+        io.RF_inputs.bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+        io.RF_inputs.valid := 0.B
 
         // clear RS entries
         for(i <- 0 until RSEntries){

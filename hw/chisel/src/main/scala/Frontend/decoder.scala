@@ -305,6 +305,70 @@ class decoder(coreParameters:CoreParameters) extends Module{
     io.decoded_instruction.bits.ROB_index            := 0.U
     io.decoded_instruction.bits.MOB_index            := 0.U
 
+    //////////////////
+    // PORT BINDING //
+    //////////////////
+    // Assign a port for this instruction
+    // FIXME: add an element of randomness here...
+    // FIXME: this makes a lot more sense to be used with multiple reservation stations, not just one
+    def shift_port_seq(portSR: Vec[UInt]): Unit = { // Shift portSR by 1
+    val first = portSR.head
+        for (i <- 0 until portSR.length - 1) {
+            portSR(i) := portSR(i + 1)
+        }
+        portSR(portSR.length - 1) := first
+    }
+
+    def get_next_port(portSR: Vec[UInt]): UInt = { // Get the lowest SR entry
+        portSR.head
+    }
+
+    // Create UInt Vecs of the port #s that support the corresponding instruction
+
+    val ALU_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsInt).map(_._2.U)))
+    val branch_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsBranch).map(_._2.U)))
+    val CSR_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsCSRs).map(_._2.U)))
+    val memory_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsAddressGeneration).map(_._2.U)))
+    val mul_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsMult).map(_._2.U)))
+    val div_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsDiv).map(_._2.U)))
+
+    dontTouch(ALU_port_seq)
+    dontTouch(branch_port_seq)
+    dontTouch(CSR_port_seq)
+    dontTouch(memory_port_seq)
+    dontTouch(mul_port_seq)
+    dontTouch(div_port_seq)
+
+    // Assign ports based on instruction requirements
+    when(io.decoded_instruction.bits.needs_ALU) {
+        io.decoded_instruction.bits.assigned_port := get_next_port(ALU_port_seq)
+    }.elsewhen(io.decoded_instruction.bits.needs_branch_unit) {
+        io.decoded_instruction.bits.assigned_port := get_next_port(branch_port_seq)
+    }.elsewhen(io.decoded_instruction.bits.needs_CSRs) {
+        io.decoded_instruction.bits.assigned_port := get_next_port(CSR_port_seq)
+    }.elsewhen(io.decoded_instruction.bits.needs_memory) {
+        io.decoded_instruction.bits.assigned_port := get_next_port(memory_port_seq)
+    }.elsewhen(io.decoded_instruction.bits.needs_mul) {
+        io.decoded_instruction.bits.assigned_port := get_next_port(mul_port_seq)
+    }.elsewhen(io.decoded_instruction.bits.needs_div) {
+        io.decoded_instruction.bits.assigned_port := get_next_port(div_port_seq)
+    }
+    //.elsewhen(io.decoded_instruction.bits.needs_FPU) {
+        //io.decoded_instruction.bits.assigned_port := get_next_port(FPU_port_seq)
+    //}
+
+    // Update next ports after assignment
+    shift_port_seq(ALU_port_seq)
+    shift_port_seq(branch_port_seq)
+    shift_port_seq(CSR_port_seq)
+    shift_port_seq(memory_port_seq)
+    shift_port_seq(mul_port_seq)
+    shift_port_seq(div_port_seq)
+
+
+
+
+
     when (instruction(31,12) === 0x105.U){
         io.decoded_instruction.bits.IMM := 0.U
     }

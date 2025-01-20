@@ -291,9 +291,10 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // CSRRS/CSRRC (imm and no imm) always read. only write if wr_data != 0
 
 
-    val input_CSR_read_request      =   ((is_CSRRW || is_CSRRWI) && io.FU_input.bits.decoded_instruction.PRD =/= 0.U) ||
+    val input_CSR_read_request      =   (((is_CSRRW || is_CSRRWI) && io.FU_input.bits.decoded_instruction.PRD =/= 0.U) ||
                                         (is_CSRRS || is_CSRRSI) || 
-                                        (is_CSRRC || is_CSRRCI)
+                                        (is_CSRRC || is_CSRRCI)) && 
+                                        io.FU_input.valid
 
     dontTouch(is_CSRRW)
     dontTouch(is_CSRRS)
@@ -302,9 +303,10 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     dontTouch(is_CSRRSI)
     dontTouch(is_CSRRCI)
     
-    val input_CSR_write_request     =   ((is_CSRRW || is_CSRRWI)) ||
+    val input_CSR_write_request     =   (((is_CSRRW || is_CSRRWI)) ||
                                         ((is_CSRRS || is_CSRRSI) && wr_data =/= 0.U) || 
-                                        ((is_CSRRC || is_CSRRCI) && wr_data =/= 0.U)
+                                        ((is_CSRRC || is_CSRRCI) && wr_data =/= 0.U)) && 
+                                        io.FU_input.valid
     
 
     val current_privilege = RegInit(UInt(2.W), 0x3.U)   // Current privilage. Set to M on reset as per spec

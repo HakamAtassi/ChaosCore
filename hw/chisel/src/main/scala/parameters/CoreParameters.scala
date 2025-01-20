@@ -136,7 +136,7 @@ case class CoreParameters(
 
     physicalRegCount:      Int = 65,  // 64 physical regs + x0 (not renamed)
 
-    RSEntries: Int = 16, // How many entires per reservation station (these are very expensive)
+    RSEntries: Int = 8, // How many entires per reservation station (these are very expensive)
 
 
     L1_cacheLineSizeBytes: Int = 32,

@@ -28,6 +28,14 @@
 */
 
 
+// STORES and CSR related instructions(CSRRW, xRET, ECALL, EBREAK, etc) all COMMIT first
+// Where commit indicates that no previous instruction flushes the pipeline. 
+// Then, these instructions execute, mark complete, and if they do not cause an exception, can retire
+// Where retire indicates that the instruction can safely exit the pipeline
+
+// When a flush occurs, you flush all unretired instructions, even if committed. 
+
+
 
 package ChaosCore
 
@@ -48,6 +56,9 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
 
         // commit insn (1 bit, commit this instruction)
         val commit                        =   Input(Bool())
+        
+        // same for retire
+        val retire                        =   Input(Bool())
 
         // commit output
         val ROB_instruction_entry         =   Output(new ROB_instruction_entry(coreParameters))
@@ -63,8 +74,6 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     // On commit, set commit bit
     // Clear entries with commit bit set
     // On flush, clear bank entries
-
-    val IS_STORE = Wire(Bool()) // FIXME: THIS IS TEMPORARY UNTIL THE MOB IS FIXED
 
     /////////////////////
     // WRITE-BACK BANK //
@@ -92,13 +101,12 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
 
     // commit
 
-
     when(io.commit){
         wb_mem(io.ROB_front_idx).committed           := 1.B
     }
 
     // free entry after "full" commit
-    when(wb_mem(io.ROB_front_idx).valid && wb_mem(io.ROB_front_idx).committed && (wb_mem(io.ROB_front_idx).complete || IS_STORE)){
+    when(io.retire){
         wb_mem(io.ROB_front_idx) := 0.U.asTypeOf(new ROB_WB_entry(coreParameters))
     }
 
@@ -132,7 +140,6 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     // rob row output for commit
     io.ROB_instruction_entry.uOp := insn_mem.read(io.ROB_front_idx)
 
-    IS_STORE := insn_mem.read(io.ROB_front_idx).decoded_insn.STORE
 
 
 
@@ -244,8 +251,6 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
 
     val mem = SyncReadMem(ROBEntries, new ROB_branch_entry(coreParameters))
 
-    // FIXME: this module doesnt work
-
     /////////////////////////
     // ROUND ROBIN ARBITER //
     /////////////////////////
@@ -321,7 +326,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     }); dontTouch(io)
 
     val CSR_port = IO(Input(new CSR_out(coreParameters))); dontTouch(CSR_port)
-earliest_CTRL_oh
     // only update WB valid memory on a grant/no grant basis
     // for instance, multiple instructions may be writing to the same branch WB bank in a single cycle.
     // Only mark those branches as complete in the ROB_WB_bank if the ROB_branch_bank grants the write-back.
@@ -442,12 +446,6 @@ earliest_CTRL_oh
         }
     )
 
-    dontTouch(CSRRW_insn_oh)
-    dontTouch(FENCE_insn_oh)
-    dontTouch(FLUSH_insn_oh)
-    dontTouch(EXCEPTION_insn_oh)
-    dontTouch(earliest_CTRL_oh)
-
     val earliest_CTRL_idx = PriorityEncoder(earliest_CTRL_oh.asUInt)
 
     // mux out the info for the taken branches
@@ -455,17 +453,15 @@ earliest_CTRL_oh
     val prediction_earliest_CTRL_insn = WireInit(0.U.asTypeOf(new ROB_instruction_entry(coreParameters)))
     val earliest_CTRL_branch_info = WireInit(0.U.asTypeOf(new ROB_branch_entry(coreParameters)))
 
-    dontTouch(earliest_CTRL_idx)
-    dontTouch(earliest_CTRL_branch_info)
+
 
 
 
     // done with this row
     // this signal increments pointers and helps with interrupts and things
-    // FIXME: remove store condition after FIXING MOB
-    val row_commit = ROB_instruction_banks.zipWithIndex.map { case (bank, i) =>
+    val row_retire = ROB_instruction_banks.zipWithIndex.map { case (bank, i) =>
         !bank.io.ROB_instruction_entry.WB.valid || 
-        (bank.io.ROB_instruction_entry.WB.valid && (((bank.io.ROB_instruction_entry.WB.complete || bank.io.ROB_instruction_entry.uOp.decoded_insn.STORE) && bank.io.ROB_instruction_entry.WB.committed) || i.U > earliest_CTRL_idx))
+        (bank.io.ROB_instruction_entry.WB.valid && (bank.io.ROB_instruction_entry.retire || i.U > earliest_CTRL_idx))
     }.reduce(_ && _) && ROB_shared_bank.io.ROB_shared_entry.valid
 
     val prediction = WireInit(0.U.asTypeOf(new prediction(coreParameters)))
@@ -490,21 +486,13 @@ earliest_CTRL_oh
 
     expected_next_PC    := ROB_shared_bank.io.ROB_shared_entry.bits.fetch_PC + (4.U * fetchWidth.U)
 
-    dontTouch(expected_next_PC)
 
     io.flush := output_flush
-
-    dontTouch(earliest_CTRL_insn)
-    dontTouch(prediction)
 
     // FIXME: important! We are transitioning from the weird CSR commit/complete stuff in stores and CSR insns to instrucions ALWAYS requiring a 
     // commit and complete bit to be set for its retirement. If a flush is taking place, re-attempt any unretired instructions(uncompleted but committed) instructions too
 
-    val test = WireInit(false.B)
-    dontTouch(test)
-
-
-    when(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.uOp.decoded_insn.CTRL && earliest_CTRL_insn.WB.committed){
+    when(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.uOp.decoded_insn.CTRL && earliest_CTRL_insn.retire){
         // dominant branch is a typical branch
         // only flush if doesnt match prediction
         expected_next_PC    := earliest_CTRL_branch_info.target_PC
@@ -527,7 +515,7 @@ earliest_CTRL_oh
 
         output_flush.bits.is_exception  := 1.B
         output_flush.bits.exception_cause := earliest_CTRL_insn.WB.exception_cause
-    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.WB.committed){
+    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) && earliest_CTRL_insn.retire){
         // is a CSRRW, FENCE, FLUSH, or otherwise
         // flush and jump to next insn
         output_flush.valid := 1.B
@@ -538,7 +526,7 @@ earliest_CTRL_oh
 
         output_flush.bits.is_fence    := earliest_CTRL_insn.uOp.decoded_insn.FENCE
         output_flush.bits.is_CSR      := earliest_CTRL_insn.uOp.decoded_insn.CSRRW
-    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) === 0.B && prediction_earliest_CTRL_insn.WB.committed){    // no taken branch (make sure frontend agrees/agreed)
+    }.elsewhen(earliest_CTRL_oh.reduce(_ || _) === 0.B && prediction_earliest_CTRL_insn.retire){    // no taken branch (make sure frontend agrees/agreed)
 
         when(prediction.T_NT){ // if you predicted taken
             // flush to the instruction after the incorrectly predicted one
@@ -575,28 +563,36 @@ earliest_CTRL_oh
 
         val cVec = WireInit(VecInit(Seq.fill(fetchWidth)(false.B)))
 
-        cVec(0) := (entries(0).WB.complete || entries(0).uOp.decoded_insn.STORE || entries(0).uOp.decoded_insn.CSRRW) && !entries(0).WB.committed && entries(0).WB.valid
+        cVec(0) := entries(0).commit
 
         for (i <- 1 until fetchWidth) {
             val prevValid      = entries(i-1).WB.valid
             val prevComplete   = entries(i-1).WB.complete
             val prevCommittedOrCommitting = entries(i-1).WB.committed || committing(i-1)
 
-            cVec(i) :=  entries(i).WB.valid &&        // insn is valid
-                        !entries(i).WB.committed          &&        // insn not already committed
-                        (entries(i).WB.complete || entries(i).uOp.decoded_insn.STORE || entries(i).uOp.decoded_insn.CSRRW) &&   // insn is complete or commit first
+            cVec(i) :=  entries(i).WB.valid          &&        // insn is valid
+                        !entries(i).WB.committed     &&        // insn not already committed
+                        (entries(i).commit)           &&        // insn should commit (already complete or completes after commit)
                         (!prevValid || (prevComplete && prevCommittedOrCommitting)) &&                                          // prev insn has committed or is committing
                         i.U <= earliest_CTRL_idx &&                                                                             // only commit up to commit point 
                         !EXCEPTION_insn_oh(i)                                                                                   // don't commit exceptions
-                        //!CSR_port.interrupt                                                                                   // don't commit anything when an interrupt is taking place
         }
         cVec
+    }
+
+    val retire_vec = {
+        val entries = ROB_instruction_banks.map(_.io.ROB_instruction_entry)
+        val rVec = WireInit(VecInit(Seq.fill(fetchWidth)(false.B)))
+        for (i <- 0 until fetchWidth) {rVec(i) :=  entries(i).WB.valid && entries(i).retire}
+        rVec
     }
 
     // Drive the commit signal for each instruction bank
     for (i <- 0 until fetchWidth) {
         ROB_instruction_banks(i).io.commit := commit_vec(i)
+        ROB_instruction_banks(i).io.retire := retire_vec(i)
     }
+
 
     
     // DRIVE I/O COMMIT //
@@ -644,11 +640,11 @@ earliest_CTRL_oh
         front_pointer := 0.U
         back_pointer  := 0.U
     }.otherwise{
-        front_pointer := front_pointer + row_commit
+        front_pointer := front_pointer + row_retire
         back_pointer  := back_pointer + io.ROB_packet.fire
     }
 
-    ROB_shared_bank.io.commit_row                       := row_commit
+    ROB_shared_bank.io.commit_row                       := row_retire
     ROB_shared_bank.io.flush                            := output_flush.valid
 
     //////////////////
@@ -689,7 +685,7 @@ earliest_CTRL_oh
     // INTERRUPT //
     ///////////////
     
-    when(CSR_port.interrupt && row_commit){ 
+    when(CSR_port.interrupt && row_retire){ 
         // on interrupt, jump to mtvec
         // set PC to the next instruction that would have committed
         output_flush    := 0.U.asTypeOf(ValidIO(new flush(coreParameters)))
@@ -733,15 +729,10 @@ earliest_CTRL_oh
                 printf("core   0: 3 0x%x 0x%d = 0x%x | mem[???]\n", instruction_PC, arch_RD, RD_data)
             }.elsewhen(done && IS_CSRRW){
                 //printf();
-                val CSRR =  ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSRR 
-                val CSRW =  ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSRW 
                 val CSR_addr =  ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.CSR_addr
 
                 printf("core   0: 3 0x%x", instruction_PC);
                 //printf(cf"core   0: 3 0x$instruction_PC");
-                when(CSRR){
-                    printf(" x%d <= 0x%d ", arch_RD, RD_data);
-                }
                 printf("CSR 0x%x", CSR_addr)
                 //printf(cf"CSR 0x$CSR_addr")
 
@@ -762,6 +753,19 @@ earliest_CTRL_oh
 
         }
     }
+
+
+    dontTouch(expected_next_PC)
+    dontTouch(earliest_CTRL_insn)
+    dontTouch(prediction)
+
+    dontTouch(earliest_CTRL_idx)
+    dontTouch(earliest_CTRL_branch_info)
+    dontTouch(CSRRW_insn_oh)
+    dontTouch(FENCE_insn_oh)
+    dontTouch(FLUSH_insn_oh)
+    dontTouch(EXCEPTION_insn_oh)
+    dontTouch(earliest_CTRL_oh)
 
 
 }
