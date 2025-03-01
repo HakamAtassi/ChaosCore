@@ -71,6 +71,9 @@ case class ChaosCoreParams(
   debugROB: Option[DebugROBParams] = None, // if size < 1, SW ROB, else HW ROB
   haveCease: Boolean = true, // non-standard CEASE instruction
   haveSimTimeout: Boolean = true, // add plusarg for simulation timeout
+
+  fetchWidth: Int = 1,
+
 ) extends CoreParams {
 
   //override def vMemDataBits: Int = 0
@@ -83,209 +86,14 @@ case class ChaosCoreParams(
   val lgPauseCycles = 5
   val haveFSDirty = false
   val pmpGranularity: Int = 0
-  val fetchWidth: Int = 4
   val fpu: Option[FPUParams] = None 
-  //  fetchWidth doubled, but coreInstBytes halved, for RVC:
   val decodeWidth: Int = 4
   val retireWidth: Int = 1
   val instBits: Int = if (useCompressed) 16 else 32
   val lrscCycles: Int = 80 // worst case is 14 mispredicted branches + slop
   val traceHasWdata: Boolean = debugROB.isDefined // ooo wb, so no wdata in trace
+
 }
-
-
-/*
-case class ChaosCoreParams(
-  //Defaults based on Ibex "small" configuration
-  //See https://github.com/lowRISC/ibex for more information
-  val bootFreqHz: BigInt = BigInt(1700000000),
-  val pmpEnable: Int = 0,
-  val pmpGranularity: Int = 0,
-  val pmpNumRegions: Int = 4,
-  val mhpmCounterNum: Int = 0,
-  val mhpmCounterWidth: Int = 0,
-  val rv32e: Int = 0,
-  val rv32m: String = "RV32MFast",
-  val rv32b: String = "RV32BNone",
-  val regFile: String = "RegFileFF",
-  val branchTargetALU: Int = 0,
-  val wbStage: Int = 0,
-  val branchPredictor: Int = 0,
-  val dbgHwBreakNum: Int = 1,
-  val dmHaltAddr: Int = 0x1A110800,
-  val dmExceptionAddr: Int = 0x1A110808
-) extends CoreParams {
-  val xLen = 32
-  val pgLevels = 2
-  val useVM: Boolean = false
-  val useHypervisor: Boolean = false
-  val useUser: Boolean = true
-  val useSupervisor: Boolean = false
-  val useDebug: Boolean = true
-  val useAtomics: Boolean = false
-  val useAtomicsOnlyForIO: Boolean = false
-  val useCompressed: Boolean = false
-  override val useVector: Boolean = false
-  val useSCIE: Boolean = false
-  val useRVE: Boolean = true
-  val mulDiv: Option[MulDivParams] = Some(MulDivParams()) // copied from Rocket
-  val fpu: Option[FPUParams] = None //floating point not supported
-  val fetchWidth: Int = 1
-  val decodeWidth: Int = 1
-  val retireWidth: Int = 2
-  val instBits: Int = if (useCompressed) 16 else 32
-  val nLocalInterrupts: Int = 15
-  val nPMPs: Int = 0
-  val nBreakpoints: Int = 0
-  val useBPWatch: Boolean = false
-  val nPerfCounters: Int = 29
-  val haveBasicCounters: Boolean = true
-  val haveFSDirty: Boolean = false
-  val misaWritable: Boolean = false
-  val haveCFlush: Boolean = false
-  val nL2TLBEntries: Int = 0
-  val mtvecInit: Option[BigInt] = Some(BigInt(0))
-  val mtvecWritable: Boolean = true
-  val nL2TLBWays: Int = 1
-  val lrscCycles: Int = 80
-  val mcontextWidth: Int = 0
-  val scontextWidth: Int = 0
-  val useNMI: Boolean = true
-  val nPTECacheEntries: Int = 0
-  val traceHasWdata: Boolean = false
-  val useConditionalZero: Boolean = false
-  val useZba: Boolean = false
-  val useZbb: Boolean = false
-  val useZbs: Boolean = false
-}
-*/
-
-
-
-
-
-/*
-case class BoomCoreParams(
-// DOC include start: BOOM Parameters
-  pgLevels: Int = 3,
-  fetchWidth: Int = 4,
-  decodeWidth: Int = 1,
-  numRobEntries: Int = 32,
-  issueParams: Seq[IssueParams] = Seq(
-    IssueParams(issueWidth=2, numEntries=8, iqType=IQ_MEM, dispatchWidth=1),
-    IssueParams(issueWidth=1, numEntries=8, iqType=IQ_UNQ, dispatchWidth=1),
-    IssueParams(issueWidth=1, numEntries=8, iqType=IQ_ALU, dispatchWidth=1),
-    IssueParams(issueWidth=1, numEntries=8, iqType=IQ_FP , dispatchWidth=1)),
-  lsuWidth: Int = 1,
-  numLdqEntries: Int = 8,
-  numStqEntries: Int = 8,
-  numIntPhysRegisters: Int = 48,
-  numFpPhysRegisters: Int = 48,
-  numImmPhysRegisters: Int = 32,
-  numIrfReadPorts: Int = 3,
-  numFrfReadPorts: Int = 3,
-  numIrfBanks: Int = 1,
-  numFrfBanks: Int = 1,
-  maxBrCount: Int = 4,
-  numFetchBufferEntries: Int = 8,
-  enableColumnALUIssue: Boolean = false,
-  enableALUSingleWideDispatch: Boolean = false,
-  enableBankedFPFreelist: Boolean = false,
-  enablePrefetching: Boolean = false,
-  enableFastLoadUse: Boolean = false,
-  enableCompactingLSUDuringDispatch: Boolean = true,
-  enableAgenStage: Boolean = false,
-  enableStLdForwarding: Boolean = false,
-  enableFastPNR: Boolean = false,
-  enableSFBOpt: Boolean = true,
-  enableGHistStallRepair: Boolean = true,
-  enableBTBFastRepair: Boolean = true,
-  enableLoadToStoreForwarding: Boolean = true,
-  enableSuperscalarSnapshots: Boolean = true,
-  enableSlowBTBRedirect: Boolean = false,
-  enableBPDHPMs: Boolean = false,
-
-  useAtomicsOnlyForIO: Boolean = false,
-  ftq: FtqParameters = FtqParameters(nEntries=16),
-  intToFpLatency: Int = 2,
-  imulLatency: Int = 3,
-  nPerfCounters: Int = 2,
-  numRXQEntries: Int = 4,
-  numRCQEntries: Int = 8,
-  numDCacheBanks: Int = 1,
-  dcacheSinglePorted: Boolean = false,
-
-  nPMPs: Int = 8,
-  enableICacheDelay: Boolean = false,
-  icacheSinglePorted: Boolean = true,
-
-  /* branch prediction */
-  enableBranchPrediction: Boolean = true,
-  branchPredictor: Function2[BranchPredictionBankResponse, Parameters, Tuple2[Seq[BranchPredictorBank], BranchPredictionBankResponse]] = ((resp_in: BranchPredictionBankResponse, p: Parameters) => (Nil, resp_in)),
-  globalHistoryLength: Int = 64,
-  localHistoryLength: Int = 32,
-  localHistoryNSets: Int = 128,
-  bpdMaxMetaLength: Int = 120,
-  numRasEntries: Int = 32,
-  enableRasTopRepair: Boolean = true,
-
-  /* more stuff */
-  useCompressed: Boolean = true,
-  useFetchMonitor: Boolean = true,
-  bootFreqHz: BigInt = 0,
-  fpu: Option[FPUParams] = Some(FPUParams(sfmaLatency=4, dfmaLatency=4, divSqrt=true)),
-  usingFPU: Boolean = true,
-  haveBasicCounters: Boolean = true,
-  misaWritable: Boolean = false,
-  mtvecInit: Option[BigInt] = Some(BigInt(0)),
-  mtvecWritable: Boolean = true,
-  haveCFlush: Boolean = false,
-  mulDiv: Option[freechips.rocketchip.rocket.MulDivParams] = Some(MulDivParams(divEarlyOut=true)),
-  nBreakpoints: Int = 0, // TODO Fix with better frontend breakpoint unit
-  nL2TLBEntries: Int = 512,
-  nL2TLBWays: Int = 1,
-  nLocalInterrupts: Int = 0,
-  useNMI: Boolean = false,
-  useAtomics: Boolean = true,
-  useDebug: Boolean = true,
-  useUser: Boolean = true,
-  useSupervisor: Boolean = false,
-  useVM: Boolean = true,
-  useSCIE: Boolean = false,
-  useRVE: Boolean = false,
-  useBPWatch: Boolean = false,
-  clockGate: Boolean = false,
-  mcontextWidth: Int = 0,
-  scontextWidth: Int = 0,
-  trace: Boolean = false,
-
-  /* debug stuff */
-  enableCommitLogPrintf: Boolean = false,
-  enableBranchPrintf: Boolean = false,
-  enableMemtracePrintf: Boolean = false
-
-// DOC include end: BOOM Parameters
-) extends freechips.rocketchip.tile.CoreParams
-{
-  override def traceCustom = Some(new BoomTraceBundle)
-  val xLen = 64
-  val haveFSDirty = true
-  val pmpGranularity: Int = 4
-  val instBits: Int = 16
-  val lrscCycles: Int = 80 // worst case is 14 mispredicted branches + slop
-  val retireWidth = decodeWidth
-  val nPTECacheEntries = 0
-  val useHypervisor = false
-  val jumpInFrontend: Boolean = false // unused in boom
-  val traceHasWdata = trace
-  val useConditionalZero = false
-  val useZba = true
-  val useZbb = true
-  val useZbs = true
-
-  override def customCSRs(implicit p: Parameters) = new BoomCustomCSRs
-}
-*/
 
 
 case class ChaosCoreAttachParams(
@@ -313,8 +121,6 @@ case class ChaosCoreTileParams(
   val boundaryBuffers: Option[ChaosCoreTileBoundaryBufferParams] = None
   require(icache.isDefined)
   require(dcache.isDefined)
-  //val dcache: Option[DCacheParams] = Some(DCacheParams())
-  //val icache: Option[ICacheParams] = Some(ICacheParams())
   val clockSinkParams: ClockSinkParameters = ClockSinkParameters()
   def instantiate(crossing: HierarchicalElementCrossingParamsLike, lookup: LookupByHartIdImpl)(implicit p: Parameters): ChaosCoreTile = {
     new ChaosCoreTile(this, crossing, lookup)
@@ -322,21 +128,6 @@ case class ChaosCoreTileParams(
   val baseName = name.getOrElse("ChaosCore_tile")
   val uniqueName = s"${baseName}_$tileId"
 }
-
-
-//abstract class InstantiableTileParams[TileType <: BaseTile] extends TileParams {
-  //def instantiate(crossing: TileCrossingParamsLike, lookup: LookupByHartIdImpl)
-                //(implicit p: Parameters): TileType
-//}
-
-
-//case class FPUParams(
-  //minFLen: Int = 32,          // Minimum floating point length (no need to change)
-  //fLen: Int = 64,             // Maximum floating point length, use 32 if only single precision is supported
-  //divSqrt: Boolean = true,    // Div/Sqrt operation supported
-  //sfmaLatency: Int = 3,       // Rocket specific: Fused multiply-add pipeline latency (single precision)
-  //dfmaLatency: Int = 4        // Rocket specific: Fused multiply-add pipeline latency (double precision)
-//)
 
 class ChaosCoreTile(
   val chaosParams: ChaosCoreTileParams,
@@ -347,7 +138,6 @@ class ChaosCoreTile(
   with SinksExternalInterrupts
   with SourcesExternalNotifications
 {
-
 
   //////////////////
   //// INTERRUPTS //
@@ -370,15 +160,11 @@ class ChaosCoreTile(
   val masterNode = visibilityNode
   val slaveNode = TLIdentityNode()
 
-
-
-
   /////////////////
   // ICACHE INIT //
   /////////////////
 
   val icache = LazyModule(new ICache(tileParams.icache.get, 0))
-
 
   //icache.resetVectorSinkNode := resetVectorNexusNode
   tlMasterXbar.node := TLWidthWidget(tileParams.icache.get.rowBits/8) := icache.masterNode
@@ -389,7 +175,6 @@ class ChaosCoreTile(
   /////////////////
   // DCACHE INIT //
   /////////////////
-
 
   lazy val dcache: HellaCache = LazyModule(p(BuildHellaCache)(this)(p))
   var nDCachePorts = 0
@@ -475,10 +260,36 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   // annotate the parameters
   Annotated.params(this, outer.chaosParams)
 
-  val core = Module(new ChaosCore(CoreParameters( 
-    startPC = 0x10000.U // FIXME: this should be set based on the starting address of the bootrom automatically
-  )))
+  import outer.chaosParams.core._
 
+  val core = Module(new ChaosCore(CoreParameters( 
+    // Override parameters from Chipyard params to ChaosCore params
+    startPC = 0x10000.U,
+    fetchWidth = outer.chaosParams.core.fetchWidth,
+
+//    DEBUG = outer.chaosParams.core.DEBUG, 
+    //coreConfig = outer.chaosParams.core.coreConfig,
+    //hartID = outer.chaosParams.core.hartID, 
+    //GHRWidth = outer.chaosParams.core.GHRWidth,
+    //RASEntries = outer.chaosParams.core.RASEntries,
+    //BTBEntries = outer.chaosParams.core.BTBEntries,
+    //FTQEntries = outer.chaosParams.core.FTQEntries,
+    //ROBEntries = outer.chaosParams.core.ROBEntries,
+    //architecturalRegCount = outer.chaosParams.core.architecturalRegCount,
+    //RATCheckpointCount = outer.chaosParams.core.RATCheckpointCount,
+    //physicalRegCount = outer.chaosParams.core.physicalRegCount,
+    //RSEntries = outer.chaosParams.core.RSEntries,
+    //ALUportCount = outer.chaosParams.core.ALUportCount,
+    //MEMportCount = outer.chaosParams.core.MEMportCount,
+    //FPUportCount = outer.chaosParams.core.FPUportCount,
+    //ALUStages = outer.chaosParams.core.ALUStages,
+    //MOBWBPortCount = outer.chaosParams.core.MOBWBPortCount,
+    //instruction_queue_depth = outer.chaosParams.core.instruction_queue_depth,
+    //speculative = outer.chaosParams.core.speculative,
+    //MOBEntries = outer.chaosParams.core.MOBEntries,
+    //IQEntries = outer.chaosParams.core.IQEntries,
+    //FUParamSeq = outer.chaosParams.core.FUParamSeq
+  )))
 
 
   core.io := DontCare
@@ -489,22 +300,19 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   dontTouch(outer.dcache.module.io)
   dontTouch(outer.dcache.module.io)
 
-
-
   ////////////////
   // I$ CONNECT //
   ////////////////
 
   // connect I$ resp
-  for(i <- 0 until 4){  // FIXME: this needs to be based on the fetchwidth parameter
-      core.io.frontend_memory_response.bits.instructions(i).instruction    := (outer.icache.module.io.resp.bits.data >> (32*i).U)(31, 0) //(outer.icache.module.io.resp.bits.data)(i)
-      // FIXME: idk about the rest of these params. maybe we can scrap them all together?
-      core.io.frontend_memory_response.bits.fetch_PC        := RegNext(outer.icache.module.io.req.bits.addr)
-      core.io.frontend_memory_response.bits.valid_bits(i)   := RegNext((outer.icache.module.io.req.bits.addr(3, 0)) <= i.U)
-      core.io.frontend_memory_response.bits.prediction      := DontCare//0.U
-      core.io.frontend_memory_response.bits.GHR             := DontCare//0.U
-      core.io.frontend_memory_response.bits.NEXT            := DontCare//0.U
-      core.io.frontend_memory_response.bits.TOS             := DontCare//0.U
+  for(i <- 0 until fetchWidth){  // FIXME: this needs to be based on the fetchwidth parameter
+    core.io.frontend_memory_response.bits.instructions(i).instruction    := (outer.icache.module.io.resp.bits.data >> (32*i).U)(31, 0)
+    core.io.frontend_memory_response.bits.fetch_PC        := RegNext(outer.icache.module.io.req.bits.addr)
+    core.io.frontend_memory_response.bits.valid_bits(i)   := RegNext((outer.icache.module.io.req.bits.addr(log2Ceil(fetchWidth*4), 0)) <= i.U)
+    core.io.frontend_memory_response.bits.prediction      := DontCare//0.U
+    core.io.frontend_memory_response.bits.GHR             := DontCare//0.U
+    core.io.frontend_memory_response.bits.NEXT            := DontCare//0.U
+    core.io.frontend_memory_response.bits.TOS             := DontCare//0.U
   }
 
 
@@ -515,12 +323,12 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
 
   core.io.frontend_memory_response.valid      := outer.icache.module.io.resp.valid
 
-  outer.icache.module.io.s1_paddr := RegNext(core.io.frontend_memory_request.bits.addr) // delayed one cycle w.r.t. req (no vmem)
-  outer.icache.module.io.s2_vaddr :=  RegNext(RegNext(core.io.frontend_memory_request.bits.addr)) //Input(UInt(vaddrBits.W)) // delayed two cycles w.r.t. req
-  outer.icache.module.io.s1_kill := core.io.flush.valid //Input(Bool()) // delayed one cycle w.r.t. req
-  outer.icache.module.io.s2_kill := 0.U //Input(Bool()) // delayed two cycles; prevents I$ miss emission
-  outer.icache.module.io.s2_cacheable := 0.B //Input(Bool()) // should L2 cache line on a miss?
-  outer.icache.module.io.s2_prefetch := 1.U //Input(Bool()) // should I$ prefetch next line on a miss?
+  outer.icache.module.io.s1_paddr := RegNext(core.io.frontend_memory_request.bits.addr)           // delayed one cycle w.r.t. req (no vmem)
+  outer.icache.module.io.s2_vaddr :=  RegNext(RegNext(core.io.frontend_memory_request.bits.addr)) // delayed two cycles w.r.t. req
+  outer.icache.module.io.s1_kill := core.io.flush.valid                                           // delayed one cycle w.r.t. req
+  outer.icache.module.io.s2_kill := 0.U                                                           // delayed two cycles; prevents I$ miss emission
+  outer.icache.module.io.s2_cacheable := 0.B                                                      // should L2 cache line on a miss?
+  outer.icache.module.io.s2_prefetch := 1.U                                                       // should I$ prefetch next line on a miss?
 
   outer.icache.module.io.invalidate := 0.B // flush L1 cache from CPU. IIRC, SFENCE.I
 

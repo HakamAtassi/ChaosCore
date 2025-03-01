@@ -120,7 +120,7 @@ case class CoreParameters(
     //hartIDs:Seq[Int] = Seq(0, 1),
 
 
-    fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
+    fetchWidth: Int = 1,   // up to how many instructions does the core fetch each cycle
 
 
     GHRWidth: Int = 16,

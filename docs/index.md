@@ -73,10 +73,11 @@ conda activate base
 ChaosCore depends on a fork of Chipyard. Chipyard provides a variety of useful IP for RISCV related development, including interconnects, periphirals, interrupt controllers, and more. Chipyard also provides RISCV GNU, Spike, and Verilator. In other words, installing Chipyard's packages should (for the most part) bootstrap a development environment for ChaosCore and other RISCV Cores. To get started, clone the ChaosCore-chipyard fork.
 
 ```
-git clone git@github.com:HakamAtassi/ChaosCore-chipyard.git
+git clone https://github.com/HakamAtassi/ChaosCore-chipyard.git
 cd ChaosCore-chipyard
-git clone git@github.com:HakamAtassi/ChaosCore.git generators/ChaosCore   # Add ChaosCore to generators
+git clone https://github.com/HakamAtassi/ChaosCore.git generators/ChaosCore # Add ChaosCore to generators
 ```
+
 Next, install the Chipyard packages. This process may take ~10-20 minutes. 
 ```
 ./build-setup.sh -s 6 -s 7 -s 8 -s 9  # Skip firemarshal and linux stuff

@@ -759,13 +759,13 @@ class ROB(coreParameters:CoreParameters) extends Module{
     dontTouch(earliest_CTRL_insn)
     dontTouch(prediction)
 
-    dontTouch(earliest_CTRL_idx)
-    dontTouch(earliest_CTRL_branch_info)
-    dontTouch(CSRRW_insn_oh)
-    dontTouch(FENCE_insn_oh)
-    dontTouch(FLUSH_insn_oh)
-    dontTouch(EXCEPTION_insn_oh)
-    dontTouch(earliest_CTRL_oh)
+    //dontTouch(earliest_CTRL_idx)
+    //dontTouch(earliest_CTRL_branch_info)
+    //dontTouch(CSRRW_insn_oh)
+    //dontTouch(FENCE_insn_oh)
+    //dontTouch(FLUSH_insn_oh)
+    //dontTouch(EXCEPTION_insn_oh)
+    //dontTouch(earliest_CTRL_oh)
 
 
 }
