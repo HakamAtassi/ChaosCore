@@ -141,6 +141,10 @@ class backend(coreParameters:CoreParameters) extends Module{
     ///////////////////////////
     val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount, depth=physicalRegCount, width=32))
 
+    if(coreConfig.contains("F")){
+        // TODO
+    }
+
     ///////////////////////
     // EXECUTION ENGINES //
     ///////////////////////
