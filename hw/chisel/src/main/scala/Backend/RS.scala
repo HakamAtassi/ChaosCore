@@ -206,8 +206,8 @@ class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends
             (current_instruction.needs_ALU && current_port_support.supportsInt.B) ||
             (current_instruction.needs_branch_unit && current_port_support.supportsBranch.B) ||
             (current_instruction.needs_CSRs && current_port_support.supportsCSRs.B) ||
-            (current_instruction.needs_div && current_port_support.supportsDiv.B) ||
-            (current_instruction.needs_mul && current_port_support.supportsMult.B) ||
+            (current_instruction.needs_div && current_port_support.supportsIntDiv.B) ||
+            (current_instruction.needs_mul && current_port_support.supportsIntMult.B) ||
             (current_instruction.needs_memory && current_port_support.supportsAddressGeneration.B)
             )
 

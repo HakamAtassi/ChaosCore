@@ -206,7 +206,7 @@ class age_RS(coreParameters:CoreParameters) extends Module{
     
     val availalbe_RS_entries = PopCount(~Cat(reservation_station.map(_.valid)))
 
-    for(i <- 0 until portCount){
+    for(i <- 0 until WBPortCount){
         io.FU_outputs(i).ready := 1.B   // RS can always set ready bits
     }
     

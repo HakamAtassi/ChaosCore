@@ -35,10 +35,16 @@ import chisel3.util._
 
 class backend(coreParameters:CoreParameters) extends Module{
     import coreParameters._
-    val portCount = getPortCount(coreParameters)
-    val branchPortCount = getBranchPortCount(coreParameters)
+
+    // these functions could use a lot of work
+    val portCount = getPortCount(coreParameters)    // number of ports total
     val memoryPortCount = FUParamSeq.count(_.supportsAddressGeneration)
-    val nonMemoryPortCount = portCount - memoryPortCount 
+    val FPportCount  = FPUportCount 
+    val INTportCount = portCount - memoryPortCount - FPportCount
+
+    val branchPortCount = getBranchPortCount(coreParameters)
+    val nonMemoryPortCount = portCount - memoryPortCount
+
 
     val io = IO(new Bundle{
         // FLUSH //
@@ -88,6 +94,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     // RESERVATION STATIONS //
     //////////////////////////
     val INT_RS: Seq[age_RS] = Seq.tabulate(nonMemoryPortCount) { w => Module(new age_RS(coreParameters))}  // init distributed reservation stations for int operations
+    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FPportCount) { w => Module(new age_RS(coreParameters))} else Seq()
     val MEM_RS              = Module(new age_RS(coreParameters))
 
     /////////
@@ -98,30 +105,37 @@ class backend(coreParameters:CoreParameters) extends Module{
     //////////////
     // ALLOCATE //
     //////////////
+    val backend_can_allocate =  MEM_RS.io.backend_packet.map(_.ready).foldLeft(true.B)(_ && _) &&  // mem RS ready
+                                INT_RS.map(_.io.backend_packet.map(_.ready).foldLeft(true.B)(_ && _)).foldLeft(true.B)(_ && _) && // all INT RS ready
+                                FP_RS.map(_.io.backend_packet.map(_.ready).foldLeft(true.B)(_ && _)).foldLeft(true.B)(_ && _) && // handle optional FP RS
+                                MOB.io.reserve.map(_.ready).foldLeft(true.B)(_ && _)  // MOB ready
 
-    val backend_can_allocate =  MEM_RS.io.backend_packet.map(_.ready).reduce(_ && _) &&     // mem RS ready
-                                INT_RS.map(_.io.backend_packet.map(_.ready).reduce(_ && _)).reduce(_ && _) &&     // all INT RS ready
-                                MOB.io.reserve.map(_.ready).reduce(_ && _)                  // MOB ready
+
     
     for (i <- 0 until fetchWidth){
         io.backend_packet(i).ready        := backend_can_allocate
     }
 
-    // allocate RS entries
+    /////////////////////////
+    // allocate RS entries //
+    /////////////////////////
     // reservation stations only allocate instructions if they correspond to that port
-    for (i <- 0 until nonMemoryPortCount){
+
+    // INTRS 
+    for (i <- 0 until INTportCount){
         for(j <- 0 until fetchWidth){
             INT_RS(i).io.backend_packet(j).bits   := io.backend_packet(j).bits
             INT_RS(i).io.backend_packet(j).valid  := io.backend_packet(j).valid && io.backend_packet(j).bits.assigned_port === i.U
         }
     }
 
+
+
     // MEMRS //
     for(i <- 0 until fetchWidth){
         MEM_RS.io.backend_packet(i).bits   := io.backend_packet(i).bits
         MEM_RS.io.backend_packet(i).valid  := io.backend_packet(i).valid && io.backend_packet(i).bits.assigned_port === (portCount-1).U // AGU unit defined to be last FU
     }
-
 
     // reserve mem ops
     for (i <- 0 until fetchWidth){
@@ -134,16 +148,22 @@ class backend(coreParameters:CoreParameters) extends Module{
         MEM_RS.io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
     }
 
-
+    // FPRS //
+    if(coreConfig.contains("F")){
+        for (i <- 0 until FPportCount){
+            for(j <- 0 until fetchWidth){
+                FP_RS(i).io.backend_packet(j).bits   := io.backend_packet(j).bits
+                FP_RS(i).io.backend_packet(j).valid  := io.backend_packet(j).valid && io.backend_packet(j).bits.assigned_port === i.U
+            }
+        }
+    }
 
     ///////////////////////////
     // REGISTER FILES (READ) //
     ///////////////////////////
-    val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount, depth=physicalRegCount, width=32))
-
-    if(coreConfig.contains("F")){
-        // TODO
-    }
+    // Both PRFs need an extra write port to write back the possible conversions from INT to FP and vice versa
+    val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount + (if (coreConfig.contains("F")) 1 else 0), depth=physicalRegCount, width=32))
+    val FP_PRF  = if (coreConfig.contains("F")) Some(Module(new nReadmWriteLVT(n=FPportCount*2, m=FPportCount + (if (coreConfig.contains("F")) 1 else 0), depth=physicalRegCount, width=32))) else None
 
     ///////////////////////
     // EXECUTION ENGINES //
@@ -157,7 +177,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))
 
     // CONNECT NON-MEMORY FUs to Reg Read
-    for(i <- 0 until nonMemoryPortCount){
+    for(i <- 0 until INTportCount){
         // RS <> PRF //
         INT_PRF.io.raddr(i*2)       := INT_RS(i).io.RF_inputs.bits.RS1
         INT_PRF.io.raddr(i*2+1)     := INT_RS(i).io.RF_inputs.bits.RS2
@@ -165,7 +185,6 @@ class backend(coreParameters:CoreParameters) extends Module{
         // PRF <> instr //
         read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(i*2)
         read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(i*2+1)
-
 
         // FWD instruction //
         read_decoded_instructions(i).decoded_instruction := RegNext(INT_RS(i).io.RF_inputs.bits)
@@ -189,7 +208,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     // CONNECT MEMORY FUs TO REG READ
-    for(i <- nonMemoryPortCount until portCount){
+    for(i <- INTportCount until INTportCount+memoryPortCount){
         // RS <> PRF //
         INT_PRF.io.raddr(i*2)       := MEM_RS.io.RF_inputs.bits.RS1
         INT_PRF.io.raddr(i*2+1)     := MEM_RS.io.RF_inputs.bits.RS2
@@ -207,12 +226,11 @@ class backend(coreParameters:CoreParameters) extends Module{
         MEM_RS.io.RF_inputs.ready        := execution_engine.io.FU_input(i).ready
     }
 
-
     // CONNECT EX. ENGINE TO PRF WB (ALUs)
-    for(i <- 0 until nonMemoryPortCount){
+    for(i <- 0 until INTportCount){
         // FU data <> PRF (WB) //
         INT_PRF.io.waddr(i)  :=    execution_engine.io.FU_output(i).bits.PRD
-        INT_PRF.io.wen(i)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid
+        INT_PRF.io.wen(i)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid 
         INT_PRF.io.wdata(i)  :=    execution_engine.io.FU_output(i).bits.RD_data
 
         // INTRS RS1/RS2 //
@@ -228,7 +246,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     // CONNECT EX. ENGINE TO MOB
-    for(i <- nonMemoryPortCount until portCount){
+    for(i <- INTportCount until INTportCount+memoryPortCount){
         // THIS LOOP WILL ONLY EVER RUN FOR ONE ITERATION
         MOB.io.AGU_output <> execution_engine.io.FU_output(i)  // FIXME add param number of AGU inputs to MOB
 
@@ -247,6 +265,27 @@ class backend(coreParameters:CoreParameters) extends Module{
         io.FU_outputs(i)        <> MOB.io.MOB_output
     }
 
+
+    ////////////////
+    // MISC CASES //
+    ////////////////
+    // handle conversions
+    if(coreConfig.contains("F")){
+        // connect the INT2FP unit to a PRF WB port (the last one)
+        // connect that FU's conversion port to the corresponding PRF port
+        val int2fpIndex = FUParamSeq.indexWhere(_.supportsINT2FP)
+        FP_PRF.get.io.waddr.last  :=    execution_engine.io.FU_output(int2fpIndex).bits.PRD
+        FP_PRF.get.io.wen.last    :=    execution_engine.io.FU_output(int2fpIndex).valid && execution_engine.io.FU_output(int2fpIndex).bits.RD_valid
+        FP_PRF.get.io.wdata.last  :=    execution_engine.io.FU_output(int2fpIndex).bits.RD_data
+
+
+        // Do the same to the FP2INT unit
+        // connect that FU's conversion port to the corresponding PRF port
+        val fp2intIndex = FUParamSeq.indexWhere(_.supportsFP2INT)
+        INT_PRF.io.waddr.last  :=    execution_engine.io.FU_output(fp2intIndex).bits.PRD
+        INT_PRF.io.wen.last    :=    execution_engine.io.FU_output(fp2intIndex).valid && execution_engine.io.FU_output(fp2intIndex).bits.RD_valid
+        INT_PRF.io.wdata.last  :=    execution_engine.io.FU_output(fp2intIndex).bits.RD_data
+    }
     
     ////////////////
     // INTERRUPTS //

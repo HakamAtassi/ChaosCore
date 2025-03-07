@@ -517,10 +517,14 @@ class MEMRS_entry(coreParameters:CoreParameters) extends Bundle{
 class FU_output(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     // Arithmetic/Load
+    val FP                  =   Bool()  // is instruction FP
+    val INT                 =   Bool()  // is instruction INT
+
     val PRD                 =   UInt(physicalRegBits.W)
     val RD_data             =   UInt(32.W)
     val RS1_data            =   if (coreParameters.DEBUG) Some(UInt(32.W)) else None     // for CSR/memory writes
     val RD_valid            =   Bool()
+
 
     // Branch
     val CTRL                =   Bool()

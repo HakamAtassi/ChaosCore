@@ -35,27 +35,31 @@ import chisel3._
 
 case class FUParams(
     supportsInt: Boolean = false, 
-    supportsMult: Boolean = false,
-    supportsDiv: Boolean = false,
+    supportsINT2FP: Boolean = false, 
+    supportsFP: Boolean = false,
+    supportsFP2INT: Boolean = false,
+    supportsIntMult: Boolean = false,
+    supportsIntDiv: Boolean = false,
     supportsBranch: Boolean = false,
     supportsCSRs: Boolean = false,
     supportsAddressGeneration: Boolean = false,
+
 
     INTRS_MEMRS_port:Int=0,             // RS index
     RS1_RS2_indices:Seq[Int]=Seq(0, 0),      // RS1 RS2 index
     PRFRD:Int=0                         // PRD writeback index
 ) {
 
-    val is_INTFU:Boolean = supportsInt || supportsMult || supportsDiv || supportsBranch
+    val is_INTFU:Boolean = supportsInt || supportsIntMult || supportsIntDiv || supportsBranch
     val is_MEMFU:Boolean = supportsAddressGeneration
     val is_branch:Boolean = supportsBranch
 
-    require(
-        supportsInt || supportsMult || supportsDiv || supportsBranch || supportsCSRs || supportsAddressGeneration,
-        "At least one of the functional unit supports must be true.")
+    //require(
+        //supportsInt || supportsIntMult || supportsIntDiv || supportsBranch || supportsCSRs || supportsAddressGeneration,
+        //"At least one of the functional unit supports must be true.")
 
     require(
-        !(supportsAddressGeneration && (supportsMult || supportsDiv || supportsBranch || supportsInt || supportsCSRs)),
+        !(supportsAddressGeneration && (supportsIntMult || supportsIntDiv || supportsBranch || supportsInt || supportsCSRs)),
         "FU cannot be an AGU and something else. Ie, AGUs are mutually exclusive from all other FU types"
     )
 

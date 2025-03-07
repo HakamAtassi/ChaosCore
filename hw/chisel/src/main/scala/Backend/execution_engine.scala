@@ -43,7 +43,6 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
         val commit          =   Flipped(ValidIO(new commit(coreParameters)))
 
         val FU_input        =   Vec(portCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
-        
         val FU_output       =   Vec(portCount, Decoupled(new FU_output(coreParameters)))
 
         val irq_software_i                      = Input(Bool())      //msip

@@ -74,9 +74,6 @@ object validate_backend{
             println(s"[${Console.YELLOW}ChaosCore Warning${Console.RESET}] The CSR file and Branch Unit are exist in different FUs. This is not suggested for FPGA builds.")
         }
 
-
-
-
         // There must be at least 1 INT
         val intUnits = FUParamSeq.count(_.supportsInt)
         if (intUnits < 1) {
@@ -85,7 +82,7 @@ object validate_backend{
         }
 
         // There must be at least 1 MUL
-        val mulUnits = FUParamSeq.count(_.supportsMult)
+        val mulUnits = FUParamSeq.count(_.supportsIntMult)
         if(expects_mul){
             if (mulUnits < 1) {
                 println(s"There must be at least 1 MUL unit, found $mulUnits.")
@@ -94,14 +91,29 @@ object validate_backend{
         }
 
         // There must be at least 1 FPU (if enabled)
-        //val isFpuEnabled = true // Replace with actual condition
-        //if (isFpuEnabled) {
-            //val fpuUnits = FUParamSeq.count(_.supportsFPU) // Assuming supportsFPU exists
-            //if (fpuUnits < 1) {
-                //println(s"FPU is enabled, but no FPU units were found.")
-                //return false
-            //}
-        //}
+        val isFpuEnabled = coreConfig.contains("F")
+        if (isFpuEnabled) {
+            // MUST HAVE 1 INT2FP and FP2INT 
+            if(FUParamSeq.count(_.supportsINT2FP) != 1){
+                println(s"FPU requires 1 and exactly 1 INT2FP units.")
+                return false
+            }
+
+            if(FUParamSeq.count(_.supportsFP2INT) != 1){
+                println(s"FPU requires 1 and exactly 1 FP2INT units.")
+                return false
+            }
+
+            val fpuUnits = FUParamSeq.count(_.supportsFP) // Assuming supportsFPU exists
+            if (fpuUnits < 1) {
+                println(s"FPU is enabled, but no FPU units were found.")
+                return false
+            }
+
+            // Make sure units have an FP and an INT
+        }else{  // "F" not defined for core. Make sure no FP units defined
+
+        }
 
         true
     }
@@ -114,7 +126,7 @@ case class CoreParameters(
     DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
-    coreConfig: String = "RV32IMSUF",  // core extension (IMAF, etc...)
+    coreConfig: String = "RV32IMSU",  // core extension (IMAF, etc...)
     hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     //hartIDs:Seq[Int] = Seq(0, 1),
@@ -184,12 +196,17 @@ case class CoreParameters(
     // 
     FUParamSeq: Seq[FUParams] = Seq(
         // ALU + MUL ARITHMETIC UNITS
-        FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsMult=true,   supportsDiv=true,  supportsBranch=true,  supportsCSRs=true,     supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsMult=false,  supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false,  supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=true,   supportsIntDiv=true,  supportsBranch=true,  supportsCSRs=true,  supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=true, supportsIntMult=false,  supportsIntDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
 
         // MEMORY UNITS
-        FUParams(supportsInt=false, supportsMult=false, supportsDiv=false, supportsBranch=false, supportsCSRs=false,    supportsAddressGeneration=true),
+        FUParams(supportsInt=false, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=true),
+
+        // FPUs (these have to go after the memory unit)
+        //FUParams(supportsInt=false, supportsFP=false, supportsFP2INT=true, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
+        //FUParams(supportsInt=false, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=false),
+
     )
 
 

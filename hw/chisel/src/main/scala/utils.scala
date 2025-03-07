@@ -99,7 +99,6 @@ object getPortCount
     portCount += MEMportCount
 
     if(coreConfig.contains("F")) portCount += FPUportCount
-    //TODO: add the rest...
 
     portCount
   }

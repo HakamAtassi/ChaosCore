@@ -577,8 +577,8 @@ class decoder(coreParameters:CoreParameters) extends Module{
     val branch_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsBranch).map(_._2.U)))
     val CSR_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsCSRs).map(_._2.U)))
     val memory_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsAddressGeneration).map(_._2.U)))
-    val mul_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsMult).map(_._2.U)))
-    val div_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsDiv).map(_._2.U)))
+    val mul_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsIntMult).map(_._2.U)))
+    val div_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsIntDiv).map(_._2.U)))
 
     dontTouch(ALU_port_seq)
     dontTouch(branch_port_seq)

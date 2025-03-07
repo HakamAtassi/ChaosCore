@@ -61,13 +61,11 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     val debug_req_i                         = if (FUParam.supportsCSRs) Some(IO(Input(Bool()))) else None
     val irq_nm_i                            = if (FUParam.supportsCSRs) Some(IO(Input(Bool()))) else None
 
-
-
     val ALU             = if (supportsInt)                  Some(Module(new ALU(coreParameters))) else None
     val branch_unit     = if (supportsBranch)               Some(Module(new branch_unit(coreParameters))) else None
     val AGU             = if (supportsAddressGeneration)    Some(Module(new AGU(coreParameters))) else None
-    val mul             = if (supportsMult)                 Some(Module(new mul_unit(coreParameters))) else None   
-    val div             = if (supportsDiv)                  Some(Module(new div_unit(coreParameters))) else None
+    val mul             = if (supportsIntMult)                 Some(Module(new mul_unit(coreParameters))) else None   
+    val div             = if (supportsIntDiv)                  Some(Module(new div_unit(coreParameters))) else None
     val CSR             = if (supportsCSRs)                 Some(Module(new CSR_FU(coreParameters))) else None     
 
     // assign inputs
