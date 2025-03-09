@@ -43,7 +43,7 @@ import Thermometor._
 // Ex: memrs needs only 1 port. its ID is arbitrary, stuff like that
 
 // FIXME: the number of ports the RS has should be based on the number of INT/MEM FUs
-class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String) extends Module{
+class RS(coreParameters:CoreParameters, RSPortCount:Int, RS_type:String)(WBPortCount:Int) extends Module{
     import coreParameters._
 
 

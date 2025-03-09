@@ -43,7 +43,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     val INTportCount = portCount - memoryPortCount - FPportCount
 
     val branchPortCount = getBranchPortCount(coreParameters)
-    val nonMemoryPortCount = portCount - memoryPortCount
+    val nonMemoryPortCount = INTportCount + FPUportCount
 
 
     val io = IO(new Bundle{
@@ -81,9 +81,12 @@ class backend(coreParameters:CoreParameters) extends Module{
         val debug_req_i                         = Input(Bool())      //debug
         val irq_nm_i                            = Input(Bool())      //nmi
 
-
         // UPDATE //
-        val FU_outputs                  =   Vec(portCount, Decoupled(new FU_output(coreParameters)))
+        val INT_FU_outputs                  =   Vec(INTportCount, Decoupled(new FU_output(coreParameters)))
+        val MEM_FU_outputs                  =   Vec(MEMportCount, Decoupled(new FU_output(coreParameters)))
+        val FP_FU_outputs                   =   Vec(FPportCount, Decoupled(new FU_output(coreParameters)))
+
+
     }); dontTouch(io)
 
 
@@ -93,23 +96,49 @@ class backend(coreParameters:CoreParameters) extends Module{
     //////////////////////////
     // RESERVATION STATIONS //
     //////////////////////////
-    val INT_RS: Seq[age_RS] = Seq.tabulate(nonMemoryPortCount) { w => Module(new age_RS(coreParameters))}  // init distributed reservation stations for int operations
-    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FPportCount) { w => Module(new age_RS(coreParameters))} else Seq()
-    val MEM_RS              = Module(new age_RS(coreParameters))
+    // FIXME: add 1 to this if there is FP (conversion)!
+    val INT_RS: Seq[age_RS] = Seq.tabulate(INTportCount) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount))}  // init distributed reservation stations for int operations
+    val MEM_RS: Seq[age_RS] = Seq.tabulate(1) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount))}  // init distributed reservation stations for int operations
+    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FPportCount) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount))} else Seq()
 
     /////////
     // MOB //
     /////////
     val MOB   =  Module(new simple_MOB(coreParameters))
 
+    ///////////////////////
+    // EXECUTION ENGINES //
+    ///////////////////////
+    val execution_engine = Module(new execution_engine(coreParameters))
+
+    ////////////////////
+    // REGISTER FILES //
+    ////////////////////
+    // Both PRFs need an extra write port to write back the possible conversions from INT to FP and vice versa
+
+    val INT_PRF = Module(new nReadmWriteLVT(
+        n = portCount * 2,
+        m = portCount + (if (coreConfig.contains("F")) 1 else 0),
+        depth = physicalRegCount,
+        width = 32
+    ))
+    val FP_PRF =
+    if (coreConfig.contains("F"))
+        Some(Module(new nReadmWriteLVT(
+            n = FPportCount * 2,
+            m = FPportCount + (if (coreConfig.contains("F")) 1 else 0),
+            depth = physicalRegCount,
+            width = 32
+        )))
+    else None
+
     //////////////
     // ALLOCATE //
     //////////////
-    val backend_can_allocate =  MEM_RS.io.backend_packet.map(_.ready).foldLeft(true.B)(_ && _) &&  // mem RS ready
+    val backend_can_allocate =  MEM_RS(0).io.backend_packet.map(_.ready).foldLeft(true.B)(_ && _) &&  // mem RS ready
                                 INT_RS.map(_.io.backend_packet.map(_.ready).foldLeft(true.B)(_ && _)).foldLeft(true.B)(_ && _) && // all INT RS ready
                                 FP_RS.map(_.io.backend_packet.map(_.ready).foldLeft(true.B)(_ && _)).foldLeft(true.B)(_ && _) && // handle optional FP RS
                                 MOB.io.reserve.map(_.ready).foldLeft(true.B)(_ && _)  // MOB ready
-
 
     
     for (i <- 0 until fetchWidth){
@@ -119,86 +148,109 @@ class backend(coreParameters:CoreParameters) extends Module{
     /////////////////////////
     // allocate RS entries //
     /////////////////////////
-    // reservation stations only allocate instructions if they correspond to that port
 
-    // INTRS 
-    for (i <- 0 until INTportCount){
-        for(j <- 0 until fetchWidth){
-            INT_RS(i).io.backend_packet(j).bits   := io.backend_packet(j).bits
-            INT_RS(i).io.backend_packet(j).valid  := io.backend_packet(j).valid && io.backend_packet(j).bits.assigned_port === i.U
+    def connect_allocation(rsSeq: Seq[age_RS]): Unit = {
+        // connect each reservation station with all instruction inputs
+        rsSeq.zipWithIndex.foreach { case (rs, i) =>
+            for (j <- 0 until io.backend_packet.length) {
+                rs.io.backend_packet(j).bits  := io.backend_packet(j).bits
+                rs.io.backend_packet(j).valid := io.backend_packet(j).valid && (io.backend_packet(j).bits.assigned_port === i.U)
+            }
         }
     }
 
 
+    def reg_read_and_fire(
+        rsSeq: Seq[age_RS],
+        prf: nReadmWriteLVT,
+        FU_input: Vec[DecoupledIO[read_decoded_instruction]],
+        offset: Int = 0
+    ): Unit = {
+        val read_decoded_instruction   =   Wire(new read_decoded_instruction(coreParameters))
 
-    // MEMRS //
-    for(i <- 0 until fetchWidth){
-        MEM_RS.io.backend_packet(i).bits   := io.backend_packet(i).bits
-        MEM_RS.io.backend_packet(i).valid  := io.backend_packet(i).valid && io.backend_packet(i).bits.assigned_port === (portCount-1).U // AGU unit defined to be last FU
+        rsSeq.zipWithIndex.foreach { case (rs, i) =>
+            // RS <> PRF
+            prf.io.raddr(offset + i * 2)     := rs.io.RF_inputs.bits.RS1
+            prf.io.raddr(offset + i * 2 + 1) := rs.io.RF_inputs.bits.RS2
+            read_decoded_instructions(i).RS1_data := prf.io.rdata(offset + i * 2)
+            read_decoded_instructions(i).RS2_data := prf.io.rdata(offset + i * 2 + 1)
+
+            // Send off instruction to execution engine.
+            read_decoded_instructions(i).decoded_instruction := RegNext(rs.io.RF_inputs.bits)
+            FU_input(i).valid := RegNext(rs.io.RF_inputs.valid)
+            FU_input(i).bits  <> read_decoded_instructions(i)
+        }
     }
+
+    // Connect the RS ready signals to the execution engine.
+    def assign_ready(rsSeq: Seq[age_RS], FU_input: Vec[DecoupledIO[read_decoded_instruction]]): Unit = {
+        rsSeq.zipWithIndex.foreach { case (rs, i) =>
+            // RS ready <> FU ready //
+            rs.io.RF_inputs.ready := FU_input(i).ready
+        }
+    }
+
+    def assign_WB(rsSeq: Seq[age_RS], prf: nReadmWriteLVT, FU_output:Vec[???]): Unit = {
+        // write back FU produced results to PRF
+        rsseq.zipwithindex.foreach { case (rs, i) =>
+            prf.io.waddr(i) := fu_output(i).bits.prd
+            prf.io.wen(i)   := fu_output(i).valid && fu_output(i).bits.rd_valid
+            prf.io.wdata(i) := fu_output(i).bits.rd_data
+        }
+    }
+
+    def wakeup_RS(rsSeq: Seq[age_RS], producers:Vec[???]): Unit = {
+        rsseq.zipwithindex.foreach { case (rs, i) =>
+            // For each RS, connect all producer ports (FU outputs that are relevant to that RS)
+            producers.zipwithindex.foreach { case (producer, j) =>
+                rs.io.FU_outputs(j) <> producer
+            }
+        }
+    }
+
+
+    // CONNECT INT //
+    connect_allocation(INT_RS)
+    reg_read_and_fire(rsSeq = INT_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input)
+    assign_ready(INT_RS, execution_engine.io.INT_FU_input)
+    assign_WB(rsSeq=INT_RS, prf=INT_PRF, FU_output=execution_engine.io.INT_FU_input)
+    
+
+    // CONNECT FP //
+    connect_allocation(FP_RS)
+    reg_read_and_fire(FP_RS, FP_PRF.get)
+    reg_read_and_fire(rsSeq = FP_RS, prf = FP_PRF, FU_input = execution_engine.io.FP_FU_input)
+    assign_ready(FP_RS, FU_input = execution_engine.io.FP_FU_input)
+    assign_WB(rsSeq=FP_RS, prf=FP_PRF, FU_output=execution_engine.io.FP_FU_input)
+
+    // CONNECT MEM //
+    connect_allocation(MEM_RS)
+    reg_read_and_fire(MEM_RS, INT_PRF)
+    reg_read_and_fire(rsSeq = MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.MEM_FU_input, offset = INTportCount*2)
+    assign_ready(MEM_RS, FU_input = execution_engine.io.MEM_FU_input)
+    assign_WB(rsSeq=MEM_RS, prf=INT_PRF, FU_output=execution_engine.io.MEM_FU_input)  // Last FP only for conversion WB because it produces its (possibly)
+
+    // CONNECT WAKEUP SIGNALS //
+    val int_producers   =  Seq(execution_engine.io.INT_FU_output, execution_engine.io.MEM_FU_output, execution_engine.io.FP_FU_output.last)
+    val float_producers =  Seq(execution_engine.io.FP_FU_output, execution_engine.io.MEM_FU_output, execution_engine.io.INT_FU_output.last)
+    wakeup_RS(rsSeq=INT_RS, producers = int_producers)
+    wakeup_RS(rsSeq=MEM_RS, producers = int_producers)
+    wakeup_RS(rsSeq=FP_RS, producers = float_producers)
+
 
     // reserve mem ops
     for (i <- 0 until fetchWidth){
         MOB.io.reserve(i).bits     := io.backend_packet(i).bits
         MOB.io.reserve(i).valid    := io.backend_packet(i).bits.needs_MEM_RS && io.backend_packet(i).valid
     }
-    
+
     // inform MEM_RS about location of allocated entries for mem ops for AGU WB
     for(i <- 0 until fetchWidth){
-        MEM_RS.io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
+        MEM_RS(0).io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
     }
-
-    // FPRS //
-    if(coreConfig.contains("F")){
-        for (i <- 0 until FPportCount){
-            for(j <- 0 until fetchWidth){
-                FP_RS(i).io.backend_packet(j).bits   := io.backend_packet(j).bits
-                FP_RS(i).io.backend_packet(j).valid  := io.backend_packet(j).valid && io.backend_packet(j).bits.assigned_port === i.U
-            }
-        }
-    }
-
-    ///////////////////////////
-    // REGISTER FILES (READ) //
-    ///////////////////////////
-    // Both PRFs need an extra write port to write back the possible conversions from INT to FP and vice versa
-    val INT_PRF = Module(new nReadmWriteLVT(n=portCount*2, m=portCount + (if (coreConfig.contains("F")) 1 else 0), depth=physicalRegCount, width=32))
-    val FP_PRF  = if (coreConfig.contains("F")) Some(Module(new nReadmWriteLVT(n=FPportCount*2, m=FPportCount + (if (coreConfig.contains("F")) 1 else 0), depth=physicalRegCount, width=32))) else None
-
-    ///////////////////////
-    // EXECUTION ENGINES //
-    ///////////////////////
-
-    val execution_engine = Module(new execution_engine(coreParameters))
-    // NOTE: EX. UNITS ARE ALWAYS STRUCTURED AS [ALU, ALU, ALU, ALU, MEM, MEM, ...]
-    // That is, first come arithmetic units, then branch units. 
-    // Which may explain the structure of this code. 
-
-    val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))
-
-    // CONNECT NON-MEMORY FUs to Reg Read
-    for(i <- 0 until INTportCount){
-        // RS <> PRF //
-        INT_PRF.io.raddr(i*2)       := INT_RS(i).io.RF_inputs.bits.RS1
-        INT_PRF.io.raddr(i*2+1)     := INT_RS(i).io.RF_inputs.bits.RS2
-
-        // PRF <> instr //
-        read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(i*2)
-        read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(i*2+1)
-
-        // FWD instruction //
-        read_decoded_instructions(i).decoded_instruction := RegNext(INT_RS(i).io.RF_inputs.bits)
-        execution_engine.io.FU_input(i).valid            := RegNext(INT_RS(i).io.RF_inputs.valid)
-        execution_engine.io.FU_input(i).bits             <> read_decoded_instructions(i)
-        
-        // RS ready <> FU ready //
-        INT_RS(i).io.RF_inputs.ready        := execution_engine.io.FU_input(i).ready
-    }
-
 
     // CONNECT BRANCH UNITS TO PC FILE (in ROB)
     for (i <- 0 until portCount) {
-        read_decoded_instructions(i).fetch_PC := DontCare
         if (FUParamSeq(i).supportsBranch) {
             val PC_file_port_index = FUParamSeq.take(i).count(_.supportsBranch)
             io.PC_file_exec_addr(PC_file_port_index) := INT_RS(i).io.RF_inputs.bits.ROB_index
@@ -206,63 +258,13 @@ class backend(coreParameters:CoreParameters) extends Module{
         }
     }
 
-
-    // CONNECT MEMORY FUs TO REG READ
-    for(i <- INTportCount until INTportCount+memoryPortCount){
-        // RS <> PRF //
-        INT_PRF.io.raddr(i*2)       := MEM_RS.io.RF_inputs.bits.RS1
-        INT_PRF.io.raddr(i*2+1)     := MEM_RS.io.RF_inputs.bits.RS2
-
-        // PRF <> instr //
-        read_decoded_instructions(i).RS1_data := INT_PRF.io.rdata(i*2)
-        read_decoded_instructions(i).RS2_data := INT_PRF.io.rdata(i*2+1)
-
-        // FWD instruction //
-        read_decoded_instructions(i).decoded_instruction := RegNext(MEM_RS.io.RF_inputs.bits)
-        execution_engine.io.FU_input(i).valid            := RegNext(MEM_RS.io.RF_inputs.valid)
-        execution_engine.io.FU_input(i).bits             <> read_decoded_instructions(i)
-        
-        // RS ready <> FU ready //
-        MEM_RS.io.RF_inputs.ready        := execution_engine.io.FU_input(i).ready
+    for(i <- 0 until fetchWidth){
+        MEM_RS(0).io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
     }
 
-    // CONNECT EX. ENGINE TO PRF WB (ALUs)
     for(i <- 0 until INTportCount){
-        // FU data <> PRF (WB) //
-        INT_PRF.io.waddr(i)  :=    execution_engine.io.FU_output(i).bits.PRD
-        INT_PRF.io.wen(i)    :=    execution_engine.io.FU_output(i).valid && execution_engine.io.FU_output(i).bits.RD_valid 
-        INT_PRF.io.wdata(i)  :=    execution_engine.io.FU_output(i).bits.RD_data
-
-        // INTRS RS1/RS2 //
-        for(RS_index <- 0 until nonMemoryPortCount){
-            INT_RS(RS_index).io.FU_outputs(i) <> execution_engine.io.FU_output(i)
-        }
-
-        // MEMRS RS1/RS2 //
-        MEM_RS.io.FU_outputs(i) <> execution_engine.io.FU_output(i)
-
+        // Connect top level FU_outputs 
         io.FU_outputs(i) <> execution_engine.io.FU_output(i)
-    }
-
-
-    // CONNECT EX. ENGINE TO MOB
-    for(i <- INTportCount until INTportCount+memoryPortCount){
-        // THIS LOOP WILL ONLY EVER RUN FOR ONE ITERATION
-        MOB.io.AGU_output <> execution_engine.io.FU_output(i)  // FIXME add param number of AGU inputs to MOB
-
-        INT_PRF.io.waddr(i)  :=  MOB.io.MOB_output.bits.PRD 
-        INT_PRF.io.wen(i)    :=  MOB.io.MOB_output.bits.RD_valid && MOB.io.MOB_output.valid 
-        INT_PRF.io.wdata(i)  :=  MOB.io.MOB_output.bits.RD_data
-
-        // INTRS RS1/RS2 //
-        for(RS_index <- 0 until nonMemoryPortCount){
-            INT_RS(RS_index).io.FU_outputs(i) <> MOB.io.MOB_output
-        }
-
-        // MEMRS RS1/RS2 //
-        MEM_RS.io.FU_outputs(i) <> MOB.io.MOB_output
-
-        io.FU_outputs(i)        <> MOB.io.MOB_output
     }
 
 
@@ -312,15 +314,17 @@ class backend(coreParameters:CoreParameters) extends Module{
     ////////////
     execution_engine.io.commit           <> io.commit
     MOB.io.commit                        <> io.commit
-    MEM_RS.io.commit                     <> io.commit
+    MEM_RS(0).io.commit                     <> io.commit
     INT_RS.foreach(_.io.commit <> io.commit)
+    FP_RS.foreach(_.io.commit <> io.commit)
 
     ///////////
     // FLUSH //
     ///////////
 
     INT_RS.foreach(_.io.flush <> io.flush)
-    MEM_RS.io.flush <> io.flush
+    FP_RS.foreach(_.io.flush <> io.flush)
+    MEM_RS(0).io.flush <> io.flush
     MOB.io.flush    <> io.flush
 
     execution_engine.io.flush       <>  io.flush

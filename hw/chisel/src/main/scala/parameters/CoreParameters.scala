@@ -126,7 +126,7 @@ case class CoreParameters(
     DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
-    coreConfig: String = "RV32IMSU",  // core extension (IMAF, etc...)
+    coreConfig: String = "RV32IMSUF",  // core extension (IMAF, etc...)
     hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     //hartIDs:Seq[Int] = Seq(0, 1),
@@ -168,7 +168,7 @@ case class CoreParameters(
     // Execution params
     ALUportCount:Int = 3,
     MEMportCount:Int = 1,
-    FPUportCount:Int = 0,  // not used if not "F"
+    FPUportCount:Int = 2,  // not used if not "F"   // FIXME: make this parameterizable
 
 
     ALUStages: Int = 2, // latency of the ALU unit
@@ -204,8 +204,8 @@ case class CoreParameters(
         FUParams(supportsInt=false, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=true),
 
         // FPUs (these have to go after the memory unit)
-        //FUParams(supportsInt=false, supportsFP=false, supportsFP2INT=true, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
-        //FUParams(supportsInt=false, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=false),
+        FUParams(supportsInt=false, supportsFP=true, supportsFP2INT=true, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
+        FUParams(supportsInt=false, supportsFP=true, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=false),
 
     )
 
@@ -267,7 +267,6 @@ case class CoreParameters(
     val MEMRSPortCount: Int = FUParamSeq.count(_.is_MEMFU)
     val branchPortCount: Int = FUParamSeq.count(_.is_branch)
 
-    val WBPortCount: Int = INTRSPortCount + MOBWBPortCount
 
 
     //val FURSPortCount:Int = // total number of FUs that connect to the INTRS  // TODO:

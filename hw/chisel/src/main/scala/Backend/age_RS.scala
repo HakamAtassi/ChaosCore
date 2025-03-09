@@ -32,7 +32,7 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
-class age_RS(coreParameters:CoreParameters) extends Module{
+class age_RS(coreParameters:CoreParameters)(WBPortCount:Int) extends Module{
     import coreParameters._
 
 

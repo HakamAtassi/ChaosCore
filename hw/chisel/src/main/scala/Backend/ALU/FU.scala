@@ -62,6 +62,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     val irq_nm_i                            = if (FUParam.supportsCSRs) Some(IO(Input(Bool()))) else None
 
     val ALU             = if (supportsInt)                  Some(Module(new ALU(coreParameters))) else None
+    val FPU             = if (supportsFP)                   Some(Module(new FPU(coreParameters))) else None
     val branch_unit     = if (supportsBranch)               Some(Module(new branch_unit(coreParameters))) else None
     val AGU             = if (supportsAddressGeneration)    Some(Module(new AGU(coreParameters))) else None
     val mul             = if (supportsIntMult)                 Some(Module(new mul_unit(coreParameters))) else None   
@@ -70,6 +71,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
 
     // assign inputs
     ALU.foreach         {ALU => ALU.io.FU_input                     <> io.FU_input }
+    FPU.foreach         {FPU => FPU.io.FU_input                     <> io.FU_input }
     branch_unit.foreach {branch_unit => branch_unit.io.FU_input     <> io.FU_input }
     AGU.foreach         { AGU => AGU.io.FU_input                    <> io.FU_input }
     mul.foreach         { mul => mul.io.FU_input                    <> io.FU_input }
@@ -79,6 +81,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     // assign inputs
 
     ALU.foreach         {ALU => ALU.io.commit                     <> io.commit }
+    FPU.foreach         {FPU => FPU.io.commit                     <> io.commit }
     branch_unit.foreach {branch_unit => branch_unit.io.commit     <> io.commit }
     AGU.foreach         { AGU => AGU.io.commit                    <> io.commit }
     mul.foreach         { mul => mul.io.commit                    <> io.commit }
@@ -91,11 +94,12 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
 
     val FU_outputs = Seq(
         ALU.map(_.io.FU_output),
+        FPU.map(_.io.FU_output),
         branch_unit.map(_.io.FU_output),
         AGU.map(_.io.FU_output),
         mul.map(_.io.FU_output),
         div.map(_.io.FU_output),
-        CSR.map(_.io.FU_output)
+        CSR.map(_.io.FU_output),
     ).flatten
 
     val arbiter = Module(new Arbiter(chiselTypeOf(io.FU_output.bits), FU_outputs.length))
@@ -123,6 +127,7 @@ class FU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{
     // ASSIGN FLUSH //
     //////////////////
     if(ALU.isDefined){ALU.get.io.flush                  <> io.flush}
+    if(FPU.isDefined){FPU.get.io.flush                  <> io.flush}
     if(branch_unit.isDefined){branch_unit.get.io.flush  <> io.flush}
     if(AGU.isDefined){AGU.get.io.flush                  <> io.flush}
     if(mul.isDefined){mul.get.io.flush                  <> io.flush}

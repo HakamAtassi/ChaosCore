@@ -42,8 +42,14 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
 
         val commit          =   Flipped(ValidIO(new commit(coreParameters)))
 
-        val FU_input        =   Vec(portCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
-        val FU_output       =   Vec(portCount, Decoupled(new FU_output(coreParameters)))
+        // FIXME: Split this into INT_FU_input, FP_FU_input, MEM_FU_input to aliviate the ordering issue
+        val INT_FU_input        =   Vec(INTportCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
+        val MEM_FU_input        =   Vec(MEMportCount, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
+        val FP_FU_input         =   Vec(FPportCount,  Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
+
+        val INT_FU_output       =   Vec(INTportCount, Decoupled(new FU_output(coreParameters)))
+        val MEM_FU_output       =   Vec(MEMportCount, Decoupled(new FU_output(coreParameters)))
+        val FP_FU_output        =   Vec(FPportCount,  Decoupled(new FU_output(coreParameters)))
 
         val irq_software_i                      = Input(Bool())      //msip
         val irq_timer_i                         = Input(Bool())      //mtip
@@ -57,12 +63,11 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     // FUs
     val FUs: Seq[FU] = Seq.tabulate(FUParamSeq.length) { i => Module(new FU(FUParamSeq(i))(coreParameters))}
 
-
     for(i <- 0 until portCount){
         FUs(i).io.flush             <> io.flush
         FUs(i).io.commit            <> io.commit
         FUs(i).io.FU_input          <> io.FU_input(i)
-        FUs(i).io.FU_output         <> io.FU_output(i)
+        FUs(i).io.FU_output         <> Seq(io.INT_FU_output, io.MEM_FU_input, FP_FU_input)(i)
 
         FUs(i).CSR_port.foreach { _ =>
             FUs(i).CSR_port.get <> CSR_port
