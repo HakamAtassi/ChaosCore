@@ -35,7 +35,11 @@ import chisel3.util._
 
 class execution_engine(coreParameters:CoreParameters) extends Module{
     import coreParameters._
-    val portCount = FUParamSeq.length
+    val portCount = getPortCount(coreParameters)    // number of ports total
+
+    val memoryPortCount = FUParamSeq.count(_.supportsAddressGeneration)
+    val FPportCount  = FPUportCount 
+    val INTportCount = portCount - memoryPortCount - FPportCount
 
     val io = IO(new Bundle{
         val flush           =   Flipped(ValidIO(new flush(coreParameters)))
@@ -66,8 +70,8 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until portCount){
         FUs(i).io.flush             <> io.flush
         FUs(i).io.commit            <> io.commit
-        FUs(i).io.FU_input          <> io.FU_input(i)
-        FUs(i).io.FU_output         <> Seq(io.INT_FU_output, io.MEM_FU_input, FP_FU_input)(i)
+        FUs(i).io.FU_input          <> Seq(io.INT_FU_input, io.MEM_FU_input, io.FP_FU_input)(i)
+        FUs(i).io.FU_output         <> Seq(io.INT_FU_output, io.MEM_FU_output, io.FP_FU_output)(i)
 
         FUs(i).CSR_port.foreach { _ =>
             FUs(i).CSR_port.get <> CSR_port

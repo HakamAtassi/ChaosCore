@@ -172,13 +172,13 @@ class backend(coreParameters:CoreParameters) extends Module{
             // RS <> PRF
             prf.io.raddr(offset + i * 2)     := rs.io.RF_inputs.bits.RS1
             prf.io.raddr(offset + i * 2 + 1) := rs.io.RF_inputs.bits.RS2
-            read_decoded_instructions(i).RS1_data := prf.io.rdata(offset + i * 2)
-            read_decoded_instructions(i).RS2_data := prf.io.rdata(offset + i * 2 + 1)
+            read_decoded_instruction.RS1_data := prf.io.rdata(offset + i * 2)
+            read_decoded_instruction.RS2_data := prf.io.rdata(offset + i * 2 + 1)
 
             // Send off instruction to execution engine.
-            read_decoded_instructions(i).decoded_instruction := RegNext(rs.io.RF_inputs.bits)
+            read_decoded_instruction.decoded_instruction := RegNext(rs.io.RF_inputs.bits)
             FU_input(i).valid := RegNext(rs.io.RF_inputs.valid)
-            FU_input(i).bits  <> read_decoded_instructions(i)
+            FU_input(i).bits  <> read_decoded_instruction
         }
     }
 
@@ -190,19 +190,19 @@ class backend(coreParameters:CoreParameters) extends Module{
         }
     }
 
-    def assign_WB(rsSeq: Seq[age_RS], prf: nReadmWriteLVT, FU_output:Vec[???]): Unit = {
+    def assign_WB(rsSeq: Seq[age_RS], prf: nReadmWriteLVT, FU_output:Vec[DecoupledIO[FU_output]]): Unit = {
         // write back FU produced results to PRF
-        rsseq.zipwithindex.foreach { case (rs, i) =>
-            prf.io.waddr(i) := fu_output(i).bits.prd
-            prf.io.wen(i)   := fu_output(i).valid && fu_output(i).bits.rd_valid
-            prf.io.wdata(i) := fu_output(i).bits.rd_data
+        rsSeq.zipWithIndex.foreach { case (rs, i) =>
+            prf.io.waddr(i) := FU_output(i).bits.PRD
+            prf.io.wen(i)   := FU_output(i).valid && FU_output(i).bits.RD_valid
+            prf.io.wdata(i) := FU_output(i).bits.RD_valid
         }
     }
 
-    def wakeup_RS(rsSeq: Seq[age_RS], producers:Vec[???]): Unit = {
-        rsseq.zipwithindex.foreach { case (rs, i) =>
-            // For each RS, connect all producer ports (FU outputs that are relevant to that RS)
-            producers.zipwithindex.foreach { case (producer, j) =>
+    def wakeup_RS(rsSeq: Seq[age_RS], producers: Vec[DecoupledIO[FU_output]]): Unit = {
+        rsSeq.zipWithIndex.foreach { case (rs, i) =>
+            // Connect each RS's FU_outputs ports with the corresponding producer from the view.
+            producers.zipWithIndex.foreach { case (producer, j) =>
                 rs.io.FU_outputs(j) <> producer
             }
         }
@@ -218,14 +218,12 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // CONNECT FP //
     connect_allocation(FP_RS)
-    reg_read_and_fire(FP_RS, FP_PRF.get)
-    reg_read_and_fire(rsSeq = FP_RS, prf = FP_PRF, FU_input = execution_engine.io.FP_FU_input)
+    reg_read_and_fire(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
     assign_ready(FP_RS, FU_input = execution_engine.io.FP_FU_input)
-    assign_WB(rsSeq=FP_RS, prf=FP_PRF, FU_output=execution_engine.io.FP_FU_input)
+    assign_WB(rsSeq=FP_RS, prf=FP_PRF.get, FU_output=execution_engine.io.FP_FU_input)
 
     // CONNECT MEM //
     connect_allocation(MEM_RS)
-    reg_read_and_fire(MEM_RS, INT_PRF)
     reg_read_and_fire(rsSeq = MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.MEM_FU_input, offset = INTportCount*2)
     assign_ready(MEM_RS, FU_input = execution_engine.io.MEM_FU_input)
     assign_WB(rsSeq=MEM_RS, prf=INT_PRF, FU_output=execution_engine.io.MEM_FU_input)  // Last FP only for conversion WB because it produces its (possibly)
@@ -254,7 +252,7 @@ class backend(coreParameters:CoreParameters) extends Module{
         if (FUParamSeq(i).supportsBranch) {
             val PC_file_port_index = FUParamSeq.take(i).count(_.supportsBranch)
             io.PC_file_exec_addr(PC_file_port_index) := INT_RS(i).io.RF_inputs.bits.ROB_index
-            execution_engine.io.FU_input(i).bits.fetch_PC := io.PC_file_exec_data(PC_file_port_index)
+            execution_engine.io.INT_FU_input(i).bits.fetch_PC := io.PC_file_exec_data(PC_file_port_index)
         }
     }
 
@@ -262,10 +260,10 @@ class backend(coreParameters:CoreParameters) extends Module{
         MEM_RS(0).io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
     }
 
-    for(i <- 0 until INTportCount){
-        // Connect top level FU_outputs 
-        io.FU_outputs(i) <> execution_engine.io.FU_output(i)
-    }
+    // Connect top level FU_outputs 
+    for(i <- 0 until INTportCount){io.INT_FU_outputs(i) <> execution_engine.io.INT_FU_output(i)}
+    for(i <- 0 until FPportCount) {io.FP_FU_outputs(i) <> execution_engine.io.FP_FU_output(i)}
+    for(i <- 0 until memoryPortCount){io.MEM_FU_outputs(i) <> execution_engine.io.MEM_FU_output(i)}
 
 
     ////////////////
@@ -276,17 +274,17 @@ class backend(coreParameters:CoreParameters) extends Module{
         // connect the INT2FP unit to a PRF WB port (the last one)
         // connect that FU's conversion port to the corresponding PRF port
         val int2fpIndex = FUParamSeq.indexWhere(_.supportsINT2FP)
-        FP_PRF.get.io.waddr.last  :=    execution_engine.io.FU_output(int2fpIndex).bits.PRD
-        FP_PRF.get.io.wen.last    :=    execution_engine.io.FU_output(int2fpIndex).valid && execution_engine.io.FU_output(int2fpIndex).bits.RD_valid
-        FP_PRF.get.io.wdata.last  :=    execution_engine.io.FU_output(int2fpIndex).bits.RD_data
+        //FP_PRF.get.io.waddr.last  :=    execution_engine.io.FU_output(int2fpIndex).bits.PRD
+        //FP_PRF.get.io.wen.last    :=    execution_engine.io.FU_output(int2fpIndex).valid && execution_engine.io.FU_output(int2fpIndex).bits.RD_valid
+        //FP_PRF.get.io.wdata.last  :=    execution_engine.io.FU_output(int2fpIndex).bits.RD_data
 
 
         // Do the same to the FP2INT unit
         // connect that FU's conversion port to the corresponding PRF port
         val fp2intIndex = FUParamSeq.indexWhere(_.supportsFP2INT)
-        INT_PRF.io.waddr.last  :=    execution_engine.io.FU_output(fp2intIndex).bits.PRD
-        INT_PRF.io.wen.last    :=    execution_engine.io.FU_output(fp2intIndex).valid && execution_engine.io.FU_output(fp2intIndex).bits.RD_valid
-        INT_PRF.io.wdata.last  :=    execution_engine.io.FU_output(fp2intIndex).bits.RD_data
+        //INT_PRF.io.waddr.last  :=    execution_engine.io.FU_output(fp2intIndex).bits.PRD
+        //INT_PRF.io.wen.last    :=    execution_engine.io.FU_output(fp2intIndex).valid && execution_engine.io.FU_output(fp2intIndex).bits.RD_valid
+        //INT_PRF.io.wdata.last  :=    execution_engine.io.FU_output(fp2intIndex).bits.RD_data
     }
     
     ////////////////
