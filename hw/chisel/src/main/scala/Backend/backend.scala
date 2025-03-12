@@ -82,9 +82,7 @@ class backend(coreParameters:CoreParameters) extends Module{
         val irq_nm_i                            = Input(Bool())      //nmi
 
         // UPDATE //
-        val INT_FU_outputs                  =   Vec(INTportCount, Decoupled(new FU_output(coreParameters)))
-        val MEM_FU_outputs                  =   Vec(MEMportCount, Decoupled(new FU_output(coreParameters)))
-        val FP_FU_outputs                   =   Vec(FPportCount, Decoupled(new FU_output(coreParameters)))
+        val FU_outputs                  =   Vec(portCount, Decoupled(new FU_output(coreParameters)))
 
 
     }); dontTouch(io)
@@ -97,9 +95,10 @@ class backend(coreParameters:CoreParameters) extends Module{
     // RESERVATION STATIONS //
     //////////////////////////
     // FIXME: add 1 to this if there is FP (conversion)!
-    val INT_RS: Seq[age_RS] = Seq.tabulate(INTportCount) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount))}  // init distributed reservation stations for int operations
-    val MEM_RS: Seq[age_RS] = Seq.tabulate(1) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount))}  // init distributed reservation stations for int operations
-    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FPportCount) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount))} else Seq()
+    // FIXME: make the above fixme based on config
+    val INT_RS: Seq[age_RS] = Seq.tabulate(INTportCount) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount + 1))}  // init distributed reservation stations for int operations
+    val MEM_RS: Seq[age_RS] = Seq.tabulate(1) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount + 1))}  // init distributed reservation stations for int operations
+    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FPportCount) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount + 1))} else Seq()
 
     /////////
     // MOB //
@@ -199,11 +198,13 @@ class backend(coreParameters:CoreParameters) extends Module{
         }
     }
 
-    def wakeup_RS(rsSeq: Seq[age_RS], producers: Vec[DecoupledIO[FU_output]]): Unit = {
+
+    // producers: Vec(INTportCount, Decoupled(new FU_output(coreParameters)))
+    def wakeup_RS(rsSeq: Seq[age_RS], producers: Seq[DecoupledIO[FU_output]]): Unit = {
         rsSeq.zipWithIndex.foreach { case (rs, i) =>
             // Connect each RS's FU_outputs ports with the corresponding producer from the view.
             producers.zipWithIndex.foreach { case (producer, j) =>
-                rs.io.FU_outputs(j) <> producer
+                rs.io.FU_outputs(j) <> producers(j)
             }
         }
     }
@@ -213,28 +214,38 @@ class backend(coreParameters:CoreParameters) extends Module{
     connect_allocation(INT_RS)
     reg_read_and_fire(rsSeq = INT_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input)
     assign_ready(INT_RS, execution_engine.io.INT_FU_input)
-    assign_WB(rsSeq=INT_RS, prf=INT_PRF, FU_output=execution_engine.io.INT_FU_input)
-    
+    assign_WB(rsSeq=INT_RS, prf=INT_PRF, FU_output=execution_engine.io.INT_FU_output)
 
     // CONNECT FP //
     connect_allocation(FP_RS)
     reg_read_and_fire(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
     assign_ready(FP_RS, FU_input = execution_engine.io.FP_FU_input)
-    assign_WB(rsSeq=FP_RS, prf=FP_PRF.get, FU_output=execution_engine.io.FP_FU_input)
+    assign_WB(rsSeq=FP_RS, prf=FP_PRF.get, FU_output=execution_engine.io.FP_FU_output)
 
     // CONNECT MEM //
     connect_allocation(MEM_RS)
     reg_read_and_fire(rsSeq = MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.MEM_FU_input, offset = INTportCount*2)
     assign_ready(MEM_RS, FU_input = execution_engine.io.MEM_FU_input)
-    assign_WB(rsSeq=MEM_RS, prf=INT_PRF, FU_output=execution_engine.io.MEM_FU_input)  // Last FP only for conversion WB because it produces its (possibly)
+    assign_WB(rsSeq=MEM_RS, prf=INT_PRF, FU_output=execution_engine.io.MEM_FU_output)  // Last FP only for conversion WB because it produces its (possibly)
+
 
     // CONNECT WAKEUP SIGNALS //
-    val int_producers   =  Seq(execution_engine.io.INT_FU_output, execution_engine.io.MEM_FU_output, execution_engine.io.FP_FU_output.last)
-    val float_producers =  Seq(execution_engine.io.FP_FU_output, execution_engine.io.MEM_FU_output, execution_engine.io.INT_FU_output.last)
-    wakeup_RS(rsSeq=INT_RS, producers = int_producers)
-    wakeup_RS(rsSeq=MEM_RS, producers = int_producers)
-    wakeup_RS(rsSeq=FP_RS, producers = float_producers)
+    val int_producers = Seq(
+        execution_engine.io.INT_FU_output.toSeq,
+        execution_engine.io.MEM_FU_output.toSeq,
+        Seq(execution_engine.io.FP_FU_output.last) // `last` is already a single element, so wrap it in Seq
+    ).flatten
 
+    val float_producers = Seq(
+    execution_engine.io.FP_FU_output.toSeq,
+    execution_engine.io.MEM_FU_output.toSeq,
+    Seq(execution_engine.io.INT_FU_output.last) // Wrap `last` in Seq
+    ).flatten
+
+
+    wakeup_RS(rsSeq = INT_RS, producers = int_producers)
+    wakeup_RS(rsSeq = MEM_RS, producers = int_producers)
+    wakeup_RS(rsSeq = FP_RS, producers = float_producers)
 
     // reserve mem ops
     for (i <- 0 until fetchWidth){
@@ -261,9 +272,14 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
     // Connect top level FU_outputs 
-    for(i <- 0 until INTportCount){io.INT_FU_outputs(i) <> execution_engine.io.INT_FU_output(i)}
-    for(i <- 0 until FPportCount) {io.FP_FU_outputs(i) <> execution_engine.io.FP_FU_output(i)}
-    for(i <- 0 until memoryPortCount){io.MEM_FU_outputs(i) <> execution_engine.io.MEM_FU_output(i)}
+    Seq(
+        execution_engine.io.INT_FU_output.toSeq,
+        execution_engine.io.FP_FU_output.toSeq,
+        execution_engine.io.MEM_FU_output.toSeq
+    ).flatten.zipWithIndex.foreach { case (fu, i) =>
+        io.FU_outputs(i) <> fu
+    }
+
 
 
     ////////////////

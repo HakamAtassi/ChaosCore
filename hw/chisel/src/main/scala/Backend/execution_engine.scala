@@ -67,11 +67,14 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     // FUs
     val FUs: Seq[FU] = Seq.tabulate(FUParamSeq.length) { i => Module(new FU(FUParamSeq(i))(coreParameters))}
 
+    val FU_inputs  = Seq(io.INT_FU_input.toSeq, io.MEM_FU_input.toSeq, io.FP_FU_input.toSeq).flatten
+    val FU_outputs = Seq(io.INT_FU_output.toSeq, io.MEM_FU_output.toSeq, io.FP_FU_output.toSeq).flatten
+
     for(i <- 0 until portCount){
         FUs(i).io.flush             <> io.flush
         FUs(i).io.commit            <> io.commit
-        FUs(i).io.FU_input          <> Seq(io.INT_FU_input, io.MEM_FU_input, io.FP_FU_input)(i)
-        FUs(i).io.FU_output         <> Seq(io.INT_FU_output, io.MEM_FU_output, io.FP_FU_output)(i)
+        FUs(i).io.FU_input          <> FU_inputs(i)
+        FUs(i).io.FU_output         <> FU_outputs(i)
 
         FUs(i).CSR_port.foreach { _ =>
             FUs(i).CSR_port.get <> CSR_port
