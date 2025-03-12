@@ -159,16 +159,20 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
 
+
+
     def reg_read_and_fire(
         rsSeq: Seq[age_RS],
         prf: nReadmWriteLVT,
         FU_input: Seq[DecoupledIO[read_decoded_instruction]],
         offset: Int = 0
     ): Unit = {
-        val read_decoded_instruction   =   Wire(new read_decoded_instruction(coreParameters))
-        read_decoded_instruction.fetch_PC := DontCare
 
         rsSeq.zipWithIndex.foreach { case (rs, i) =>
+
+            val read_decoded_instruction   =   WireInit(0.U.asTypeOf(new read_decoded_instruction(coreParameters)))
+            read_decoded_instruction.decoded_instruction := RegNext(rs.io.RF_inputs.bits)
+
             // RS <> PRF
             prf.io.raddr(offset + i * 2)     := rs.io.RF_inputs.bits.RS1
             prf.io.raddr(offset + i * 2 + 1) := rs.io.RF_inputs.bits.RS2
@@ -176,7 +180,6 @@ class backend(coreParameters:CoreParameters) extends Module{
             read_decoded_instruction.RS2_data := prf.io.rdata(offset + i * 2 + 1)
 
             // Send off instruction to execution engine.
-            read_decoded_instruction.decoded_instruction := RegNext(rs.io.RF_inputs.bits)
             FU_input(i).valid := RegNext(rs.io.RF_inputs.valid)
             FU_input(i).bits  <> read_decoded_instruction
         }
@@ -196,7 +199,7 @@ class backend(coreParameters:CoreParameters) extends Module{
         FU_output.zipWithIndex.foreach{ case(fu, i) =>
             prf.io.waddr(i) := fu.bits.PRD
             prf.io.wen(i)   := fu.valid && FU_output(i).bits.RD_valid
-            prf.io.wdata(i) := fu.bits.RD_valid
+            prf.io.wdata(i) := fu.bits.RD_data
         }
 
 
@@ -205,32 +208,36 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // producers: Vec(INTPortCount, Decoupled(new FU_output(coreParameters)))
     def wakeup_RS(rsSeq: Seq[age_RS], producers: Seq[DecoupledIO[FU_output]]): Unit = {
-        rsSeq.zipWithIndex.foreach { case (rs, i) =>
+        rsSeq.foreach ( rs => 
             // Connect each RS's FU_outputs ports with the corresponding producer from the view.
             producers.zipWithIndex.foreach { case (producer, j) =>
                 rs.io.FU_outputs(j) <> producers(j)
             }
-        }
+        )
     }
 
     //
     val int_producers = Seq(
         execution_engine.io.INT_FU_output.toSeq,
-        execution_engine.io.MEM_FU_output.toSeq,
-        Seq(execution_engine.io.FP_FU_output.last) // `last` is already a single element, so wrap it in Seq
+        //execution_engine.io.MEM_FU_output.toSeq,
+        Seq(MOB.io.MOB_output),
+        Seq(execution_engine.io.FP_FU_output.last)
     ).flatten
 
     val float_producers = Seq(
     execution_engine.io.FP_FU_output.toSeq,
-    execution_engine.io.MEM_FU_output.toSeq,
-    Seq(execution_engine.io.INT_FU_output.last) // Wrap `last` in Seq
+    Seq(MOB.io.MOB_output),
+    Seq(execution_engine.io.INT_FU_output.last)
     ).flatten
 
     // CONNECT INT + MEM //
     // Since INT and MEM share a bunch of structures, it makes sense to perform their connection logic together. This is to help with the indexing of the various involved structures
-    connect_allocation(INT_RS)  // Connects frontend "backend packet" to reservation stations
-    connect_allocation(MEM_RS)
+    connect_allocation(rsSeq = INT_RS ++ MEM_RS)  // Connects frontend "backend packet" to reservation stations
     reg_read_and_fire(rsSeq = INT_RS ++ MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input ++ execution_engine.io.MEM_FU_input)   // Connects output of reservation stations to register read components
+
+
+
+
     assign_ready(INT_RS, execution_engine.io.INT_FU_input)
     assign_ready(MEM_RS, FU_input = execution_engine.io.MEM_FU_input)
     assign_WB(prf=INT_PRF, FU_output=execution_engine.io.INT_FU_output ++ Seq(MOB.io.MOB_output))  // Last FP only for conversion WB because it produces its (possibly)

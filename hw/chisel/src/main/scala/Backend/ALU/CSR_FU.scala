@@ -967,6 +967,12 @@ class CSR_FU(coreParameters:CoreParameters) extends GALU(coreParameters){
     val STI_VALID = mstatus_reg.SIE.asBool && mip_reg.STIP.asBool && mie_reg.STIE.asBool
 
 
+    dontTouch(MEI_VALID)
+    dontTouch(MSI_VALID)
+    dontTouch(MTI_VALID)
+    dontTouch(SEI_VALID)
+    dontTouch(SSI_VALID)
+    dontTouch(STI_VALID)
 
 
     // Priority: MEI, MSI, MTI, SEI, SSI, STI, UEI, USI, UTI
