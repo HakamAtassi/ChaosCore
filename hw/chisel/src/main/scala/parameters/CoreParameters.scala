@@ -166,6 +166,7 @@ case class CoreParameters(
     L1_MSHRWidth: Int = 8,                      // width of MSHR rows (misses per address)
 
     // Execution params
+    // FIXME: why are these repeated here?
     ALUportCount:Int = 3,
     MEMportCount:Int = 1,
     FPUportCount:Int = 2,  // not used if not "F"   // FIXME: make this parameterizable
@@ -264,6 +265,7 @@ case class CoreParameters(
     val portCount:Int = FUParamSeq.length   // total number of ports from the reservation stations to the functional units
 
     val INTRSPortCount: Int = FUParamSeq.count(_.is_INTFU)
+    val FPRSPortCount: Int = FUParamSeq.count(_.is_FPU)
     val MEMRSPortCount: Int = FUParamSeq.count(_.is_MEMFU)
     val branchPortCount: Int = FUParamSeq.count(_.is_branch)
 

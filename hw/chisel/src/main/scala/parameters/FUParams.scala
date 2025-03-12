@@ -52,6 +52,7 @@ case class FUParams(
 
     val is_INTFU:Boolean = supportsInt || supportsIntMult || supportsIntDiv || supportsBranch
     val is_MEMFU:Boolean = supportsAddressGeneration
+    val is_FPU:Boolean = supportsFP
     val is_branch:Boolean = supportsBranch
 
     //require(

@@ -39,11 +39,11 @@ class backend(coreParameters:CoreParameters) extends Module{
     // these functions could use a lot of work
     val portCount = getPortCount(coreParameters)    // number of ports total
     val memoryPortCount = FUParamSeq.count(_.supportsAddressGeneration)
-    val FPportCount  = FPUportCount 
-    val INTportCount = portCount - memoryPortCount - FPportCount
+    val FPPortCount  = FPUportCount 
+    val INTPortCount = ALUportCount // FIXME: why is this renamed here?
 
     val branchPortCount = getBranchPortCount(coreParameters)
-    val nonMemoryPortCount = INTportCount + FPUportCount
+    val nonMemoryPortCount = INTPortCount + FPUportCount
 
 
     val io = IO(new Bundle{
@@ -96,9 +96,9 @@ class backend(coreParameters:CoreParameters) extends Module{
     //////////////////////////
     // FIXME: add 1 to this if there is FP (conversion)!
     // FIXME: make the above fixme based on config
-    val INT_RS: Seq[age_RS] = Seq.tabulate(INTportCount) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount + 1))}  // init distributed reservation stations for int operations
-    val MEM_RS: Seq[age_RS] = Seq.tabulate(1) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount + 1))}  // init distributed reservation stations for int operations
-    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FPportCount) { w => Module(new age_RS(coreParameters)(INTRSPortCount + MOBWBPortCount + 1))} else Seq()
+    val INT_RS: Seq[age_RS] = Seq.tabulate(INTPortCount) { w => Module(new age_RS(coreParameters)(INTPortCount + MOBWBPortCount + 1))}  // init distributed reservation stations for int operations
+    val MEM_RS: Seq[age_RS] = Seq.tabulate(1) { w => Module(new age_RS(coreParameters)(INTPortCount + MOBWBPortCount + 1))}  // init distributed reservation stations for int operations
+    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FPPortCount) { w => Module(new age_RS(coreParameters)(FPPortCount + MOBWBPortCount + 1))} else Seq()
 
     /////////
     // MOB //
@@ -124,8 +124,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     val FP_PRF =
     if (coreConfig.contains("F"))
         Some(Module(new nReadmWriteLVT(
-            n = FPportCount * 2,
-            m = FPportCount + (if (coreConfig.contains("F")) 1 else 0),
+            n = FPPortCount * 2,
+            m = FPPortCount + (if (coreConfig.contains("F")) 1 else 0),
             depth = physicalRegCount,
             width = 32
         )))
@@ -199,7 +199,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
 
-    // producers: Vec(INTportCount, Decoupled(new FU_output(coreParameters)))
+    // producers: Vec(INTPortCount, Decoupled(new FU_output(coreParameters)))
     def wakeup_RS(rsSeq: Seq[age_RS], producers: Seq[DecoupledIO[FU_output]]): Unit = {
         rsSeq.zipWithIndex.foreach { case (rs, i) =>
             // Connect each RS's FU_outputs ports with the corresponding producer from the view.
@@ -224,7 +224,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // CONNECT MEM //
     connect_allocation(MEM_RS)
-    reg_read_and_fire(rsSeq = MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.MEM_FU_input, offset = INTportCount*2)
+    reg_read_and_fire(rsSeq = MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.MEM_FU_input, offset = INTPortCount*2)
     assign_ready(MEM_RS, FU_input = execution_engine.io.MEM_FU_input)
     assign_WB(rsSeq=MEM_RS, prf=INT_PRF, FU_output=execution_engine.io.MEM_FU_output)  // Last FP only for conversion WB because it produces its (possibly)
 
