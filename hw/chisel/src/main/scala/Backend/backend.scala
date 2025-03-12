@@ -116,8 +116,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     // Both PRFs need an extra write port to write back the possible conversions from INT to FP and vice versa
 
     val INT_PRF = Module(new nReadmWriteLVT(
-        n = portCount * 2,
-        m = portCount + (if (coreConfig.contains("F")) 1 else 0),
+        n = (INTPortCount+memoryPortCount) * 2, // Read (only for INT FUs and AGU)
+        m = (INTPortCount+memoryPortCount) + (if (coreConfig.contains("F")) 1 else 0),   // write (INT FUs + memory AGU + 1 for FPU conversion output)
         depth = physicalRegCount,
         width = 32
     ))
@@ -162,10 +162,11 @@ class backend(coreParameters:CoreParameters) extends Module{
     def reg_read_and_fire(
         rsSeq: Seq[age_RS],
         prf: nReadmWriteLVT,
-        FU_input: Vec[DecoupledIO[read_decoded_instruction]],
+        FU_input: Seq[DecoupledIO[read_decoded_instruction]],
         offset: Int = 0
     ): Unit = {
         val read_decoded_instruction   =   Wire(new read_decoded_instruction(coreParameters))
+        read_decoded_instruction.fetch_PC := DontCare
 
         rsSeq.zipWithIndex.foreach { case (rs, i) =>
             // RS <> PRF
@@ -182,20 +183,23 @@ class backend(coreParameters:CoreParameters) extends Module{
     }
 
     // Connect the RS ready signals to the execution engine.
-    def assign_ready(rsSeq: Seq[age_RS], FU_input: Vec[DecoupledIO[read_decoded_instruction]]): Unit = {
+    def assign_ready(rsSeq: Seq[age_RS], FU_input: Seq[DecoupledIO[read_decoded_instruction]]): Unit = {
         rsSeq.zipWithIndex.foreach { case (rs, i) =>
             // RS ready <> FU ready //
             rs.io.RF_inputs.ready := FU_input(i).ready
         }
     }
 
-    def assign_WB(rsSeq: Seq[age_RS], prf: nReadmWriteLVT, FU_output:Vec[DecoupledIO[FU_output]]): Unit = {
+    // why does this have RS?
+    def assign_WB(prf: nReadmWriteLVT, FU_output:Seq[DecoupledIO[FU_output]]): Unit = {
         // write back FU produced results to PRF
-        rsSeq.zipWithIndex.foreach { case (rs, i) =>
-            prf.io.waddr(i) := FU_output(i).bits.PRD
-            prf.io.wen(i)   := FU_output(i).valid && FU_output(i).bits.RD_valid
-            prf.io.wdata(i) := FU_output(i).bits.RD_valid
+        FU_output.zipWithIndex.foreach{ case(fu, i) =>
+            prf.io.waddr(i) := fu.bits.PRD
+            prf.io.wen(i)   := fu.valid && FU_output(i).bits.RD_valid
+            prf.io.wdata(i) := fu.bits.RD_valid
         }
+
+
     }
 
 
@@ -209,27 +213,7 @@ class backend(coreParameters:CoreParameters) extends Module{
         }
     }
 
-
-    // CONNECT INT //
-    connect_allocation(INT_RS)
-    reg_read_and_fire(rsSeq = INT_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input)
-    assign_ready(INT_RS, execution_engine.io.INT_FU_input)
-    assign_WB(rsSeq=INT_RS, prf=INT_PRF, FU_output=execution_engine.io.INT_FU_output)
-
-    // CONNECT FP //
-    connect_allocation(FP_RS)
-    reg_read_and_fire(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
-    assign_ready(FP_RS, FU_input = execution_engine.io.FP_FU_input)
-    assign_WB(rsSeq=FP_RS, prf=FP_PRF.get, FU_output=execution_engine.io.FP_FU_output)
-
-    // CONNECT MEM //
-    connect_allocation(MEM_RS)
-    reg_read_and_fire(rsSeq = MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.MEM_FU_input, offset = INTPortCount*2)
-    assign_ready(MEM_RS, FU_input = execution_engine.io.MEM_FU_input)
-    assign_WB(rsSeq=MEM_RS, prf=INT_PRF, FU_output=execution_engine.io.MEM_FU_output)  // Last FP only for conversion WB because it produces its (possibly)
-
-
-    // CONNECT WAKEUP SIGNALS //
+    //
     val int_producers = Seq(
         execution_engine.io.INT_FU_output.toSeq,
         execution_engine.io.MEM_FU_output.toSeq,
@@ -242,7 +226,24 @@ class backend(coreParameters:CoreParameters) extends Module{
     Seq(execution_engine.io.INT_FU_output.last) // Wrap `last` in Seq
     ).flatten
 
+    // CONNECT INT + MEM //
+    // Since INT and MEM share a bunch of structures, it makes sense to perform their connection logic together. This is to help with the indexing of the various involved structures
+    connect_allocation(INT_RS)  // Connects frontend "backend packet" to reservation stations
+    connect_allocation(MEM_RS)
+    reg_read_and_fire(rsSeq = INT_RS ++ MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input ++ execution_engine.io.MEM_FU_input)   // Connects output of reservation stations to register read components
+    assign_ready(INT_RS, execution_engine.io.INT_FU_input)
+    assign_ready(MEM_RS, FU_input = execution_engine.io.MEM_FU_input)
+    assign_WB(prf=INT_PRF, FU_output=execution_engine.io.INT_FU_output ++ Seq(MOB.io.MOB_output))  // Last FP only for conversion WB because it produces its (possibly)
 
+    MOB.io.AGU_output <> execution_engine.io.MEM_FU_output(0)   //FIXME:  for now there is only 1. Make parameterizable. 
+
+    // CONNECT FP //
+    connect_allocation(FP_RS)
+    reg_read_and_fire(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
+    assign_ready(FP_RS, execution_engine.io.FP_FU_input)
+    assign_WB(prf=FP_PRF.get, FU_output=execution_engine.io.FP_FU_output)
+
+    // CONNECT WAKEUP SIGNALS //
     wakeup_RS(rsSeq = INT_RS, producers = int_producers)
     wakeup_RS(rsSeq = MEM_RS, producers = int_producers)
     wakeup_RS(rsSeq = FP_RS, producers = float_producers)
@@ -289,18 +290,17 @@ class backend(coreParameters:CoreParameters) extends Module{
     if(coreConfig.contains("F")){
         // connect the INT2FP unit to a PRF WB port (the last one)
         // connect that FU's conversion port to the corresponding PRF port
-        val int2fpIndex = FUParamSeq.indexWhere(_.supportsINT2FP)
-        //FP_PRF.get.io.waddr.last  :=    execution_engine.io.FU_output(int2fpIndex).bits.PRD
-        //FP_PRF.get.io.wen.last    :=    execution_engine.io.FU_output(int2fpIndex).valid && execution_engine.io.FU_output(int2fpIndex).bits.RD_valid
-        //FP_PRF.get.io.wdata.last  :=    execution_engine.io.FU_output(int2fpIndex).bits.RD_data
+        FP_PRF.get.io.waddr.last  :=    execution_engine.io.INT_FU_output.last.bits.PRD
+        // FIXME: 
+        FP_PRF.get.io.wen.last    :=    0.U //execution_engine.io.FU_output(int2fpIndex).valid && execution_engine.io.FU_output(int2fpIndex).bits.RD_valid
+        FP_PRF.get.io.wdata.last  :=    0.U //execution_engine.io.FU_output(int2fpIndex).bits.RD_data
 
 
         // Do the same to the FP2INT unit
         // connect that FU's conversion port to the corresponding PRF port
-        val fp2intIndex = FUParamSeq.indexWhere(_.supportsFP2INT)
-        //INT_PRF.io.waddr.last  :=    execution_engine.io.FU_output(fp2intIndex).bits.PRD
-        //INT_PRF.io.wen.last    :=    execution_engine.io.FU_output(fp2intIndex).valid && execution_engine.io.FU_output(fp2intIndex).bits.RD_valid
-        //INT_PRF.io.wdata.last  :=    execution_engine.io.FU_output(fp2intIndex).bits.RD_data
+        INT_PRF.io.waddr.last  :=    execution_engine.io.FP_FU_output.last.bits.PRD
+        INT_PRF.io.wen.last    :=    0.U //execution_engine.io.FU_output(fp2intIndex).valid && execution_engine.io.FU_output(fp2intIndex).bits.RD_valid
+        INT_PRF.io.wdata.last  :=    0.U //execution_engine.io.FU_output(fp2intIndex).bits.RD_data
     }
     
     ////////////////
