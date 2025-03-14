@@ -32,28 +32,87 @@ package ChaosCore
 import chisel3._
 
 import chisel3.util._
+import hardfloat._
 
 class FPU(coreParameters:CoreParameters) extends GALU(coreParameters){
     import coreParameters._
 
-    // Supports all standard FPU operations:
-    // FMA 
-    // FMS
-    // Add
-    // sub, 
-    // mul
-    // div
-    // square root
-    // convert
-    // compare
-    // etc...
+    // link to hardfloat docs
+    // http://www.jhauser.us/arithmetic/HardFloat-1/doc/HardFloat-Verilog.html
 
 
     // need a scoreboarding mechanism of some kind
 
+    // Float instructions: 
+    // Load/Store. Full words only
+    // Fused mul add, mul sub, neg/pos
+    // flt add, flt sub
+    // flt div
+    // flt mul
+    // flt sqr root
+    // flt sign injection (normal, neg, xor)
+    // flt min, max
+    // flt convert to int (to int and uint)
+    // flt move to float
+    // flt equality
+    // flt <, <=
+    // flt classify
+
+    // FP formats:
+    // fN -> ieee FP32/64 format
+    // recFN
+
+    // FPU hardfloat HW
+    // Adder: AddRecFN
+    // Multiplier: MulRecFN
+    // Fused-Multiply-Add: MulAddRecFN
+    // Sqrt/Divide: DivSqrtFN_small (only div or square root in pipeline at once, but does both)
+    // classify: classifyRecFN
+    // Compare: CompareRecFN
+
+    // RecFNToIn    // This lives in FP to Int
+    // IntToRecFN    // This lives in a conversion supported ALU
+
+    // Conversions:
+    // (FN to Recoded FN -> recFNFromFN)    // input to modules (standard ieee FP to RecFN)
+    // (Recoded FN to FN -> fNFromRecFN)    // output of modules (RecFN to standard ieee FP)
 
 
 
+    /////////////////////
+    // INIT FP Modules //
+    /////////////////////
+
+    // standard IEEE 32 bit widths
+    val AddRecFN = Module(new AddRecFN(expWidth=8, sigWidth = 24))
+    val MulRecFN = Module(new (expWidth=8 sigWidth = 24))
+    val MulAddRecFN = Module(new MulAddRecFN(expWidth=8 sigWidth = 24))
+    val DivSqrtFN_small = Module(new DivSqrtFN_small(expWidth=8 sigWidth = 24))
+    val classifyRecFN = Module(new classifyRecFN(expWidth=8 sigWidth = 24))
+    val compare = Module(new CompareRecFN(expWidth=8 sigWidth = 24))
+
+
+    AddRecFN.io         := DontCare
+    MulRecFN.io         := DontCare
+    MulAddRecFN.io      := DontCare
+    DivSqrtFN_small.io  := DontCare
+    classifyRecFN.io    := DontCare
+    compare.io          := DontCare
+
+    
+    // this should be optional
+    // val RecFNToIn = Module(new RecFNToIN(expWidth=8, sigWidth=24, intWidth=32))
+
+
+    //////////////////////////////
+    // CONVERT FROM NN to RecFN //
+    //////////////////////////////
+
+    //val fNRS1 = recFNFromFN(RS1_data)
+    //val fNRS2 = recFNFromFN(RS2_data)
+
+
+    // 
  
 
 

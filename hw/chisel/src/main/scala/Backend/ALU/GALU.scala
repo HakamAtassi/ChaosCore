@@ -141,6 +141,19 @@ class GALU(coreParameters:CoreParameters) extends Module{
     val GE              =   WireInit(Bool(), 0.B)
     val LTU             =   WireInit(Bool(), 0.B)
     val GEU             =   WireInit(Bool(), 0.B)
+    
+
+    // FP
+    // TODO:
+    //val EQ              =   WireInit(Bool(), 0.B)
+    //val NE              =   WireInit(Bool(), 0.B)
+    //val LT              =   WireInit(Bool(), 0.B)
+    //val GE              =   WireInit(Bool(), 0.B)
+    //val LTU             =   WireInit(Bool(), 0.B)
+    //val GEU             =   WireInit(Bool(), 0.B)
+
+    // this should be optional
+    // val INToRecFN = Module(new INToRecFN(intWidth=???, expWidth=???, sigWidth=???))
 
 
     val RS1_signed      =   Wire(SInt(32.W))
