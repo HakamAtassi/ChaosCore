@@ -232,7 +232,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // CONNECT INT + MEM //
     // Since INT and MEM share a bunch of structures, it makes sense to perform their connection logic together. This is to help with the indexing of the various involved structures
-    connect_allocation(rsSeq = INT_RS ++ MEM_RS)  // Connects frontend "backend packet" to reservation stations
+    connect_allocation(rsSeq = INT_RS ++ MEM_RS ++ FP_RS)  // Connects frontend "backend packet" to reservation stations
     reg_read_and_fire(rsSeq = INT_RS ++ MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input ++ execution_engine.io.MEM_FU_input)   // Connects output of reservation stations to register read components
 
 
@@ -245,7 +245,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     MOB.io.AGU_output <> execution_engine.io.MEM_FU_output(0)   //FIXME:  for now there is only 1. Make parameterizable. 
 
     // CONNECT FP //
-    connect_allocation(FP_RS)
+    //connect_allocation(FP_RS)
     reg_read_and_fire(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
     assign_ready(FP_RS, execution_engine.io.FP_FU_input)
     assign_WB(prf=FP_PRF.get, FU_output=execution_engine.io.FP_FU_output)
