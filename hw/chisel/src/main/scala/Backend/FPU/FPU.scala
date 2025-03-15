@@ -34,8 +34,24 @@ import chisel3._
 import chisel3.util._
 import hardfloat._
 
-class FPU(coreParameters:CoreParameters) extends GALU(coreParameters){
+//class FPU(FUParam:FUParams)(coreParameters:CoreParameters) extends Module{    // FIXME: needs FUParams...
+class FPU(coreParameters:CoreParameters) extends Module{
     import coreParameters._
+    //import FUParam._  // FIXME: needs this 
+    val io = IO(new Bundle{
+        // FLUSH
+        val flush         =   Flipped(ValidIO(new flush(coreParameters)))
+
+        // Input
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
+        
+        // Output
+        val FU_output     =   Decoupled(new FU_output(coreParameters))
+
+        // partial_commit (for CSRs)
+        val commit         =   Flipped(ValidIO(new commit(coreParameters)))
+
+    }); dontTouch(io)
 
     // link to hardfloat docs
     // http://www.jhauser.us/arithmetic/HardFloat-1/doc/HardFloat-Verilog.html
@@ -71,11 +87,25 @@ class FPU(coreParameters:CoreParameters) extends GALU(coreParameters){
     // Compare: CompareRecFN
 
     // RecFNToIn    // This lives in FP to Int
-    // IntToRecFN    // This lives in a conversion supported ALU
+    // IntToRecFN   // This lives in a conversion supported ALU
 
     // Conversions:
     // (FN to Recoded FN -> recFNFromFN)    // input to modules (standard ieee FP to RecFN)
     // (Recoded FN to FN -> fNFromRecFN)    // output of modules (RecFN to standard ieee FP)
+
+    ////////////
+    // DECODE //
+    ////////////
+    val CSRRW               =  io.FU_input.bits.decoded_instruction.CSRRW
+
+
+
+    ////////////////
+    // SCOREBOARD //
+    ////////////////
+    // Instructions are only accepted if they are guaranteed to not cause contention on the output bus when they are done. 
+    // For instance, dont accept an Add if one cycle from now, a multiply will be writing back (since that will cause output contention)
+
 
 
 
@@ -84,20 +114,20 @@ class FPU(coreParameters:CoreParameters) extends GALU(coreParameters){
     /////////////////////
 
     // standard IEEE 32 bit widths
-    val AddRecFN = Module(new AddRecFN(expWidth=8, sigWidth = 24))
-    val MulRecFN = Module(new (expWidth=8 sigWidth = 24))
-    val MulAddRecFN = Module(new MulAddRecFN(expWidth=8 sigWidth = 24))
-    val DivSqrtFN_small = Module(new DivSqrtFN_small(expWidth=8 sigWidth = 24))
-    val classifyRecFN = Module(new classifyRecFN(expWidth=8 sigWidth = 24))
-    val compare = Module(new CompareRecFN(expWidth=8 sigWidth = 24))
+//    val AddRecFN = Module(new AddRecFN(expWidth=8, sigWidth=24))    // 1 cycle
+    //val MulRecFN = Module(new MulRecFN(expWidth=8 sigWidth=24))             // 
+    //val MulAddRecFN = Module(new MulAddRecFN(expWidth=8 sigWidth=24))
+    //val DivSqrtFN_small = Module(new DivSqrtFN_small(expWidth=8 sigWidth=24))
+    //val classifyRecFN = Module(new classifyRecFN(expWidth=8 sigWidth=24))
+    //val compare = Module(new CompareRecFN(expWidth=8 sigWidth=24))
 
 
-    AddRecFN.io         := DontCare
-    MulRecFN.io         := DontCare
-    MulAddRecFN.io      := DontCare
-    DivSqrtFN_small.io  := DontCare
-    classifyRecFN.io    := DontCare
-    compare.io          := DontCare
+    //AddRecFN.io         := DontCare
+    //MulRecFN.io         := DontCare
+    //MulAddRecFN.io      := DontCare
+    //DivSqrtFN_small.io  := DontCare
+    //classifyRecFN.io    := DontCare
+    //compare.io          := DontCare
 
     
     // this should be optional
@@ -111,26 +141,26 @@ class FPU(coreParameters:CoreParameters) extends GALU(coreParameters){
     //val fNRS1 = recFNFromFN(RS1_data)
     //val fNRS2 = recFNFromFN(RS2_data)
 
-
-    // 
  
 
 
     // Not a branch unit (all FUs share the same output channel)
 
-    FU_output.io.enq.valid                      :=  RegNext(ALU_input_valid)
-    FU_output.io.enq.bits.branch_valid          :=  0.B
-    FU_output.io.enq.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
-    FU_output.io.enq.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
+    io := DontCare
 
-    // Actual Outputs
-    FU_output.io.enq.bits.PRD                   :=  RegNext(io.FU_input.bits.decoded_instruction.PRD)
-    FU_output.io.enq.bits.RD_valid              :=  RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    FU_output.io.enq.bits.RD_data               :=  RegNext(arithmetic_result)
+    //FU_output.io.enq.valid                      :=  RegNext(ALU_input_valid)
+    //FU_output.io.enq.bits.branch_valid          :=  0.B
+    //FU_output.io.enq.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
+    //FU_output.io.enq.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
-    FU_output.io.enq.bits.MOB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
-    FU_output.io.enq.bits.address               :=  0.U
-    FU_output.io.enq.bits.ROB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    //// Actual Outputs
+    //FU_output.io.enq.bits.PRD                   :=  RegNext(io.FU_input.bits.decoded_instruction.PRD)
+    //FU_output.io.enq.bits.RD_valid              :=  RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    //FU_output.io.enq.bits.RD_data               :=  RegNext(arithmetic_result)
+
+    //FU_output.io.enq.bits.MOB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    //FU_output.io.enq.bits.address               :=  0.U
+    //FU_output.io.enq.bits.ROB_index             :=  RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
 
 
 }
