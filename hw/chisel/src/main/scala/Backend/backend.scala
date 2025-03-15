@@ -68,7 +68,7 @@ class backend(coreParameters:CoreParameters) extends Module{
         val backend_packet              =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
 
-        val MOB_output                  =   Decoupled(new FU_output(coreParameters))                                               // broadcast load data
+        val INT_MOB_output                  =   Decoupled(new FU_output(coreParameters))                                               // broadcast load data
 
         ////////////////
         // INTERRUPTS //
@@ -124,7 +124,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     val FP_PRF =
     if (coreConfig.contains("F"))
         Some(Module(new nReadmWriteLVT(
-            n = FPPortCount * 2,
+            n = FPPortCount * 3,    // each FPU has potentially 3 inputs (RS1, RS2, RS3)
             m = FPPortCount + (if (coreConfig.contains("F")) 1 else 0),
             depth = physicalRegCount,
             width = 32
@@ -161,23 +161,29 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
 
-    def reg_read_and_fire(
+    def reg_read_and_fire(sources_per_port:Int)(
         rsSeq: Seq[age_RS],
         prf: nReadmWriteLVT,
         FU_input: Seq[DecoupledIO[read_decoded_instruction]],
         offset: Int = 0
     ): Unit = {
 
+        assert(sources_per_port == 2 || sources_per_port == 3, s"souces per port can only be 2 or 3. Got $sources_per_port")
         rsSeq.zipWithIndex.foreach { case (rs, i) =>
 
             val read_decoded_instruction   =   WireInit(0.U.asTypeOf(new read_decoded_instruction(coreParameters)))
             read_decoded_instruction.decoded_instruction := RegNext(rs.io.RF_inputs.bits)
 
             // RS <> PRF
-            prf.io.raddr(offset + i * 2)     := rs.io.RF_inputs.bits.RS1
-            prf.io.raddr(offset + i * 2 + 1) := rs.io.RF_inputs.bits.RS2
-            read_decoded_instruction.RS1_data := prf.io.rdata(offset + i * 2)
-            read_decoded_instruction.RS2_data := prf.io.rdata(offset + i * 2 + 1)
+            prf.io.raddr(offset + i * sources_per_port)     := rs.io.RF_inputs.bits.RS1
+            prf.io.raddr(offset + i * sources_per_port + 1) := rs.io.RF_inputs.bits.RS2
+            read_decoded_instruction.RS1_data := prf.io.rdata(offset + i * sources_per_port)
+            read_decoded_instruction.RS2_data := prf.io.rdata(offset + i * sources_per_port + 1)
+
+            if(sources_per_port == 3){
+                prf.io.raddr(offset + i * sources_per_port + 2) := rs.io.RF_inputs.bits.RS2
+                read_decoded_instruction.RS3_data := prf.io.rdata(offset + i * sources_per_port + 2)
+            }
 
             // Send off instruction to execution engine.
             FU_input(i).valid := RegNext(rs.io.RF_inputs.valid)
@@ -220,33 +226,33 @@ class backend(coreParameters:CoreParameters) extends Module{
     val int_producers = Seq(
         execution_engine.io.INT_FU_output.toSeq,
         //execution_engine.io.MEM_FU_output.toSeq,
-        Seq(MOB.io.MOB_output),
+        Seq(MOB.io.INT_MOB_output),
         Seq(execution_engine.io.FP_FU_output.last)
     ).flatten
 
     val float_producers = Seq(
     execution_engine.io.FP_FU_output.toSeq,
-    Seq(MOB.io.MOB_output),
+    Seq(MOB.io.FP_MOB_output),
     Seq(execution_engine.io.INT_FU_output.last)
     ).flatten
 
     // CONNECT INT + MEM //
     // Since INT and MEM share a bunch of structures, it makes sense to perform their connection logic together. This is to help with the indexing of the various involved structures
     connect_allocation(rsSeq = INT_RS ++ MEM_RS ++ FP_RS)  // Connects frontend "backend packet" to reservation stations
-    reg_read_and_fire(rsSeq = INT_RS ++ MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input ++ execution_engine.io.MEM_FU_input)   // Connects output of reservation stations to register read components
+    reg_read_and_fire(sources_per_port = 2)(rsSeq = INT_RS ++ MEM_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input ++ execution_engine.io.MEM_FU_input)   // Connects output of reservation stations to register read components
 
 
 
 
     assign_ready(INT_RS, execution_engine.io.INT_FU_input)
     assign_ready(MEM_RS, FU_input = execution_engine.io.MEM_FU_input)
-    assign_WB(prf=INT_PRF, FU_output=execution_engine.io.INT_FU_output ++ Seq(MOB.io.MOB_output))  // Last FP only for conversion WB because it produces its (possibly)
+    assign_WB(prf=INT_PRF, FU_output=execution_engine.io.INT_FU_output ++ Seq(MOB.io.INT_MOB_output))  // Last FP only for conversion WB because it produces its (possibly)
 
     MOB.io.AGU_output <> execution_engine.io.MEM_FU_output(0)   //FIXME:  for now there is only 1. Make parameterizable. 
 
     // CONNECT FP //
     //connect_allocation(FP_RS)
-    reg_read_and_fire(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
+    reg_read_and_fire(sources_per_port = 3)(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
     assign_ready(FP_RS, execution_engine.io.FP_FU_input)
     assign_WB(prf=FP_PRF.get, FU_output=execution_engine.io.FP_FU_output)
 
@@ -327,7 +333,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     // AGU <> MOB //
     ////////////////
     MOB.io.fetch_PC <> io.fetch_PC
-    io.MOB_output   <> MOB.io.MOB_output   // this updates reg status etc...
+    io.INT_MOB_output   <> MOB.io.INT_MOB_output   // this updates reg status etc...
 
 
     ////////////

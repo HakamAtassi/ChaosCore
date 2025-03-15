@@ -261,6 +261,7 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 
     val RS1                 =  UInt(physicalRegBits.W)
     val RS2                 =  UInt(physicalRegBits.W)
+    val RS3                 =  UInt(physicalRegBits.W)  // FIXME: make this optional
     val IMM                 =  UInt(21.W)
     val FUNCT3              =  UInt(3.W)
     val FUNCT7              =  UInt(7.W)
@@ -312,6 +313,18 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // MISC //
     val FLUSH              = Bool()
 
+    // FP
+    // FIXME: make these optional
+    val RS3_valid   = Bool()
+    val FMA_FMS     = Bool()
+    val sign_inject = Bool()
+    val min_max     = Bool()
+    val convert     = Bool()
+    val move        = Bool()
+    val compare     = Bool()
+    val classify    = Bool()
+
+
 
 
     def needs_INT_RS: Bool = {
@@ -361,6 +374,7 @@ class read_decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // read data from register read 
     val RS1_data        =   UInt(32.W)
     val RS2_data        =   UInt(32.W)
+    val RS3_data        =   UInt(32.W)  // FIXME: make this potional
     val fetch_PC        =   UInt(32.W)
 }
 
@@ -682,6 +696,12 @@ object MOB_STATES extends ChiselEnum {
     DONE = Value        // 6    (Response received)
 }
 
+
+object data_type_t extends ChiselEnum {
+    val INT,       
+    FP = Value        // 6    (Response received)
+}
+
 class MOB_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
@@ -706,6 +726,8 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
 
     val committed               = Bool()
     val resolved                = Bool()    // all previous stores resolved?
+
+    val data_type               = data_type_t()
 
 
     // Entry state

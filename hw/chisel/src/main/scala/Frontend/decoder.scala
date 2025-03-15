@@ -82,6 +82,8 @@ object apply_decoding{
 
         val decoded_instruction = Wire(new decoded_instruction(coreParameters))
 
+
+        // FIXME: this is wrong.
         decoded_instruction.needs_ALU            := decode_pat(25+8)
         decoded_instruction.needs_branch_unit    := decode_pat(24+8)
         decoded_instruction.needs_CSRs           := decode_pat(23+8)
@@ -428,6 +430,16 @@ class decoder(coreParameters:CoreParameters) extends Module{
 
     // MISC //
     io.decoded_instruction.bits.FLUSH                := decode_pat(25)
+
+    // FP //
+    io.decoded_instruction.bits.RS3_valid            := decode_pat(26)
+    io.decoded_instruction.bits.FMA_FMS              := decode_pat(27)
+    io.decoded_instruction.bits.sign_inject          := decode_pat(28)
+    io.decoded_instruction.bits.min_max              := decode_pat(29)
+    io.decoded_instruction.bits.convert              := decode_pat(30)
+    io.decoded_instruction.bits.move                 := decode_pat(31)
+    io.decoded_instruction.bits.compare              := decode_pat(32)
+    io.decoded_instruction.bits.classify             := decode_pat(33)
 
 
 

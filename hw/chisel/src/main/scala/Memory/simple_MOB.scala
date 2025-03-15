@@ -59,7 +59,8 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
         val fetch_PC                =      Input(UInt(32.W))                                                                  // DEBUG
 
         val AGU_output              =      Flipped(Decoupled(new FU_output(coreParameters)))                                      // update address (AGU)
-        val MOB_output              =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
+        val INT_MOB_output          =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
+        val FP_MOB_output           =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
 
         // REDIRECTS // 
         val commit                  =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
@@ -121,6 +122,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
             MOB_entry.ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB_entry.fetch_packet_index   :=  io.reserve(i).bits.packet_index
             MOB_entry.mem_signed           :=  io.reserve(i).bits.mem_signed
+            MOB_entry.data_type            :=  Mux(io.reserve(i).bits.needs_FPU, data_type_t.FP, data_type_t.INT) // io.reserve(i).bits.mem_signed
 
             io.reserved_pointers(i).bits                        := back_index + index_offset
             io.reserved_pointers(i).valid                       := 1.U
@@ -280,26 +282,52 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
 
     // cache response
-    io.MOB_output.bits                      := 0.U.asTypeOf(new FU_output(coreParameters))
-    io.MOB_output.bits.ROB_index            := MOB(io.backend_memory_response.bits.MOB_index).ROB_index
-    io.MOB_output.bits.MOB_index            := io.backend_memory_response.bits.MOB_index    // why is this needed?
-    io.MOB_output.bits.address              := io.backend_memory_response.bits.addr
-    io.MOB_output.bits.PRD                  := MOB(io.backend_memory_response.bits.MOB_index).PRD //io.backend_memory_response.bits.PRD
-    io.MOB_output.bits.RD_data              := io.backend_memory_response.bits.data
-    io.MOB_output.bits.RD_valid             := io.backend_memory_response.valid
-    io.MOB_output.bits.fetch_packet_index   := MOB(io.backend_memory_response.bits.MOB_index).fetch_packet_index //io.backend_memory_response.bits.fetch_packet_index
-    io.MOB_output.valid                     := io.backend_memory_response.valid && !io.backend_memory_response.bits.nack
 
-    when(MOB(front_index).valid && MOB(front_index).MOB_STATE === MOB_STATES.DONE && MOB(front_index).memory_type === memory_type_t.STORE){
-        io.MOB_output.bits.ROB_index            := MOB(front_index).ROB_index
-        //io.MOB_output.bits.MOB_index            := MOB(front_index).MOB_index
-        io.MOB_output.bits.address              := MOB(front_index).address
-        //io.MOB_output.bits.PRD                  := MOB(front_index).PRD
-        //io.MOB_output.bits.RD_data              := MOB(front_index).RD_data
-        //io.MOB_output.bits.RD_valid             := MOB(front_index).RD_valid
-        io.MOB_output.bits.fetch_packet_index   := MOB(front_index).fetch_packet_index //io.backend_memory_response.bits.fetch_packet_index
-        io.MOB_output.valid                     := 1.B
+
+
+    // Create a default zeroed-out decoupled wire for memory response
+    val memory_response = WireInit(0.U.asTypeOf(Decoupled(new FU_output(coreParameters))))
+
+    // Extract indices and types
+    val response_index  = io.backend_memory_response.bits.MOB_index
+    val response_type   = MOB(response_index).data_type
+
+    // Populate `memory_response` only when valid and not nacked
+    memory_response.valid                   := io.backend_memory_response.valid && !io.backend_memory_response.bits.nack
+    memory_response.bits.ROB_index           := MOB(response_index).ROB_index
+    memory_response.bits.MOB_index           := io.backend_memory_response.bits.MOB_index
+    memory_response.bits.address             := io.backend_memory_response.bits.addr
+    memory_response.bits.PRD                 := MOB(response_index).PRD
+    memory_response.bits.RD_data             := io.backend_memory_response.bits.data
+    memory_response.bits.RD_valid            := io.backend_memory_response.valid
+    memory_response.bits.fetch_packet_index  := MOB(response_index).fetch_packet_index
+
+    io.INT_MOB_output.valid := 0.B
+    io.INT_MOB_output.bits  := 0.U.asTypeOf(new FU_output(coreParameters))
+
+    io.FP_MOB_output.valid  := 0.B
+    io.FP_MOB_output.bits   := 0.U.asTypeOf(new FU_output(coreParameters))
+
+    when(response_type === data_type_t.INT) {
+        io.INT_MOB_output <> memory_response
+    }.elsewhen(response_type === data_type_t.FP) {
+        io.FP_MOB_output  <> memory_response
+    }.otherwise {
+        assert(false.B, "INVALID MEMORY RESPONSE DATA TYPE!")
     }
+
+
+
+//    when(MOB(front_index).valid && MOB(front_index).MOB_STATE === MOB_STATES.DONE && MOB(front_index).memory_type === memory_type_t.STORE){
+        //io.MOB_output.bits.ROB_index            := MOB(front_index).ROB_index
+        ////io.MOB_output.bits.MOB_index            := MOB(front_index).MOB_index
+        //io.MOB_output.bits.address              := MOB(front_index).address
+        ////io.MOB_output.bits.PRD                  := MOB(front_index).PRD
+        ////io.MOB_output.bits.RD_data              := MOB(front_index).RD_data
+        ////io.MOB_output.bits.RD_valid             := MOB(front_index).RD_valid
+        //io.MOB_output.bits.fetch_packet_index   := MOB(front_index).fetch_packet_index //io.backend_memory_response.bits.fetch_packet_index
+        //io.MOB_output.valid                     := 1.B
+    //}
 
 
     when(io.flush.valid){
