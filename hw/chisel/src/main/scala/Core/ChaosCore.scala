@@ -125,8 +125,8 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     /////////////////////////
     // FRONTEND <> BACKEND //
     /////////////////////////
-    frontend.io.FU_outputs <> backend.io.FU_outputs
-    frontend.io.FU_outputs(3) <> backend.io.INT_MOB_output      //FIXME: make this dynamic?
+    frontend.io.INT_producers <> backend.io.INT_producers
+    frontend.io.FP_producers <> backend.io.FP_producers // FIXME: make this optional
 
 
     ////////////////////

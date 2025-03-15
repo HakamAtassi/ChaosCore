@@ -33,6 +33,8 @@ package ChaosCore
 import chisel3._
 
 
+
+// FIXME: add int_producer, fp_producer, mem_producer
 case class FUParams(
     supportsInt: Boolean = false, 
     supportsINT2FP: Boolean = false, 
@@ -54,6 +56,13 @@ case class FUParams(
     val is_MEMFU:Boolean = supportsAddressGeneration
     val is_FPU:Boolean = supportsFP
     val is_branch:Boolean = supportsBranch
+
+
+    // below is a more abstract representation of FUs once they have produced their result.
+    val INT_producer: Boolean   = is_INTFU || supportsFP2INT    // does this FU produce int results (that are useable)  // FIXME: supports branch? should this be included?
+    val FP_producer: Boolean    = is_FPU   || supportsINT2FP  // does this FU produce int results (that are useable)  // FIXME: supports branch? should this be included?
+    val MEM_producer: Boolean   = is_MEMFU    // does this FU produce int results (that are useable)  // FIXME: supports branch? should this be included?
+
 
     //require(
         //supportsInt || supportsIntMult || supportsIntDiv || supportsBranch || supportsCSRs || supportsAddressGeneration,
