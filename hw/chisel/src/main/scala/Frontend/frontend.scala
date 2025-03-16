@@ -57,11 +57,12 @@ class frontend(coreParameters:CoreParameters) extends Module{
         // INSTRUCTION OUT //
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
 
-        // PRD FREE //
-        val FU_outputs                      =   Vec(portCount, Flipped(Decoupled(new FU_output(coreParameters))))
+        // UPDATE //
+        val INT_producers                 =   Vec(INT_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
+        val FP_producers                  =   Vec(FP_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
 
         val revert                          =   ValidIO(new revert(coreParameters))
-    })
+    }); dontTouch(io)
 
 
     //////////////
@@ -74,7 +75,8 @@ class frontend(coreParameters:CoreParameters) extends Module{
     
     val instruction_queue   = Module(new Queue(new decoded_fetch_packet(coreParameters), 16, flow=false, hasFlush=true, useSyncReadMem=true))
 
-    val rename              = Module(new rename(coreParameters))
+    val rename              = Module(new rename(data_type="Int")(coreParameters))
+    //val rename              = Module(new rename(data_type="Float")(coreParameters))
 
     val flush = io.commit.bits.is_misprediction && io.commit.valid
 
@@ -108,13 +110,14 @@ class frontend(coreParameters:CoreParameters) extends Module{
     ////////////
     instruction_queue.io.flush.get := flush
 
-    rename.io.FU_outputs           <>     io.FU_outputs
+    rename.io.FU_outputs           <>     io.INT_producers
     rename.io.flush                <>     io.flush
     rename.io.commit               <>     io.commit
 
     ////////////
     // OUTPUT //
     ////////////
+
     io.renamed_decoded_fetch_packet <> rename.io.renamed_decoded_fetch_packet
 
 
@@ -127,6 +130,9 @@ class frontend(coreParameters:CoreParameters) extends Module{
 
 
     rename.io.decoded_fetch_packet <> instruction_queue.io.deq
+
+
+    io.FP_producers := DontCare
 
 
     

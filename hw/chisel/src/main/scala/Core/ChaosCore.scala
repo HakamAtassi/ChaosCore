@@ -125,14 +125,17 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     /////////////////////////
     // FRONTEND <> BACKEND //
     /////////////////////////
-    frontend.io.INT_producers <> backend.io.INT_producers
     frontend.io.FP_producers <> backend.io.FP_producers // FIXME: make this optional
+    frontend.io.INT_producers <> backend.io.INT_producers
 
 
     ////////////////////
     // ROB <> BACKEND //
     ////////////////////
-    ROB.io.FU_inputs <> backend.io.FU_outputs 
+    // FIXME: completely temporary
+    ROB.io.FU_inputs <> backend.io.INT_producers 
+
+
     //ROB.io.mtvec <> backend.io.mtvec
     ROB.CSR_port <> backend.CSR_port
 

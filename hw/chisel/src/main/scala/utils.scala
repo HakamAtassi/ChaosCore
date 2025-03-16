@@ -100,7 +100,8 @@ object getPortCount
 
     if(coreConfig.contains("F")) portCount += FPUportCount
 
-    portCount
+    //portCount
+    4
   }
 }
 
@@ -500,5 +501,29 @@ object initMisa {
       0.U(4.W), // WPRI (Reserved bits - Write-preserve, read-ignore)
       mxlValue
     )
+  }
+}
+
+object get_INT_producer_count {
+  def apply(FUParamSeq: Seq[FUParams]): Int = {
+    FUParamSeq.count(p => p.INT_producer || p.MEM_producer)
+  }
+}
+
+object get_FP_producer_count {
+  def apply(FUParamSeq: Seq[FUParams]): Int = {
+    FUParamSeq.count(p => p.FP_producer || p.MEM_producer)
+  }
+}
+
+object get_INT_consumer_count {
+  def apply(FUParamSeq: Seq[FUParams]): Int = {
+    FUParamSeq.count(_.INT_consumer)
+  }
+}
+
+object get_FP_consumer_count {
+  def apply(FUParamSeq: Seq[FUParams]): Int = {
+    FUParamSeq.count(_.FP_consumer)
   }
 }

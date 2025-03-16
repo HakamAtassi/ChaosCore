@@ -62,9 +62,6 @@ class backend(coreParameters:CoreParameters) extends Module{
         val fetch_PC                    =   Input(UInt(32.W))  // DEBUG
         val backend_packet              =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
-
-        val INT_MOB_output             =   Decoupled(new FU_output(coreParameters))                                               // broadcast load data
-
         ////////////////
         // INTERRUPTS //
         ////////////////
@@ -87,13 +84,17 @@ class backend(coreParameters:CoreParameters) extends Module{
     //////////////////////////
     // RESERVATION STATIONS //
     //////////////////////////
-    val INT_RS: Seq[age_RS] = Seq.tabulate(FUParamSeq.INT_consumer_count) { w => Module(new age_RS(coreParameters)(WBPortCount=FUParamSeq.INT_producer_count))}  // init distributed reservation stations for int operations
-    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FUParamSeq.FP_producer_count) { w => Module(new age_RS(coreParameters)(WBPortCount=FUParamSeq.FP_producer_count))} else Seq()
+    val INT_RS: Seq[age_RS] = Seq.tabulate(INT_consumer_count) { w => Module(new age_RS(coreParameters)(WBPortCount=INT_producer_count))}  // init distributed reservation stations for int operations
+    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FP_producer_count) { w => Module(new age_RS(coreParameters)(WBPortCount=FP_producer_count))} else Seq()
 
     ///////////////////////
     // EXECUTION ENGINES //
     ///////////////////////
     val execution_engine = Module(new execution_engine(coreParameters))
+
+    execution_engine.io.backend_packet  <> io.backend_packet
+    execution_engine.io.reserved_pointers  <> io.reserved_pointers
+    execution_engine.io.reserve  <> io.backend_packet
 
     ////////////////////
     // REGISTER FILES //
@@ -101,8 +102,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     // Both PRFs need an extra write port to write back the possible conversions from INT to FP and vice versa
 
     val INT_PRF = Module(new nReadmWriteLVT(
-        n = (FUParamSeq.INT_consumer_count) * 2, // Read (only for INT FUs and AGU)
-        m = (FUParamSeq.INT_producer_count),   // write (INT FUs + memory AGU + 1 for FPU conversion output)
+        n = (INT_consumer_count) * 2, // Read (only for INT FUs and AGU)
+        m = (INT_producer_count),   // write (INT FUs + memory AGU + 1 for FPU conversion output)
         depth = physicalRegCount,
         width = 32
     ))
@@ -110,8 +111,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     val FP_PRF =
     if (coreConfig.contains("F"))
         Some(Module(new nReadmWriteLVT(
-            n = (FUParamSeq.FP_consumer_count) * 3,    // each FPU has potentially 3 inputs (RS1, RS2, RS3)
-            m =  (FUParamSeq.FP_producer_count),
+            n = (FP_consumer_count) * 3,    // each FPU has potentially 3 inputs (RS1, RS2, RS3)
+            m =  (FP_producer_count),
             depth = physicalRegCount,
             width = 32
         )))
@@ -213,18 +214,22 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     assign_ready(INT_RS, execution_engine.io.INT_FU_input)
-    assign_WB(prf=INT_PRF, FU_output=execution_engine.io.INT_FU_output)  // Last FP only for conversion WB because it produces its (possibly)
+    assign_WB(prf=INT_PRF, FU_output=execution_engine.io.INT_producers)  // Last FP only for conversion WB because it produces its (possibly)
 
     // CONNECT FP //
     //connect_allocation(FP_RS)
     reg_read_and_fire(sources_per_port = 3)(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
     assign_ready(FP_RS, execution_engine.io.FP_FU_input)
-    assign_WB(prf=FP_PRF.get, FU_output=execution_engine.io.FP_FU_output)
+    assign_WB(prf=FP_PRF.get, FU_output=execution_engine.io.FP_producers)
 
     // CONNECT WAKEUP SIGNALS //
-    wakeup_RS(rsSeq = INT_RS, producers = execution_engine.io.INT_producers)
     wakeup_RS(rsSeq = FP_RS, producers = execution_engine.io.FP_producers)
+    wakeup_RS(rsSeq = INT_RS, producers = execution_engine.io.INT_producers)
 
+
+    for(i <- 0 until fetchWidth){
+        INT_RS(3).io.backend_packet(i).bits.MOB_index := execution_engine.io.reserved_pointers(i).bits
+    }
 
 
     // CONNECT BRANCH UNITS TO PC FILE (in ROB)
@@ -239,8 +244,8 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     // connect INT FU
-    execution_engine.io.INT_FU_output.foreach{ fu => io.INT_FU_output <> fu }
-    execution_engine.io.FP_FU_output.foreach{ fu => io.FP_FU_output <> fu }
+    execution_engine.io.FP_producers.zipWithIndex.foreach{case(producer, i) => io.FP_producers(i) <> producer}
+    execution_engine.io.INT_producers.zipWithIndex.foreach{case(producer, i) => io.INT_producers(i) <> producer}
     
 
     ////////////////
@@ -250,17 +255,16 @@ class backend(coreParameters:CoreParameters) extends Module{
     if(coreConfig.contains("F")){
         // connect the INT2FP unit to a PRF WB port (the last one)
         // connect that FU's conversion port to the corresponding PRF port
-        FP_PRF.get.io.waddr.last  :=    execution_engine.io.INT_FU_output.last.bits.PRD
-        // FIXME: 
-        FP_PRF.get.io.wen.last    :=    0.U //execution_engine.io.FU_output(int2fpIndex).valid && execution_engine.io.FU_output(int2fpIndex).bits.RD_valid
-        FP_PRF.get.io.wdata.last  :=    0.U //execution_engine.io.FU_output(int2fpIndex).bits.RD_data
+        //FP_PRF.get.io.waddr.last  :=    execution_engine.io.INT_FU_output.last.bits.PRD
+        //FP_PRF.get.io.wen.last    :=    0.U //execution_engine.io.FU_output(int2fpIndex).valid && execution_engine.io.FU_output(int2fpIndex).bits.RD_valid
+        //FP_PRF.get.io.wdata.last  :=    0.U //execution_engine.io.FU_output(int2fpIndex).bits.RD_data
 
 
         // Do the same to the FP2INT unit
         // connect that FU's conversion port to the corresponding PRF port
-        INT_PRF.io.waddr.last  :=    execution_engine.io.FP_FU_output.last.bits.PRD
-        INT_PRF.io.wen.last    :=    0.U //execution_engine.io.FU_output(fp2intIndex).valid && execution_engine.io.FU_output(fp2intIndex).bits.RD_valid
-        INT_PRF.io.wdata.last  :=    0.U //execution_engine.io.FU_output(fp2intIndex).bits.RD_data
+        //INT_PRF.io.waddr.last  :=    execution_engine.io.FP_FU_output.last.bits.PRD
+        //INT_PRF.io.wen.last    :=    0.U //execution_engine.io.FU_output(fp2intIndex).valid && execution_engine.io.FU_output(fp2intIndex).bits.RD_valid
+        //INT_PRF.io.wdata.last  :=    0.U //execution_engine.io.FU_output(fp2intIndex).bits.RD_data
     }
     
     ////////////////
@@ -275,6 +279,8 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // Output CSR_port values
     execution_engine.CSR_port <> CSR_port
+
+
 
 
 

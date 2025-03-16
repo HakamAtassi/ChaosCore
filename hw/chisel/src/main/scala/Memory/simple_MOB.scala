@@ -56,8 +56,6 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
         val reserve                 =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))         // reserve entry (rename)
         val reserved_pointers       =      Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                               // pointer to allocated entry
 
-        val fetch_PC                =      Input(UInt(32.W))                                                                  // DEBUG
-
         val AGU_output              =      Flipped(Decoupled(new FU_output(coreParameters)))                                      // update address (AGU)
         val INT_MOB_output          =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
         val FP_MOB_output           =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data

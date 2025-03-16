@@ -46,6 +46,7 @@ import chisel3.util._
 class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
+    val portCount = getPortCount(coreParameters)
     val io = IO(new Bundle{
         // allocate input (1 wr)
         val decoded_insn                  =   Flipped(Decoupled(new decoded_instruction(coreParameters)))
@@ -225,6 +226,8 @@ class ROB_shared_bank(coreParameters:CoreParameters) extends Module{
 
 class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends Module {
     import coreParameters._
+
+    val portCount = getPortCount(coreParameters)
     val io = IO(new Bundle {
         // commit port
         val resolved_branch_out     = Output(new ROB_branch_entry(coreParameters))
@@ -308,7 +311,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val ROB_packet                  =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
         // UPDATE //
-        val FU_inputs                  =    Vec(portCount, Flipped(Decoupled(new FU_output(coreParameters))))
+        val FU_inputs                  =    Vec(4, Flipped(Decoupled(new FU_output(coreParameters))))   // FIXME: this is temporary
 
         // COMMIT //
         val commit                      =   ValidIO(new commit(coreParameters))
@@ -572,7 +575,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
             cVec(i) :=  entries(i).WB.valid          &&        // insn is valid
                         !entries(i).WB.committed     &&        // insn not already committed
-                        (entries(i).commit)           &&        // insn should commit (already complete or completes after commit)
+                        (entries(i).commit)           &&       // insn should commit (already complete or completes after commit)
                         (!prevValid || (prevComplete && prevCommittedOrCommitting)) &&                                          // prev insn has committed or is committing
                         i.U <= earliest_CTRL_idx &&                                                                             // only commit up to commit point 
                         !EXCEPTION_insn_oh(i)                                                                                   // don't commit exceptions

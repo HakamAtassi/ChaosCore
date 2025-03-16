@@ -275,6 +275,13 @@ case class CoreParameters(
 
     val portedFUParamSeq = generateFUPorts(FUParamSeq)
 
+
+    val INT_consumer_count = get_INT_consumer_count(FUParamSeq)
+    val FP_consumer_count = get_FP_consumer_count(FUParamSeq)
+
+    val INT_producer_count = get_INT_consumer_count(FUParamSeq)
+    val FP_producer_count = get_FP_consumer_count(FUParamSeq)
+
     ////////////////
     // EXTENSIONS //
     ////////////////

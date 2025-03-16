@@ -156,7 +156,7 @@ class RAT(coreParameters:CoreParameters) extends Module{
 
 }
 
-class rename(coreParameters:CoreParameters) extends Module{
+class rename(data_type:String = "Int")(coreParameters:CoreParameters) extends Module{
     import coreParameters._
     // Takes in N input instructions
     // Reads the renamed versions of RS1, RS2, and PRD (old)
@@ -165,9 +165,10 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     // Also provides checkpointing capability.
 
+    // FIXME: module currently doesnt check for data type when renaming...!!!!
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
-    val portCount = getPortCount(coreParameters)
+    val portCount = if(data_type == "Int"){get_INT_consumer_count(FUParamSeq)} else {get_FP_consumer_count(FUParamSeq)}
 
     val io = IO(new Bundle{
         // FLUSH

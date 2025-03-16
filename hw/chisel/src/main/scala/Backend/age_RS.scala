@@ -56,7 +56,7 @@ class age_RS(coreParameters:CoreParameters)(WBPortCount:Int) extends Module{
 
 
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreParameters))))) // once an entry is selected and issued
-    val issue_queue         = Module(new Queue(new decoded_instruction(coreParameters), IQEntries, flow = false, hasFlush = true, useSyncReadMem = false))
+    //val issue_queue         = Module(new Queue(new decoded_instruction(coreParameters), IQEntries, flow = false, hasFlush = true, useSyncReadMem = false))
     
 
     //////////////
@@ -153,16 +153,18 @@ class age_RS(coreParameters:CoreParameters)(WBPortCount:Int) extends Module{
     }
 
     // issue that instruction
-    issue_queue.io.enq.bits  := 0.U.asTypeOf(new decoded_instruction(coreParameters))
-    issue_queue.io.enq.valid := 0.B
+    io.RF_inputs.bits  := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+    io.RF_inputs.valid := 0.B
 
     when(schedulable_instructions(scheduled_index)){
         // assign instruction to issue Q
-        issue_queue.io.enq.bits  := reservation_station(scheduled_index).decoded_instruction
-        issue_queue.io.enq.valid := 1.B
+        io.RF_inputs.bits := reservation_station(scheduled_index).decoded_instruction
+        io.RF_inputs.valid := 1.B
+        //issue_queue.io.enq.bits  := reservation_station(scheduled_index).decoded_instruction
+        //issue_queue.io.enq.valid := 1.B
     }
 
-    when(issue_queue.io.enq.fire){
+    when(io.RF_inputs.fire && !io.flush.valid){
         // free RS entry
         reservation_station(scheduled_index) := 0.U.asTypeOf(new RS_entry(coreParameters))
     }
@@ -174,7 +176,7 @@ class age_RS(coreParameters:CoreParameters)(WBPortCount:Int) extends Module{
     ////////////////////
 
     // write issue queue to output
-    issue_queue.io.deq <> io.RF_inputs
+    //issue_queue.io.deq <> io.RF_inputs
 
     when(io.RF_inputs.valid === 0.B){
         io.RF_inputs.bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
@@ -184,16 +186,19 @@ class age_RS(coreParameters:CoreParameters)(WBPortCount:Int) extends Module{
     // FLUSH //
     ///////////
 
-    issue_queue.io.flush.get := io.flush.valid  // flush issue queues
+    //issue_queue.io.flush.get := io.flush.valid  // flush issue queues
 
     when(io.flush.valid){
         // de-assert current outputs
-        io.RF_inputs.bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+        io.RF_inputs.bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))  // FIXME: what if the entry you are outputting is committted?
         io.RF_inputs.valid := 0.B
 
         // clear RS entries
         for(i <- 0 until RSEntries){
-            reservation_station(i) := 0.U.asTypeOf(new RS_entry(coreParameters))
+            val committed = reservation_station(i).committed && reservation_station(i).valid
+            when(!committed){
+                reservation_station(i) := 0.U.asTypeOf(new RS_entry(coreParameters))
+            }
         }
     }
 

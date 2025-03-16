@@ -57,6 +57,8 @@ case class FUParams(
     val is_FPU:Boolean = supportsFP
     val is_branch:Boolean = supportsBranch
 
+    val INT_consumer: Boolean   = is_INTFU || supportsINT2FP || is_MEMFU    // does this FU produce int results (that are useable)  // FIXME: supports branch? should this be included?
+    val FP_consumer: Boolean    = is_FPU   || supportsFP2INT  // does this FU produce int results (that are useable)  // FIXME: supports branch? should this be included?
 
     // below is a more abstract representation of FUs once they have produced their result.
     val INT_producer: Boolean   = is_INTFU || supportsFP2INT    // does this FU produce int results (that are useable)  // FIXME: supports branch? should this be included?

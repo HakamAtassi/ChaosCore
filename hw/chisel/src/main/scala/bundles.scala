@@ -466,12 +466,16 @@ class ROB_instruction_entry(coreParameters:CoreParameters) extends Bundle{
     val uOp = new ROB_uOp_entry(coreParameters)
     val WB = new ROB_WB_entry(coreParameters)
 
+    // FIXME: this is inconsistent
+
+
+
     def commit:Bool = { // just a helper function
-        (WB.valid && WB.complete) || uOp.decoded_insn.STORE || uOp.decoded_insn.needs_CSRs
+        WB.valid && (WB.complete || uOp.decoded_insn.STORE || uOp.decoded_insn.needs_CSRs)
     }
 
     def retire:Bool = { // instruction can safely exit pipeline
-        (WB.valid && WB.complete && !WB.exception && WB.committed) 
+        (WB.valid && (WB.complete || uOp.decoded_insn.STORE) && !WB.exception && WB.committed) 
     }
 }
 
