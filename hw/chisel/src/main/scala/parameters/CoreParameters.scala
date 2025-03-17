@@ -240,12 +240,17 @@ case class CoreParameters(
 
     //val FURSPortCount:Int = // total number of FUs that connect to the INTRS  // TODO:
 
-    val INT_consumer_count = get_INT_consumer_count(INT_FUParamSeq) + get_INT_consumer_count(FP_FUParamSeq)
-    val FP_consumer_count = get_FP_consumer_count(INT_FUParamSeq) + get_FP_consumer_count(FP_FUParamSeq)
+    val INT_consumer_count = INT_FUParamSeq.count(p => p.INT_consumer) + FP_FUParamSeq.count(p => p.INT_consumer) 
+    val FP_consumer_count = INT_FUParamSeq.count(p => p.FP_consumer) + FP_FUParamSeq.count(p => p.FP_consumer)
 
 
-    val INT_producer_count = get_INT_producer_count(INT_FUParamSeq) + get_INT_producer_count(FP_FUParamSeq)
-    val FP_producer_count = get_FP_producer_count(INT_FUParamSeq) + get_FP_producer_count(FP_FUParamSeq)
+    val INT_producer_count = INT_FUParamSeq.count(p => p.INT_producer) + FP_FUParamSeq.count(p => p.INT_producer) + INT_FUParamSeq.count(p => p.MEM_producer)
+
+    // FIXME: better way of encoding this? if "F" disabled, then there is no MEM FP and int has no conversion port...
+    val FP_producer_count = (if (coreConfig.contains("F")) INT_FUParamSeq.count(p => p.FP_producer) else 0) + FP_FUParamSeq.count(p => p.FP_producer) + (if (coreConfig.contains("F")) INT_FUParamSeq.count(p => p.MEM_producer) else 0)
+
+
+    val producer_count = INT_producer_count + FP_producer_count   
 
     ////////////////
     // EXTENSIONS //

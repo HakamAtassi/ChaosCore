@@ -54,7 +54,6 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
         val FP_FU_input         =   Vec(FP_consumer_count,  Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
 
         val INT_producers       =   Vec(INT_producer_count, Decoupled(new FU_output(coreParameters)))
-
         val FP_producers = if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Decoupled(new FU_output(coreParameters)))) else None
 
 
@@ -157,6 +156,21 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     for(i <- 0 until fetchWidth){
         //MEM_RS(0).io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
         io.reserved_pointers(i) <> MOB.io.reserved_pointers(i)
+    }
+
+
+
+
+    // Connect conversion ports
+
+    
+    val int2fpIndex = INT_FUParamSeq.indexWhere(_.supportsINT2FP)
+    val fp2intIndex = FP_FUParamSeq.indexWhere(_.supportsFP2INT)
+
+
+    if(coreConfig.contains("F")){
+        io.FP_producers.get.last <> INT_FUs(int2fpIndex).io.FU_output //DontCare
+        io.INT_producers.last <> FP_FUs(fp2intIndex).io.FU_output //DontCare
     }
 
 

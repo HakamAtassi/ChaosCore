@@ -165,10 +165,12 @@ class rename(data_type:String = "Int")(coreParameters:CoreParameters) extends Mo
 
     // Also provides checkpointing capability.
 
-    // FIXME: module currently doesnt check for data type when renaming...!!!!
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
-    val portCount = INT_consumer_count //if(data_type == "Int"){get_INT_consumer_count(INT_FUParamSeq)} else {get_FP_consumer_count(FUParamSeq)}
+    assert(data_type == "Int" || data_type == "Float", "Rename data type must be Int or Float. Case sensitive.")
+
+    val producer_count = if(data_type == "Int"){INT_producer_count} else {FP_producer_count}
+
 
     val io = IO(new Bundle{
         // FLUSH
@@ -180,7 +182,7 @@ class rename(data_type:String = "Int")(coreParameters:CoreParameters) extends Mo
         // Instruction input (decoded)
         val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
-        val FU_outputs                      =   Vec(portCount, Flipped(Decoupled(new FU_output(coreParameters))))
+        val FU_outputs                      =   Vec(producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
 
         // Instruction output (renamed)
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
@@ -251,7 +253,7 @@ class rename(data_type:String = "Int")(coreParameters:CoreParameters) extends Mo
     RAT.io.free_list_wr_en                         :=  WAW_handler.io.RAT_wr_en 
     RAT.io.free_list_RD                            :=  WAW_handler.io.FL_RD_values
     RAT.io.commit                                  <> io.commit
-    RAT.io.flush                                  <> io.flush
+    RAT.io.flush                                   <> io.flush
     
     // Assign read ports
     for(i <- 0 until fetchWidth){
@@ -326,7 +328,7 @@ class rename(data_type:String = "Int")(coreParameters:CoreParameters) extends Mo
 
 
 
-    for(i <- 0 until portCount){
+    for(i <- 0 until producer_count){
 
         val set_RD      = io.FU_outputs(i).bits.PRD
         val RD_valid    = io.FU_outputs(i).valid && io.FU_outputs(i).bits.RD_valid

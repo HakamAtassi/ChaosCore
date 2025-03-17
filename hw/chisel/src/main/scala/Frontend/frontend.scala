@@ -58,7 +58,7 @@ class frontend(coreParameters:CoreParameters) extends Module{
 
         // UPDATE //
         val INT_producers                   =   Vec(INT_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
-        val FP_producers                    =   if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Decoupled(new FU_output(coreParameters)))) else None
+        val FP_producers                    =   if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))) else None
 
         val revert                          =   ValidIO(new revert(coreParameters))
     }); dontTouch(io)
@@ -133,7 +133,7 @@ class frontend(coreParameters:CoreParameters) extends Module{
 
 
     // FIXME: remove this    
-    if(coreConfig.contains("F")) io.FP_producers.get := DontCare
+    if(coreConfig.contains("F")) io.FP_producers.get.foreach(_ := DontCare)
 
 
     

@@ -486,13 +486,13 @@ object initMisa {
 
 object get_INT_producer_count {
   def apply(FUParamSeq: Seq[FUParams]): Int = {
-    FUParamSeq.count(p => p.INT_producer) + (if (FUParamSeq.nonEmpty) 1 else 0)  // add 1 producer if there exists a set of int consumers at all
+    FUParamSeq.count(p => p.INT_producer)   // add 1 producer if there exists a set of int consumers at all
   }
 }
 
 object get_FP_producer_count {
   def apply(FUParamSeq: Seq[FUParams]): Int = {
-    FUParamSeq.count(p => p.FP_producer) + (if (FUParamSeq.nonEmpty) 1 else 0)  // same as above
+    FUParamSeq.count(p => p.FP_producer)   // same as above
   }
 }
 

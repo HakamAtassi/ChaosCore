@@ -133,7 +133,10 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // ROB <> BACKEND //
     ////////////////////
     // FIXME: completely temporary
-    ROB.io.FU_inputs <> backend.io.INT_producers 
+    ROB.io.INT_producers <> backend.io.INT_producers 
+    if(coreConfig.contains("F")){
+        ROB.io.FP_producers.get <> backend.io.FP_producers.get
+    }
 
 
     //ROB.io.mtvec <> backend.io.mtvec

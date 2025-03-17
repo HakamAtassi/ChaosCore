@@ -53,7 +53,7 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
         val ROB_back_idx                  =   Input(UInt(log2Ceil(ROBEntries).W))
 
         // WB inputs
-        val FU_inputs                     =   Vec(portCount, Flipped(Decoupled(new FU_output(coreParameters))))
+        val producers                     =   Vec(producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
 
         // commit insn (1 bit, commit this instruction)
         val commit                        =   Input(Bool())
@@ -90,7 +90,7 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
     }
 
     // update (WB)
-    for(FU_input <- io.FU_inputs){
+    for(FU_input <- io.producers){
         when(FU_input.fire && FU_input.bits.fetch_packet_index === bank_idx.U){
             wb_mem(FU_input.bits.ROB_index).complete            := FU_input.valid
             wb_mem(FU_input.bits.ROB_index).exception           := FU_input.bits.exception
@@ -149,9 +149,8 @@ class ROB_instruction_bank(bank_idx:Int = 0)(coreParameters:CoreParameters) exte
 
     // ready bits for WB mem access (always ready for WB)
     // WB mem always ready
-    for(i <- 0 until portCount){
-        io.FU_inputs(i).ready := 1.B
-    }
+
+    io.producers.foreach(_.ready := 1.B)
 
     io.decoded_insn.ready := (io.ROB_back_idx + 1.U) =/= io.ROB_front_idx
 }
@@ -194,7 +193,6 @@ class ROB_shared_bank(coreParameters:CoreParameters) extends Module{
     when(io.ROB_packet.fire) {
         val shared_entry = Wire(new ROB_shared_entry(coreParameters))
         shared_entry.fetch_PC                   := io.ROB_packet.bits.fetch_PC
-        shared_entry.free_list_front_pointer    := io.ROB_packet.bits.free_list_front_pointer   // FIXME: do we use this?
         shared_entry.GHR                        := io.ROB_packet.bits.GHR
         shared_entry.NEXT                       := io.ROB_packet.bits.NEXT
         shared_entry.TOS                        := io.ROB_packet.bits.TOS
@@ -234,7 +232,7 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
         val ROB_front_idx           = Input(UInt(log2Ceil(ROBEntries).W))
 
         // WB port (1 WR)
-        val FU_inputs               = Vec(portCount, Flipped(Decoupled(new FU_output(coreParameters))))
+        val INT_producers               = Vec(INT_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
     }); dontTouch(io)
 
     // update on WB
@@ -259,21 +257,21 @@ class ROB_branch_bank(bank_idx: Int = 0)(coreParameters: CoreParameters) extends
     /////////////////////////
     // output is ready if input is non branch or if bank is available
 
-    val valid_branch_inputs = WireInit(VecInit(io.FU_inputs.zipWithIndex.map { case (fu_input, idx) =>
+    val valid_branch_inputs = WireInit(VecInit(io.INT_producers.zipWithIndex.map { case (fu_input, idx) =>
         fu_input.valid && (fu_input.bits.CTRL) && (fu_input.bits.fetch_packet_index === bank_idx.U)
     }))
 
     dontTouch(valid_branch_inputs)
 
-    val arbiter = Module(new RRArbiter(new FU_output(coreParameters), portCount))
-    arbiter.io.in.zip(io.FU_inputs).foreach { case (arb_in, fu_input) =>
-        arb_in.valid := valid_branch_inputs(io.FU_inputs.indexOf(fu_input))
+    val arbiter = Module(new RRArbiter(new FU_output(coreParameters), INT_producer_count))
+    arbiter.io.in.zip(io.INT_producers).foreach { case (arb_in, fu_input) =>
+        arb_in.valid := valid_branch_inputs(io.INT_producers.indexOf(fu_input))
         arb_in.bits := fu_input.bits
     }
 
     // output ready if granted or doesnt need this bank
     // ie, not a control insn, or is a control insn to a diff bank
-    io.FU_inputs.zipWithIndex.foreach { case (fu_input, idx) =>
+    io.INT_producers.zipWithIndex.foreach { case (fu_input, idx) =>
         fu_input.ready := arbiter.io.in(idx).ready || !fu_input.bits.CTRL || fu_input.bits.fetch_packet_index =/= bank_idx.U
     }
 
@@ -311,7 +309,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
         val ROB_packet                  =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
         // UPDATE //
-        val FU_inputs                  =    Vec(4, Flipped(Decoupled(new FU_output(coreParameters))))   // FIXME: this is temporary
+        //val FU_inputs                  =    Vec(4, Flipped(Decoupled(new FU_output(coreParameters))))   // FIXME: this is temporary
+  
+        val INT_producers               =   Vec(INT_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
+        val FP_producers                =   if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))) else None
 
         // COMMIT //
         val commit                      =   ValidIO(new commit(coreParameters))
@@ -350,6 +351,12 @@ class ROB(coreParameters:CoreParameters) extends Module{
     front_index  := front_pointer(pointer_width-2, 0)
 
 
+    var producers = Seq.empty[DecoupledIO[FU_output]]   // combined list of producers
+    producers = producers ++ io.INT_producers ++ io.FP_producers.getOrElse(Seq.empty)
+
+
+
+
     //////////////////////////
     // ROB INSTRUCTION BANK //
     //////////////////////////
@@ -363,10 +370,10 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
         ROB_instruction_banks(i).io.ROB_back_idx          := back_index
 
-        for(j <- 0 until portCount){
+        for(j <- 0 until producer_count){
             // FIXME: ready?
-            ROB_instruction_banks(i).io.FU_inputs(j).bits              :=  io.FU_inputs(j).bits 
-            ROB_instruction_banks(i).io.FU_inputs(j).valid             :=  io.FU_inputs(j).valid 
+            ROB_instruction_banks(i).io.producers(j).bits              :=  producers(j).bits //io.FU_inputs(j).bits 
+            ROB_instruction_banks(i).io.producers(j).valid             :=  producers(j).valid //io.FU_inputs(j).valid 
         }
 
         ROB_instruction_banks(i).io.ROB_front_idx        := front_index
@@ -398,9 +405,9 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until fetchWidth){
         ROB_branch_banks(i).io.ROB_front_idx                      :=  front_index         
-        for(j <- 0 until portCount){
-            ROB_branch_banks(i).io.FU_inputs(j).bits              :=  io.FU_inputs(j).bits 
-            ROB_branch_banks(i).io.FU_inputs(j).valid             :=  io.FU_inputs(j).valid 
+        for(j <- 0 until INT_producer_count){ // FPs dont resolve branches...
+            ROB_branch_banks(i).io.INT_producers(j).bits             :=  io.INT_producers(j).bits 
+            ROB_branch_banks(i).io.INT_producers(j).valid             :=  io.INT_producers(j).valid 
         }
     }
 
@@ -611,7 +618,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
     io.commit.bits.br_mask    :=  earliest_CTRL_idx
     io.commit.bits.ROB_index := front_index
-    io.commit.bits.free_list_front_pointer := ROB_shared_bank.io.ROB_shared_entry.bits.free_list_front_pointer
 
     for(i <- 0 until fetchWidth){
         io.commit.bits.insn_commit(i).valid          := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.valid  
@@ -657,14 +663,14 @@ class ROB(coreParameters:CoreParameters) extends Module{
     // Compress ready bits for each instruction bank
     val instruction_bank_FU_output_ready = VecInit(
         (0 until portCount).map { i =>
-            ROB_instruction_banks.map(_.io.FU_inputs(i).ready).reduce(_ && _)
+            ROB_instruction_banks.map(_.io.producers(i).ready).reduce(_ && _)
         }
     )
 
     // Compress ready bits for each branch bank
     val branch_bank_FU_output_ready = VecInit(
         (0 until portCount).map { i =>
-            ROB_branch_banks.map(_.io.FU_inputs(i).ready).reduce(_ && _)
+            ROB_branch_banks.map(_.io.INT_producers(i).ready).reduce(_ && _)
         }
     )
 
@@ -676,8 +682,14 @@ class ROB(coreParameters:CoreParameters) extends Module{
     )
 
     // Assign each bit to the corresponding element in io.FU_inputs.ready
-    for (i <- 0 until portCount) {
-        io.FU_inputs(i).ready := FU_ready_bits(i)
+    for (i <- 0 until INT_producer_count) {
+        io.INT_producers(i).ready := 1.B //FU_ready_bits(i)
+    }
+
+    if(coreConfig.contains("F")){
+        for (i <- 0 until FP_producer_count) {
+            io.FP_producers.get(i).ready := 1.B //FU_ready_bits(i)
+        }
     }
 
     io.ROB_packet.ready := ROB_shared_bank.io.ROB_packet.ready && ROB_instruction_banks.map(_.io.decoded_insn.ready).reduce(_ && _)

@@ -454,12 +454,9 @@ class ROB_shared_entry(coreParameters:CoreParameters) extends Bundle{
     // fetch packet metadata
     val fetch_PC                = UInt(32.W)
 
-    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
-
     val GHR     = UInt(GHRWidth.W)
     val NEXT    = UInt(log2Ceil(RASEntries).W)
     val TOS     = UInt(log2Ceil(RASEntries).W)
-
 
     val prediction      = new prediction(coreParameters)
 }

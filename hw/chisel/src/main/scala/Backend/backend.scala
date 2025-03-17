@@ -75,8 +75,7 @@ class backend(coreParameters:CoreParameters) extends Module{
 
         // UPDATE //
         val INT_producers                 =   Vec(INT_producer_count, Decoupled(new FU_output(coreParameters)))
-
-        val FP_producers = if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Decoupled(new FU_output(coreParameters)))) else None
+        val FP_producers                  = if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Decoupled(new FU_output(coreParameters)))) else None
 
     }); dontTouch(io)
 
@@ -85,8 +84,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     //////////////////////////
     // RESERVATION STATIONS //
     //////////////////////////
-    val INT_RS: Seq[age_RS] = Seq.tabulate(INT_consumer_count) { w => Module(new age_RS(coreParameters)(WBPortCount=INT_producer_count))}  // init distributed reservation stations for int operations
-    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FP_producer_count) { w => Module(new age_RS(coreParameters)(WBPortCount=FP_producer_count))} else Seq()
+    val INT_RS: Seq[age_RS] = Seq.tabulate(INT_FUParamSeq.length) { w => Module(new age_RS(coreParameters)(WBPortCount=INT_producer_count))}  // init distributed reservation stations for int operations
+    val FP_RS: Seq[age_RS]  = if (coreConfig.contains("F")) Seq.tabulate(FP_FUParamSeq.length) { w => Module(new age_RS(coreParameters)(WBPortCount=FP_producer_count))} else Seq()
 
     ///////////////////////
     // EXECUTION ENGINES //
@@ -103,7 +102,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     // Both PRFs need an extra write port to write back the possible conversions from INT to FP and vice versa
 
     val INT_PRF = Module(new nReadmWriteLVT(
-        n = (INT_consumer_count) * 2, // Read (only for INT FUs and AGU)
+        n = (INT_consumer_count ) * 2, // Read (only for INT FUs and AGU)
         m = (INT_producer_count),   // write (INT FUs + memory AGU + 1 for FPU conversion output)
         depth = physicalRegCount,
         width = 32
@@ -151,8 +150,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     def reg_read_and_fire(sources_per_port:Int)(
         rsSeq: Seq[age_RS],
         prf: nReadmWriteLVT,
-        FU_input: Seq[DecoupledIO[read_decoded_instruction]],
-        offset: Int = 0
+        FU_input: Seq[DecoupledIO[read_decoded_instruction]]
     ): Unit = {
 
         assert(sources_per_port == 2 || sources_per_port == 3, s"souces per port can only be 2 or 3. Got $sources_per_port")
@@ -162,14 +160,15 @@ class backend(coreParameters:CoreParameters) extends Module{
             read_decoded_instruction.decoded_instruction := RegNext(rs.io.RF_inputs.bits)
 
             // RS <> PRF
-            prf.io.raddr(offset + i * sources_per_port)     := rs.io.RF_inputs.bits.RS1
-            prf.io.raddr(offset + i * sources_per_port + 1) := rs.io.RF_inputs.bits.RS2
-            read_decoded_instruction.RS1_data := prf.io.rdata(offset + i * sources_per_port)
-            read_decoded_instruction.RS2_data := prf.io.rdata(offset + i * sources_per_port + 1)
+            prf.io.raddr(i * sources_per_port)     := rs.io.RF_inputs.bits.RS1
+            prf.io.raddr(i * sources_per_port + 1) := rs.io.RF_inputs.bits.RS2
+
+            read_decoded_instruction.RS1_data := prf.io.rdata(i * sources_per_port)
+            read_decoded_instruction.RS2_data := prf.io.rdata(i * sources_per_port + 1)
 
             if(sources_per_port == 3){
-                prf.io.raddr(offset + i * sources_per_port + 2) := rs.io.RF_inputs.bits.RS2
-                read_decoded_instruction.RS3_data := prf.io.rdata(offset + i * sources_per_port + 2)
+                prf.io.raddr(i * sources_per_port + 2) := rs.io.RF_inputs.bits.RS2
+                read_decoded_instruction.RS3_data := prf.io.rdata(i * sources_per_port + 2)
             }
 
             // Send off instruction to execution engine.
@@ -217,7 +216,6 @@ class backend(coreParameters:CoreParameters) extends Module{
     wakeup_RS(rsSeq = INT_RS, producers = execution_engine.io.INT_producers)
 
     // CONNECT FP //
-    //connect_allocation(FP_RS)
     if(coreConfig.contains("F")){
         reg_read_and_fire(sources_per_port = 3)(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
         assign_ready(FP_RS, execution_engine.io.FP_FU_input)
@@ -246,7 +244,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     // connect INT FU
 
     if(coreConfig.contains("F")){
-        execution_engine.io.FP_producers.zipWithIndex.foreach{case(producer, i) => io.FP_producers.get(i) <> producer}
+        execution_engine.io.FP_producers.get.zipWithIndex.foreach{case(producer, i) => io.FP_producers.get(i) <> producer}
     }
     execution_engine.io.INT_producers.zipWithIndex.foreach{case(producer, i) => io.INT_producers(i) <> producer}
     
