@@ -74,8 +74,9 @@ class frontend(coreParameters:CoreParameters) extends Module{
     
     val instruction_queue   = Module(new Queue(new decoded_fetch_packet(coreParameters), 16, flow=false, hasFlush=true, useSyncReadMem=true))
 
-    val rename              = Module(new rename(data_type="Int")(coreParameters))
-    //val rename              = Module(new rename(data_type="Float")(coreParameters))
+    val INT_rename          = Module(new rename(data_type="Int")(coreParameters))
+
+    val FP_rename           = if(coreConfig.contains("F")) Some(Module(new rename(data_type="Float")(coreParameters))) else None
 
     val flush = io.commit.bits.is_misprediction && io.commit.valid
 
@@ -109,16 +110,16 @@ class frontend(coreParameters:CoreParameters) extends Module{
     ////////////
     instruction_queue.io.flush.get := flush
 
+    INT_rename.io.FU_outputs           <>     io.INT_producers
+    INT_rename.io.flush                <>     io.flush
+    INT_rename.io.commit               <>     io.commit
 
-    rename.io.FU_outputs           <>     io.INT_producers
-    rename.io.flush                <>     io.flush
-    rename.io.commit               <>     io.commit
 
     ////////////
     // OUTPUT //
     ////////////
 
-    io.renamed_decoded_fetch_packet <> rename.io.renamed_decoded_fetch_packet
+    io.renamed_decoded_fetch_packet <> INT_rename.io.renamed_decoded_fetch_packet
 
 
     ///////////////////////
@@ -129,7 +130,21 @@ class frontend(coreParameters:CoreParameters) extends Module{
     instruction_queue.io.flush.get   <> io.flush.valid
 
 
-    rename.io.decoded_fetch_packet <> instruction_queue.io.deq
+    INT_rename.io.decoded_fetch_packet <> instruction_queue.io.deq
+
+
+
+    /////////////////////
+    // FP rename stuff //
+    /////////////////////
+    // dumped here cuz I'm lazy
+    if(coreConfig.contains("F")){
+        FP_rename.get.io.FU_outputs           <>     io.FP_producers.get
+        FP_rename.get.io.flush                <>     io.flush
+        FP_rename.get.io.commit               <>     io.commit
+        FP_rename.get.io.decoded_fetch_packet <> instruction_queue.io.deq
+        io.renamed_decoded_fetch_packet <> FP_rename.get.io.renamed_decoded_fetch_packet
+    }
 
 
     // FIXME: remove this    
