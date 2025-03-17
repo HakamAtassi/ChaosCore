@@ -125,7 +125,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     /////////////////////////
     // FRONTEND <> BACKEND //
     /////////////////////////
-    frontend.io.FP_producers <> backend.io.FP_producers // FIXME: make this optional
+    if(coreConfig.contains("F")){frontend.io.FP_producers.get <> backend.io.FP_producers.get}
     frontend.io.INT_producers <> backend.io.INT_producers
 
 

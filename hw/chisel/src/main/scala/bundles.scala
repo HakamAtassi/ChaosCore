@@ -64,37 +64,6 @@ class metadata extends Bundle{
     val is_control      = Bool()
 }
 
-class instruction_cache_data_line(coreParameters:CoreParameters) extends Bundle{
-    import coreParameters._
-
-    val set_bits:Int                        = log2Ceil(L1_instructionCacheSets)
-    val byte_offset_bits:Int                = log2Ceil(L1_cacheLineSizeBytes)
-
-    val tag_bits:Int                        = 32 - set_bits - byte_offset_bits
-    val data_bits:Int                       = L1_cacheLineSizeBytes*8
-
-    val valid   = Bool()
-    val tag     = UInt(tag_bits.W)
-    val data    = UInt(data_bits.W)
-
-}
-
-class instruction_cache_address_packet(coreParameters: CoreParameters) extends Bundle {
-    import coreParameters._
-
-    val set_bits:Int                    = log2Ceil(L1_instructionCacheSets)
-    val tag_bits:Int                    = 32 - log2Ceil(L1_cacheLineSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
-    val instruction_offset_bits:Int     = log2Ceil(L1_cacheLineSizeBytes/4)
-    val fetch_packet_bits:Int           = log2Ceil(L1_cacheLineSizeBytes/4/fetchWidth)
-
-    val tag                     = UInt(tag_bits.W)
-    val set                     = UInt(set_bits.W)
-    val fetch_packet            = UInt(fetch_packet_bits.W)
-    val instruction_offset      = UInt(instruction_offset_bits.W)
-}
-
-
-
 
 /////////////////
 // BP channels //
@@ -741,56 +710,6 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
         MOB_STATE === s
     }
 
-}
-
-
-
-class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
-    // An entire row of the MSHR.
-    import coreParameters._
-
-
-    val address                 =   UInt(32.W)      // address shared across MSHR row
-    val miss_requests           =   Vec(L1_MSHRWidth, new backend_memory_request(coreParameters))
-    val allocate_way            =   UInt(log2Ceil(L1_DataCacheWays).W)
-
-    val pointer_width           = log2Ceil(L1_MSHRWidth)
-
-    val front_pointer           =   UInt(pointer_width.W)
-    val back_pointer            =   UInt(pointer_width.W)
-
-
-    val valid                   =   Bool()
-
-    def dequeue: Unit = {
-        miss_requests(front_pointer) := 0.U.asTypeOf(new backend_memory_request(coreParameters))
-        front_pointer := front_pointer + 1.U
-    }
-
-    def front: backend_memory_request = {
-        miss_requests(front_pointer)
-    }
-
-    def full: Bool = {
-        // MSHR entry pointers do not wrap around. If full, it does not accept any additional entries. 
-        // When the queue begins emptying, it empties all the way and clears the row.
-        (front_pointer + 1.U) === L1_MSHRWidth.U
-    }
-
-    def last: Bool = {
-        // MSHR entry pointers do not wrap around. If full, it does not accept any additional entries. 
-        // When the queue begins emptying, it empties all the way and clears the row.
-        (front_pointer + 1.U) === back_pointer
-    }
-
-    def clear: Unit = {
-        front_pointer := 0.U
-        back_pointer := 0.U
-        address := 0.U
-        allocate_way := 0.U
-        valid := 0.U
-        //miss_request := 0.U // TODO: 
-    }
 }
 
 

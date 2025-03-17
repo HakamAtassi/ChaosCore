@@ -36,7 +36,6 @@ import chisel3.util._
 class frontend(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
-    val dataSizeBits         = L1_cacheLineSizeBytes*8
     val architecturalRegBits = log2Ceil(architecturalRegCount)
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
@@ -58,8 +57,8 @@ class frontend(coreParameters:CoreParameters) extends Module{
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
 
         // UPDATE //
-        val INT_producers                 =   Vec(INT_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
-        val FP_producers                  =   Vec(FP_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
+        val INT_producers                   =   Vec(INT_producer_count, Flipped(Decoupled(new FU_output(coreParameters))))
+        val FP_producers                    =   if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Decoupled(new FU_output(coreParameters)))) else None
 
         val revert                          =   ValidIO(new revert(coreParameters))
     }); dontTouch(io)
@@ -110,6 +109,7 @@ class frontend(coreParameters:CoreParameters) extends Module{
     ////////////
     instruction_queue.io.flush.get := flush
 
+
     rename.io.FU_outputs           <>     io.INT_producers
     rename.io.flush                <>     io.flush
     rename.io.commit               <>     io.commit
@@ -132,7 +132,8 @@ class frontend(coreParameters:CoreParameters) extends Module{
     rename.io.decoded_fetch_packet <> instruction_queue.io.deq
 
 
-    io.FP_producers := DontCare
+    // FIXME: remove this    
+    if(coreConfig.contains("F")) io.FP_producers.get := DontCare
 
 
     

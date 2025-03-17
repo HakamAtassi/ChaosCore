@@ -168,7 +168,7 @@ class rename(data_type:String = "Int")(coreParameters:CoreParameters) extends Mo
     // FIXME: module currently doesnt check for data type when renaming...!!!!
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
-    val portCount = if(data_type == "Int"){get_INT_consumer_count(FUParamSeq)} else {get_FP_consumer_count(FUParamSeq)}
+    val portCount = INT_consumer_count //if(data_type == "Int"){get_INT_consumer_count(INT_FUParamSeq)} else {get_FP_consumer_count(FUParamSeq)}
 
     val io = IO(new Bundle{
         // FLUSH

@@ -53,8 +53,10 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
         val INT_FU_input        =   Vec(INT_consumer_count, Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
         val FP_FU_input         =   Vec(FP_consumer_count,  Flipped(Decoupled(new read_decoded_instruction(coreParameters))))
 
-        val INT_producers       =   Vec(INT_consumer_count, Decoupled(new FU_output(coreParameters)))
-        val FP_producers        =   Vec(FP_consumer_count,  Decoupled(new FU_output(coreParameters)))
+        val INT_producers       =   Vec(INT_producer_count, Decoupled(new FU_output(coreParameters)))
+
+        val FP_producers = if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Decoupled(new FU_output(coreParameters)))) else None
+
 
         val irq_software_i                      = Input(Bool())      //msip
         val irq_timer_i                         = Input(Bool())      //mtip
@@ -66,80 +68,77 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
     val CSR_port = IO(Output(new CSR_out(coreParameters)))
 
     // FUs + MOB //
-    val FUs: Seq[FU] = Seq.tabulate(FUParamSeq.length) { i => Module(new FU(FUParamSeq(i))(coreParameters))}
+    val INT_FUs: Seq[FU] = Seq.tabulate(INT_FUParamSeq.length) { i => Module(new FU(INT_FUParamSeq(i))(coreParameters))}
+    val FP_FUs: Seq[FU] = Seq.tabulate(FP_FUParamSeq.length) { i => Module(new FU(FP_FUParamSeq(i))(coreParameters))}
     val MOB   =  Module(new simple_MOB(coreParameters))
 
-    // FIXME: temp
-    io.FP_producers := DontCare
-    FUs(4).io := DontCare
-    FUs(5).io := DontCare
-
-    io.FP_FU_input := DontCare
-
-
-    // FIXME: the FP and INT producer outputs here are missing an offset. How do I fix that?
     // Connect INT producers 
-    for(i <- 0 until FUParamSeq.length){
-        FUs(i).io.flush             <> io.flush
-        FUs(i).io.commit            <> io.commit
-
-        // connect FU inputs
-        // FIXME: offsets missing from here
-        if(FUParamSeq(i).INT_consumer){
-            FUs(i).io.FU_input     <> io.INT_FU_input(i)
-        }
+    for(i <- 0 until INT_FUParamSeq.length){
+        INT_FUs(i).io.flush        <> io.flush
+        INT_FUs(i).io.commit       <> io.commit
+        INT_FUs(i).io.FU_input     <> io.INT_FU_input(i)
         
-        //else if(FUParamSeq(i).FP_consumer){
-            ////FUs(i).io.FU_input     <> io.FP_FU_input(i)
-        //}
-
     }
+
+    for(i <- 0 until FP_FUParamSeq.length){
+        FP_FUs(i).io.flush        <> io.flush
+        FP_FUs(i).io.commit       <> io.commit
+        FP_FUs(i).io.FU_input     <> io.FP_FU_input(i)
+    }
+        
 
 
 
     // connect CSR stuff
-    for(i <- 0 until FUParamSeq.length){
-        FUs(i).CSR_port.foreach { _ =>
-            FUs(i).CSR_port.get <> CSR_port
-            FUs(i).irq_software_i.get                 := io.irq_software_i    
-            FUs(i).irq_timer_i.get                    := io.irq_timer_i
-            FUs(i).irq_external_i.get                 := io.irq_external_i
-            FUs(i).debug_req_i.get                    := io.debug_req_i
-            FUs(i).irq_nm_i.get                       := io.irq_nm_i
+    // FIXME: this can be cleaned up
+    for(i <- 0 until INT_FUParamSeq.length){
+        INT_FUs(i).CSR_port.foreach { _ =>
+            INT_FUs(i).CSR_port.get <> CSR_port
+            INT_FUs(i).irq_software_i.get                 := io.irq_software_i    
+            INT_FUs(i).irq_timer_i.get                    := io.irq_timer_i
+            INT_FUs(i).irq_external_i.get                 := io.irq_external_i
+            INT_FUs(i).debug_req_i.get                    := io.debug_req_i
+            INT_FUs(i).irq_nm_i.get                       := io.irq_nm_i
         }
     }
 
+    /////////////////////////////
+    // CREATE INT/FP producers //
+    /////////////////////////////
 
-    // create sequence of INT/FP producers
+    var INT_producers = Seq.empty[DecoupledIO[FU_output]]
 
-  val INT_producers = FUParamSeq.zipWithIndex.flatMap { case (param, i) =>
-        if (param.INT_producer) Some(FUs(i).io.FU_output)
-        else if (param.MEM_producer) Some(MOB.io.INT_MOB_output)
-        else None
+    INT_FUParamSeq.zipWithIndex.foreach { case (param, i) =>
+        if (param.INT_producer) INT_producers = INT_producers :+ INT_FUs(i).io.FU_output
     }
 
-    val FP_producers = FUParamSeq.zipWithIndex.flatMap { case (param, i) =>
-        if (param.FP_producer) Some(FUs(i).io.FU_output)
-        else if (param.MEM_producer) Some(MOB.io.FP_MOB_output)
-        else None
+    // Add MOB output to seq
+    INT_producers = INT_producers :+ MOB.io.INT_MOB_output
+
+    
+
+    if(coreConfig.contains("F")){
+        var FP_producers = Seq.empty[DecoupledIO[FU_output]]
+        FP_FUParamSeq.zipWithIndex.foreach { case (param, i) =>
+            if (param.FP_producer) FP_producers = FP_producers :+ FP_FUs(i).io.FU_output
+        }
+
+        // Add MOB output to seq
+        FP_producers = FP_producers :+ MOB.io.FP_MOB_output.get
+        for(i <- 0 until FP_producers.length) {io.FP_producers.get(i) <> FP_producers(i)}
     }
 
-    for(i <- 0 until FP_producer_count) {io.FP_producers(i) <> FP_producers(i)}
-    for(i <- 0 until INT_producer_count){io.INT_producers(i) <> INT_producers(i)}
 
 
-    val AGU_index = FUParamSeq.indexWhere(_.supportsAddressGeneration)
+    for(i <- 0 until INT_producers.length){io.INT_producers(i) <> INT_producers(i)}
 
 
-    println(INT_producers)
-
-
-
+    val AGU_index = INT_FUParamSeq.indexWhere(_.supportsAddressGeneration)
 
 
 
     // MOB connections
-    MOB.io.AGU_output <> FUs(AGU_index).io.FU_output
+    MOB.io.AGU_output <> INT_FUs(AGU_index).io.FU_output
     
 
     // reserve mem ops
@@ -150,7 +149,7 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
         io.reserve(i).ready        := MOB.io.reserve(i).ready
     }
 
-    MOB.io.backend_memory_request     <> io.backend_memory_request
+    MOB.io.backend_memory_request  <> io.backend_memory_request
 
     MOB.io.backend_memory_response <> io.backend_memory_response
 
@@ -159,22 +158,6 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
         //MEM_RS(0).io.backend_packet(i).bits.MOB_index := MOB.io.reserved_pointers(i).bits
         io.reserved_pointers(i) <> MOB.io.reserved_pointers(i)
     }
-
-
-    // replace FU_output for AGU with MOB output
-    //FUs(AGU_index).io.FU_output  := FP_producers(AGU_index)
-
-
-    //for(i <- 0 until INT_producer_count){
-        //io.INT_producers(i) <> FUs(i).io.FU_output
-    //}
-
-
-    //for(i <- 0 until FP_producer_count){
-        //io.FP_FU_output(i) <> io.FP_FU_output(i)
-    //}
-
-
 
 
 

@@ -41,7 +41,6 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     val portCount       = getPortCount(coreParameters)
     val portCountBits   = log2Ceil(portCount)
 
-    val memPortCount = FUParamSeq.count(_.supportsAddressGeneration)
     val nonMemoryPortCount = portCount - memPortCount 
 
 
@@ -58,7 +57,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
         val AGU_output              =      Flipped(Decoupled(new FU_output(coreParameters)))                                      // update address (AGU)
         val INT_MOB_output          =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
-        val FP_MOB_output           =      Decoupled(new FU_output(coreParameters))                                               // broadcast load data
+        val FP_MOB_output           =      if (coreConfig.contains("F")) Some(Decoupled(new FU_output(coreParameters))) else None
 
         // REDIRECTS // 
         val commit                  =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
@@ -303,13 +302,17 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.INT_MOB_output.valid := 0.B
     io.INT_MOB_output.bits  := 0.U.asTypeOf(new FU_output(coreParameters))
 
-    io.FP_MOB_output.valid  := 0.B
-    io.FP_MOB_output.bits   := 0.U.asTypeOf(new FU_output(coreParameters))
+    if(coreConfig.contains("F")){
+        io.FP_MOB_output.get.valid  := 0.B
+        io.FP_MOB_output.get.bits   := 0.U.asTypeOf(new FU_output(coreParameters))
+    }
 
     when(response_type === data_type_t.INT) {
         io.INT_MOB_output <> memory_response
     }.elsewhen(response_type === data_type_t.FP) {
-        io.FP_MOB_output  <> memory_response
+        if(coreConfig.contains("F")){
+            io.FP_MOB_output.get  <> memory_response
+        }
     }.otherwise {
         assert(false.B, "INVALID MEMORY RESPONSE DATA TYPE!")
     }

@@ -35,8 +35,6 @@ import chisel3.util._
 class instruction_fetch_v3(coreParameters: CoreParameters) extends Module {
   import coreParameters._
 
-  val dataSizeBits = L1_cacheLineSizeBytes * 8
-
   val io = IO(new Bundle {
 
     val commit = Flipped(ValidIO(new commit(coreParameters)))

@@ -91,14 +91,14 @@ object getPortCount
   def apply(coreParameters:CoreParameters) ={
     import coreParameters._
 
-    var portCount = ALUportCount
+    //var portCount = ALUportCount
     //ALUportCount // Defined in config
     //MEMportCount // Defined in config 
     //FPUportCount // Defined in config 
 
-    portCount += MEMportCount
+    //portCount += MEMportCount
 
-    if(coreConfig.contains("F")) portCount += FPUportCount
+    //if(coreConfig.contains("F")) portCount += FPUportCount
 
     //portCount
     4
@@ -111,9 +111,10 @@ object getBranchPortCount
   def apply(coreParameters:CoreParameters) ={
     import coreParameters._
 
-    var portCount = branchPortCount
+    //var portCount = branchPortCount
 
-    portCount
+    //portCount
+    branchPortCount
   }
 }
 
@@ -209,27 +210,6 @@ object helperFunctions {
 
 
 
-
-object get_decomposed_icache_address{
-  def apply(coreParameters:CoreParameters, address:UInt):instruction_cache_address_packet={
-      import coreParameters._
-
-      val set_bits                    = log2Ceil(L1_instructionCacheSets)
-      val tag_bits                    = 32 - log2Ceil(L1_cacheLineSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
-      val instruction_offset_bits     = log2Ceil(fetchWidth)
-      val fetch_packet_bits           = log2Ceil(L1_cacheLineSizeBytes/4/fetchWidth)
-
-      val decomposed_icache_address = Wire(new instruction_cache_address_packet(coreParameters))
-
-      decomposed_icache_address.tag                 := address(31, 31-tag_bits+1)
-      decomposed_icache_address.set                 := address(31-tag_bits, 31-tag_bits-set_bits+1)
-      decomposed_icache_address.fetch_packet        := address(31-tag_bits-set_bits, 31-tag_bits-set_bits-fetch_packet_bits+1) 
-      decomposed_icache_address.instruction_offset  := address(2+instruction_offset_bits, 2) // The offset within the packet
-
-      decomposed_icache_address
-
-  }
-}
 
 object get_MOB_row_byte_sel {
   def apply(coreParameters:CoreParameters, MOB_entry: MOB_entry): Vec[Bool] = {
@@ -506,13 +486,13 @@ object initMisa {
 
 object get_INT_producer_count {
   def apply(FUParamSeq: Seq[FUParams]): Int = {
-    FUParamSeq.count(p => p.INT_producer || p.MEM_producer)
+    FUParamSeq.count(p => p.INT_producer) + (if (FUParamSeq.nonEmpty) 1 else 0)  // add 1 producer if there exists a set of int consumers at all
   }
 }
 
 object get_FP_producer_count {
   def apply(FUParamSeq: Seq[FUParams]): Int = {
-    FUParamSeq.count(p => p.FP_producer || p.MEM_producer)
+    FUParamSeq.count(p => p.FP_producer) + (if (FUParamSeq.nonEmpty) 1 else 0)  // same as above
   }
 }
 

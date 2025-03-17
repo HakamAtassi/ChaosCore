@@ -75,7 +75,8 @@ class backend(coreParameters:CoreParameters) extends Module{
 
         // UPDATE //
         val INT_producers                 =   Vec(INT_producer_count, Decoupled(new FU_output(coreParameters)))
-        val FP_producers                  =   Vec(FP_producer_count, Decoupled(new FU_output(coreParameters)))
+
+        val FP_producers = if (coreConfig.contains("F")) Some(Vec(FP_producer_count, Decoupled(new FU_output(coreParameters)))) else None
 
     }); dontTouch(io)
 
@@ -211,20 +212,19 @@ class backend(coreParameters:CoreParameters) extends Module{
     // Since INT and MEM share a bunch of structures, it makes sense to perform their connection logic together. This is to help with the indexing of the various involved structures
     connect_allocation(rsSeq = INT_RS ++ FP_RS)  // Connects frontend "backend packet" to reservation stations
     reg_read_and_fire(sources_per_port = 2)(rsSeq = INT_RS, prf = INT_PRF, FU_input = execution_engine.io.INT_FU_input)   // Connects output of reservation stations to register read components
-
-
     assign_ready(INT_RS, execution_engine.io.INT_FU_input)
     assign_WB(prf=INT_PRF, FU_output=execution_engine.io.INT_producers)  // Last FP only for conversion WB because it produces its (possibly)
+    wakeup_RS(rsSeq = INT_RS, producers = execution_engine.io.INT_producers)
 
     // CONNECT FP //
     //connect_allocation(FP_RS)
-    reg_read_and_fire(sources_per_port = 3)(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
-    assign_ready(FP_RS, execution_engine.io.FP_FU_input)
-    assign_WB(prf=FP_PRF.get, FU_output=execution_engine.io.FP_producers)
+    if(coreConfig.contains("F")){
+        reg_read_and_fire(sources_per_port = 3)(rsSeq = FP_RS, prf = FP_PRF.get, FU_input = execution_engine.io.FP_FU_input)
+        assign_ready(FP_RS, execution_engine.io.FP_FU_input)
+        assign_WB(prf=FP_PRF.get, FU_output=execution_engine.io.FP_producers.get)
 
-    // CONNECT WAKEUP SIGNALS //
-    wakeup_RS(rsSeq = FP_RS, producers = execution_engine.io.FP_producers)
-    wakeup_RS(rsSeq = INT_RS, producers = execution_engine.io.INT_producers)
+        wakeup_RS(rsSeq = FP_RS, producers = execution_engine.io.FP_producers.get)
+    }
 
 
     for(i <- 0 until fetchWidth){
@@ -233,9 +233,9 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     // CONNECT BRANCH UNITS TO PC FILE (in ROB)
-    for (i <- 0 until portCount) {
-        if (FUParamSeq(i).supportsBranch) {
-            val PC_file_port_index = FUParamSeq.take(i).count(_.supportsBranch)
+    for (i <- 0 until INT_consumer_count) {
+        if (INT_FUParamSeq(i).supportsBranch) {
+            val PC_file_port_index = INT_FUParamSeq.take(i).count(_.supportsBranch)
             io.PC_file_exec_addr(PC_file_port_index) := INT_RS(i).io.RF_inputs.bits.ROB_index
             execution_engine.io.INT_FU_input(i).bits.fetch_PC := io.PC_file_exec_data(PC_file_port_index)
         }
@@ -244,7 +244,10 @@ class backend(coreParameters:CoreParameters) extends Module{
 
 
     // connect INT FU
-    execution_engine.io.FP_producers.zipWithIndex.foreach{case(producer, i) => io.FP_producers(i) <> producer}
+
+    if(coreConfig.contains("F")){
+        execution_engine.io.FP_producers.zipWithIndex.foreach{case(producer, i) => io.FP_producers.get(i) <> producer}
+    }
     execution_engine.io.INT_producers.zipWithIndex.foreach{case(producer, i) => io.INT_producers(i) <> producer}
     
 

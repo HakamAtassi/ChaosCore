@@ -476,13 +476,14 @@ class decoder(coreParameters:CoreParameters) extends Module{
 
     // Create UInt Vecs of the port #s that support the corresponding instruction
 
-    val ALU_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsInt).map(_._2.U)))
-    val branch_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsBranch).map(_._2.U)))
-    val CSR_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsCSRs).map(_._2.U)))
-    val memory_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsAddressGeneration).map(_._2.U)))
-    val mul_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsIntMult).map(_._2.U)))
-    val div_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsIntDiv).map(_._2.U)))
-    val FPU_port_seq = RegInit(VecInit(FUParamSeq.zipWithIndex.filter(_._1.supportsFP).map(_._2.U)))
+    val ALU_port_seq = RegInit(VecInit(INT_FUParamSeq.zipWithIndex.filter(_._1.supportsInt).map(_._2.U)))
+    val branch_port_seq = RegInit(VecInit(INT_FUParamSeq.zipWithIndex.filter(_._1.supportsBranch).map(_._2.U)))
+    val CSR_port_seq = RegInit(VecInit(INT_FUParamSeq.zipWithIndex.filter(_._1.supportsCSRs).map(_._2.U)))
+    val memory_port_seq = RegInit(VecInit(INT_FUParamSeq.zipWithIndex.filter(_._1.supportsAddressGeneration).map(_._2.U)))
+    val mul_port_seq = RegInit(VecInit(INT_FUParamSeq.zipWithIndex.filter(_._1.supportsIntMult).map(_._2.U)))
+    val div_port_seq = RegInit(VecInit(INT_FUParamSeq.zipWithIndex.filter(_._1.supportsIntDiv).map(_._2.U)))
+    
+
 
     dontTouch(ALU_port_seq)
     dontTouch(branch_port_seq)
@@ -490,7 +491,6 @@ class decoder(coreParameters:CoreParameters) extends Module{
     dontTouch(memory_port_seq)
     dontTouch(mul_port_seq)
     dontTouch(div_port_seq)
-    dontTouch(FPU_port_seq)
 
     // Assign ports based on instruction requirements
     when(io.decoded_instruction.bits.needs_ALU) {
@@ -505,9 +505,23 @@ class decoder(coreParameters:CoreParameters) extends Module{
         io.decoded_instruction.bits.assigned_port := get_next_port(mul_port_seq)
     }.elsewhen(io.decoded_instruction.bits.needs_div) {
         io.decoded_instruction.bits.assigned_port := get_next_port(div_port_seq)
-    }.elsewhen(io.decoded_instruction.bits.needs_FPU) {
-        io.decoded_instruction.bits.assigned_port := get_next_port(FPU_port_seq)
     }
+
+
+    val FPU_port_Seq = if (coreConfig.contains("F")) 
+        Some(RegInit(VecInit(FP_FUParamSeq.zipWithIndex.filter(_._1.supportsFP).map(_._2.U)))) 
+    else 
+        None
+
+    FPU_port_Seq.foreach { ports =>
+        when(io.decoded_instruction.bits.needs_FPU) {
+            io.decoded_instruction.bits.assigned_port := get_next_port(ports)
+        }
+        shift_port_seq(ports)
+        dontTouch(ports)
+    }
+
+
 
     // Update next ports after assignment
     shift_port_seq(ALU_port_seq)
@@ -516,7 +530,6 @@ class decoder(coreParameters:CoreParameters) extends Module{
     shift_port_seq(memory_port_seq)
     shift_port_seq(mul_port_seq)
     shift_port_seq(div_port_seq)
-    shift_port_seq(FPU_port_seq)
 
 
 

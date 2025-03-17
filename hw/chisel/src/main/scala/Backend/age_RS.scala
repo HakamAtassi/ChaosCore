@@ -110,8 +110,8 @@ class age_RS(coreParameters:CoreParameters)(WBPortCount:Int) extends Module{
                 reservation_station(i).committed := 1.B 
             }
         }
-
     }
+
 
 
     dontTouch(reservation_station)

@@ -126,11 +126,10 @@ case class CoreParameters(
     DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
-    coreConfig: String = "RV32IMSUF",  // core extension (IMAF, etc...)
+    coreConfig: String = "RV32IMSU",  // core extension (IMAF, etc...)
     hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     //hartIDs:Seq[Int] = Seq(0, 1),
-
 
     fetchWidth: Int = 1,   // up to how many instructions does the core fetch each cycle
 
@@ -151,26 +150,6 @@ case class CoreParameters(
     RSEntries: Int = 8, // How many entires per reservation station (these are very expensive)
 
 
-    L1_cacheLineSizeBytes: Int = 32,
-
-    // Instruction Cache params
-    L1_instructionCacheWays: Int = 2,
-    L1_instructionCacheSets: Int = 64,
-
-    // Data Cache params
-    L1_DataCacheWays: Int = 4,
-    L1_DataCacheSets: Int = 64,
-
-    L1_MSHREntries: Int = 4,                    // number of MSHR rows (unique miss addresses)
-    L1_NonCacheableBufferEntries: Int = 4,      // number of MSHR rows (unique miss addresses)
-    L1_MSHRWidth: Int = 8,                      // width of MSHR rows (misses per address)
-
-    // Execution params
-    // FIXME: why are these repeated here?
-    ALUportCount:Int = 3,
-    MEMportCount:Int = 1,
-    FPUportCount:Int = 2,  // not used if not "F"   // FIXME: make this parameterizable
-
 
     ALUStages: Int = 2, // latency of the ALU unit
 
@@ -187,32 +166,6 @@ case class CoreParameters(
     IQEntries:Int = 4,
     //MOBForceInOrder:Boolean = true,  // can loads execute if not all previous (load+store) addresses have been resolved?
 
-    /////////////////////////////
-    // EXECUTION ENGINE PARAMS //
-    /////////////////////////////
-
-    // Add as many FUs as desired. 
-    // FIXME: check that there is only 1 CSRs, etc...
-    // Add other requirements here
-    // 
-    FUParamSeq: Seq[FUParams] = Seq(
-        // ALU + MUL ARITHMETIC UNITS
-        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false,  supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=true,   supportsIntDiv=true,  supportsBranch=true,  supportsCSRs=true,  supportsAddressGeneration=false),
-        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=true, supportsIntMult=false,  supportsIntDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
-
-        // MEMORY UNITS
-        FUParams(supportsInt=false, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=true),
-
-        // FPUs (these have to go after the memory unit)
-        FUParams(supportsInt=false, supportsFP=true, supportsFP2INT=true, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
-        FUParams(supportsInt=false, supportsFP=true, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=false),
-
-    )
-
-
-
-
 
 
 
@@ -221,6 +174,38 @@ case class CoreParameters(
     
 ){
     println(s"Building Core $hartID parameters...")
+
+    /////////////////////////////
+    // EXECUTION ENGINE PARAMS //
+    /////////////////////////////
+
+    // Add as many FUs as desired. 
+    // FIXME: check that there is only 1 CSRs, etc...
+    // Add other requirements here
+    // 
+    val INT_FUParamSeq: Seq[FUParams] = Seq(
+        // ALU + MUL ARITHMETIC UNITS
+        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false,  supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=true,   supportsIntDiv=true,  supportsBranch=true,  supportsCSRs=true,  supportsAddressGeneration=false),
+        FUParams(supportsInt=true, supportsFP=false, supportsFP2INT=false, supportsINT2FP=true, supportsIntMult=false,  supportsIntDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
+
+        // MEMORY UNITS
+        FUParams(supportsInt=false, supportsFP=false, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=true),
+    )
+
+
+    var FP_FUParamSeq: Seq[FUParams] = Seq(
+        // FPUs (these have to go after the memory unit)
+        FUParams(supportsInt=false, supportsFP=true, supportsFP2INT=true, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false,  supportsAddressGeneration=false),
+        FUParams(supportsInt=false, supportsFP=true, supportsFP2INT=false, supportsINT2FP=false, supportsIntMult=false, supportsIntDiv=false, supportsBranch=false, supportsCSRs=false, supportsAddressGeneration=false)
+    )
+
+
+    if(!coreConfig.contains("F")) FP_FUParamSeq = Seq()
+
+
+
+
 
     ///////////////////////////////////
     // DO NOT TOUCH THESE PARAMETERS //
@@ -241,46 +226,26 @@ case class CoreParameters(
     }
 
 
-    ////////////////
-    // DATA CACHE //
-    ////////////////
-    val L1_DataCacheTagBits:Int = 32 - log2Ceil(L1_DataCacheSets) - log2Ceil(L1_cacheLineSizeBytes)
-
-    def getDataCacheSizeKB:Int = {
-        0
-    }
-
-    ////////////////////////
-    // Instruction CACHE //
-    ///////////////////////
-    def getInstructionCacheSizeKB:Int = {
-        0
-    }
-
-
     ////////
     // FU //
     ////////
 
-    val portCount:Int = FUParamSeq.length   // total number of ports from the reservation stations to the functional units
+    if(!coreConfig.contains("F")) FP_FUParamSeq=Seq()
 
-    val INTRSPortCount: Int = FUParamSeq.count(_.is_INTFU)
-    val FPRSPortCount: Int = FUParamSeq.count(_.is_FPU)
-    val MEMRSPortCount: Int = FUParamSeq.count(_.is_MEMFU)
-    val branchPortCount: Int = FUParamSeq.count(_.is_branch)
+    val portCount:Int = INT_FUParamSeq.length + FP_FUParamSeq.length    // total number of ports from the reservation stations to the functional units
 
+    val branchPortCount:Int = INT_FUParamSeq.count(_.supportsBranch)
 
+    val memPortCount:Int = INT_FUParamSeq.count(_.supportsAddressGeneration)
 
     //val FURSPortCount:Int = // total number of FUs that connect to the INTRS  // TODO:
 
-    val portedFUParamSeq = generateFUPorts(FUParamSeq)
+    val INT_consumer_count = get_INT_consumer_count(INT_FUParamSeq) + get_INT_consumer_count(FP_FUParamSeq)
+    val FP_consumer_count = get_FP_consumer_count(INT_FUParamSeq) + get_FP_consumer_count(FP_FUParamSeq)
 
 
-    val INT_consumer_count = get_INT_consumer_count(FUParamSeq)
-    val FP_consumer_count = get_FP_consumer_count(FUParamSeq)
-
-    val INT_producer_count = get_INT_consumer_count(FUParamSeq)
-    val FP_producer_count = get_FP_consumer_count(FUParamSeq)
+    val INT_producer_count = get_INT_producer_count(INT_FUParamSeq) + get_INT_producer_count(FP_FUParamSeq)
+    val FP_producer_count = get_FP_producer_count(INT_FUParamSeq) + get_FP_producer_count(FP_FUParamSeq)
 
     ////////////////
     // EXTENSIONS //
@@ -299,7 +264,7 @@ case class CoreParameters(
     //require(supportedExtensions.contains(userExtensions), 
     //s"Invalid extensions: $userExtensions. Supported extensions are: ${supportedExtensions.mkString(", ")}")
 
-    require(validate_backend(coreConfig)(FUParamSeq))   // Ensure minimal required functional units
+    ///require(validate_backend(coreConfig)(FUParamSeq))   // Ensure minimal required functional units
 
 }
 
