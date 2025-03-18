@@ -14,30 +14,29 @@ import freechips.rocketchip.tilelink._
 import freechips.rocketchip.util.UIntIsOneOf
 
 case class PPMParams(
-  address: BigInt = 0x4000,
-  width: Int = 32,
-  useAXI4: Boolean = false,
-  useBlackBox: Boolean = true
+  address: BigInt = 0x4000
 )
 
 
 
-case object PPMKey extends Field[Option[PPMKey]](None)
+case object PPMKey extends Field[Option[PPMParams]](None)
 
 
-class PPMIO(val data_width: Int = 24, val address_width: Int = 16) extends Bundle {
+
+class PPMIO(data_width: Int = 24, address_width: Int = 16) extends Bundle {
   val clock   = Input(Clock())
   val reset   = Input(Bool())
-  val data    = Input(UInt(data_width.W))
-  val address = Input(UInt(address_width.W))
-  val wr_en   = Input(Bool())
-  val dump    = Input(Bool())
+
+  val input_ready = Output(Bool())
+  val input_valid = Input(Bool())
+
+  val operation   = Input(Bool())   // slightly more abstract wr_en
+  val address     = Input(UInt(address_width.W))  // address for data
+  val data        = Input(UInt(data_width.W)) // data
+
+  val dump        = Input(Bool())
 }
 
-
-trait HasPPMTopIO {
-  def io: PPMTopIO
-}
 
 class PPMMMIOBlackBox(address_width: Int, data_width:Int) extends BlackBox(Map("address_width" -> IntParam(address_width), "data_width" -> IntParam(data_width))) 
 with HasBlackBoxResource {
@@ -50,44 +49,48 @@ class PPMTL(params: PPMParams, beatBytes: Int)(implicit p: Parameters) extends C
   val node = TLRegisterNode(Seq(AddressSet(params.address, 4096-1)), device, "reg/control", beatBytes=beatBytes)
 
   override lazy val module = new PPMImpl
-  class PPMImpl extends Impl with HasPPMTopIO {
-    val io = IO(new PPMTopIO)
+  class PPMImpl extends Impl {
+
+
     withClockAndReset(clock, reset) {
-        
-        // How many clock cycles in a PWM cycle?
-        val PPM_in = Wire(new DecoupledIO(UInt(PPMIO(data_width=8, address_width=log2Ceil(params.IMAGE_WIDTH*params.IMAGE_HEIGHT)))))
-        val dump            = Reg(Bool())
+      // Create registers with proper widths
+      val reg_operation = RegInit(0.U(1.W))
+      val reg_address   = RegInit(0.U(16.W))
+      val reg_data      = RegInit(0.U(24.W))
 
-        val impl_io = if (params.useBlackBox) {
-            val impl = Module(new PPMMMIOBlackBox(params.width))
-            impl.io
-        }
+      val dump      = WireInit(0.B)
+      val doorbell   = WireInit(0.B)
+      
+      // Instantiate the blackbox
+      val impl_io = Module(new PPMMMIOBlackBox(address_width = 16, data_width = 24)).io
+      
+      // Connect clock and reset to the blackbox.
+      impl_io.clock := clock
+      impl_io.reset := reset.asBool
+      
+      // Drive the blackbox inputs from the registers.
+      impl_io.operation   := reg_operation
+      impl_io.address     := reg_address
+      impl_io.data        := reg_data
+      impl_io.dump        := dump
 
-        // connect clock and reset
-        impl_io.clock := clock
-        impl_io.reset := reset.asBool
+      impl_io.input_valid := doorbell
 
-        
-        // set up regmap
-        node.regmap(
-            0x00 -> Seq(RegField.w(PPM_in.getWidth, PPM_in)),               // SRAM IO
-            0x04 -> Seq(RegField.w(1, dump)),                               // dump contents of memory to ppm
-        )
-
-
-        // assign reg values to implementation
-
-        // wr pixel info
-        impl_io.address := PPM_in.bits.address
-        impl_io.data := PPM_in.bits.data
-        impl_io.wr_en := PPM_in.bits.wr_en
-
-        // dump to file
-        impl_io.dump := PPM_in.bits.dump
-
+      // Set up the regmap, making sure the widths match the registers:
+      node.regmap(
+        0x00 -> Seq(RegField.r(1, impl_io.input_ready)), 
+        0x04 -> Seq(RegField.w(1, reg_operation)),       
+        0x08 -> Seq(RegField.w(16, reg_address)),        
+        0x0C -> Seq(RegField.w(24, reg_data)),           
+        0x10 -> Seq(RegField.w(1, dump)),            
+        0x14 -> Seq(RegField.w(1, doorbell))             
+      )
     }
+
   }
 }
+
+
 
 
 
@@ -96,22 +99,20 @@ trait CanHavePeripheryPPM { this: BaseSubsystem =>
 
   private val pbus = locateTLBusWrapper(PBUS)
 
-  val ppm_busy = p(PPMKey) match {
+  p(PPMKey) match {
     case Some(params) => {
-        
-        val ppm = LazyModule(new PPMTL(params, pbus.beatBytes)(p))
-        ppm.clockNode := pbus.fixedClockNode
-        pbus.coupleTo(portName) { ppm.node := TLFragmenter(pbus.beatBytes, pbus.blockBytes) := _ }
-        ppm
-
+      val ppm = LazyModule(new PPMTL(params, pbus.beatBytes)(p))
+      ppm.clockNode := pbus.fixedClockNode
+      pbus.coupleTo(portName) { ppm.node := TLFragmenter(pbus.beatBytes, pbus.blockBytes) := _ }
     }
-    case None => None
+    case None => // Do nothing if PPM is not enabled
   }
 }
 
 
-class WithPPM(useAXI4: Boolean = false, useBlackBox: Boolean = false) extends Config((site, here, up) => {
+
+class WithPPM extends Config((site, here, up) => {
   case PPMKey => {
-    Some(PPMParams(useAXI4 = useAXI4, useBlackBox = useBlackBox))
+    Some(PPMParams())
   }
 })
