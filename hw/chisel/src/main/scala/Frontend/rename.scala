@@ -234,7 +234,6 @@ class rename(data_type:String = "Int")(coreParameters:CoreParameters) extends Mo
         renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD           := io.decoded_fetch_packet.bits.decoded_instruction(i).RD
         //renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold       := io.decoded_fetch_packet.bits.decoded_instruction(i).PRDold
     }
-    renamed_decoded_fetch_packet.bits.free_list_front_pointer                 := free_list.io.free_list_front_pointer
 
     /////////
     // WAW //

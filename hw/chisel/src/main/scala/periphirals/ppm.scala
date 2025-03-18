@@ -23,7 +23,7 @@ case object PPMKey extends Field[Option[PPMParams]](None)
 
 
 
-class PPMIO(data_width: Int = 24, address_width: Int = 16) extends Bundle {
+class PPMIO(data_width: Int = 24, address_width: Int = 17) extends Bundle {
   val clock   = Input(Clock())
   val reset   = Input(Bool())
 
@@ -55,14 +55,14 @@ class PPMTL(params: PPMParams, beatBytes: Int)(implicit p: Parameters) extends C
     withClockAndReset(clock, reset) {
       // Create registers with proper widths
       val reg_operation = RegInit(0.U(1.W))
-      val reg_address   = RegInit(0.U(16.W))
+      val reg_address   = RegInit(0.U(17.W))
       val reg_data      = RegInit(0.U(24.W))
 
       val dump      = WireInit(0.B)
       val doorbell   = WireInit(0.B)
       
       // Instantiate the blackbox
-      val impl_io = Module(new PPMMMIOBlackBox(address_width = 16, data_width = 24)).io
+      val impl_io = Module(new PPMMMIOBlackBox(address_width = 17, data_width = 24)).io
       
       // Connect clock and reset to the blackbox.
       impl_io.clock := clock
@@ -80,7 +80,7 @@ class PPMTL(params: PPMParams, beatBytes: Int)(implicit p: Parameters) extends C
       node.regmap(
         0x00 -> Seq(RegField.r(1, impl_io.input_ready)), 
         0x04 -> Seq(RegField.w(1, reg_operation)),       
-        0x08 -> Seq(RegField.w(16, reg_address)),        
+        0x08 -> Seq(RegField.w(17, reg_address)),        
         0x0C -> Seq(RegField.w(24, reg_data)),           
         0x10 -> Seq(RegField.w(1, dump)),            
         0x14 -> Seq(RegField.w(1, doorbell))             

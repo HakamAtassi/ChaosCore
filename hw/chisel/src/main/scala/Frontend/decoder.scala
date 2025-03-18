@@ -622,7 +622,6 @@ class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
     decoded_fetch_packet.bits.NEXT                       := io.fetch_packet.bits.NEXT
     decoded_fetch_packet.bits.TOS                        := io.fetch_packet.bits.TOS
 
-    decoded_fetch_packet.bits.free_list_front_pointer    := DontCare // This is fine. Allocated during rename
 
 
     //////////////////

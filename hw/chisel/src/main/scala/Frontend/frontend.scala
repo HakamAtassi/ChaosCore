@@ -33,6 +33,9 @@ import chisel3._
 import chisel3.util._
 
 
+
+
+
 class frontend(coreParameters:CoreParameters) extends Module{
     import coreParameters._
 
@@ -110,16 +113,12 @@ class frontend(coreParameters:CoreParameters) extends Module{
     ////////////
     instruction_queue.io.flush.get := flush
 
-    INT_rename.io.FU_outputs           <>     io.INT_producers
-    INT_rename.io.flush                <>     io.flush
-    INT_rename.io.commit               <>     io.commit
-
 
     ////////////
     // OUTPUT //
     ////////////
 
-    io.renamed_decoded_fetch_packet <> INT_rename.io.renamed_decoded_fetch_packet
+
 
 
     ///////////////////////
@@ -128,10 +127,16 @@ class frontend(coreParameters:CoreParameters) extends Module{
     instruction_queue.io.enq         <> decoders.io.decoded_fetch_packet
     instruction_queue.io.enq.valid   := decoders.io.decoded_fetch_packet.valid 
     instruction_queue.io.flush.get   <> io.flush.valid
+    
 
+    INT_rename.io.FU_outputs           <>     io.INT_producers
+    INT_rename.io.flush                <>     io.flush
 
-    INT_rename.io.decoded_fetch_packet <> instruction_queue.io.deq
+    INT_rename.io.commit                    <>     io.commit
+    INT_rename.io.commit.bits               <>     io.commit.bits.get_INT_view
 
+    INT_rename.io.decoded_fetch_packet      <> instruction_queue.io.deq
+    INT_rename.io.decoded_fetch_packet.bits <> instruction_queue.io.deq.bits.get_INT_view
 
 
     /////////////////////
@@ -141,9 +146,39 @@ class frontend(coreParameters:CoreParameters) extends Module{
     if(coreConfig.contains("F")){
         FP_rename.get.io.FU_outputs           <>     io.FP_producers.get
         FP_rename.get.io.flush                <>     io.flush
+        
+
         FP_rename.get.io.commit               <>     io.commit
-        FP_rename.get.io.decoded_fetch_packet <> instruction_queue.io.deq
-        io.renamed_decoded_fetch_packet <> FP_rename.get.io.renamed_decoded_fetch_packet
+        FP_rename.get.io.commit.bits          <>     io.commit.bits.get_FP_view
+
+        FP_rename.get.io.decoded_fetch_packet <>     instruction_queue.io.deq
+
+        FP_rename.get.io.decoded_fetch_packet           <> instruction_queue.io.deq
+        FP_rename.get.io.decoded_fetch_packet.bits      := instruction_queue.io.deq.bits.get_FP_view
+    }
+
+
+    // merge output of renamers into a single renamed output fetch packet
+    io.renamed_decoded_fetch_packet         <>     INT_rename.io.renamed_decoded_fetch_packet   // FIXME: temporary. fix this to account for FP_rename valid
+    for(i <- 0 until fetchWidth){
+
+        if(coreConfig.contains("F")){io.renamed_decoded_fetch_packet.ready      <>     FP_rename.get.io.renamed_decoded_fetch_packet.ready}
+
+        if(coreConfig.contains("F")){
+            when(FP_rename.get.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).needs_FPU){ // instruction is float...
+                io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)         <>     FP_rename.get.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)
+            }.otherwise{    // instruction is non-float
+                io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)         <>     INT_rename.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)
+            }
+        }else{
+            {   // instruction is non float (F not enabled)
+                io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)         <>     INT_rename.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i)
+            }
+        }
+
+
+
+
     }
 
 

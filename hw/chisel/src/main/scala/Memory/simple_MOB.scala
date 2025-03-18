@@ -141,7 +141,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until memPortCount){
         val AGU_index = io.AGU_output.bits.MOB_index
-        when(io.AGU_output.valid){
+        when(io.AGU_output.valid && MOB(AGU_index).valid){
             MOB(AGU_index).address  := io.AGU_output.bits.address
             MOB(AGU_index).data  := io.AGU_output.bits.wr_data
             MOB(AGU_index).resolved := 1.B

@@ -407,7 +407,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_branch_banks(i).io.ROB_front_idx                      :=  front_index         
         for(j <- 0 until INT_producer_count){ // FPs dont resolve branches...
             ROB_branch_banks(i).io.INT_producers(j).bits             :=  io.INT_producers(j).bits 
-            ROB_branch_banks(i).io.INT_producers(j).valid             :=  io.INT_producers(j).valid 
+            ROB_branch_banks(i).io.INT_producers(j).valid            :=  io.INT_producers(j).valid 
         }
     }
 
@@ -625,6 +625,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         io.commit.bits.insn_commit(i).bits.WB_committed := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.committed
         io.commit.bits.insn_commit(i).bits.WB_complete := ROB_instruction_banks(i).io.ROB_instruction_entry.WB.complete
 
+        io.commit.bits.insn_commit(i).bits.FP        := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.needs_FPU
         io.commit.bits.insn_commit(i).bits.MOB_index := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_index
         io.commit.bits.insn_commit(i).bits.MOB_valid := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.MOB_valid
         io.commit.bits.insn_commit(i).bits.RD        := ROB_instruction_banks(i).io.ROB_instruction_entry.uOp.decoded_insn.RD

@@ -103,10 +103,51 @@ class insn_commit(coreParameters:CoreParameters) extends Bundle{
     val MOB_index               = UInt(log2Ceil(MOBEntries).W)
     val MOB_valid               = Bool()   // only valid on loads and stores
 
+    val FP                      = Bool()
     val RD                      = UInt(architecturalRegBits.W)
     val RD_valid                = Bool()
     val PRD                     = UInt(physicalRegBits.W)
     val PRDold                  = UInt(physicalRegBits.W)
+
+    def get_FP_view(): insn_commit = {
+        val insn_commit = Wire(new insn_commit(coreParameters))
+        insn_commit := 0.U.asTypeOf(new insn_commit(coreParameters))
+
+        when(FP){
+            insn_commit.WB_complete            := WB_complete
+            insn_commit.WB_committed           := WB_committed
+            insn_commit.MOB_index              := MOB_index
+            insn_commit.MOB_valid              := MOB_valid
+            insn_commit.FP                     := FP
+            insn_commit.RD                     := RD
+            insn_commit.RD_valid               := RD_valid
+            insn_commit.PRD                    := PRD
+            insn_commit.PRDold                 := PRDold
+        }
+        insn_commit
+    }
+
+
+    def get_INT_view(): insn_commit = {
+        val insn_commit = Wire(new insn_commit(coreParameters))
+        insn_commit := 0.U.asTypeOf(new insn_commit(coreParameters))
+
+        when(!FP){
+            insn_commit.WB_complete            := WB_complete
+            insn_commit.WB_committed           := WB_committed
+            insn_commit.MOB_index              := MOB_index
+            insn_commit.MOB_valid              := MOB_valid
+            insn_commit.FP                     := FP
+            insn_commit.RD                     := RD
+            insn_commit.RD_valid               := RD_valid
+            insn_commit.PRD                    := PRD
+            insn_commit.PRDold                 := PRDold
+        }
+        insn_commit
+    }
+
+
+
 }
 
 class commit(coreParameters:CoreParameters) extends Bundle{
@@ -126,8 +167,6 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val TOS                     = UInt(log2Ceil(RASEntries).W)
     val NEXT                    = UInt(log2Ceil(RASEntries).W)
 
-    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
-
     // INSN COMMIT SIGNALS
     val insn_commit             = Vec(fetchWidth, ValidIO(new insn_commit(coreParameters)))
 
@@ -136,6 +175,70 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val target                  = UInt(32.W)
     val br_type                 = br_type_t()
     val br_mask                 = UInt(log2Ceil(fetchWidth).W)
+
+
+
+    def get_INT_view(): commit = {
+        val commit = Wire(new commit(coreParameters))
+        commit := 0.U.asTypeOf(new commit(coreParameters))
+
+        
+        // Copy only the necessary signals
+        commit.fetch_PC := fetch_PC
+        commit.ROB_index := ROB_index
+        commit.fetch_packet_index := fetch_packet_index
+        commit.is_misprediction := is_misprediction
+        commit.expected_PC := expected_PC
+
+
+        commit.GHR := GHR
+        commit.TOS := TOS
+        commit.NEXT := NEXT
+
+        // Remove BP signals
+        commit.T_NT := false.B
+        commit.target := 0.U
+        commit.br_type := 0.U.asTypeOf(br_type_t())
+        commit.br_mask := 0.U
+
+        // Pass through insn commit signals
+        commit.insn_commit.zip(insn_commit).foreach { case (dst, src) =>
+            dst.valid := src.valid
+            dst.bits := src.bits.get_INT_view()
+        }
+
+        commit
+    }
+
+    def get_FP_view(): commit = {
+        val commit = Wire(new commit(coreParameters))
+
+        // Copy only the necessary signals
+        commit.fetch_PC := fetch_PC
+        commit.ROB_index := ROB_index
+        commit.fetch_packet_index := fetch_packet_index
+        commit.is_misprediction := is_misprediction
+        commit.expected_PC := expected_PC
+
+        commit.GHR := GHR
+        commit.TOS := TOS
+        commit.NEXT := NEXT
+
+        // Remove BP signals
+        commit.T_NT := false.B
+        commit.target := 0.U
+        commit.br_type := 0.U.asTypeOf(br_type_t())
+        commit.br_mask := 0.U
+
+        // Pass through insn commit signals
+          commit.insn_commit.zip(insn_commit).foreach { case (dst, src) =>
+            dst.valid := src.valid
+            dst.bits := src.bits.get_FP_view()
+        }
+
+        commit
+    }
+
 
 }
 
@@ -316,6 +419,157 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     def CSR_addr: UInt = {
         IMM(11,0).asUInt
     }
+
+
+    def get_INT_view(): decoded_instruction = {
+        val decoded_instruction = Wire(new decoded_instruction(coreParameters))
+        decoded_instruction := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+
+        when(!needs_FPU){
+            decoded_instruction.ready_bits          :=  ready_bits
+
+            decoded_instruction.valid               :=  valid
+
+            decoded_instruction.RD                  :=  RD
+            decoded_instruction.PRD                 :=  PRD
+            decoded_instruction.PRDold              :=  PRDold
+
+            decoded_instruction.RS1                 :=  RS1
+            decoded_instruction.RS2                 :=  RS2
+            decoded_instruction.RS3                 :=  RS3
+            decoded_instruction.IMM                 :=  IMM
+            decoded_instruction.FUNCT3              :=  FUNCT3
+            decoded_instruction.FUNCT7              :=  FUNCT7
+
+            decoded_instruction.packet_index        :=  packet_index
+            decoded_instruction.ROB_index           :=  ROB_index
+            decoded_instruction.MOB_index           :=  MOB_index
+
+
+            decoded_instruction.mem_signed          :=  mem_signed
+            decoded_instruction.memory_type         :=  memory_type
+            decoded_instruction.access_width        :=  access_width
+
+            decoded_instruction.needs_ALU           := needs_ALU
+            decoded_instruction.needs_branch_unit   := needs_branch_unit
+            decoded_instruction.needs_CSRs          := needs_CSRs
+            decoded_instruction.needs_memory        := needs_memory
+            decoded_instruction.needs_mul           := needs_mul
+            decoded_instruction.needs_div           := needs_div
+            decoded_instruction.needs_FPU           := needs_FPU
+
+            decoded_instruction.assigned_port       := assigned_port
+
+            decoded_instruction.RS1_valid          := RS1_valid
+            decoded_instruction.RS2_valid          := RS2_valid
+            decoded_instruction.RD_valid           := RD_valid
+            decoded_instruction.IS_IMM             := IS_IMM
+            decoded_instruction.UNSIGNED           := UNSIGNED
+
+            decoded_instruction.BASE_ARITHMETIC    := BASE_ARITHMETIC
+            decoded_instruction.MULTIPLY           := MULTIPLY
+            decoded_instruction.LOAD               := LOAD
+            decoded_instruction.STORE              := STORE
+            decoded_instruction.CTRL               := CTRL
+            decoded_instruction.CSRRW              := CSRRW
+            decoded_instruction.XRET               := XRET
+            decoded_instruction.ENV                := ENV
+            decoded_instruction.FENCE              := FENCE
+
+            decoded_instruction.LUI                := LUI
+            decoded_instruction.AUIPC              := AUIPC
+            decoded_instruction.JAL                := JAL
+            decoded_instruction.JALR               := JALR
+
+            decoded_instruction.FLUSH              := FLUSH
+
+            decoded_instruction.RS3_valid   := RS3_valid
+            decoded_instruction.FMA_FMS     := FMA_FMS
+            decoded_instruction.sign_inject := sign_inject
+            decoded_instruction.min_max     := min_max
+            decoded_instruction.convert     := convert
+            decoded_instruction.move        := move
+            decoded_instruction.compare     := compare
+            decoded_instruction.classify    := classify
+        }
+        decoded_instruction
+    }
+
+    def get_FP_view(): decoded_instruction = {
+        val decoded_instruction = Wire(new decoded_instruction(coreParameters))
+        decoded_instruction := 0.U.asTypeOf(new decoded_instruction(coreParameters))
+
+        when(needs_FPU){
+            decoded_instruction.ready_bits          :=  ready_bits
+
+            decoded_instruction.valid               :=  valid
+
+            decoded_instruction.RD                  :=  RD
+            decoded_instruction.PRD                 :=  PRD
+            decoded_instruction.PRDold              :=  PRDold
+
+            decoded_instruction.RS1                 :=  RS1
+            decoded_instruction.RS2                 :=  RS2
+            decoded_instruction.RS3                 :=  RS3
+            decoded_instruction.IMM                 :=  IMM
+            decoded_instruction.FUNCT3              :=  FUNCT3
+            decoded_instruction.FUNCT7              :=  FUNCT7
+
+            decoded_instruction.packet_index        :=  packet_index
+            decoded_instruction.ROB_index           :=  ROB_index
+            decoded_instruction.MOB_index           :=  MOB_index
+
+
+            decoded_instruction.mem_signed          :=  mem_signed
+            decoded_instruction.memory_type         :=  memory_type
+            decoded_instruction.access_width        :=  access_width
+
+            decoded_instruction.needs_ALU           := needs_ALU
+            decoded_instruction.needs_branch_unit   := needs_branch_unit
+            decoded_instruction.needs_CSRs          := needs_CSRs
+            decoded_instruction.needs_memory        := needs_memory
+            decoded_instruction.needs_mul           := needs_mul
+            decoded_instruction.needs_div           := needs_div
+            decoded_instruction.needs_FPU           := needs_FPU
+
+            decoded_instruction.assigned_port       := assigned_port
+
+            decoded_instruction.RS1_valid          := RS1_valid
+            decoded_instruction.RS2_valid          := RS2_valid
+            decoded_instruction.RD_valid           := RD_valid
+            decoded_instruction.IS_IMM             := IS_IMM
+            decoded_instruction.UNSIGNED           := UNSIGNED
+
+            decoded_instruction.BASE_ARITHMETIC    := BASE_ARITHMETIC
+            decoded_instruction.MULTIPLY           := MULTIPLY
+            decoded_instruction.LOAD               := LOAD
+            decoded_instruction.STORE              := STORE
+            decoded_instruction.CTRL               := CTRL
+            decoded_instruction.CSRRW              := CSRRW
+            decoded_instruction.XRET               := XRET
+            decoded_instruction.ENV                := ENV
+            decoded_instruction.FENCE              := FENCE
+
+            decoded_instruction.LUI                := LUI
+            decoded_instruction.AUIPC              := AUIPC
+            decoded_instruction.JAL                := JAL
+            decoded_instruction.JALR               := JALR
+
+            decoded_instruction.FLUSH              := FLUSH
+
+            decoded_instruction.RS3_valid   := RS3_valid
+            decoded_instruction.FMA_FMS     := FMA_FMS
+            decoded_instruction.sign_inject := sign_inject
+            decoded_instruction.min_max     := min_max
+            decoded_instruction.convert     := convert
+            decoded_instruction.move        := move
+            decoded_instruction.compare     := compare
+            decoded_instruction.classify    := classify
+        }
+        decoded_instruction
+    }
+
+
 }
 
 
@@ -330,7 +584,30 @@ class decoded_fetch_packet(coreParameters:CoreParameters) extends Bundle{
 
     val prediction              = new prediction(coreParameters)
 
-    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
+    def get_INT_view(): decoded_fetch_packet = {
+        val decoded_fetch_packet = Wire(new decoded_fetch_packet(coreParameters))
+
+        decoded_fetch_packet.fetch_PC := fetch_PC
+        decoded_fetch_packet.decoded_instruction := decoded_instruction.map(_.get_INT_view)
+        decoded_fetch_packet.GHR := GHR
+        decoded_fetch_packet.TOS := TOS
+        decoded_fetch_packet.NEXT := NEXT
+        decoded_fetch_packet.prediction := prediction
+        decoded_fetch_packet
+    }
+
+    def get_FP_view(): decoded_fetch_packet = {
+        val decoded_fetch_packet = Wire(new decoded_fetch_packet(coreParameters))
+
+        decoded_fetch_packet.fetch_PC := fetch_PC
+        decoded_fetch_packet.decoded_instruction := decoded_instruction.map(_.get_FP_view)
+        decoded_fetch_packet.GHR := GHR
+        decoded_fetch_packet.TOS := TOS
+        decoded_fetch_packet.NEXT := NEXT
+        decoded_fetch_packet.prediction := prediction
+        decoded_fetch_packet
+    }
+
 
 }
 

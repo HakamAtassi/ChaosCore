@@ -51,8 +51,6 @@ class free_list(coreParameters:CoreParameters) extends Module{
 
         val flush                   = Flipped(ValidIO(new flush(coreParameters)))
 
-        val free_list_front_pointer = Output(UInt(ptr_width.W))                  // To ROB
-
         val can_allocate            = Output(Bool())
     }); dontTouch(io)
 
@@ -83,7 +81,6 @@ class free_list(coreParameters:CoreParameters) extends Module{
         }
     }
 
-    io.free_list_front_pointer  := 0.U
 
     //FIXME: does the order of these matter?
     when(io.commit.valid){  // add to freelist

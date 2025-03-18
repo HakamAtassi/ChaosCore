@@ -126,7 +126,7 @@ case class CoreParameters(
     DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
-    coreConfig: String = "RV32IMSUF",  // core extension (IMAF, etc...)
+    coreConfig: String = "RV32IMSU",  // core extension (IMAF, etc...)
     hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     //hartIDs:Seq[Int] = Seq(0, 1),
@@ -248,7 +248,6 @@ case class CoreParameters(
 
     // FIXME: better way of encoding this? if "F" disabled, then there is no MEM FP and int has no conversion port...
     val FP_producer_count = (if (coreConfig.contains("F")) INT_FUParamSeq.count(p => p.FP_producer) else 0) + FP_FUParamSeq.count(p => p.FP_producer) + (if (coreConfig.contains("F")) INT_FUParamSeq.count(p => p.MEM_producer) else 0)
-
 
     val producer_count = INT_producer_count + FP_producer_count   
 
