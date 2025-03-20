@@ -126,7 +126,7 @@ case class CoreParameters(
     DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
-    coreConfig: String = "RV32IMSU",  // core extension (IMAF, etc...)
+    coreConfig: String = "RV32IMSUF",  // core extension (IMAF, etc...)
     hartID: Int = 0, // for multicore, this must be assigned on config. 
 
     //hartIDs:Seq[Int] = Seq(0, 1),

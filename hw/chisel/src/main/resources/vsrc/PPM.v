@@ -1,27 +1,29 @@
 `timescale 1ns / 1ps
 
 module PPMMMIOBlackBox 
-  #(parameter address_width = 16, 
-    parameter data_width = 24) 
+  #(parameter address_width = 32, 
+    parameter data_width = 32) 
   (
     input                           clock,
     input                           reset,
     output                          input_ready,
     input                           input_valid,
-    input  [address_width-1:0]      address,    
-    input  [data_width-1:0]         data,       
-    input                           operation,
+    input  [31:0]                   address,    
+    input  [31:0]                   data,       
+    input  [31:0]                   operation,
     input                           dump        
   );
+
+
+  reg[8*256-1:0] filename_buf;
 
   reg [data_width-1:0] mem[0:FRAME_HEIGHT*FRAME_WIDTH];
   integer i;
   integer j;
   integer fd;
 
-  localparam FRAME_WIDTH  = 320;
-  localparam FRAME_HEIGHT = 240;
-  localparam filename = "ChaosCore_frame.ppm";
+  localparam FRAME_WIDTH  = 100;
+  localparam FRAME_HEIGHT = 100;
 
   assign input_ready = 1'b1;
 
@@ -29,14 +31,29 @@ module PPMMMIOBlackBox
   
 
 
+    string result = "";
+    reg [7:0] byte_val;
+    function string reg_to_string(input reg [256*8-1:0] data);
+        result="";
+        for (int i = 0; i < 256; i++) begin
+            byte_val = data[i*8 +: 8];
+            if (byte_val == 0) begin
+                // do nothing
+            end else begin
+                result = {result, string'(byte_val)};
+            end
+        end
+        return result;
+    endfunction
+
 
   task dump_ppm;
     integer fd;
     integer i;
     reg [7:0] r, g, b;
+
     begin
-      $display("Dumping ppm!");
-      fd = $fopen("ChaosCore_frame.ppm", "wb"); // Open in binary write mode
+      fd = $fopen(reg_to_string(filename_buf), "wb"); // Open in binary write mode
       if (fd) begin
         $fdisplay(fd, "P6");
         $fdisplay(fd, "%0d %0d", FRAME_WIDTH, FRAME_HEIGHT);
@@ -51,6 +68,8 @@ module PPMMMIOBlackBox
       end
     end
   endtask
+
+
 
 
   task init_mem;
@@ -68,13 +87,14 @@ module PPMMMIOBlackBox
   endtask
 
 
+  wire wr_en = operation == 32'd1;
+  wire wr_filename = operation == 32'd2;
+
 
   always @(posedge clock) begin
     if (reset) begin
-
       init_ppm <= 1'b0;
-
-
+      filename_buf <= 256'h6D70702E656D6172665F65726F43736F616843;
 
     end else begin
 
@@ -85,13 +105,18 @@ module PPMMMIOBlackBox
         init_ppm <= 1'b1;
       end
 
-      if (operation) begin
+
+      if ((wr_en) && input_valid==1'b1) begin
         mem[address] <= data;
       end
 
-      if (dump) begin
+      if ((wr_filename) && (input_valid == 1'b1)) filename_buf[(8 * address) +: 8] <= data[7:0]; 
+
+
+      if (dump == 1'b1) begin
         dump_ppm;
       end
+
     end
   end
 

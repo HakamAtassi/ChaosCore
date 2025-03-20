@@ -23,18 +23,19 @@ case object PPMKey extends Field[Option[PPMParams]](None)
 
 
 
-class PPMIO(data_width: Int = 24, address_width: Int = 17) extends Bundle {
+class PPMIO(data_width: Int = 32, address_width: Int = 32) extends Bundle {
   val clock   = Input(Clock())
   val reset   = Input(Bool())
 
   val input_ready = Output(Bool())
   val input_valid = Input(Bool())
 
-  val operation   = Input(Bool())   // slightly more abstract wr_en
+  val operation   = Input(UInt(32.W))   // slightly more abstract wr_en
   val address     = Input(UInt(address_width.W))  // address for data
   val data        = Input(UInt(data_width.W)) // data
 
   val dump        = Input(Bool())
+
 }
 
 
@@ -54,15 +55,17 @@ class PPMTL(params: PPMParams, beatBytes: Int)(implicit p: Parameters) extends C
 
     withClockAndReset(clock, reset) {
       // Create registers with proper widths
-      val reg_operation = RegInit(0.U(1.W))
-      val reg_address   = RegInit(0.U(17.W))
-      val reg_data      = RegInit(0.U(24.W))
+      val reg_operation = RegInit(0.U(32.W))
+      val reg_address   = RegInit(0.U(32.W))
+      val reg_data      = RegInit(0.U(32.W))
 
       val dump      = WireInit(0.B)
       val doorbell   = WireInit(0.B)
+
+      //val reg_filename  = RegInit((0x4368616f73436f72655f6672616d65).U((256*8).W))
       
       // Instantiate the blackbox
-      val impl_io = Module(new PPMMMIOBlackBox(address_width = 17, data_width = 24)).io
+      val impl_io = Module(new PPMMMIOBlackBox(address_width = 32, data_width = 32)).io
       
       // Connect clock and reset to the blackbox.
       impl_io.clock := clock
@@ -79,11 +82,11 @@ class PPMTL(params: PPMParams, beatBytes: Int)(implicit p: Parameters) extends C
       // Set up the regmap, making sure the widths match the registers:
       node.regmap(
         0x00 -> Seq(RegField.r(1, impl_io.input_ready)), 
-        0x04 -> Seq(RegField.w(1, reg_operation)),       
-        0x08 -> Seq(RegField.w(17, reg_address)),        
-        0x0C -> Seq(RegField.w(24, reg_data)),           
+        0x04 -> Seq(RegField.w(32, reg_operation)),       
+        0x08 -> Seq(RegField.w(32, reg_address)),        
+        0x0C -> Seq(RegField.w(32, reg_data)),           
         0x10 -> Seq(RegField.w(1, dump)),            
-        0x14 -> Seq(RegField.w(1, doorbell))             
+        0x14 -> Seq(RegField.w(1, doorbell)),
       )
     }
 
