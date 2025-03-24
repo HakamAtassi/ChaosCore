@@ -68,7 +68,6 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
         val irq_external_i                      = Input(Bool())      //meip
         val debug_req_i                         = Input(Bool())      //debug
         val irq_nm_i                            = Input(Bool())      //nmi
-        //val [14:0] irq_fast_i =    //fast local interrupts
 
     }); dontTouch(io)
 

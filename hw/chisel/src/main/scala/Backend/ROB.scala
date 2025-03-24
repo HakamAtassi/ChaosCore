@@ -456,7 +456,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
         }
     )
 
-    val earliest_CTRL_idx = PriorityEncoder(earliest_CTRL_oh.asUInt)
+    val earliest_CTRL_idx = WireInit(PriorityEncoder(earliest_CTRL_oh.asUInt))
+
 
     // mux out the info for the taken branches
     val earliest_CTRL_insn = WireInit(0.U.asTypeOf(new ROB_instruction_entry(coreParameters)))
@@ -465,6 +466,8 @@ class ROB(coreParameters:CoreParameters) extends Module{
 
 
 
+    dontTouch(earliest_CTRL_insn)
+    dontTouch(earliest_CTRL_idx)
 
 
     // done with this row

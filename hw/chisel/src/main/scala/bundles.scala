@@ -103,7 +103,9 @@ class insn_commit(coreParameters:CoreParameters) extends Bundle{
     val MOB_index               = UInt(log2Ceil(MOBEntries).W)
     val MOB_valid               = Bool()   // only valid on loads and stores
 
+    val FP_RD                   = Bool()
     val FP                      = Bool()
+
     val RD                      = UInt(architecturalRegBits.W)
     val RD_valid                = Bool()
     val PRD                     = UInt(physicalRegBits.W)
@@ -327,10 +329,12 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 
     val valid               =  Bool()
 
+    val FP_RD               =  Bool()
     val RD                  =  UInt(architecturalRegBits.W) 
     val PRD                 =  UInt(physicalRegBits.W)
     val PRDold              =  UInt(physicalRegBits.W)
 
+    val FP_RS               =  Bool()
     val RS1                 =  UInt(physicalRegBits.W)
     val RS2                 =  UInt(physicalRegBits.W)
     val RS3                 =  UInt(physicalRegBits.W)  // FIXME: make this optional
@@ -362,6 +366,7 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
     // Operand
     val RS1_valid          = Bool()
     val RS2_valid          = Bool()
+    val RS3_valid          = Bool()
     val RD_valid           = Bool()
     val IS_IMM             = Bool()
     val UNSIGNED           = Bool()
@@ -387,7 +392,6 @@ class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
 
     // FP
     // FIXME: make these optional
-    val RS3_valid   = Bool()
     val FMA_FMS     = Bool()
     val sign_inject = Bool()
     val min_max     = Bool()
@@ -753,6 +757,7 @@ class ROB_branch_entry(coreParameters:CoreParameters) extends Bundle{
 class sources_ready extends Bundle{
     val RS1_ready    =   Bool()
     val RS2_ready    =   Bool()
+    val RS3_ready    =   Bool()
 }
 
 class RS_entry(coreParameters:CoreParameters) extends Bundle{
@@ -935,12 +940,12 @@ val Acquire,
 object MOB_STATES extends ChiselEnum {
     val INVALID,       
     VALID,              // 1    (entry valid)
-    COMMITTED,          
-    RESOLVED,           
-    READY,              
-    REQUESTED,          // 3    (Request sent)
-    NACKED,             // 4    (Requested but denied)
-    DONE = Value        // 6    (Response received)
+    COMMITTED,          // 2
+    RESOLVED,           // 3
+    READY,              // 4
+    REQUESTED,          // 5    (Request sent)
+    NACKED,             // 6    (Requested but denied)
+    DONE = Value        // 7    (Response received)
 }
 
 

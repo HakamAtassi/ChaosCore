@@ -113,6 +113,8 @@ class FPU(coreParameters:CoreParameters) extends Module{
     // INIT FP Modules //
     /////////////////////
 
+    // Make them all the same latency, like Rocket/Boom
+
     // standard IEEE 32 bit widths
 //    val AddRecFN = Module(new AddRecFN(expWidth=8, sigWidth=24))    // 1 cycle
     //val MulRecFN = Module(new MulRecFN(expWidth=8 sigWidth=24))             // 
