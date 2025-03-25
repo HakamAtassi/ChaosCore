@@ -169,8 +169,12 @@ class execution_engine(coreParameters:CoreParameters) extends Module{
 
 
     if(coreConfig.contains("F")){
-        io.FP_producers.get.last <> INT_FUs(int2fpIndex).io.FU_output //DontCare
-        io.INT_producers.last <> FP_FUs(fp2intIndex).io.FU_output //DontCare
+        io.FP_producers.get.last       <> INT_FUs(int2fpIndex).io.FU_output 
+        io.FP_producers.get.last.valid := INT_FUs(int2fpIndex).io.FU_output.valid && INT_FUs(int2fpIndex).io.FU_output.bits.FP
+
+
+        io.INT_producers.last        <> FP_FUs(fp2intIndex).io.FU_output
+        io.INT_producers.last.valid  := FP_FUs(fp2intIndex).io.FU_output.valid && FP_FUs(fp2intIndex).io.FU_output.bits.INT
     }
 
 

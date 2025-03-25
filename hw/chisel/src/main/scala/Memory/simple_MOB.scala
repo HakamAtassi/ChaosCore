@@ -123,7 +123,7 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
             MOB_entry.ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB_entry.fetch_packet_index   :=  io.reserve(i).bits.packet_index
             MOB_entry.mem_signed           :=  io.reserve(i).bits.mem_signed
-            MOB_entry.data_type            :=  Mux(io.reserve(i).bits.needs_FPU, data_type_t.FP, data_type_t.INT) // io.reserve(i).bits.mem_signed
+            MOB_entry.data_type            :=  Mux(io.reserve(i).bits.FP_RD, data_type_t.FP, data_type_t.INT) // io.reserve(i).bits.mem_signed
 
             io.reserved_pointers(i).bits                        := back_index + index_offset
             io.reserved_pointers(i).valid                       := 1.U
@@ -289,7 +289,11 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
         memory_response.bits.RD_valid            := 1.B
         memory_response.bits.fetch_packet_index  := MOB(front_index).fetch_packet_index
 
-        io.INT_MOB_output <> memory_response
+        when(MOB(front_index).data_type === data_type_t.INT){
+            io.INT_MOB_output <> memory_response
+        }.elsewhen(MOB(front_index).data_type === data_type_t.FP){
+            io.FP_MOB_output.get <> memory_response
+        }
 
         MOB(front_index).MOB_STATE := MOB_STATES.DONE
     }

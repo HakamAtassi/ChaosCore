@@ -172,16 +172,14 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
 
             renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1 := RS1
             renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2 := RS2
-            renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := PRDold
 
             // Forward within packet...
             for(j <- 0 until i){
                 val curr_insn = insn
                 val prev_insn = renamed_decoded_fetch_packet.bits.decoded_instruction(j)
 
-                val forward_RS1     = prev_insn.RD === curr_insn.RS1 && curr_insn.RS1_valid && prev_insn.RD_valid && prev_insn.valid
-                val forward_RS2     = prev_insn.RD === curr_insn.RS2 && curr_insn.RS2_valid && prev_insn.RD_valid && prev_insn.valid
-                val forward_PRDold  = prev_insn.RD === curr_insn.RD  && curr_insn.RD_valid  && prev_insn.RD_valid && curr_insn.RD =/= 0.U && prev_insn.RD =/= 0.U && prev_insn.valid
+                val forward_RS1     = prev_insn.RD === curr_insn.RS1 && curr_insn.RS1_valid && prev_insn.RD_valid && !prev_insn.FP_RD && prev_insn.valid
+                val forward_RS2     = prev_insn.RD === curr_insn.RS2 && curr_insn.RS2_valid && prev_insn.RD_valid && !prev_insn.FP_RD && prev_insn.valid
                 
                 when(forward_RS1){
                     renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1 := prev_insn.PRD
@@ -189,16 +187,79 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
                 when(forward_RS2){
                     renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2 := prev_insn.PRD
                 }
+            }
+
+
+        }.elsewhen(FP_sources){
+            // TODO (just copy from above but for FP)
+            var RS1 = FP_RAT(og_RS1)
+            var RS2 = FP_RAT(og_RS2)
+            var PRDold = FP_RAT(og_RD) 
+
+            renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1 := RS1
+            renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2 := RS2
+
+            // Forward within packet...
+            for(j <- 0 until i){
+                val curr_insn = insn
+                val prev_insn = renamed_decoded_fetch_packet.bits.decoded_instruction(j)
+
+                val forward_RS1     = prev_insn.RD === curr_insn.RS1 && curr_insn.RS1_valid && prev_insn.RD_valid && prev_insn.FP_RD && prev_insn.valid
+                val forward_RS2     = prev_insn.RD === curr_insn.RS2 && curr_insn.RS2_valid && prev_insn.RD_valid && prev_insn.FP_RD && prev_insn.valid
+                
+                when(forward_RS1){
+                    renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1 := prev_insn.PRD
+                }
+                when(forward_RS2){
+                    renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2 := prev_insn.PRD
+                }
+            }
+        }
+
+        // rename dest
+        when(!FP_dest){
+            var PRDold = INT_RAT(og_RD) 
+
+            renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := PRDold
+
+            // Forward within packet...
+            for(j <- 0 until i){
+                val curr_insn = insn
+                val prev_insn = renamed_decoded_fetch_packet.bits.decoded_instruction(j)
+
+                val forward_PRDold  = prev_insn.RD === curr_insn.RD  && curr_insn.RD_valid  && prev_insn.RD_valid && !prev_insn.FP_RD && curr_insn.RD =/= 0.U && prev_insn.RD =/= 0.U && prev_insn.valid
+                
                 when(forward_PRDold){
                     renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := prev_insn.PRD
                 }
             }
 
 
-        }.elsewhen(FP_sources){
+        }.elsewhen(FP_dest){
             // TODO (just copy from above but for FP)
+            var PRDold = FP_RAT(og_RD) 
 
+            renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := PRDold
+
+            // Forward within packet...
+            for(j <- 0 until i){
+                val curr_insn = insn
+                val prev_insn = renamed_decoded_fetch_packet.bits.decoded_instruction(j)
+
+                val forward_PRDold  = prev_insn.RD === curr_insn.RD  && curr_insn.RD_valid  && prev_insn.RD_valid && prev_insn.FP_RD && curr_insn.RD =/= 0.U && prev_insn.RD =/= 0.U && prev_insn.valid
+                
+                when(forward_PRDold){
+                    renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := prev_insn.PRD
+                }
+            }
         }
+
+
+
+
+
+
+
 
         // rename dest
         when(!FP_dest && og_RD =/= 0.U && insn.RD_valid && insn.valid && io.decoded_fetch_packet.fire){

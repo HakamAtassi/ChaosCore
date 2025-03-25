@@ -818,6 +818,8 @@ class FU_output(coreParameters:CoreParameters) extends Bundle{
     
     val fetch_packet_index  =   UInt(log2Ceil(fetchWidth).W)
 
+
+
 }
 
 
