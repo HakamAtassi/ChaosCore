@@ -140,18 +140,11 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
         new_PRD
     }
 
-
-
-
-
     ////////////
     // RENAME //
     ////////////
 
     // read RS1, RS2, pop from free list, update RAT
-
-
-    // FIXME: valid ready signaling of entire module is fucked. fix it...
 
     val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 16, flow=false, hasFlush=true, useSyncReadMem=false))
     val renamed_decoded_fetch_packet    = Wire(Decoupled(new decoded_fetch_packet(coreParameters)))
@@ -160,6 +153,7 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
 
     renamed_decoded_fetch_packet.bits       := io.decoded_fetch_packet.bits
     renamed_decoded_fetch_packet.valid      := io.decoded_fetch_packet.fire && !(io.flush.valid) 
+
 
     for ((insn, i) <- io.decoded_fetch_packet.bits.decoded_instruction.zipWithIndex) {
         val FP_sources = insn.FP_RS
@@ -265,8 +259,8 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
     }
 
 
-    val INT_incomplete_producers = WireInit(VecInit(io.renamed_decoded_fetch_packet.bits.decoded_instruction.map(insn =>Mux(!insn.FP_RD && insn.RD_valid, insn.PRD, 0.U))))
-    val FP_incomplete_producers = WireInit(VecInit(io.renamed_decoded_fetch_packet.bits.decoded_instruction.map(insn => Mux(insn.FP_RD && insn.RD_valid, insn.PRD, 0.U))))
+    val INT_incomplete_producers = WireInit(VecInit(io.renamed_decoded_fetch_packet.bits.decoded_instruction.map(insn =>Mux(!insn.FP_RD && insn.RD_valid && insn.valid, insn.PRD, 0.U))))
+    val FP_incomplete_producers = WireInit(VecInit(io.renamed_decoded_fetch_packet.bits.decoded_instruction.map(insn => Mux(insn.FP_RD && insn.RD_valid && insn.valid, insn.PRD, 0.U))))
 
     val INT_complete_producers = WireInit(VecInit(io.INT_producers.map(producer => Mux(producer.valid && producer.bits.RD_valid, producer.bits.PRD, 0.U))))
     val FP_complete_producers  = WireInit(VecInit(io.FP_producers.get.map(producer => Mux(producer.valid && producer.bits.RD_valid, producer.bits.PRD, 0.U))))
@@ -292,8 +286,7 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
                 flag := 1.B
             }
         }
-        //flag
-        0.B
+        flag
     }
 
 
@@ -317,13 +310,9 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
         // FIXME: this doesnt work as expecteed
         // INT_incomplete_producers = (0, 0, 8, 9) at one point in simulation, where the last instruction uses RS1=8 but marks it as ready for some reason. 
         when(!FP_sources){
-            renamed_decoded_instruction.ready_bits.RS1_ready := (INT_available_table(RS1) || !RS1_valid || RS1 === 0.U || INT_complete_producers.contains(RS1)) && !INT_incomplete_producers.take(i).contains(RS1).B
-            renamed_decoded_instruction.ready_bits.RS2_ready := (INT_available_table(RS2) || !RS2_valid || RS2 === 0.U || INT_complete_producers.contains(RS2)) && !INT_incomplete_producers.take(i).contains(RS2).B
+            renamed_decoded_instruction.ready_bits.RS1_ready := (!RS1_valid || RS1 === 0.U || INT_complete_producers.contains(RS1) || (INT_available_table(RS1) && !being_produced(INT_incomplete_producers)(RS1, i.U)))
+            renamed_decoded_instruction.ready_bits.RS2_ready := (!RS2_valid || RS2 === 0.U || INT_complete_producers.contains(RS2) || (INT_available_table(RS2) && !being_produced(INT_incomplete_producers)(RS2, i.U)))
             renamed_decoded_instruction.ready_bits.RS3_ready := 1.B
-
-            //renamed_decoded_instruction.ready_bits.RS1_ready := (!RS1_valid || RS1 === 0.U || INT_complete_producers.contains(RS1) || (INT_available_table(RS1) && !being_produced(INT_incomplete_producers)(RS1, i.U)))
-            //renamed_decoded_instruction.ready_bits.RS2_ready := (!RS2_valid || RS2 === 0.U || INT_complete_producers.contains(RS2) || (INT_available_table(RS2) && !being_produced(INT_incomplete_producers)(RS2, i.U)))
-            //renamed_decoded_instruction.ready_bits.RS3_ready := 1.B
 
         }
 

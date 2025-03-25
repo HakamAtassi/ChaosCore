@@ -719,13 +719,12 @@ class ROB_instruction_entry(coreParameters:CoreParameters) extends Bundle{
     // FIXME: this is inconsistent
 
 
-
     def commit:Bool = { // just a helper function
-        WB.valid && (WB.complete || uOp.decoded_insn.STORE || uOp.decoded_insn.needs_CSRs)
+        WB.valid && (WB.complete || uOp.decoded_insn.needs_CSRs)
     }
 
     def retire:Bool = { // instruction can safely exit pipeline
-        (WB.valid && (WB.complete || uOp.decoded_insn.STORE) && !WB.exception && WB.committed) 
+        (WB.valid && (WB.complete) && !WB.exception && WB.committed) 
     }
 }
 
@@ -930,13 +929,6 @@ val Acquire,
     ProbeAckData = Value
 }
 
-
-/*loads mark as complete when they are 100% correct and non-speculative.*/
-/*That is, loads can mark the PRD ready to avoid stalling the pipeline*/
-/*But have the possibility of causing an exception that prevents them from committing*/
-/*Loads are not freed until they actually commit.*/
-
-
 object MOB_STATES extends ChiselEnum {
     val INVALID,       
     VALID,              // 1    (entry valid)
@@ -944,8 +936,9 @@ object MOB_STATES extends ChiselEnum {
     RESOLVED,           // 3
     READY,              // 4
     REQUESTED,          // 5    (Request sent)
-    NACKED,             // 6    (Requested but denied)
-    DONE = Value        // 7    (Response received)
+    RESPONDED,          // 6    (Request sent)
+    NOTIFIED,           // 7    (STORE; Wrote complete to ROB, waiting commit)
+    DONE = Value        // 8    (Response received)
 }
 
 
@@ -987,6 +980,14 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
 
     def in(s: MOB_STATES.Type): Bool = {
         MOB_STATE === s
+    }
+
+    def is_store(): Bool = {
+        memory_type === memory_type_t.STORE
+    }
+
+    def is_load(): Bool = {
+        memory_type === memory_type_t.LOAD
     }
 
 }
