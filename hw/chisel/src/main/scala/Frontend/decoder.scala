@@ -518,6 +518,10 @@ class decoder(coreParameters:CoreParameters) extends Module{
         io.decoded_instruction.bits.assigned_port := get_next_port(mul_port_seq)
     }.elsewhen(io.decoded_instruction.bits.needs_div) {
         io.decoded_instruction.bits.assigned_port := get_next_port(div_port_seq)
+    }.elsewhen(io.decoded_instruction.bits.needs_FPU) {
+        if(coreConfig.contains("F")){
+            io.decoded_instruction.bits.assigned_port := get_next_port(FPU_port_Seq.get) + INT_FUParamSeq.length.asUInt
+        }
     }
 
 

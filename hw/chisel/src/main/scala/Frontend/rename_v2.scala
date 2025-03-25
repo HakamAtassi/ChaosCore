@@ -79,16 +79,42 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
 
     // reg version of components
     val INT_freelist            = RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B)))
-    val FP_freelist             = RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B)))
 
     val INT_commit_freelist     = RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B)))
-    val FP_commit_freelist      = RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B)))
 
     val INT_RAT                 = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
-    val FP_RAT                  = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
 
-    val FP_commit_RAT           = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
     val INT_commit_RAT          = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
+
+
+    //val FP_RAT.get                  = if(coreConfig.contains("F")) Some(RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))) else None
+    //val FP_freelist             = RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B)))
+    //val FP_commit_freelist      = RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B)))
+    //val FP_commit_RAT           = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
+
+    val FP_RAT = if (coreConfig.contains("F")) {
+        Some(RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W)))))
+    } else {
+        None
+    }
+
+    val FP_freelist = if (coreConfig.contains("F")) {
+        Some(RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B))))
+    } else {
+        None
+    }
+
+    val FP_commit_freelist = if (coreConfig.contains("F")) {
+        Some(RegInit(VecInit(Seq.fill(physicalRegCount-1)(1.B))))
+    } else {
+        None
+    }
+
+    val FP_commit_RAT = if (coreConfig.contains("F")) {
+        Some(RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W)))))
+    } else {
+        None
+    }
 
 
 
@@ -191,27 +217,29 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
 
 
         }.elsewhen(FP_sources){
-            // TODO (just copy from above but for FP)
-            var RS1 = FP_RAT(og_RS1)
-            var RS2 = FP_RAT(og_RS2)
-            var PRDold = FP_RAT(og_RD) 
+            if(coreConfig.contains("F")){
+                // TODO (just copy from above but for FP)
+                var RS1 = FP_RAT.get(og_RS1)
+                var RS2 = FP_RAT.get(og_RS2)
+                var PRDold = FP_RAT.get(og_RD) 
 
-            renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1 := RS1
-            renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2 := RS2
+                renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1 := RS1
+                renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2 := RS2
 
-            // Forward within packet...
-            for(j <- 0 until i){
-                val curr_insn = insn
-                val prev_insn = renamed_decoded_fetch_packet.bits.decoded_instruction(j)
+                // Forward within packet...
+                for(j <- 0 until i){
+                    val curr_insn = insn
+                    val prev_insn = renamed_decoded_fetch_packet.bits.decoded_instruction(j)
 
-                val forward_RS1     = prev_insn.RD === curr_insn.RS1 && curr_insn.RS1_valid && prev_insn.RD_valid && prev_insn.FP_RD && prev_insn.valid
-                val forward_RS2     = prev_insn.RD === curr_insn.RS2 && curr_insn.RS2_valid && prev_insn.RD_valid && prev_insn.FP_RD && prev_insn.valid
-                
-                when(forward_RS1){
-                    renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1 := prev_insn.PRD
-                }
-                when(forward_RS2){
-                    renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2 := prev_insn.PRD
+                    val forward_RS1     = prev_insn.RD === curr_insn.RS1 && curr_insn.RS1_valid && prev_insn.RD_valid && prev_insn.FP_RD && prev_insn.valid
+                    val forward_RS2     = prev_insn.RD === curr_insn.RS2 && curr_insn.RS2_valid && prev_insn.RD_valid && prev_insn.FP_RD && prev_insn.valid
+                    
+                    when(forward_RS1){
+                        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1 := prev_insn.PRD
+                    }
+                    when(forward_RS2){
+                        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2 := prev_insn.PRD
+                    }
                 }
             }
         }
@@ -236,22 +264,26 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
 
 
         }.elsewhen(FP_dest){
-            // TODO (just copy from above but for FP)
-            var PRDold = FP_RAT(og_RD) 
+            if(coreConfig.contains("F")){
+                // TODO (just copy from above but for FP)
+                var PRDold = FP_RAT.get(og_RD) 
 
-            renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := PRDold
+                renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := PRDold
 
-            // Forward within packet...
-            for(j <- 0 until i){
-                val curr_insn = insn
-                val prev_insn = renamed_decoded_fetch_packet.bits.decoded_instruction(j)
+                // Forward within packet...
+                for(j <- 0 until i){
+                    val curr_insn = insn
+                    val prev_insn = renamed_decoded_fetch_packet.bits.decoded_instruction(j)
 
-                val forward_PRDold  = prev_insn.RD === curr_insn.RD  && curr_insn.RD_valid  && prev_insn.RD_valid && prev_insn.FP_RD && curr_insn.RD =/= 0.U && prev_insn.RD =/= 0.U && prev_insn.valid
-                
-                when(forward_PRDold){
-                    renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := prev_insn.PRD
+                    val forward_PRDold  = prev_insn.RD === curr_insn.RD  && curr_insn.RD_valid  && prev_insn.RD_valid && prev_insn.FP_RD && curr_insn.RD =/= 0.U && prev_insn.RD =/= 0.U && prev_insn.valid
+                    
+                    when(forward_PRDold){
+                        renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRDold := prev_insn.PRD
+                    }
                 }
+
             }
+
         }
 
 
@@ -266,8 +298,10 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
             val PRD = allocate_dest(RAT=INT_RAT, freelist=INT_freelist)(RD=og_RD, index=i.U)
             renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD := PRD
         }.elsewhen(FP_dest && og_RD =/= 0.U && insn.RD_valid && insn.valid && io.decoded_fetch_packet.fire){
-            val RD = allocate_dest(RAT=FP_RAT, freelist=FP_freelist)(RD=og_RD, index=i.U)
-            renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD := RD
+            if(coreConfig.contains("F")){
+                val RD = allocate_dest(RAT=FP_RAT.get, freelist=FP_freelist.get)(RD=og_RD, index=i.U)
+                renamed_decoded_fetch_packet.bits.decoded_instruction(i).PRD := RD
+            }
         }
 
     }
@@ -283,15 +317,21 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
 
 
 
-    io.decoded_fetch_packet.ready := (PopCount(INT_freelist.asUInt) >= fetchWidth.U) && (PopCount(FP_freelist.asUInt) >= fetchWidth.U) && io.renamed_decoded_fetch_packet.ready
+    if(coreConfig.contains("F")){
+        io.decoded_fetch_packet.ready := (PopCount(INT_freelist.asUInt) >= fetchWidth.U) && (PopCount(FP_freelist.get.asUInt) >= fetchWidth.U) && io.renamed_decoded_fetch_packet.ready
+    }else{
+        io.decoded_fetch_packet.ready := (PopCount(INT_freelist.asUInt) >= fetchWidth.U) && io.renamed_decoded_fetch_packet.ready
+    }
 
 
     for(i <- 0 until INT_producer_count){
         io.INT_producers(i).ready := 1.B
     }
 
-    for(i <- 0 until FP_producer_count){
-        io.FP_producers.get(i).ready := 1.B
+    if(coreConfig.contains("F")){
+        for(i <- 0 until FP_producer_count){
+            io.FP_producers.get(i).ready := 1.B
+        }
     }
 
     ////////////////
@@ -300,7 +340,7 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
     // RS1/RS2/RS3 ready bits
 
     val INT_available_table     = RegInit(VecInit(Seq.fill(physicalRegCount)(0.B)))
-    val FP_available_table      = RegInit(VecInit(Seq.fill(physicalRegCount)(0.B)))
+    val FP_available_table      = if(coreConfig.contains("F")) Some(RegInit(VecInit(Seq.fill(physicalRegCount)(0.B)))) else None
     
 
     // update INT ready bits
@@ -312,24 +352,22 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
     }
 
     // update FP ready bits
-    for(producer <- io.FP_producers.get){
-        val PRD = producer.bits.PRD
-        when(producer.valid && producer.bits.RD_valid){
-            FP_available_table(PRD) := 1.B // update reg table
+    if(coreConfig.contains("F")){
+        for(producer <- io.FP_producers.get){
+            val PRD = producer.bits.PRD
+            when(producer.valid && producer.bits.RD_valid){
+                FP_available_table.get(PRD) := 1.B // update reg table
+            }
         }
     }
 
 
     val INT_incomplete_producers = WireInit(VecInit(io.renamed_decoded_fetch_packet.bits.decoded_instruction.map(insn =>Mux(!insn.FP_RD && insn.RD_valid && insn.valid, insn.PRD, 0.U))))
-    val FP_incomplete_producers = WireInit(VecInit(io.renamed_decoded_fetch_packet.bits.decoded_instruction.map(insn => Mux(insn.FP_RD && insn.RD_valid && insn.valid, insn.PRD, 0.U))))
-
     val INT_complete_producers = WireInit(VecInit(io.INT_producers.map(producer => Mux(producer.valid && producer.bits.RD_valid, producer.bits.PRD, 0.U))))
-    val FP_complete_producers  = WireInit(VecInit(io.FP_producers.get.map(producer => Mux(producer.valid && producer.bits.RD_valid, producer.bits.PRD, 0.U))))
 
-    dontTouch(INT_complete_producers)
-    dontTouch(FP_complete_producers)
-    dontTouch(INT_incomplete_producers)
-    dontTouch(FP_incomplete_producers)
+    val FP_incomplete_producers = if(coreConfig.contains("F")) Some(WireInit(VecInit(io.renamed_decoded_fetch_packet.bits.decoded_instruction.map(insn => Mux(insn.FP_RD && insn.RD_valid && insn.valid, insn.PRD, 0.U))))) else None
+    val FP_complete_producers  = if(coreConfig.contains("F")) Some(WireInit(VecInit(io.FP_producers.get.map(producer => Mux(producer.valid && producer.bits.RD_valid, producer.bits.PRD, 0.U))))) else None
+
 
     /**
     * checks if a current source is being produced earlier in the fetch packet
@@ -377,10 +415,13 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
 
         }
 
-        when(FP_sources){
-            renamed_decoded_instruction.ready_bits.RS1_ready := (!RS1_valid || RS1 === 0.U || FP_complete_producers.contains(RS1) || (FP_available_table(RS1) && !being_produced(FP_incomplete_producers)(RS1, i.U)))
-            renamed_decoded_instruction.ready_bits.RS2_ready := (!RS2_valid || RS2 === 0.U || FP_complete_producers.contains(RS2) || (FP_available_table(RS2) && !being_produced(FP_incomplete_producers)(RS2, i.U)))
-            renamed_decoded_instruction.ready_bits.RS3_ready := (!RS3_valid || RS3 === 0.U || FP_complete_producers.contains(RS3) || (FP_available_table(RS3) && !being_produced(FP_incomplete_producers)(RS3, i.U)))
+        if(coreConfig.contains("F")){
+            when(FP_sources){
+                renamed_decoded_instruction.ready_bits.RS1_ready := (!RS1_valid || RS1 === 0.U || FP_complete_producers.get.contains(RS1) || (FP_available_table.get(RS1) && !being_produced(FP_incomplete_producers.get)(RS1, i.U)))
+                renamed_decoded_instruction.ready_bits.RS2_ready := (!RS2_valid || RS2 === 0.U || FP_complete_producers.get.contains(RS2) || (FP_available_table.get(RS2) && !being_produced(FP_incomplete_producers.get)(RS2, i.U)))
+                renamed_decoded_instruction.ready_bits.RS3_ready := (!RS3_valid || RS3 === 0.U || FP_complete_producers.get.contains(RS3) || (FP_available_table.get(RS3) && !being_produced(FP_incomplete_producers.get)(RS3, i.U)))
+            }
+
         }
 
         //test(i) := !INT_incomplete_producers.take(i).contains(RS1).B
@@ -390,8 +431,11 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
             INT_available_table(PRD) := 0.B
         }
 
-        when(FP_dest && RD_valid && io.renamed_decoded_fetch_packet.fire){
-            FP_available_table(PRD) := 0.B
+        if(coreConfig.contains("F")){
+            when(FP_dest && RD_valid && io.renamed_decoded_fetch_packet.fire){
+                FP_available_table.get(PRD) := 0.B
+            }
+
         }
 
     }
@@ -417,6 +461,27 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
                 INT_RAT(io.commit.bits.insn_commit(i).bits.RD) := io.commit.bits.insn_commit(i).bits.PRD
             }
         }
+    }
+
+    if(coreConfig.contains("F")){
+        // FIXME: 
+        //for (i <- 0 until fetchWidth){
+            //when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid){
+                //INT_commit_RAT(io.commit.bits.insn_commit(i).bits.RD) := io.commit.bits.insn_commit(i).bits.PRD
+            //}
+        //}
+
+        //// flush/revert
+        //when(io.flush.valid){
+            //INT_RAT := INT_commit_RAT
+            //for(i <- 0 until fetchWidth){
+                //when(io.commit.valid && io.commit.bits.insn_commit(i).valid && io.commit.bits.insn_commit(i).bits.committed && io.commit.bits.insn_commit(i).bits.RD_valid){
+                    //INT_RAT(io.commit.bits.insn_commit(i).bits.RD) := io.commit.bits.insn_commit(i).bits.PRD
+                //}
+            //}
+        //}
+
+
     }
 
 
@@ -462,6 +527,8 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
         }
     }
 
+    // fIXME: ADD FP STUFF
+
     
     //////////
     // MISC //
@@ -470,7 +537,9 @@ class rename_v2(coreParameters:CoreParameters) extends Module{
     // x0 as a dest or source is never remapped
     // x0 always ready
     INT_available_table(0) := 1.U
-    FP_available_table(0) := 1.U
+    if(coreConfig.contains("F")){
+        FP_available_table.get(0) := 1.U
+    }
 
 
 

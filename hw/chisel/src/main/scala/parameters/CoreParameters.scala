@@ -122,17 +122,18 @@ object validate_backend{
 
 
 
+//hartIDs:Seq[Int] = Seq(0, 1),
+
+
 case class CoreParameters(
     DEBUG: Boolean = true,
 
     // FIXME: add a requirement here than makes sure that the core config actually makes sense
-    coreConfig: String = "RV32IMSUF",  // core extension (IMAF, etc...)
+    coreConfig: String = "RV32IMSU",  // core extension (IMAF, etc...)
     hartID: Int = 0, // for multicore, this must be assigned on config. 
 
-    //hartIDs:Seq[Int] = Seq(0, 1),
 
     fetchWidth: Int = 1,   // up to how many instructions does the core fetch each cycle
-
 
     GHRWidth: Int = 16,
     RASEntries: Int = 128,
@@ -149,8 +150,6 @@ case class CoreParameters(
 
     RSEntries: Int = 8, // How many entires per reservation station (these are very expensive)
 
-
-
     ALUStages: Int = 2, // latency of the ALU unit
 
     /////////
@@ -165,9 +164,6 @@ case class CoreParameters(
     MOBEntries:Int = 16,
     IQEntries:Int = 4,
     //MOBForceInOrder:Boolean = true,  // can loads execute if not all previous (load+store) addresses have been resolved?
-
-
-
 
     // TODO: 
     // Add requirement that there can only be 1 AGU, and that there are no mults or divs currently. 

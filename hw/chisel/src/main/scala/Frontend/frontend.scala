@@ -109,7 +109,9 @@ class frontend(coreParameters:CoreParameters) extends Module{
     instruction_queue.io.flush.get := flush
 
     rename.io.INT_producers        <>     io.INT_producers
-    rename.io.FP_producers.get     <>     io.FP_producers.get
+    if(coreConfig.contains("F")){
+        rename.io.FP_producers.get     <>     io.FP_producers.get
+    }
     rename.io.flush                <>     io.flush
     rename.io.commit               <>     io.commit
 

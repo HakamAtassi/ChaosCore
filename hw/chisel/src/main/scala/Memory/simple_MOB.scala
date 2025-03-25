@@ -255,9 +255,10 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
     io.INT_MOB_output.valid := 0.B
     io.INT_MOB_output.bits  := 0.U.asTypeOf(new FU_output(coreParameters))
 
-    io.FP_MOB_output.get.valid := 0.B
-    io.FP_MOB_output.get.bits  := 0.U.asTypeOf(new FU_output(coreParameters))
-
+    if(coreConfig.contains("F")){
+        io.FP_MOB_output.get.valid := 0.B
+        io.FP_MOB_output.get.bits  := 0.U.asTypeOf(new FU_output(coreParameters))
+    }
 
 
     // CORE OUTPUT
@@ -292,7 +293,9 @@ class simple_MOB(coreParameters:CoreParameters) extends Module{
         when(MOB(front_index).data_type === data_type_t.INT){
             io.INT_MOB_output <> memory_response
         }.elsewhen(MOB(front_index).data_type === data_type_t.FP){
-            io.FP_MOB_output.get <> memory_response
+            if(coreConfig.contains("F")){
+                io.FP_MOB_output.get <> memory_response
+            }
         }
 
         MOB(front_index).MOB_STATE := MOB_STATES.DONE
