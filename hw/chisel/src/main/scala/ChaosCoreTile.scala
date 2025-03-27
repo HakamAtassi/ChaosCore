@@ -386,8 +386,8 @@ class ChaosCoreTileModuleImp(outer: ChaosCoreTile) extends BaseTileModuleImp(out
   outer.dcache.module.io.cpu.s1_data.mask    := DontCare
 
   // CACHE REQ - MISC //
-  outer.dcache.module.io.cpu.s1_kill            := 0.B //core.io.flush.valid // kill previous cycle's req
-  outer.dcache.module.io.cpu.s2_kill            := 0.B //core.io.flush.valid // kill req from two cycles ago
+  outer.dcache.module.io.cpu.s1_kill            := core.io.flush.valid // kill previous cycle's req
+  outer.dcache.module.io.cpu.s2_kill            := core.io.flush.valid // kill req from two cycles ago
 
 
   // CACHE RESP //
